@@ -305,6 +305,7 @@ for (const [locale, theme] of [
       })
       .click();
     state.modes.reply = 'hold';
+    await page.clock.install();
     await submit(reply).click();
     await expect.poll(() => state.held?.command.family).toBe('reply');
     const capturedReply = state.held!.command;
@@ -325,7 +326,10 @@ for (const [locale, theme] of [
         )
     ).toBe(true);
     await lockedCompanions(page, locale, state, 'ticket-reply-input');
-    await fixture.finishHeld('lost');
+    await page.clock.fastForward(15_001);
+    await expect(retry(page, locale)).toBeEnabled();
+    expect(state.effects.reply).toBe(0);
+    await fixture.finishHeld('timed-out');
     await expect(retry(page, locale)).toBeEnabled();
     await expect(reply.locator('#ticket-reply')).toHaveValue(
       '  **Public evidence** remains ordered  '
@@ -495,12 +499,16 @@ for (const [locale, theme] of [
     await expect(reply).toContainText('internal-proof.pdf');
     await expect(reply).not.toContainText('public-first.pdf');
     state.modes.reply = 'hold';
+    await page.clock.install();
     await submit(reply).click();
     await expect.poll(() => state.held?.command.family).toBe('reply');
     const capturedInternal = state.held!.command;
     expect(capturedInternal.body.visibility).toBe('internal');
     expect(capturedInternal.body.attachments).toHaveLength(1);
-    await fixture.finishHeld('lost');
+    await page.clock.fastForward(15_001);
+    await expect(retry(page, locale)).toBeEnabled();
+    expect(state.effects.reply).toBe(1);
+    await fixture.finishHeld('timed-out');
     await expect(retry(page, locale)).toBeEnabled();
     state.modes.reply = 'success';
     await retry(page, locale).click();

@@ -495,11 +495,12 @@ export async function setupTicketForms(page: Page, locale: 'en' | 'fa', staff: b
         .context()
         .addCookies([{ name: 'barghsa_csrf', value: state.csrf, url: 'http://127.0.0.1:4173' }]);
     },
-    async finishHeld(outcome: 'lost' | 'foreign' | 'malformed') {
+    async finishHeld(outcome: 'lost' | 'foreign' | 'malformed' | 'timed-out') {
       const held = state.held;
       if (!held) throw new Error('No captured ticket command is held');
       state.held = undefined;
       const result = commit(held.command);
+      if (outcome === 'timed-out') return held.command;
       if (outcome === 'lost') await held.route.abort('failed');
       else
         await held.route.fulfill({

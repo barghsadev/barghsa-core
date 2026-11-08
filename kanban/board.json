@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T11:36:51+00:00",
-  "source_commit": "0f4e2e57a1f71f2fa2525583fa715bf7fb52c37c",
+  "updated": "2026-11-08T11:47:32+00:00",
+  "source_commit": "f4cb97fbff31d0b0c76d9c94f497dce0d3dff1bc",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -25358,7 +25358,7 @@
             },
             {
               "path": "apps/web/e2e/verification-notices.spec.ts",
-              "sha256": "303c61496c067ab572537fdcf1f8c2051aeea8f86ca216b3478a48023f556be9"
+              "sha256": "96dd8083f95ecb37e82e0dff9e04f8125943853caea62067e5c08183f7759766"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
@@ -30669,7 +30669,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/routes/_app/electricity/order.tsx",
@@ -56434,11 +56434,11 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/e2e/ticket-forms.spec.ts",
-              "sha256": "d1e3474df5d78abb6f554520e6311a274f14380f9a0799f759aa52ab574dc43b"
+              "sha256": "5cce4db6d72741214fb2b8942af57c68146e111453e6c1444efd805d69b5116e"
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
@@ -56482,11 +56482,11 @@
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.test.tsx",
-              "sha256": "8f58c9633d8792213129619786d0b9fa580a72a7d988456a9caa0e18a38c0f8b"
+              "sha256": "912f3186b44de63a56a77c4e15954b9fcf79cee49605bb6efeea0537e25519cb"
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.ts",
-              "sha256": "d40c56a578efebe6b7888159be945b40b3266e711df38b1ffe226197830bcb72"
+              "sha256": "b27c1ecdcb40271844edcf0150b6a3fec7684ea1dca3a18ed131398798a2aa2b"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -57545,11 +57545,11 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/e2e/ticket-forms.spec.ts",
-              "sha256": "d1e3474df5d78abb6f554520e6311a274f14380f9a0799f759aa52ab574dc43b"
+              "sha256": "5cce4db6d72741214fb2b8942af57c68146e111453e6c1444efd805d69b5116e"
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
@@ -57593,11 +57593,11 @@
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.test.tsx",
-              "sha256": "8f58c9633d8792213129619786d0b9fa580a72a7d988456a9caa0e18a38c0f8b"
+              "sha256": "912f3186b44de63a56a77c4e15954b9fcf79cee49605bb6efeea0537e25519cb"
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.ts",
-              "sha256": "d40c56a578efebe6b7888159be945b40b3266e711df38b1ffe226197830bcb72"
+              "sha256": "b27c1ecdcb40271844edcf0150b6a3fec7684ea1dca3a18ed131398798a2aa2b"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -58656,11 +58656,11 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/e2e/ticket-forms.spec.ts",
-              "sha256": "d1e3474df5d78abb6f554520e6311a274f14380f9a0799f759aa52ab574dc43b"
+              "sha256": "5cce4db6d72741214fb2b8942af57c68146e111453e6c1444efd805d69b5116e"
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
@@ -58704,11 +58704,11 @@
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.test.tsx",
-              "sha256": "8f58c9633d8792213129619786d0b9fa580a72a7d988456a9caa0e18a38c0f8b"
+              "sha256": "912f3186b44de63a56a77c4e15954b9fcf79cee49605bb6efeea0537e25519cb"
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.ts",
-              "sha256": "d40c56a578efebe6b7888159be945b40b3266e711df38b1ffe226197830bcb72"
+              "sha256": "b27c1ecdcb40271844edcf0150b6a3fec7684ea1dca3a18ed131398798a2aa2b"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -60050,7 +60050,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -60070,7 +60070,7 @@
             },
             {
               "path": "apps/web/e2e/verification-notices.spec.ts",
-              "sha256": "303c61496c067ab572537fdcf1f8c2051aeea8f86ca216b3478a48023f556be9"
+              "sha256": "96dd8083f95ecb37e82e0dff9e04f8125943853caea62067e5c08183f7759766"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
@@ -73980,7 +73980,7 @@
             },
             {
               "path": "apps/web/e2e/verification-notices.spec.ts",
-              "sha256": "303c61496c067ab572537fdcf1f8c2051aeea8f86ca216b3478a48023f556be9"
+              "sha256": "96dd8083f95ecb37e82e0dff9e04f8125943853caea62067e5c08183f7759766"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -74449,7 +74449,7 @@
             },
             {
               "path": "apps/web/e2e/verification-notices.spec.ts",
-              "sha256": "303c61496c067ab572537fdcf1f8c2051aeea8f86ca216b3478a48023f556be9"
+              "sha256": "96dd8083f95ecb37e82e0dff9e04f8125943853caea62067e5c08183f7759766"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -74948,7 +74948,7 @@
             },
             {
               "path": "apps/web/e2e/verification-notices.spec.ts",
-              "sha256": "303c61496c067ab572537fdcf1f8c2051aeea8f86ca216b3478a48023f556be9"
+              "sha256": "96dd8083f95ecb37e82e0dff9e04f8125943853caea62067e5c08183f7759766"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -75426,7 +75426,7 @@
             },
             {
               "path": "apps/web/e2e/verification-notices.spec.ts",
-              "sha256": "303c61496c067ab572537fdcf1f8c2051aeea8f86ca216b3478a48023f556be9"
+              "sha256": "96dd8083f95ecb37e82e0dff9e04f8125943853caea62067e5c08183f7759766"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -92830,11 +92830,11 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/e2e/ticket-forms.spec.ts",
-              "sha256": "d1e3474df5d78abb6f554520e6311a274f14380f9a0799f759aa52ab574dc43b"
+              "sha256": "5cce4db6d72741214fb2b8942af57c68146e111453e6c1444efd805d69b5116e"
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
@@ -92878,11 +92878,11 @@
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.test.tsx",
-              "sha256": "8f58c9633d8792213129619786d0b9fa580a72a7d988456a9caa0e18a38c0f8b"
+              "sha256": "912f3186b44de63a56a77c4e15954b9fcf79cee49605bb6efeea0537e25519cb"
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.ts",
-              "sha256": "d40c56a578efebe6b7888159be945b40b3266e711df38b1ffe226197830bcb72"
+              "sha256": "b27c1ecdcb40271844edcf0150b6a3fec7684ea1dca3a18ed131398798a2aa2b"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -93873,11 +93873,11 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/e2e/ticket-forms.spec.ts",
-              "sha256": "d1e3474df5d78abb6f554520e6311a274f14380f9a0799f759aa52ab574dc43b"
+              "sha256": "5cce4db6d72741214fb2b8942af57c68146e111453e6c1444efd805d69b5116e"
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
@@ -93921,11 +93921,11 @@
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.test.tsx",
-              "sha256": "8f58c9633d8792213129619786d0b9fa580a72a7d988456a9caa0e18a38c0f8b"
+              "sha256": "912f3186b44de63a56a77c4e15954b9fcf79cee49605bb6efeea0537e25519cb"
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.ts",
-              "sha256": "d40c56a578efebe6b7888159be945b40b3266e711df38b1ffe226197830bcb72"
+              "sha256": "b27c1ecdcb40271844edcf0150b6a3fec7684ea1dca3a18ed131398798a2aa2b"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -94922,11 +94922,11 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/e2e/ticket-forms.spec.ts",
-              "sha256": "d1e3474df5d78abb6f554520e6311a274f14380f9a0799f759aa52ab574dc43b"
+              "sha256": "5cce4db6d72741214fb2b8942af57c68146e111453e6c1444efd805d69b5116e"
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
@@ -94970,11 +94970,11 @@
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.test.tsx",
-              "sha256": "8f58c9633d8792213129619786d0b9fa580a72a7d988456a9caa0e18a38c0f8b"
+              "sha256": "912f3186b44de63a56a77c4e15954b9fcf79cee49605bb6efeea0537e25519cb"
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.ts",
-              "sha256": "d40c56a578efebe6b7888159be945b40b3266e711df38b1ffe226197830bcb72"
+              "sha256": "b27c1ecdcb40271844edcf0150b6a3fec7684ea1dca3a18ed131398798a2aa2b"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -192267,7 +192267,7 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -193179,7 +193179,7 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -194151,7 +194151,7 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -195276,7 +195276,7 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -197214,7 +197214,7 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -199003,7 +199003,7 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -464987,7 +464987,7 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
@@ -465328,7 +465328,7 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
@@ -465693,7 +465693,7 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
@@ -466035,7 +466035,7 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
@@ -489284,11 +489284,11 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/e2e/ticket-forms.spec.ts",
-              "sha256": "d1e3474df5d78abb6f554520e6311a274f14380f9a0799f759aa52ab574dc43b"
+              "sha256": "5cce4db6d72741214fb2b8942af57c68146e111453e6c1444efd805d69b5116e"
             },
             {
               "path": "apps/web/e2e/ui-feedback.spec.ts",
@@ -489638,11 +489638,11 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/e2e/ticket-forms.spec.ts",
-              "sha256": "d1e3474df5d78abb6f554520e6311a274f14380f9a0799f759aa52ab574dc43b"
+              "sha256": "5cce4db6d72741214fb2b8942af57c68146e111453e6c1444efd805d69b5116e"
             },
             {
               "path": "apps/web/e2e/ui-feedback.spec.ts",
@@ -492958,7 +492958,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/components/VersionedSettingsCard.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2f9d6a3bf7976204ded2c8383205578d593566c215303645dfe13ab04c6305c3"
+              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -497780,7 +497780,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/components/VersionedSettingsCard.tsx",
@@ -512771,7 +512771,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -513570,7 +513570,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -514368,7 +514368,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -515165,7 +515165,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/components/route-states.test.tsx",
@@ -515601,7 +515601,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
@@ -516040,7 +516040,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
@@ -516471,7 +516471,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/components/route-states.test.tsx",
@@ -517293,11 +517293,11 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/e2e/ticket-forms.spec.ts",
-              "sha256": "d1e3474df5d78abb6f554520e6311a274f14380f9a0799f759aa52ab574dc43b"
+              "sha256": "5cce4db6d72741214fb2b8942af57c68146e111453e6c1444efd805d69b5116e"
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
@@ -517689,7 +517689,7 @@
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.ts",
-              "sha256": "d40c56a578efebe6b7888159be945b40b3266e711df38b1ffe226197830bcb72"
+              "sha256": "b27c1ecdcb40271844edcf0150b6a3fec7684ea1dca3a18ed131398798a2aa2b"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2f9d6a3bf7976204ded2c8383205578d593566c215303645dfe13ab04c6305c3"
+              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2f9d6a3bf7976204ded2c8383205578d593566c215303645dfe13ab04c6305c3"
+              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -519426,7 +519426,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
@@ -566752,7 +566752,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -567520,7 +567520,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2f9d6a3bf7976204ded2c8383205578d593566c215303645dfe13ab04c6305c3"
+              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568647,7 +568647,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -569415,7 +569415,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2f9d6a3bf7976204ded2c8383205578d593566c215303645dfe13ab04c6305c3"
+              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570219,7 +570219,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer solar document completion now has bounded acknowledgement and exact replay. Reconcile and close the shared customer and staff ticket command deadline and remaining ordinary command feedback against the refreshed source inventory."
+        "Customer and staff ticket writes now bound response headers and body, preserve captured commands, and cancel obsolete transports. The shared verified upload preparation and the verification-mode draft write still need bounded feedback."
       ],
       "owner": null,
       "depends_on": [],
@@ -570275,7 +570275,8 @@
           "release-0.5-route-feedback-reconciliation",
           "release-0.5-customer-electricity-command-recovery",
           "release-0.5-electricity-draft-recovery",
-          "release-0.5-solar-document-completion"
+          "release-0.5-solar-document-completion",
+          "release-0.5-ticket-command-deadline"
         ],
         "current_acceptance": null
       }
@@ -570618,7 +570619,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -571386,7 +571387,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2f9d6a3bf7976204ded2c8383205578d593566c215303645dfe13ab04c6305c3"
+              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -572513,7 +572514,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -573281,7 +573282,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2f9d6a3bf7976204ded2c8383205578d593566c215303645dfe13ab04c6305c3"
+              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -574408,7 +574409,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -575176,7 +575177,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2f9d6a3bf7976204ded2c8383205578d593566c215303645dfe13ab04c6305c3"
+              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -576303,7 +576304,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -577071,7 +577072,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2f9d6a3bf7976204ded2c8383205578d593566c215303645dfe13ab04c6305c3"
+              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -578198,7 +578199,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -578966,7 +578967,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2f9d6a3bf7976204ded2c8383205578d593566c215303645dfe13ab04c6305c3"
+              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -580093,7 +580094,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -580861,7 +580862,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2f9d6a3bf7976204ded2c8383205578d593566c215303645dfe13ab04c6305c3"
+              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581988,7 +581989,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -582756,7 +582757,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2f9d6a3bf7976204ded2c8383205578d593566c215303645dfe13ab04c6305c3"
+              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -583883,7 +583884,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -584651,7 +584652,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2f9d6a3bf7976204ded2c8383205578d593566c215303645dfe13ab04c6305c3"
+              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -585778,7 +585779,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -586546,7 +586547,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2f9d6a3bf7976204ded2c8383205578d593566c215303645dfe13ab04c6305c3"
+              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -587673,7 +587674,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -588441,7 +588442,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2f9d6a3bf7976204ded2c8383205578d593566c215303645dfe13ab04c6305c3"
+              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589568,7 +589569,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -590336,7 +590337,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2f9d6a3bf7976204ded2c8383205578d593566c215303645dfe13ab04c6305c3"
+              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591600,7 +591601,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2f9d6a3bf7976204ded2c8383205578d593566c215303645dfe13ab04c6305c3"
+              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592203,7 +592204,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -592971,7 +592972,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2f9d6a3bf7976204ded2c8383205578d593566c215303645dfe13ab04c6305c3"
+              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594098,7 +594099,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -594866,7 +594867,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2f9d6a3bf7976204ded2c8383205578d593566c215303645dfe13ab04c6305c3"
+              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595670,7 +595671,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Solar request and guidance loading and recovery have current keyboard, responsive and bilingual evidence. Continue the route-by-route loading, empty and error evidence reconciliation for the remaining views."
+        "Ticket command recovery and the verification banner have current production browser evidence. Continue matching the remaining route loading, empty and error states to current source and related native evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -595738,7 +595739,8 @@
           "release-0.5-route-feedback-reconciliation",
           "release-0.5-customer-electricity-command-recovery",
           "release-0.5-electricity-draft-recovery",
-          "release-0.5-solar-document-completion"
+          "release-0.5-solar-document-completion",
+          "release-0.5-ticket-command-deadline"
         ],
         "current_acceptance": null
       }
@@ -612853,7 +612855,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -613651,7 +613653,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -614449,7 +614451,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -615247,7 +615249,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -616049,7 +616051,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -616847,7 +616849,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -617645,7 +617647,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -618444,7 +618446,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -619243,7 +619245,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -620042,7 +620044,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -620841,7 +620843,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -621640,7 +621642,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -622439,7 +622441,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -623238,7 +623240,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -624037,7 +624039,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -674174,11 +674176,11 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/e2e/ticket-forms.spec.ts",
-              "sha256": "d1e3474df5d78abb6f554520e6311a274f14380f9a0799f759aa52ab574dc43b"
+              "sha256": "5cce4db6d72741214fb2b8942af57c68146e111453e6c1444efd805d69b5116e"
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
@@ -674258,11 +674260,11 @@
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.test.tsx",
-              "sha256": "8f58c9633d8792213129619786d0b9fa580a72a7d988456a9caa0e18a38c0f8b"
+              "sha256": "912f3186b44de63a56a77c4e15954b9fcf79cee49605bb6efeea0537e25519cb"
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.ts",
-              "sha256": "d40c56a578efebe6b7888159be945b40b3266e711df38b1ffe226197830bcb72"
+              "sha256": "b27c1ecdcb40271844edcf0150b6a3fec7684ea1dca3a18ed131398798a2aa2b"
             },
             {
               "path": "apps/web/src/hooks/useTicketFormFeedback.ts",
@@ -674706,11 +674708,11 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/e2e/ticket-forms.spec.ts",
-              "sha256": "d1e3474df5d78abb6f554520e6311a274f14380f9a0799f759aa52ab574dc43b"
+              "sha256": "5cce4db6d72741214fb2b8942af57c68146e111453e6c1444efd805d69b5116e"
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
@@ -674790,11 +674792,11 @@
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.test.tsx",
-              "sha256": "8f58c9633d8792213129619786d0b9fa580a72a7d988456a9caa0e18a38c0f8b"
+              "sha256": "912f3186b44de63a56a77c4e15954b9fcf79cee49605bb6efeea0537e25519cb"
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.ts",
-              "sha256": "d40c56a578efebe6b7888159be945b40b3266e711df38b1ffe226197830bcb72"
+              "sha256": "b27c1ecdcb40271844edcf0150b6a3fec7684ea1dca3a18ed131398798a2aa2b"
             },
             {
               "path": "apps/web/src/hooks/useTicketFormFeedback.ts",
@@ -675242,11 +675244,11 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/e2e/ticket-forms.spec.ts",
-              "sha256": "d1e3474df5d78abb6f554520e6311a274f14380f9a0799f759aa52ab574dc43b"
+              "sha256": "5cce4db6d72741214fb2b8942af57c68146e111453e6c1444efd805d69b5116e"
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
@@ -675326,11 +675328,11 @@
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.test.tsx",
-              "sha256": "8f58c9633d8792213129619786d0b9fa580a72a7d988456a9caa0e18a38c0f8b"
+              "sha256": "912f3186b44de63a56a77c4e15954b9fcf79cee49605bb6efeea0537e25519cb"
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.ts",
-              "sha256": "d40c56a578efebe6b7888159be945b40b3266e711df38b1ffe226197830bcb72"
+              "sha256": "b27c1ecdcb40271844edcf0150b6a3fec7684ea1dca3a18ed131398798a2aa2b"
             },
             {
               "path": "apps/web/src/hooks/useTicketFormFeedback.ts",
@@ -675775,11 +675777,11 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/e2e/ticket-forms.spec.ts",
-              "sha256": "d1e3474df5d78abb6f554520e6311a274f14380f9a0799f759aa52ab574dc43b"
+              "sha256": "5cce4db6d72741214fb2b8942af57c68146e111453e6c1444efd805d69b5116e"
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
@@ -675859,11 +675861,11 @@
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.test.tsx",
-              "sha256": "8f58c9633d8792213129619786d0b9fa580a72a7d988456a9caa0e18a38c0f8b"
+              "sha256": "912f3186b44de63a56a77c4e15954b9fcf79cee49605bb6efeea0537e25519cb"
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.ts",
-              "sha256": "d40c56a578efebe6b7888159be945b40b3266e711df38b1ffe226197830bcb72"
+              "sha256": "b27c1ecdcb40271844edcf0150b6a3fec7684ea1dca3a18ed131398798a2aa2b"
             },
             {
               "path": "apps/web/src/hooks/useTicketFormFeedback.ts",
@@ -676307,11 +676309,11 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/e2e/ticket-forms.spec.ts",
-              "sha256": "d1e3474df5d78abb6f554520e6311a274f14380f9a0799f759aa52ab574dc43b"
+              "sha256": "5cce4db6d72741214fb2b8942af57c68146e111453e6c1444efd805d69b5116e"
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
@@ -676391,11 +676393,11 @@
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.test.tsx",
-              "sha256": "8f58c9633d8792213129619786d0b9fa580a72a7d988456a9caa0e18a38c0f8b"
+              "sha256": "912f3186b44de63a56a77c4e15954b9fcf79cee49605bb6efeea0537e25519cb"
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.ts",
-              "sha256": "d40c56a578efebe6b7888159be945b40b3266e711df38b1ffe226197830bcb72"
+              "sha256": "b27c1ecdcb40271844edcf0150b6a3fec7684ea1dca3a18ed131398798a2aa2b"
             },
             {
               "path": "apps/web/src/hooks/useTicketFormFeedback.ts",
@@ -676841,11 +676843,11 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/e2e/ticket-forms.spec.ts",
-              "sha256": "d1e3474df5d78abb6f554520e6311a274f14380f9a0799f759aa52ab574dc43b"
+              "sha256": "5cce4db6d72741214fb2b8942af57c68146e111453e6c1444efd805d69b5116e"
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
@@ -676925,11 +676927,11 @@
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.test.tsx",
-              "sha256": "8f58c9633d8792213129619786d0b9fa580a72a7d988456a9caa0e18a38c0f8b"
+              "sha256": "912f3186b44de63a56a77c4e15954b9fcf79cee49605bb6efeea0537e25519cb"
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.ts",
-              "sha256": "d40c56a578efebe6b7888159be945b40b3266e711df38b1ffe226197830bcb72"
+              "sha256": "b27c1ecdcb40271844edcf0150b6a3fec7684ea1dca3a18ed131398798a2aa2b"
             },
             {
               "path": "apps/web/src/hooks/useTicketFormFeedback.ts",
@@ -713141,11 +713143,11 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/e2e/ticket-forms.spec.ts",
-              "sha256": "d1e3474df5d78abb6f554520e6311a274f14380f9a0799f759aa52ab574dc43b"
+              "sha256": "5cce4db6d72741214fb2b8942af57c68146e111453e6c1444efd805d69b5116e"
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
@@ -713189,11 +713191,11 @@
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.test.tsx",
-              "sha256": "8f58c9633d8792213129619786d0b9fa580a72a7d988456a9caa0e18a38c0f8b"
+              "sha256": "912f3186b44de63a56a77c4e15954b9fcf79cee49605bb6efeea0537e25519cb"
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.ts",
-              "sha256": "d40c56a578efebe6b7888159be945b40b3266e711df38b1ffe226197830bcb72"
+              "sha256": "b27c1ecdcb40271844edcf0150b6a3fec7684ea1dca3a18ed131398798a2aa2b"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -718888,7 +718890,7 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/e2e/upload-fixture.ts",
@@ -718896,7 +718898,7 @@
             },
             {
               "path": "apps/web/e2e/verification-notices.spec.ts",
-              "sha256": "303c61496c067ab572537fdcf1f8c2051aeea8f86ca216b3478a48023f556be9"
+              "sha256": "96dd8083f95ecb37e82e0dff9e04f8125943853caea62067e5c08183f7759766"
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
@@ -722762,7 +722764,7 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+              "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
             },
             {
               "path": "apps/web/e2e/upload-fixture.ts",
@@ -722770,7 +722772,7 @@
             },
             {
               "path": "apps/web/e2e/verification-notices.spec.ts",
-              "sha256": "303c61496c067ab572537fdcf1f8c2051aeea8f86ca216b3478a48023f556be9"
+              "sha256": "96dd8083f95ecb37e82e0dff9e04f8125943853caea62067e5c08183f7759766"
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
@@ -725382,7 +725384,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Solar document completion and recovery have current browser and PostgreSQL evidence. The remaining ordinary commands, bespoke route states, live Sentry receipt and GitHub accessibility enforcement still gate full adoption."
+        "The scoped ticket command and verification banner changes have current evidence. Remaining command feedback and route states, the live Sentry receipt and required GitHub accessibility enforcement still gate full adoption."
       ],
       "owner": null,
       "depends_on": [],
@@ -725514,7 +725516,8 @@
           "release-0.5-route-feedback-reconciliation",
           "release-0.5-customer-electricity-command-recovery",
           "release-0.5-electricity-draft-recovery",
-          "release-0.5-solar-document-completion"
+          "release-0.5-solar-document-completion",
+          "release-0.5-ticket-command-deadline"
         ]
       }
     },
@@ -726114,7 +726117,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+              "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -726286,7 +726289,7 @@
             },
             {
               "path": "apps/web/src/hooks/useTicketCommand.ts",
-              "sha256": "d40c56a578efebe6b7888159be945b40b3266e711df38b1ffe226197830bcb72"
+              "sha256": "b27c1ecdcb40271844edcf0150b6a3fec7684ea1dca3a18ed131398798a2aa2b"
             },
             {
               "path": "apps/web/src/hooks/useToast.ts",
@@ -727299,7 +727302,8 @@
             "Renewed shared shell recovery and the route and interaction budget measurements. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-feedback-reconciliation/proof.json",
             "Renewed customer electricity cancellation and increase coverage and the route and interaction budget measurements. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-electricity-command-recovery/proof.json",
             "Renewed guarded electricity draft recovery coverage and the route and interaction budget measurements. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-draft-recovery/proof.json",
-            "Renewed solar document completion coverage and the route and interaction budget measurements. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-document-completion/proof.json"
+            "Renewed solar document completion coverage and the route and interaction budget measurements. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-document-completion/proof.json",
+            "Renewed ticket command, verification banner and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-ticket-command-deadline/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -798988,6 +798992,111 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-document-completion/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-document-completion/reviewed.patch",
       "release_disposition": "Verified scoped solar document completion recovery. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-ticket-command-deadline": {
+      "batch": "release-0.5-ticket-command-deadline",
+      "base_commit": "f4cb97fbff31d0b0c76d9c94f497dce0d3dff1bc",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+        },
+        {
+          "path": "apps/api/src/database/idempotency.ts",
+          "sha256": "939b065943ccf6746fdbab13d97823b31130785c5cf02d397eb7f120e933a4d4"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.service.ts",
+          "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+        },
+        {
+          "path": "apps/web/e2e/ticket-forms-fixture.ts",
+          "sha256": "0da0c0bf4ea31c8f9de4a5c6f591ece7ec73244e4e107b387537332290b72367"
+        },
+        {
+          "path": "apps/web/e2e/ticket-forms.spec.ts",
+          "sha256": "5cce4db6d72741214fb2b8942af57c68146e111453e6c1444efd805d69b5116e"
+        },
+        {
+          "path": "apps/web/e2e/tickets.spec.ts",
+          "sha256": "76e7d71acd31f72ee94f3a5dc5041118321086152b2b37bb5946ecaaff56cbec"
+        },
+        {
+          "path": "apps/web/e2e/verification-banner.spec.ts",
+          "sha256": "d4d4881781d88bfbfdf68d762b55b556e534565268c94cb5327a6d9acd3527a3"
+        },
+        {
+          "path": "apps/web/e2e/verification-notices.spec.ts",
+          "sha256": "96dd8083f95ecb37e82e0dff9e04f8125943853caea62067e5c08183f7759766"
+        },
+        {
+          "path": "apps/web/src/components/TicketIntakeForm.tsx",
+          "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+        },
+        {
+          "path": "apps/web/src/components/TicketStaffForms.tsx",
+          "sha256": "6f7bff83c21f53854d2909b5fc18a09aab735dfe157a004f995352817d44b93d"
+        },
+        {
+          "path": "apps/web/src/components/VerificationBanner.tsx",
+          "sha256": "93c1555b4aa454711189136f5d2f8371afc131d52bb15c42aad4b4538d58d897"
+        },
+        {
+          "path": "apps/web/src/hooks/useTicketCommand.test.tsx",
+          "sha256": "912f3186b44de63a56a77c4e15954b9fcf79cee49605bb6efeea0537e25519cb"
+        },
+        {
+          "path": "apps/web/src/hooks/useTicketCommand.ts",
+          "sha256": "b27c1ecdcb40271844edcf0150b6a3fec7684ea1dca3a18ed131398798a2aa2b"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "apps/web/src/lib/ticket-form.ts",
+          "sha256": "084ef2c87c9631118111c1195c41a22927d887f64c1b72fab25e38a08fd6134d"
+        },
+        {
+          "path": "apps/web/src/pages/TicketsPage.tsx",
+          "sha256": "957cdaefba5bb88d77ef2ec2062ed9ad3a87379a3b34dbd09416629d6b20b98e"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "Customer and staff ticket command acknowledgements now time out at 15 seconds through the response body. A timeout keeps the exact command and its ordered verified file references. Retry uses the same JSON and current CSRF token. Scope changes and revoked grants cancel obsolete transports.",
+        "Both hook unit cases passed, including body timeout, late receipt suppression, explicit exact replay and authority loss. The first production build passed 24 related browser cases and exceeded the existing electricity ordering budget by eight bytes.",
+        "The verification banner derives its waiting state from the cleared status and still aborts and cancels its previous query on cleanup. The final bundle passes all 100 unchanged limits. Final evidence covers 30 passing Chromium and Mobile Safari cases and 15 instrumented Chromium cases, including ticket replay and banner refresh. Two Mobile Safari cases initially stopped at overlapping fixture navigations. The updated fixture waits for the failed read and current URL, then waits for the malformed reply. Only the four affected cases ran again against the identical runtime build.",
+        "All nine changed-coverage groups, format, scoped lint and web typecheck passed. Six cold-auth receipts carry forward from byte-identical runtime files."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ticket-command-deadline",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ticket-command-deadline/proof.json",
+      "source_scope_proof_sha256": "f904141e84c7e01ee736dc1f03d079cde5b97084be2128b290ea1ae0e3e7159c",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ticket-command-deadline/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ticket-command-deadline/reviewed.patch",
+      "release_disposition": "Verified scoped ticket command acknowledgement and verification banner bundle. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -799038,12 +799147,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Close the shared ticket-command response deadline through existing customer and staff callers with exact replay and current authority. Reconcile remaining route states against the refreshed router inventory and native evidence. Live Sentry delivery and GitHub accessibility enforcement remain separate v0.5.0 gates."
+    "goal": "Close demonstrated ordinary command feedback gaps in verified upload preparation and the versioned verification-mode draft, preserving uploaded-file integrity and version checks. Reconcile remaining route loading, empty and error evidence with the existing route inventory. Live Sentry delivery and GitHub accessibility enforcement remain separate v0.5.0 gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, guarded electricity drafts, solar document completion and scoped customer electricity, shell, onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, guarded electricity drafts, solar document completion, ticket acknowledgement and scoped customer electricity, shell, onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {

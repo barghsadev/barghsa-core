@@ -178,11 +178,18 @@ for (const locale of ['en', 'fa']) {
     const banner = page.getByTestId('verification-notice');
     await expect(banner).toBeVisible();
     fail = true;
-    await banner
-      .getByRole('link', {
-        name: locale === 'fa' ? 'مشاهده همه اعلان‌ها' : 'View all notifications',
-      })
-      .click();
+    await Promise.all([
+      page.waitForResponse(
+        (response) =>
+          response.url().endsWith('/api/profiles/verification-status') && response.status() === 503
+      ),
+      banner
+        .getByRole('link', {
+          name: locale === 'fa' ? 'مشاهده همه اعلان‌ها' : 'View all notifications',
+        })
+        .click(),
+    ]);
+    await expect(page).toHaveURL(/\/notifications$/);
     await expect(banner).toHaveCount(0);
     await page.route('**/api/profiles/verification-status', (r) =>
       r.fulfill({
@@ -195,7 +202,14 @@ for (const locale of ['en', 'fa']) {
         },
       })
     );
-    await page.goto('/dashboard');
+    const [malformed] = await Promise.all([
+      page.waitForResponse(
+        (response) =>
+          response.url().endsWith('/api/profiles/verification-status') && response.status() === 200
+      ),
+      page.goto('/dashboard'),
+    ]);
+    await malformed.finished();
     await expect(banner).toHaveCount(0);
   });
 }

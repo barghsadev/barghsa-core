@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { withCsrf } from '../lib/csrf.js';
 import { inputErrorFields } from '../lib/input-error-fields.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import type { TicketCommand, TicketCoordination, TicketOwner } from '../lib/ticket-form.js';
 export function useTicketCommand(
   scope: string,
@@ -18,7 +19,7 @@ export function useTicketCommand(
       scope: string;
       uncertain: boolean;
     } | null>(null),
-    sending = useRef(false);
+    sending = useRef<AbortController | null>(null);
   const [locked, setLocked] = useState<TicketOwner | null>(null),
     [busy, setBusy] = useState(false),
     [uncertain, setUncertain] = useState(false),
@@ -26,7 +27,8 @@ export function useTicketCommand(
   function reset() {
     owner.current = null;
     capture.current = null;
-    sending.current = false;
+    sending.current?.abort();
+    sending.current = null;
     setLocked(null);
     setBusy(false);
     setUncertain(false);
@@ -68,6 +70,8 @@ export function useTicketCommand(
       alive.current = false;
       owner.current = null;
       capture.current = null;
+      sending.current?.abort();
+      sending.current = null;
     };
   }, []);
   useEffect(() => {
@@ -83,7 +87,8 @@ export function useTicketCommand(
       coordination.denied();
       return false;
     }
-    sending.current = true;
+    const controller = new AbortController();
+    sending.current = controller;
     setBusy(true);
     setError('');
     const unconfirmed = (message: string) => {
@@ -94,49 +99,49 @@ export function useTicketCommand(
       if (first) onUnconfirmed?.();
     };
     try {
-      const response = await fetch(held.command.path, {
-        method: held.command.method,
-        credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: held.json,
+      const { status, value } = await readWithDeadline(controller.signal, async (signal) => {
+        const response = await fetch(held.command.path, {
+          method: held.command.method,
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: held.json,
+          signal,
+        });
+        const value: unknown = [401, 403, 404].includes(response.status)
+          ? null
+          : await response.json().catch(() => null);
+        return { status: response.status, value };
       });
       if (!isCurrent() || capture.current !== held) return false;
       if (!authorized(held.command.owner)) {
         coordination.denied();
         return false;
       }
-      if ([401, 403, 404].includes(response.status)) {
+      if ([401, 403, 404].includes(status)) {
         coordination.denied();
         return false;
       }
-      let value: unknown;
-      try {
-        value = await response.json();
-      } catch {
-        value = null;
-      }
-      if (!isCurrent() || capture.current !== held) return false;
-      if (!authorized(held.command.owner)) {
-        coordination.denied();
-        return false;
-      }
-      if (response.status === held.command.status && held.command.confirmed(value)) {
+      if (status === held.command.status && held.command.confirmed(value)) {
         capture.current = null;
         setUncertain(false);
         try {
           await held.command.accepted(value);
         } finally {
-          if (isCurrent() && owner.current === held.command.owner) {
+          if (
+            isCurrent() &&
+            sending.current === controller &&
+            owner.current === held.command.owner
+          ) {
             owner.current = null;
             setLocked(null);
           }
         }
-        return isCurrent();
+        return isCurrent() && sending.current === controller;
       }
-      const fields = inputErrorFields(value, response.status).fields;
+      const fields = inputErrorFields(value, status).fields;
       if (
         !held.uncertain &&
-        response.status === 400 &&
+        status === 400 &&
         Array.isArray(fields) &&
         held.command.fields?.(fields)
       ) {
@@ -146,7 +151,7 @@ export function useTicketCommand(
         setError('');
         return false;
       }
-      unconfirmed(response.status === 409 ? 'conflict' : 'error');
+      unconfirmed(status === 409 ? 'conflict' : 'error');
       return false;
     } catch {
       if (isCurrent() && capture.current === held) {
@@ -155,11 +160,8 @@ export function useTicketCommand(
       }
       return false;
     } finally {
-      if (isCurrent() && capture.current === held) {
-        sending.current = false;
-        setBusy(false);
-      } else if (isCurrent() && !capture.current) {
-        sending.current = false;
+      if (isCurrent() && sending.current === controller) {
+        sending.current = null;
         setBusy(false);
       }
     }

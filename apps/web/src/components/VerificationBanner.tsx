@@ -60,7 +60,6 @@ function OwnedVerificationBanner({
   const reader = useId();
   const sequence = useRef(0);
   const [status, setStatus] = useState<VerificationStatusResponse | null>(null);
-  const [loading, setLoading] = useState(true);
   const [verifying, setVerifying] = useState(false);
   const [verified, setVerified] = useState(false);
   const [dismissed, setDismissed] = useState<string | null>(null);
@@ -77,9 +76,6 @@ function OwnedVerificationBanner({
       { context: 'account', ownerId: accountId ?? 'current-session', accountId, revision },
       JSON.stringify([reader, 'verification-status', pathname, locale, ++sequence.current])
     );
-    const cancel = () => void client.cancelQueries({ queryKey: key, exact: true });
-    controller.signal.addEventListener('abort', cancel, { once: true });
-    setLoading(true);
     setStatus(null);
 
     async function fetchStatus() {
@@ -103,8 +99,6 @@ function OwnedVerificationBanner({
         if (!controller.signal.aborted) setStatus(data);
       } catch {
         // The previous status was cleared before the read.
-      } finally {
-        if (!controller.signal.aborted) setLoading(false);
       }
     }
 
@@ -112,12 +106,12 @@ function OwnedVerificationBanner({
 
     return () => {
       controller.abort();
-      controller.signal.removeEventListener('abort', cancel);
+      void client.cancelQueries({ queryKey: key, exact: true });
     };
   }, [locale, pathname, client, accountId, revision, reader]);
 
   // Don't render anything while loading, or if no status data, or if dismissed
-  if (loading || !status) return null;
+  if (!status) return null;
 
   const notice = status.verificationNotice;
   const noticeContent = notice?.localizedContent?.[locale];

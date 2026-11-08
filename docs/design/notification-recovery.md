@@ -72,6 +72,8 @@ The revision record retains only ownership and version metadata. Discard, expiry
 
 Solar document submission waits up to 15 seconds for a receipt bound to the request and submission key. An unconfirmed reply holds the user's acknowledgement and allows an explicit retry with the same key. The API checks current ownership before releasing a receipt and records the first successful submission, audit entry and notification in one transaction. Replaying the receipt leaves later staff decisions and newly uploaded files alone. A confirmed receipt refreshes the current request so a later staff decision still appears on screen.
 
+Customer and staff ticket commands wait up to 15 seconds for response headers and the receipt body. An unconfirmed reply keeps the captured text, ordered attachment references and submission key. Explicit retry uses the same payload with the current CSRF token. A scope change or loss of authority cancels the transport and suppresses obsolete replies.
+
 Staff invoice and wallet receipt decisions also use the 15-second deadline. A stalled password verification leaves the decision unsent. An unknown write outcome clears the captured review and reloads the current receipt before staff can review and submit another decision.
 
 Onboarding start, profile completion and dashboard-profile selection use the same deadline. After an unconfirmed start, Retry checks for an active setup before creation becomes available. Profile completion can retry the same owned profile explicitly. An unconfirmed dashboard selection keeps the reviewed choice for exact retry and offers a fresh journey read. When that read confirms completion, opening the dashboard honors the currently active profile without writing another choice.
