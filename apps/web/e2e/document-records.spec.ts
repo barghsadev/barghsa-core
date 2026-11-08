@@ -3,6 +3,7 @@ import { test, expect, type Page } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { documentText } from '@barghsa/i18n/documents';
 import { t as appText } from '@barghsa/i18n/app';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import {
   documentRow,
   documentProfileId,
@@ -416,6 +417,10 @@ for (const staff of [false, true])
       await page.keyboard.press('Enter');
       const dialog = page.getByRole('dialog');
       await expect(dialog).toContainText(old.originalName);
+      await expect(
+        dialog.getByRole('button', { name: appText('team.confirm', locale), exact: true })
+      ).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'destructive');
       await dialog
         .getByRole('button', { name: appText('team.confirm', locale), exact: true })
         .click();

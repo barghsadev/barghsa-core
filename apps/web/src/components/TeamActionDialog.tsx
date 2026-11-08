@@ -119,6 +119,7 @@ export function TeamActionDialog({
   const [needsPassword, setNeedsPassword] = useState(!action || action.requiresPassword === true);
   const [needsOtp, setNeedsOtp] = useState(action?.requiresOtp === true);
   const [password, setPassword] = useState('');
+  const [invalidPassword, setInvalidPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const passwordInput = useRef<HTMLInputElement>(null);
   const focusPasswordFor = useRef<TeamAction | null>(null);
@@ -161,6 +162,7 @@ export function TeamActionDialog({
     setBusy(true);
     onPendingChange?.(true);
     setError(null);
+    setInvalidPassword(false);
     const owned = () =>
       mounted.current &&
       currentAction.current === action &&
@@ -186,6 +188,7 @@ export function TeamActionDialog({
         setPassword('');
         if (rateLimited(verified)) return;
         if (!verified.ok) {
+          setInvalidPassword(true);
           showError(t('team.passwordError', locale));
           return;
         }
@@ -330,7 +333,14 @@ export function TeamActionDialog({
               <DialogTitle>{copy.title}</DialogTitle>
               <DialogDescription>{copy.description}</DialogDescription>
             </DialogHeader>
-            {error && <Alert variant="destructive">{error}</Alert>}
+            {error && (
+              <Alert
+                id={invalidPassword ? 'team-step-up-password-error' : undefined}
+                variant="destructive"
+              >
+                {error}
+              </Alert>
+            )}
             {summary}
             <ConfirmationFields gate={gate} disabled={busy} />
             {needsPassword && (
@@ -342,10 +352,19 @@ export function TeamActionDialog({
                   type="password"
                   autoComplete="current-password"
                   required
+                  aria-required="true"
+                  aria-invalid={invalidPassword || undefined}
+                  aria-describedby={invalidPassword ? 'team-step-up-password-error' : undefined}
                   autoFocus={!destructive && !financial}
                   value={password}
                   disabled={busy}
-                  onChange={(event) => setPassword(event.target.value)}
+                  onChange={(event) => {
+                    setPassword(event.target.value);
+                    if (invalidPassword) {
+                      setInvalidPassword(false);
+                      setError(null);
+                    }
+                  }}
                 />
               </div>
             )}

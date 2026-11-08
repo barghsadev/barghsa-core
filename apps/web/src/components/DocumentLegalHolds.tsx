@@ -85,7 +85,9 @@ function OwnedDocumentLegalHolds({ document }: { document: BusinessDocument }) {
   const [reason, setReason] = useState('');
   const [expiresAt, setExpiresAt] = useState('');
   const [releaseNote, setReleaseNote] = useState('');
-  const [invalid, setInvalid] = useState(false);
+  const [invalidReason, setInvalidReason] = useState(false);
+  const [invalidExpiry, setInvalidExpiry] = useState(false);
+  const [invalidReleaseNote, setInvalidReleaseNote] = useState(false);
   const [action, setAction] = useState<HoldAction | null>(null);
 
   useEffect(() => {
@@ -110,14 +112,11 @@ function OwnedDocumentLegalHolds({ document }: { document: BusinessDocument }) {
     event.preventDefault();
     if (!data?.canManage || error || action) return;
     const expiry = expiresAt ? new Date(expiresAt) : null;
-    if (
-      reason.trim().length < 3 ||
-      (expiry && (!Number.isFinite(expiry.getTime()) || expiry <= new Date()))
-    ) {
-      setInvalid(true);
-      return;
-    }
-    setInvalid(false);
+    const reasonInvalid = reason.trim().length < 3;
+    const expiryInvalid = !!expiry && (!Number.isFinite(expiry.getTime()) || expiry <= new Date());
+    setInvalidReason(reasonInvalid);
+    setInvalidExpiry(expiryInvalid);
+    if (reasonInvalid || expiryInvalid) return;
     setAction({
       target: {
         profileId: scope === 'profile' ? document.profileId : null,
@@ -140,10 +139,10 @@ function OwnedDocumentLegalHolds({ document }: { document: BusinessDocument }) {
   function release(hold: Hold) {
     if (!data?.canManage || error || action || !hold.active) return;
     if (releaseNote.trim().length < 3) {
-      setInvalid(true);
+      setInvalidReleaseNote(true);
       return;
     }
-    setInvalid(false);
+    setInvalidReleaseNote(false);
     setAction({
       target: { ...hold, holdId: hold.id },
       risk: 'destructive',
@@ -206,11 +205,12 @@ function OwnedDocumentLegalHolds({ document }: { document: BusinessDocument }) {
       ) : null}
       {data?.canManage && !error ? (
         <div className="space-y-4 border-t pt-4">
-          <form onSubmit={create} className="grid gap-3 sm:grid-cols-2">
+          <form noValidate onSubmit={create} className="grid gap-3 sm:grid-cols-2">
             <Field>
               <FieldLabel htmlFor="hold-scope">{word('holdScope')}</FieldLabel>
               <NativeSelect
                 id="hold-scope"
+                aria-required="true"
                 value={scope}
                 onChange={(event) => setScope(event.target.value as 'document' | 'profile')}
               >
@@ -218,44 +218,71 @@ function OwnedDocumentLegalHolds({ document }: { document: BusinessDocument }) {
                 <option value="profile">{word('holdProfile')}</option>
               </NativeSelect>
             </Field>
-            <Field>
+            <Field data-invalid={invalidExpiry || undefined}>
               <FieldLabel htmlFor="hold-expiry">{word('holdExpiry')}</FieldLabel>
               <Input
                 id="hold-expiry"
                 type="datetime-local"
                 value={expiresAt}
-                onChange={(event) => setExpiresAt(event.target.value)}
+                onChange={(event) => {
+                  setExpiresAt(event.target.value);
+                  setInvalidExpiry(false);
+                }}
+                aria-invalid={invalidExpiry || undefined}
+                aria-describedby={invalidExpiry ? 'hold-expiry-error' : undefined}
               />
+              {invalidExpiry && (
+                <p id="hold-expiry-error" role="alert" className="text-sm text-destructive">
+                  {word('holdExpiryError')}
+                </p>
+              )}
             </Field>
-            <Field className="sm:col-span-2" data-invalid={invalid || undefined}>
+            <Field className="sm:col-span-2" data-invalid={invalidReason || undefined}>
               <FieldLabel htmlFor="hold-reason">{word('holdReason')}</FieldLabel>
               <Textarea
                 id="hold-reason"
                 value={reason}
                 maxLength={1000}
-                onChange={(event) => setReason(event.target.value)}
+                onChange={(event) => {
+                  setReason(event.target.value);
+                  if (event.target.value.trim().length >= 3) setInvalidReason(false);
+                }}
                 required
+                aria-required="true"
+                aria-invalid={invalidReason || undefined}
+                aria-describedby={invalidReason ? 'hold-reason-error' : undefined}
               />
+              {invalidReason && (
+                <p id="hold-reason-error" role="alert" className="text-sm text-destructive">
+                  {word('legalReasonLength')}
+                </p>
+              )}
             </Field>
             <Button type="submit" className="justify-self-start">
               {word('createHold')}
             </Button>
           </form>
           {data.holds.some((hold) => hold.active) ? (
-            <Field data-invalid={invalid || undefined}>
+            <Field data-invalid={invalidReleaseNote || undefined}>
               <FieldLabel htmlFor="hold-release-note">{word('releaseNote')}</FieldLabel>
               <Textarea
                 id="hold-release-note"
                 value={releaseNote}
                 maxLength={1000}
-                onChange={(event) => setReleaseNote(event.target.value)}
+                onChange={(event) => {
+                  setReleaseNote(event.target.value);
+                  if (event.target.value.trim().length >= 3) setInvalidReleaseNote(false);
+                }}
+                aria-required="true"
+                aria-invalid={invalidReleaseNote || undefined}
+                aria-describedby={invalidReleaseNote ? 'hold-release-note-error' : undefined}
               />
+              {invalidReleaseNote && (
+                <p id="hold-release-note-error" role="alert" className="text-sm text-destructive">
+                  {word('legalReasonLength')}
+                </p>
+              )}
             </Field>
-          ) : null}
-          {invalid ? (
-            <p role="alert" className="text-sm">
-              {word('reasonRequired')}
-            </p>
           ) : null}
         </div>
       ) : null}
@@ -273,6 +300,8 @@ function OwnedDocumentLegalHolds({ document }: { document: BusinessDocument }) {
             setReload((value) => value + 1);
             setReason('');
             setReleaseNote('');
+            setInvalidReason(false);
+            setInvalidReleaseNote(false);
             return confirmationText('recorded', locale);
           }}
         />

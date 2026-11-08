@@ -63,9 +63,11 @@ function OwnedDocumentRetentionPolicies() {
   const [years, setYears] = useState(10);
   const [held, setHeld] = useState(false);
   const [note, setNote] = useState('');
-  const [invalid, setInvalid] = useState(false);
+  const [attempted, setAttempted] = useState(false);
   const [saved, setSaved] = useState(false);
   const [action, setAction] = useState<TeamAction | null>(null);
+  const validYears = Number.isInteger(years) && years >= 1 && years <= 100;
+  const validNote = note.trim().length >= 3;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -88,7 +90,7 @@ function OwnedDocumentRetentionPolicies() {
     setYears(current.retentionYears);
     setHeld(current.legalHold);
     setNote('');
-    setInvalid(false);
+    setAttempted(false);
   }, [data, kind]);
 
   function select(next: string) {
@@ -97,11 +99,11 @@ function OwnedDocumentRetentionPolicies() {
   }
   function submit(event: FormEvent) {
     event.preventDefault();
-    if (!Number.isInteger(years) || years < 1 || years > 100 || note.trim().length < 3) {
-      setInvalid(true);
+    if (!validYears || !validNote) {
+      setAttempted(true);
       return;
     }
-    setInvalid(false);
+    setAttempted(false);
     setAction({
       title: word('savePolicy'),
       description: word('retentionChangeWarning'),
@@ -131,6 +133,7 @@ function OwnedDocumentRetentionPolicies() {
           <FieldLabel htmlFor="retention-kind">{word('kind')}</FieldLabel>
           <NativeSelect
             id="retention-kind"
+            aria-required="true"
             value={kind}
             onChange={(event) => select(event.target.value)}
           >
@@ -148,17 +151,26 @@ function OwnedDocumentRetentionPolicies() {
           </p>
         ) : null}
         {data?.canManage ? (
-          <form onSubmit={submit} className="grid gap-4 sm:grid-cols-2">
-            <Field data-invalid={invalid || undefined}>
+          <form noValidate onSubmit={submit} className="grid gap-4 sm:grid-cols-2">
+            <Field data-invalid={(attempted && !validYears) || undefined}>
               <FieldLabel htmlFor="retention-years">{word('retentionYears')}</FieldLabel>
               <Input
                 id="retention-years"
                 type="number"
                 min={1}
                 max={100}
+                required
+                aria-required="true"
+                aria-invalid={(attempted && !validYears) || undefined}
+                aria-describedby={attempted && !validYears ? 'retention-years-error' : undefined}
                 value={years}
                 onChange={(event) => setYears(Number(event.target.value))}
               />
+              {attempted && !validYears && (
+                <p id="retention-years-error" role="alert" className="text-sm text-destructive">
+                  {word('retentionYearsError')}
+                </p>
+              )}
             </Field>
             <label className="flex items-center gap-3 text-sm">
               <input
@@ -168,7 +180,7 @@ function OwnedDocumentRetentionPolicies() {
               />
               {word('policyHold')}
             </label>
-            <Field className="sm:col-span-2" data-invalid={invalid || undefined}>
+            <Field className="sm:col-span-2" data-invalid={(attempted && !validNote) || undefined}>
               <FieldLabel htmlFor="retention-note">{word('approvalNote')}</FieldLabel>
               <Textarea
                 id="retention-note"
@@ -176,13 +188,16 @@ function OwnedDocumentRetentionPolicies() {
                 value={note}
                 onChange={(event) => setNote(event.target.value)}
                 required
+                aria-required="true"
+                aria-invalid={(attempted && !validNote) || undefined}
+                aria-describedby={attempted && !validNote ? 'retention-note-error' : undefined}
               />
+              {attempted && !validNote && (
+                <p id="retention-note-error" role="alert" className="text-sm text-destructive">
+                  {word('legalReasonLength')}
+                </p>
+              )}
             </Field>
-            {invalid ? (
-              <p role="alert" className="sm:col-span-2">
-                {word('reasonRequired')}
-              </p>
-            ) : null}
             <Button type="submit" className="justify-self-start">
               {word('savePolicy')}
             </Button>

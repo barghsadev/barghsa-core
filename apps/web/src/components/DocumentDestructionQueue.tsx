@@ -228,6 +228,7 @@ function OwnedDocumentDestructionQueue() {
                       onClick={() => {
                         setSelected(item);
                         setNote('');
+                        setInvalid(false);
                       }}
                     >
                       {word('destructionApprove')}
@@ -239,7 +240,7 @@ function OwnedDocumentDestructionQueue() {
           ) : null}
         </ListPage.Content>
         {selected && data?.canManage ? (
-          <form onSubmit={approve} className="space-y-3 border-t pt-4">
+          <form noValidate onSubmit={approve} className="space-y-3 border-t pt-4">
             <p className="text-sm">{word('destructionWarning')}</p>
             <p className="break-all text-sm text-muted-foreground">{selected.documentId}</p>
             <Field data-invalid={invalid || undefined}>
@@ -248,11 +249,21 @@ function OwnedDocumentDestructionQueue() {
                 id="destruction-note"
                 value={note}
                 maxLength={1000}
-                onChange={(event) => setNote(event.target.value)}
+                onChange={(event) => {
+                  setNote(event.target.value);
+                  if (event.target.value.trim().length >= 3) setInvalid(false);
+                }}
                 required
+                aria-required="true"
+                aria-invalid={invalid || undefined}
+                aria-describedby={invalid ? 'destruction-note-error' : undefined}
               />
+              {invalid && (
+                <p id="destruction-note-error" role="alert" className="text-sm text-destructive">
+                  {word('legalReasonLength')}
+                </p>
+              )}
             </Field>
-            {invalid ? <p role="alert">{word('reasonRequired')}</p> : null}
             <div className="flex gap-2">
               <Button type="submit">{word('destructionApprove')}</Button>
               <Button type="button" variant="outline" onClick={() => setSelected(null)}>

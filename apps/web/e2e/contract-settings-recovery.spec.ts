@@ -77,6 +77,14 @@ for (const [locale, darkMode] of [
     await page.locator('#template-description').fill('Keep explanation');
     const picker = page.getByRole('button', { name: word('chooseFile'), exact: true });
     await expect(picker).toHaveAccessibleDescription(word('fileHelp'));
+    await page.locator('#template-file').setInputFiles({
+      name: 'unsupported.pdf',
+      mimeType: 'application/pdf',
+      buffer: Buffer.from('%PDF'),
+    });
+    await expect(picker).toHaveAttribute('aria-invalid', 'true');
+    await expect(picker).toHaveAccessibleDescription(`${word('fileHelp')} ${word('fileError')}`);
+    await expect(page.getByRole('button', { name: word('upload'), exact: true })).toBeDisabled();
     await picker.focus();
     const chooserPromise = page.waitForEvent('filechooser');
     await picker.press('Enter');
@@ -86,6 +94,7 @@ for (const [locale, darkMode] of [
       mimeType: 'text/plain',
       buffer: Buffer.from('{{customer}}'),
     });
+    await expect(picker).not.toHaveAttribute('aria-invalid', 'true');
     await expect(page.getByRole('button', { name: word('upload'), exact: true })).toBeEnabled();
     const before = listReads;
     await page

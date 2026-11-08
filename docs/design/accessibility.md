@@ -73,6 +73,12 @@ count and links invalid selections to the inline error. Reviewer notes become
 required when staff select rejection. The CRM archive dialog keeps its scroll
 area within the viewport as its height changes.
 
+Document retention years, legal reasons, and hold expiry each link to their
+own validation errors. Hold expiry remains optional. Upload policy formats
+require at least one selection, so the group explains the requirement without
+marking each checkbox required. A rejected confirmation password links to its
+own error.
+
 State either-or requirements before submission. A ticket reply can contain
 text, an attachment, or both, so its text field is not individually required.
 On an uncertain save, keep the original request and a visible recovery

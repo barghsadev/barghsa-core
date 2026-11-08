@@ -37,17 +37,26 @@ for (const locale of ['en', 'fa'])
     await page
       .getByRole('button', { name: fa ? 'افزودن قالب' : 'Add template', exact: true })
       .click();
-    await page.getByLabel(fa ? 'نام' : 'Name', { exact: true }).fill('  Local contract  ');
+    const name = page.getByRole('textbox', { name: fa ? 'نام' : 'Name', exact: true });
+    await expect(name).toHaveAttribute('aria-required', 'true');
+    await name.fill('  Local contract  ');
     await page
       .getByRole('button', { name: fa ? 'ذخیره قالب' : 'Save template', exact: true })
       .click();
     const dialog = page.getByRole('dialog'),
       confirm = dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
     await confirm.click();
-    await dialog.locator('input[type="password"]').fill('wrong');
+    const password = dialog.locator('input[type="password"]');
+    await expect(password).toHaveAccessibleName(/\S/);
+    await expect(password).toHaveAttribute('aria-required', 'true');
+    await password.fill('wrong');
     await confirm.click();
-    await expect(dialog.getByRole('alert')).toBeVisible();
-    await dialog.locator('input[type="password"]').fill('correct');
+    const error = dialog.getByRole('alert');
+    await expect(error).toBeVisible();
+    await expect(password).toHaveAttribute('aria-invalid', 'true');
+    await expect(password).toHaveAccessibleDescription(await error.innerText());
+    await password.fill('correct');
+    await expect(password).not.toHaveAttribute('aria-invalid', 'true');
     await confirm.click();
     await expect(dialog).toHaveCount(0);
     expect(attempts).toEqual(Array(2).fill({ name: 'Local contract', description: '' }));

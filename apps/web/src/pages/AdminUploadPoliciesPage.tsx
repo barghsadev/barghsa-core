@@ -702,13 +702,20 @@ export default function AdminUploadPoliciesPage() {
                 className="space-y-2"
                 disabled={disabled || needsReset || uncertain || form.pending}
                 aria-invalid={form.bind('extensions')['aria-invalid']}
-                aria-describedby={form.bind('extensions')['aria-describedby']}
+                aria-describedby={
+                  form.bind('extensions')['aria-describedby'] ?? 'upload-policy-formats-help'
+                }
                 onBlur={(event) => {
                   if (!event.currentTarget.contains(event.relatedTarget))
                     form.bind('extensions').onBlur();
                 }}
               >
                 <legend className="font-medium">{label('formats')}</legend>
+                {!form.errors.extensions && (
+                  <p id="upload-policy-formats-help" className="text-sm text-muted-foreground">
+                    {text('extensions')}
+                  </p>
+                )}
                 <div className="flex flex-wrap gap-3">
                   {editor.limit.allowedExtensions.map((ext) => (
                     <label key={ext} className="flex items-center gap-2">
@@ -745,11 +752,18 @@ export default function AdminUploadPoliciesPage() {
                   max={editor.limit.maxSizeBytes / mib}
                   step="any"
                   required
+                  aria-required="true"
+                  aria-describedby={[
+                    form.bind('size')['aria-describedby'],
+                    'upload-policy-size-ceiling',
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
                   value={form.values.size}
                   disabled={disabled || needsReset || uncertain || form.pending}
                   onChange={(event) => form.field('size')[1](event.target.value)}
                 />
-                <p className="text-sm text-muted-foreground">
+                <p id="upload-policy-size-ceiling" className="text-sm text-muted-foreground">
                   {label('ceiling')}: {size(editor.limit.maxSizeBytes)}
                 </p>
               </div>

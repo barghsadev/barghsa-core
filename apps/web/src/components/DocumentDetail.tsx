@@ -42,6 +42,7 @@ const transitionState: Record<DocumentAction, BusinessDocument['state']> = {
   quarantine: 'Quarantined',
   remove: 'Removed',
 };
+const reasonRequiredActions = new Set<DocumentAction>(['reject', 'request-changes', 'quarantine']);
 type Transition = TeamAction & {
   target: { id: string; profileId: string; revision: number; state: BusinessDocument['state'] };
 };
@@ -171,7 +172,7 @@ function OwnedDocumentDetail({
   }
   function choose(next: DocumentAction) {
     if (!document) return;
-    if (['reject', 'request-changes', 'quarantine'].includes(next) && !reason.trim()) {
+    if (reasonRequiredActions.has(next) && !reason.trim()) {
       setReasonMissing(true);
       return;
     }
@@ -236,6 +237,7 @@ function OwnedDocumentDetail({
     }
     if (staff && !['Removed', 'Quarantined'].includes(document.state)) actions.push('quarantine');
   }
+  const showReasonHelp = actions.some((item) => reasonRequiredActions.has(item));
   return (
     <section
       className="flex flex-col gap-5 rounded-xl border bg-card p-5"
@@ -391,10 +393,25 @@ function OwnedDocumentDetail({
                 id="document-review-reason"
                 maxLength={1000}
                 value={reason}
-                onChange={(event) => setReason(event.target.value)}
+                onChange={(event) => {
+                  setReason(event.target.value);
+                  if (event.target.value.trim()) setReasonMissing(false);
+                }}
                 aria-invalid={reasonMissing}
-                aria-describedby={reasonMissing ? 'document-review-reason-error' : undefined}
+                aria-required={reasonMissing || undefined}
+                aria-describedby={
+                  reasonMissing
+                    ? 'document-review-reason-help document-review-reason-error'
+                    : showReasonHelp
+                      ? 'document-review-reason-help'
+                      : undefined
+                }
               />
+              {showReasonHelp && (
+                <p id="document-review-reason-help" className="text-sm text-muted-foreground">
+                  {word('reviewReasonHelp')}
+                </p>
+              )}
               {reasonMissing ? (
                 <p id="document-review-reason-error" role="alert">
                   {word('reasonRequired')}

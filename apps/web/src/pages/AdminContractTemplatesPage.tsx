@@ -499,6 +499,7 @@ export default function AdminContractTemplatesPage() {
                         {...editor.bind('name')}
                         id="template-name"
                         required
+                        aria-required="true"
                         maxLength={200}
                         value={draft.name}
                         onChange={(event) => setDraft({ ...draft, name: event.target.value })}
@@ -590,6 +591,7 @@ export default function AdminContractTemplatesPage() {
                     <Button
                       type="button"
                       variant="outline"
+                      aria-invalid={fileError || undefined}
                       aria-describedby={
                         fileError ? 'template-file-help template-file-error' : 'template-file-help'
                       }
