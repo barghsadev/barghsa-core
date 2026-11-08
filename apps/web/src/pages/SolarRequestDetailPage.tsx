@@ -12,6 +12,7 @@ import { announceReadRetry } from '../lib/read-retry-feedback.js';
 import { queryKeys } from '../lib/query-keys.js';
 import { Link, useParams } from '@tanstack/react-router';
 import { tSolar } from '@barghsa/i18n/solar';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { withCsrf } from '../lib/csrf.js';
@@ -399,7 +400,9 @@ function SolarRequestDetail({
       {loading && <LoadingStatus>{copy('loading')}</LoadingStatus>}
       {detailError && (
         <div className="space-y-2">
-          <p role="alert">{copy('notFound')}</p>
+          <p role="alert">
+            {detailError === 'denied' ? loadingText('recordUnavailable', locale) : copy('notFound')}
+          </p>
           {detailError !== 'denied' && (
             <button
               type="button"

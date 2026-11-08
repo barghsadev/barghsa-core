@@ -45,6 +45,7 @@ import {
   type ConsultationInformationCommand,
 } from '../lib/consultation-form.js';
 import { tConsultation } from '@barghsa/i18n/consultation';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
 import {
   parseConsultationOfferReview,
   type ConsultationOfferReview,
@@ -56,7 +57,7 @@ import { withCsrf } from '../lib/csrf.js';
 import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
 import { workflowFeedback } from '@barghsa/i18n/workflow-feedback';
 import { consultationNextAction } from '../lib/consultation-next-action.js';
-import { readWithDeadline } from '../lib/server-query-client.js';
+import { readWithDeadline, ServerQueryError } from '../lib/server-query-client.js';
 
 interface Detail {
   request: {
@@ -145,7 +146,7 @@ export function ConsultationDetailPage() {
   const [detailState, setDetail] = useState<Detail | null>(null);
   const detail = acceptedScope === scope ? detailState : null;
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<'notFound' | 'detailLoadError' | null>(null);
   const schemaGeneration = generation.current;
   const informationForm = useZodForm<ConsultationReasonDraft>(
     async () => {
@@ -215,7 +216,7 @@ export function ConsultationDetailPage() {
         cache: 'no-store',
         signal,
       });
-      if (!response.ok) throw new Error('request');
+      if (!response.ok) throw new ServerQueryError(response.status);
       const value = (await response.json()) as Detail;
       if (
         !value ||
@@ -284,14 +285,14 @@ export function ConsultationDetailPage() {
     const recoveryAtRead = actionPending.current ? null : pendingInformation.current;
     const offerAtRead = actionPending.current ? null : offerRecovery;
     setLoading(true);
-    setError(false);
+    setError(null);
     setDetail(null);
     void detailQuery
       .refetch()
       .then((reply) => {
         if (controller.signal.aborted || capturedGeneration !== generation.current)
           throw new Error('Abandoned consultation read');
-        if (!reply.isSuccess || !reply.data) throw new Error('request');
+        if (!reply.isSuccess || !reply.data) throw reply.error ?? new Error('request');
         return reply.data;
       })
       .then((result) => {
@@ -350,11 +351,15 @@ export function ConsultationDetailPage() {
         setAcceptedScope(scope);
         setDetail(result);
       })
-      .catch(() => {
+      .catch((reason: unknown) => {
         if (!controller.signal.aborted && capturedGeneration === generation.current) {
           setDetail(null);
           setDecisionReview(null);
-          setError(true);
+          setError(
+            reason instanceof ServerQueryError && reason.status === 404
+              ? 'notFound'
+              : 'detailLoadError'
+          );
         }
       })
       .finally(() => {
@@ -415,7 +420,7 @@ export function ConsultationDetailPage() {
           if ([401, 403, 404].includes(response.status)) {
             setDetail(null);
             setDecisionReview(null);
-            setError(true);
+            setError(response.status === 404 ? 'notFound' : 'detailLoadError');
           }
           if (definitiveConsultationRejection(response.status, result)) {
             pendingInformation.current = null;
@@ -609,17 +614,23 @@ export function ConsultationDetailPage() {
         {copy('back')}
       </Link>
       <h1 className="text-3xl font-semibold">{copy('details')}</h1>
-      <Button
-        type="button"
-        variant="outline"
-        disabled={sending || informationForm.formState.isSubmitting || loading}
-        onClick={() => setRevision((value) => value + 1)}
-      >
-        {copy('informationReload')}
-      </Button>
+      {error !== 'notFound' && (
+        <Button
+          type="button"
+          variant="outline"
+          disabled={sending || informationForm.formState.isSubmitting || loading}
+          onClick={() => setRevision((value) => value + 1)}
+        >
+          {copy('informationReload')}
+        </Button>
+      )}
       {time.notice}
       {loading && <LoadingStatus>{copy('loading')}</LoadingStatus>}
-      {error && <p role="alert">{copy('loadError')}</p>}
+      {error && (
+        <p role="alert">
+          {error === 'notFound' ? loadingText('recordUnavailable', locale) : copy(error)}
+        </p>
+      )}
       <CommandFeedback
         kind="error"
         message={offerRecovery ? copy('decisionUnconfirmed') : null}

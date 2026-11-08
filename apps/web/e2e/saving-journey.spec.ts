@@ -1,4 +1,5 @@
 import { tSaving as savingCopy } from '@barghsa/i18n/saving';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { contractText as contractCopy } from '@barghsa/i18n/contracts';
 import { tSavingStaffReview as savingReviewCopy } from '@barghsa/i18n/saving-staff-review';
 import { t as appCopy } from '@barghsa/i18n/app';
@@ -719,12 +720,12 @@ for (const locale of ['en', 'fa'] as const)
       await expect(detail.getByRole('heading', { level: 1 })).toHaveText(
         savingCopy('orderDetail', locale)
       );
-      await expect(detail.getByText(savingCopy('loading', locale), { exact: true })).toBeVisible();
+      await expect(detail.getByText(loadingText('loading', locale), { exact: true })).toBeVisible();
     } finally {
       releaseFirstDetail();
     }
     await expect(
-      detail.getByRole('alert').filter({ hasText: savingCopy('error', locale) })
+      detail.getByRole('alert').filter({ hasText: loadingText('readError', locale) })
     ).toBeVisible();
     await expect(detail.getByText('PRIVATE_OTHER_SAVING_ORDER')).toHaveCount(0);
     expect(detailReads).toBe(1);
@@ -739,7 +740,7 @@ for (const locale of ['en', 'fa'] as const)
         savingCopy('orderDetail', locale)
       );
       await expect(
-        detail.getByRole('alert').filter({ hasText: savingCopy('error', locale) })
+        detail.getByRole('alert').filter({ hasText: loadingText('readError', locale) })
       ).toBeVisible();
       await expect(detail.locator(`a[href="/invoices/${invoiceId}"]`)).toHaveCount(0);
     }

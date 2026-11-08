@@ -334,7 +334,7 @@ for (const locale of ['en', 'fa'] as const)
       page.getByRole('heading', { name: consultationCopy('details', locale), exact: true })
     ).toBeVisible();
     await expect(
-      page.getByText(consultationCopy('loadError', locale), { exact: true })
+      page.getByText(consultationCopy('detailLoadError', locale), { exact: true })
     ).toBeVisible();
     await expect(page.getByText(consultationCopy('noFee', locale))).toHaveCount(0);
     await page.getByRole('button', { name: consultationCopy('informationReload', locale) }).click();

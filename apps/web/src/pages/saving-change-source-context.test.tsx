@@ -221,6 +221,9 @@ it('does not reuse an accepted saving detail after a failed fresh read', async (
   fail = true;
   await act(async () => panel.props!.onChanged());
   expect(mock).toHaveBeenCalledTimes(2);
+  expect(host.querySelector('[role=alert]')?.textContent).toBe(
+    'Could not load this information. Try again.'
+  );
   expect(host.textContent).not.toContain('Private change workspace');
   expect(host.textContent).not.toContain('Old street');
   fail = false;
@@ -229,4 +232,39 @@ it('does not reuse an accepted saving detail after a failed fresh read', async (
   expect(mock).toHaveBeenCalledTimes(3);
   expect(host.textContent).toContain('Private change workspace');
   expect(host.textContent).toContain('Old street');
+});
+
+it('withholds a missing saving order and its commands after a formerly valid read', async () => {
+  const mock = vi.fn(async () => Response.json(detail()));
+  await render(mock);
+  mock.mockResolvedValueOnce(Response.json({ message: 'Private API data' }, { status: 404 }));
+  await act(async () => panel.props!.onChanged());
+  expect(host.querySelector('[role=alert]')?.textContent).toBe('Record unavailable.');
+  expect(host.textContent).not.toContain('Private API data');
+  expect(host.textContent).not.toContain('Private change workspace');
+  expect(host.textContent).not.toContain('Try again');
+  expect(mock).toHaveBeenCalledTimes(2);
+});
+
+it('shows an accepted order with unavailable financial records and no history yet', async () => {
+  const accepted = {
+    ...detail(),
+    can_edit: false,
+    invoice_id: null,
+    invoice_state: null,
+    contract_id: null,
+    contract_state: null,
+    revisions: undefined,
+    addressAmendments: undefined,
+    hardwareAmendments: undefined,
+    hardwareUpgrades: undefined,
+  };
+  await render(async () => Response.json(accepted));
+  expect(host.querySelector('h1')?.textContent).toBe('Saving order');
+  expect(host.textContent).toContain('Old street');
+  expect(
+    [...host.querySelectorAll('p')].filter((p) => p.textContent === 'Unavailable')
+  ).toHaveLength(2);
+  expect(host.textContent).not.toContain('View invoice');
+  expect(host.textContent).not.toContain('View contract');
 });

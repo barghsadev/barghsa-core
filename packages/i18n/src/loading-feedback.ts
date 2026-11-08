@@ -3,12 +3,14 @@ const messages = {
     loading: 'Loading page',
     loadingAdmin: 'Loading admin dashboard',
     readError: 'Could not load this information. Try again.',
+    recordUnavailable: 'Record unavailable.',
     connectionRetry: 'Connection interrupted. Retrying the request…',
   },
   fa: {
     loading: 'در حال بارگذاری صفحه',
     loadingAdmin: 'در حال بارگذاری پنل مدیریت',
     readError: 'بارگذاری اطلاعات ناموفق بود. دوباره تلاش کنید.',
+    recordUnavailable: 'این مورد در دسترس نیست.',
     connectionRetry: 'ارتباط قطع شد. درخواست دوباره ارسال می‌شود…',
   },
 } as const;

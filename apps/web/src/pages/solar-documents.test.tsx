@@ -296,6 +296,7 @@ it('withdraws solar private detail after document read authority is lost', async
   );
   const view = await scopedSolar(fetcher);
   try {
+    expect(view.host.textContent).toContain('Record unavailable.');
     expect(view.host.textContent).not.toContain('Private site');
     expect(view.host.textContent).not.toContain('Accepted terms');
     expect(view.host.querySelector('input[type=checkbox]')).toBeNull();

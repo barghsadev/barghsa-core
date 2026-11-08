@@ -4,6 +4,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { crmShell } from './crm-shell-fixture';
 import { t } from '@barghsa/i18n/app';
 import { tSaving } from '@barghsa/i18n/saving';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
 
 const id = '81111111-1111-4111-8111-111111111111';
 const profileId = '82222222-2222-4222-8222-222222222222';
@@ -247,7 +248,7 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await page.goto(`/savings/orders/${id}`);
     await expect(
-      page.getByRole('alert').filter({ hasText: tSaving('error', locale) })
+      page.getByRole('alert').filter({ hasText: loadingText('readError', locale) })
     ).toBeVisible();
     failed = false;
     await page.getByRole('button', { name: tSaving('retry', locale), exact: true }).click();
@@ -257,7 +258,7 @@ for (const locale of ['en', 'fa'] as const) {
     denied = true;
     await page.reload();
     await expect(
-      page.getByRole('alert').filter({ hasText: tSaving('error', locale) })
+      page.getByRole('alert').filter({ hasText: loadingText('readError', locale) })
     ).toBeVisible();
     await expect(
       page.getByRole('region', { name: tSaving('fulfillment', locale), exact: true })

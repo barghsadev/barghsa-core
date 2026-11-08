@@ -866,7 +866,9 @@ it.each(['denied-write', 'malformed-read'] as const)(
       expect(view.host.querySelector('form')).toBeNull();
       expect(view.host.textContent).not.toContain('Private requested detail');
       expect(view.host.textContent).not.toContain(browseConsultation.title.en);
-      expect(view.host.textContent).toContain(copy('loadError'));
+      expect(view.host.textContent).toContain(
+        mode === 'denied-write' ? 'Record unavailable.' : copy('detailLoadError')
+      );
     } finally {
       await view.close();
     }
@@ -962,7 +964,7 @@ it.each(['fee', 'adjustment', 'refund'] as const)(
     try {
       expect(view.host.querySelector('form')).toBeNull();
       expect(view.host.textContent).not.toContain('Private requested detail');
-      expect(view.host.textContent).toContain(copy('loadError'));
+      expect(view.host.textContent).toContain(copy('detailLoadError'));
     } finally {
       await view.close();
     }
@@ -984,7 +986,7 @@ it('recovers locally from invalid consultation display and authority fields', as
       expect(reads).toBe(read);
       expect(view.host.querySelector('h1')).not.toBeNull();
       expect(view.host.querySelector('form')).toBeNull();
-      expect(view.host.textContent).toContain(copy('loadError'));
+      expect(view.host.textContent).toContain(copy('detailLoadError'));
       await view.click(copy('informationReload'));
     }
     expect(reads).toBe(4);
@@ -1060,7 +1062,23 @@ it('cancels an old consultation read after a profile revision without replacing 
     expect(view.host.querySelector('form')).toBeNull();
     expect(view.host.textContent).not.toContain('Private requested detail');
     expect(view.host.textContent).not.toContain('Old private draft');
-    expect(view.host.textContent).toContain(copy('loadError'));
+    expect(view.host.textContent).toContain(copy('detailLoadError'));
+  } finally {
+    await view.close();
+  }
+});
+
+it('keeps a missing consultation on a safe terminal view', async () => {
+  const fetcher = vi.fn(async () =>
+    Response.json({ message: 'Private API data' }, { status: 404 })
+  );
+  const view = await mount(ConsultationDetailPage, fetcher);
+  try {
+    expect(view.host.querySelector('[role=alert]')?.textContent).toBe('Record unavailable.');
+    expect(view.host.textContent).not.toContain('Private API data');
+    expect(view.host.textContent).not.toContain(copy('informationReload'));
+    expect(view.host.querySelector('form')).toBeNull();
+    expect(fetcher).toHaveBeenCalledTimes(1);
   } finally {
     await view.close();
   }

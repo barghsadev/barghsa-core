@@ -3,9 +3,11 @@ import { Link, useParams } from '@tanstack/react-router';
 import { useEffect, useId, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useServerDetailQuery } from '../hooks/useServerQuery.js';
+import { ServerQueryError } from '../lib/server-query-client.js';
 import { queryKeys } from '../lib/query-keys.js';
 import { LoadingStatus, Button, Card, CardContent } from '@barghsa/ui';
 import { tSaving } from '@barghsa/i18n/saving';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
@@ -160,7 +162,7 @@ export function SavingOrderDetailPage() {
   const [loadedDetail, setDetail] = useState<{ scope: string; value: Detail } | null>(null);
   const currentDetail = useRef(loadedDetail);
   currentDetail.current = loadedDetail;
-  const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [state, setState] = useState<'loading' | 'ready' | 'error' | 'notFound'>('loading');
   const [revision, setRevision] = useState(0);
   const detail =
     loadedDetail?.scope === scope && loadedDetail.value.id === orderId ? loadedDetail.value : null;
@@ -190,7 +192,7 @@ export function SavingOrderDetailPage() {
         credentials: 'include',
         signal,
       });
-      if (!response.ok) throw new Error('order');
+      if (!response.ok) throw new ServerQueryError(response.status);
       const result = (await response.json()) as Detail | null;
       if (!validDetail(result, orderId)) throw new Error('order');
       return result;
@@ -205,16 +207,18 @@ export function SavingOrderDetailPage() {
       .refetch()
       .then((reply) => {
         if (controller.signal.aborted) return;
-        if (!reply.isSuccess || !reply.data) throw new Error('order');
+        if (!reply.isSuccess || !reply.data) throw reply.error ?? new Error('order');
         if (!controller.signal.aborted) {
           setDetail({ scope, value: reply.data });
           setState('ready');
         }
       })
-      .catch(() => {
+      .catch((reason: unknown) => {
         if (!controller.signal.aborted) {
           setDetail(null);
-          setState('error');
+          setState(
+            reason instanceof ServerQueryError && reason.status === 404 ? 'notFound' : 'error'
+          );
         }
       });
     return () => {
@@ -242,10 +246,11 @@ export function SavingOrderDetailPage() {
         <h1 className="text-3xl font-semibold">{copy('orderDetail')}</h1>
       </header>
       {time.notice}
-      {state === 'loading' && <LoadingStatus>{copy('loading')}</LoadingStatus>}
+      {state === 'loading' && <LoadingStatus>{loadingText('loading', locale)}</LoadingStatus>}
+      {state === 'notFound' && <p role="alert">{loadingText('recordUnavailable', locale)}</p>}
       {state === 'error' && (
         <div className="space-y-2">
-          <p role="alert">{copy('error')}</p>
+          <p role="alert">{loadingText('readError', locale)}</p>
           <Button variant="outline" onClick={refresh}>
             {copy('retry')}
           </Button>

@@ -3,6 +3,7 @@ import AxeBuilder from '@axe-core/playwright';
 import type { Locator, Page } from '@playwright/test';
 import { t } from '@barghsa/i18n/app';
 import { tSaving } from '@barghsa/i18n/saving';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { tSavingStaffReview } from '@barghsa/i18n/saving-staff-review';
 import { tSavingChange } from '@barghsa/i18n/saving-change';
 import { test, expect } from './coverage-fixture';
@@ -242,7 +243,9 @@ for (const [locale, theme] of [
     state.customerQuoteMode = locale === 'en' ? 'denied' : 'missing';
     await preview().click();
     await expect(panel).toHaveCount(0);
-    await expect(page.getByRole('main').getByRole('alert')).toContainText(copy('error'));
+    await expect(page.getByRole('main').getByRole('alert')).toContainText(
+      loadingText('readError', locale)
+    );
     await expect(page.locator('#saving-change-hardware,#saving-change-address')).toHaveCount(0);
     await expect(page.getByTestId('saving-change-quote')).toHaveCount(0);
     await expect(

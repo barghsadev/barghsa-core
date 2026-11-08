@@ -32,6 +32,8 @@ Admin agent previews allow the same 300 seconds. After a timeout or an in-progre
 
 Consultation intake and replies allow up to 15 seconds for a response, including its body. A timeout leaves the outcome unconfirmed. Intake allows an explicit retry of the original product and submission key. A reply remains locked until a fresh request history confirms the captured information. A late acknowledgement cannot substitute for that history check.
 
+Saving, solar and consultation detail pages keep the page heading and return link when a record is unavailable. The API uses the same missing-record response for nonexistent records and records outside the current profile's authority. A temporary read failure offers a fresh read of the selected record. A valid saving order can appear before its invoice, contract or history exists.
+
 Consultation offer preview and decision responses have the same deadline. An unconfirmed decision closes its review and refreshes the saved request. While the same offer remains pending, only the same decision can be reviewed again. Each new review requires fresh confirmation. Open invoice payment only after a receipt confirms the reviewed request, offer and invoice.
 
 In electricity and saving order discussions, an explicit retry after a transport failure announces the connection retry. Keep the failed page cursor, existing comments and unsent draft. HTTP errors and invalid response bodies retain inline recovery.
