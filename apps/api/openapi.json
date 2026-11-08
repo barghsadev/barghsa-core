@@ -35160,6 +35160,51 @@
         ]
       }
     },
+    "/api/route-errors": {
+      "post": {
+        "operationId": "RouteErrorsController_report",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "enum": [
+                      "CHUNK_LOAD_FAILED",
+                      "ROUTE_RENDER_FAILED"
+                    ],
+                    "type": "string"
+                  },
+                  "reference": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "code",
+                  "reference"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Sentry acknowledged the matching route error event."
+          },
+          "503": {
+            "description": "No matching Sentry receipt is available."
+          }
+        },
+        "tags": [
+          "RouteErrors"
+        ]
+      }
+    },
     "/api/saving/orders": {
       "get": {
         "operationId": "SavingOrderController_list",

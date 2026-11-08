@@ -4,10 +4,13 @@ import { routeTree } from './routeTree.gen.js';
 import { RouteEmergencyReload } from './components/RouteFallbackLandmark.js';
 
 const loadRecovery = () =>
-  import('./components/RouteErrorBoundary.js').catch(() => ({
-    default: RouteEmergencyReload,
-    RouteNotFound: RouteEmergencyReload,
-  }));
+  import('./components/RouteErrorBoundary.js').catch(() => {
+    void import('./hooks/useRouteErrorReport.js').then(
+      (reporting) => reporting.default(),
+      () => {}
+    );
+    return { default: RouteEmergencyReload, RouteNotFound: RouteEmergencyReload };
+  });
 
 // The router instance
 export const router = createRouter({

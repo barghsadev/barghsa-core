@@ -1,21 +1,22 @@
 import { type ErrorComponentProps, Link, useRouter } from '@tanstack/react-router';
 import { ErrorState } from '@barghsa/ui';
-import { useState } from 'react';
 import { feedbackText } from '@barghsa/i18n/feedback';
 import { useLocale } from '../hooks/useLocale.js';
+import { useRouteErrorReport } from '../hooks/useRouteErrorReport.js';
 import { RouteFallbackLandmark } from './RouteFallbackLandmark.js';
 
 /** Localized route recovery without exposing internal error details. */
 export function RouteErrorBoundary({ error, reset }: ErrorComponentProps) {
   const locale = useLocale();
   const router = useRouter();
-  const [reference] = useState(() => crypto.randomUUID());
   const isChunkLoadError =
     error instanceof TypeError &&
     (error.message.includes('Failed to fetch') ||
       error.message === 'Importing a module script failed.' ||
       error.message.includes('loading') ||
       error.message.includes('ChunkLoadError'));
+  const code = isChunkLoadError ? 'CHUNK_LOAD_FAILED' : 'ROUTE_RENDER_FAILED';
+  const reference = useRouteErrorReport(code);
   return (
     <RouteFallbackLandmark>
       <ErrorState
@@ -31,7 +32,7 @@ export function RouteErrorBoundary({ error, reset }: ErrorComponentProps) {
         }}
         details={{
           label: feedbackText('details', locale),
-          code: isChunkLoadError ? 'CHUNK_LOAD_FAILED' : 'ROUTE_RENDER_FAILED',
+          code,
           referenceLabel: feedbackText('reference', locale),
           reference,
         }}

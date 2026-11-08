@@ -52,6 +52,10 @@ Verification submission time comes from the immutable onboarding audit entry or 
 
 Keep loading, empty, failed and denied states distinct. A dependency failure needs an explanation, a responsible team and a usable retry or support route. Route error details contain only a product-defined code and an opaque support reference. Do not display or transmit exception messages, stacks, form values, profile identifiers or provider responses as browser diagnostics. Reporting failure must not prevent recovery.
 
+The main error boundary sends one same-origin report per displayed failure. If the detailed recovery UI fails to load, the emergency path loads the reporter separately. Signed-in requests carry the session CSRF token. The API applies the origin check and a 1 KiB body limit before forwarding the fixed code and reference to Sentry. The receiver has three seconds to acknowledge the matching event ID. Retry and reload stay usable if the reporting module or endpoint is unavailable.
+
+Set `ROUTE_ERROR_SENTRY_DSN` in the protected API runtime configuration. Use the staging project's HTTPS DSN for staging. Verify a controlled staging route failure by finding its matching reference in Sentry and recording the provider event ID with the candidate commit. Use the existing support reference and avoid copying any unrelated event data.
+
 For account settings, use the query's deadline error to end visible loading even when the request owner discards updates from the aborted transport. An explicit retry renews only the failed settings read. Companion sections keep their confirmed data, and writes in the failed section stay disabled until a fresh read succeeds.
 
 Username, contact and Telegram linking commands wait up to 15 seconds for an acknowledgement, including the response body. An unconfirmed command requires a fresh account or link-status check before further writes. No code or command is resent automatically.

@@ -12,6 +12,7 @@ import { RateLimitModule } from './rate-limit/index.js';
 import { StorageModule } from './storage/index.js';
 import { UploadModule } from './upload/index.js';
 import { CspReportModule } from './csp-report/csp-report.module.js';
+import { RouteErrorsController } from './route-errors/route-errors.controller.js';
 import { MaintenanceModule } from './maintenance/maintenance.module.js';
 
 import { AuthModule } from './auth/index.js';
@@ -80,7 +81,7 @@ import { TelegramModule } from './telegram/telegram.module.js';
     JobsModule,
     TelegramModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, RouteErrorsController],
   providers: [CorrelationIdProvider, ShutdownService],
 })
 export class AppModule implements NestModule {

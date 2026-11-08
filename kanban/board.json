@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T08:38:06+00:00",
-  "source_commit": "7fa5c940b276cfa00b774b01c325699e4ff3d3dd",
+  "updated": "2026-11-08T08:58:03+00:00",
+  "source_commit": "0a27977fbb4129558458fbffbbbd11bcf20c0271",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -24206,7 +24206,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -27344,7 +27344,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -28497,7 +28497,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -38611,7 +38611,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/tos-http.integration.test.ts",
@@ -39967,7 +39967,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/tos-http.integration.test.ts",
@@ -41331,7 +41331,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/tos-http.integration.test.ts",
@@ -42694,7 +42694,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/crm/crm-list-http.integration.test.ts",
@@ -43461,7 +43461,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/crm/crm-legal-documents.controller.ts",
@@ -44300,7 +44300,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -51472,7 +51472,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
@@ -53377,7 +53377,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -55259,7 +55259,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/crm/crm-dashboard.integration.test.ts",
@@ -62385,7 +62385,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -63783,7 +63783,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
@@ -64444,7 +64444,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
@@ -65104,7 +65104,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
@@ -65763,7 +65763,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
@@ -75853,7 +75853,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -76262,7 +76262,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -76693,7 +76693,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -89372,7 +89372,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -95821,11 +95821,11 @@
           "source_evidence": [
             {
               "path": ".env.example",
-              "sha256": "c7b2aad510314385145040ae03e35eccf3fd63f3fbbc442efff640928c88190e"
+              "sha256": "596f78ae3d2a24f7834fcbb46e315011011ccc47b087e25b58e14933e9e0b239"
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/gift-code-http.integration.test.ts",
@@ -104212,7 +104212,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/scripts/telegram-test-fetch.cjs",
@@ -104380,7 +104380,7 @@
             },
             {
               "path": "apps/api/src/app.module.ts",
-              "sha256": "01c6c94b77e86f89e0f02215c75e5a4a2c6c456b6d170681a19f1ab6cc5e17a5"
+              "sha256": "d15b1829ecfe92ff7a6f3e86c3b6cad6d15703297a9fe122751f870b56498d76"
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
@@ -106871,7 +106871,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/gift-code-http.integration.test.ts",
@@ -124969,7 +124969,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -125961,7 +125961,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -126953,7 +126953,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -127945,7 +127945,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -128937,7 +128937,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -129929,7 +129929,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -131005,7 +131005,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -132125,7 +132125,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -133201,7 +133201,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -134321,7 +134321,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -142941,7 +142941,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/finance/financial-submission-actor.ts",
@@ -182253,7 +182253,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -253158,7 +253158,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -254296,7 +254296,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -255430,7 +255430,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -256563,7 +256563,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -257697,7 +257697,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -258831,7 +258831,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -259970,7 +259970,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -261107,7 +261107,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -262242,7 +262242,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -263380,7 +263380,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -264520,7 +264520,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -265655,7 +265655,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -266789,7 +266789,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -267924,7 +267924,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -269059,7 +269059,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -270195,7 +270195,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -290211,7 +290211,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -297754,7 +297754,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -318293,7 +318293,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -348922,7 +348922,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -370171,7 +370171,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
@@ -371453,7 +371453,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
@@ -372735,7 +372735,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
@@ -374017,7 +374017,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
@@ -375300,7 +375300,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
@@ -397596,7 +397596,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -398169,7 +398169,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -398742,7 +398742,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -399316,7 +399316,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -399893,7 +399893,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -400466,7 +400466,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -401040,7 +401040,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -401615,7 +401615,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -402188,7 +402188,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -402761,7 +402761,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -403340,7 +403340,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -404686,7 +404686,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -406033,7 +406033,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -407379,7 +407379,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -408725,7 +408725,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -410072,7 +410072,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -411420,7 +411420,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -412764,7 +412764,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -414071,7 +414071,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -415416,7 +415416,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -416757,7 +416757,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -418057,7 +418057,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -419357,7 +419357,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -421450,7 +421450,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/wallet/staff-wallet-balance-http.integration.test.ts",
@@ -436474,7 +436474,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
@@ -460391,7 +460391,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/scripts/telegram-test-fetch.cjs",
@@ -460559,7 +460559,7 @@
             },
             {
               "path": "apps/api/src/app.module.ts",
-              "sha256": "01c6c94b77e86f89e0f02215c75e5a4a2c6c456b6d170681a19f1ab6cc5e17a5"
+              "sha256": "d15b1829ecfe92ff7a6f3e86c3b6cad6d15703297a9fe122751f870b56498d76"
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9c56b687351aae97ef34a3a5fc2610f17d9e64bbe9601e6337c2ed26edf3cf36"
+              "sha256": "e27413cc6f8bf17f90e4a09ac869e6c7b53290057adc807ec228ffa240840c3e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -498841,7 +498841,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -499385,7 +499385,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -499929,7 +499929,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -500473,7 +500473,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -501017,7 +501017,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -501561,7 +501561,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -502105,7 +502105,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -502649,7 +502649,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -503193,7 +503193,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -503737,7 +503737,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -504281,7 +504281,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -504825,7 +504825,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -505369,7 +505369,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -505913,7 +505913,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -508177,7 +508177,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
+              "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
             },
             {
               "path": "apps/web/src/components/RouteFallbackLandmark.tsx",
@@ -508341,7 +508341,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
+              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
@@ -512076,7 +512076,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
+              "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
             },
             {
               "path": "apps/web/src/components/RouteFallbackLandmark.tsx",
@@ -512372,7 +512372,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
+              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
             },
             {
               "path": "apps/web/src/routes/login.tsx",
@@ -515089,7 +515089,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
+              "sha256": "ab6d9df3611e658b73445618dabaebf8b8d8ac3337f5319e0cc884feec07623c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -515149,7 +515149,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
+              "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
             },
             {
               "path": "apps/web/src/components/RouteFallbackLandmark.tsx",
@@ -515205,7 +515205,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
+              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -516395,7 +516395,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
+              "sha256": "ab6d9df3611e658b73445618dabaebf8b8d8ac3337f5319e0cc884feec07623c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -516455,7 +516455,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
+              "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
             },
             {
               "path": "apps/web/src/components/RouteFallbackLandmark.tsx",
@@ -516511,7 +516511,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
+              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -517561,7 +517561,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
+              "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9c56b687351aae97ef34a3a5fc2610f17d9e64bbe9601e6337c2ed26edf3cf36"
+              "sha256": "e27413cc6f8bf17f90e4a09ac869e6c7b53290057adc807ec228ffa240840c3e"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -518849,7 +518849,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
+              "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
             },
             {
               "path": "apps/web/src/components/RouteFallbackLandmark.tsx",
@@ -519029,7 +519029,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
+              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9c56b687351aae97ef34a3a5fc2610f17d9e64bbe9601e6337c2ed26edf3cf36"
+              "sha256": "e27413cc6f8bf17f90e4a09ac869e6c7b53290057adc807ec228ffa240840c3e"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -523284,7 +523284,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -524192,7 +524192,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -525100,7 +525100,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -526008,7 +526008,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -526916,7 +526916,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -527824,7 +527824,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -528732,7 +528732,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -529640,7 +529640,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -530548,7 +530548,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -531456,7 +531456,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -532364,7 +532364,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -533272,7 +533272,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -534180,7 +534180,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -535088,7 +535088,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -535996,7 +535996,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -536904,7 +536904,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -537812,7 +537812,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -538720,7 +538720,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -539628,7 +539628,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -540536,7 +540536,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -566504,7 +566504,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -566540,7 +566540,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
+              "sha256": "ab6d9df3611e658b73445618dabaebf8b8d8ac3337f5319e0cc884feec07623c"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -566696,7 +566696,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
+              "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -567480,7 +567480,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
+              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -567520,7 +567520,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9c56b687351aae97ef34a3a5fc2610f17d9e64bbe9601e6337c2ed26edf3cf36"
+              "sha256": "e27413cc6f8bf17f90e4a09ac869e6c7b53290057adc807ec228ffa240840c3e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568399,7 +568399,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -568435,7 +568435,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
+              "sha256": "ab6d9df3611e658b73445618dabaebf8b8d8ac3337f5319e0cc884feec07623c"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -568591,7 +568591,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
+              "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -569375,7 +569375,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
+              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -569415,7 +569415,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9c56b687351aae97ef34a3a5fc2610f17d9e64bbe9601e6337c2ed26edf3cf36"
+              "sha256": "e27413cc6f8bf17f90e4a09ac869e6c7b53290057adc807ec228ffa240840c3e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570359,7 +570359,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -570395,7 +570395,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
+              "sha256": "ab6d9df3611e658b73445618dabaebf8b8d8ac3337f5319e0cc884feec07623c"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -570551,7 +570551,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
+              "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -571335,7 +571335,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
+              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -571375,7 +571375,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9c56b687351aae97ef34a3a5fc2610f17d9e64bbe9601e6337c2ed26edf3cf36"
+              "sha256": "e27413cc6f8bf17f90e4a09ac869e6c7b53290057adc807ec228ffa240840c3e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -572254,7 +572254,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -572290,7 +572290,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
+              "sha256": "ab6d9df3611e658b73445618dabaebf8b8d8ac3337f5319e0cc884feec07623c"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -572446,7 +572446,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
+              "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -573230,7 +573230,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
+              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -573270,7 +573270,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9c56b687351aae97ef34a3a5fc2610f17d9e64bbe9601e6337c2ed26edf3cf36"
+              "sha256": "e27413cc6f8bf17f90e4a09ac869e6c7b53290057adc807ec228ffa240840c3e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -574149,7 +574149,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -574185,7 +574185,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
+              "sha256": "ab6d9df3611e658b73445618dabaebf8b8d8ac3337f5319e0cc884feec07623c"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -574341,7 +574341,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
+              "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -575125,7 +575125,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
+              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -575165,7 +575165,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9c56b687351aae97ef34a3a5fc2610f17d9e64bbe9601e6337c2ed26edf3cf36"
+              "sha256": "e27413cc6f8bf17f90e4a09ac869e6c7b53290057adc807ec228ffa240840c3e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -576044,7 +576044,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -576080,7 +576080,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
+              "sha256": "ab6d9df3611e658b73445618dabaebf8b8d8ac3337f5319e0cc884feec07623c"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -576236,7 +576236,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
+              "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -577020,7 +577020,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
+              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -577060,7 +577060,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9c56b687351aae97ef34a3a5fc2610f17d9e64bbe9601e6337c2ed26edf3cf36"
+              "sha256": "e27413cc6f8bf17f90e4a09ac869e6c7b53290057adc807ec228ffa240840c3e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577939,7 +577939,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -577975,7 +577975,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
+              "sha256": "ab6d9df3611e658b73445618dabaebf8b8d8ac3337f5319e0cc884feec07623c"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -578131,7 +578131,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
+              "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -578915,7 +578915,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
+              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -578955,7 +578955,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9c56b687351aae97ef34a3a5fc2610f17d9e64bbe9601e6337c2ed26edf3cf36"
+              "sha256": "e27413cc6f8bf17f90e4a09ac869e6c7b53290057adc807ec228ffa240840c3e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -579834,7 +579834,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -579870,7 +579870,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
+              "sha256": "ab6d9df3611e658b73445618dabaebf8b8d8ac3337f5319e0cc884feec07623c"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -580026,7 +580026,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
+              "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -580810,7 +580810,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
+              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -580850,7 +580850,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9c56b687351aae97ef34a3a5fc2610f17d9e64bbe9601e6337c2ed26edf3cf36"
+              "sha256": "e27413cc6f8bf17f90e4a09ac869e6c7b53290057adc807ec228ffa240840c3e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581729,7 +581729,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -581765,7 +581765,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
+              "sha256": "ab6d9df3611e658b73445618dabaebf8b8d8ac3337f5319e0cc884feec07623c"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -581921,7 +581921,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
+              "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -582705,7 +582705,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
+              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -582745,7 +582745,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9c56b687351aae97ef34a3a5fc2610f17d9e64bbe9601e6337c2ed26edf3cf36"
+              "sha256": "e27413cc6f8bf17f90e4a09ac869e6c7b53290057adc807ec228ffa240840c3e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -583624,7 +583624,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -583660,7 +583660,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
+              "sha256": "ab6d9df3611e658b73445618dabaebf8b8d8ac3337f5319e0cc884feec07623c"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -583816,7 +583816,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
+              "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -584600,7 +584600,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
+              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -584640,7 +584640,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9c56b687351aae97ef34a3a5fc2610f17d9e64bbe9601e6337c2ed26edf3cf36"
+              "sha256": "e27413cc6f8bf17f90e4a09ac869e6c7b53290057adc807ec228ffa240840c3e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -585519,7 +585519,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -585555,7 +585555,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
+              "sha256": "ab6d9df3611e658b73445618dabaebf8b8d8ac3337f5319e0cc884feec07623c"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -585711,7 +585711,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
+              "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -586495,7 +586495,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
+              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -586535,7 +586535,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9c56b687351aae97ef34a3a5fc2610f17d9e64bbe9601e6337c2ed26edf3cf36"
+              "sha256": "e27413cc6f8bf17f90e4a09ac869e6c7b53290057adc807ec228ffa240840c3e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -587414,7 +587414,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -587450,7 +587450,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
+              "sha256": "ab6d9df3611e658b73445618dabaebf8b8d8ac3337f5319e0cc884feec07623c"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -587606,7 +587606,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
+              "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -588390,7 +588390,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
+              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -588430,7 +588430,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9c56b687351aae97ef34a3a5fc2610f17d9e64bbe9601e6337c2ed26edf3cf36"
+              "sha256": "e27413cc6f8bf17f90e4a09ac869e6c7b53290057adc807ec228ffa240840c3e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589309,7 +589309,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -589345,7 +589345,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
+              "sha256": "ab6d9df3611e658b73445618dabaebf8b8d8ac3337f5319e0cc884feec07623c"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -589501,7 +589501,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
+              "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -590285,7 +590285,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
+              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -590325,7 +590325,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9c56b687351aae97ef34a3a5fc2610f17d9e64bbe9601e6337c2ed26edf3cf36"
+              "sha256": "e27413cc6f8bf17f90e4a09ac869e6c7b53290057adc807ec228ffa240840c3e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591589,7 +591589,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9c56b687351aae97ef34a3a5fc2610f17d9e64bbe9601e6337c2ed26edf3cf36"
+              "sha256": "e27413cc6f8bf17f90e4a09ac869e6c7b53290057adc807ec228ffa240840c3e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591944,7 +591944,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -591980,7 +591980,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
+              "sha256": "ab6d9df3611e658b73445618dabaebf8b8d8ac3337f5319e0cc884feec07623c"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -592136,7 +592136,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
+              "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -592920,7 +592920,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
+              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -592960,7 +592960,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9c56b687351aae97ef34a3a5fc2610f17d9e64bbe9601e6337c2ed26edf3cf36"
+              "sha256": "e27413cc6f8bf17f90e4a09ac869e6c7b53290057adc807ec228ffa240840c3e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593839,7 +593839,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -593875,7 +593875,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
+              "sha256": "ab6d9df3611e658b73445618dabaebf8b8d8ac3337f5319e0cc884feec07623c"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -594031,7 +594031,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
+              "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -594815,7 +594815,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
+              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -594855,7 +594855,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9c56b687351aae97ef34a3a5fc2610f17d9e64bbe9601e6337c2ed26edf3cf36"
+              "sha256": "e27413cc6f8bf17f90e4a09ac869e6c7b53290057adc807ec228ffa240840c3e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595736,7 +595736,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The localized route fallback displays an opaque reference and reload or support actions. It currently sends no report. Implement safe delivery of the route code and reference to the specified Sentry integration or owner-approved receiver and verify a live staging receipt. Preserve exclusion of private exception and profile data."
+        "The route reporter and exact Sentry receipt validation passed the local production browser, HTTP and synthetic HTTPS checks. Protected staging runtime has no Sentry setting. Configure the staging project's ROUTE_ERROR_SENTRY_DSN, then capture a controlled candidate error and verify its matching event in the actual project. Any alternate receiver needs owner approval."
       ],
       "owner": null,
       "depends_on": [],
@@ -595747,7 +595747,8 @@
           "release-0.5-notification-recovery-journey",
           "release-0.5-route-fallback-and-announcement",
           "release-0.5-stale-route-recovery",
-          "release-0.5-conditional-form-closure"
+          "release-0.5-conditional-form-closure",
+          "release-0.5-route-error-delivery"
         ],
         "current_acceptance": null
       }
@@ -608438,7 +608439,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -609265,7 +609266,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -610092,7 +610093,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -610919,7 +610920,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -611746,7 +611747,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -624555,7 +624556,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -625382,7 +625383,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -626209,7 +626210,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -627036,7 +627037,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -627863,7 +627864,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -628690,7 +628691,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -629517,7 +629518,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -630344,7 +630345,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -631171,7 +631172,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -631998,7 +631999,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -632825,7 +632826,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -633652,7 +633653,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -658703,7 +658704,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -659385,7 +659386,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -660069,7 +660070,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -660751,7 +660752,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -661432,7 +661433,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -662612,7 +662613,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -663294,7 +663295,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -663977,7 +663978,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -664658,7 +664659,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -665338,7 +665339,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -666018,7 +666019,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -666698,7 +666699,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -701534,7 +701535,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -703883,7 +703884,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/package.json",
@@ -704375,7 +704376,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -705060,7 +705061,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -709097,7 +709098,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -713558,7 +713559,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -717569,7 +717570,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -721471,7 +721472,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "71f98254f8bbf7264f3df3690331e9dfda2d345f461ab528a55bd7a36a4fd55a"
+              "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -725359,7 +725360,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Form semantics are accepted. Complete scoped command acknowledgements, bespoke route states and live accessibility enforcement and route diagnostics before accepting full UI adoption."
+        "Form semantics are accepted. Route reporting passes local verification and still needs a configured live staging receiver and matching event. Complete scoped command acknowledgements, bespoke route states and GitHub accessibility enforcement."
       ],
       "owner": null,
       "depends_on": [],
@@ -725479,7 +725480,8 @@
           "release-0.5-preference-write-recovery",
           "release-0.5-electricity-staff-acknowledgement",
           "release-0.5-solar-postal-required",
-          "release-0.5-conditional-form-closure"
+          "release-0.5-conditional-form-closure",
+          "release-0.5-route-error-delivery"
         ]
       }
     },
@@ -725951,7 +725953,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
+              "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
             },
             {
               "path": "apps/web/src/components/RouteFallbackLandmark.tsx",
@@ -726671,7 +726673,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
+              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -727120,6 +727122,22 @@
             {
               "path": "apps/web/src/routes/_app/settings/timezone.tsx",
               "sha256": "32f73dc2a6fa3c73b9acf99605e0c1b64794bc179c236895632a7a5f56381f68"
+            },
+            {
+              "path": "apps/api/src/app.factory.ts",
+              "sha256": "d8c9b3dd8908d62c7ab19f4351c01cddc3eae647fdd51b76087701caaa51bf7d"
+            },
+            {
+              "path": "apps/api/src/app.module.ts",
+              "sha256": "d15b1829ecfe92ff7a6f3e86c3b6cad6d15703297a9fe122751f870b56498d76"
+            },
+            {
+              "path": "apps/api/src/route-errors/route-errors.controller.ts",
+              "sha256": "0e16a8a12e48adc346e7be9829475247b4e87aa14c0ad99676edbe0c07a66093"
+            },
+            {
+              "path": "apps/web/src/hooks/useRouteErrorReport.ts",
+              "sha256": "b64d5f6932d0a07a373d8cde4ef3a6fb455ce748b8de277ed7cf2fcd0ec40fb0"
             }
           ],
           "checks": [
@@ -727184,7 +727202,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Renewed staff electricity and shared confirmation dialog performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Renewed solar postal form performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-postal-required/proof.json",
-            "Renewed conditional form accessibility and performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-form-closure/proof.json"
+            "Renewed conditional form accessibility and performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-form-closure/proof.json",
+            "Renewed on-demand route reporting coverage, route budgets and cold auth evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-error-delivery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -797346,6 +797365,122 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-form-closure/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-form-closure/reviewed.patch",
       "release_disposition": "Accepted programmatic form labels, linked errors and required field semantics. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-route-error-delivery": {
+      "batch": "release-0.5-route-error-delivery",
+      "base_commit": "0a27977fbb4129558458fbffbbbd11bcf20c0271",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.09",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.09",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".env.example",
+          "sha256": "596f78ae3d2a24f7834fcbb46e315011011ccc47b087e25b58e14933e9e0b239"
+        },
+        {
+          "path": ".size-limit.json",
+          "sha256": "3e22df1ae210db450940af0674c699c1b6c8f9df91db74ff0f2b2488d5d0f946"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "f756cea6be9acde0c4685bf550d9c0939229164af54f11f89ad84dab9e501cdf"
+        },
+        {
+          "path": "apps/api/src/app.factory.ts",
+          "sha256": "d8c9b3dd8908d62c7ab19f4351c01cddc3eae647fdd51b76087701caaa51bf7d"
+        },
+        {
+          "path": "apps/api/src/app.module.ts",
+          "sha256": "d15b1829ecfe92ff7a6f3e86c3b6cad6d15703297a9fe122751f870b56498d76"
+        },
+        {
+          "path": "apps/api/src/csp-report/csp-report-http.integration.test.ts",
+          "sha256": "80231637e0ac487ad229a0b3ec426d7d5f12c35100a460fb2ac44fa533632493"
+        },
+        {
+          "path": "apps/api/src/route-errors/route-errors-http.integration.test.ts",
+          "sha256": "9d545527d6fb140dbb1b0cb352fa49677d5e83a336a76a6ea68338060dda81ad"
+        },
+        {
+          "path": "apps/api/src/route-errors/route-errors.controller.test.ts",
+          "sha256": "e59f2ac8db69247aaca5bbbe9f8a6c31dcdab91a0d60adf2a658d9adf49b492b"
+        },
+        {
+          "path": "apps/api/src/route-errors/route-errors.controller.ts",
+          "sha256": "0e16a8a12e48adc346e7be9829475247b4e87aa14c0ad99676edbe0c07a66093"
+        },
+        {
+          "path": "apps/api/src/session/csrf.guard.ts",
+          "sha256": "d795e525a70bc39ad9b83f8c373ab7acb45e747279dd9ba87681406afd107fe9"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "b11b691680a16cfd244d5430449a7c91c918a09f5f3e5b5c09ed31299d80359c"
+        },
+        {
+          "path": "apps/web/e2e/feedback.spec.ts",
+          "sha256": "ab6d9df3611e658b73445618dabaebf8b8d8ac3337f5319e0cc884feec07623c"
+        },
+        {
+          "path": "apps/web/src/components/RouteErrorBoundary.tsx",
+          "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
+        },
+        {
+          "path": "apps/web/src/components/RouteFallbackLandmark.tsx",
+          "sha256": "92f2454ab22bf6803f53fe5d7efb7d757c2b1fa6606046b9a3a8a257af3eaaa9"
+        },
+        {
+          "path": "apps/web/src/hooks/useRouteErrorReport.test.tsx",
+          "sha256": "fedde4ed49241ae5690199ce91030ab29dd2f674b97a5a7ed5bb900b3cb80f89"
+        },
+        {
+          "path": "apps/web/src/hooks/useRouteErrorReport.ts",
+          "sha256": "b64d5f6932d0a07a373d8cde4ef3a6fb455ce748b8de277ed7cf2fcd0ec40fb0"
+        },
+        {
+          "path": "apps/web/src/lib/csrf.ts",
+          "sha256": "9ae9d43859271c9fcf38aa560cc4369e5a9930a679fccb54b6b754f6f43ef209"
+        },
+        {
+          "path": "apps/web/src/router.tsx",
+          "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "313320ae3a3550695cf7fb7a6c2e3c1039b4ba77007a627f144aecb9cd0c902d"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "e27413cc6f8bf17f90e4a09ac869e6c7b53290057adc807ec228ffa240840c3e"
+        },
+        {
+          "path": "scripts/check-auth-transfer.mjs",
+          "sha256": "5a23ff527130ee3ffc86d20c716ccd5d22430f108dd3350166d847e7cf7a8690"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "The prior build reproduced absent reports for both the standard and emergency recovery paths. Final Chromium and Mobile Safari cases verify one report with the matching visible reference for ordinary errors, CSRF on signed-in requests, and emergency reload after a failed report.",
+        "The API accepts only fixed codes and UUIDv4 references. It bounds JSON to 1 KiB and uses existing same-origin, active-session CSRF and security rate-limit controls. It sends an HTTPS Sentry envelope with a three-second deadline and accepts only an exact event ID receipt.",
+        "The compiled API delivered a real HTTPS request to a local synthetic receiver and returned 204 for the matching ID and 503 for a mismatched ID. This is local transport evidence. The staging runtime has no Sentry setting, so a protected project DSN and an actual provider receipt remain required.",
+        "Twelve production browser cases, six instrumented cases, two web unit cases, 38 final API unit and HTTP cases, eight coverage groups, 98 bundle budgets and six cold auth transfers passed. OpenAPI snapshot and checks, changed-file lint and formatting and both typechecks passed.",
+        "The eager reporting draft and the first lazy draft exceeded the electricity budget. The final deferred reporter passed the unchanged 255 KB threshold. An interim local disk error interrupted PostgreSQL teardown and a web build. Three duplicate build contexts were checked against their retained archives and removed before the successful reruns."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-error-delivery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-error-delivery/proof.json",
+      "source_scope_proof_sha256": "6df1bdf8dcd04ad665a5a1e713c774fb56df4170829df3db61908e847b45da1e",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-error-delivery/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-error-delivery/reviewed.patch",
+      "release_disposition": "Verified privacy-safe on-demand route reporting and local receipt handling. Live staging provider and v0.5.0 acceptance remain open."
     }
   },
   "historical_improvements": [
@@ -797396,12 +797531,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Implement privacy-safe route error reporting and reconcile its live receiver. Close demonstrated command acknowledgement and bespoke route state gaps. Verify the owner accessibility policy before accepting v0.5.0."
+    "goal": "Close staff confirmation acknowledgement ownership and reconcile remaining bespoke route states. Verify the configured Sentry staging receipt and GitHub accessibility policy before accepting v0.5.0."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics are accepted with evidence for the 93-route populated width matrix and eight source-bound coverage groups. Five launch-required v0.5.0 criteria remain open, including accessibility enforcement and live route reporting. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics are accepted and route reporting passes local checks. Five launch-required criteria remain open, including live Sentry reporting and GitHub accessibility enforcement. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {

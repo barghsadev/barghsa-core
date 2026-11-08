@@ -71,6 +71,7 @@ for (const locale of ['en', 'fa'] as const) {
   test(`auth bootstrap errors provide safe details, retry and a support reference (${locale})`, async ({
     page,
     browserName,
+    baseURL,
   }) => {
     await page.addInitScript((value) => {
       if (document.documentElement) document.documentElement.lang = value;
@@ -80,6 +81,16 @@ for (const locale of ['en', 'fa'] as const) {
     }, locale);
     await feedbackWorkspace(page, locale);
     await mockPublicAuthCsrf(page);
+    const reports: unknown[] = [];
+    await page.route('**/api/route-errors', async (route) => {
+      expect(route.request().method()).toBe('POST');
+      const headers = await route.request().allHeaders();
+      const origin = new URL(baseURL!).origin;
+      expect(headers.origin).toBe(origin);
+      expect(headers.referer).toBe(origin + '/');
+      reports.push(route.request().postDataJSON());
+      await route.fulfill({ status: 503, json: {} });
+    });
     let failed = true;
     let release!: () => void;
     const pending = new Promise<void>((resolve) => {
@@ -130,6 +141,7 @@ for (const locale of ['en', 'fa'] as const) {
     const reference = (await details.textContent())!.match(
       /[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/i
     )![0];
+    await expect.poll(() => reports).toEqual([{ code: 'ROUTE_RENDER_FAILED', reference }]);
     const support = alert.getByRole('link', {
       name: locale === 'fa' ? 'تماس با پشتیبانی' : 'Contact support',
       exact: true,
@@ -158,6 +170,7 @@ for (const locale of ['en', 'fa'] as const) {
       'href',
       new RegExp(encodeURIComponent(reference))
     );
+    expect(reports).toHaveLength(1);
   });
 
   test(`unknown routes keep one localized main and the first skip target (${locale})`, async ({
@@ -189,8 +202,18 @@ for (const locale of ['en', 'fa'] as const) {
 
   test(`a missing route and recovery chunk leave a localized reload path (${locale})`, async ({
     page,
+    baseURL,
   }, info) => {
     await feedbackWorkspace(page, locale);
+    const reports: unknown[] = [];
+    await page
+      .context()
+      .addCookies([{ name: 'barghsa_csrf', value: 'fixture-route-csrf', url: baseURL! }]);
+    await page.route('**/api/route-errors', async (route) => {
+      expect(route.request().headers()['x-csrf-token']).toBe('fixture-route-csrf');
+      reports.push(route.request().postDataJSON());
+      await route.abort('failed');
+    });
     const dist = process.env['BARGHSA_BROWSER_COVERAGE'] === '1' ? 'dist-coverage' : 'dist';
     const manifest = JSON.parse(readFileSync(resolve(dist, '.vite/manifest.json'), 'utf8'));
     const routeChunk = manifest['src/pages/SolarRequestDetailPage.tsx']?.file;
@@ -238,6 +261,14 @@ for (const locale of ['en', 'fa'] as const) {
     ).toBeVisible();
     expect(routeFailures).toBeGreaterThan(0);
     expect(recoveryFailures).toBeGreaterThan(0);
+    await expect
+      .poll(() => reports)
+      .toEqual([
+        {
+          code: 'CHUNK_LOAD_FAILED',
+          reference: expect.stringMatching(/^[0-9a-f-]{36}$/i),
+        },
+      ]);
     await expect(main).toHaveCount(1);
     await expect(page.locator('#main-content')).toHaveCount(1);
     await expect(page.getByRole('button', { name: 'Show Error', exact: true })).toHaveCount(0);
@@ -263,6 +294,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       main.getByRole('heading', { level: 1, name: tSolar('details', locale), exact: true })
     ).toBeVisible();
+    expect(reports).toHaveLength(1);
   });
 }
 

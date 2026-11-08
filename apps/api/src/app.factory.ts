@@ -43,6 +43,14 @@ export async function createApplication() {
       /^\/api\/csp-report\/?(?:\?|$)/.test(request.url ?? '') &&
       /^application\/csp-report(?:\s*;|$)/i.test(request.headers['content-type'] ?? ''),
   });
+  app.useBodyParser('json', {
+    limit: 1024,
+    inflate: false,
+    type: (request) =>
+      request.method === 'POST' &&
+      /^\/api\/route-errors\/?(?:\?|$)/.test(request.url ?? '') &&
+      /^application\/json(?:\s*;|$)/i.test(request.headers['content-type'] ?? ''),
+  });
   app.useBodyParser('json');
   app.use(sanitizeBodyParserErrors);
 
