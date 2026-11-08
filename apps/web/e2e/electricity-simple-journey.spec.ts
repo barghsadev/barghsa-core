@@ -6,6 +6,7 @@ import { contractText as contractCopy } from '@barghsa/i18n/contracts';
 import { test, expect } from './coverage-fixture';
 import { electricityPaymentReview } from './electricity-payment-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
+import { checkRoutePresentation } from './route-presentation';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
 const orderId = '22222222-2222-4222-8222-222222222222';
@@ -451,6 +452,19 @@ for (const locale of ['en', 'fa'] as const)
       publishedAt: submittedAt,
       acceptedAt: accepted ? submittedAt : null,
     });
+    const contractDetail = (
+      state: ReturnType<typeof contractState> | 'Accepted' = contractState()
+    ) => ({
+      id: contractId,
+      profileId,
+      orderId,
+      serviceType: 'electricity',
+      state,
+      version: contractVersion(),
+      canAccept: !accepted,
+      initialInvoiceId: invoiceId,
+      initialInvoiceState: 'Paid',
+    });
     const paymentFacts = paymentReview().data;
     const { payment: _walletPayment, ...initialInvoiceFacts } = paymentFacts;
     const financialReview = {
@@ -514,7 +528,8 @@ for (const locale of ['en', 'fa'] as const)
     await page.route(`**/api/contracts/${contractId}/accept`, (route) => {
       contractAcceptances.push(route.request().postDataJSON() as Record<string, unknown>);
       accepted = true;
-      return route.fulfill({ json: { id: contractId, state: contractState(), financialReview } });
+      // The acceptance receipt precedes activation, which is reflected by the subsequent read.
+      return route.fulfill({ json: { ...contractDetail('Accepted'), financialReview } });
     });
     await page.route(`**/api/contracts/${contractId}/acceptance-review?*`, (route) =>
       route.fulfill({ json: financialReview })
@@ -551,31 +566,20 @@ for (const locale of ['en', 'fa'] as const)
       })
     );
     await page.route(`**/api/contracts/${contractId}`, (route) =>
-      route.fulfill({
-        json: {
-          id: contractId,
-          profileId,
-          orderId,
-          serviceType: 'electricity',
-          state: contractState(),
-          version: contractVersion(),
-          canAccept: !accepted,
-          initialInvoiceId: invoiceId,
-          initialInvoiceState: 'Paid',
-        },
-      })
+      route.fulfill({ json: contractDetail() })
     );
     await page.route('**/api/documents?*', (route) =>
       route.fulfill({ json: { documents: [], nextBefore: null } })
     );
 
     await page.goto('/electricity');
-    await page
-      .getByRole('link', {
-        name: appCopy('electricity.catalogue.createDraft', locale),
-        exact: true,
-      })
-      .click();
+    const startDraft = page.getByRole('link', {
+      name: appCopy('electricity.catalogue.createDraft', locale),
+      exact: true,
+    });
+    await expect(startDraft).toBeVisible();
+    await checkRoutePresentation(page, test.info(), locale);
+    await startDraft.click();
     await expect(page.locator('#electricity-period option[value="current_month"]')).toContainText(
       locale === 'fa'
         ? new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
@@ -585,6 +589,7 @@ for (const locale of ['en', 'fa'] as const)
           }).format(new Date(submittedAt))
         : 'Sep 23, 2026 – Oct 2, 2026'
     );
+    await checkRoutePresentation(page, test.info(), locale);
     await page.locator('#electricity-period-type').selectOption('weekly');
     await page.locator('#electricity-period').selectOption('next_week');
     const next = page.getByRole('button', {
@@ -748,6 +753,7 @@ for (const locale of ['en', 'fa'] as const)
     await expect(
       page.getByRole('region', { name: appCopy('workflow.summary', locale) })
     ).toContainText(appCopy('electricity.order.nextAction.accept_contract', locale));
+    await checkRoutePresentation(page, test.info(), locale);
     await page
       .getByRole('link', { name: appCopy('electricity.order.nextAction.accept_contract', locale) })
       .click();
@@ -764,6 +770,7 @@ for (const locale of ['en', 'fa'] as const)
     await expect(
       page.getByRole('region', { name: appCopy('workflow.summary', locale) })
     ).toContainText(contractCopy('accept', locale));
+    await checkRoutePresentation(page, test.info(), locale);
     await page.getByRole('checkbox').check();
     await page.getByRole('button', { name: contractCopy('accept', locale) }).click();
     await expect(confirm).toBeDisabled();

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T19:55:43+00:00",
-  "source_commit": "3933994decc5367d25157dfbdd03a897c76e4696",
+  "updated": "2026-11-08T20:19:21+00:00",
+  "source_commit": "d91698296ce4ce49c5e93a3a6edd1aa600af9364",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35332,7 +35332,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -287707,7 +287707,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -288562,7 +288562,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -289417,7 +289417,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -290974,7 +290974,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -291830,7 +291830,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -292685,7 +292685,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -293540,7 +293540,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -294395,7 +294395,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -295251,7 +295251,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -296106,7 +296106,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -296961,7 +296961,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -298517,7 +298517,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -299372,7 +299372,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -300227,7 +300227,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -301082,7 +301082,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -301937,7 +301937,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -302792,7 +302792,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -303647,7 +303647,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -304502,7 +304502,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -305360,7 +305360,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -306215,7 +306215,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -307070,7 +307070,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -496675,7 +496675,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
+              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
             },
             {
               "path": "apps/web/package.json",
@@ -508484,7 +508484,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -508889,7 +508889,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -509292,7 +509292,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -509695,7 +509695,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -511996,7 +511996,7 @@
             },
             {
               "path": "apps/web/e2e/route-presentation.ts",
-              "sha256": "8dabd22073f252b16a56ee02f016f674116680e7d1e529ac3edf817d4f9f119d"
+              "sha256": "3b8b1e8ea1c428bea8034336170811dd33171a51c028ece2fbabe6b2484f259b"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -515121,7 +515121,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
+              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
             },
             {
               "path": "apps/web/package.json",
@@ -515241,7 +515241,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "80d1891be8c8e9ffd647762cfc539a42046738c2a41fd5ed57120fa508c75caf"
+              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -515565,7 +515565,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
+              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
             },
             {
               "path": "apps/web/index.html",
@@ -515621,7 +515621,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "80d1891be8c8e9ffd647762cfc539a42046738c2a41fd5ed57120fa508c75caf"
+              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516004,7 +516004,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
+              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
             },
             {
               "path": "apps/web/index.html",
@@ -516060,7 +516060,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "80d1891be8c8e9ffd647762cfc539a42046738c2a41fd5ed57120fa508c75caf"
+              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516427,7 +516427,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
+              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
             },
             {
               "path": "apps/web/package.json",
@@ -516547,7 +516547,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "80d1891be8c8e9ffd647762cfc539a42046738c2a41fd5ed57120fa508c75caf"
+              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516997,7 +516997,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -517145,7 +517145,7 @@
             },
             {
               "path": "apps/web/e2e/route-presentation.ts",
-              "sha256": "8dabd22073f252b16a56ee02f016f674116680e7d1e529ac3edf817d4f9f119d"
+              "sha256": "3b8b1e8ea1c428bea8034336170811dd33171a51c028ece2fbabe6b2484f259b"
             },
             {
               "path": "apps/web/e2e/saving-catalogue-forms.spec.ts",
@@ -517325,7 +517325,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
+              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
             },
             {
               "path": "apps/web/package.json",
@@ -518101,7 +518101,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "80d1891be8c8e9ffd647762cfc539a42046738c2a41fd5ed57120fa508c75caf"
+              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
             },
             {
               "path": "docs/design/notification-recovery.md",
@@ -518523,7 +518523,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "80d1891be8c8e9ffd647762cfc539a42046738c2a41fd5ed57120fa508c75caf"
+              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -518821,7 +518821,7 @@
             },
             {
               "path": "apps/web/e2e/route-presentation.ts",
-              "sha256": "8dabd22073f252b16a56ee02f016f674116680e7d1e529ac3edf817d4f9f119d"
+              "sha256": "3b8b1e8ea1c428bea8034336170811dd33171a51c028ece2fbabe6b2484f259b"
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
@@ -519209,7 +519209,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "80d1891be8c8e9ffd647762cfc539a42046738c2a41fd5ed57120fa508c75caf"
+              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
             },
             {
               "path": "docs/design/notification-recovery.md",
@@ -519390,7 +519390,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
+              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
             },
             {
               "path": "apps/web/index.html",
@@ -519446,7 +519446,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "80d1891be8c8e9ffd647762cfc539a42046738c2a41fd5ed57120fa508c75caf"
+              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -519962,7 +519962,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "80d1891be8c8e9ffd647762cfc539a42046738c2a41fd5ed57120fa508c75caf"
+              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -520516,7 +520516,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
+              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
             },
             {
               "path": "apps/web/package.json",
@@ -520680,7 +520680,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "80d1891be8c8e9ffd647762cfc539a42046738c2a41fd5ed57120fa508c75caf"
+              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -521344,7 +521344,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
+              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
             },
             {
               "path": "apps/web/package.json",
@@ -521508,7 +521508,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "80d1891be8c8e9ffd647762cfc539a42046738c2a41fd5ed57120fa508c75caf"
+              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -522118,7 +522118,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "80d1891be8c8e9ffd647762cfc539a42046738c2a41fd5ed57120fa508c75caf"
+              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -522672,7 +522672,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
+              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
             },
             {
               "path": "apps/web/package.json",
@@ -522836,7 +522836,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "80d1891be8c8e9ffd647762cfc539a42046738c2a41fd5ed57120fa508c75caf"
+              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -541448,7 +541448,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -541851,7 +541851,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -542254,7 +542254,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -542657,7 +542657,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -543065,7 +543065,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -543474,7 +543474,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -543877,7 +543877,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -544280,7 +544280,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -544684,7 +544684,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -545089,7 +545089,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -545492,7 +545492,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -545896,7 +545896,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -570581,7 +570581,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -570985,7 +570985,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
+              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
             },
             {
               "path": "apps/web/package.json",
@@ -594041,7 +594041,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
+              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
             },
             {
               "path": "apps/web/package.json",
@@ -598483,7 +598483,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Contract and document workspaces, customer privacy, staff and customer inboxes, provider panes, and security lists now have source-bound conditional evidence. Reconcile the remaining detail and singleton panels against the 98-route inventory and existing independent tests, including routes whose populated layout was measured but whose recovery conditions still lack a current owner or proof."
+        "Finish the route and widget conditional-state reconciliation. Current scoped browser cases distinguish verified electricity step-up cancellation and an unknown write, and include the paid order through exact acceptance and activation. Layout receipts certify their named populated views separately."
       ],
       "owner": null,
       "depends_on": [],
@@ -598590,7 +598590,8 @@
           "release-0.5-address-states-and-route-reconciliation",
           "release-0.5-hosted-affected-web-repair",
           "release-0.5-wallet-ledger-read-recovery",
-          "release-0.5-record-workspace-read-states"
+          "release-0.5-record-workspace-read-states",
+          "release-0.5-route-theme-layout"
         ],
         "current_acceptance": null
       }
@@ -708410,7 +708411,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -709981,7 +709982,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
+              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.tsx",
@@ -710486,7 +710487,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
-              "sha256": "a512310a2fcc5ce868a319ddd76315470b016407a33a7906be4b33a34652e1cf"
+              "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -728234,7 +728235,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Current recovery evidence now includes the nine named workspace, inbox, provider and security routes. The previous wallet commit passed hosted CI. Verify hosted CI for this batch and finish the route and shared-pattern reconciliation. Required GitHub merge enforcement and a staging Sentry event remain open."
+        "The source-bound route census records 93 of 93 populated routes across both themes, directions and native browser projects at eight widths. Reconcile the carried layout receipts and original route and shared-pattern acceptance criteria. Reproduce the active staff navigation contrast observed during a theme transition. See /Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-theme-layout/theme-census-proof.json."
       ],
       "owner": null,
       "depends_on": [],
@@ -728406,7 +728407,8 @@
           "release-0.5-address-states-and-route-reconciliation",
           "release-0.5-hosted-affected-web-repair",
           "release-0.5-wallet-ledger-read-recovery",
-          "release-0.5-record-workspace-read-states"
+          "release-0.5-record-workspace-read-states",
+          "release-0.5-route-theme-layout"
         ]
       }
     },
@@ -728498,7 +728500,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
+              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -806639,6 +806641,54 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-record-workspace-read-states/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-record-workspace-read-states/reviewed.patch",
       "release_disposition": "Verified nine named route scopes. v0.5.0 remains open."
+    },
+    "release-0.5-route-theme-layout": {
+      "batch": "release-0.5-route-theme-layout",
+      "base_commit": "d91698296ce4ce49c5e93a3a6edd1aa600af9364",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
+          "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
+        },
+        {
+          "path": "apps/web/e2e/electricity-staff-queue-tables.spec.ts",
+          "sha256": "a0c894c0fa0b2a563e9389f3269b291376667460a11e306ee30b97d9164089a2"
+        },
+        {
+          "path": "apps/web/e2e/route-presentation.ts",
+          "sha256": "3b8b1e8ea1c428bea8034336170811dd33171a51c028ece2fbabe6b2484f259b"
+        },
+        {
+          "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
+          "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
+        },
+        {
+          "path": "docs/design/accessibility.md",
+          "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
+        }
+      ],
+      "checks": [
+        "Verified 93 of 93 populated routes across two native browser projects, two directions, light and dark themes, and eight widths by combining current passing measurements with identified prior receipts. Route-level report records 5952 measured cells, distinguishes the 66 routes with every cell measured on this runtime, and identifies cells carried from the prior census.",
+        "The probe observes the real theme at each width, retains all existing layout, direction, heading, landmark and touch assertions and restores the original preference. Fixed-brand fixtures report their measured theme. Supplemental fixture clones allow a user theme preference without changing their business routes or assertions.",
+        "Both browsers passed all 24 affected electricity queue and wallet executions in theme mode and 16 affected executions with normal options. The electricity queue verifies no password or extra dispatch after a cancelled step-up challenge. An unknown result after successful verification keeps the queue locked, preserves the reason and proves exact command replay after verification.",
+        "The simple electricity fixture now provides the exact accepted contract/version/profile receipt before its subsequent activation read. The existing paid-invoice, review hash, selected version, and activation assertions pass in both languages and browsers. The wallet fixture uses the application preference and asserts its requested theme.",
+        "Earlier electricity failures were reproduced with normal options and traced to fixtures that conflated a rejected step-up challenge with an uncertain write and contract acceptance with activation. Initial Safari output stopped when temporary trace storage filled, and the selected cases reran with tracing off. The reports retain unsuccessful supplemental cases and exclude them from the measured cells. A supplemental Axe run saw 2.86:1 on the active staff navigation link during a theme change; the same case passed after its transition settled. Verify that transient through the normal theme control.",
+        "Production web source and assets are unchanged in this batch. Reused the exact verified production build and prior budget and coverage receipts. GitHub Actions run 42517518388 on the predecessor passed all reported jobs."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-theme-layout",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-theme-layout/proof.json",
+      "source_scope_proof_sha256": "41adfa3beb3ac806c54d62ce25ca1631d615feeba3a599663fc396ff240badde",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-theme-layout/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-theme-layout/reviewed.patch",
+      "release_disposition": "Verified the named route appearance and electricity receipt cases. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -806689,12 +806739,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Complete conditional evidence reconciliation for the remaining read-owning detail and settings panes using the 98-route census and case receipts. Diagnose demonstrated gaps first. Required GitHub merge enforcement and staging Sentry delivery remain independent gates."
+    "goal": "Reproduce the active navigation theme transition contrast through the normal preference control. Reconcile the carried layout receipts and remaining route and widget conditional states against existing source-bound checks. GitHub merge enforcement and staging Sentry delivery remain independent gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. Nine named v0.5.0 route scopes passed current conditional checks. Four launch-required criteria remain open and the November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. The v0.5.0 route census records 93 fully measured populated routes. Four launch-required criteria remain open and the November 9 sequence remains at risk."
   },
   "capabilities": [
     {

@@ -40,6 +40,11 @@ other theme as unmeasured. Reveal clipped text in its scroll container and
 check it again. Run page landmark assertions before opening a modal, then
 measure the dialog while it owns focus.
 
+Use `BARGHSA_ROUTE_THEME_CENSUS=1` with the production browser runner to
+exercise both themes in a populated route fixture that allows a theme choice.
+The probe uses the application preference, records the actual theme at each
+width and restores the previous preference before the journey continues.
+
 Settings navigation sits on the configurable page canvas. Inactive links
 use the page foreground. Hovered and selected links use the foreground
 paired with their active fill. The public brand tile and bolt use the paired

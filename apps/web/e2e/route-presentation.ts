@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page, type TestInfo } from './coverage-fixture';
 import { scanAdvisoryMain } from './critical-accessibility';
+import { THEME_POLICY_STORAGE_KEY, THEME_STORAGE_KEY, type ResolvedTheme } from '../src/lib/theme';
 
 const widths = [320, 375, 390, 414, 768, 1024, 1280, 1920];
 
@@ -22,10 +23,53 @@ export async function checkChoiceTarget(
 
 /** Probe the existing populated journey without resetting its profile, records, or draft. */
 export async function checkRoutePresentation(page: Page, info: TestInfo, locale: 'en' | 'fa') {
+  const root = page.locator('html');
+  const activeTheme = (): Promise<ResolvedTheme> =>
+    root.evaluate((node) => (node.classList.contains('dark') ? 'dark' : 'light'));
+  const theme = await activeTheme();
+  const otherTheme = theme === 'dark' ? 'light' : 'dark';
+  const policy = await page.evaluate((key) => localStorage.getItem(key), THEME_POLICY_STORAGE_KEY);
+  const probeBoth =
+    process.env['BARGHSA_ROUTE_THEME_CENSUS'] === '1' && policy !== 'dark' && policy !== 'light';
+  const preference = probeBoth
+    ? await page.evaluate((key) => localStorage.getItem(key), THEME_STORAGE_KEY)
+    : null;
+  const setPreference = (value: string | null) =>
+    page.evaluate(
+      ({ key, value }) => {
+        if (value === null) localStorage.removeItem(key);
+        else localStorage.setItem(key, value);
+        window.dispatchEvent(new StorageEvent('storage', { key, newValue: value }));
+      },
+      { key: THEME_STORAGE_KEY, value }
+    );
+  await page.evaluate(() => document.fonts.ready);
+  try {
+    await measureRoutePresentation(page, info, locale, theme);
+    if (probeBoth) {
+      await setPreference(otherTheme);
+      await expect.poll(activeTheme).toBe(otherTheme);
+      await measureRoutePresentation(page, info, locale, otherTheme);
+    }
+  } finally {
+    if (probeBoth) {
+      await setPreference(preference);
+      await expect.poll(activeTheme).toBe(theme);
+    }
+  }
+  if (process.env['BARGHSA_A11Y_ADVISORY'] === '1' && !info.tags.includes('@a11y-critical'))
+    await scanAdvisoryMain(page, info);
+}
+
+async function measureRoutePresentation(
+  page: Page,
+  info: TestInfo,
+  locale: 'en' | 'fa',
+  theme: ResolvedTheme
+) {
   const original = page.viewportSize();
   const pathname = new URL(page.url()).pathname;
   const report = [];
-  await page.evaluate(() => document.fonts.ready);
   try {
     for (const width of widths) {
       await page.setViewportSize({ width, height: 900 });
@@ -138,6 +182,7 @@ export async function checkRoutePresentation(page: Page, info: TestInfo, locale:
           return {
             width: innerWidth,
             direction: document.documentElement.dir,
+            theme: document.documentElement.classList.contains('dark') ? 'dark' : 'light',
             documentOverflow: document.documentElement.scrollWidth - innerWidth,
             mainOverflow: main ? main.scrollWidth - main.clientWidth : null,
             mains: document.querySelectorAll('main#main-content').length,
@@ -156,12 +201,13 @@ export async function checkRoutePresentation(page: Page, info: TestInfo, locale:
     if (original) await page.setViewportSize(original);
   }
   await info.attach('populated-route-presentation', {
-    body: JSON.stringify({ pathname, report }),
+    body: JSON.stringify({ pathname, activeTheme: theme, report }),
     contentType: 'application/json',
   });
   for (const row of report) {
-    const scope = `${pathname} ${locale} at ${row.width}px`;
+    const scope = `${pathname} ${locale} ${theme} at ${row.width}px`;
     expect.soft(row.direction, scope).toBe(locale === 'fa' ? 'rtl' : 'ltr');
+    expect.soft(row.theme, scope).toBe(theme);
     expect.soft(row.mains, scope).toBe(1);
     expect.soft(row.pageTitles, scope).toBe(1);
     expect
@@ -200,6 +246,4 @@ export async function checkRoutePresentation(page: Page, info: TestInfo, locale:
       )
       .toEqual([]);
   }
-  if (process.env['BARGHSA_A11Y_ADVISORY'] === '1' && !info.tags.includes('@a11y-critical'))
-    await scanAdvisoryMain(page, info);
 }

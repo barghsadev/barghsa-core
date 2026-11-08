@@ -13,6 +13,7 @@ import { test, expect } from './coverage-fixture';
 import { verifyClippedContrast } from './clipped-contrast';
 import { scanCriticalMain } from './critical-accessibility';
 import { checkRoutePresentation } from './route-presentation';
+import { THEME_STORAGE_KEY } from '../src/lib/theme';
 
 const profileId = '10000000-0000-4000-8000-000000000001';
 const receiptId = '20000000-0000-4000-8000-000000000001';
@@ -69,26 +70,11 @@ for (const locale of ['en', 'fa'] as const)
       async ({ page }) => {
         await page.setViewportSize({ width: 390, height: 844 });
         await page.addInitScript(
-          ({ locale, darkMode }) => {
+          ({ locale, theme, themeKey }) => {
             localStorage.setItem('barghsa.locale', locale);
-            const apply = () => {
-              if (document.documentElement && document.documentElement.lang !== locale)
-                document.documentElement.lang = locale;
-              if (
-                document.documentElement &&
-                document.documentElement.classList.contains('dark') !== darkMode
-              )
-                document.documentElement.classList.toggle('dark', darkMode);
-            };
-            apply();
-            new MutationObserver(apply).observe(document, {
-              childList: true,
-              attributes: true,
-              attributeFilter: ['lang', 'class'],
-              subtree: true,
-            });
+            localStorage.setItem(themeKey, theme);
           },
-          { locale, darkMode }
+          { locale, theme: darkMode ? 'dark' : 'light', themeKey: THEME_STORAGE_KEY }
         );
         await page.route('**/api/**', (r) => r.fulfill({ status: 404, json: {} }));
         await page.route('**/api/auth/user', (r) =>
@@ -236,6 +222,9 @@ for (const locale of ['en', 'fa'] as const)
         const word = (key: string) => receiptText(`wallet.receipt.${key}`, locale);
         const details = history.locator('[data-slot=wallet-receipt-details]');
         await expect(details).toHaveCount(1);
+        await expect
+          .poll(() => page.locator('html').evaluate((node) => node.classList.contains('dark')))
+          .toBe(darkMode);
         await scanCriticalMain(page);
         await checkRoutePresentation(page, test.info(), locale);
         if (test.info().project.name === 'chromium') {

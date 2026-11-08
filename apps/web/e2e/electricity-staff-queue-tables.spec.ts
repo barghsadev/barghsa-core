@@ -54,6 +54,11 @@ for (const locale of ['en', 'fa'] as const)
           queueReads = 0,
           detailReads = 0;
         const writes: unknown[] = [];
+        const passwords: unknown[] = [];
+        await page.route('**/api/auth/step-up', (route) => {
+          passwords.push(route.request().postDataJSON());
+          return route.fulfill({ status: 204 });
+        });
         await page.route('**/api/staff/electricity/orders**', (route) => {
           const url = new URL(route.request().url());
           const base = '/api/staff/electricity/orders';
@@ -78,7 +83,9 @@ for (const locale of ['en', 'fa'] as const)
             return route.fulfill({ json: rows.find((row) => url.pathname.endsWith(row.orderId)) });
           }
           writes.push(route.request().postDataJSON());
-          return route.fulfill({ status: 403, json: { requiresStepUp: true } });
+          return passwords.length === 0
+            ? route.fulfill({ status: 403, json: { requiresStepUp: true } })
+            : route.fulfill({ status: 503, json: {} });
         });
         await page.setViewportSize({ width: 1280, height: 900 });
         await page.goto(
@@ -224,9 +231,23 @@ for (const locale of ['en', 'fa'] as const)
           .click();
         await expect(dialog).toHaveCount(0);
         await expect(reason).toHaveValue('  Keep the exact staff draft  ');
-        await expect(
-          page.getByRole('button', { name: copy('refresh'), exact: true })
-        ).toBeDisabled();
+        const refresh = page.getByRole('button', { name: copy('refresh'), exact: true });
+        await expect(refresh).toBeEnabled();
+        expect(passwords).toEqual([]);
         expect(writes).toHaveLength(1);
+
+        await page.getByRole('button', { name: copy('request-changes'), exact: true }).click();
+        await expect(confirm).toBeDisabled();
+        await approveRiskConfirmation(page, locale, 'both');
+        await confirm.click();
+        await dialog.locator('input[type=password]').fill('synthetic-only-password');
+        await confirm.click();
+        await expect(dialog).toHaveCount(0);
+        await expect(refresh).toBeDisabled();
+        await expect(reason).toHaveValue('  Keep the exact staff draft  ');
+        expect(passwords).toEqual([{ password: 'synthetic-only-password' }]);
+        expect(writes).toHaveLength(3);
+        expect(writes[2]).toEqual(writes[1]);
+        expect(queueReads).toBe(commandReads);
       });
     }
