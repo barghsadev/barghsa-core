@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T16:38:03+00:00",
-  "source_commit": "aa3901f9759dd5ca944200bb43bbecad829ae834",
+  "updated": "2026-11-08T16:50:49+00:00",
+  "source_commit": "6dc5d9238c29777036e5e4e7a4ba2a7e9ab08062",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -163098,7 +163098,7 @@
             },
             {
               "path": "apps/web/e2e/customer-cancellation-request.spec.ts",
-              "sha256": "1f9e1e9a77bdf84924a6e47438a34dc7c0c6011dcf80a48755f0365ecefbed1f"
+              "sha256": "bd16505b525693d9121cc918511a3fb3aff63e4c87d07427f2e9ae93d364acc1"
             },
             {
               "path": "apps/web/src/components/ContractActivation.test.tsx",
@@ -163118,7 +163118,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -164104,7 +164104,7 @@
             },
             {
               "path": "apps/web/e2e/customer-cancellation-request.spec.ts",
-              "sha256": "1f9e1e9a77bdf84924a6e47438a34dc7c0c6011dcf80a48755f0365ecefbed1f"
+              "sha256": "bd16505b525693d9121cc918511a3fb3aff63e4c87d07427f2e9ae93d364acc1"
             },
             {
               "path": "apps/web/src/components/ContractActivation.test.tsx",
@@ -164124,7 +164124,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -165113,7 +165113,7 @@
             },
             {
               "path": "apps/web/e2e/customer-cancellation-request.spec.ts",
-              "sha256": "1f9e1e9a77bdf84924a6e47438a34dc7c0c6011dcf80a48755f0365ecefbed1f"
+              "sha256": "bd16505b525693d9121cc918511a3fb3aff63e4c87d07427f2e9ae93d364acc1"
             },
             {
               "path": "apps/web/src/components/ContractActivation.test.tsx",
@@ -165133,7 +165133,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -166120,7 +166120,7 @@
             },
             {
               "path": "apps/web/e2e/customer-cancellation-request.spec.ts",
-              "sha256": "1f9e1e9a77bdf84924a6e47438a34dc7c0c6011dcf80a48755f0365ecefbed1f"
+              "sha256": "bd16505b525693d9121cc918511a3fb3aff63e4c87d07427f2e9ae93d364acc1"
             },
             {
               "path": "apps/web/src/components/ContractActivation.test.tsx",
@@ -166140,7 +166140,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -167126,7 +167126,7 @@
             },
             {
               "path": "apps/web/e2e/customer-cancellation-request.spec.ts",
-              "sha256": "1f9e1e9a77bdf84924a6e47438a34dc7c0c6011dcf80a48755f0365ecefbed1f"
+              "sha256": "bd16505b525693d9121cc918511a3fb3aff63e4c87d07427f2e9ae93d364acc1"
             },
             {
               "path": "apps/web/src/components/ContractActivation.test.tsx",
@@ -167146,7 +167146,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -168132,7 +168132,7 @@
             },
             {
               "path": "apps/web/e2e/customer-cancellation-request.spec.ts",
-              "sha256": "1f9e1e9a77bdf84924a6e47438a34dc7c0c6011dcf80a48755f0365ecefbed1f"
+              "sha256": "bd16505b525693d9121cc918511a3fb3aff63e4c87d07427f2e9ae93d364acc1"
             },
             {
               "path": "apps/web/src/components/ContractActivation.test.tsx",
@@ -168152,7 +168152,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -169137,7 +169137,7 @@
             },
             {
               "path": "apps/web/e2e/customer-cancellation-request.spec.ts",
-              "sha256": "1f9e1e9a77bdf84924a6e47438a34dc7c0c6011dcf80a48755f0365ecefbed1f"
+              "sha256": "bd16505b525693d9121cc918511a3fb3aff63e4c87d07427f2e9ae93d364acc1"
             },
             {
               "path": "apps/web/src/components/ContractActivation.test.tsx",
@@ -169157,7 +169157,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -170145,7 +170145,7 @@
             },
             {
               "path": "apps/web/e2e/customer-cancellation-request.spec.ts",
-              "sha256": "1f9e1e9a77bdf84924a6e47438a34dc7c0c6011dcf80a48755f0365ecefbed1f"
+              "sha256": "bd16505b525693d9121cc918511a3fb3aff63e4c87d07427f2e9ae93d364acc1"
             },
             {
               "path": "apps/web/src/components/ContractActivation.test.tsx",
@@ -170165,7 +170165,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -171151,7 +171151,7 @@
             },
             {
               "path": "apps/web/e2e/customer-cancellation-request.spec.ts",
-              "sha256": "1f9e1e9a77bdf84924a6e47438a34dc7c0c6011dcf80a48755f0365ecefbed1f"
+              "sha256": "bd16505b525693d9121cc918511a3fb3aff63e4c87d07427f2e9ae93d364acc1"
             },
             {
               "path": "apps/web/src/components/ContractActivation.test.tsx",
@@ -171171,7 +171171,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -172157,7 +172157,7 @@
             },
             {
               "path": "apps/web/e2e/customer-cancellation-request.spec.ts",
-              "sha256": "1f9e1e9a77bdf84924a6e47438a34dc7c0c6011dcf80a48755f0365ecefbed1f"
+              "sha256": "bd16505b525693d9121cc918511a3fb3aff63e4c87d07427f2e9ae93d364acc1"
             },
             {
               "path": "apps/web/src/components/ContractActivation.test.tsx",
@@ -172177,7 +172177,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -173164,7 +173164,7 @@
             },
             {
               "path": "apps/web/e2e/customer-cancellation-request.spec.ts",
-              "sha256": "1f9e1e9a77bdf84924a6e47438a34dc7c0c6011dcf80a48755f0365ecefbed1f"
+              "sha256": "bd16505b525693d9121cc918511a3fb3aff63e4c87d07427f2e9ae93d364acc1"
             },
             {
               "path": "apps/web/src/components/ContractActivation.test.tsx",
@@ -173184,7 +173184,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -174170,7 +174170,7 @@
             },
             {
               "path": "apps/web/e2e/customer-cancellation-request.spec.ts",
-              "sha256": "1f9e1e9a77bdf84924a6e47438a34dc7c0c6011dcf80a48755f0365ecefbed1f"
+              "sha256": "bd16505b525693d9121cc918511a3fb3aff63e4c87d07427f2e9ae93d364acc1"
             },
             {
               "path": "apps/web/src/components/ContractActivation.test.tsx",
@@ -174190,7 +174190,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -175175,7 +175175,7 @@
             },
             {
               "path": "apps/web/e2e/customer-cancellation-request.spec.ts",
-              "sha256": "1f9e1e9a77bdf84924a6e47438a34dc7c0c6011dcf80a48755f0365ecefbed1f"
+              "sha256": "bd16505b525693d9121cc918511a3fb3aff63e4c87d07427f2e9ae93d364acc1"
             },
             {
               "path": "apps/web/src/components/ContractActivation.test.tsx",
@@ -175195,7 +175195,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -176181,7 +176181,7 @@
             },
             {
               "path": "apps/web/e2e/customer-cancellation-request.spec.ts",
-              "sha256": "1f9e1e9a77bdf84924a6e47438a34dc7c0c6011dcf80a48755f0365ecefbed1f"
+              "sha256": "bd16505b525693d9121cc918511a3fb3aff63e4c87d07427f2e9ae93d364acc1"
             },
             {
               "path": "apps/web/src/components/ContractActivation.test.tsx",
@@ -176201,7 +176201,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -370383,7 +370383,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "968bc6004f5c93ecac7eb02bec021906eb1a9988d6ad3643ebcfbc1ed3fa2f6b"
+              "sha256": "d1e90ded9abec9529f0b6836d7f0120a778d70429375260ed49da2fb03a7449e"
             },
             {
               "path": "apps/web/e2e/contract-cancellation.spec.ts",
@@ -370391,11 +370391,11 @@
             },
             {
               "path": "apps/web/e2e/customer-cancellation-request.spec.ts",
-              "sha256": "1f9e1e9a77bdf84924a6e47438a34dc7c0c6011dcf80a48755f0365ecefbed1f"
+              "sha256": "bd16505b525693d9121cc918511a3fb3aff63e4c87d07427f2e9ae93d364acc1"
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -370411,7 +370411,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -371665,7 +371665,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "968bc6004f5c93ecac7eb02bec021906eb1a9988d6ad3643ebcfbc1ed3fa2f6b"
+              "sha256": "d1e90ded9abec9529f0b6836d7f0120a778d70429375260ed49da2fb03a7449e"
             },
             {
               "path": "apps/web/e2e/contract-cancellation.spec.ts",
@@ -371673,11 +371673,11 @@
             },
             {
               "path": "apps/web/e2e/customer-cancellation-request.spec.ts",
-              "sha256": "1f9e1e9a77bdf84924a6e47438a34dc7c0c6011dcf80a48755f0365ecefbed1f"
+              "sha256": "bd16505b525693d9121cc918511a3fb3aff63e4c87d07427f2e9ae93d364acc1"
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -371693,7 +371693,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -372947,7 +372947,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "968bc6004f5c93ecac7eb02bec021906eb1a9988d6ad3643ebcfbc1ed3fa2f6b"
+              "sha256": "d1e90ded9abec9529f0b6836d7f0120a778d70429375260ed49da2fb03a7449e"
             },
             {
               "path": "apps/web/e2e/contract-cancellation.spec.ts",
@@ -372955,11 +372955,11 @@
             },
             {
               "path": "apps/web/e2e/customer-cancellation-request.spec.ts",
-              "sha256": "1f9e1e9a77bdf84924a6e47438a34dc7c0c6011dcf80a48755f0365ecefbed1f"
+              "sha256": "bd16505b525693d9121cc918511a3fb3aff63e4c87d07427f2e9ae93d364acc1"
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -372975,7 +372975,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -374229,7 +374229,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "968bc6004f5c93ecac7eb02bec021906eb1a9988d6ad3643ebcfbc1ed3fa2f6b"
+              "sha256": "d1e90ded9abec9529f0b6836d7f0120a778d70429375260ed49da2fb03a7449e"
             },
             {
               "path": "apps/web/e2e/contract-cancellation.spec.ts",
@@ -374237,11 +374237,11 @@
             },
             {
               "path": "apps/web/e2e/customer-cancellation-request.spec.ts",
-              "sha256": "1f9e1e9a77bdf84924a6e47438a34dc7c0c6011dcf80a48755f0365ecefbed1f"
+              "sha256": "bd16505b525693d9121cc918511a3fb3aff63e4c87d07427f2e9ae93d364acc1"
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -374257,7 +374257,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -375512,7 +375512,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "968bc6004f5c93ecac7eb02bec021906eb1a9988d6ad3643ebcfbc1ed3fa2f6b"
+              "sha256": "d1e90ded9abec9529f0b6836d7f0120a778d70429375260ed49da2fb03a7449e"
             },
             {
               "path": "apps/web/e2e/contract-cancellation.spec.ts",
@@ -375520,11 +375520,11 @@
             },
             {
               "path": "apps/web/e2e/customer-cancellation-request.spec.ts",
-              "sha256": "1f9e1e9a77bdf84924a6e47438a34dc7c0c6011dcf80a48755f0365ecefbed1f"
+              "sha256": "bd16505b525693d9121cc918511a3fb3aff63e4c87d07427f2e9ae93d364acc1"
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -375540,7 +375540,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -496691,11 +496691,11 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
+              "sha256": "bcca317a692990736590e8eb6a2ae61f4a1b229514d73aada9393e89cded5ed4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -512020,7 +512020,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -516857,7 +516857,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "968bc6004f5c93ecac7eb02bec021906eb1a9988d6ad3643ebcfbc1ed3fa2f6b"
+              "sha256": "d1e90ded9abec9529f0b6836d7f0120a778d70429375260ed49da2fb03a7449e"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -517377,7 +517377,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
+              "sha256": "bcca317a692990736590e8eb6a2ae61f4a1b229514d73aada9393e89cded5ed4"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
+              "sha256": "bcca317a692990736590e8eb6a2ae61f4a1b229514d73aada9393e89cded5ed4"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -546384,7 +546384,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -546396,7 +546396,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -548250,7 +548250,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -548262,7 +548262,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -550117,7 +550117,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -550129,7 +550129,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -551953,7 +551953,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -551965,7 +551965,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -553815,7 +553815,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -553827,7 +553827,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -555686,7 +555686,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -555698,7 +555698,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -557530,7 +557530,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -557542,7 +557542,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -559338,7 +559338,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -559350,7 +559350,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -561146,7 +561146,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -561158,7 +561158,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -562955,7 +562955,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -562967,7 +562967,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -564763,7 +564763,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -564775,7 +564775,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -567521,7 +567521,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
+              "sha256": "bcca317a692990736590e8eb6a2ae61f4a1b229514d73aada9393e89cded5ed4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -569416,7 +569416,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
+              "sha256": "bcca317a692990736590e8eb6a2ae61f4a1b229514d73aada9393e89cded5ed4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570220,7 +570220,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Retention policy saves, document detail transitions and inline removal now have matched receipts and fresh-read recovery. Reconcile remaining confirmation and CRUD feedback paths, including contract and configuration commands."
+        "Customer cancellation requests, staff request rejections, cancellation preparation and execution now have bounded, exact recovery. Reconcile the remaining contract acceptance, lifecycle and configuration confirmation paths."
       ],
       "owner": null,
       "depends_on": [],
@@ -570299,7 +570299,8 @@
           "release-0.5-shared-confirmation-deadlines",
           "release-0.5-financial-confirmation-recovery",
           "release-0.5-protected-creation-recovery",
-          "release-0.5-document-command-recovery"
+          "release-0.5-document-command-recovery",
+          "release-0.5-contract-cancellation-recovery"
         ],
         "current_acceptance": null
       }
@@ -571410,7 +571411,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
+              "sha256": "bcca317a692990736590e8eb6a2ae61f4a1b229514d73aada9393e89cded5ed4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -573305,7 +573306,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
+              "sha256": "bcca317a692990736590e8eb6a2ae61f4a1b229514d73aada9393e89cded5ed4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -575200,7 +575201,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
+              "sha256": "bcca317a692990736590e8eb6a2ae61f4a1b229514d73aada9393e89cded5ed4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577095,7 +577096,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
+              "sha256": "bcca317a692990736590e8eb6a2ae61f4a1b229514d73aada9393e89cded5ed4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -578990,7 +578991,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
+              "sha256": "bcca317a692990736590e8eb6a2ae61f4a1b229514d73aada9393e89cded5ed4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -580885,7 +580886,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
+              "sha256": "bcca317a692990736590e8eb6a2ae61f4a1b229514d73aada9393e89cded5ed4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -582780,7 +582781,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
+              "sha256": "bcca317a692990736590e8eb6a2ae61f4a1b229514d73aada9393e89cded5ed4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -584675,7 +584676,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
+              "sha256": "bcca317a692990736590e8eb6a2ae61f4a1b229514d73aada9393e89cded5ed4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -586570,7 +586571,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
+              "sha256": "bcca317a692990736590e8eb6a2ae61f4a1b229514d73aada9393e89cded5ed4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -588465,7 +588466,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
+              "sha256": "bcca317a692990736590e8eb6a2ae61f4a1b229514d73aada9393e89cded5ed4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -590360,7 +590361,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
+              "sha256": "bcca317a692990736590e8eb6a2ae61f4a1b229514d73aada9393e89cded5ed4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591268,11 +591269,11 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.tsx",
@@ -591624,7 +591625,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
+              "sha256": "bcca317a692990736590e8eb6a2ae61f4a1b229514d73aada9393e89cded5ed4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592995,7 +592996,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
+              "sha256": "bcca317a692990736590e8eb6a2ae61f4a1b229514d73aada9393e89cded5ed4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594890,7 +594891,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
+              "sha256": "bcca317a692990736590e8eb6a2ae61f4a1b229514d73aada9393e89cded5ed4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595694,7 +595695,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Saving and solar conditional detail recovery is verified. Document detail and inline removal also have scoped loading, denied and uncertain-command read evidence. Finish remaining conditional route, list and dashboard state reconciliation against the route census."
+        "Saving, solar and document conditional details are verified for the recorded paths. Cancellation request and decision views now preserve their drafts and require a fresh read after uncertainty. Finish remaining conditional route, list and dashboard reconciliation. The Persian fulfilled cancellation status label clips on mobile."
       ],
       "owner": null,
       "depends_on": [],
@@ -595785,7 +595786,8 @@
           "release-0.5-financial-confirmation-recovery",
           "release-0.5-protected-creation-recovery",
           "release-0.5-customer-detail-state-recovery",
-          "release-0.5-document-command-recovery"
+          "release-0.5-document-command-recovery",
+          "release-0.5-contract-cancellation-recovery"
         ],
         "current_acceptance": null
       }
@@ -595974,7 +595976,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -595986,7 +595988,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -597778,7 +597780,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -597790,7 +597792,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -599582,7 +599584,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -599594,7 +599596,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -601386,7 +601388,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -601398,7 +601400,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -603190,7 +603192,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -603202,7 +603204,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -604994,7 +604996,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -605006,7 +605008,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -606798,7 +606800,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -606810,7 +606812,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -710523,7 +710525,7 @@
             },
             {
               "path": "apps/web/e2e/customer-cancellation-request.spec.ts",
-              "sha256": "1f9e1e9a77bdf84924a6e47438a34dc7c0c6011dcf80a48755f0365ecefbed1f"
+              "sha256": "bd16505b525693d9121cc918511a3fb3aff63e4c87d07427f2e9ae93d364acc1"
             },
             {
               "path": "apps/web/src/components/ContractActivation.test.tsx",
@@ -710543,7 +710545,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -714664,7 +714666,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "968bc6004f5c93ecac7eb02bec021906eb1a9988d6ad3643ebcfbc1ed3fa2f6b"
+              "sha256": "d1e90ded9abec9529f0b6836d7f0120a778d70429375260ed49da2fb03a7449e"
             },
             {
               "path": "apps/web/e2e/contract-cancellation.spec.ts",
@@ -714672,11 +714674,11 @@
             },
             {
               "path": "apps/web/e2e/customer-cancellation-request.spec.ts",
-              "sha256": "1f9e1e9a77bdf84924a6e47438a34dc7c0c6011dcf80a48755f0365ecefbed1f"
+              "sha256": "bd16505b525693d9121cc918511a3fb3aff63e4c87d07427f2e9ae93d364acc1"
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -714692,7 +714694,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -725429,7 +725431,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Document policy, transition and inline removal feedback have current production-browser evidence. Remaining scoped command feedback and conditional UI states require reconciliation. Required GitHub accessibility enforcement and the staging Sentry receipt remain open."
+        "Cancellation confirmation and fresh-read recovery have current production-browser evidence. Remaining scoped command feedback and conditional UI states require reconciliation. Required GitHub accessibility enforcement and the staging Sentry receipt remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -725585,7 +725587,8 @@
           "release-0.5-financial-confirmation-recovery",
           "release-0.5-protected-creation-recovery",
           "release-0.5-customer-detail-state-recovery",
-          "release-0.5-document-command-recovery"
+          "release-0.5-document-command-recovery",
+          "release-0.5-contract-cancellation-recovery"
         ]
       }
     },
@@ -725757,11 +725760,11 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "df9ce6ae07350962bc836dbbff9999c8f3c291df3b06510784c40b7639583fe0"
+              "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.tsx",
@@ -727469,7 +727472,8 @@
             "Renewed financial recovery native browser and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-confirmation-recovery/proof.json",
             "Renewed protected creation browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-creation-recovery/proof.json",
             "Renewed saving and solar detail browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-detail-state-recovery/proof.json",
-            "Renewed document command recovery browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-command-recovery/proof.json"
+            "Renewed document command recovery browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-command-recovery/proof.json",
+            "Renewed cancellation recovery browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-cancellation-recovery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -801658,6 +801662,99 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-command-recovery/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-command-recovery/reviewed.patch",
       "release_disposition": "Verified document retention policy receipts and exact recovery for detail transitions and inline removal. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-contract-cancellation-recovery": {
+      "batch": "release-0.5-contract-cancellation-recovery",
+      "base_commit": "6dc5d9238c29777036e5e4e7a4ba2a7e9ab08062",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+        },
+        {
+          "path": "apps/api/src/contract/contract-cancellation-request.service.ts",
+          "sha256": "526127be65247d5295168cb5296c6ddb25c74d5f4386da526a3c04f4cb611202"
+        },
+        {
+          "path": "apps/api/src/contract/contract-cancellation.controller.ts",
+          "sha256": "e8bf437e357ef95147668c7e8fcd76c64309f2722d27d2df58d5363691f4075e"
+        },
+        {
+          "path": "apps/api/src/contract/contract-cancellation.service.ts",
+          "sha256": "35a15ed616c718c55797f7997ec566a03c27c5244f11194748e6b8ddd32c2821"
+        },
+        {
+          "path": "apps/web/e2e/cancellation-forms.spec.ts",
+          "sha256": "d1e90ded9abec9529f0b6836d7f0120a778d70429375260ed49da2fb03a7449e"
+        },
+        {
+          "path": "apps/web/e2e/customer-cancellation-request.spec.ts",
+          "sha256": "bd16505b525693d9121cc918511a3fb3aff63e4c87d07427f2e9ae93d364acc1"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/ContractCancellationEditor.tsx",
+          "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+        },
+        {
+          "path": "apps/web/src/components/ContractCancellationPanel.tsx",
+          "sha256": "9d487f30156cd287b808e6c8b8f07f95d75d6ac8115a595b0af7a0937356ec7b"
+        },
+        {
+          "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
+          "sha256": "6222f0a7a88f4d5dde79d6d00536ec63261d68b098dfe239ea9196e20297ce8c"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedContractRead.ts",
+          "sha256": "d158637ca069b7551b3d4920621873ed1a07b10a0cc50c730be822d68ae20200"
+        },
+        {
+          "path": "apps/web/src/lib/contract-cancellation.ts",
+          "sha256": "79d7429ec6a34c74371346e122572c95fedefb43de577bcfe0adc47b7301832f"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "bcca317a692990736590e8eb6a2ae61f4a1b229514d73aada9393e89cded5ed4"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "Customer cancellation requests and staff rejection preserve the exact reason, destination when applicable, captured request or version, and original request key after an unconfirmed command. A fresh matching read is required before another confirmation. Unavailable or denied reads cannot dispatch a write.",
+        "Staff cancellation preparation and execution preserve the financial review basis, exact refund amounts and original request key. Browser cases verify recovery with an unchanged intent and recognize an executed intent through a fresh read without replaying it.",
+        "Passed 36 native Chromium and mobile Safari cases, 8 instrumented Chromium cases, and 69 targeted unit tests. Type checking, lint, formatting, all 100 route and interaction budgets and all nine changed-source coverage groups passed. The 31 cold-auth assets matched previously verified bytes.",
+        "Contract, refund and approval server safeguards are unchanged. The legacy customer browser fixture now completes typed and financial confirmations. The original caller run supplied four passing staff cases. The retained Persian mobile screenshot identifies a clipped fulfilled status label. The corrected customer run supplied four passing cases. Runtime source is identical across the build and final test snapshots."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-cancellation-recovery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-cancellation-recovery/proof.json",
+      "source_scope_proof_sha256": "95252019560e4dffcccf834b1276c20c345a817d157def71f410a8fe88cb02f4",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-cancellation-recovery/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-cancellation-recovery/reviewed.patch",
+      "release_disposition": "Verified cancellation request and decision recovery, exact retries and read-only settlement of a recorded execution. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -801708,12 +801805,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Reconcile the remaining v0.5.0 confirmation sites and CRUD feedback using the existing command recovery rules. Verify remaining conditional states against the current route census and scoped evidence. Live Sentry and required GitHub accessibility enforcement remain separate gates."
+    "goal": "Reconcile the remaining v0.5.0 contract acceptance, lifecycle and configuration confirmations. Fix the clipped Persian cancellation status label and verify remaining conditional states against the route census. Live Sentry and required GitHub accessibility enforcement remain separate gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 document policy, transition and removal recovery has current native browser evidence. Five launch-required criteria remain open, including staging Sentry delivery, GitHub accessibility enforcement and remaining UI reconciliation. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 cancellation request and decision recovery has current native browser evidence. Five launch-required criteria remain open, including staging Sentry delivery, GitHub accessibility enforcement and remaining UI reconciliation. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {

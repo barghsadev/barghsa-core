@@ -3,6 +3,7 @@ import type { Route } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { contractText } from '@barghsa/i18n/contracts';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { t } from '@barghsa/i18n/app';
 import { test, expect, type Page } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
@@ -81,7 +82,8 @@ async function fixture(page: Page, locale: 'en' | 'fa', dark: boolean, surface: 
     stale: false,
   };
   let resolved = false,
-    cancelled = false;
+    cancelled = false,
+    readFails = false;
   let currentRequest: Record<string, unknown> | null = surface === 'rejection' ? pending : null;
   await page.route(`**${base}?*`, (route) =>
     route.fulfill({
@@ -138,7 +140,9 @@ async function fixture(page: Page, locale: 'en' | 'fa', dark: boolean, surface: 
   );
   await page.route(`**${base}/${id}/cancellation-requests`, (route) => {
     if (route.request().method() === 'GET')
-      return route.fulfill({ json: { request: currentRequest, canRequest: !resolved } });
+      return readFails
+        ? route.fulfill({ status: 503, json: {} })
+        : route.fulfill({ json: { request: currentRequest, canRequest: !resolved } });
     return write(route);
   });
   await page.route('**/api/admin/contract-cancellation-requests/*/reject', write);
@@ -168,18 +172,30 @@ async function fixture(page: Page, locale: 'en' | 'fa', dark: boolean, surface: 
     ],
   };
   await page.route(`**/api/admin/contracts/${id}/cancellation-preview`, (route) =>
-    route.fulfill({ json: preview })
+    readFails ? route.fulfill({ status: 503, json: {} }) : route.fulfill({ json: preview })
   );
   let intent: null | Record<string, unknown> = null;
   await page.route(`**/api/admin/contracts/${id}/cancellations`, (route) =>
     route.request().method() === 'GET' ? route.fulfill({ json: { intent } }) : write(route)
   );
-  await page.route(`**/api/admin/contracts/${id}/cancellations/execute`, (route) => {
-    expect(route.request().postDataJSON()).toMatchObject({
+  const executions: unknown[] = [];
+  let releaseExecution = () => {};
+  const heldExecution = new Promise<void>((resolve) => (releaseExecution = resolve));
+  await page.route(`**/api/admin/contracts/${id}/cancellations/execute`, async (route) => {
+    const body = route.request().postDataJSON();
+    executions.push(body);
+    expect(body).toMatchObject({
       intentId,
       idempotencyKey: expect.any(String),
     });
-    cancelled = true;
+    if (dark || executions.length > 1) {
+      cancelled = true;
+      intent = { ...intent, status: 'executed' };
+    }
+    if (executions.length === 1) {
+      await heldExecution;
+      return route.abort().catch(() => {});
+    }
     return route.fulfill({
       status: 201,
       json: { contractId: id, versionId, intentId, state: 'Cancelled', financiallyClosed: false },
@@ -261,6 +277,11 @@ async function fixture(page: Page, locale: 'en' | 'fa', dark: boolean, surface: 
     .click();
   return {
     writes,
+    executions,
+    releaseExecution,
+    setReadFailure: (fail: boolean) => {
+      readFails = fail;
+    },
     setMode: (next: typeof mode) => {
       mode = next;
     },
@@ -387,16 +408,35 @@ for (const surface of ['customer', 'rejection', 'decision'] as const)
         await expect(reason).toHaveValue('  Raw reason  ');
         f.setMode('service');
         await confirm();
-        await expect(dialog.getByRole('alert')).toBeVisible();
+        await expect(dialog).toHaveCount(0);
+        const unconfirmed = region.getByText(confirmationText('unconfirmed', locale), {
+          exact: true,
+        });
+        const check = region.getByRole('button', {
+          name: confirmationText('checkStatus', locale),
+          exact: true,
+        });
+        await expect(unconfirmed).toBeVisible();
+        await expect(reason).toBeDisabled();
+        f.setReadFailure(true);
+        await check.click();
+        await expect(region.getByText(w('error'), { exact: true })).toBeVisible();
+        expect(f.writes).toHaveLength(4);
+        f.setReadFailure(false);
+        await check.click();
+        await expect(reason).toHaveValue('  Raw reason  ');
+        await expect(reason).toBeEnabled();
         f.setMode('mismatch');
-        await confirm();
-        await expect(dialog.getByRole('alert')).toBeVisible();
+        await submit();
+        await confirmNew();
+        await expect(dialog).toHaveCount(0);
+        await expect(unconfirmed).toBeVisible();
         expect(f.writes[2]).toEqual(f.writes[3]);
         expect(f.writes[3]).toEqual(f.writes[4]);
         await expect(page.locator('body')).not.toContainText('private-cancellation-diagnostic');
-        await dialog.getByRole('button', { name: t('team.cancel', locale), exact: true }).click();
+        await check.click();
         await expect(reason).toHaveValue('  Raw reason  ');
-        await expect(reason).toBeFocused();
+        await expect(reason).toBeEnabled();
         expect((await new AxeBuilder({ page }).include('form').analyze()).violations).toEqual([]);
         expect(await page.locator('html').getAttribute('dir')).toBe(
           locale === 'fa' ? 'rtl' : 'ltr'
@@ -411,7 +451,7 @@ for (const surface of ['customer', 'rejection', 'decision'] as const)
           testInfo.project.name === 'mobile-safari'
         )
           await page.screenshot({
-            path: '/tmp/barghsa-cancellation-fa-dark-mobile.png',
+            path: testInfo.outputPath('cancellation-fa-dark-mobile.png'),
             fullPage: true,
           });
         f.setMode('denied');
@@ -438,11 +478,34 @@ for (const surface of ['customer', 'rejection', 'decision'] as const)
         await confirmNew();
         await expect(dialog).toHaveCount(0);
         if (surface === 'decision') {
-          await region.getByRole('button', { name: w('cancellationConfirm'), exact: true }).click();
+          const execute = region.getByRole('button', {
+            name: w('cancellationConfirm'),
+            exact: true,
+          });
+          await execute.click();
+          await page.clock.install();
           await confirmNew('both');
+          try {
+            await expect.poll(() => f.executions.length).toBe(1);
+            await page.clock.runFor(15_100);
+            await expect(dialog).toHaveCount(0);
+            await expect(unconfirmed).toBeVisible();
+            await expect(execute).toBeDisabled();
+          } finally {
+            f.releaseExecution();
+          }
+          await check.click();
+          if (!dark) {
+            await execute.click();
+            await confirmNew('both');
+            await expect(dialog).toHaveCount(0);
+            expect(f.executions).toHaveLength(2);
+            expect(f.executions[1]).toEqual(f.executions[0]);
+          }
           await expect(
             region.getByText(w('cancellationServiceEnded'), { exact: true })
           ).toBeVisible();
+          expect(f.executions).toHaveLength(dark ? 1 : 2);
         } else {
           await expect(
             region.getByText(

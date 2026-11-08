@@ -30,6 +30,8 @@ import type {
 } from '../lib/contract-cancellation.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 
+const isIrr = (value: unknown) => typeof value === 'string' && /^\d+$/.test(value);
+
 export default function CancellationEditor(props: Parameters<typeof OwnedCancellationEditor>[0]) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
@@ -95,9 +97,14 @@ function OwnedCancellationEditor({
     [phase, setPhase] = useState<'prepare' | 'execute'>('prepare');
   const [loading, setLoading] = useState(true);
   const [denied, setDenied] = useState(false);
+  const [needsRead, setNeedsRead] = useState(false);
   const live = useRef(false),
     generation = useRef(0),
     current = useRef<TeamAction | null>(null);
+  const currentBasis = useRef('');
+  const unconfirmed = useRef<{ action: TeamAction; basis: string } | null>(null);
+  const notifyChanged = useRef(onChanged);
+  notifyChanged.current = onChanged;
   const previewRef = useRef(preview);
   previewRef.current = preview;
   const canChooseRef = useRef(canChooseRefund);
@@ -118,6 +125,8 @@ function OwnedCancellationEditor({
   function deny() {
     generation.current++;
     close();
+    unconfirmed.current = null;
+    setNeedsRead(false);
     setPreview(null);
     setIntent(null);
     setDenied(true);
@@ -153,23 +162,59 @@ function OwnedCancellationEditor({
     ])
       .then(([snapshot, saved]) => {
         if (controller.signal.aborted || owner !== generation.current) return;
+        const stored = saved.intent;
         if (
-          terminalAction === 'reject' &&
-          (snapshot.terminalAction !== 'reject' ||
-            snapshot.contractId !== id ||
-            snapshot.serviceType !== 'electricity' ||
-            (saved.intent &&
-              (saved.intent.terminalAction !== 'reject' || saved.intent.contractId !== id)))
+          snapshot.contractId !== id ||
+          (snapshot.terminalAction ?? 'cancel') !== terminalAction ||
+          (terminalAction === 'reject' && snapshot.serviceType !== 'electricity') ||
+          typeof snapshot.versionId !== 'string' ||
+          typeof snapshot.fingerprint !== 'string' ||
+          !Array.isArray(snapshot.blockers) ||
+          !Array.isArray(snapshot.invoices) ||
+          !isIrr(snapshot.refundableAmount) ||
+          !snapshot.invoices.every(
+            (invoice) =>
+              invoice &&
+              typeof invoice.id === 'string' &&
+              [
+                invoice.paidAmount,
+                invoice.refundedAmount,
+                invoice.availableRefundAmount,
+                invoice.refundableAmount,
+              ].every(isIrr)
+          ) ||
+          (stored !== null &&
+            (!stored ||
+              stored.contractId !== id ||
+              (stored.terminalAction ?? 'cancel') !== terminalAction ||
+              !['ready', 'awaiting_approval', 'rejected', 'executed'].includes(stored.status) ||
+              !Array.isArray(stored.refundDecision?.refunds) ||
+              !stored.refundDecision.refunds.every(
+                (line) =>
+                  line &&
+                  typeof line.invoiceId === 'string' &&
+                  isIrr(line.amount) &&
+                  ['wallet', 'external_bank'].includes(line.destination)
+              )))
         )
-          throw new Error('Unbound rejection snapshot');
+          throw new Error('Unbound cancellation snapshot');
+        const pending = unconfirmed.current;
+        if (
+          pending?.action.path.endsWith('/execute') &&
+          stored?.status === 'executed' &&
+          stored.id === (pending.action.body as { intentId: string }).intentId
+        ) {
+          unconfirmed.current = null;
+          notifyChanged.current();
+        }
         setPreview(snapshot);
         setLoading(false);
+        setNeedsRead(false);
         setDenied(false);
-        setIntent(
-          customerRequestId && saved.intent?.customerRequestId !== customerRequestId
-            ? null
-            : saved.intent
-        );
+        const currentIntent =
+          customerRequestId && stored?.customerRequestId !== customerRequestId ? null : stored;
+        if (pending && currentIntent && currentIntent.id !== intent?.id) setDiscard(false);
+        setIntent(currentIntent);
         const values = draft.form.getValues();
         draft.form.reset({
           ...values,
@@ -195,7 +240,8 @@ function OwnedCancellationEditor({
   }, [id, reload, customerRequestId, terminalAction, readContract]);
   function prepare(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (busy || error || denied || !permitted || draft.form.isSubmissionPending()) return;
+    if (busy || needsRead || error || denied || !permitted || draft.form.isSubmissionPending())
+      return;
     const captured = preview;
     const owner = generation.current;
     void draft.form.handleSubmit((values) => {
@@ -216,6 +262,17 @@ function OwnedCancellationEditor({
         return;
       openPreparation(captured, values);
     })(event);
+  }
+  function openCommand(proposal: TeamAction & { body: Record<string, unknown> }) {
+    const basis = JSON.stringify([proposal.path, proposal.body]);
+    const pending = unconfirmed.current;
+    const command =
+      pending?.basis === basis
+        ? pending.action
+        : { ...proposal, body: { ...proposal.body, idempotencyKey: crypto.randomUUID() } };
+    currentBasis.current = basis;
+    current.current = command;
+    setAction(command);
   }
   function openPreparation(
     preview: CancellationPreview,
@@ -245,7 +302,7 @@ function OwnedCancellationEditor({
           },
       reason: reason.trim(),
     });
-    const command: TeamAction = {
+    openCommand({
       risk: 'financial',
       title: word('cancellationSave'),
       description: word('cancellationPrepareNotice'),
@@ -258,17 +315,15 @@ function OwnedCancellationEditor({
         reason: reason.trim(),
         ...(customerRequestId ? { customerRequestId } : {}),
         refundDecision: custom ? { mode: 'custom', refunds } : { mode: 'full_wallet' },
-        idempotencyKey: crypto.randomUUID(),
       },
       conflictMessage: word('cancellationConflict'),
       forbiddenMessage: word('denied'),
-    };
-    current.current = command;
-    setAction(command);
+    });
   }
   function execute() {
     if (
       busy ||
+      needsRead ||
       error ||
       denied ||
       !permitted ||
@@ -284,18 +339,16 @@ function OwnedCancellationEditor({
     const amount = intent.refundDecision.refunds
       .reduce((sum, line) => sum + BigInt(line.amount), 0n)
       .toString();
-    const command: TeamAction = {
+    openCommand({
       risk: 'both',
       title: word('cancellationConfirm'),
       description: `${word('cancellationIrreversible')} ${word('cancellationReturn')}: ${money(amount)} ${word('irr')}. ${intent.reason}`,
       path: `/api/admin/contracts/${id}/cancellations/execute`,
       method: 'POST',
-      body: { intentId: intent.id, idempotencyKey: crypto.randomUUID() },
+      body: { intentId: intent.id },
       conflictMessage: word('cancellationConflict'),
       forbiddenMessage: word('denied'),
-    };
-    current.current = command;
-    setAction(command);
+    });
   }
   const saved = intent && !discard ? intent : null;
   const stale = !!(
@@ -311,8 +364,13 @@ function OwnedCancellationEditor({
         className="self-start"
         onClick={() => setReload((n) => n + 1)}
       >
-        {word('cancellationRefresh')}
+        {needsRead ? confirmationText('checkStatus', locale) : word('cancellationRefresh')}
       </Button>
+      {needsRead && (
+        <Alert variant="destructive">
+          <AlertDescription>{confirmationText('unconfirmed', locale)}</AlertDescription>
+        </Alert>
+      )}
       {denied ? <p role="status">{word('denied')}</p> : null}
       {error ? (
         <Alert variant="destructive">
@@ -360,7 +418,7 @@ function OwnedCancellationEditor({
               ) : null}
               {saved.status === 'ready' && !stale && !preview.blockers.length ? (
                 <Button
-                  disabled={busy || error || !permitted}
+                  disabled={busy || needsRead || error || !permitted}
                   variant="destructive"
                   className="self-start"
                   onClick={execute}
@@ -369,7 +427,7 @@ function OwnedCancellationEditor({
                 </Button>
               ) : null}
               <Button
-                disabled={busy || error}
+                disabled={busy || needsRead || error}
                 variant="outline"
                 className="self-start"
                 onClick={() => {
@@ -398,7 +456,7 @@ function OwnedCancellationEditor({
                 <label className="touch-label flex items-center gap-2">
                   <input
                     type="checkbox"
-                    disabled={busy || error}
+                    disabled={busy || needsRead || error}
                     checked={custom}
                     onChange={(e) => setCustom(e.target.checked)}
                   />
@@ -419,7 +477,7 @@ function OwnedCancellationEditor({
                           inputMode="numeric"
                           value={lines[invoice.id]?.amount ?? ''}
                           {...draft.bind(`lines.${invoice.id}.amount`)}
-                          disabled={busy || error}
+                          disabled={busy || needsRead || error}
                           aria-required="true"
                           onChange={(e) =>
                             draft.field(`lines.${invoice.id}.amount`)[1](e.target.value)
@@ -457,7 +515,7 @@ function OwnedCancellationEditor({
                           className="h-10 rounded-md border bg-background px-3 text-sm"
                           value={lines[invoice.id]?.destination ?? 'wallet'}
                           {...draft.bind(`lines.${invoice.id}.destination`)}
-                          disabled={busy || error}
+                          disabled={busy || needsRead || error}
                           aria-required="true"
                           onChange={(e) =>
                             draft.field(`lines.${invoice.id}.destination`)[1](
@@ -495,7 +553,7 @@ function OwnedCancellationEditor({
                 <FieldLabel htmlFor="cancellation-reason">{word('cancellationReason')}</FieldLabel>
                 <Textarea
                   {...draft.bind('reason')}
-                  disabled={busy || error}
+                  disabled={busy || needsRead || error}
                   required
                   aria-required="true"
                   id="cancellation-reason"
@@ -517,7 +575,11 @@ function OwnedCancellationEditor({
                   <AlertDescription>{draft.errors.root.validation.message}</AlertDescription>
                 </Alert>
               ) : null}
-              <Button type="submit" className="self-start" disabled={busy || error || !permitted}>
+              <Button
+                type="submit"
+                className="self-start"
+                disabled={busy || needsRead || error || !permitted}
+              >
                 {draft.form.formState.isSubmitting && (
                   <span
                     aria-hidden="true"
@@ -546,6 +608,12 @@ function OwnedCancellationEditor({
           onDenied={() => {
             if (live.current && current.current === action) deny();
           }}
+          onUnconfirmed={() => {
+            if (!live.current || current.current !== action) return;
+            unconfirmed.current = { action, basis: currentBasis.current };
+            setNeedsRead(true);
+            close();
+          }}
           onValidationError={(fields) =>
             live.current &&
             current.current === action &&
@@ -573,6 +641,7 @@ function OwnedCancellationEditor({
                 receipt.state !== (terminalAction === 'reject' ? 'Rejected' : 'Cancelled')
               )
                 throw new Error('Cancellation execution acknowledgement mismatch');
+              unconfirmed.current = null;
               close();
               onChanged();
             } else {
@@ -584,12 +653,13 @@ function OwnedCancellationEditor({
                 receipt.versionId !== review.snapshot.versionId ||
                 receipt.financialFingerprint !== review.snapshot.fingerprint ||
                 receipt.reason !== review.reason ||
-                (terminalAction === 'reject' && receipt.terminalAction !== 'reject') ||
+                (receipt.terminalAction ?? 'cancel') !== terminalAction ||
                 (receipt.customerRequestId ?? null) !== customerRequestId ||
                 !['ready', 'awaiting_approval'].includes(receipt.status) ||
                 !sameRefundDecision(receipt.refundDecision, review.decision)
               )
                 throw new Error('Cancellation decision acknowledgement mismatch');
+              unconfirmed.current = null;
               close();
               setIntent(receipt);
               setDiscard(false);

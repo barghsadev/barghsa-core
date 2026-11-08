@@ -44,6 +44,15 @@ type RequestPanelProps = {
   onChanged: () => void;
   onReview: (request: CancellationRequest) => void;
 };
+type RequestCommand = TeamAction & {
+  priorRequest: string | null;
+  body: {
+    reason: string;
+    idempotencyKey: string;
+    preferredDestination?: string;
+    expectedVersionId?: string;
+  };
+};
 export function ContractCancellationRequestPanel(props: RequestPanelProps) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
@@ -81,10 +90,12 @@ function RequestWorkspace({
   const draft = useCancellationRequestForm(staff);
   const [reason, setReason] = draft.field('reason');
   const [destination, setDestination] = draft.field('preferredDestination');
-  const [action, setAction] = useState<TeamAction | null>(null);
+  const [action, setAction] = useState<RequestCommand | null>(null);
+  const [needsRead, setNeedsRead] = useState(false);
   const [loading, setLoading] = useState(true);
   const [denied, setDenied] = useState(false);
-  const current = useRef<TeamAction | null>(null);
+  const current = useRef<RequestCommand | null>(null);
+  const unconfirmed = useRef<RequestCommand | null>(null);
   const live = useRef(false);
   const dataRef = useRef(data);
   dataRef.current = data;
@@ -104,6 +115,8 @@ function RequestWorkspace({
   function deny() {
     generation.current++;
     close();
+    unconfirmed.current = null;
+    setNeedsRead(false);
     setData(null);
     setDenied(true);
     draft.form.reset({ reason: '', preferredDestination: 'wallet' });
@@ -122,10 +135,29 @@ function RequestWorkspace({
     )
       .then((value) => {
         if (controller.signal.aborted || generation.current !== owner) return;
+        const request = value.request;
+        if (
+          request !== null &&
+          (!request ||
+            typeof request.id !== 'string' ||
+            !request.id ||
+            request.contractId !== id ||
+            typeof request.versionId !== 'string' ||
+            typeof request.reason !== 'string' ||
+            !['wallet', 'external_bank'].includes(request.preferredDestination) ||
+            !['Pending', 'Rejected', 'Fulfilled', 'Closed'].includes(request.status))
+        )
+          throw new Error('Unbound cancellation request');
         const previous = dataRef.current;
-        if (previous?.request?.id !== value.request?.id)
+        if (previous?.request?.id !== request?.id)
           draft.form.reset({ reason: '', preferredDestination: 'wallet' });
+        if (
+          unconfirmed.current?.priorRequest !== (request?.id ?? null) ||
+          (staff ? request?.status !== 'Pending' : value.canRequest !== true)
+        )
+          unconfirmed.current = null;
         setData(value);
+        setNeedsRead(false);
         setDenied(false);
         setLoading(false);
       })
@@ -140,7 +172,7 @@ function RequestWorkspace({
   }, [id, versionId, staff, reload, readContract]);
   function choose(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (busy || denied || error || draft.form.isSubmissionPending()) return;
+    if (busy || needsRead || denied || error || draft.form.isSubmissionPending()) return;
     const captured = data;
     const owner = generation.current;
     void draft.form.handleSubmit((values) => {
@@ -154,24 +186,40 @@ function RequestWorkspace({
         return;
       if (!captured || (staff ? captured.request?.status !== 'Pending' : !captured.canRequest))
         return;
-      const command: TeamAction = {
-        risk: 'destructive',
-        title: word(staff ? 'cancellationRequestReject' : 'cancellationRequestSubmit'),
-        description: word(staff ? 'cancellationRequestRejectNotice' : 'cancellationRequestNotice'),
-        path: staff
-          ? `/api/admin/contract-cancellation-requests/${captured.request!.id}/reject`
-          : `/api/contracts/${id}/cancellation-requests`,
-        method: 'POST',
-        body: {
-          reason: values.reason.trim(),
-          idempotencyKey: crypto.randomUUID(),
-          ...(!staff
-            ? { expectedVersionId: versionId, preferredDestination: values.preferredDestination }
-            : {}),
-        },
-        conflictMessage: word('cancellationConflict'),
-        forbiddenMessage: word('denied'),
-      };
+      const note = values.reason.trim();
+      const priorRequest = captured.request?.id ?? null;
+      const preferredDestination = staff ? undefined : values.preferredDestination;
+      const pending = unconfirmed.current;
+      const command: RequestCommand =
+        pending &&
+        pending.priorRequest === priorRequest &&
+        pending.body.reason === note &&
+        pending.body.preferredDestination === preferredDestination
+          ? pending
+          : {
+              priorRequest,
+              risk: 'destructive',
+              title: word(staff ? 'cancellationRequestReject' : 'cancellationRequestSubmit'),
+              description: word(
+                staff ? 'cancellationRequestRejectNotice' : 'cancellationRequestNotice'
+              ),
+              path: staff
+                ? `/api/admin/contract-cancellation-requests/${captured.request!.id}/reject`
+                : `/api/contracts/${id}/cancellation-requests`,
+              method: 'POST',
+              body: {
+                reason: note,
+                idempotencyKey: crypto.randomUUID(),
+                ...(!staff
+                  ? {
+                      expectedVersionId: versionId,
+                      preferredDestination: values.preferredDestination,
+                    }
+                  : {}),
+              },
+              conflictMessage: word('cancellationConflict'),
+              forbiddenMessage: word('denied'),
+            };
       current.current = command;
       setAction(command);
     })(event);
@@ -186,9 +234,14 @@ function RequestWorkspace({
       <div className="flex items-center justify-between gap-3">
         <h4 className="font-medium">{word('cancellationRequestTitle')}</h4>
         <Button variant="ghost" disabled={busy} onClick={() => setReload((n) => n + 1)}>
-          {word('refresh')}
+          {needsRead ? confirmationText('checkStatus', locale) : word('refresh')}
         </Button>
       </div>
+      {needsRead && (
+        <Alert variant="destructive">
+          <AlertDescription>{confirmationText('unconfirmed', locale)}</AlertDescription>
+        </Alert>
+      )}
       {denied ? (
         <p role="status">{word('denied')}</p>
       ) : error ? (
@@ -235,7 +288,7 @@ function RequestWorkspace({
               <Button
                 className="self-start"
                 variant="outline"
-                disabled={busy || request.stale}
+                disabled={busy || needsRead || request.stale}
                 onClick={() => onReview(request)}
               >
                 {word('cancellationRequestReview')}
@@ -258,7 +311,7 @@ function RequestWorkspace({
                 </FieldLabel>
                 <Textarea
                   {...draft.bind('reason')}
-                  disabled={busy}
+                  disabled={busy || needsRead}
                   required
                   aria-required="true"
                   id={'request-reason-' + id}
@@ -282,7 +335,7 @@ function RequestWorkspace({
                   </FieldLabel>
                   <NativeSelect
                     {...draft.bind('preferredDestination')}
-                    disabled={busy}
+                    disabled={busy || needsRead}
                     id={'request-destination-' + id}
                     value={destination}
                     onChange={(e) => setDestination(e.target.value as 'wallet' | 'external_bank')}
@@ -307,7 +360,7 @@ function RequestWorkspace({
                 </Alert>
               ) : null}
               <Button
-                disabled={busy}
+                disabled={busy || needsRead}
                 type="submit"
                 variant={staff ? 'outline' : 'default'}
                 className="self-start"
@@ -335,18 +388,26 @@ function RequestWorkspace({
           onDenied={() => {
             if (live.current && current.current === action) deny();
           }}
+          onUnconfirmed={() => {
+            if (!live.current || current.current !== action) return;
+            unconfirmed.current = action;
+            setNeedsRead(true);
+            close();
+          }}
           onValidationError={(fields) =>
             live.current && current.current === action && draft.applyServerErrors(fields)
           }
           onSuccess={async (result) => {
             if (!live.current || current.current !== action) return;
             const receipt = result as Partial<CancellationRequest> | null;
-            const body = action.body as { reason: string; preferredDestination?: string };
+            const body = action.body;
             if (
               !receipt ||
               receipt.contractId !== id ||
               (staff
-                ? receipt.id !== request?.id ||
+                ? !request ||
+                  receipt.id !== request.id ||
+                  receipt.versionId !== request.versionId ||
                   receipt.status !== 'Rejected' ||
                   receipt.resolutionReason !== body.reason
                 : !receipt.id ||
@@ -356,6 +417,7 @@ function RequestWorkspace({
                   receipt.preferredDestination !== body.preferredDestination)
             )
               throw new Error('Cancellation request acknowledgement mismatch');
+            unconfirmed.current = null;
             close();
             draft.form.reset({ reason: '', preferredDestination: 'wallet' });
             setReload((n) => n + 1);

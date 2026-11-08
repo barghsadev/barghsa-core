@@ -1,6 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import { en, fa } from '../../../packages/i18n/src/contracts';
 import { t } from '../../../packages/i18n/src/app';
+import { approveRiskConfirmation } from './confirmation-fixture';
 for (const locale of ['en', 'fa'] as const)
   test(
     locale +
@@ -239,6 +240,7 @@ for (const locale of ['en', 'fa'] as const)
         await requestPanel
           .getByRole('button', { name: w.cancellationRequestSubmit, exact: true })
           .click();
+        await approveRiskConfirmation(page, locale, 'destructive');
         await confirm();
       };
       await customerOpen();
@@ -279,6 +281,7 @@ for (const locale of ['en', 'fa'] as const)
       await requestPanel
         .getByRole('button', { name: w.cancellationRequestReject, exact: true })
         .click();
+      await approveRiskConfirmation(page, locale, 'destructive');
       await confirm();
       await customerOpen();
       await expect(
@@ -298,8 +301,10 @@ for (const locale of ['en', 'fa'] as const)
         .getByLabel(w.cancellationReason, { exact: true })
         .fill('Approved customer request');
       await cancellation.getByRole('button', { name: w.cancellationSave, exact: true }).click();
+      await approveRiskConfirmation(page, locale, 'financial');
       await confirm();
       await cancellation.getByRole('button', { name: w.cancellationConfirm, exact: true }).click();
+      await approveRiskConfirmation(page, locale, 'both');
       await confirm();
       await expect(
         cancellation.getByText(w.cancellationServiceEnded, { exact: true })
