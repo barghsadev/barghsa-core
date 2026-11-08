@@ -5,6 +5,7 @@ import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { t } from '@barghsa/i18n/app';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { SimpleElectricityOrderPage as Page } from './SimpleElectricityOrderPage.js';
 
 const notices = vi.hoisted(() => ({ error: vi.fn(), success: vi.fn() }));
@@ -109,7 +110,8 @@ let container: HTMLDivElement;
 let root: Root;
 let fetchMock: ReturnType<typeof vi.fn<typeof fetch>>;
 let orderReply: () => Promise<Response>;
-let draftReply: (input: typeof draft) => Promise<Response>;
+let draftReply: (input: typeof draft & { revision: string }) => Promise<Response>;
+let draftRevision: string | null;
 let previewReply: () => Promise<Response>;
 let billDataReply: () => Promise<Response>;
 let accountTimezone: string;
@@ -124,6 +126,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   catalogue = [product];
   draft = { currentStep: 1, data: null };
+  draftRevision = null;
   orderReply = async () => response(saved, 201);
   draftReply = async (input) => response(input);
   previewReply = async () => response(quote);
@@ -147,10 +150,13 @@ beforeEach(() => {
         { id: address.cityId, provinceId: address.provinceId, nameFa: 'تهران', nameEn: 'Tehran' },
       ]);
     if (url === '/api/electricity/periods/simple') return response({ periods });
-    if (url === `/api/electricity/drafts/simple?profileId=${profileId}`) return response(draft);
-    if (url === '/api/electricity/drafts/simple' && init?.method === 'PUT') {
+    if (url === `/api/electricity/drafts/simple/guarded?profileId=${profileId}`)
+      return response({ ...draft, revision: draftRevision });
+    if (url === '/api/electricity/drafts/simple/guarded' && init?.method === 'PUT') {
+      expect(new Headers(init.headers).get('x-draft-revision')).toBe(draftRevision ?? 'initial');
       draft = JSON.parse(init.body as string);
-      return draftReply(draft);
+      draftRevision = crypto.randomUUID();
+      return draftReply({ ...draft, revision: draftRevision });
     }
     if (url === `/api/wallet/${profileId}`) return response({ balance: '500000', currency: 'IRR' });
     if (url.startsWith(`/api/electricity/bill-data/${profileId}`)) return billDataReply();
@@ -446,11 +452,11 @@ it('keeps the current fields when the server confirms a different saved quantity
   expect(next().disabled).toBe(false);
   await advance();
   expect(
-    fetchMock.mock.calls.filter(([url]) => url === '/api/electricity/drafts/simple')
+    fetchMock.mock.calls.filter(([url]) => url === '/api/electricity/drafts/simple/guarded')
   ).toHaveLength(1);
   expect(window.location.search).toBe('?step=2');
   expect(container.querySelector<HTMLInputElement>('#electricity-kwh')?.value).toBe('10');
-  expect(notices.error).toHaveBeenCalledWith(t('electricity.order.draftSaveFailed', 'en'));
+  expect(notices.error).toHaveBeenCalledWith(confirmationText('unconfirmed', 'en'));
 });
 
 it('freezes the draft snapshot and sends one save until confirmation arrives', async () => {
@@ -468,10 +474,10 @@ it('freezes the draft snapshot and sends one save until confirmation arrives', a
     next().click();
   });
   expect(
-    fetchMock.mock.calls.filter(([url]) => url === '/api/electricity/drafts/simple')
+    fetchMock.mock.calls.filter(([url]) => url === '/api/electricity/drafts/simple/guarded')
   ).toHaveLength(1);
   expect(container.querySelector('fieldset')?.disabled).toBe(true);
-  await act(async () => finish(response(draft)));
+  await act(async () => finish(response({ ...draft, revision: draftRevision })));
   expect(window.location.search).toBe('?step=3');
 });
 
@@ -510,10 +516,10 @@ it('ignores a draft acknowledgement after the order form has unmounted', async (
   await approveVisibleConfirmation();
   await act(async () => next().click());
   expect(
-    fetchMock.mock.calls.filter(([url]) => url === '/api/electricity/drafts/simple')
+    fetchMock.mock.calls.filter(([url]) => url === '/api/electricity/drafts/simple/guarded')
   ).toHaveLength(1);
   await act(async () => root.render(null));
-  await act(async () => finish(response(draft)));
+  await act(async () => finish(response({ ...draft, revision: draftRevision })));
   expect(window.location.search).toBe('?step=2');
   expect(navigate).not.toHaveBeenCalled();
 });
@@ -582,7 +588,7 @@ it.each([
   `/api/profiles/${profileId}/addresses`,
   '/api/electricity/periods/simple',
   `/api/electricity/bill-data/${profileId}?period=current_month`,
-  `/api/electricity/drafts/simple?profileId=${profileId}`,
+  `/api/electricity/drafts/simple/guarded?profileId=${profileId}`,
 ])('cancels pending intake bytes for %s on page-only removal', async (path) => {
   const previous = fetchMock.getMockImplementation()!;
   let signal!: AbortSignal, finish!: (value: unknown) => void;

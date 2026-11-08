@@ -65,10 +65,10 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await page.route('**/api/products/electricity', (route) => route.fulfill({ json: [] }));
     await page.route('**/api/saving/orders/draft?*', (route) =>
-      route.fulfill({ json: { currentStep: 1, data: null, updatedAt: null } })
+      route.fulfill({ json: { currentStep: 1, data: null, updatedAt: null, revision: null } })
     );
-    await page.route('**/api/electricity/drafts/simple?*', (route) =>
-      route.fulfill({ json: { currentStep: 1, data: null, updatedAt: null } })
+    await page.route('**/api/electricity/drafts/simple/guarded?*', (route) =>
+      route.fulfill({ json: { currentStep: 1, data: null, updatedAt: null, revision: null } })
     );
     await page.route('**/api/profiles/profile-one/addresses', (route) =>
       route.fulfill({ json: { addresses: [] } })

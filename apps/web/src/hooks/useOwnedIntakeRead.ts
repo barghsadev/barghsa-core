@@ -42,7 +42,7 @@ export function useOwnedIntakeRead(identity: string) {
           ].includes(path) ||
           /^\/api\/profiles\/[^/?]+\/addresses$/.test(path) ||
           /^\/api\/electricity\/bill-data\/[^/?]+\?period=[^&#]+$/.test(path) ||
-          /^\/api\/electricity\/drafts\/simple\?profileId=[^&#]+$/.test(path)
+          /^\/api\/electricity\/drafts\/simple(?:\/guarded)?\?profileId=[^&#]+$/.test(path)
         )
       )
         throw new Error('Invalid intake read');

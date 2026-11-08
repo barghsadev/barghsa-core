@@ -20,9 +20,14 @@ import {
 } from '../components/ElectricityContractTerms.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useFinancialFormatting } from '../hooks/useFinancialFormatting.js';
-import { withCsrf } from '../lib/csrf.js';
 import { useWizardStep } from '../hooks/useWizardStep.js';
-import { confirmedDraftReceipt, electricityOrderReceipt } from '../lib/form-receipt.js';
+import { electricityOrderReceipt } from '../lib/form-receipt.js';
+import { confirmationText } from '@barghsa/i18n/confirmation';
+import {
+  ElectricityDraftRecovery,
+  electricityDraftPath,
+  useElectricityDraftPersistence,
+} from './electricity-draft-persistence.js';
 import { useReviewedSubmission } from '../hooks/useReviewedSubmission.js';
 import { SubmissionRecovery } from '../components/SubmissionRecovery.js';
 import { formatJalaliDateTime, parseJalaliDateTime } from '../lib/jalali-date-time.js';
@@ -244,7 +249,9 @@ export function AdvancedElectricityOrderPage() {
   const [loadError, setLoadError] = useState(false);
   const [bootstrapAttempt, setBootstrapAttempt] = useState(0);
   const [draftAttempt, setDraftAttempt] = useState(0);
-  const [saving, setSaving] = useState(false);
+  const drafts = useElectricityDraftPersistence('advanced');
+  const { reset: resetDraft, retire: retireDraft, readRevision } = drafts;
+  const saving = drafts.working;
   const [submitting, setSubmitting] = useState(false);
   const wizard = useWizardStep('/electricity/advanced');
   const { step } = wizard;
@@ -256,6 +263,7 @@ export function AdvancedElectricityOrderPage() {
     { addIdempotencyKey: true }
   );
   const orderUnconfirmed = orderSubmission.unconfirmed;
+  const held = orderUnconfirmed || !!drafts.recovery;
   const generation = useRef(0);
   const completed = useRef(false);
   const savedSignature = useRef('');
@@ -270,12 +278,22 @@ export function AdvancedElectricityOrderPage() {
     shouldBlockFn: ({ current, next }) =>
       current.pathname !== next.pathname &&
       !completed.current &&
-      (hasUnsavedChanges() || orderUnconfirmed || !!command.current || fields.isPending()),
+      (hasUnsavedChanges() ||
+        held ||
+        !!command.current ||
+        !!drafts.active.current ||
+        fields.isPending()),
     enableBeforeUnload: () =>
       !completed.current &&
-      (hasUnsavedChanges() || orderUnconfirmed || !!command.current || fields.isPending()),
+      (hasUnsavedChanges() ||
+        held ||
+        !!command.current ||
+        !!drafts.active.current ||
+        fields.isPending()),
     withResolver: true,
   });
+  const activeBlocker = useRef(blocker);
+  activeBlocker.current = blocker;
   const selectedAddress = addresses.find((address) => address.id === addressId);
   const startAt = useMemo(() => parseJalaliDateTime(start), [start]);
   const endAt = useMemo(() => parseJalaliDateTime(end), [end]);
@@ -353,7 +371,7 @@ export function AdvancedElectricityOrderPage() {
     wizard.reset();
     command.current = null;
     completed.current = false;
-    setSaving(false);
+    resetDraft();
     setSubmitting(false);
     setLoading(true);
     void readWithDeadline(
@@ -361,7 +379,7 @@ export function AdvancedElectricityOrderPage() {
       async (signal): Promise<[{ addresses: Address[] }, Draft]> => {
         const [addresses, draft] = await Promise.all([
           fetch(`/api/profiles/${profileId}/addresses`, { credentials: 'include', signal }),
-          fetch(`/api/electricity/drafts/advanced?profileId=${profileId}`, {
+          fetch(electricityDraftPath('advanced', profileId), {
             credentials: 'include',
             signal,
           }),
@@ -401,6 +419,7 @@ export function AdvancedElectricityOrderPage() {
               (draft.data.addressId !== undefined && typeof draft.data.addressId !== 'string')))
         )
           throw new Error('Invalid draft');
+        readRevision(draft);
         setAddresses(addressData.addresses);
         const restoredAddress =
           draft.data?.addressId ??
@@ -439,10 +458,11 @@ export function AdvancedElectricityOrderPage() {
       });
     return () => {
       abort.abort();
+      retireDraft();
       command.current = null;
       if (generation.current === epoch) generation.current++;
     };
-  }, [profileId, draftAttempt]);
+  }, [profileId, draftAttempt, readRevision, resetDraft, retireDraft]);
 
   useEffect(() => {
     setQuote(null);
@@ -490,11 +510,12 @@ export function AdvancedElectricityOrderPage() {
     quoteVersion,
   ]);
 
-  async function saveDraft(next: boolean, target = next ? step + 1 : step) {
+  async function saveDraft(next: boolean, target = next ? step + 1 : step, leave = false) {
     if (next && step === 4 && !selectedAddress) return false;
     if (
       command.current ||
-      orderUnconfirmed ||
+      held ||
+      drafts.active.current ||
       completed.current ||
       loading ||
       loadError ||
@@ -509,8 +530,6 @@ export function AdvancedElectricityOrderPage() {
       (step === 1 ? !validPeriod : !quote || !validPeriod || !quantitiesValid || quoteError)
     )
       return false;
-    const token = Symbol();
-    command.current = token;
     const epoch = generation.current;
     const snapshot = signature;
     const input = {
@@ -524,36 +543,30 @@ export function AdvancedElectricityOrderPage() {
         ...(addressId ? { addressId } : {}),
       },
     };
-    setSaving(true);
-    try {
-      const response = await fetch('/api/electricity/drafts/advanced', {
-        method: 'PUT',
-        credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify(input),
-      });
-      if (!response.ok) throw new Error('Draft failed');
-      const saved: unknown = await response.json();
-      if (epoch !== generation.current) return false;
-      if (!confirmedDraftReceipt(saved, input)) throw new Error('Draft save was not confirmed');
-      savedSignature.current = snapshot;
-      if (liveSignature.current !== snapshot) return false;
-      if (target !== step) await wizard.go(target, step);
-      else toast.success(t('electricity.order.draftSaved', locale));
-      return true;
-    } catch {
-      if (epoch === generation.current) toast.error(t('electricity.order.draftSaveFailed', locale));
-      return false;
-    } finally {
-      if (command.current === token) {
-        command.current = null;
-        setSaving(false);
-      }
-    }
+    const saved = await drafts.save(
+      input,
+      async () => {
+        if (epoch !== generation.current) return false;
+        savedSignature.current = snapshot;
+        if (liveSignature.current !== snapshot) return false;
+        if (target !== step) await wizard.go(target, step);
+        else toast.success(t('electricity.order.draftSaved', locale));
+        return true;
+      },
+      leave
+    );
+    if (!saved && epoch === generation.current)
+      toast.error(
+        drafts.unresolved.current
+          ? confirmationText('unconfirmed', locale)
+          : t('electricity.order.draftSaveFailed', locale)
+      );
+    return saved;
   }
 
   async function openAddresses() {
-    if (!(await saveDraft(false))) return;
+    if (held || drafts.active.current) return;
+    if (savedSignature.current !== liveSignature.current && !(await saveDraft(false))) return;
     await navigate({ to: '/settings/addresses', search: { returnTo: '/electricity/advanced' } });
   }
 
@@ -563,7 +576,16 @@ export function AdvancedElectricityOrderPage() {
     'financial'
   );
   async function sendOrder(input?: object) {
-    if (command.current || completed.current || loading || loadError || blocked || !profileId)
+    if (
+      command.current ||
+      drafts.active.current ||
+      drafts.recovery ||
+      completed.current ||
+      loading ||
+      loadError ||
+      blocked ||
+      !profileId
+    )
       return;
     const token = Symbol();
     command.current = token;
@@ -597,7 +619,7 @@ export function AdvancedElectricityOrderPage() {
   }
 
   async function submit() {
-    if (!financialGate.allowed || orderUnconfirmed) return;
+    if (!financialGate.allowed || held) return;
     if (
       command.current ||
       completed.current ||
@@ -670,6 +692,23 @@ export function AdvancedElectricityOrderPage() {
     t('electricity.order.step4', locale),
     t('electricity.advanced.stepConfirm', locale),
   ];
+  const draftRecovery = drafts.recovery && (
+    <ElectricityDraftRecovery
+      phase={drafts.recovery}
+      locale={locale}
+      working={drafts.working}
+      discardRetry={drafts.discardRetry}
+      onAction={async () => {
+        if (drafts.recovery === 'stale') {
+          if (blocker.status === 'blocked') blocker.reset();
+          setDraftAttempt((value) => value + 1);
+        } else if (await drafts.recover()) {
+          const latest = activeBlocker.current;
+          if (latest.status === 'blocked') latest.proceed();
+        }
+      }}
+    />
+  );
   return (
     <div className="mx-auto max-w-4xl space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       {blocker.status === 'blocked' && (
@@ -680,50 +719,19 @@ export function AdvancedElectricityOrderPage() {
               submitting ? 'electricity.order.submitting' : 'electricity.order.savingDraft',
               locale
             )}
-            saveDisabled={orderUnconfirmed}
+            saveDisabled={held}
             errorMessage={orderUnconfirmed ? t('electricity.order.unconfirmed', locale) : undefined}
-            onSave={() => saveDraft(false)}
+            onSave={() => saveDraft(false, step, true)}
             onStay={() => blocker.reset()}
+            recovery={draftRecovery}
             onDiscardSaved={
-              orderUnconfirmed
+              held
                 ? undefined
-                : async () => {
-                    if (!profileId || command.current || completed.current) return false;
-                    const token = Symbol();
-                    command.current = token;
-                    const epoch = generation.current;
-                    setSaving(true);
-                    try {
-                      const response = await fetch(
-                        `/api/electricity/drafts/advanced?profileId=${profileId}`,
-                        {
-                          method: 'DELETE',
-                          credentials: 'include',
-                          headers: withCsrf(),
-                        }
-                      );
-                      if (!response.ok) return false;
-                      const receipt: unknown = await response.json();
-                      return (
-                        epoch === generation.current &&
-                        typeof receipt === 'object' &&
-                        receipt !== null &&
-                        'discarded' in receipt &&
-                        receipt.discarded === true &&
-                        'profileId' in receipt &&
-                        receipt.profileId === profileId &&
-                        'mode' in receipt &&
-                        receipt.mode === 'advanced'
-                      );
-                    } catch {
-                      return false;
-                    } finally {
-                      if (command.current === token) {
-                        command.current = null;
-                        setSaving(false);
-                      }
-                    }
-                  }
+                : async () =>
+                    !!profileId &&
+                    !command.current &&
+                    !completed.current &&
+                    drafts.discard(profileId)
             }
             onLeave={() => blocker.proceed()}
           />
@@ -735,6 +743,7 @@ export function AdvancedElectricityOrderPage() {
           {t('electricity.advanced.description', locale)}
         </p>
       </header>
+      {blocker.status !== 'blocked' && draftRecovery}
       {orderUnconfirmed && (
         <SubmissionRecovery busy={submitting} onRetry={() => void sendOrder()} />
       )}
@@ -743,13 +752,7 @@ export function AdvancedElectricityOrderPage() {
         errorId={fields.errorId}
         onPendingChange={fields.setValidationPending}
         disabled={
-          orderUnconfirmed ||
-          loading ||
-          loadError ||
-          blocked ||
-          completed.current ||
-          saving ||
-          submitting
+          held || loading || loadError || blocked || completed.current || saving || submitting
         }
         onInvalidStep={(target) => wizard.go(target, step)}
         fields={[
@@ -781,10 +784,10 @@ export function AdvancedElectricityOrderPage() {
         submittingLabel={t('electricity.order.submitting', locale)}
         saving={saving}
         submitting={submitting}
-        backDisabled={orderUnconfirmed}
-        saveDisabled={orderUnconfirmed || completed.current}
+        backDisabled={held}
+        saveDisabled={held || completed.current}
         nextDisabled={
-          orderUnconfirmed ||
+          held ||
           completed.current ||
           (step === 1
             ? !validPeriod
@@ -792,7 +795,7 @@ export function AdvancedElectricityOrderPage() {
           (step === 4 && !selectedAddress)
         }
         submitDisabled={
-          orderUnconfirmed ||
+          held ||
           !financialGate.allowed ||
           completed.current ||
           !quote ||
@@ -810,7 +813,7 @@ export function AdvancedElectricityOrderPage() {
         {(pending) => (
           <fieldset
             className="min-w-0"
-            disabled={orderUnconfirmed || pending || saving || submitting || completed.current}
+            disabled={held || pending || saving || submitting || completed.current}
           >
             <legend className="sr-only">{t('electricity.order.steps', locale)}</legend>
             {step === 1 && (

@@ -4385,6 +4385,7 @@ it('rejects a reviewed quote after its authoritative price changes', async () =>
 it('resumes completed steps and removes the draft atomically on submission', async () => {
   const path = `${http.base}/api/electricity/drafts/simple`;
   const get = () => fetch(`${path}?profileId=${input.profileId}`, { headers });
+  const guarded = () => fetch(`${path}/guarded?profileId=${input.profileId}`, { headers });
   const put = (currentStep: number, totalKwh?: string) =>
     fetch(path, {
       method: 'PUT',
@@ -4403,8 +4404,25 @@ it('resumes completed steps and removes the draft atomically on submission', asy
     currentStep: 3,
     data: { period: 'next_week', totalKwh: '10' },
   });
+  const captured = (await (await guarded()).json()) as {
+    revision: string;
+    data: object;
+  };
   expect((await post('orders/simple', input)).status).toBe(201);
   expect(await (await get()).json()).toMatchObject({ currentStep: 1, data: null });
+  const cleared = (await (await guarded()).json()) as { revision: string };
+  expect(cleared).toMatchObject({ currentStep: 1, data: null });
+  expect(cleared.revision).not.toBe(captured.revision);
+  expect(
+    (
+      await fetch(`${path}/guarded`, {
+        method: 'PUT',
+        headers: { ...headers, 'x-draft-revision': captured.revision },
+        body: JSON.stringify({ profileId: input.profileId, currentStep: 3, data: captured.data }),
+      })
+    ).status
+  ).toBe(409);
+  expect(await (await guarded()).json()).toEqual(cleared);
 });
 
 it('expires old drafts using the configured retention period', async () => {

@@ -243,6 +243,31 @@ export const electricityCustomerDrafts = pgTable(
   ]
 );
 
+/** Keeps an empty draft slot distinguishable from an earlier empty slot. */
+export const electricityCustomerDraftRevisions = pgTable(
+  'electricity_customer_draft_revisions',
+  {
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.userId, { onDelete: 'cascade' }),
+    profileId: uuid('profile_id')
+      .notNull()
+      .references(() => profiles.id, { onDelete: 'cascade' }),
+    mode: text('mode', { enum: ['simple', 'advanced'] }).notNull(),
+    revision: uuidv7('revision').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.userId, table.profileId, table.mode] }),
+    index('electricity_customer_draft_revisions_profile_idx').on(table.profileId),
+    check(
+      'electricity_customer_draft_revisions_mode',
+      sql`${table.mode} IN ('simple', 'advanced')`
+    ),
+  ]
+);
+
 /** A paid rejected order owns a durable, idempotent refund obligation. */
 export const refundObligations = pgTable(
   'refund_obligations',

@@ -70,6 +70,7 @@ let step: number;
 let quantities: Record<string, string>;
 let bootstrapLoadFailures: number;
 let draftLoadFailures: number;
+let draftRevision: string | null;
 let draftReply: (input: object) => Promise<Response>;
 let orderReply: (() => Promise<Response>) | null;
 let savedStepOverride: number | null;
@@ -93,6 +94,7 @@ let quoteErrorDetails: Array<{
 }>;
 
 beforeEach(() => {
+  draftRevision = null;
   window.history.replaceState({}, '', '/electricity/advanced');
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
@@ -131,18 +133,29 @@ beforeEach(() => {
         mandatoryGreenEnabled: true,
       });
     if (url === `/api/profiles/${profileId}/addresses`) return reply({ addresses });
-    if (url === `/api/electricity/drafts/advanced?profileId=${profileId}`) {
+    if (url === `/api/electricity/drafts/advanced/guarded?profileId=${profileId}`) {
       if (draftLoadFailures > 0) {
         draftLoadFailures -= 1;
         return reply({ error: 'Unavailable' }, 503);
       }
-      return reply({ currentStep: step, data: { startAt, endAt, quantities, giftCode } });
+      return reply({
+        currentStep: step,
+        data: { startAt, endAt, quantities, giftCode },
+        revision: draftRevision,
+      });
     }
-    if (url === '/api/electricity/drafts/advanced') {
+    if (url === '/api/electricity/drafts/advanced/guarded') {
       const saved = JSON.parse((init?.body as string) ?? '{}') as {
         currentStep: number;
       };
-      return draftReply({ ...saved, currentStep: savedStepOverride ?? saved.currentStep });
+      expect(new Headers(init?.headers).get('x-draft-revision')).toBe(draftRevision ?? 'initial');
+      const revision = crypto.randomUUID();
+      if (savedStepOverride === null) draftRevision = revision;
+      return draftReply({
+        ...saved,
+        currentStep: savedStepOverride ?? saved.currentStep,
+        revision,
+      });
     }
     if (url === '/api/electricity/preview/advanced')
       return quoteSuccess
@@ -307,6 +320,13 @@ it('retries initial order context before opening the wizard', async () => {
   );
 });
 
+async function retryReviewedDraft() {
+  const action = (label: string) =>
+    [...container.querySelectorAll('button')].find((button) => button.textContent === label)!;
+  await act(async () => action('Check current status').click());
+  await act(async () => action('Retry the reviewed draft change').click());
+}
+
 it('does not advance until the server confirms the saved step', async () => {
   step = 1;
   quantities = { thermal: '0', green: '0', free_market: '0', energy_saving: '0' };
@@ -322,13 +342,12 @@ it('does not advance until the server confirms the saved step', async () => {
   expect(container.querySelector('li[aria-current="step"]')?.textContent).toContain(
     t('electricity.advanced.stepDates', 'en')
   );
-  expect(fetchMock.mock.calls.some(([url]) => url === '/api/electricity/drafts/advanced')).toBe(
-    true
-  );
+  expect(
+    fetchMock.mock.calls.some(([url]) => url === '/api/electricity/drafts/advanced/guarded')
+  ).toBe(true);
 
   savedStepOverride = null;
-  await approveVisibleConfirmation();
-  await act(async () => next()?.click());
+  await retryReviewedDraft();
   expect(container.querySelector('li[aria-current="step"]')?.textContent).toContain(
     t('electricity.advanced.stepProducts', 'en')
   );
@@ -364,6 +383,7 @@ it('saves the address step before opening address settings', async () => {
   expect(navigateMock).not.toHaveBeenCalled();
 
   savedStepOverride = null;
+  await retryReviewedDraft();
   await approveVisibleConfirmation();
   await act(async () => addAddress()?.click());
   expect(navigateMock).toHaveBeenCalledWith({

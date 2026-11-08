@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { test, expect } from './coverage-fixture';
 import { t } from '@barghsa/i18n/app';
 import { electricityPaymentReview } from './electricity-payment-fixture';
@@ -124,16 +125,24 @@ for (const locale of ['en', 'fa'] as const) {
       })
     );
     const drafts: Array<Record<string, unknown>> = [];
+    let draftRevision: string | null = null;
     let reviewComplete = false;
     let paid = false;
-    await page.route('**/api/electricity/drafts/advanced?*', (route) =>
+    await page.route('**/api/electricity/drafts/advanced/guarded?*', (route) =>
       route.fulfill({
-        json: drafts.at(-1) ?? { currentStep: 1, data: null, updatedAt: null },
+        json: {
+          ...(drafts.at(-1) ?? { currentStep: 1, data: null, updatedAt: null }),
+          revision: draftRevision,
+        },
       })
     );
-    await page.route('**/api/electricity/drafts/advanced', (route) => {
+    await page.route('**/api/electricity/drafts/advanced/guarded', (route) => {
+      expect(route.request().headers()['x-draft-revision']).toBe(draftRevision ?? 'initial');
       drafts.push(route.request().postDataJSON());
-      return route.fulfill({ json: { ...drafts.at(-1), updatedAt: '2026-09-23T10:00:00.000Z' } });
+      draftRevision = randomUUID();
+      return route.fulfill({
+        json: { ...drafts.at(-1), updatedAt: '2026-09-23T10:00:00.000Z', revision: draftRevision },
+      });
     });
     const previews: Array<Record<string, unknown>> = [];
     let reviewedTotal = '0';

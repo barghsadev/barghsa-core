@@ -2,7 +2,7 @@ import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { ConfirmationFields } from '@barghsa/ui';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { Button, Dialog, DialogContent, DialogDescription, DialogTitle } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/workspace';
 import { useLocale } from '../hooks/useLocale.js';
@@ -16,6 +16,7 @@ interface Props {
   onStay: () => void;
   onLeave: () => void;
   onDiscardSaved?: (() => Promise<boolean>) | undefined;
+  recovery?: ReactNode;
 }
 
 export default function WizardLeaveDialog(props: Props) {
@@ -30,6 +31,7 @@ export default function WizardLeaveDialog(props: Props) {
   );
   const [saving, setSaving] = useState(false);
   const [failed, setFailed] = useState(false);
+  const recoveryWorking = !!props.recovery && working;
   const inFlight = useRef(false);
   const mounted = useRef(true);
   const latest = useRef(props);
@@ -43,7 +45,7 @@ export default function WizardLeaveDialog(props: Props) {
     };
   }, []);
   const stay = () => {
-    if (!inFlight.current) onStay();
+    if (!inFlight.current && !recoveryWorking) onStay();
   };
   const saveAndLeave = async () => {
     if (inFlight.current || working || saveDisabled) return;
@@ -93,11 +95,12 @@ export default function WizardLeaveDialog(props: Props) {
         {(saving || working) && (
           <p role="status">{saving ? t('electricity.order.savingDraft', locale) : workingLabel}</p>
         )}
-        {!saving && !working && (failed || errorMessage) && (
+        {!saving && !working && !props.recovery && (failed || errorMessage) && (
           <p role="alert" className="text-sm text-destructive">
             {errorMessage || t('electricity.order.draftSaveFailed', locale)}
           </p>
         )}
+        {props.recovery}
         <div className="flex flex-col gap-2">
           <Button
             type="button"
@@ -106,7 +109,12 @@ export default function WizardLeaveDialog(props: Props) {
           >
             {t('electricity.order.unsaved.saveAndLeave', locale)}
           </Button>
-          <Button type="button" variant="outline" disabled={saving} onClick={stay}>
+          <Button
+            type="button"
+            variant="outline"
+            disabled={saving || recoveryWorking}
+            onClick={stay}
+          >
             {t('electricity.order.unsaved.stay', locale)}
           </Button>
           <Button

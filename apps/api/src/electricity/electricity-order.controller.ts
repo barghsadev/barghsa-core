@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   HttpCode,
   HttpException,
   Param,
@@ -13,7 +14,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import {
   validatePostalCode,
@@ -121,6 +122,19 @@ const draftInput = z
       .strict(),
   })
   .strict();
+const draftMode = z.enum(['simple', 'advanced']);
+const draftRevision = z.union([z.literal('initial'), z.string().uuid()]);
+
+function requireDraftScope(mode: string, revision?: string) {
+  const parsedMode = draftMode.safeParse(mode);
+  const parsedRevision = draftRevision.safeParse(revision);
+  if (!parsedMode.success || !parsedRevision.success)
+    throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+  return {
+    mode: parsedMode.data,
+    revision: parsedRevision.data === 'initial' ? null : parsedRevision.data,
+  };
+}
 const addressCorrectionInput = z
   .object({
     idempotencyKey: z.string().uuid(),
@@ -307,6 +321,66 @@ export class ElectricityOrderController {
     if (mode !== 'simple' && mode !== 'advanced')
       throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
     return this.drafts.discard(req.session, profileId, mode);
+  }
+
+  @Get('drafts/:mode/guarded')
+  @RateLimit({ namespace: 'electricity:draft-read:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Read private wizard progress and its current revision' })
+  @ApiParam({ name: 'mode', enum: draftMode.options })
+  @ApiQuery({ name: 'profileId', type: String, required: true })
+  @ApiResponse({ status: 200, description: 'Saved progress and the scoped revision.' })
+  getGuardedDraft(
+    @Param('mode') mode: string,
+    @Query('profileId', new ParseUUIDPipe()) profileId: string,
+    @Req() req: AuthenticatedRequest
+  ) {
+    const parsed = draftMode.safeParse(mode);
+    if (!parsed.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    return this.drafts.get(req.session, profileId, parsed.data, true);
+  }
+
+  @Put('drafts/:mode/guarded')
+  @RateLimit({ namespace: 'electricity:draft-write:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Save private wizard progress against its current revision' })
+  @ApiParam({ name: 'mode', enum: draftMode.options })
+  @ApiHeader({ name: 'X-Draft-Revision', required: true })
+  @ApiZodBody(z.union([draftInput, advancedDraftInput]))
+  @ApiResponse({ status: 200, description: 'Saved progress and its new revision.' })
+  @ApiResponse({ status: 409, description: 'The draft revision is stale.' })
+  saveGuardedDraft(
+    @Param('mode') requestedMode: string,
+    @Headers('x-draft-revision') expected: string | undefined,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    const { mode, revision } = requireDraftScope(requestedMode, expected);
+    const parsed = (mode === 'simple' ? draftInput : advancedDraftInput).safeParse(body);
+    if (
+      !parsed.success ||
+      (mode === 'simple' &&
+        parsed.data.currentStep >= 3 &&
+        !('totalKwh' in parsed.data.data && parsed.data.data.totalKwh))
+    )
+      throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    return this.drafts.save(req.session, parsed.data, mode, revision);
+  }
+
+  @Delete('drafts/:mode/guarded')
+  @RateLimit({ namespace: 'electricity:draft-write:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Discard private wizard progress against its current revision' })
+  @ApiParam({ name: 'mode', enum: draftMode.options })
+  @ApiQuery({ name: 'profileId', type: String, required: true })
+  @ApiHeader({ name: 'X-Draft-Revision', required: true })
+  @ApiResponse({ status: 200, description: 'Discard confirmation and the empty slot revision.' })
+  @ApiResponse({ status: 409, description: 'The draft revision is stale.' })
+  discardGuardedDraft(
+    @Param('mode') requestedMode: string,
+    @Query('profileId', new ParseUUIDPipe()) profileId: string,
+    @Headers('x-draft-revision') expected: string | undefined,
+    @Req() req: AuthenticatedRequest
+  ) {
+    const { mode, revision } = requireDraftScope(requestedMode, expected);
+    return this.drafts.discard(req.session, profileId, mode, revision);
   }
 
   @Get('bill-data/:profileId')

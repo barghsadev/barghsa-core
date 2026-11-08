@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { t as appCopy } from '@barghsa/i18n/app';
 import { t as adminCopy } from '@barghsa/i18n/admin-ui';
 import { tWalletInvoicePayment as walletCopy } from '@barghsa/i18n/wallet-invoice-payment';
@@ -182,12 +183,19 @@ for (const locale of ['en', 'fa'] as const)
         },
       })
     );
-    await page.route('**/api/electricity/drafts/simple?*', (route) =>
-      route.fulfill({ json: { currentStep: 1, data: null, updatedAt: null } })
+    let savedDraft = { currentStep: 1, data: null, updatedAt: null, revision: null };
+    await page.route('**/api/electricity/drafts/simple/guarded?*', (route) =>
+      route.fulfill({ json: savedDraft })
     );
-    await page.route('**/api/electricity/drafts/simple', (route) =>
-      route.fulfill({ json: { ...route.request().postDataJSON(), updatedAt: submittedAt } })
-    );
+    await page.route('**/api/electricity/drafts/simple/guarded', (route) => {
+      expect(route.request().headers()['x-draft-revision']).toBe(savedDraft.revision ?? 'initial');
+      savedDraft = {
+        ...route.request().postDataJSON(),
+        updatedAt: submittedAt,
+        revision: randomUUID(),
+      };
+      return route.fulfill({ json: savedDraft });
+    });
     await page.route(`**/api/electricity/bill-data/${profileId}*`, (route) =>
       route.fulfill({
         json: billAvailable

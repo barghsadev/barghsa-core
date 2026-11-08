@@ -1,4 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import type { PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { readWizardDraftTtl } from '../common/wizard-draft-retention.js';
@@ -7,6 +9,11 @@ import type { ValidatedSession } from '../session/session.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { OrdersService } from '../orders/orders.service.js';
 import type { SimplePeriod } from './electricity-order.service.js';
+import {
+  clearElectricityDraft,
+  readElectricityDraftRevision,
+  type ElectricityDraftMode,
+} from './electricity-draft-revision.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 export interface SimpleDraftData {
@@ -39,7 +46,40 @@ export interface SaveAdvancedDraft {
 export class ElectricityDraftService {
   constructor(private readonly orders: OrdersService) {}
 
-  async get(actor: Actor, profileId: string, mode: 'simple' | 'advanced' = 'simple') {
+  private async removeExpired(
+    client: PoolClient,
+    userId: string,
+    profileId: string,
+    mode: ElectricityDraftMode
+  ) {
+    const ttlDays = await readWizardDraftTtl(client);
+    await client.query(
+      `DELETE FROM electricity_customer_drafts
+        WHERE user_id=$1 AND profile_id=$2 AND mode=$3
+        AND updated_at < NOW() - ($4::integer * INTERVAL '1 day')`,
+      [userId, profileId, mode, ttlDays]
+    );
+  }
+
+  private async requireRevision(
+    client: PoolClient,
+    userId: string,
+    profileId: string,
+    mode: ElectricityDraftMode,
+    expected: string | null | undefined
+  ) {
+    if (expected === undefined) return;
+    await this.removeExpired(client, userId, profileId, mode);
+    if ((await readElectricityDraftRevision(client, userId, profileId, mode)) !== expected)
+      throw new ConflictException({ error: ErrorCodes.CONFLICT_VERSION.code });
+  }
+
+  async get(
+    actor: Actor,
+    profileId: string,
+    mode: ElectricityDraftMode = 'simple',
+    versioned = false
+  ) {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
@@ -54,13 +94,7 @@ export class ElectricityDraftService {
         )
       ).rows[0];
       if (profile?.profile_type !== 'LEGAL') throw new NotFoundException('Legal profile not found');
-      const ttlDays = await readWizardDraftTtl(client);
-      await client.query(
-        `DELETE FROM electricity_customer_drafts
-          WHERE user_id=$1 AND profile_id=$2 AND mode=$4
-          AND updated_at < NOW() - ($3::integer * INTERVAL '1 day')`,
-        [actor.userId, profileId, ttlDays, mode]
-      );
+      await this.removeExpired(client, actor.userId, profileId, mode);
       const draft = (
         await client.query<{ current_step: number; data: SimpleDraftData; updated_at: Date }>(
           `SELECT current_step,data,updated_at FROM electricity_customer_drafts
@@ -68,6 +102,9 @@ export class ElectricityDraftService {
           [actor.userId, profileId, mode]
         )
       ).rows[0];
+      const revision = versioned
+        ? { revision: await readElectricityDraftRevision(client, actor.userId, profileId, mode) }
+        : {};
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return draft
@@ -75,8 +112,9 @@ export class ElectricityDraftService {
             currentStep: draft.current_step,
             data: draft.data,
             updatedAt: draft.updated_at.toISOString(),
+            ...revision,
           }
-        : { currentStep: 1, data: null, updatedAt: null };
+        : { currentStep: 1, data: null, updatedAt: null, ...revision };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;
@@ -85,7 +123,12 @@ export class ElectricityDraftService {
     }
   }
 
-  async discard(actor: Actor, profileId: string, mode: 'simple' | 'advanced') {
+  async discard(
+    actor: Actor,
+    profileId: string,
+    mode: ElectricityDraftMode,
+    expectedRevision?: string | null
+  ) {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
@@ -93,10 +136,8 @@ export class ElectricityDraftService {
       if (!(await this.orders.mayManageOrders(client, actor.userId, profileId))) {
         throw new NotFoundException('Profile not found');
       }
-      await client.query(
-        'DELETE FROM electricity_customer_drafts WHERE user_id=$1 AND profile_id=$2 AND mode=$3',
-        [actor.userId, profileId, mode]
-      );
+      await this.requireRevision(client, actor.userId, profileId, mode, expectedRevision);
+      await clearElectricityDraft(client, actor.userId, profileId, mode);
       await client.query(
         `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id)
          VALUES($1,$2,'electricity_wizard_discarded',$3::jsonb,$4)`,
@@ -107,9 +148,13 @@ export class ElectricityDraftService {
           correlationIdStorage.getStore() ?? uuidv7(),
         ]
       );
+      const revision =
+        expectedRevision === undefined
+          ? {}
+          : { revision: await readElectricityDraftRevision(client, actor.userId, profileId, mode) };
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
-      return { discarded: true, profileId, mode };
+      return { discarded: true, profileId, mode, ...revision };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;
@@ -121,7 +166,8 @@ export class ElectricityDraftService {
   async save(
     actor: Actor,
     input: SaveSimpleDraft | SaveAdvancedDraft,
-    mode: 'simple' | 'advanced' = 'simple'
+    mode: ElectricityDraftMode = 'simple',
+    expectedRevision?: string | null
   ) {
     const client = await getDbPool().connect();
     try {
@@ -137,6 +183,7 @@ export class ElectricityDraftService {
         )
       ).rows[0];
       if (profile?.profile_type !== 'LEGAL') throw new NotFoundException('Legal profile not found');
+      await this.requireRevision(client, actor.userId, input.profileId, mode, expectedRevision);
       const row = (
         await client.query<{ current_step: number; data: SimpleDraftData; updated_at: Date }>(
           `INSERT INTO electricity_customer_drafts(user_id,profile_id,mode,current_step,data)
@@ -147,12 +194,24 @@ export class ElectricityDraftService {
           [actor.userId, input.profileId, mode, input.currentStep, JSON.stringify(input.data)]
         )
       ).rows[0]!;
+      const revision =
+        expectedRevision === undefined
+          ? {}
+          : {
+              revision: await readElectricityDraftRevision(
+                client,
+                actor.userId,
+                input.profileId,
+                mode
+              ),
+            };
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return {
         currentStep: row.current_step,
         data: row.data,
         updatedAt: row.updated_at.toISOString(),
+        ...revision,
       };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});

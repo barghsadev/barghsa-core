@@ -43,6 +43,7 @@ import {
 } from './electricity-calculation.js';
 import { persistElectricitySubmissionSnapshot } from './electricity-submission-snapshot.js';
 import { createElectricityRefundObligation } from './electricity-refund-obligation.js';
+import { clearElectricityDraft } from './electricity-draft-revision.js';
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 import { STORAGE_PROVIDER } from '../storage/index.js';
 import {
@@ -1799,9 +1800,11 @@ export class ElectricityOrderService {
           ip,
         ]
       );
-      await client.query(
-        'DELETE FROM electricity_customer_drafts WHERE user_id=$1 AND profile_id=$2 AND mode=$3',
-        [actor.userId, input.profileId, 'startAt' in input ? 'advanced' : 'simple']
+      await clearElectricityDraft(
+        client,
+        actor.userId,
+        input.profileId,
+        'startAt' in input ? 'advanced' : 'simple'
       );
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');

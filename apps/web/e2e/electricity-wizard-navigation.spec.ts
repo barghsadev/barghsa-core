@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { readFileSync } from 'node:fs';
 import AxeBuilder from '@axe-core/playwright';
@@ -122,6 +124,8 @@ async function fixture(page: Page, mode: Mode, locale: Locale, step = 2) {
     } as { currentStep: number; data: Record<string, unknown> },
     saves: [] as Array<{ currentStep: number; data: Record<string, unknown> }>,
     orders: [] as Record<string, unknown>[],
+    revision: null as string | null,
+    draftDiscarded: false,
     saveMismatch: false,
     saveStatus: 200,
     saveGate: null as Promise<void> | null,
@@ -236,8 +240,11 @@ async function fixture(page: Page, mode: Mode, locale: Locale, step = 2) {
   await page.route(`**/api/wallet/${profileId}`, (r) =>
     r.fulfill({ json: { balance: '20000000', currency: 'IRR' } })
   );
-  await page.route(`**/api/electricity/drafts/${mode}?*`, (r) => {
+  await page.route(`**/api/electricity/drafts/${mode}/guarded?*`, (r) => {
     if (r.request().method() === 'DELETE') {
+      expect(r.request().headers()['x-draft-revision']).toBe(state.revision ?? 'initial');
+      state.revision = randomUUID();
+      state.draftDiscarded = true;
       state.draft = {
         currentStep: 1,
         data:
@@ -245,23 +252,38 @@ async function fixture(page: Page, mode: Mode, locale: Locale, step = 2) {
             ? { period: 'next_week', totalKwh: '', addressId: '' }
             : { startAt, endAt, quantities: {}, addressId: '' },
       };
-      return r.fulfill({ json: { discarded: true, profileId, mode } });
+      return r.fulfill({ json: { discarded: true, profileId, mode, revision: state.revision } });
     }
-    return r.fulfill({ json: state.draft });
+    return r.fulfill({
+      json: {
+        ...state.draft,
+        ...(state.draftDiscarded ? { data: null } : {}),
+        revision: state.revision,
+      },
+    });
   });
-  await page.route(`**/api/electricity/drafts/${mode}`, async (r) => {
+  await page.route(`**/api/electricity/drafts/${mode}/guarded`, async (r) => {
+    const expectedRevision = r.request().headers()['x-draft-revision'];
+    expect(expectedRevision).toBe(state.revision ?? 'initial');
     const input = r.request().postDataJSON();
     state.saves.push(input);
     await state.saveGate;
+    if (expectedRevision !== (state.revision ?? 'initial'))
+      return r.fulfill({ status: 409, json: {} }).catch(() => {});
     if (state.saveStatus !== 200) return r.fulfill({ status: state.saveStatus, json: {} });
     if (state.saveMismatch)
-      return r.fulfill({ json: { currentStep: input.currentStep, data: {} } });
+      return r.fulfill({
+        json: { currentStep: input.currentStep, data: {}, revision: randomUUID() },
+      });
     state.draft = input;
+    state.draftDiscarded = false;
+    state.revision = randomUUID();
     return r.fulfill({
       json: {
         currentStep: input.currentStep,
         data: input.data,
         updatedAt: '2026-10-02T10:00:00.000Z',
+        revision: state.revision,
       },
     });
   });
@@ -317,7 +339,7 @@ for (const locale of ['en', 'fa'] as const)
   }) => {
     await page.clock.install({ time: new Date('2026-10-02T10:00:00Z') });
     const state = await fixture(page, 'advanced', locale);
-    const draftUrl = `**/api/electricity/drafts/advanced?profileId=${profileId}`;
+    const draftUrl = `**/api/electricity/drafts/advanced/guarded?profileId=${profileId}`;
     const settingsUrl = '**/api/electricity/periods/advanced';
     let settingsReads = 0;
     let draftReads = 0;
@@ -347,6 +369,57 @@ for (const locale of ['en', 'fa'] as const)
     expect(state.saves).toHaveLength(0);
     expect(state.orders).toHaveLength(0);
   });
+const checkDraft = (page: Page, locale: Locale) =>
+  page.getByRole('button', { name: confirmationText('checkStatus', locale), exact: true });
+const retryDraft = (page: Page, locale: Locale) =>
+  page.getByRole('button', {
+    name: locale === 'fa' ? 'تلاش دوباره برای تغییر بررسی‌شده' : 'Retry the reviewed draft change',
+    exact: true,
+  });
+
+for (const locale of ['en', 'fa'] as const)
+  for (const mode of ['simple', 'advanced'] as const)
+    test(`${mode} retains local fields and reloads a newer saved draft after timeout (${locale})`, async ({
+      page,
+    }) => {
+      await page.clock.install({ time: new Date('2026-10-02T10:00:00Z') });
+      const state = await fixture(page, mode, locale);
+      let release!: () => void;
+      state.saveGate = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      await page.goto(`${path(mode)}?step=2`);
+      await expect(field(page, mode)).toHaveValue('100');
+      await field(page, mode).fill('120');
+      try {
+        await page
+          .getByRole('button', { name: t('electricity.order.next', locale), exact: true })
+          .click();
+        await expect.poll(() => state.saves.length).toBe(1);
+        await page.clock.fastForward(15_001);
+        await expect(checkDraft(page, locale)).toBeVisible();
+        expect(state.saves).toHaveLength(1);
+        state.revision = randomUUID();
+        if (mode === 'simple') state.draft.data.totalKwh = '160';
+        else (state.draft.data.quantities as Record<string, string>).thermal = '160';
+        await checkDraft(page, locale).click();
+        await expect(field(page, mode)).toHaveValue('120');
+        await expect(retryDraft(page, locale)).toHaveCount(0);
+        await page
+          .getByRole('button', {
+            name: locale === 'fa' ? 'بارگذاری دوباره پیشرفت ذخیره‌شده' : 'Reload saved progress',
+            exact: true,
+          })
+          .click();
+        await expect(field(page, mode)).toHaveValue('160');
+        await expect(page).toHaveURL(/\?step=2$/);
+        expect(state.saves).toHaveLength(1);
+        expect(state.orders).toHaveLength(0);
+      } finally {
+        release();
+      }
+    });
+
 const button = (page: Page, key: Parameters<typeof t>[0], locale: Locale) =>
   page.getByRole('button', { name: t(key, locale), exact: true });
 
@@ -484,7 +557,7 @@ for (const locale of ['en', 'fa'] as const)
       await button(page, 'electricity.order.back', locale).click();
       await expect(page).toHaveURL(/\?step=3$/);
       await expect(
-        page.getByText(t('electricity.order.draftSaveFailed', locale), { exact: true })
+        page.getByRole('alert').filter({ hasText: confirmationText('unconfirmed', locale) })
       ).toBeVisible();
       await page.goto(`${path(mode)}?step=garbage`);
       await expect(page).toHaveURL(/\?step=1$/);
@@ -557,9 +630,10 @@ for (const locale of ['en', 'fa'] as const)
         { name: 'barghsa_csrf', value: 'current-draft-token', url: 'http://127.0.0.1:4173' },
       ]);
       const request = page.waitForRequest(
-        (r) => r.method() === 'PUT' && r.url().includes(`/electricity/drafts/${mode}`)
+        (r) => r.method() === 'PUT' && r.url().includes(`/electricity/drafts/${mode}/guarded`)
       );
-      await actions.save.click();
+      await checkDraft(page, locale).click();
+      await retryDraft(page, locale).click();
       expect((await request).headers()['x-csrf-token']).toBe('current-draft-token');
       await expect(actions.save).toBeDisabled();
       await expect(actions.discard).toBeDisabled();
@@ -713,19 +787,20 @@ for (const locale of ['en', 'fa'] as const)
       state.saveStatus = 503;
       await quantity.getByRole('button').click();
       await expect(
-        page.getByText(t('electricity.order.draftSaveFailed', locale), { exact: true })
+        page.getByRole('alert').filter({ hasText: confirmationText('unconfirmed', locale) })
       ).toBeVisible();
       await expect(page).toHaveURL(/step=5$/);
       await expect(quantity).toBeVisible();
       if (mode === 'advanced') {
         await expectNoticeBelowPageHeader(
           page.locator('[data-sonner-toast][data-type="error"]').filter({
-            hasText: t('electricity.order.draftSaveFailed', locale),
+            hasText: confirmationText('unconfirmed', locale),
           })
         );
       }
       state.saveStatus = 200;
-      await quantity.getByRole('button').click();
+      await checkDraft(page, locale).click();
+      await retryDraft(page, locale).click();
       await expect(page).toHaveURL(/step=2$/);
       await expect(field(page, mode)).toHaveValue('100');
       await checkRoutePresentation(page, info, locale);
@@ -771,7 +846,7 @@ for (const locale of ['en', 'fa'] as const)
         { name: 'barghsa_csrf', value: 'discard-token', url: 'http://127.0.0.1:4173' },
       ]);
       let fail = true;
-      await page.route(`**/api/electricity/drafts/${mode}?*`, (r) =>
+      await page.route(`**/api/electricity/drafts/${mode}/guarded?*`, (r) =>
         r.request().method() === 'DELETE' && fail
           ? r.fulfill({ status: 503, json: {} })
           : r.fallback()
@@ -786,9 +861,12 @@ for (const locale of ['en', 'fa'] as const)
       const request = page.waitForRequest(
         (r) =>
           r.method() === 'DELETE' &&
-          r.url().includes(`/electricity/drafts/${mode}?profileId=${profileId}`)
+          r.url().includes(`/electricity/drafts/${mode}/guarded?profileId=${profileId}`)
       );
-      await action.click();
+      await checkDraft(page, locale).click();
+      await expect(retryDraft(page, locale)).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'destructive');
+      await retryDraft(page, locale).click();
       expect((await request).headers()['x-csrf-token']).toBe('discard-token');
       await expect(page).toHaveURL(/\/electricity$/);
       expect(state.draft.currentStep).toBe(1);

@@ -229,11 +229,15 @@ async function orderAddressShell(page: Page, locale: string) {
     })
   );
   await page.route('**/api/products/electricity', (route) => route.fulfill({ json: [] }));
-  await page.route('**/api/electricity/drafts/simple?*', (route) => {
+  await page.route('**/api/electricity/drafts/simple/guarded?*', (route) => {
     expect(route.request().method()).toBe('GET');
     expect(new URL(route.request().url()).searchParams.get('profileId')).toBe(orderAddressProfile);
     return route.fulfill({
-      json: { currentStep: 4, data: { period: 'next_week', totalKwh: '100', addressId: '' } },
+      json: {
+        currentStep: 4,
+        data: { period: 'next_week', totalKwh: '100', addressId: '' },
+        revision: null,
+      },
     });
   });
 }

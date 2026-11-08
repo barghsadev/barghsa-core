@@ -66,6 +66,10 @@ The shared confirmation dialog uses the same deadline for staff electricity deci
 
 Customer electricity cancellation and quantity-increase writes also bound response headers and body. An unknown cancellation keeps the reviewed terms and key. A fresh order read may show that the order is already cancelled. If the same version is still eligible, the customer must confirm the same reviewed cancellation again before sending it with the original key. Quantity requests and amendment signatures use their existing exact retry and current-scope checks.
 
+Private simple and advanced electricity drafts use guarded reads, saves and discards. The API compares the captured revision under the current account lock. An unknown reply keeps the draft and waits for a fresh read. Matching saved progress or confirmed absence can resolve the attempt. An unchanged revision allows an explicit retry of the captured command. A different revision with different data asks the customer to reload saved progress. Discard retry requires a new typed confirmation.
+
+The revision record retains only ownership and version metadata. Discard, expiry and submission still delete the draft contents. Old API routes keep their response shapes and advance revisions through the database trigger. The guarded routes are separate so an older server cannot silently accept a conditional write as an unconditional one.
+
 Staff invoice and wallet receipt decisions also use the 15-second deadline. A stalled password verification leaves the decision unsent. An unknown write outcome clears the captured review and reloads the current receipt before staff can review and submit another decision.
 
 Onboarding start, profile completion and dashboard-profile selection use the same deadline. After an unconfirmed start, Retry checks for an active setup before creation becomes available. Profile completion can retry the same owned profile explicitly. An unconfirmed dashboard selection keeps the reviewed choice for exact retry and offers a fresh journey read. When that read confirms completion, opening the dashboard honors the currently active profile without writing another choice.
