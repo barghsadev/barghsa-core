@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T20:26:24+00:00",
-  "source_commit": "63e19eee19f1a5a112cca31c3383e5bb7a5326b9",
+  "updated": "2026-11-08T20:34:07+00:00",
+  "source_commit": "f5546cd7d133b76c384729a93fd57b7bf1141b4e",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -25362,11 +25362,11 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.tsx",
-              "sha256": "59f4b8e4bb78e745bd3338d7bfb842fdb67756f11a5f8f5d0230b2d8e496421f"
+              "sha256": "c237ba08fc6fd4f20f62d17a5418cc5bdf0705efd9569524dd28d9e96f5f66fb"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -492946,7 +492946,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.tsx",
-              "sha256": "59f4b8e4bb78e745bd3338d7bfb842fdb67756f11a5f8f5d0230b2d8e496421f"
+              "sha256": "c237ba08fc6fd4f20f62d17a5418cc5bdf0705efd9569524dd28d9e96f5f66fb"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
+              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -497768,7 +497768,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.tsx",
-              "sha256": "59f4b8e4bb78e745bd3338d7bfb842fdb67756f11a5f8f5d0230b2d8e496421f"
+              "sha256": "c237ba08fc6fd4f20f62d17a5418cc5bdf0705efd9569524dd28d9e96f5f66fb"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
+              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
+              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -546582,7 +546582,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -548448,7 +548448,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -550315,7 +550315,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -552151,7 +552151,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -554013,7 +554013,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -555884,7 +555884,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -557728,7 +557728,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -559536,7 +559536,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -561344,7 +561344,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -563153,7 +563153,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -564961,7 +564961,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -566739,7 +566739,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -567523,7 +567523,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
+              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568634,7 +568634,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -569418,7 +569418,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
+              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -571450,7 +571450,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/SubmissionRecovery.tsx",
@@ -573070,7 +573070,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
+              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
             },
             {
               "path": "scripts/check-changed-coverage.py",
@@ -573416,7 +573416,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -574200,7 +574200,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
+              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -575311,7 +575311,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -576095,7 +576095,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
+              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577206,7 +577206,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -577990,7 +577990,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
+              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -579101,7 +579101,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -579885,7 +579885,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
+              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -580996,7 +580996,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -581780,7 +581780,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
+              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -582891,7 +582891,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -583675,7 +583675,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
+              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -584786,7 +584786,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -585570,7 +585570,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
+              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -586681,7 +586681,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -587465,7 +587465,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
+              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -588576,7 +588576,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -589360,7 +589360,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
+              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -590471,7 +590471,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -591255,7 +591255,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
+              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592366,7 +592366,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -593150,7 +593150,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
+              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594414,7 +594414,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
+              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595001,7 +595001,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -595785,7 +595785,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
+              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -596896,7 +596896,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -597680,7 +597680,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
+              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -598484,7 +598484,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Finish the route and widget conditional-state reconciliation. Current scoped browser cases distinguish verified electricity step-up cancellation and an unknown write, and include the paid order through exact acceptance and activation. Layout receipts certify their named populated views separately."
+        "The shared sensitive-action OTP now recovers from stalled delivery or verification without dispatching the protected operation. Finish matching the remaining route and widget conditional states to current implementation and test receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -598592,7 +598592,8 @@
           "release-0.5-hosted-affected-web-repair",
           "release-0.5-wallet-ledger-read-recovery",
           "release-0.5-record-workspace-read-states",
-          "release-0.5-route-theme-layout"
+          "release-0.5-route-theme-layout",
+          "release-0.5-sensitive-otp-deadline"
         ],
         "current_acceptance": null
       }
@@ -598977,7 +598978,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -600781,7 +600782,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -602585,7 +602586,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -604389,7 +604390,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -606193,7 +606194,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -607997,7 +607998,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -609801,7 +609802,7 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -611619,11 +611620,11 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.tsx",
-              "sha256": "59f4b8e4bb78e745bd3338d7bfb842fdb67756f11a5f8f5d0230b2d8e496421f"
+              "sha256": "c237ba08fc6fd4f20f62d17a5418cc5bdf0705efd9569524dd28d9e96f5f66fb"
             },
             {
               "path": "apps/web/src/hooks/useActionFieldErrors.ts",
@@ -612446,11 +612447,11 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.tsx",
-              "sha256": "59f4b8e4bb78e745bd3338d7bfb842fdb67756f11a5f8f5d0230b2d8e496421f"
+              "sha256": "c237ba08fc6fd4f20f62d17a5418cc5bdf0705efd9569524dd28d9e96f5f66fb"
             },
             {
               "path": "apps/web/src/hooks/useActionFieldErrors.ts",
@@ -613273,11 +613274,11 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.tsx",
-              "sha256": "59f4b8e4bb78e745bd3338d7bfb842fdb67756f11a5f8f5d0230b2d8e496421f"
+              "sha256": "c237ba08fc6fd4f20f62d17a5418cc5bdf0705efd9569524dd28d9e96f5f66fb"
             },
             {
               "path": "apps/web/src/hooks/useActionFieldErrors.ts",
@@ -614100,11 +614101,11 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.tsx",
-              "sha256": "59f4b8e4bb78e745bd3338d7bfb842fdb67756f11a5f8f5d0230b2d8e496421f"
+              "sha256": "c237ba08fc6fd4f20f62d17a5418cc5bdf0705efd9569524dd28d9e96f5f66fb"
             },
             {
               "path": "apps/web/src/hooks/useActionFieldErrors.ts",
@@ -614927,11 +614928,11 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.tsx",
-              "sha256": "59f4b8e4bb78e745bd3338d7bfb842fdb67756f11a5f8f5d0230b2d8e496421f"
+              "sha256": "c237ba08fc6fd4f20f62d17a5418cc5bdf0705efd9569524dd28d9e96f5f66fb"
             },
             {
               "path": "apps/web/src/hooks/useActionFieldErrors.ts",
@@ -627736,11 +627737,11 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.tsx",
-              "sha256": "59f4b8e4bb78e745bd3338d7bfb842fdb67756f11a5f8f5d0230b2d8e496421f"
+              "sha256": "c237ba08fc6fd4f20f62d17a5418cc5bdf0705efd9569524dd28d9e96f5f66fb"
             },
             {
               "path": "apps/web/src/hooks/useActionFieldErrors.ts",
@@ -628563,11 +628564,11 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.tsx",
-              "sha256": "59f4b8e4bb78e745bd3338d7bfb842fdb67756f11a5f8f5d0230b2d8e496421f"
+              "sha256": "c237ba08fc6fd4f20f62d17a5418cc5bdf0705efd9569524dd28d9e96f5f66fb"
             },
             {
               "path": "apps/web/src/hooks/useActionFieldErrors.ts",
@@ -629390,11 +629391,11 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.tsx",
-              "sha256": "59f4b8e4bb78e745bd3338d7bfb842fdb67756f11a5f8f5d0230b2d8e496421f"
+              "sha256": "c237ba08fc6fd4f20f62d17a5418cc5bdf0705efd9569524dd28d9e96f5f66fb"
             },
             {
               "path": "apps/web/src/hooks/useActionFieldErrors.ts",
@@ -630217,11 +630218,11 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.tsx",
-              "sha256": "59f4b8e4bb78e745bd3338d7bfb842fdb67756f11a5f8f5d0230b2d8e496421f"
+              "sha256": "c237ba08fc6fd4f20f62d17a5418cc5bdf0705efd9569524dd28d9e96f5f66fb"
             },
             {
               "path": "apps/web/src/hooks/useActionFieldErrors.ts",
@@ -631044,11 +631045,11 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.tsx",
-              "sha256": "59f4b8e4bb78e745bd3338d7bfb842fdb67756f11a5f8f5d0230b2d8e496421f"
+              "sha256": "c237ba08fc6fd4f20f62d17a5418cc5bdf0705efd9569524dd28d9e96f5f66fb"
             },
             {
               "path": "apps/web/src/hooks/useActionFieldErrors.ts",
@@ -631871,11 +631872,11 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.tsx",
-              "sha256": "59f4b8e4bb78e745bd3338d7bfb842fdb67756f11a5f8f5d0230b2d8e496421f"
+              "sha256": "c237ba08fc6fd4f20f62d17a5418cc5bdf0705efd9569524dd28d9e96f5f66fb"
             },
             {
               "path": "apps/web/src/hooks/useActionFieldErrors.ts",
@@ -632698,11 +632699,11 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.tsx",
-              "sha256": "59f4b8e4bb78e745bd3338d7bfb842fdb67756f11a5f8f5d0230b2d8e496421f"
+              "sha256": "c237ba08fc6fd4f20f62d17a5418cc5bdf0705efd9569524dd28d9e96f5f66fb"
             },
             {
               "path": "apps/web/src/hooks/useActionFieldErrors.ts",
@@ -633525,11 +633526,11 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.tsx",
-              "sha256": "59f4b8e4bb78e745bd3338d7bfb842fdb67756f11a5f8f5d0230b2d8e496421f"
+              "sha256": "c237ba08fc6fd4f20f62d17a5418cc5bdf0705efd9569524dd28d9e96f5f66fb"
             },
             {
               "path": "apps/web/src/hooks/useActionFieldErrors.ts",
@@ -634352,11 +634353,11 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.tsx",
-              "sha256": "59f4b8e4bb78e745bd3338d7bfb842fdb67756f11a5f8f5d0230b2d8e496421f"
+              "sha256": "c237ba08fc6fd4f20f62d17a5418cc5bdf0705efd9569524dd28d9e96f5f66fb"
             },
             {
               "path": "apps/web/src/hooks/useActionFieldErrors.ts",
@@ -635179,11 +635180,11 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.tsx",
-              "sha256": "59f4b8e4bb78e745bd3338d7bfb842fdb67756f11a5f8f5d0230b2d8e496421f"
+              "sha256": "c237ba08fc6fd4f20f62d17a5418cc5bdf0705efd9569524dd28d9e96f5f66fb"
             },
             {
               "path": "apps/web/src/hooks/useActionFieldErrors.ts",
@@ -636006,11 +636007,11 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.tsx",
-              "sha256": "59f4b8e4bb78e745bd3338d7bfb842fdb67756f11a5f8f5d0230b2d8e496421f"
+              "sha256": "c237ba08fc6fd4f20f62d17a5418cc5bdf0705efd9569524dd28d9e96f5f66fb"
             },
             {
               "path": "apps/web/src/hooks/useActionFieldErrors.ts",
@@ -636833,11 +636834,11 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.tsx",
-              "sha256": "59f4b8e4bb78e745bd3338d7bfb842fdb67756f11a5f8f5d0230b2d8e496421f"
+              "sha256": "c237ba08fc6fd4f20f62d17a5418cc5bdf0705efd9569524dd28d9e96f5f66fb"
             },
             {
               "path": "apps/web/src/hooks/useActionFieldErrors.ts",
@@ -704277,11 +704278,11 @@
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
-              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+              "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.tsx",
-              "sha256": "59f4b8e4bb78e745bd3338d7bfb842fdb67756f11a5f8f5d0230b2d8e496421f"
+              "sha256": "c237ba08fc6fd4f20f62d17a5418cc5bdf0705efd9569524dd28d9e96f5f66fb"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -704310,7 +704311,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json"
+            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
+            "Sensitive-action OTP deadlines passed across all 32 scoped native cases. The critical coverage group and all 101 bundle budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-sensitive-otp-deadline/proof.json"
           ],
           "criterion_result": "OTP step-up adopted in email/SMS providers, refund/dual-approval threshold and staff role replacement. Native challenge/session/account/purpose binding, issuance/attempt/expiry/audit/concurrency and rotated CSRF checks pass. Sixteen bilingual/light-dark browser journeys pass. No live delivery inferred.",
           "limitations": [
@@ -728236,7 +728238,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The active staff navigation contrast regression is fixed and verified through the account theme selector. Reconcile the carried layout cells and the remaining original route and shared-pattern conditional acceptance against the existing source-bound checks."
+        "The layout census and selected navigation theme contrast have their own receipts. Reconcile the carried layout cells and remaining original route and shared-pattern acceptance. The shared sensitive-action OTP now has bounded, verified recovery."
       ],
       "owner": null,
       "depends_on": [],
@@ -728410,7 +728412,8 @@
           "release-0.5-wallet-ledger-read-recovery",
           "release-0.5-record-workspace-read-states",
           "release-0.5-route-theme-layout",
-          "release-0.5-navigation-theme-transition"
+          "release-0.5-navigation-theme-transition",
+          "release-0.5-sensitive-otp-deadline"
         ]
       }
     },
@@ -730331,7 +730334,8 @@
             "Renewed service-settings route budgets, changed-source coverage and cold auth asset comparison. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-hosted-affected-web-repair/proof.json",
             "Renewed wallet history route budgets, changed-source coverage and cold auth asset comparison. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-ledger-read-recovery/proof.json",
             "Renewed record workspace route budgets, measured coverage and cold auth evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-record-workspace-read-states/proof.json",
-            "The selected navigation palette now retains 4.5:1 across both account theme changes. All 101 route and interaction budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-navigation-theme-transition/proof.json"
+            "The selected navigation palette now retains 4.5:1 across both account theme changes. All 101 route and interaction budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-navigation-theme-transition/proof.json",
+            "Sensitive-action OTP deadlines passed across all 32 scoped native cases. The critical coverage group and all 101 bundle budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-sensitive-otp-deadline/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -806731,6 +806735,46 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-navigation-theme-transition/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-navigation-theme-transition/reviewed.patch",
       "release_disposition": "Fixed and verified the selected staff navigation contrast. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-sensitive-otp-deadline": {
+      "batch": "release-0.5-sensitive-otp-deadline",
+      "base_commit": "f5546cd7d133b76c384729a93fd57b7bf1141b4e",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "07-ui-ux-design.md#T-07.30.01.06",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
+          "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
+        },
+        {
+          "path": "apps/web/src/components/StepUpAuthGate.tsx",
+          "sha256": "c237ba08fc6fd4f20f62d17a5418cc5bdf0705efd9569524dd28d9e96f5f66fb"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
+        }
+      ],
+      "checks": [
+        "Sensitive-action OTP sends and verifies share a 15-second deadline over response headers and JSON. Unknown results, including server timeouts and errors, clear the local challenge and code. A fresh request needs an explicit action, and a late response cannot dispatch the protected command.",
+        "Known invalid codes and 429 responses retain a current challenge. Existing rate-limit precedence, access-denied handling, session rotation, CSRF and captured-action checks remain in use.",
+        "28 targeted units passed, including stalled headers, stalled verification body, late acknowledgements, resend limits and revoked authority. The unchanged critical gate measured 79/80 lines and 102/115 branches on the one changed application source.",
+        "32 native browser cases passed across Chromium and mobile Safari, Persian and English, light and dark, and provider changes, refund thresholds and staff roles. The fixtures prove that only a valid OTP resumes the captured command. Final production and auth builds, typecheck, lint, formatting and all 101 unchanged bundle budgets passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-sensitive-otp-deadline",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-sensitive-otp-deadline/proof.json",
+      "source_scope_proof_sha256": "48c704838124874bae973347b8418a12e6a4d6caeb532b08e877cc592770a6a8",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-sensitive-otp-deadline/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-sensitive-otp-deadline/reviewed.patch",
+      "release_disposition": "Verified bounded recovery in the shared sensitive-action OTP dialog. v0.5.0 remains open."
     }
   },
   "historical_improvements": [
@@ -806781,12 +806825,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Reconcile the carried layout cells and remaining route and widget conditional states against existing source-bound checks. GitHub merge enforcement and staging Sentry delivery remain independent gates."
+    "goal": "Resolve the demonstrated stalled admin agent test-chat response, then reconcile remaining route and widget conditional states against existing source-bound checks. GitHub merge enforcement and staging Sentry delivery remain independent gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 has a complete populated route census and verified navigation contrast repair. Four launch-required criteria remain open and the November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 has the populated route census, verified navigation contrast and bounded sensitive OTP recovery. Four launch-required criteria remain open and the November 9 sequence remains at risk."
   },
   "capabilities": [
     {

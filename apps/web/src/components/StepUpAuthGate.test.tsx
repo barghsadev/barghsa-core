@@ -21,6 +21,7 @@ afterEach(async () => {
   await act(async () => root.unmount());
   host.remove();
   document.cookie = 'barghsa_csrf=;max-age=0';
+  vi.useRealTimers();
   vi.unstubAllGlobals();
 });
 async function click(text: string) {
@@ -104,6 +105,107 @@ it('keeps the challenge after a wrong OTP and never continues malformed verifica
   expect(verified).not.toHaveBeenCalled();
   expect(document.querySelector('[role=alert]')?.textContent).toContain('unavailable');
 });
+
+for (const stalled of ['send headers', 'verify body'] as const)
+  it(`requires a fresh code after stalled ${stalled} and ignores the late reply`, async () => {
+    vi.useFakeTimers();
+    const verified = vi.fn().mockResolvedValue(undefined);
+    const original = challenge();
+    const fresh = { ...original, challengeId: '00000000-0000-4000-8000-000000000002' };
+    const proof = { verified: true, stepUpVerifiedAt: new Date().toISOString() };
+    let sends = 0;
+    let late!: () => void;
+    const fetcher = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      if (String(input).endsWith('/send')) {
+        if (++sends > 1) return reply(fresh);
+        if (stalled === 'send headers')
+          return new Promise<Response>((resolve) => {
+            late = () => resolve(reply(original));
+          });
+        return reply(original);
+      }
+      const body = JSON.parse(String(init?.body));
+      if (body.challengeId === fresh.challengeId) return reply(proof);
+      expect(body).toEqual({ challengeId: original.challengeId, code: '123456' });
+      const response = reply(null);
+      vi.spyOn(response, 'json').mockImplementation(
+        () => new Promise((resolve) => (late = () => resolve(proof)))
+      );
+      return response;
+    });
+    vi.stubGlobal('fetch', fetcher);
+    await act(async () => root.render(<StepUpAuthGate onVerified={verified} />));
+    await click('Send verification code');
+    if (stalled === 'verify body') {
+      await fill();
+      await submit();
+    }
+
+    const calls = fetcher.mock.calls.length;
+    const signal = fetcher.mock.lastCall?.[1]?.signal;
+    await act(async () => vi.advanceTimersByTimeAsync(15_000));
+    expect(signal?.aborted).toBe(true);
+    expect(fetcher).toHaveBeenCalledTimes(calls);
+    expect(document.querySelector('[role=alert]')?.textContent).toContain('unavailable');
+    expect(document.querySelector('input')).toBeNull();
+
+    await act(async () => late());
+    expect(document.querySelector('input')).toBeNull();
+    expect(verified).not.toHaveBeenCalled();
+    await click('Send verification code');
+    await fill();
+    await submit();
+    expect(fetcher).toHaveBeenCalledTimes(calls + 2);
+    expect(JSON.parse(String(fetcher.mock.lastCall?.[1]?.body))).toEqual({
+      challengeId: fresh.challengeId,
+      code: '123456',
+    });
+    expect(verified).toHaveBeenCalledTimes(1);
+  });
+
+for (const source of ['response body', 'Retry-After'] as const)
+  it(`honors a resend limit from the ${source} without discarding a valid challenge`, async () => {
+    vi.useFakeTimers();
+    const verified = vi.fn().mockResolvedValue(undefined);
+    const fetcher = vi
+      .fn()
+      .mockResolvedValueOnce(reply(challenge()))
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify(source === 'response body' ? { retryAfterMs: 2000 } : {}), {
+          status: 429,
+          headers: { 'Retry-After': source === 'response body' ? '60' : '2' },
+        })
+      )
+      .mockResolvedValueOnce(reply({ verified: true, stepUpVerifiedAt: new Date().toISOString() }));
+    vi.stubGlobal('fetch', fetcher);
+    await act(async () => root.render(<StepUpAuthGate onVerified={verified} />));
+    await click('Send verification code');
+    await fill();
+    await click('Send a new code');
+    await submit();
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    await act(async () => vi.advanceTimersByTimeAsync(2_000));
+    await submit();
+    expect(fetcher).toHaveBeenCalledTimes(3);
+    expect(verified).toHaveBeenCalledTimes(1);
+  });
+
+it('retires the previous challenge after an unconfirmed resend response', async () => {
+  const verified = vi.fn();
+  const fetcher = vi
+    .fn()
+    .mockResolvedValueOnce(reply(challenge()))
+    .mockResolvedValueOnce(reply({}, 503));
+  vi.stubGlobal('fetch', fetcher);
+  await act(async () => root.render(<StepUpAuthGate onVerified={verified} />));
+  await click('Send verification code');
+  await click('Send a new code');
+  expect(document.querySelector('input')).toBeNull();
+  expect(document.querySelector('[role=alert]')?.textContent).toContain('unavailable');
+  expect(fetcher).toHaveBeenCalledTimes(2);
+  expect(verified).not.toHaveBeenCalled();
+});
+
 for (const boundary of ['disabled', 'unmounted'] as const)
   it(`ignores a pending verification after ${boundary}`, async () => {
     const verified = vi.fn().mockResolvedValue(undefined);

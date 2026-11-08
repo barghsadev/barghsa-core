@@ -4,6 +4,7 @@ import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 
 /** Inline OTP form inside the existing sensitive-action dialog. */
 export function StepUpAuthGate({
@@ -63,14 +64,16 @@ export function StepUpAuthGate({
     setBusy(true);
     setError(null);
     try {
-      const response = await fetch(`/api/auth/step-up/otp/${send ? 'send' : 'verify'}`, {
-        method: 'POST',
-        credentials: 'include',
-        signal: controller.signal,
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify(send ? {} : { challengeId: challenge!.id, code }),
+      const { response, data } = await readWithDeadline(controller.signal, async (signal) => {
+        const response = await fetch(`/api/auth/step-up/otp/${send ? 'send' : 'verify'}`, {
+          method: 'POST',
+          credentials: 'include',
+          signal,
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify(send ? {} : { challengeId: challenge!.id, code }),
+        });
+        return { response, data: (await response.json().catch(() => null)) as unknown };
       });
-      const data: unknown = await response.json().catch(() => null);
       if (!alive.current || controller.signal.aborted || !allowed.current) return;
       const body = data && typeof data === 'object' ? (data as Record<string, unknown>) : {};
       const failure =
@@ -104,6 +107,7 @@ export function StepUpAuthGate({
         return;
       }
       if (!response.ok) {
+        if (response.status === 408 || response.status >= 500) throw new Error('Unconfirmed OTP');
         setCode('');
         setError(text(send ? 'sendFailed' : 'invalid'));
         return;
@@ -132,7 +136,12 @@ export function StepUpAuthGate({
         await onVerified();
       }
     } catch {
-      if (alive.current && !controller.signal.aborted) setError(text('unavailable'));
+      if (alive.current && allowed.current && !controller.signal.aborted) {
+        // An unknown send may have replaced the code, and an unknown verify may have used it.
+        setChallenge(null);
+        setCode('');
+        setError(text('unavailable'));
+      }
     } finally {
       inFlight.current = false;
       if (alive.current) setBusy(false);
