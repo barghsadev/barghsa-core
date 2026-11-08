@@ -58,11 +58,20 @@ main landmark. When an already verified session is denied on the next
 protected navigation, sign-in announces that the session ended. The notice is
 used once; a normal visit to sign-in has no expiry warning.
 
+Cold auth transfer checks cover both immediate and delayed session responses.
+On the delayed path, the loading state appears before the response arrives.
+Both paths measure scripts through the actual form heading.
+
 Use a native button for a custom file picker. Keep drop instructions, allowed
 types and limits in its accessible description, and link any file-specific
 error to the same control. Native file inputs keep their visible labels and
 descriptions. A decorative required marker stays hidden from assistive
 technology; the control announces the required state itself.
+
+In CRM identity corrections, the evidence picker describes the required file
+count and links invalid selections to the inline error. Reviewer notes become
+required when staff select rejection. The CRM archive dialog keeps its scroll
+area within the viewport as its height changes.
 
 State either-or requirements before submission. A ticket reply can contain
 text, an attachment, or both, so its text field is not individually required.

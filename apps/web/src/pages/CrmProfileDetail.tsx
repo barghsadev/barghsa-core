@@ -1641,7 +1641,10 @@ function AdminActionConfirmModal({
         if (!open && !loading) onCancel();
       }}
     >
-      <DialogContent finalFocus={finalFocus} className="max-h-[calc(100dvh-2rem)] overflow-y-auto">
+      <DialogContent
+        finalFocus={finalFocus}
+        className="max-h-[calc(100dvh-2rem)] overflow-y-auto transition-none"
+      >
         <form
           onSubmit={(event) => {
             event.preventDefault();
@@ -1660,6 +1663,7 @@ function AdminActionConfirmModal({
                   <input
                     type="checkbox"
                     required
+                    aria-required="true"
                     checked={checked.includes(item)}
                     disabled={loading}
                     className="shrink-0"
@@ -1680,6 +1684,7 @@ function AdminActionConfirmModal({
           <textarea
             id="crm-action-reason"
             required
+            aria-required="true"
             maxLength={1000}
             value={reason}
             onChange={(event) => onReasonChange(event.target.value)}

@@ -1,6 +1,6 @@
 import { Languages } from 'lucide-react';
 import { Button } from '@barghsa/ui';
-import { shellText } from '@barghsa/i18n/shell';
+import { publicShellText } from '@barghsa/i18n/public-shell';
 import { useLocale } from '../hooks/useLocale.js';
 import { setLanguagePreference } from '../lib/entry-locale.js';
 
@@ -11,7 +11,7 @@ export function LanguageSwitcher() {
     <Button
       variant="ghost"
       size="default"
-      aria-label={shellText('language', locale)}
+      aria-label={publicShellText('language', locale)}
       onClick={() => {
         const next = locale === 'fa' ? 'en' : 'fa';
         setLanguagePreference(next);
@@ -19,7 +19,7 @@ export function LanguageSwitcher() {
     >
       <Languages aria-hidden="true" data-icon="inline-start" />
       <span className="inline" lang={locale === 'fa' ? 'en' : 'fa'}>
-        {shellText('languageCode', locale)}
+        {publicShellText('languageCode', locale)}
       </span>
     </Button>
   );

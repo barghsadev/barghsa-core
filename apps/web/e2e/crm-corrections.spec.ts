@@ -116,6 +116,22 @@ for (const [locale, darkMode] of [
       .analyze();
     expect(accessibility.violations).toEqual([]);
     await verifyClippedContrast(page, accessibility);
+    for (const key of ['field', 'value', 'reason']) {
+      const control = page.locator(`#correction-${key}`);
+      await expect(control).toHaveAccessibleName(/\S/);
+      await expect(control).toHaveAttribute('aria-required', 'true');
+    }
+    const picker = page.getByRole('button', {
+      name: crmText('crm.corrections.chooseFiles', locale),
+      exact: true,
+    });
+    const create = page.getByRole('button', {
+      name: crmText('crm.corrections.upload', locale),
+      exact: true,
+    });
+    await expect(picker).toHaveAccessibleDescription(
+      new RegExp(crmText('crm.corrections.files', locale).split(' (')[0]!)
+    );
     await page.locator('#correction-field').focus();
     await page.keyboard.press('Tab');
     await expect(page.locator('#correction-value')).toBeFocused();
@@ -126,10 +142,33 @@ for (const [locale, darkMode] of [
     await page.locator('#correction-value').fill('Corrected');
     await page.locator('#correction-reason').fill('Document checked');
     await page.locator('#correction-files').setInputFiles({
+      name: 'unsupported.exe',
+      mimeType: 'application/octet-stream',
+      buffer: Buffer.from('Not supported'),
+    });
+    await expect(picker).toHaveAttribute('aria-invalid', 'true');
+    await expect(picker).toHaveAccessibleDescription(
+      new RegExp(crmText('crm.corrections.invalidFiles', locale))
+    );
+    await expect(create).toBeDisabled();
+    expect(uploads).toBe(0);
+    await page.locator('#correction-files').setInputFiles({
       name: 'evidence.pdf',
       mimeType: 'application/pdf',
       buffer: Buffer.from('%PDF-1.7\nEvidence'),
     });
+    await expect(picker).not.toHaveAttribute('aria-invalid', 'true');
+    await expect(picker).not.toHaveAccessibleDescription(
+      new RegExp(crmText('crm.corrections.invalidFiles', locale))
+    );
+    await page.locator('#correction-value').fill('   ');
+    await expect(create).toBeDisabled();
+    await page
+      .locator('form:has(#correction-value)')
+      .evaluate((form: HTMLFormElement) => form.requestSubmit());
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    expect(uploads).toBe(0);
+    await page.locator('#correction-value').fill('Corrected');
     await page.locator('section:has(#correction-field)').screenshot({
       path:
         '/tmp/barghsa-crm-correction-' +
@@ -140,13 +179,7 @@ for (const [locale, darkMode] of [
         testInfo.project.name +
         '.png',
     });
-    await page
-      .getByRole('button', {
-        name:
-          locale === 'fa' ? 'بارگذاری مدارک و بررسی درخواست' : 'Upload evidence and review request',
-        exact: true,
-      })
-      .click();
+    await create.click();
     const dialog = page.getByRole('dialog');
     await expect(dialog).toContainText(profileId);
     await dialog
@@ -389,8 +422,10 @@ for (const [locale, darkMode] of [
     await evidence.focus();
     await page.keyboard.press('Tab');
     await expect(page.locator('#case-decision')).toBeFocused();
+    await expect(page.locator('#case-decision')).toHaveAttribute('aria-required', 'true');
     await page.keyboard.press('Tab');
     await expect(page.locator('#case-notes')).toBeFocused();
+    await expect(page.locator('#case-notes')).not.toHaveAttribute('aria-required', 'true');
     await page.keyboard.type('Evidence checked');
     await page.screenshot({
       path: `/tmp/barghsa-crm-correction-review-${locale}-${darkMode ? 'dark' : 'light'}-${testInfo.project.name}.png`,
@@ -423,6 +458,7 @@ for (const [locale, darkMode] of [
     ).toBeVisible();
     await expect(evidence).toHaveCount(0);
     await page.locator('#case-decision').selectOption('Rejected');
+    await expect(page.locator('#case-notes')).toHaveAttribute('aria-required', 'true');
     await expect(review).toBeDisabled();
     await page.locator('#case-notes').fill('Resubmit evidence');
     await expect(review).toBeEnabled();

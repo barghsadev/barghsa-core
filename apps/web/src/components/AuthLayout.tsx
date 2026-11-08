@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n/auth';
-import { shellText } from '@barghsa/i18n/shell';
+import { publicShellText } from '@barghsa/i18n/public-shell';
 import { ArrowUpRight } from 'lucide-react';
 import { brandName, useBrandConfig } from '../providers/BrandThemeProvider.js';
 import { BrandMark } from './BrandMark.js';
@@ -29,9 +29,11 @@ export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps)
           <BrandMark inverse />
         </Link>
         <div className="relative z-10 my-auto hidden py-16 md:block">
-          <p className="mb-5 text-sm font-medium text-energy">{shellText('authEyebrow', locale)}</p>
+          <p className="mb-5 text-sm font-medium text-energy">
+            {publicShellText('authEyebrow', locale)}
+          </p>
           <h2 className="max-w-lg whitespace-pre-line text-[clamp(2.5rem,4.4vw,4.5rem)] leading-[1.25] font-medium tracking-tight">
-            {shellText('authTitle', locale)}
+            {publicShellText('authTitle', locale)}
           </h2>
           <p className="mt-6 max-w-sm text-base leading-relaxed text-brand-panel-muted">
             {brandConfig.slogan || t('auth.brand.slogan', locale)}
@@ -87,9 +89,9 @@ export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps)
           </div>
         </main>
         <div className="space-y-2 px-6 pb-6 text-center text-xs text-muted-foreground">
-          <p>{shellText('authNote', locale)}</p>
+          <p>{publicShellText('authNote', locale)}</p>
           <p>
-            {shellText('appVersion', locale)}{' '}
+            {publicShellText('appVersion', locale)}{' '}
             <bdi dir="ltr" data-app-version>
               v{__BARGHSA_VERSION__}
             </bdi>

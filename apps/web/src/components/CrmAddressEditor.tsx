@@ -164,6 +164,7 @@ export function CrmAddressEditor({
               <select
                 {...draft.bind('provinceId')}
                 id={fieldId + '-province'}
+                aria-required="true"
                 value={fields.provinceId}
                 disabled={!provinces.ready}
                 onChange={(event) => {
@@ -203,6 +204,7 @@ export function CrmAddressEditor({
               <DependentSelect
                 {...draft.bind('cityId')}
                 id={fieldId + '-city'}
+                aria-required="true"
                 dependencyValue={fields.provinceId}
                 value={fields.cityId}
                 ready={cities.ready}
@@ -240,6 +242,7 @@ export function CrmAddressEditor({
               {...draft.bind('fullAddress')}
               id={fieldId + '-full'}
               required
+              aria-required="true"
               maxLength={500}
               rows={3}
               value={fields.fullAddress}
@@ -262,6 +265,7 @@ export function CrmAddressEditor({
               {...draft.bind('postalCode')}
               id={fieldId + '-postal'}
               required
+              aria-required="true"
               inputMode="numeric"
               maxLength={10}
               dir="ltr"

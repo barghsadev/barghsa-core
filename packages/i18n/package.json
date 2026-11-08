@@ -197,6 +197,11 @@
       "import": "./dist/shell.js",
       "default": "./dist/shell.js"
     },
+    "./public-shell": {
+      "types": "./dist/public-shell.d.ts",
+      "import": "./dist/public-shell.js",
+      "default": "./dist/public-shell.js"
+    },
     "./documents": {
       "types": "./dist/documents.d.ts",
       "import": "./dist/documents.js",

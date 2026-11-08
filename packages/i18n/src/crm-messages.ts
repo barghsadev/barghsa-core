@@ -149,7 +149,9 @@ export const fa: I18nDictionary = {
   'crm.corrections.newValue': 'مقدار درخواستی',
   'crm.corrections.currentValue': 'مقدار اولیه',
   'crm.corrections.reason': 'دلیل',
-  'crm.corrections.files': 'مدارک (PDF، JPG یا PNG؛ حداکثر ۵ فایل)',
+  'crm.corrections.files': 'مدارک الزامی (۱ تا ۵ فایل PDF، JPG یا PNG)',
+  'crm.corrections.invalidFiles':
+    'تعداد، نوع یا اندازهٔ مدارک مجاز نیست. ۱ تا ۵ فایل معتبر انتخاب کنید.',
   'crm.corrections.upload': 'بارگذاری مدارک و بررسی درخواست',
   'crm.corrections.uploading': 'در حال بارگذاری مدارک…',
   'crm.corrections.error':
@@ -482,7 +484,9 @@ export const en: I18nDictionary = {
   'crm.corrections.newValue': 'Requested value',
   'crm.corrections.currentValue': 'Original value',
   'crm.corrections.reason': 'Reason',
-  'crm.corrections.files': 'Evidence files (PDF, JPG or PNG; up to 5)',
+  'crm.corrections.files': 'Required evidence (1 to 5 PDF, JPG or PNG files)',
+  'crm.corrections.invalidFiles':
+    'The file count, type or size is invalid. Choose 1 to 5 supported evidence files.',
   'crm.corrections.upload': 'Upload evidence and review request',
   'crm.corrections.uploading': 'Uploading evidence…',
   'crm.corrections.error':

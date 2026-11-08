@@ -1082,8 +1082,14 @@ for (const locale of ['fa', 'en'] as const)
         await page.setViewportSize(viewport);
       }
       const reason = dialog.getByRole('textbox');
+      await expect(reason).toHaveAccessibleName(/\S/);
+      await expect(reason).toHaveAttribute('aria-required', 'true');
       await reason.fill('  ');
-      for (const checkbox of await dialog.getByRole('checkbox').all()) await checkbox.check();
+      for (const checkbox of await dialog.getByRole('checkbox').all()) {
+        await expect(checkbox).toHaveAccessibleName(/\S/);
+        await expect(checkbox).toHaveAttribute('aria-required', 'true');
+        await checkbox.check();
+      }
       await expect(dialog.getByRole('button', { name: archiveLabel, exact: true })).toBeDisabled();
       await reason.fill('Closure requested');
       await page.keyboard.press('Escape');

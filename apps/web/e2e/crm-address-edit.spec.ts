@@ -196,6 +196,8 @@ for (const locale of ['fa', 'en'] as const) {
     await page.getByTestId('crm-address-city-retry').click();
     await city.selectOption(c2);
     const postal = panel.getByLabel(locale === 'fa' ? 'کد پستی' : 'Postal code', { exact: true });
+    for (const control of [province, city, full, postal])
+      await expect(control).toHaveAttribute('aria-required', 'true');
     await postal.fill('0123456789');
     const save = panel.getByRole('button', {
       name: locale === 'fa' ? 'ذخیره تغییرات' : 'Save Changes',
@@ -203,6 +205,9 @@ for (const locale of ['fa', 'en'] as const) {
     });
     await save.click();
     await expect(postal).toHaveAttribute('aria-invalid', 'true');
+    await expect(postal).toHaveAccessibleDescription(
+      locale === 'fa' ? /کد پستی ۱۰ رقمی/ : /10-digit postal code/
+    );
     await expect(panel.getByRole('alert')).toContainText(
       locale === 'fa' ? 'کد پستی ۱۰ رقمی' : '10-digit postal code'
     );

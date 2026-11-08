@@ -456,6 +456,8 @@ function Corrections({
     actionRef.current = command;
     setAction(command);
   }
+  const invalidEvidence =
+    files.length > 5 || files.some((file) => !isAllowedInvoiceReceiptFile(file));
   async function create(event: FormEvent) {
     event.preventDefault();
     if (
@@ -464,9 +466,10 @@ function Corrections({
       profileRead.loading ||
       profileRead.error ||
       denied ||
+      !value.trim() ||
+      !reason.trim() ||
       !files.length ||
-      files.length > 5 ||
-      files.some((file) => !isAllowedInvoiceReceiptFile(file)) ||
+      invalidEvidence ||
       uploading.current
     )
       return;
@@ -560,6 +563,7 @@ function Corrections({
                   <select
                     ref={fieldSelect}
                     id="correction-field"
+                    aria-required="true"
                     value={field}
                     onChange={(event) => setField(event.target.value)}
                     className="block rounded border bg-background text-foreground p-2"
@@ -579,6 +583,7 @@ function Corrections({
                   <Input
                     id="correction-value"
                     required
+                    aria-required="true"
                     maxLength={512}
                     value={value}
                     onChange={(event) => setValue(event.target.value)}
@@ -589,6 +594,7 @@ function Corrections({
                   <textarea
                     id="correction-reason"
                     required
+                    aria-required="true"
                     maxLength={1000}
                     value={reason}
                     onChange={(event) => setReason(event.target.value)}
@@ -596,7 +602,7 @@ function Corrections({
                   />
                 </div>
                 <div>
-                  <Label htmlFor="correction-file-picker">
+                  <Label id="correction-files-rules" htmlFor="correction-file-picker">
                     {t('crm.corrections.files', locale)}
                   </Label>
                   <Input
@@ -605,22 +611,23 @@ function Corrections({
                     hidden
                     id="correction-files"
                     type="file"
+                    aria-required="true"
                     multiple
                     accept="application/pdf,image/jpeg,image/png"
                     onChange={(event) => {
                       const next = Array.from(event.target.files ?? []);
                       setFiles(next);
-                      setError(
-                        next.length > 5 || next.some((file) => !isAllowedInvoiceReceiptFile(file))
-                      );
+                      setError(false);
                     }}
                   />
                   <Button
                     id="correction-file-picker"
                     type="button"
                     variant="outline"
+                    aria-label={t('crm.corrections.chooseFiles', locale)}
+                    aria-invalid={invalidEvidence || undefined}
                     onClick={() => fileInput.current?.click()}
-                    aria-describedby="correction-files-selected"
+                    aria-describedby={`correction-files-rules correction-files-selected${invalidEvidence ? ' correction-files-error' : ''}`}
                   >
                     {t('crm.corrections.chooseFiles', locale)}
                   </Button>
@@ -638,6 +645,15 @@ function Corrections({
                         ))
                       : t('crm.corrections.noFiles', locale)}
                   </p>
+                  {invalidEvidence && (
+                    <p
+                      id="correction-files-error"
+                      role="alert"
+                      className="text-sm text-destructive"
+                    >
+                      {t('crm.corrections.invalidFiles', locale)}
+                    </p>
+                  )}
                 </div>
                 <Button
                   ref={createButton}
@@ -648,8 +664,7 @@ function Corrections({
                     !value.trim() ||
                     !reason.trim() ||
                     !files.length ||
-                    files.length > 5 ||
-                    files.some((file) => !isAllowedInvoiceReceiptFile(file))
+                    invalidEvidence
                   }
                 >
                   {t(busy ? 'crm.corrections.uploading' : 'crm.corrections.upload', locale)}
@@ -817,6 +832,7 @@ function Corrections({
                     <select
                       disabled={busy || !!action}
                       id="case-decision"
+                      aria-required="true"
                       value={decision}
                       onChange={(event) => setDecision(event.target.value as Status)}
                       className="block rounded border bg-background text-foreground p-2"
@@ -834,6 +850,7 @@ function Corrections({
                     <textarea
                       disabled={busy || !!action}
                       id="case-notes"
+                      aria-required={decision === 'Rejected' || undefined}
                       maxLength={1000}
                       value={notes}
                       onChange={(event) => setNotes(event.target.value)}
