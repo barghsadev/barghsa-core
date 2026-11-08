@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T11:56:09+00:00",
-  "source_commit": "d2a19084f5c33e6c43770f40243e2b87febfd693",
+  "updated": "2026-11-08T12:04:16+00:00",
+  "source_commit": "3c7df3d371de76f3d40f777278a05a3272cec08c",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -59538,15 +59538,15 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/e2e/verification-mode.spec.ts",
-              "sha256": "c9c2580d0fde42b91ecb0fda3481b723c03123289fafcedbcda6d01db2c4c99e"
+              "sha256": "713bebf9c3909bdf6f832270288aeaa1f1a744c6c758862cdbe5c9e7534099aa"
             },
             {
               "path": "packages/i18n/src/verification-config.ts",
@@ -59558,7 +59558,7 @@
             },
             {
               "path": "apps/web/src/hooks/useSettingsSnapshot.ts",
-              "sha256": "22eb1d8e8b55ff4874e8e7ea2a885a25fdbd13956264bd9306ef66047c35b08b"
+              "sha256": "5aa686ca8da017d16dc5f579a290fafab1898296faeae799c69101cf15d752a4"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -491279,7 +491279,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
+              "sha256": "b97578cda4f5e85f4f4aa7745ad1476d966fb7b39e3d3ab01e1cc31a70f3b71f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -512292,7 +512292,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
+              "sha256": "b97578cda4f5e85f4f4aa7745ad1476d966fb7b39e3d3ab01e1cc31a70f3b71f"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
+              "sha256": "b97578cda4f5e85f4f4aa7745ad1476d966fb7b39e3d3ab01e1cc31a70f3b71f"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -520508,7 +520508,7 @@
             },
             {
               "path": "apps/web/e2e/verification-mode.spec.ts",
-              "sha256": "c9c2580d0fde42b91ecb0fda3481b723c03123289fafcedbcda6d01db2c4c99e"
+              "sha256": "713bebf9c3909bdf6f832270288aeaa1f1a744c6c758862cdbe5c9e7534099aa"
             },
             {
               "path": "apps/web/e2e/verification-settings-forms.spec.ts",
@@ -521336,7 +521336,7 @@
             },
             {
               "path": "apps/web/e2e/verification-mode.spec.ts",
-              "sha256": "c9c2580d0fde42b91ecb0fda3481b723c03123289fafcedbcda6d01db2c4c99e"
+              "sha256": "713bebf9c3909bdf6f832270288aeaa1f1a744c6c758862cdbe5c9e7534099aa"
             },
             {
               "path": "apps/web/e2e/verification-settings-forms.spec.ts",
@@ -522664,7 +522664,7 @@
             },
             {
               "path": "apps/web/e2e/verification-mode.spec.ts",
-              "sha256": "c9c2580d0fde42b91ecb0fda3481b723c03123289fafcedbcda6d01db2c4c99e"
+              "sha256": "713bebf9c3909bdf6f832270288aeaa1f1a744c6c758862cdbe5c9e7534099aa"
             },
             {
               "path": "apps/web/e2e/verification-settings-forms.spec.ts",
@@ -546863,7 +546863,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -547219,7 +547219,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -548729,7 +548729,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -549085,7 +549085,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -550596,7 +550596,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -550952,7 +550952,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -552432,7 +552432,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -552788,7 +552788,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -554294,7 +554294,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -554650,7 +554650,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -556165,7 +556165,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -556521,7 +556521,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -558009,7 +558009,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -558365,7 +558365,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -559817,7 +559817,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -560173,7 +560173,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -561625,7 +561625,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -561981,7 +561981,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -563434,7 +563434,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -563790,7 +563790,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -565242,7 +565242,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -565598,7 +565598,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -567064,7 +567064,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -567472,7 +567472,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -567520,7 +567520,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
+              "sha256": "b97578cda4f5e85f4f4aa7745ad1476d966fb7b39e3d3ab01e1cc31a70f3b71f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568959,7 +568959,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -569367,7 +569367,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -569415,7 +569415,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
+              "sha256": "b97578cda4f5e85f4f4aa7745ad1476d966fb7b39e3d3ab01e1cc31a70f3b71f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570219,7 +570219,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Shared verified attachment preparation now has bounded metadata and transfer waits, preserves receipt and ticket drafts and aborts obsolete invoice uploads. The verification-mode draft still needs a bounded save and a current-version check after an unknown reply."
+        "Verification-mode draft saves now time out safely and reset requires a fresh settings read. The shared customer settings command still waits indefinitely on write acknowledgements in profile, address and saving-order callers."
       ],
       "owner": null,
       "depends_on": [],
@@ -570277,7 +570277,8 @@
           "release-0.5-electricity-draft-recovery",
           "release-0.5-solar-document-completion",
           "release-0.5-ticket-command-deadline",
-          "release-0.5-verified-upload-deadline"
+          "release-0.5-verified-upload-deadline",
+          "release-0.5-verification-mode-recovery"
         ],
         "current_acceptance": null
       }
@@ -570932,7 +570933,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -571340,7 +571341,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -571388,7 +571389,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
+              "sha256": "b97578cda4f5e85f4f4aa7745ad1476d966fb7b39e3d3ab01e1cc31a70f3b71f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -572827,7 +572828,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -573235,7 +573236,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -573283,7 +573284,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
+              "sha256": "b97578cda4f5e85f4f4aa7745ad1476d966fb7b39e3d3ab01e1cc31a70f3b71f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -574722,7 +574723,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -575130,7 +575131,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -575178,7 +575179,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
+              "sha256": "b97578cda4f5e85f4f4aa7745ad1476d966fb7b39e3d3ab01e1cc31a70f3b71f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -576617,7 +576618,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -577025,7 +577026,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -577073,7 +577074,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
+              "sha256": "b97578cda4f5e85f4f4aa7745ad1476d966fb7b39e3d3ab01e1cc31a70f3b71f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -578512,7 +578513,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -578920,7 +578921,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -578968,7 +578969,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
+              "sha256": "b97578cda4f5e85f4f4aa7745ad1476d966fb7b39e3d3ab01e1cc31a70f3b71f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -580407,7 +580408,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -580815,7 +580816,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -580863,7 +580864,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
+              "sha256": "b97578cda4f5e85f4f4aa7745ad1476d966fb7b39e3d3ab01e1cc31a70f3b71f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -582302,7 +582303,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -582710,7 +582711,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -582758,7 +582759,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
+              "sha256": "b97578cda4f5e85f4f4aa7745ad1476d966fb7b39e3d3ab01e1cc31a70f3b71f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -584197,7 +584198,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -584605,7 +584606,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -584653,7 +584654,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
+              "sha256": "b97578cda4f5e85f4f4aa7745ad1476d966fb7b39e3d3ab01e1cc31a70f3b71f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -586092,7 +586093,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -586500,7 +586501,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -586548,7 +586549,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
+              "sha256": "b97578cda4f5e85f4f4aa7745ad1476d966fb7b39e3d3ab01e1cc31a70f3b71f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -587987,7 +587988,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -588395,7 +588396,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -588443,7 +588444,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
+              "sha256": "b97578cda4f5e85f4f4aa7745ad1476d966fb7b39e3d3ab01e1cc31a70f3b71f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589882,7 +589883,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -590290,7 +590291,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -590338,7 +590339,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
+              "sha256": "b97578cda4f5e85f4f4aa7745ad1476d966fb7b39e3d3ab01e1cc31a70f3b71f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591602,7 +591603,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
+              "sha256": "b97578cda4f5e85f4f4aa7745ad1476d966fb7b39e3d3ab01e1cc31a70f3b71f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592517,7 +592518,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -592925,7 +592926,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -592973,7 +592974,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
+              "sha256": "b97578cda4f5e85f4f4aa7745ad1476d966fb7b39e3d3ab01e1cc31a70f3b71f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594412,7 +594413,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -594820,7 +594821,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -594868,7 +594869,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
+              "sha256": "b97578cda4f5e85f4f4aa7745ad1476d966fb7b39e3d3ab01e1cc31a70f3b71f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595672,7 +595673,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Verified upload preparation and the associated invoice and wallet timeout recovery have current browser evidence. Continue matching remaining route loading, empty and error states against current source and native evidence."
+        "Verification-mode and shared workflow settings have current browser evidence for blocked writes and confirmed saved-state recovery. Continue reconciling the remaining conditional route states against the route inventory and current native evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -595742,7 +595743,8 @@
           "release-0.5-electricity-draft-recovery",
           "release-0.5-solar-document-completion",
           "release-0.5-ticket-command-deadline",
-          "release-0.5-verified-upload-deadline"
+          "release-0.5-verified-upload-deadline",
+          "release-0.5-verification-mode-recovery"
         ],
         "current_acceptance": null
       }
@@ -596411,7 +596413,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -596767,7 +596769,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -598215,7 +598217,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -598571,7 +598573,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -600019,7 +600021,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -600375,7 +600377,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -601823,7 +601825,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -602179,7 +602181,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -603627,7 +603629,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -603983,7 +603985,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -605431,7 +605433,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -605787,7 +605789,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -607235,7 +607237,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
@@ -607591,7 +607593,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -704086,11 +704088,11 @@
             },
             {
               "path": "apps/web/src/hooks/useSettingsSnapshot.ts",
-              "sha256": "22eb1d8e8b55ff4874e8e7ea2a885a25fdbd13956264bd9306ef66047c35b08b"
+              "sha256": "5aa686ca8da017d16dc5f579a290fafab1898296faeae799c69101cf15d752a4"
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -704106,7 +704108,7 @@
             },
             {
               "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
-              "sha256": "e1d55f2e2c9fb2856c050eed35dcd27e8b498618321149aedc02eb462e423347"
+              "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -704490,7 +704492,7 @@
             },
             {
               "path": "apps/web/src/hooks/useSettingsSnapshot.ts",
-              "sha256": "22eb1d8e8b55ff4874e8e7ea2a885a25fdbd13956264bd9306ef66047c35b08b"
+              "sha256": "5aa686ca8da017d16dc5f579a290fafab1898296faeae799c69101cf15d752a4"
             },
             {
               "path": "apps/web/src/lib/service-settings-form.test.ts",
@@ -705175,7 +705177,7 @@
             },
             {
               "path": "apps/web/src/hooks/useSettingsSnapshot.ts",
-              "sha256": "22eb1d8e8b55ff4874e8e7ea2a885a25fdbd13956264bd9306ef66047c35b08b"
+              "sha256": "5aa686ca8da017d16dc5f579a290fafab1898296faeae799c69101cf15d752a4"
             },
             {
               "path": "apps/web/src/lib/service-settings-form.test.ts",
@@ -725386,7 +725388,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Verified upload and receipt recovery has current evidence. Remaining command feedback and route states, live Sentry delivery and required GitHub accessibility enforcement still gate full adoption."
+        "Verification-mode and workflow-settings recovery has current evidence. Remaining command feedback and route states, live Sentry delivery and required GitHub accessibility enforcement still gate full adoption."
       ],
       "owner": null,
       "depends_on": [],
@@ -725520,7 +725522,8 @@
           "release-0.5-electricity-draft-recovery",
           "release-0.5-solar-document-completion",
           "release-0.5-ticket-command-deadline",
-          "release-0.5-verified-upload-deadline"
+          "release-0.5-verified-upload-deadline",
+          "release-0.5-verification-mode-recovery"
         ]
       }
     },
@@ -726568,7 +726571,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-              "sha256": "95fc0c4260d167100c2e847de43bfe4ae2e8fa78cf26f0732714c7b9cd15b10c"
+              "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
@@ -727229,6 +727232,10 @@
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
               "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+            },
+            {
+              "path": "apps/web/src/hooks/useSettingsSnapshot.ts",
+              "sha256": "5aa686ca8da017d16dc5f579a290fafab1898296faeae799c69101cf15d752a4"
             }
           ],
           "checks": [
@@ -727307,7 +727314,8 @@
             "Renewed guarded electricity draft recovery coverage and the route and interaction budget measurements. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-draft-recovery/proof.json",
             "Renewed solar document completion coverage and the route and interaction budget measurements. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-document-completion/proof.json",
             "Renewed ticket command, verification banner and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-ticket-command-deadline/proof.json",
-            "Renewed verified attachment, receipt preparation and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-verified-upload-deadline/proof.json"
+            "Renewed verified attachment, receipt preparation and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-verified-upload-deadline/proof.json",
+            "Renewed verification-mode and workflow recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-verification-mode-recovery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -799231,6 +799239,115 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-verified-upload-deadline/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-verified-upload-deadline/reviewed.patch",
       "release_disposition": "Verified bounded shared attachment preparation and receipt recovery. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-verification-mode-recovery": {
+      "batch": "release-0.5-verification-mode-recovery",
+      "base_commit": "3c7df3d371de76f3d40f777278a05a3272cec08c",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+        },
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+        },
+        {
+          "path": "apps/api/src/admin/verification-mode-config.ts",
+          "sha256": "86116b1fc36e78c3f7f7efcaef90edc6847eb073d84ec8d3c9ef4cae13e62bef"
+        },
+        {
+          "path": "apps/web/e2e/service-targets.spec.ts",
+          "sha256": "48ea7c1181460bbe50f5ba0e7843045b37c46e7c354708b3d7e1428afc074898"
+        },
+        {
+          "path": "apps/web/e2e/service-workflows.spec.ts",
+          "sha256": "e694bcb89fa956b7a187c85b0699e3661c97c135c818a6b33dafa3f142edf91c"
+        },
+        {
+          "path": "apps/web/e2e/verification-mode.spec.ts",
+          "sha256": "713bebf9c3909bdf6f832270288aeaa1f1a744c6c758862cdbe5c9e7534099aa"
+        },
+        {
+          "path": "apps/web/e2e/verification-settings-forms.spec.ts",
+          "sha256": "aa13d31ae5c41c7a30cff3a7f0cfaf7fce43231a35fe2281580cf7e14e65ed6d"
+        },
+        {
+          "path": "apps/web/src/components/OtpConfigPanel.tsx",
+          "sha256": "5aef5d048b843090833fec87cc4d6ccca4091235f4f967c5267876044319342c"
+        },
+        {
+          "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
+          "sha256": "5d5d6c4e53e74eaf966cb53f4f2e2ffeefa44ae1dc16af09356410eccaadf2ec"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+        },
+        {
+          "path": "apps/web/src/hooks/useCatalogueResource.ts",
+          "sha256": "a189459305295c7cef7c9741922109d25540db7eba3141d8e8d8a61941792dee"
+        },
+        {
+          "path": "apps/web/src/hooks/useServerQuery.ts",
+          "sha256": "d48dcb712ea4eee821a3b101e12b3d7ee81f11277a8b42ab8aeb594cb2fab47d"
+        },
+        {
+          "path": "apps/web/src/hooks/useSettingsSnapshot.ts",
+          "sha256": "5aa686ca8da017d16dc5f579a290fafab1898296faeae799c69101cf15d752a4"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "apps/web/src/lib/verification-settings-form.ts",
+          "sha256": "57d93bf8142f7dd7587c0eb18bafd1ca3b819c319538cda38e47b3ddf410de62"
+        },
+        {
+          "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
+          "sha256": "a6c38025d48466523ed8e48f508c3ed67102c106f19158cb4eca53827800a73c"
+        },
+        {
+          "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
+          "sha256": "1c8b2edc2f86512a8f6af4d50b1c383f9e5d970d324a5905ece4b30e3d178943"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "b97578cda4f5e85f4f4aa7745ad1476d966fb7b39e3d3ab01e1cc31a70f3b71f"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "Verification-mode draft saves bound response headers and JSON to 15 seconds. Unknown replies keep the selected mode, block saving and activation, and initiate a new owned settings read. The shared verification and workflow settings snapshot requires a successful recorded read attempt at or after the recovery request before reset can unlock the editor.",
+        "Recovery after a failed read preserves the selected mode and forbids duplicate draft or activation commands. A successful fresh read followed by explicit reset permits activation of the recorded version. The API version lock, current permissions, audit and independent password activation checks are unchanged.",
+        "Thirty-eight targeted unit cases passed, including the stalled receipt body and late successful reply. Final evidence covers 36 passing Chromium and Mobile Safari cases and 18 instrumented Chromium cases. Two Chromium cases initially stopped because the locator matched the independent policy panel as well. All four affected cases passed after scoping the locator. One instrumented case ran again after its first coverage file write failed with ENOSPC. The original 17 passing records and the one passing rerun record were verified and combined. The runtime build was unchanged.",
+        "All nine changed-coverage groups, all 100 unchanged bundle budgets, formatting, scoped lint and web typecheck passed. Six cold-auth receipts carry forward from byte-identical runtime files."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-verification-mode-recovery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-verification-mode-recovery/proof.json",
+      "source_scope_proof_sha256": "53363c55113ecc26aca0de7c6c837ed495c70d2f4e3a77afa1f2143d2ebb7ae0",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-verification-mode-recovery/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-verification-mode-recovery/reviewed.patch",
+      "release_disposition": "Verified versioned verification-mode and workflow settings recovery. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -799281,12 +799398,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Finish the versioned verification-mode draft save and current-version recovery. Inspect the remaining ordinary commands and reconcile route loading, empty and error evidence with the existing source inventory. Live Sentry delivery and GitHub accessibility enforcement remain separate v0.5.0 gates."
+    "goal": "Close the shared customer settings command deadline across profile edits, saved addresses and saving intake. Keep exact keyed replay and the read-only reconciliation of non-keyed commands. Continue matching remaining route states to existing native evidence. Live Sentry delivery and GitHub accessibility enforcement remain separate v0.5.0 gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, guarded electricity drafts, solar document completion, ticket acknowledgement, verified attachment preparation and scoped customer electricity, shell, onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, guarded electricity drafts, solar document completion, ticket acknowledgement, verified attachment and verification-mode recovery, and scoped customer electricity, shell, onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {

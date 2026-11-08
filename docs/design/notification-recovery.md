@@ -82,6 +82,8 @@ Onboarding start, profile completion and dashboard-profile selection use the sam
 
 Terms draft saves, publication and discard use the same response deadline. An unknown result keeps local draft text, retires the old publication preview and disables writes until version history is read again. Revision checks and explicit publication or discard confirmation still apply to a new attempt.
 
+Verification-mode draft saves use the same response deadline. An unknown result keeps the selected mode and blocks both saving and activation. Verification and service-workflow settings require a successful read started after the unknown result before staff can reset to the saved version. Activation still requires its own version check and password confirmation.
+
 Team invitation sends and recipient actions use the same deadline. An unknown send keeps the draft and refreshes the team. Only a pending row with the same normalized recipient, role and message confirms a matching invitation. A failed refresh leaves sending disabled. A recipient decision or profile switch needs its matching receipt, and a failed attempt waits for a fresh invitations read before another action.
 
 Workspace mode changes, theme saves and terms acceptance wait up to 15 seconds for their response and receipt. An unconfirmed mode change offers a fresh workspace entry through the normal session guard. An unconfirmed theme save keeps the displayed theme until the server preference is read again. An unconfirmed terms decision offers a fresh consent check and loads the current terms if consent is still required. These checks do not replay the writes.

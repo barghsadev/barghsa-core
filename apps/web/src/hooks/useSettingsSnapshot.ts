@@ -11,21 +11,19 @@ export function useSettingsSnapshot<View>(
 ) {
   const accepted = useRef<View | null>(null);
   const [changed, setChanged] = useState(false);
-  const [uncertain, setUncertain] = useState(false);
-  const [recovered, setRecovered] = useState(false);
-  const recoveryLoading = useRef(false);
+  const [requiredRead, setRequiredRead] = useState<number | null>(null);
   const clear = useCallback(() => {
     withdraw();
     accepted.current = null;
     reset(null);
     setChanged(false);
-    setUncertain(false);
-    setRecovered(false);
-    recoveryLoading.current = false;
+    setRequiredRead(null);
   }, [reset, withdraw]);
   const scope = useCatalogueScope(clear);
   const resource = useCatalogueResource(scope, path, validate);
-  const { data, loading, error } = resource;
+  const { data, loading, error, readAttempt } = resource;
+  const uncertain = requiredRead !== null;
+  const recovered = requiredRead !== null && readAttempt !== null && readAttempt >= requiredRead;
   const ready =
     !scope.denied &&
     !loading &&
@@ -34,7 +32,6 @@ export function useSettingsSnapshot<View>(
     accepted.current !== null &&
     basis(data) === basis(accepted.current);
   useEffect(() => {
-    if (uncertain && loading) recoveryLoading.current = true;
     if (!data || loading || error) return;
     if (!accepted.current) reset(data);
     else if (basis(accepted.current) !== basis(data)) {
@@ -42,29 +39,23 @@ export function useSettingsSnapshot<View>(
       setChanged(true);
     }
     accepted.current = data;
-    if (uncertain && recoveryLoading.current) setRecovered(true);
-  }, [data, loading, error, uncertain, basis, reset, withdraw]);
+  }, [data, loading, error, basis, reset, withdraw]);
   function resetSaved() {
     if (!ready || !data || (uncertain && !recovered)) return;
     withdraw();
     reset(data);
     setChanged(false);
-    setUncertain(false);
-    setRecovered(false);
+    setRequiredRead(null);
   }
   function unconfirmed() {
-    setUncertain(true);
-    setRecovered(false);
-    recoveryLoading.current = false;
-    resource.retry();
+    setRequiredRead(resource.retry());
   }
   function accept(value: View) {
     if (!resource.accept(value)) return false;
     accepted.current = value;
     reset(value);
     setChanged(false);
-    setUncertain(false);
-    setRecovered(false);
+    setRequiredRead(null);
     return true;
   }
   function refresh() {

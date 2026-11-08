@@ -8,6 +8,7 @@ import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useSettingsSnapshot } from '../hooks/useSettingsSnapshot.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { withCsrf } from '../lib/csrf.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import {
   settingsErrorFields,
   verificationModes,
@@ -165,31 +166,36 @@ export default function AdminVerificationConfig() {
         const controller = new AbortController();
         directRequest.current = controller;
         try {
-          const response = await fetch('/api/admin/config/profile-verification-mode', {
-            method: 'PUT',
-            headers: withCsrf({ 'Content-Type': 'application/json' }),
-            body: JSON.stringify(body),
-            signal: controller.signal,
+          const { status, raw } = await readWithDeadline(controller.signal, async (signal) => {
+            const response = await fetch('/api/admin/config/profile-verification-mode', {
+              method: 'PUT',
+              headers: withCsrf({ 'Content-Type': 'application/json' }),
+              body: JSON.stringify(body),
+              signal,
+            });
+            const raw: unknown =
+              response.status === 401 || response.status === 403
+                ? null
+                : await response.json().catch(() => null);
+            return { status: response.status, raw };
           });
           if (controller.signal.aborted || epoch !== generation.current) return;
-          if (response.status === 401 || response.status === 403) {
+          if (status === 401 || status === 403) {
             state.scope.deny();
             return;
           }
-          const raw: unknown = await response.json().catch(() => null);
-          if (controller.signal.aborted || epoch !== generation.current) return;
-          if (response.status === 400) {
+          if (status === 400) {
             const fields = settingsErrorFields(raw);
             if (!fields.length || !modeErrors(fields)) setSaveFailed(true);
             return;
           }
-          if (response.status === 409) {
+          if (status === 409) {
             setSaveFailed(true);
             state.unconfirmed();
             return;
           }
           if (
-            response.status !== 200 ||
+            status !== 200 ||
             !validVerificationConfig(raw) ||
             raw.draft !== body.mode ||
             raw.mode !== current.mode ||

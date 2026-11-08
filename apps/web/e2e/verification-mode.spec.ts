@@ -1,9 +1,64 @@
 import { cookieResponse } from './cookie-response';
 import { crmShell } from './crm-shell-fixture';
 import { test, expect } from './coverage-fixture';
+import { verificationConfigText } from '@barghsa/i18n/verification-config';
 
-for (const locale of ['en', 'fa']) {
+for (const locale of ['en', 'fa'] as const) {
   const fa = locale === 'fa';
+  test(`verification draft timeout requires a fresh version before activation (${locale})`, async ({
+    page,
+  }) => {
+    await crmShell(page, locale);
+    await page.route('**/api/admin/config/otp', (route) =>
+      route.fulfill({ json: { ttlSeconds: 300, version: 0 } })
+    );
+    const text = (key: Parameters<typeof verificationConfigText>[0]) =>
+      verificationConfigText(key, locale);
+    const button = (key: Parameters<typeof text>[0]) =>
+      page.getByRole('button', { name: text(key), exact: true });
+    let config = { mode: 'DISABLED', draft: null as string | null, version: 4 };
+    let failRead = false;
+    let reads = 0;
+    const writes: unknown[] = [];
+    await page.route('**/api/admin/config/profile-verification-mode', (route) => {
+      if (route.request().method() === 'GET') {
+        reads++;
+        return route.fulfill({ status: failRead ? 503 : 200, json: config });
+      }
+      writes.push(route.request().postDataJSON());
+      config = { ...config, draft: 'MANUAL', version: 5 };
+      failRead = true;
+    });
+    await page.goto('/admin/verification');
+    const mode = page.locator('#verification-mode-MANUAL');
+    await mode.check();
+    await page.clock.install();
+    await button('save').click();
+    await expect.poll(() => writes.length).toBe(1);
+    await expect(button('reload')).toBeDisabled();
+    await page.clock.fastForward(15_001);
+    await expect(page.getByText(text('unverified'), { exact: true })).toBeVisible();
+    await expect(
+      page.getByRole('alert').filter({ hasText: text('loadFailed'), has: button('retry') })
+    ).toBeVisible();
+    expect(reads).toBe(2);
+    await expect(mode).toBeChecked();
+    await expect(mode).toBeDisabled();
+    await expect(button('resetSaved')).toBeDisabled();
+    await expect(page.getByText(text('saved'), { exact: true })).toHaveCount(0);
+    failRead = false;
+    await button('reload').click();
+    await expect(button('resetSaved')).toBeEnabled();
+    expect(reads).toBe(3);
+    await expect(button('activate')).toBeDisabled();
+    await button('resetSaved').click();
+    await expect(mode).toBeChecked();
+    await expect(button('save')).toBeDisabled();
+    await expect(button('activate')).toBeEnabled();
+    expect(writes).toEqual([{ action: 'draft', mode: 'MANUAL', expectedVersion: 4 }]);
+    expect(config).toEqual({ mode: 'DISABLED', draft: 'MANUAL', version: 5 });
+  });
+
   test(`verification draft requires exact confirmation and recovers activation conflicts (${locale})`, async ({
     page,
   }) => {

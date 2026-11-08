@@ -383,6 +383,38 @@ it('draft network locking rejects a second save and late denial never announces 
   expect(host.textContent).not.toContain('Draft saved');
   expect(ttl().value).toBe('300');
 });
+it('times out a stalled draft receipt body and ignores its late success', async () => {
+  await mount();
+  await edit('verification');
+  vi.useFakeTimers();
+  try {
+    let finish!: (value: VerificationConfig) => void;
+    const json = vi.fn(
+      () =>
+        new Promise<VerificationConfig>((resolve) => {
+          finish = resolve;
+        })
+    );
+    heldWrite = Promise.resolve(Object.assign(new Response(), { json }));
+    await submit('verification');
+    await vi.waitFor(() => expect(json).toHaveBeenCalledOnce());
+    const signal = vi
+      .mocked(fetch)
+      .mock.calls.find(([, init]) => init?.method === 'PUT')?.[1]?.signal;
+    expect(signal?.aborted).toBe(false);
+    readStatus = 503;
+    await act(async () => vi.advanceTimersByTimeAsync(15_000));
+    expect(signal?.aborted).toBe(true);
+    expect(host.textContent).toContain('could not be confirmed');
+    expect(selected().checked).toBe(true);
+    expect(selected().matches(':disabled')).toBe(true);
+    await act(async () => finish({ mode: 'DISABLED', draft: 'MANUAL', version: 5 }));
+    expect(host.textContent).not.toContain('Draft saved');
+    expect(writes).toEqual([{ mode: 'MANUAL', expectedVersion: 4, action: 'draft' }]);
+  } finally {
+    vi.useRealTimers();
+  }
+});
 it('a draft receipt with an unexpected success status cannot announce a confirmed save', async () => {
   await mount();
   await edit('verification');
