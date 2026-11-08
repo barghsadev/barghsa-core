@@ -5,7 +5,8 @@ import { ConfirmationFields } from '@barghsa/ui';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { useOwnedInvoiceReview } from '../hooks/useOwnedInvoiceReview.js';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
-import { useProfileContextRevision } from '../lib/profile-context.js';
+import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { tInvoiceCorrections as tc } from '@barghsa/i18n/invoice-corrections';
 import {
@@ -180,6 +181,7 @@ function OwnedManualInvoiceForm({
     [acting, setActing] = useState(false);
   const live = useRef(false);
   const reviewController = useRef<AbortController | null>(null);
+  const commandTransport = useRef<AbortController | null>(null);
   const submittedLineIds = useRef<string[]>([]);
   const submittedTotal = useRef('0');
   const [accessDenied, setAccessDenied] = useState(false);
@@ -188,6 +190,7 @@ function OwnedManualInvoiceForm({
     return () => {
       live.current = false;
       reviewController.current?.abort();
+      commandTransport.current?.abort();
       request.current = null;
       correction?.onLocked(false);
     };
@@ -327,6 +330,7 @@ function OwnedManualInvoiceForm({
 
   function unlock() {
     reviewController.current?.abort();
+    commandTransport.current?.abort();
     submittedLineIds.current = [];
     request.current = null;
     uncertain.current = false;
@@ -335,6 +339,10 @@ function OwnedManualInvoiceForm({
     setReplacementReview(null);
     setManualReview(null);
   }
+  const owns = (submitted: InvoiceRequest) =>
+    live.current &&
+    request.current === submitted &&
+    getProfileContextRevision() === profileRevision;
   function reportPublicFields(status: number, value: unknown) {
     const { fields } = inputErrorFields(value, status);
     if (!fields || !draft.applyServerErrors(fields, submittedLineIds.current)) return false;
@@ -361,7 +369,9 @@ function OwnedManualInvoiceForm({
   }
   async function send(): Promise<'done' | 'step-up' | 'error'> {
     const submitted = request.current;
-    if (!submitted || !authorized.current) return 'error';
+    if (!submitted || !owns(submitted) || !authorized.current) return 'error';
+    const controller = new AbortController();
+    commandTransport.current = controller;
     try {
       const path = submitted.correction
         ? `/api/admin/invoices/${submitted.correction.invoiceId}/corrections`
@@ -382,26 +392,30 @@ function OwnedManualInvoiceForm({
                 }),
           }
         : submitted;
-      const response = await fetch(path, {
-        method: 'POST',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify(body),
+      const { response, data } = await readWithDeadline(controller.signal, async (signal) => {
+        const response = await fetch(path, {
+          method: 'POST',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify(body),
+          signal,
+        });
+        const data = (await response.json()) as {
+          error?: unknown;
+          invoiceId?: string;
+          profileId?: string;
+          totalAmount?: string;
+          state?: string;
+          originalInvoiceId?: string;
+          kind?: string;
+          amount?: string;
+          idempotencyKey?: string;
+          reason?: string;
+          status?: string;
+          approvalRequestId?: string;
+        };
+        return { response, data };
       });
-      const data = (await response.json()) as {
-        error?: unknown;
-        invoiceId?: string;
-        profileId?: string;
-        totalAmount?: string;
-        state?: string;
-        originalInvoiceId?: string;
-        kind?: string;
-        amount?: string;
-        idempotencyKey?: string;
-        reason?: string;
-        status?: string;
-        approvalRequestId?: string;
-      };
-      if (!live.current || request.current !== submitted) return 'error';
+      if (!owns(submitted)) return 'error';
       if (response.status === 403 && authErrorCode(data) === ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code)
         return 'step-up';
       if (!response.ok) {
@@ -486,16 +500,18 @@ function OwnedManualInvoiceForm({
       unlock();
       return 'done';
     } catch {
-      if (!live.current || request.current !== submitted) return 'error';
+      if (!owns(submitted)) return 'error';
       uncertain.current = true;
       setError('uncertain');
       return 'error';
+    } finally {
+      if (commandTransport.current === controller) commandTransport.current = null;
     }
   }
   async function resume() {
     const submitted = request.current;
     if (!submitted || !live.current) return;
-    const owns = () => live.current && request.current === submitted;
+    const current = () => owns(submitted);
     const correctionCommand = submitted.correction;
     if (
       !(correctionCommand ? correctionCommand.expectedReviewHash : submitted.expectedReviewHash)
@@ -526,7 +542,7 @@ function OwnedManualInvoiceForm({
           true
         );
         const value: unknown = await response.json();
-        if (!owns()) return;
+        if (!current()) return;
         if (!response.ok) {
           if ([401, 403, 404].includes(response.status)) {
             denyWork();
@@ -548,7 +564,7 @@ function OwnedManualInvoiceForm({
           parseInvoiceAdjustmentReview,
           parseInvoiceReplacementReview,
         } = await import('@barghsa/shared/finance');
-        if (!owns()) return;
+        if (!current()) return;
         if (!correctionCommand) {
           const review = parseManualInvoiceReview(value);
           if (
@@ -609,13 +625,13 @@ function OwnedManualInvoiceForm({
           setAdjustmentReview(review);
         }
       } catch {
-        if (!owns()) return;
+        if (!current()) return;
         setError('reviewFailed');
         unlock();
       }
       return;
     }
-    if ((await send()) === 'step-up' && owns()) {
+    if ((await send()) === 'step-up' && current()) {
       setPassword('');
       setStepError(null);
       setStepUp(true);
@@ -739,16 +755,22 @@ function OwnedManualInvoiceForm({
     event.preventDefault();
     if (!password || busy.current || unavailable || !request.current) return;
     const submitted = request.current;
+    if (!owns(submitted)) return;
+    const controller = new AbortController();
+    commandTransport.current = controller;
     busy.current = true;
     setActing(true);
     setStepError(null);
     try {
-      const response = await fetch('/api/auth/step-up', {
-        method: 'POST',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ password }),
-      });
-      if (!live.current || request.current !== submitted) return;
+      const response = await readWithDeadline(controller.signal, (signal) =>
+        fetch('/api/auth/step-up', {
+          method: 'POST',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({ password }),
+          signal,
+        })
+      );
+      if (!owns(submitted)) return;
       setPassword('');
       if (!response.ok) {
         setStepError('verifyFailed');
@@ -764,9 +786,12 @@ function OwnedManualInvoiceForm({
         submitButton.current?.focus();
       }
     } catch {
-      setPassword('');
-      setStepError('verifyFailed');
+      if (owns(submitted)) {
+        setPassword('');
+        setStepError('verifyUnavailable');
+      }
     } finally {
+      if (commandTransport.current === controller) commandTransport.current = null;
       if (live.current) {
         busy.current = false;
         setActing(false);

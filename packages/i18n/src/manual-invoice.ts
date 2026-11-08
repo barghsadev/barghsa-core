@@ -68,6 +68,7 @@ const fa: Record<string, string> = {
   'admin.manualInvoice.verify': 'تأیید و صدور',
   'admin.manualInvoice.cancel': 'انصراف',
   'admin.manualInvoice.verifyFailed': 'تأیید انجام نشد. رمز عبور را بررسی کنید و دوباره تلاش کنید.',
+  'admin.manualInvoice.verifyUnavailable': 'پاسخ تأیید هویت دریافت نشد. دوباره تلاش کنید.',
 };
 
 const en: Record<string, string> = {
@@ -141,6 +142,7 @@ const en: Record<string, string> = {
   'admin.manualInvoice.verify': 'Verify and issue',
   'admin.manualInvoice.cancel': 'Cancel',
   'admin.manualInvoice.verifyFailed': 'Verification failed. Check your password and try again.',
+  'admin.manualInvoice.verifyUnavailable': 'Verification did not respond. Try again.',
 };
 
 export function tManualInvoice(key: string, locale: 'fa' | 'en'): string {

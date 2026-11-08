@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T12:42:43+00:00",
-  "source_commit": "c8313f22a32fc50d8e3368c9c2b7f337fac69269",
+  "updated": "2026-11-08T12:53:14+00:00",
+  "source_commit": "ec0fcf4f4a6d366591e16d9df30442519ebb5565",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -114321,7 +114321,7 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "7e65a7550d2d1e35fcb14712df620751d442c84b23b735df065265c869055b15"
+              "sha256": "254542f2b36db66a41a4fe4d82ec70c53089920824675cf47fc58ba0a35956de"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
@@ -114329,7 +114329,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -114409,7 +114409,7 @@
             },
             {
               "path": "packages/i18n/src/manual-invoice.ts",
-              "sha256": "0d429ecada4a40c407fcb289741d5445445ebbdace9b5999ea73c524421a99b8"
+              "sha256": "40885687815e93fde59c14fde54b9deaff0d8d5f681ca736f8f4ed3ab81c89d1"
             },
             {
               "path": "packages/ui/src/components/ui/field.tsx",
@@ -115592,7 +115592,7 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "7e65a7550d2d1e35fcb14712df620751d442c84b23b735df065265c869055b15"
+              "sha256": "254542f2b36db66a41a4fe4d82ec70c53089920824675cf47fc58ba0a35956de"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
@@ -115600,7 +115600,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -115680,7 +115680,7 @@
             },
             {
               "path": "packages/i18n/src/manual-invoice.ts",
-              "sha256": "0d429ecada4a40c407fcb289741d5445445ebbdace9b5999ea73c524421a99b8"
+              "sha256": "40885687815e93fde59c14fde54b9deaff0d8d5f681ca736f8f4ed3ab81c89d1"
             },
             {
               "path": "packages/ui/src/components/ui/field.tsx",
@@ -116828,7 +116828,7 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "7e65a7550d2d1e35fcb14712df620751d442c84b23b735df065265c869055b15"
+              "sha256": "254542f2b36db66a41a4fe4d82ec70c53089920824675cf47fc58ba0a35956de"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.tsx",
@@ -116892,7 +116892,7 @@
             },
             {
               "path": "packages/i18n/src/manual-invoice.ts",
-              "sha256": "0d429ecada4a40c407fcb289741d5445445ebbdace9b5999ea73c524421a99b8"
+              "sha256": "40885687815e93fde59c14fde54b9deaff0d8d5f681ca736f8f4ed3ab81c89d1"
             },
             {
               "path": "packages/ui/src/components/ui/field.tsx",
@@ -117445,7 +117445,7 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "7e65a7550d2d1e35fcb14712df620751d442c84b23b735df065265c869055b15"
+              "sha256": "254542f2b36db66a41a4fe4d82ec70c53089920824675cf47fc58ba0a35956de"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
@@ -117453,7 +117453,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -117533,7 +117533,7 @@
             },
             {
               "path": "packages/i18n/src/manual-invoice.ts",
-              "sha256": "0d429ecada4a40c407fcb289741d5445445ebbdace9b5999ea73c524421a99b8"
+              "sha256": "40885687815e93fde59c14fde54b9deaff0d8d5f681ca736f8f4ed3ab81c89d1"
             },
             {
               "path": "packages/ui/src/components/ui/field.tsx",
@@ -118715,7 +118715,7 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "7e65a7550d2d1e35fcb14712df620751d442c84b23b735df065265c869055b15"
+              "sha256": "254542f2b36db66a41a4fe4d82ec70c53089920824675cf47fc58ba0a35956de"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
@@ -118723,7 +118723,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -118803,7 +118803,7 @@
             },
             {
               "path": "packages/i18n/src/manual-invoice.ts",
-              "sha256": "0d429ecada4a40c407fcb289741d5445445ebbdace9b5999ea73c524421a99b8"
+              "sha256": "40885687815e93fde59c14fde54b9deaff0d8d5f681ca736f8f4ed3ab81c89d1"
             },
             {
               "path": "packages/ui/src/components/ui/field.tsx",
@@ -119986,7 +119986,7 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "7e65a7550d2d1e35fcb14712df620751d442c84b23b735df065265c869055b15"
+              "sha256": "254542f2b36db66a41a4fe4d82ec70c53089920824675cf47fc58ba0a35956de"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
@@ -119994,7 +119994,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -120074,7 +120074,7 @@
             },
             {
               "path": "packages/i18n/src/manual-invoice.ts",
-              "sha256": "0d429ecada4a40c407fcb289741d5445445ebbdace9b5999ea73c524421a99b8"
+              "sha256": "40885687815e93fde59c14fde54b9deaff0d8d5f681ca736f8f4ed3ab81c89d1"
             },
             {
               "path": "packages/ui/src/components/ui/field.tsx",
@@ -121256,7 +121256,7 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "7e65a7550d2d1e35fcb14712df620751d442c84b23b735df065265c869055b15"
+              "sha256": "254542f2b36db66a41a4fe4d82ec70c53089920824675cf47fc58ba0a35956de"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
@@ -121264,7 +121264,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -121344,7 +121344,7 @@
             },
             {
               "path": "packages/i18n/src/manual-invoice.ts",
-              "sha256": "0d429ecada4a40c407fcb289741d5445445ebbdace9b5999ea73c524421a99b8"
+              "sha256": "40885687815e93fde59c14fde54b9deaff0d8d5f681ca736f8f4ed3ab81c89d1"
             },
             {
               "path": "packages/ui/src/components/ui/field.tsx",
@@ -122544,7 +122544,7 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "7e65a7550d2d1e35fcb14712df620751d442c84b23b735df065265c869055b15"
+              "sha256": "254542f2b36db66a41a4fe4d82ec70c53089920824675cf47fc58ba0a35956de"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
@@ -122552,7 +122552,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -122632,7 +122632,7 @@
             },
             {
               "path": "packages/i18n/src/manual-invoice.ts",
-              "sha256": "0d429ecada4a40c407fcb289741d5445445ebbdace9b5999ea73c524421a99b8"
+              "sha256": "40885687815e93fde59c14fde54b9deaff0d8d5f681ca736f8f4ed3ab81c89d1"
             },
             {
               "path": "packages/ui/src/components/ui/field.tsx",
@@ -123814,7 +123814,7 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "7e65a7550d2d1e35fcb14712df620751d442c84b23b735df065265c869055b15"
+              "sha256": "254542f2b36db66a41a4fe4d82ec70c53089920824675cf47fc58ba0a35956de"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
@@ -123822,7 +123822,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -123902,7 +123902,7 @@
             },
             {
               "path": "packages/i18n/src/manual-invoice.ts",
-              "sha256": "0d429ecada4a40c407fcb289741d5445445ebbdace9b5999ea73c524421a99b8"
+              "sha256": "40885687815e93fde59c14fde54b9deaff0d8d5f681ca736f8f4ed3ab81c89d1"
             },
             {
               "path": "packages/ui/src/components/ui/field.tsx",
@@ -125109,7 +125109,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -126101,7 +126101,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -127093,7 +127093,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -128085,7 +128085,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -129077,7 +129077,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -130069,7 +130069,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -131161,7 +131161,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -132265,7 +132265,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -133357,7 +133357,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -134461,7 +134461,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -491075,7 +491075,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
@@ -492918,7 +492918,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
+              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -497740,7 +497740,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -517073,7 +517073,7 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "7e65a7550d2d1e35fcb14712df620751d442c84b23b735df065265c869055b15"
+              "sha256": "254542f2b36db66a41a4fe4d82ec70c53089920824675cf47fc58ba0a35956de"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -517509,7 +517509,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/OtpConfigPanel.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
+              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -518439,7 +518439,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ProfileVerificationReview.tsx",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
+              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -519878,7 +519878,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ProfileVerificationReview.tsx",
@@ -522034,7 +522034,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ProfileVerificationReview.tsx",
@@ -546511,7 +546511,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -548377,7 +548377,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -550244,7 +550244,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -552080,7 +552080,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -553942,7 +553942,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -555813,7 +555813,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -557657,7 +557657,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -559465,7 +559465,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -561273,7 +561273,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -563082,7 +563082,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -564890,7 +564890,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -566668,7 +566668,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -566712,7 +566712,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -567520,7 +567520,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
+              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568563,7 +568563,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -568607,7 +568607,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -569415,7 +569415,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
+              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570219,7 +570219,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Staff notification template commands now give bounded, scoped feedback and require a fresh read after an unknown result. Staff invoice due-period settings still wait indefinitely for a direct save acknowledgement. Reconcile the remaining CRUD and transactional feedback against current route evidence."
+        "Staff default due periods, manual invoice issuance and corrections now have bounded recovery and current browser evidence. Single-invoice deadline overrides and reminder offset saves still have direct writes with no acknowledgement deadline. Reconcile the remaining ordinary CRUD and transactional feedback against current route evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -570281,7 +570281,8 @@
           "release-0.5-verification-mode-recovery",
           "release-0.5-customer-settings-deadline",
           "release-0.5-saving-intake-recovery",
-          "release-0.5-notification-template-command-recovery"
+          "release-0.5-notification-template-command-recovery",
+          "release-0.5-staff-invoice-command-recovery"
         ],
         "current_acceptance": null
       }
@@ -570540,7 +570541,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -570584,7 +570585,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -571392,7 +571393,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
+              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -572435,7 +572436,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -572479,7 +572480,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -573287,7 +573288,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
+              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -574330,7 +574331,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -574374,7 +574375,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -575182,7 +575183,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
+              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -576225,7 +576226,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -576269,7 +576270,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -577077,7 +577078,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
+              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -578120,7 +578121,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -578164,7 +578165,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -578972,7 +578973,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
+              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -580015,7 +580016,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -580059,7 +580060,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -580867,7 +580868,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
+              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581910,7 +581911,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -581954,7 +581955,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -582762,7 +582763,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
+              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -583805,7 +583806,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -583849,7 +583850,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -584657,7 +584658,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
+              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -585700,7 +585701,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -585744,7 +585745,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -586552,7 +586553,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
+              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -587595,7 +587596,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -587639,7 +587640,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -588447,7 +588448,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
+              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589490,7 +589491,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -589534,7 +589535,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -590342,7 +590343,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
+              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591606,7 +591607,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
+              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592125,7 +592126,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -592169,7 +592170,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -592977,7 +592978,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
+              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594020,7 +594021,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -594064,7 +594065,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -594872,7 +594873,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
+              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595676,7 +595677,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Saving intake and notification template command recovery have current native evidence. Match the remaining conditional list, detail, dashboard and staff route states to the inventory and current native evidence."
+        "Saving intake, notification template commands and the staff due-period read after an unknown write have current native evidence. Match the remaining conditional list, detail, dashboard and staff route states to the inventory and current native evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -595750,7 +595751,8 @@
           "release-0.5-verification-mode-recovery",
           "release-0.5-customer-settings-deadline",
           "release-0.5-saving-intake-recovery",
-          "release-0.5-notification-template-command-recovery"
+          "release-0.5-notification-template-command-recovery",
+          "release-0.5-staff-invoice-command-recovery"
         ],
         "current_acceptance": null
       }
@@ -596067,7 +596069,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -597871,7 +597873,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -599675,7 +599677,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -601479,7 +601481,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -603283,7 +603285,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -605087,7 +605089,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -606891,7 +606893,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -709064,7 +709066,7 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "7e65a7550d2d1e35fcb14712df620751d442c84b23b735df065265c869055b15"
+              "sha256": "254542f2b36db66a41a4fe4d82ec70c53089920824675cf47fc58ba0a35956de"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
@@ -709072,7 +709074,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -709112,7 +709114,7 @@
             },
             {
               "path": "packages/i18n/src/manual-invoice.ts",
-              "sha256": "0d429ecada4a40c407fcb289741d5445445ebbdace9b5999ea73c524421a99b8"
+              "sha256": "40885687815e93fde59c14fde54b9deaff0d8d5f681ca736f8f4ed3ab81c89d1"
             },
             {
               "path": "packages/ui/src/components/ui/field.tsx",
@@ -709272,7 +709274,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -725394,7 +725396,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Notification template mutation recovery has current evidence. Remaining command feedback and route states, live Sentry delivery and required GitHub accessibility enforcement still gate full adoption."
+        "Staff default due periods, manual invoice issuance and corrections have current recovery evidence. Remaining command feedback and route states, live Sentry delivery and required GitHub accessibility enforcement still gate full adoption."
       ],
       "owner": null,
       "depends_on": [],
@@ -725532,7 +725534,8 @@
           "release-0.5-verification-mode-recovery",
           "release-0.5-customer-settings-deadline",
           "release-0.5-saving-intake-recovery",
-          "release-0.5-notification-template-command-recovery"
+          "release-0.5-notification-template-command-recovery",
+          "release-0.5-staff-invoice-command-recovery"
         ]
       }
     },
@@ -725888,7 +725891,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+              "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -726040,7 +726043,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
-              "sha256": "cd46e274ad20eadbb7301b3436306343cf4ff7effa9ed8ec891713efb22f3c19"
+              "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
@@ -727257,6 +727260,10 @@
             {
               "path": "packages/i18n/src/notification-forms.ts",
               "sha256": "426fb5a38c9e3b014e8dd65935c6e1029b2055f8b119cefbf87b074ada74eedc"
+            },
+            {
+              "path": "packages/i18n/src/manual-invoice.ts",
+              "sha256": "40885687815e93fde59c14fde54b9deaff0d8d5f681ca736f8f4ed3ab81c89d1"
             }
           ],
           "checks": [
@@ -727339,7 +727346,8 @@
             "Renewed verification-mode and workflow recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-verification-mode-recovery/proof.json",
             "Renewed shared customer settings command and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-settings-deadline/proof.json",
             "Renewed saving intake recovery, accessibility and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-intake-recovery/proof.json",
-            "Renewed notification template recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-template-command-recovery/proof.json"
+            "Renewed notification template recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-template-command-recovery/proof.json",
+            "Renewed staff invoice recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-invoice-command-recovery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -799644,6 +799652,114 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-template-command-recovery/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-template-command-recovery/reviewed.patch",
       "release_disposition": "Verified staff notification template write recovery with its existing permission and receipt safeguards. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-staff-invoice-command-recovery": {
+      "batch": "release-0.5-staff-invoice-command-recovery",
+      "base_commit": "ec0fcf4f4a6d366591e16d9df30442519ebb5565",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.service.ts",
+          "sha256": "71b9e9dc14f95d6d7ee43e2285ee58b469868e2c6ab2a1b7df5b58f7b59bab5b"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.ts",
+          "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+        },
+        {
+          "path": "apps/web/e2e/deadline-forms.spec.ts",
+          "sha256": "97dec4dfa85656b3b1efcb8e10aa1e16a085e00f280b44a9772d86fb75f74547"
+        },
+        {
+          "path": "apps/web/e2e/invoice-corrections.spec.ts",
+          "sha256": "266e9ef07f1d91de4d01567aba71983d3e46a709432d2b78ba5818a56835173d"
+        },
+        {
+          "path": "apps/web/e2e/manual-invoice.spec.ts",
+          "sha256": "254542f2b36db66a41a4fe4d82ec70c53089920824675cf47fc58ba0a35956de"
+        },
+        {
+          "path": "apps/web/src/components/DeadlineForms.test.tsx",
+          "sha256": "241fae721cd1ec70ca3f95a945338200113947f0f1de9dd7891c04b75effd5c9"
+        },
+        {
+          "path": "apps/web/src/components/InvoiceCorrectionsPanel.tsx",
+          "sha256": "ebf20e782877f50e037abc79f86a348213a45b8902b47932275c1a5063ab9c42"
+        },
+        {
+          "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
+          "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
+        },
+        {
+          "path": "apps/web/src/components/ManualInvoiceForm.tsx",
+          "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
+        },
+        {
+          "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
+          "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedInvoiceReview.ts",
+          "sha256": "a928b66193795d500754ba8e7e58280bb802ab5659d4fba7e4e626bad1ea3428"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedStaffServiceRead.ts",
+          "sha256": "32c1269a80fcff189bcb8953f1ea274ceb5d1c2874eb5b8fcee2df31ccecc64a"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
+        },
+        {
+          "path": "packages/i18n/src/invoice-due-periods.ts",
+          "sha256": "41ea6882805652c3420317050f916d371959cc4df0918ca6557404ede314aa53"
+        },
+        {
+          "path": "packages/i18n/src/manual-invoice.ts",
+          "sha256": "40885687815e93fde59c14fde54b9deaff0d8d5f681ca736f8f4ed3ab81c89d1"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "Staff default due-period changes bound the direct and protected write acknowledgement. The old draft stays visible while a lost reply requires a fresh successful read, with no automatic retry or success notice. A failed read leaves writes disabled.",
+        "Manual invoice issuance and corrections bound the write acknowledgement and password verification while retaining the reviewed idempotency key and financial receipt matching. A stalled password check clears the password and leaves the invoice command unsent. A stalled write keeps the exact captured payload for an explicit retry.",
+        "Forty-seven unit cases, 40 production Chromium and Mobile Safari cases, 20 instrumented Chromium cases, all nine changed-coverage groups, all 100 unchanged bundle budgets, formatting, scoped lint and web typecheck passed. Two manual invoice cases initially looked for the retry label while the disabled button showed the issuing label. The corrected cases both passed with the same application assets, and the original 38 passes were retained. Six cold-auth receipts carry forward from byte-identical runtime files."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-invoice-command-recovery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-invoice-command-recovery/proof.json",
+      "source_scope_proof_sha256": "9eaa24cb80373bd4e236b19d4312e8775da847a7454ed720db4ec011ed107eba",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-invoice-command-recovery/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-invoice-command-recovery/reviewed.patch",
+      "release_disposition": "Verified staff invoice setting, issuance and correction recovery with its existing permission, concurrency and receipt safeguards. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -799694,12 +799810,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Reconcile staff invoice settings and manual invoice command recovery, starting with the unbounded due-period save acknowledgement. Continue matching remaining conditional route states to native evidence. Live Sentry delivery and required GitHub accessibility enforcement remain separate v0.5.0 gates."
+    "goal": "Finish the staff invoice deadline and reminders recovery journey by addressing the unbounded single-invoice deadline override and reminder offset writes. Continue matching remaining conditional route states to native evidence. Live Sentry delivery and required GitHub accessibility enforcement remain separate v0.5.0 gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, guarded electricity drafts, solar document completion, ticket acknowledgement, verified attachment and verification-mode recovery, shared customer settings acknowledgement and saving intake recovery, staff notification template recovery, and scoped customer electricity, shell, onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, guarded electricity drafts, solar document completion, ticket acknowledgement, verified attachment and verification-mode recovery, shared customer settings acknowledgement and saving intake recovery, staff notification template and invoice command recovery, and scoped customer electricity, shell, onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {

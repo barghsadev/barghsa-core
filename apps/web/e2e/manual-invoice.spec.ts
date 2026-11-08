@@ -14,6 +14,8 @@ for (const locale of ['fa', 'en'] as const)
       page,
     }) => {
       const fa = locale === 'fa';
+      const exerciseTimeout = fa && !darkMode;
+      if (exerciseTimeout) await page.clock.install();
       await page.addInitScript((locale) => {
         localStorage.setItem('barghsa.locale', locale);
         const apply = () => {
@@ -155,6 +157,7 @@ for (const locale of ['fa', 'en'] as const)
           return darkMode
             ? route.fulfill({ json: { invoiceId, profileId, totalAmount: 'invalid' } })
             : route.fulfill({ status: 503, json: {} });
+        if (exerciseTimeout && requests.length === 3) return;
         return route.fulfill({
           status: 201,
           json: { invoiceId, profileId, totalAmount: '60761', state: 'Unpaid' },
@@ -164,6 +167,7 @@ for (const locale of ['fa', 'en'] as const)
       await page.route('**/api/auth/step-up', (route) => {
         verificationRequests++;
         expect(route.request().headers()['x-csrf-token']).toBe('manual-csrf');
+        if (exerciseTimeout && verificationRequests === 1) return;
         return route.fulfill({ json: { success: true } });
       });
       await page.goto('/admin/invoices');
@@ -283,21 +287,46 @@ for (const locale of ['fa', 'en'] as const)
       await expect(password).toBeFocused();
       await password.fill('test-only');
       await approveRiskConfirmation(page, locale, 'financial');
-      await dialog
-        .getByRole('button', { name: fa ? 'تأیید و صدور' : 'Verify and issue', exact: true })
-        .click();
+      const verify = dialog.getByRole('button', {
+        name: fa ? 'تأیید و صدور' : 'Verify and issue',
+        exact: true,
+      });
+      await verify.click();
+      if (exerciseTimeout) {
+        await expect.poll(() => verificationRequests).toBe(1);
+        await page.clock.fastForward(15_001);
+        await expect(
+          dialog.getByText(tManualInvoice('admin.manualInvoice.verifyUnavailable', locale))
+        ).toBeVisible();
+        await expect(password).toHaveValue('');
+        expect(requests).toHaveLength(1);
+        await password.fill('test-only');
+        await verify.click();
+      }
       await expect(dialog).not.toBeVisible();
       await expect(panel.getByRole('alert')).toContainText(
         fa ? 'نتیجه صدور مشخص نیست' : 'The result is unknown'
       );
       await expect(price.first()).toBeDisabled();
       await expect(panel.getByRole('combobox')).toBeDisabled();
-      await panel
-        .getByRole('button', {
-          name: fa ? 'تلاش مجدد برای همین فاکتور' : 'Retry this invoice',
-          exact: true,
-        })
-        .click();
+      const retry = panel.getByRole('button', {
+        name: fa ? 'تلاش مجدد برای همین فاکتور' : 'Retry this invoice',
+        exact: true,
+      });
+      await retry.click();
+      if (exerciseTimeout) {
+        await expect.poll(() => requests.length).toBe(3);
+        await expect(
+          panel.getByRole('button', {
+            name: tManualInvoice('admin.manualInvoice.issuing', locale),
+            exact: true,
+          })
+        ).toBeDisabled();
+        await page.clock.fastForward(15_001);
+        await expect(retry).toBeEnabled();
+        expect(requests).toHaveLength(3);
+        await retry.click();
+      }
       await expect(panel.getByRole('status')).toContainText(invoiceId);
       await expect(panel.getByRole('status')).toContainText(total);
       await expect(
@@ -305,11 +334,10 @@ for (const locale of ['fa', 'en'] as const)
           hasText: tManualInvoice('admin.manualInvoice.created', locale),
         })
       ).toHaveCount(1);
-      expect(verificationRequests).toBe(1);
+      expect(verificationRequests).toBe(exerciseTimeout ? 2 : 1);
       expect(previews).toHaveLength(1);
-      expect(requests).toHaveLength(3);
-      expect(requests[1]).toEqual(requests[0]);
-      expect(requests[2]).toEqual(requests[0]);
+      expect(requests).toHaveLength(exerciseTimeout ? 4 : 3);
+      for (const attempt of requests.slice(1)) expect(attempt).toEqual(requests[0]);
       expect(requests[0]).toMatchObject({
         profileId,
         expectedReviewHash: reviewHash,

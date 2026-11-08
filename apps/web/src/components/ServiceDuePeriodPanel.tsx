@@ -1,6 +1,8 @@
 import { CommandFeedback } from './CommandFeedback.js';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
-import { useProfileContextRevision } from '../lib/profile-context.js';
+import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
+import { sendToast } from '../lib/toast-api.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { SERVICE_DUE_PERIOD_TYPES } from '@barghsa/shared/finance/browser';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
@@ -83,6 +85,7 @@ function OwnedServiceDuePeriodPanel() {
     owner: number;
   } | null>(null);
   const inFlight = useRef(false),
+    write = useRef<AbortController | null>(null),
     submitButton = useRef<HTMLButtonElement>(null),
     generation = useRef(0),
     live = useRef(false);
@@ -103,11 +106,13 @@ function OwnedServiceDuePeriodPanel() {
     return () => {
       live.current = false;
       generation.current++;
+      write.current?.abort();
     };
   }, []);
   function denied() {
     invalidFocus.current = null;
     generation.current++;
+    write.current?.abort();
     setSettings(null);
     settingsRef.current = null;
     setPending(null);
@@ -155,7 +160,13 @@ function OwnedServiceDuePeriodPanel() {
     return () => controller.abort();
     // The resource owns reloads; form changes must not restart its request.
   }, [reload, locale, readStaff]);
-  const current = (owner: number) => live.current && owner === generation.current;
+  const current = (owner: number) =>
+    live.current && owner === generation.current && getProfileContextRevision() === profileRevision;
+  function unconfirmed(owner: number) {
+    if (!current(owner)) return;
+    setUnavailable(true);
+    setError(t('error', locale));
+  }
   function accepted(value: unknown, change: Change, owner: number) {
     if (!current(owner)) return;
     if (
@@ -186,6 +197,7 @@ function OwnedServiceDuePeriodPanel() {
     setSaving(true);
     setSaved(false);
     setError(null);
+    let dispatched = false;
     try {
       await draft.form.handleSubmit(
         async (values) => {
@@ -196,13 +208,20 @@ function OwnedServiceDuePeriodPanel() {
             expectedPeriodId: settings.find((row) => row.serviceType === values.serviceType)!
               .periodId,
           };
-          const response = await fetch(path, {
-            method: 'PUT',
-            credentials: 'include',
-            headers: withCsrf({ 'Content-Type': 'application/json' }),
-            body: JSON.stringify(change),
+          const controller = new AbortController();
+          write.current = controller;
+          const { response, value } = await readWithDeadline(controller.signal, async (signal) => {
+            dispatched = true;
+            const response = await fetch(path, {
+              method: 'PUT',
+              credentials: 'include',
+              headers: withCsrf({ 'Content-Type': 'application/json' }),
+              body: JSON.stringify(change),
+              signal,
+            });
+            const value: unknown = await response.json().catch(() => null);
+            return { response, value };
           });
-          const value: unknown = await response.json().catch(() => null);
           if (!current(owner)) return;
           if (
             response.status === 403 &&
@@ -218,6 +237,7 @@ function OwnedServiceDuePeriodPanel() {
                 title: t('verifyTitle', locale),
                 description: t('verifyDescription', locale),
                 requiresPassword: true,
+                responseDeadline: true,
                 conflictMessage: t('conflict', locale),
                 forbiddenMessage: t('denied', locale),
               },
@@ -235,6 +255,7 @@ function OwnedServiceDuePeriodPanel() {
               draft.applyServerErrors(fields)
             )
               return;
+            if (response.status >= 500) throw new Error('unconfirmed');
             if (response.status === 409) setUnavailable(true);
             setError(t(response.status === 409 ? 'conflict' : 'error', locale));
           } else accepted(value, change, owner);
@@ -246,8 +267,14 @@ function OwnedServiceDuePeriodPanel() {
         }
       )(event);
     } catch {
-      if (current(owner)) setError(t('error', locale));
+      if (current(owner)) {
+        if (dispatched) {
+          unconfirmed(owner);
+          sendToast('warning', t('error', locale));
+        } else setError(t('error', locale));
+      }
     } finally {
+      write.current = null;
       inFlight.current = false;
       if (live.current) setSaving(false);
     }
@@ -355,6 +382,8 @@ function OwnedServiceDuePeriodPanel() {
           finalFocus={submitButton}
           onClose={() => setPending(null)}
           onDenied={denied}
+          confirmationDisabled={unavailable || !current(pending.owner)}
+          onUnconfirmed={() => unconfirmed(pending.owner)}
           onValidationError={(fields) => current(pending.owner) && draft.applyServerErrors(fields)}
           onSuccess={async (value) => accepted(value, pending.change, pending.owner)}
         />

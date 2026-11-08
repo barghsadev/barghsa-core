@@ -266,6 +266,79 @@ for (const locale of ['fa', 'en'] as const)
       await expect(page.locator('body')).not.toContainText('private backend text');
     });
 for (const locale of ['fa', 'en'] as const)
+  test(`default due period requires an authoritative reload after a stalled save (${locale})`, async ({
+    page,
+  }) => {
+    await setup(page, locale, false);
+    await page.clock.install();
+    const protectedSave = locale === 'fa';
+    const commands: unknown[] = [];
+    let unavailable = false;
+    let saved = false;
+    await page.route('**/api/admin/config/invoice-due-periods', (route) => {
+      if (route.request().method() === 'GET')
+        return route.fulfill({
+          status: unavailable ? 503 : 200,
+          json: saved
+            ? periods.map((period) =>
+                period.serviceType === 'electricity'
+                  ? {
+                      ...period,
+                      defaultDays: 14,
+                      periodId: invoiceId,
+                      effectiveFrom: source.issuedAt,
+                    }
+                  : period
+              )
+            : periods,
+        });
+      commands.push(route.request().postDataJSON());
+      if (protectedSave && commands.length === 1)
+        return route.fulfill({ status: 403, json: { error: 'AUTHZ:STEP_UP_REQUIRED' } });
+      saved = true;
+    });
+    await page.route('**/api/auth/step-up', (route) => route.fulfill({ json: { success: true } }));
+    await page.goto('/admin/invoices');
+    const panel = page.locator('#invoice-due-periods');
+    const days = panel.locator('#due-period-days');
+    const raw = protectedSave ? '۱۴' : '14';
+    await days.fill(raw);
+    await panel.getByRole('button', { name: tDuePeriods('save', locale), exact: true }).click();
+    const dialog = page.getByRole('dialog');
+    if (protectedSave) {
+      await dialog.locator('#team-step-up-password').fill('test-only');
+      await dialog.getByRole('button', { name: 'تأیید', exact: true }).click();
+    }
+    await expect.poll(() => saved).toBe(true);
+    await page.clock.fastForward(15_001);
+    await expect(panel.getByText(tDuePeriods('error', locale), { exact: true })).toBeVisible();
+    if (protectedSave) {
+      await expect(dialog.locator('button[type=submit]')).toBeDisabled();
+      await page.keyboard.press('Escape');
+      await expect(dialog).toHaveCount(0);
+    }
+    await expect(days).toBeDisabled();
+    await expect(days).toHaveValue(raw);
+    const reload = panel.getByRole('button', { name: tDuePeriods('load', locale), exact: true });
+    unavailable = true;
+    await reload.click();
+    await expect(panel.getByText(tDuePeriods('error', locale), { exact: true })).toBeVisible();
+    await expect(days).toBeDisabled();
+    unavailable = false;
+    await reload.click();
+    await expect(days).toBeEnabled();
+    await expect(days).toHaveValue('14');
+    await expect(panel.getByText(tDuePeriods('saved', locale), { exact: true })).toHaveCount(0);
+    expect(commands).toEqual(
+      Array(protectedSave ? 2 : 1).fill({
+        serviceType: 'electricity',
+        defaultDays: 14,
+        expectedPeriodId: null,
+      })
+    );
+  });
+
+for (const locale of ['fa', 'en'] as const)
   test(`deadline validators fail safely when their module is unavailable (${locale})`, async ({
     page,
   }) => {
