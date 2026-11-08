@@ -450,6 +450,40 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
     expect(container.textContent).toContain('No refunds requested.');
   });
 
+  it('scrolls overflowing invoice lines with the arrow keys', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({ ok: true, status: 200, json: async () => adjustmentPayload() }))
+    );
+    await act(async () => {
+      root.render(
+        <QueryProvider>
+          <InvoiceDetailsPage invoiceId={ORIGINAL_ID} />
+        </QueryProvider>
+      );
+    });
+    const region = container
+      .querySelector(`[data-testid="invoice-card-${ORIGINAL_ID}"] table`)!
+      .closest<HTMLElement>('[role="region"]')!;
+    const scrollBy = vi.fn();
+    Object.defineProperties(region, {
+      clientWidth: { value: 320 },
+      scrollWidth: { value: 576, configurable: true },
+      scrollBy: { value: scrollBy },
+    });
+    const press = (target: Element, key: string) =>
+      target.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+    expect(press(region.querySelector('td')!, 'ArrowRight')).toBe(true);
+    expect(press(region, 'Tab')).toBe(true);
+    expect(scrollBy).not.toHaveBeenCalled();
+    expect(press(region, 'ArrowLeft')).toBe(false);
+    expect(press(region, 'ArrowRight')).toBe(false);
+    expect(scrollBy.mock.calls).toEqual([[{ left: -40 }], [{ left: 40 }]]);
+    Object.defineProperty(region, 'scrollWidth', { value: 320 });
+    expect(press(region, 'ArrowRight')).toBe(true);
+    expect(scrollBy).toHaveBeenCalledTimes(2);
+  });
+
   it('shows the original invoice and the replacement with its explanation', async () => {
     const payload = replacementPayload();
     payload.chain[0]!.dueAtOverrideReason = '<strong>Extra time requested</strong>';
@@ -729,10 +763,15 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
     }
   );
 
-  it.each([false, true])(
-    'preserves a saved receipt and retries a failed history refresh (fail=%s)',
-    async (failRefresh) => {
+  it.each(['success', 'retry', 'denied'] as const)(
+    'preserves a saved receipt and handles history refresh (%s)',
+    async (outcome) => {
+      const failRefresh = outcome !== 'success';
       let detailReads = 0;
+      let finishRetry!: () => void;
+      const retryBody = new Promise<void>((resolve) => {
+        finishRetry = resolve;
+      });
       const payload = replacementPayload();
       const attachmentKey = 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf';
       const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
@@ -742,6 +781,20 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
           detailReads++;
           if (failRefresh && detailReads === 2)
             return { ok: false, status: 500, json: async () => ({}) };
+          if (failRefresh && detailReads === 3) {
+            if (outcome === 'denied') {
+              await retryBody;
+              return { ok: false, status: 403, json: async () => ({}) };
+            }
+            return {
+              ok: true,
+              status: 200,
+              json: async () => {
+                await retryBody;
+                return payload;
+              },
+            };
+          }
           return { ok: true, status: 200, json: async () => payload };
         }
         if (url.endsWith('/api/profiles') && method === 'GET') {
@@ -908,11 +961,30 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
         )!;
         expect(alert).toBeTruthy();
         expect(container.querySelector('[data-testid="invoice-receipt-error"]')).toBeNull();
+        const retry = alert.parentElement!.querySelector('button')!;
         await act(async () => {
-          (alert.querySelector('button') as HTMLButtonElement).click();
+          retry.click();
+          retry.click();
         });
         expect(detailReads).toBe(3);
+        expect(retry.disabled).toBe(true);
+        expect(
+          Array.from(container.querySelectorAll('[role="status"]')).some(
+            (status) => status.textContent === 'Loading receipts…'
+          )
+        ).toBe(true);
+        expect(container.querySelector('[data-testid="invoice-receipt-success"]')).not.toBeNull();
+        expect(container.querySelector('[data-testid="invoice-activity"]')).not.toBeNull();
         expect(container.textContent).not.toContain('Receipt saved, but history');
+        await act(async () => finishRetry());
+        expect(retry.isConnected).toBe(false);
+        expect(container.textContent).not.toContain('Loading receipts…');
+        expect(container.textContent).not.toContain('Receipt saved, but history');
+        if (outcome === 'denied') {
+          expect(container.querySelector('[data-testid="invoice-load-error"]')).not.toBeNull();
+          expect(container.querySelector('[data-testid="invoice-activity"]')).toBeNull();
+          expect(container.querySelector('[data-testid="invoice-receipt-form"]')).toBeNull();
+        }
         expect(
           fetchMock.mock.calls.filter(
             ([url, init]) => String(url).endsWith('/bank-receipts') && init?.method === 'POST'

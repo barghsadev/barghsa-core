@@ -179,3 +179,5 @@ Wallet history checks transaction rows and receipt timelines before rendering. A
 Contract history keeps its last verified rows while a refresh starts at the first page. Malformed rows leave an explicit retry, and denied reads remove the old rows. Document queues check the selected profile and record metadata before accepting a page. Accounts without an active profile can return to the dashboard to choose one. The privacy page announces loading while its preview retry is pending.
 
 Public support distinguishes a failed guide availability check from confirmed unavailability. Checking again only reloads availability. New-contact verification allows up to 15 seconds for the CSRF bootstrap and confirmation receipt. If the outcome is uncertain, the form clears the code and keeps the case and challenge IDs visible. Contact support to check the saved outcome before using another code.
+
+After an invoice receipt is saved, a failed history read leaves the submission confirmation visible. The retry reads the invoice and shows progress while the request is in flight. If access is denied, the page withdraws the invoice details and receipt history.

@@ -413,6 +413,49 @@ for (const kind of ['wallet', 'invoice'] as const) {
 }
 
 for (const locale of ['en', 'fa'] as const) {
+  test(`saved invoice receipt retries only its history read (${locale})`, async ({ page }) => {
+    const { submissions } = await setup(page, locale, 'invoice');
+    let detailReads = 0;
+    let finishRetry!: () => void;
+    const retryResponse = new Promise<void>((resolve) => {
+      finishRetry = resolve;
+    });
+    await page.route(`**/api/invoices/${invoiceId}`, async (route) => {
+      if (++detailReads === 1) return route.fulfill({ status: 503, json: {} });
+      await retryResponse;
+      return route.fallback();
+    });
+    await page.getByTestId('invoice-receipt-submit').click();
+    await confirmReceipt(page, locale);
+    const success = page.getByTestId('invoice-receipt-success');
+    const failure = page
+      .getByRole('alert')
+      .filter({ hasText: t('invoices.activity.refreshFailed', locale) });
+    await expect(success).toBeVisible();
+    await expect(failure).toBeVisible();
+    expect(detailReads).toBe(1);
+
+    const retry = page
+      .locator('section[aria-labelledby="invoice-chain-heading"]')
+      .getByRole('button', { name: t('invoices.activity.retry', locale), exact: true });
+    const loading = page
+      .getByRole('status')
+      .filter({ hasText: t('invoices.receipts.loading', locale) });
+    await retry.click();
+    await expect(retry).toBeDisabled();
+    await expect(loading).toBeVisible();
+    await expect(failure).toHaveCount(0);
+    await expect(success).toBeVisible();
+    await expect(page.getByTestId('invoice-activity')).toBeVisible();
+    expect(detailReads).toBe(2);
+    finishRetry();
+    await expect(loading).toHaveCount(0);
+    await expect(retry).toHaveCount(0);
+    await expect(page.getByTestId('invoice-activity')).toContainText('TRACK-123');
+    expect(submissions).toHaveLength(1);
+    expect(submissions[0]!.body.expectedReviewHash).toBe('a'.repeat(64));
+  });
+
   test(`invoice receipt retries a held review and rejects a foreign profile snapshot (${locale})`, async ({
     page,
   }, info) => {

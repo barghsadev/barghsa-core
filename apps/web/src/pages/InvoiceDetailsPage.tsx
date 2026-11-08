@@ -239,12 +239,20 @@ function InvoiceDetailsBody({
 }) {
   const locale = useLocale();
   const [refreshFailed, setRefreshFailed] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const refreshPending = useRef(false);
   const refreshReceiptHistory = async () => {
+    if (refreshPending.current) return;
+    refreshPending.current = true;
+    setRefreshing(true);
     try {
       await onRefreshDetails();
       setRefreshFailed(false);
     } catch {
       setRefreshFailed(true);
+    } finally {
+      refreshPending.current = false;
+      setRefreshing(false);
     }
   };
   const viewed = details.invoice;
@@ -290,18 +298,24 @@ function InvoiceDetailsBody({
         />
       ))}
 
-      {refreshFailed ? (
-        <p role="alert" className="text-sm text-destructive">
-          {t('invoices.activity.refreshFailed', locale)}
+      {refreshing && (
+        <LoadingStatus className="text-sm text-muted-foreground">
+          {t('invoices.receipts.loading', locale)}
+        </LoadingStatus>
+      )}
+      {refreshFailed && (
+        <div className="text-sm text-destructive">
+          {!refreshing && <p role="alert">{t('invoices.activity.refreshFailed', locale)}</p>}
           <button
             type="button"
-            className="ms-2 underline"
+            className="touch-action underline disabled:opacity-60"
+            disabled={refreshing}
             onClick={() => void refreshReceiptHistory()}
           >
             {t('invoices.activity.retry', locale)}
           </button>
-        </p>
-      ) : null}
+        </div>
+      )}
       <InvoicePaymentSummary invoice={viewed} onRefreshDetails={onRefreshDetails} />
       <InvoiceActivity details={details} formatTimestamp={formatTimestamp} />
       {canCustomerSubmitInvoiceBankReceipt({

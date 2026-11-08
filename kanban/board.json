@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T21:53:49+00:00",
-  "source_commit": "9a57aede4a56a7d527e7b82132c929ea4acd5980",
+  "updated": "2026-11-08T22:02:32+00:00",
+  "source_commit": "7e90b1ca4ccfa32b22abc8a3e20651bd8c47720a",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -125125,11 +125125,11 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/worker/src/invoices/overdue-scanner.ts",
@@ -126117,11 +126117,11 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/worker/src/invoices/overdue-scanner.ts",
@@ -127109,11 +127109,11 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/worker/src/invoices/overdue-scanner.ts",
@@ -128101,11 +128101,11 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/worker/src/invoices/overdue-scanner.ts",
@@ -129093,11 +129093,11 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/worker/src/invoices/overdue-scanner.ts",
@@ -130085,11 +130085,11 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/worker/src/invoices/overdue-scanner.ts",
@@ -131185,11 +131185,11 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/worker/src/invoices/overdue-scanner.ts",
@@ -132281,11 +132281,11 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/worker/src/invoices/overdue-scanner.ts",
@@ -133381,11 +133381,11 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/worker/src/invoices/overdue-scanner.ts",
@@ -134477,11 +134477,11 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/worker/src/invoices/overdue-scanner.ts",
@@ -135445,7 +135445,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/worker/src/invoices/reminder-canceller.integration.test.ts",
@@ -136227,7 +136227,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/worker/src/invoices/reminder-canceller.integration.test.ts",
@@ -136971,11 +136971,11 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -140661,7 +140661,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
+              "sha256": "2307db44b583b9f1a1aa771b172ad7083e7af224e0078589de34cfa0fea3b30b"
             },
             {
               "path": "apps/web/src/hooks/useReceiptForm.ts",
@@ -143009,7 +143009,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -146096,7 +146096,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
+              "sha256": "2307db44b583b9f1a1aa771b172ad7083e7af224e0078589de34cfa0fea3b30b"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -146168,7 +146168,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
@@ -146686,7 +146686,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
+              "sha256": "2307db44b583b9f1a1aa771b172ad7083e7af224e0078589de34cfa0fea3b30b"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -146770,7 +146770,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
@@ -147306,7 +147306,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
+              "sha256": "2307db44b583b9f1a1aa771b172ad7083e7af224e0078589de34cfa0fea3b30b"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -147378,7 +147378,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
@@ -147943,7 +147943,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
+              "sha256": "2307db44b583b9f1a1aa771b172ad7083e7af224e0078589de34cfa0fea3b30b"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -148015,7 +148015,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
@@ -148682,7 +148682,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
+              "sha256": "2307db44b583b9f1a1aa771b172ad7083e7af224e0078589de34cfa0fea3b30b"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -148754,7 +148754,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
@@ -149184,7 +149184,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
+              "sha256": "2307db44b583b9f1a1aa771b172ad7083e7af224e0078589de34cfa0fea3b30b"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -149256,7 +149256,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
@@ -149664,7 +149664,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
+              "sha256": "2307db44b583b9f1a1aa771b172ad7083e7af224e0078589de34cfa0fea3b30b"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -149736,7 +149736,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
@@ -150145,7 +150145,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
+              "sha256": "2307db44b583b9f1a1aa771b172ad7083e7af224e0078589de34cfa0fea3b30b"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -150217,7 +150217,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
@@ -150627,7 +150627,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
+              "sha256": "2307db44b583b9f1a1aa771b172ad7083e7af224e0078589de34cfa0fea3b30b"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -150699,7 +150699,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
@@ -151117,7 +151117,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
+              "sha256": "2307db44b583b9f1a1aa771b172ad7083e7af224e0078589de34cfa0fea3b30b"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -151189,7 +151189,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
@@ -151599,7 +151599,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
+              "sha256": "2307db44b583b9f1a1aa771b172ad7083e7af224e0078589de34cfa0fea3b30b"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -151671,7 +151671,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
@@ -483102,7 +483102,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
+              "sha256": "2307db44b583b9f1a1aa771b172ad7083e7af224e0078589de34cfa0fea3b30b"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -483694,7 +483694,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
+              "sha256": "2307db44b583b9f1a1aa771b172ad7083e7af224e0078589de34cfa0fea3b30b"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -484286,7 +484286,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
+              "sha256": "2307db44b583b9f1a1aa771b172ad7083e7af224e0078589de34cfa0fea3b30b"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -484878,7 +484878,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
+              "sha256": "2307db44b583b9f1a1aa771b172ad7083e7af224e0078589de34cfa0fea3b30b"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -491335,7 +491335,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/InvoicesPage.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1e1dab32af5724b33b8568950e0d108b4a4bc157b5fe05aa5f7f717a4bcb154d"
+              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -511630,7 +511630,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/InvoicesPage.tsx",
@@ -516933,7 +516933,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
+              "sha256": "2307db44b583b9f1a1aa771b172ad7083e7af224e0078589de34cfa0fea3b30b"
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1e1dab32af5724b33b8568950e0d108b4a4bc157b5fe05aa5f7f717a4bcb154d"
+              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1e1dab32af5724b33b8568950e0d108b4a4bc157b5fe05aa5f7f717a4bcb154d"
+              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -567107,7 +567107,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -567523,7 +567523,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1e1dab32af5724b33b8568950e0d108b4a4bc157b5fe05aa5f7f717a4bcb154d"
+              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -569002,7 +569002,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -569418,7 +569418,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1e1dab32af5724b33b8568950e0d108b4a4bc157b5fe05aa5f7f717a4bcb154d"
+              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570494,7 +570494,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
+              "sha256": "2307db44b583b9f1a1aa771b172ad7083e7af224e0078589de34cfa0fea3b30b"
             },
             {
               "path": "apps/web/e2e/customer-request-routes.spec.ts",
@@ -572510,11 +572510,11 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -573070,7 +573070,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1e1dab32af5724b33b8568950e0d108b4a4bc157b5fe05aa5f7f717a4bcb154d"
+              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
             },
             {
               "path": "scripts/check-changed-coverage.py",
@@ -573784,7 +573784,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -574200,7 +574200,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1e1dab32af5724b33b8568950e0d108b4a4bc157b5fe05aa5f7f717a4bcb154d"
+              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -575679,7 +575679,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -576095,7 +576095,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1e1dab32af5724b33b8568950e0d108b4a4bc157b5fe05aa5f7f717a4bcb154d"
+              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577574,7 +577574,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -577990,7 +577990,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1e1dab32af5724b33b8568950e0d108b4a4bc157b5fe05aa5f7f717a4bcb154d"
+              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -579469,7 +579469,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -579885,7 +579885,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1e1dab32af5724b33b8568950e0d108b4a4bc157b5fe05aa5f7f717a4bcb154d"
+              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581364,7 +581364,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -581780,7 +581780,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1e1dab32af5724b33b8568950e0d108b4a4bc157b5fe05aa5f7f717a4bcb154d"
+              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -583259,7 +583259,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -583675,7 +583675,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1e1dab32af5724b33b8568950e0d108b4a4bc157b5fe05aa5f7f717a4bcb154d"
+              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -585154,7 +585154,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -585570,7 +585570,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1e1dab32af5724b33b8568950e0d108b4a4bc157b5fe05aa5f7f717a4bcb154d"
+              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -587049,7 +587049,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -587465,7 +587465,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1e1dab32af5724b33b8568950e0d108b4a4bc157b5fe05aa5f7f717a4bcb154d"
+              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -588944,7 +588944,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -589360,7 +589360,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1e1dab32af5724b33b8568950e0d108b4a4bc157b5fe05aa5f7f717a4bcb154d"
+              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -590839,7 +590839,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -591255,7 +591255,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1e1dab32af5724b33b8568950e0d108b4a4bc157b5fe05aa5f7f717a4bcb154d"
+              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592734,7 +592734,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -593150,7 +593150,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1e1dab32af5724b33b8568950e0d108b4a4bc157b5fe05aa5f7f717a4bcb154d"
+              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594414,7 +594414,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1e1dab32af5724b33b8568950e0d108b4a4bc157b5fe05aa5f7f717a4bcb154d"
+              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595369,7 +595369,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -595785,7 +595785,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1e1dab32af5724b33b8568950e0d108b4a4bc157b5fe05aa5f7f717a4bcb154d"
+              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -597264,7 +597264,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -597680,7 +597680,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1e1dab32af5724b33b8568950e0d108b4a4bc157b5fe05aa5f7f717a4bcb154d"
+              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -598484,7 +598484,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Public support and the named customer and staff guide cases now have current evidence. Verify in-progress and duplicate-read handling for the invoice receipt panel, finish the wallet and invoice conditional-state audit, then bind the remaining original requirements route by route."
+        "The named public support, guide, wallet and invoice conditional journeys have current source-bound evidence. Consolidate the original route and shared-pattern criteria against the 93-route census and the recorded conditional proofs. Identify remaining unbound or failed cases before accepting the whole requirement."
       ],
       "owner": null,
       "depends_on": [],
@@ -598600,7 +598600,8 @@
           "release-0.5-customer-service-detail-states",
           "release-0.5-settings-pane-read-states",
           "release-0.5-auth-terminal-recovery",
-          "release-0.5-public-support-recovery"
+          "release-0.5-public-support-recovery",
+          "release-0.5-invoice-post-receipt"
         ],
         "current_acceptance": null
       }
@@ -650201,11 +650202,11 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/InvoicesPage.test.tsx",
@@ -651030,11 +651031,11 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/InvoicesPage.test.tsx",
@@ -651867,11 +651868,11 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/InvoicesPage.test.tsx",
@@ -652688,11 +652689,11 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/InvoicesPage.test.tsx",
@@ -653508,11 +653509,11 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/InvoicesPage.test.tsx",
@@ -688458,7 +688459,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -689299,7 +689300,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -690142,7 +690143,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -690983,7 +690984,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -691824,7 +691825,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -692669,7 +692670,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -693514,7 +693515,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -694355,7 +694356,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -695196,7 +695197,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -696038,7 +696039,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -696885,7 +696886,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -712137,11 +712138,11 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+              "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/worker/src/invoices/reminder-canceller.integration.test.ts",
@@ -712565,7 +712566,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
+              "sha256": "2307db44b583b9f1a1aa771b172ad7083e7af224e0078589de34cfa0fea3b30b"
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-fields.ts",
@@ -728247,7 +728248,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Public support and the named customer and staff guide cases now have current evidence. Verify in-progress and duplicate-read handling for the invoice receipt panel, finish the wallet and invoice conditional-state audit, then bind the remaining original requirements route by route."
+        "The named public support, guide, wallet and invoice conditional journeys have current source-bound evidence. Consolidate the original route and shared-pattern criteria against the 93-route census and the recorded conditional proofs. Identify remaining unbound or failed cases before accepting the whole requirement."
       ],
       "owner": null,
       "depends_on": [],
@@ -728429,7 +728430,8 @@
           "release-0.5-customer-service-detail-states",
           "release-0.5-settings-pane-read-states",
           "release-0.5-auth-terminal-recovery",
-          "release-0.5-public-support-recovery"
+          "release-0.5-public-support-recovery",
+          "release-0.5-invoice-post-receipt"
         ]
       }
     },
@@ -729541,7 +729543,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-              "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+              "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
             },
             {
               "path": "apps/web/src/pages/InvoicesPage.tsx",
@@ -730357,7 +730359,8 @@
             "The final service detail build passed all 101 existing bundle limits. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-service-detail-states/proof.json",
             "Final scoped branding and wallet presentation build passed all 101 existing budgets. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-pane-read-states/proof.json",
             "Final activation recovery passed all 101 budgets and six cold-auth transfer checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-auth-terminal-recovery/proof.json",
-            "Public support recovery passed all 101 route and interaction budgets. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-public-support-recovery/proof.json"
+            "Public support recovery passed all 101 route and interaction budgets. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-public-support-recovery/proof.json",
+            "Invoice receipt history recovery passed all 101 route and interaction budgets. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-post-receipt/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -807477,6 +807480,93 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-public-support-recovery/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-public-support-recovery/renewed-bindings.json",
       "release_disposition": "Verified public support recovery and the named guide and receipt cases. v0.5.0 remains open."
+    },
+    "release-0.5-invoice-post-receipt": {
+      "batch": "release-0.5-invoice-post-receipt",
+      "base_commit": "7e90b1ca4ccfa32b22abc8a3e20651bd8c47720a",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/customer-receipts.spec.ts",
+          "sha256": "2307db44b583b9f1a1aa771b172ad7083e7af224e0078589de34cfa0fea3b30b"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
+          "sha256": "60027e707886a558a5f4d3d37698a4da73dfde30445e62c783b925906e0da278"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "dd842e73921c38636c4630460ec6148e0c50c67a9539efb30bda59f254bb809b"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
+        },
+        {
+          "path": "apps/web/src/components/InvoicePaymentSummary.tsx",
+          "sha256": "93d8b6443069032d549b373b099504b5f4eacfa04fcdb505e3d7b79068340d4e"
+        },
+        {
+          "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
+          "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
+        },
+        {
+          "path": "apps/web/src/components/WalletTransactionList.tsx",
+          "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.tsx",
+          "sha256": "44ee2de825c64b4a53473aaf8a022175959f36ed543fa97f6d582949c89be630"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceActivity.tsx",
+          "sha256": "02411aebe3dc86ea957acde07794784e634bb5daa2cc5ec8e060c5a091753a8a"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
+          "sha256": "47262b576580541642b72e570a1d8718d13e6ac83893f3842f7142c467a3b5a7"
+        },
+        {
+          "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
+          "sha256": "d33f65b0cd98fc27a8788758a993de29dc710d8c57a2527c1c5a69128e20b846"
+        },
+        {
+          "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
+          "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
+        },
+        {
+          "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
+          "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+        },
+        {
+          "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
+          "sha256": "549793a0ac3cbb878a0eda4f745a4efb6f4c4a9ccb5eda00fb4591c9b3b15687"
+        },
+        {
+          "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
+          "sha256": "15e40d795f0daedfa9ea575f9b14d8fd329a67b60217916c7f45e28ec37215d2"
+        }
+      ],
+      "checks": [
+        "After a confirmed customer invoice receipt, history recovery shows independent progress and allows one read at a time. The confirmation and prior activity stay visible during a recoverable failure. The retry reads the invoice without submitting another receipt. A denied read withdraws the invoice and receipt activity.",
+        "Thirty-six production Chromium and Mobile Safari cases passed. They covered localized receipt history recovery and private previews, receipt review authority, wallet timelines, invoice details and keyboard access, financial history views, and receipt recovery after a lost wallet payment response.",
+        "Forty-five units and ten instrumented Chromium cases passed. Initial coverage fell below the unchanged critical branch floor. A denied history refresh and invoice keyboard branches were exercised. The final gate measured 71/71 lines and 95/106 branches with no excluded application branches.",
+        "Production/auth builds, all 101 route and interaction budgets, web typecheck, changed-file lint and formatting passed. The wallet receipts route measured 499.98 KB against 500 KB."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-post-receipt",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-post-receipt/proof.json",
+      "source_scope_proof_sha256": "07814ac309be9a178af1b6be1696cce649256e1cc5c2628004057503bb06355d",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-post-receipt/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-post-receipt/renewed-bindings.json",
+      "release_disposition": "Verified the named finance conditional states on the current implementation. v0.5.0 remains open."
     }
   },
   "historical_improvements": [
@@ -807527,12 +807617,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Close the wallet and invoice conditional states and bind the remaining original requirements route by route. GitHub merge enforcement and staging Sentry delivery remain independent gates."
+    "goal": "Reconcile the original route and shared-pattern acceptance against the existing source-bound census and conditional evidence. Verify concrete uncovered cases. GitHub merge enforcement and staging Sentry delivery remain independent gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 has populated layouts for 93 routes and current evidence for additional public support and guide states. Four required criteria remain open and the November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 has populated layouts for 93 routes and current evidence for the named support, guide and finance recovery cases. Four required criteria remain open and the November 9 sequence remains at risk."
   },
   "capabilities": [
     {
