@@ -79,6 +79,11 @@ require at least one selection, so the group explains the requirement without
 marking each checkbox required. A rejected confirmation password links to its
 own error.
 
+Knowledge editors require a source address when staff select URL or API
+sources. The URL field retains its entry instructions when an error appears.
+AI policy editors identify the required fields for the selected rule type.
+Membership selectors require a choice, and priority overrides can be left blank.
+
 State either-or requirements before submission. A ticket reply can contain
 text, an attachment, or both, so its text field is not individually required.
 On an uncertain save, keep the original request and a visible recovery

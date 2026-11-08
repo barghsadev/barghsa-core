@@ -694,6 +694,7 @@ function OwnedAiPoliciesPage({
                       id="policy-title"
                       value={draft.title}
                       required
+                      aria-required="true"
                       maxLength={120}
                       onChange={(event) =>
                         form.field('title')[1](event.target.value as Draft['title'])
@@ -731,6 +732,7 @@ function OwnedAiPoliciesPage({
                         <select
                           {...form.bind('policyType')}
                           id="policy-type"
+                          aria-required="true"
                           className="rounded-md border bg-background p-2"
                           value={draft.policyType}
                           onChange={(event) => changePolicyType(event.target.value as PolicyType)}
@@ -759,6 +761,12 @@ function OwnedAiPoliciesPage({
                           max={1000}
                           step={1}
                           required
+                          aria-required="true"
+                          aria-describedby={
+                            form.errors.priority
+                              ? `${form.errorId('priority')} policy-priority-help`
+                              : 'policy-priority-help'
+                          }
                           value={draft.priority}
                           onChange={(event) =>
                             form.field('priority')[1](event.target.value as Draft['priority'])
@@ -769,7 +777,9 @@ function OwnedAiPoliciesPage({
                           error={form.errors.priority}
                           message={messages.priority}
                         />
-                        <p className="text-sm text-muted-foreground">{label('priorityHelp')}</p>
+                        <p id="policy-priority-help" className="text-sm text-muted-foreground">
+                          {label('priorityHelp')}
+                        </p>
                       </div>
                       {draft.policyType === 'response_style' ? (
                         <>
@@ -779,6 +789,7 @@ function OwnedAiPoliciesPage({
                               {...form.bind('tone')}
                               id="policy-tone"
                               required
+                              aria-required="true"
                               maxLength={200}
                               value={draft.tone}
                               onChange={(event) =>
@@ -853,6 +864,7 @@ function OwnedAiPoliciesPage({
                           <select
                             {...form.bind('format')}
                             id="policy-format"
+                            aria-required="true"
                             className="rounded-md border bg-background p-2"
                             value={draft.format}
                             onChange={(event) =>
@@ -882,6 +894,7 @@ function OwnedAiPoliciesPage({
                               max={100}
                               step={1}
                               required
+                              aria-required="true"
                               value={draft.maxRequests}
                               onChange={(event) =>
                                 form.field('maxRequests')[1](
@@ -907,6 +920,7 @@ function OwnedAiPoliciesPage({
                               max={3600}
                               step={1}
                               required
+                              aria-required="true"
                               value={draft.windowSeconds}
                               onChange={(event) =>
                                 form.field('windowSeconds')[1](
@@ -929,8 +943,13 @@ function OwnedAiPoliciesPage({
                             id="policy-items"
                             className="min-h-32 rounded-md border bg-background p-3"
                             required
+                            aria-required="true"
                             value={draft.items}
-                            aria-describedby={`${form.errorId('items')} policy-items-help`}
+                            aria-describedby={
+                              form.errors.items
+                                ? `${form.errorId('items')} policy-items-help`
+                                : 'policy-items-help'
+                            }
                             onChange={(event) =>
                               form.field('items')[1](event.target.value as Draft['items'])
                             }

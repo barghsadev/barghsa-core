@@ -58,8 +58,16 @@ for (const locale of ['en', 'fa'])
     });
     await page.goto('/admin/agents');
     const chat = page.getByRole('region', { name: fa ? 'گفت‌وگوی آزمایشی عامل' : 'Test an agent' });
-    await chat.getByLabel(fa ? 'عامل' : 'Agent', { exact: true }).selectOption(agentId);
-    await chat.getByLabel(fa ? 'پیام آزمایشی' : 'Test message').fill('Hello');
+    const agent = chat.getByLabel(fa ? 'عامل' : 'Agent', { exact: true });
+    const message = chat.getByLabel(fa ? 'پیام آزمایشی' : 'Test message', { exact: true });
+    await expect(agent).toHaveAttribute('aria-required', 'true');
+    await expect(message).toHaveAttribute('aria-required', 'true');
+    await expect(chat.getByLabel(fa ? 'نمایش در جایگاه' : 'Preview as slot')).not.toHaveAttribute(
+      'aria-required',
+      'true'
+    );
+    await agent.selectOption(agentId);
+    await message.fill('Hello');
     await chat.getByRole('button', { name: fa ? 'ارسال' : 'Send', exact: true }).click();
     await expect(chat.getByText('Power is available.')).toBeVisible();
     await chat.locator('summary').first().click();
@@ -136,7 +144,9 @@ for (const locale of ['en', 'fa'])
     await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill('Local assistant');
     await page.getByLabel(fa ? 'مدل' : 'Model', { exact: true }).selectOption(model);
     await page.getByLabel(fa ? 'دستورالعمل سیستم' : 'System instructions').fill('Help with energy');
-    await page.getByLabel(fa ? 'دما' : 'Temperature').fill('0.4');
+    await page
+      .getByRole('spinbutton', { name: fa ? 'دما' : 'Temperature', exact: true })
+      .fill('0.4');
     await page.getByLabel(fa ? 'حداکثر توکن' : 'Maximum tokens').fill('512');
     await page.getByLabel('Support knowledge', { exact: true }).check();
     await page.getByLabel('Support policies', { exact: true }).check();

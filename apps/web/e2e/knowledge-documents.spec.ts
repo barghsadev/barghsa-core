@@ -2,6 +2,7 @@ import { mockOppositeNumerals } from './number-preference-fixture';
 import { test, expect } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { cookieResponse } from './cookie-response';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { t } from '@barghsa/i18n/admin-ui';
 import { knowledgePolicyFormText } from '@barghsa/i18n/knowledge-policy-forms';
 import { knowledgeBase, policyEntry, policyGroup } from '../src/test/knowledge-policy-fixtures';
@@ -113,9 +114,13 @@ for (const locale of ['en', 'fa'] as const)
       const selected = page.locator('#kb-file'),
         search = page.locator('#kb-file-search'),
         file = page.locator('#kb-new-document');
+      await expect(selected).toHaveAttribute('aria-required', 'true');
+      await expect(file).toHaveAttribute('aria-required', 'true');
+      await expect(search).not.toHaveAttribute('aria-required', 'true');
       await button(label('attach')).click();
       await expect(selected).toBeFocused();
       await expect(selected).toHaveAttribute('aria-invalid', 'true');
+      await expect(selected).toHaveAccessibleDescription(copy('storageKey'));
       await search.fill('x'.repeat(201));
       await button(label('search')).click();
       await expect(search).toBeFocused();
@@ -148,11 +153,14 @@ for (const locale of ['en', 'fa'] as const)
       await expect(button(`${label('detach')} Guide.txt`)).toBeVisible();
       await expect(selected).toHaveValue('');
       await button(`${label('detach')} Guide.txt`).click();
+      await expect(page.getByRole('dialog').locator('button[type=submit]')).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'destructive');
       await page.getByRole('dialog').locator('button[type=submit]').click();
       await expect(button(`${label('detach')} Guide.txt`)).toHaveCount(0);
       await button(label('upload')).click();
       await expect(file).toBeFocused();
       await expect(file).toHaveAttribute('aria-invalid', 'true');
+      await expect(file).toHaveAccessibleDescription(`${copy('file')} ${label('uploadHelp')}`);
       await file.setInputFiles({
         name: 'tool.exe',
         mimeType: 'application/octet-stream',

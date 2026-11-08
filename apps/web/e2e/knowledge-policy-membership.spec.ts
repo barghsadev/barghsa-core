@@ -1,6 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { cookieResponse } from './cookie-response';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { t } from '@barghsa/i18n/admin-ui';
 import { knowledgePolicyFormText } from '@barghsa/i18n/knowledge-policy-forms';
 import {
@@ -99,9 +100,12 @@ for (const locale of ['en', 'fa'] as const)
       await button(`${k('open')} ${kg.title}`).click();
       const query = page.locator('#kb-test-query'),
         member = page.locator('#kb-member');
+      await expect(query).toHaveAttribute('aria-required', 'true');
+      await expect(member).toHaveAttribute('aria-required', 'true');
       await button(k('runQuery')).click();
       await expect(query).toBeFocused();
       await expect(query).toHaveAttribute('aria-invalid', 'true');
+      await expect(query).toHaveAccessibleDescription(copy('query'));
       expect(queries).toBe(0);
       await query.fill('Meter question');
       await button(k('runQuery')).click();
@@ -113,6 +117,7 @@ for (const locale of ['en', 'fa'] as const)
       await button(k('link')).click();
       await expect(member).toBeFocused();
       await expect(member).toHaveAttribute('aria-invalid', 'true');
+      await expect(member).toHaveAccessibleDescription(copy('member'));
       await member.selectOption(kb.id);
       await button(k('link')).click();
       await confirm();
@@ -139,6 +144,8 @@ for (const locale of ['en', 'fa'] as const)
       await button(copy('reset')).click();
       await expect(member).toHaveValue('');
       await button(`${k('unlink')} ${kb.title}`).click();
+      await expect(page.getByRole('dialog').locator('button[type=submit]')).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'destructive');
       await confirm();
       await expect(button(`${k('unlink')} ${kb.title}`)).toHaveCount(0);
       expect(knowledgeWrites).toEqual(['add', 'add', 'add', 'remove']);
@@ -183,6 +190,8 @@ for (const locale of ['en', 'fa'] as const)
           .locator('form')
           .filter({ has: first })
           .getByRole('button', { name: p('updatePriority'), exact: true });
+      await expect(page.locator('#policy-member')).toHaveAttribute('aria-required', 'true');
+      await expect(first).not.toHaveAttribute('aria-required', 'true');
       await first.fill('1.5');
       await saveFirst.click();
       await expect(first).toBeFocused();
@@ -241,6 +250,8 @@ for (const locale of ['en', 'fa'] as const)
         { policyId: policy.id, priorityOverride: null },
       ]);
       await button(`${p('unlink')} ${policySecond.title}`).click();
+      await expect(page.getByRole('dialog').locator('button[type=submit]')).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'destructive');
       await confirm();
       await expect(second).toHaveCount(0);
       await page.goto('/admin/knowledge-bases');

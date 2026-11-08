@@ -649,6 +649,7 @@ function OwnedAiAgentsPage({
                           {...form.bind(key)}
                           id={id}
                           required
+                          aria-required="true"
                           maxLength={max}
                           value={draft[key]}
                           dir="auto"
@@ -661,7 +662,11 @@ function OwnedAiAgentsPage({
                           maxLength={max}
                           value={draft[key]}
                           dir="auto"
-                          aria-describedby={`${form.errorId(key)} agent-prompt-help`}
+                          aria-describedby={
+                            form.errors[key]
+                              ? `${form.errorId(key)} agent-prompt-help`
+                              : 'agent-prompt-help'
+                          }
                           onChange={(event) => form.field(key)[1](event.target.value)}
                         />
                       ) : (
@@ -694,6 +699,7 @@ function OwnedAiAgentsPage({
                       id="agent-model"
                       className="max-w-full rounded-md border bg-background p-2"
                       required
+                      aria-required="true"
                       value={draft.modelId}
                       onChange={(event) => form.field('modelId')[1](event.target.value)}
                     >
@@ -748,6 +754,7 @@ function OwnedAiAgentsPage({
                       <select
                         {...form.bind('linkMode')}
                         id="agent-link-mode"
+                        aria-required="true"
                         className="max-w-full rounded-md border bg-background p-2"
                         value={draft.linkMode}
                         onChange={(event) =>

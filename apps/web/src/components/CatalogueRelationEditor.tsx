@@ -158,6 +158,7 @@ export function CatalogueRelationEditor(props: Props) {
             <select
               {...form.bind('memberId')}
               id={props.id}
+              aria-required="true"
               className="max-w-full rounded-md border bg-background p-2"
               value={form.values.memberId}
               onChange={(event) => {

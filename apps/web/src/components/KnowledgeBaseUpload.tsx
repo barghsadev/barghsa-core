@@ -128,6 +128,7 @@ export function KnowledgeBaseUpload(props: Props) {
             }}
             id="kb-new-document"
             type="file"
+            aria-required="true"
             accept={KNOWLEDGE_DOCUMENT_ACCEPT}
             aria-describedby={[binding['aria-describedby'], 'kb-upload-help']
               .filter(Boolean)

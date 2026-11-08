@@ -791,6 +791,7 @@ function OwnedKnowledgeBasesPage({
                       {...form.bind('title')}
                       id="kb-title"
                       required
+                      aria-required="true"
                       maxLength={120}
                       value={draft.title}
                       onChange={(event) =>
@@ -828,6 +829,12 @@ function OwnedKnowledgeBasesPage({
                         <select
                           {...form.bind('audience')}
                           id="kb-audience"
+                          aria-required="true"
+                          aria-describedby={
+                            form.errors.audience
+                              ? `${form.errorId('audience')} kb-audience-help`
+                              : 'kb-audience-help'
+                          }
                           className="rounded-md border bg-background p-2"
                           value={draft.audience}
                           onChange={(event) =>
@@ -845,13 +852,16 @@ function OwnedKnowledgeBasesPage({
                           error={form.errors.audience}
                           message={messages.audience}
                         />
-                        <p className="text-sm text-muted-foreground">{label('audienceHelp')}</p>
+                        <p id="kb-audience-help" className="text-sm text-muted-foreground">
+                          {label('audienceHelp')}
+                        </p>
                       </div>
                       <div className="flex flex-col gap-2">
                         <Label htmlFor="kb-source-type">{label('sourceType')}</Label>
                         <select
                           {...form.bind('sourceType')}
                           id="kb-source-type"
+                          aria-required="true"
                           className="rounded-md border bg-background p-2"
                           value={draft.sourceType}
                           onChange={(event) => {
@@ -878,6 +888,12 @@ function OwnedKnowledgeBasesPage({
                                 {...form.bind('sourceUrl')}
                                 id="kb-source-url"
                                 required
+                                aria-required="true"
+                                aria-describedby={
+                                  form.errors.sourceUrl
+                                    ? `${form.errorId('sourceUrl')} kb-source-urls-help`
+                                    : 'kb-source-urls-help'
+                                }
                                 maxLength={40960}
                                 rows={3}
                                 className="rounded-md border bg-background p-3"
@@ -893,7 +909,7 @@ function OwnedKnowledgeBasesPage({
                                 error={form.errors.sourceUrl}
                                 message={messages.sourceUrl}
                               />
-                              <p className="text-sm text-muted-foreground">
+                              <p id="kb-source-urls-help" className="text-sm text-muted-foreground">
                                 {label('sourceUrlsHelp')}
                               </p>
                             </>
@@ -904,6 +920,7 @@ function OwnedKnowledgeBasesPage({
                                 id="kb-source-url"
                                 type="url"
                                 required
+                                aria-required="true"
                                 maxLength={2048}
                                 placeholder="https://"
                                 value={draft.sourceUrl}
@@ -934,6 +951,7 @@ function OwnedKnowledgeBasesPage({
                             min={100}
                             max={4000}
                             required
+                            aria-required="true"
                             value={draft.chunkSize}
                             onChange={(event) =>
                               form.field('chunkSize')[1](event.target.value as Draft['chunkSize'])
@@ -956,6 +974,7 @@ function OwnedKnowledgeBasesPage({
                             min={0}
                             max={1000}
                             required
+                            aria-required="true"
                             value={draft.chunkOverlap}
                             onChange={(event) =>
                               form.field('chunkOverlap')[1](

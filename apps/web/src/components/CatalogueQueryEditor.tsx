@@ -74,6 +74,7 @@ export function CatalogueQueryEditor(props: Props) {
           <Input
             {...form.bind('query')}
             id="kb-test-query"
+            aria-required="true"
             value={form.values.query}
             onChange={(event) => {
               form.field('query')[1](event.target.value);

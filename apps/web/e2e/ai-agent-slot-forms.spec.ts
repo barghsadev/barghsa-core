@@ -83,10 +83,19 @@ for (const locale of ['en', 'fa'] as const)
           .locator('fieldset')
           .filter({ has: page.getByRole('checkbox', { name: 'Tariffs', exact: true }) })
           .last();
+      for (const id of ['agent-title', 'agent-model', 'agent-link-mode']) {
+        const field = page.locator(`#${id}`);
+        await expect(field).toHaveAccessibleName(/\S/);
+        await expect(field).toHaveAttribute('aria-required', 'true');
+      }
+      await expect(prompt).not.toHaveAttribute('aria-required', 'true');
+      await expect(prompt).toHaveAccessibleDescription(copy('promptHelp'));
+      await expect(max).not.toHaveAttribute('aria-required', 'true');
       await max.fill('1.5');
       await button(agentText('save')).click();
       await expect(max).toBeFocused();
       await expect(max).toHaveAttribute('aria-invalid', 'true');
+      await expect(max).toHaveAccessibleDescription(copy('maxTokens'));
       expect(agentWrites).toHaveLength(0);
       await max.fill('512');
       await prompt.fill('Preserve my instructions');
@@ -94,6 +103,7 @@ for (const locale of ['en', 'fa'] as const)
       await confirm();
       await expect(group).toBeFocused();
       await expect(group).toHaveAttribute('aria-invalid', 'true');
+      await expect(group).toHaveAccessibleDescription(copy('kbIds'));
       await expect(page.getByRole('checkbox', { name: 'Tariffs', exact: true })).toBeChecked();
       await expect(prompt).toHaveValue('Preserve my instructions');
       await expect(page.locator('main[data-area=admin]')).not.toContainText('private-server-value');

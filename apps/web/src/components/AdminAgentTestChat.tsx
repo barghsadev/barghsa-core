@@ -286,6 +286,7 @@ export function AdminAgentTestChat({
           <select
             id="test-chat-agent"
             {...bind('agentId')}
+            aria-required="true"
             onBlur={() => {
               if (!form.isPending() && !controller.current) form.bind('agentId').onBlur();
             }}
@@ -415,6 +416,7 @@ export function AdminAgentTestChat({
           textareaProps={{
             ...bind('message'),
             id: 'test-chat-message',
+            'aria-required': true,
             value: message,
             disabled: locked || !!pending,
             placeholder: label('message'),

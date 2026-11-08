@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T01:38:46+00:00",
-  "source_commit": "41d76ba0ea01a610cd047a985c47b542961002de",
+  "updated": "2026-11-08T01:49:28+00:00",
+  "source_commit": "b772a75cffe660cd0140390c663082cda927fdb4",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -102420,15 +102420,15 @@
             },
             {
               "path": "apps/web/e2e/knowledge-documents.spec.ts",
-              "sha256": "d674d781e4521a2ee5e898b476db59d57f3e17986fc13f966a92ce84a0794898"
+              "sha256": "61620ba487e7173fd6b71eb8b3152c27eef845c3e6cf352207ca9f0752be57f4"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
+              "sha256": "9e61e7b35e7ed65cbfadd4d86efa32628bf6d15b6bebe543bfff409d204eb1a7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "168b0219671314ef34ee248de979423ec4b89e50c6b5a8e1c8363fcd6063999e"
+              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
             },
             {
               "path": "apps/web/e2e/knowledge-bases.spec.ts",
@@ -102492,23 +102492,23 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseDocumentPicker.tsx",
-              "sha256": "693be3b4020559489ad4508526d4d2230468395eb5086da313090d875f0f3f39"
+              "sha256": "067bbd10fdbca1d47af938c77d5d1ccd7f7c4bbc16fe17e390cf2d1e781b40a4"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseUpload.tsx",
-              "sha256": "24d8868101b2d7b7cd57f58d3e23436d48d1393c9281979f92780a1f11c8294b"
+              "sha256": "a150f2d20208a75b3529fe14a69ace3e3df2d286dd855d352eb1f815f7d953b7"
             },
             {
               "path": "apps/web/src/components/CatalogueQueryEditor.tsx",
-              "sha256": "b066a646a0289bca2ae29b8f3fd94cf4d6c6d91e1a31d321e1364cca1eb43c90"
+              "sha256": "540e00bd788a8dbe45fbc0279dacfdb1009869a7fa6c0d909553eb7c3a6fd980"
             },
             {
               "path": "apps/web/src/components/CatalogueRelationEditor.tsx",
-              "sha256": "2c61293ee3613373426e4693fa91bf49a9e8a9a1a06f1e3da6056d21472ccefd"
+              "sha256": "2c43adeabfaa774c30f8bd35235b8f5f39b990da7fbd39f455a1a04b8a337a6e"
             },
             {
               "path": "apps/web/src/components/CatalogueRecordTable.tsx",
@@ -103060,7 +103060,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/lib/knowledge-policy-form.ts",
@@ -103084,7 +103084,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueRelationEditor.tsx",
-              "sha256": "2c61293ee3613373426e4693fa91bf49a9e8a9a1a06f1e3da6056d21472ccefd"
+              "sha256": "2c43adeabfaa774c30f8bd35235b8f5f39b990da7fbd39f455a1a04b8a337a6e"
             },
             {
               "path": "apps/web/src/components/CatalogueRecordTable.tsx",
@@ -103112,11 +103112,11 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
+              "sha256": "9e61e7b35e7ed65cbfadd4d86efa32628bf6d15b6bebe543bfff409d204eb1a7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "168b0219671314ef34ee248de979423ec4b89e50c6b5a8e1c8363fcd6063999e"
+              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -103599,7 +103599,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -103615,7 +103615,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
@@ -103663,7 +103663,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
-              "sha256": "f309e28ca33fc1cdb08382d94824b1cfc5fc26c962e6d41892ba20b03473ad91"
+              "sha256": "f2d62f219ad6fbef31e8e4d5a61ca282338f0fc9fdf42c32827e23bdf1e4210d"
             },
             {
               "path": "apps/web/e2e/agent-slots.spec.ts",
@@ -103671,7 +103671,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agent-slot-forms.spec.ts",
-              "sha256": "64c7700355db2f1a329d72a3bb733602921c444e7451c0bb67c6bbae3efabaae"
+              "sha256": "32eb797f16cd23ec797d139dd576ffb42e01aab32beebccd26aaeb8368d6c475"
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
@@ -104424,7 +104424,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
-              "sha256": "f309e28ca33fc1cdb08382d94824b1cfc5fc26c962e6d41892ba20b03473ad91"
+              "sha256": "f2d62f219ad6fbef31e8e4d5a61ca282338f0fc9fdf42c32827e23bdf1e4210d"
             },
             {
               "path": "apps/web/e2e/assistant-chat-forms.spec.ts",
@@ -104456,7 +104456,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -104524,7 +104524,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
@@ -442301,7 +442301,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-documents.spec.ts",
-              "sha256": "d674d781e4521a2ee5e898b476db59d57f3e17986fc13f966a92ce84a0794898"
+              "sha256": "61620ba487e7173fd6b71eb8b3152c27eef845c3e6cf352207ca9f0752be57f4"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -442789,7 +442789,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-documents.spec.ts",
-              "sha256": "d674d781e4521a2ee5e898b476db59d57f3e17986fc13f966a92ce84a0794898"
+              "sha256": "61620ba487e7173fd6b71eb8b3152c27eef845c3e6cf352207ca9f0752be57f4"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -443560,7 +443560,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-documents.spec.ts",
-              "sha256": "d674d781e4521a2ee5e898b476db59d57f3e17986fc13f966a92ce84a0794898"
+              "sha256": "61620ba487e7173fd6b71eb8b3152c27eef845c3e6cf352207ca9f0752be57f4"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -443950,7 +443950,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-documents.spec.ts",
-              "sha256": "d674d781e4521a2ee5e898b476db59d57f3e17986fc13f966a92ce84a0794898"
+              "sha256": "61620ba487e7173fd6b71eb8b3152c27eef845c3e6cf352207ca9f0752be57f4"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -444856,7 +444856,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-documents.spec.ts",
-              "sha256": "d674d781e4521a2ee5e898b476db59d57f3e17986fc13f966a92ce84a0794898"
+              "sha256": "61620ba487e7173fd6b71eb8b3152c27eef845c3e6cf352207ca9f0752be57f4"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -445338,7 +445338,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-documents.spec.ts",
-              "sha256": "d674d781e4521a2ee5e898b476db59d57f3e17986fc13f966a92ce84a0794898"
+              "sha256": "61620ba487e7173fd6b71eb8b3152c27eef845c3e6cf352207ca9f0752be57f4"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -445844,7 +445844,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-documents.spec.ts",
-              "sha256": "d674d781e4521a2ee5e898b476db59d57f3e17986fc13f966a92ce84a0794898"
+              "sha256": "61620ba487e7173fd6b71eb8b3152c27eef845c3e6cf352207ca9f0752be57f4"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -446350,7 +446350,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-documents.spec.ts",
-              "sha256": "d674d781e4521a2ee5e898b476db59d57f3e17986fc13f966a92ce84a0794898"
+              "sha256": "61620ba487e7173fd6b71eb8b3152c27eef845c3e6cf352207ca9f0752be57f4"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -446856,7 +446856,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-documents.spec.ts",
-              "sha256": "d674d781e4521a2ee5e898b476db59d57f3e17986fc13f966a92ce84a0794898"
+              "sha256": "61620ba487e7173fd6b71eb8b3152c27eef845c3e6cf352207ca9f0752be57f4"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -447361,7 +447361,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-documents.spec.ts",
-              "sha256": "d674d781e4521a2ee5e898b476db59d57f3e17986fc13f966a92ce84a0794898"
+              "sha256": "61620ba487e7173fd6b71eb8b3152c27eef845c3e6cf352207ca9f0752be57f4"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -451715,15 +451715,15 @@
             },
             {
               "path": "apps/web/e2e/knowledge-documents.spec.ts",
-              "sha256": "d674d781e4521a2ee5e898b476db59d57f3e17986fc13f966a92ce84a0794898"
+              "sha256": "61620ba487e7173fd6b71eb8b3152c27eef845c3e6cf352207ca9f0752be57f4"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
+              "sha256": "9e61e7b35e7ed65cbfadd4d86efa32628bf6d15b6bebe543bfff409d204eb1a7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "168b0219671314ef34ee248de979423ec4b89e50c6b5a8e1c8363fcd6063999e"
+              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
             },
             {
               "path": "apps/web/e2e/knowledge-bases.spec.ts",
@@ -451787,23 +451787,23 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseDocumentPicker.tsx",
-              "sha256": "693be3b4020559489ad4508526d4d2230468395eb5086da313090d875f0f3f39"
+              "sha256": "067bbd10fdbca1d47af938c77d5d1ccd7f7c4bbc16fe17e390cf2d1e781b40a4"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseUpload.tsx",
-              "sha256": "24d8868101b2d7b7cd57f58d3e23436d48d1393c9281979f92780a1f11c8294b"
+              "sha256": "a150f2d20208a75b3529fe14a69ace3e3df2d286dd855d352eb1f815f7d953b7"
             },
             {
               "path": "apps/web/src/components/CatalogueQueryEditor.tsx",
-              "sha256": "b066a646a0289bca2ae29b8f3fd94cf4d6c6d91e1a31d321e1364cca1eb43c90"
+              "sha256": "540e00bd788a8dbe45fbc0279dacfdb1009869a7fa6c0d909553eb7c3a6fd980"
             },
             {
               "path": "apps/web/src/components/CatalogueRelationEditor.tsx",
-              "sha256": "2c61293ee3613373426e4693fa91bf49a9e8a9a1a06f1e3da6056d21472ccefd"
+              "sha256": "2c43adeabfaa774c30f8bd35235b8f5f39b990da7fbd39f455a1a04b8a337a6e"
             },
             {
               "path": "apps/web/src/components/CatalogueRecordTable.tsx",
@@ -452167,15 +452167,15 @@
             },
             {
               "path": "apps/web/e2e/knowledge-documents.spec.ts",
-              "sha256": "d674d781e4521a2ee5e898b476db59d57f3e17986fc13f966a92ce84a0794898"
+              "sha256": "61620ba487e7173fd6b71eb8b3152c27eef845c3e6cf352207ca9f0752be57f4"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
+              "sha256": "9e61e7b35e7ed65cbfadd4d86efa32628bf6d15b6bebe543bfff409d204eb1a7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "168b0219671314ef34ee248de979423ec4b89e50c6b5a8e1c8363fcd6063999e"
+              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
             },
             {
               "path": "apps/web/e2e/knowledge-bases.spec.ts",
@@ -452239,23 +452239,23 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseDocumentPicker.tsx",
-              "sha256": "693be3b4020559489ad4508526d4d2230468395eb5086da313090d875f0f3f39"
+              "sha256": "067bbd10fdbca1d47af938c77d5d1ccd7f7c4bbc16fe17e390cf2d1e781b40a4"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseUpload.tsx",
-              "sha256": "24d8868101b2d7b7cd57f58d3e23436d48d1393c9281979f92780a1f11c8294b"
+              "sha256": "a150f2d20208a75b3529fe14a69ace3e3df2d286dd855d352eb1f815f7d953b7"
             },
             {
               "path": "apps/web/src/components/CatalogueQueryEditor.tsx",
-              "sha256": "b066a646a0289bca2ae29b8f3fd94cf4d6c6d91e1a31d321e1364cca1eb43c90"
+              "sha256": "540e00bd788a8dbe45fbc0279dacfdb1009869a7fa6c0d909553eb7c3a6fd980"
             },
             {
               "path": "apps/web/src/components/CatalogueRelationEditor.tsx",
-              "sha256": "2c61293ee3613373426e4693fa91bf49a9e8a9a1a06f1e3da6056d21472ccefd"
+              "sha256": "2c43adeabfaa774c30f8bd35235b8f5f39b990da7fbd39f455a1a04b8a337a6e"
             },
             {
               "path": "apps/web/src/components/CatalogueRecordTable.tsx",
@@ -452621,15 +452621,15 @@
             },
             {
               "path": "apps/web/e2e/knowledge-documents.spec.ts",
-              "sha256": "d674d781e4521a2ee5e898b476db59d57f3e17986fc13f966a92ce84a0794898"
+              "sha256": "61620ba487e7173fd6b71eb8b3152c27eef845c3e6cf352207ca9f0752be57f4"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
+              "sha256": "9e61e7b35e7ed65cbfadd4d86efa32628bf6d15b6bebe543bfff409d204eb1a7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "168b0219671314ef34ee248de979423ec4b89e50c6b5a8e1c8363fcd6063999e"
+              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
             },
             {
               "path": "apps/web/e2e/knowledge-bases.spec.ts",
@@ -452693,23 +452693,23 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseDocumentPicker.tsx",
-              "sha256": "693be3b4020559489ad4508526d4d2230468395eb5086da313090d875f0f3f39"
+              "sha256": "067bbd10fdbca1d47af938c77d5d1ccd7f7c4bbc16fe17e390cf2d1e781b40a4"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseUpload.tsx",
-              "sha256": "24d8868101b2d7b7cd57f58d3e23436d48d1393c9281979f92780a1f11c8294b"
+              "sha256": "a150f2d20208a75b3529fe14a69ace3e3df2d286dd855d352eb1f815f7d953b7"
             },
             {
               "path": "apps/web/src/components/CatalogueQueryEditor.tsx",
-              "sha256": "b066a646a0289bca2ae29b8f3fd94cf4d6c6d91e1a31d321e1364cca1eb43c90"
+              "sha256": "540e00bd788a8dbe45fbc0279dacfdb1009869a7fa6c0d909553eb7c3a6fd980"
             },
             {
               "path": "apps/web/src/components/CatalogueRelationEditor.tsx",
-              "sha256": "2c61293ee3613373426e4693fa91bf49a9e8a9a1a06f1e3da6056d21472ccefd"
+              "sha256": "2c43adeabfaa774c30f8bd35235b8f5f39b990da7fbd39f455a1a04b8a337a6e"
             },
             {
               "path": "apps/web/src/components/CatalogueRecordTable.tsx",
@@ -453074,15 +453074,15 @@
             },
             {
               "path": "apps/web/e2e/knowledge-documents.spec.ts",
-              "sha256": "d674d781e4521a2ee5e898b476db59d57f3e17986fc13f966a92ce84a0794898"
+              "sha256": "61620ba487e7173fd6b71eb8b3152c27eef845c3e6cf352207ca9f0752be57f4"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
+              "sha256": "9e61e7b35e7ed65cbfadd4d86efa32628bf6d15b6bebe543bfff409d204eb1a7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "168b0219671314ef34ee248de979423ec4b89e50c6b5a8e1c8363fcd6063999e"
+              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
             },
             {
               "path": "apps/web/e2e/knowledge-bases.spec.ts",
@@ -453146,23 +453146,23 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseDocumentPicker.tsx",
-              "sha256": "693be3b4020559489ad4508526d4d2230468395eb5086da313090d875f0f3f39"
+              "sha256": "067bbd10fdbca1d47af938c77d5d1ccd7f7c4bbc16fe17e390cf2d1e781b40a4"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseUpload.tsx",
-              "sha256": "24d8868101b2d7b7cd57f58d3e23436d48d1393c9281979f92780a1f11c8294b"
+              "sha256": "a150f2d20208a75b3529fe14a69ace3e3df2d286dd855d352eb1f815f7d953b7"
             },
             {
               "path": "apps/web/src/components/CatalogueQueryEditor.tsx",
-              "sha256": "b066a646a0289bca2ae29b8f3fd94cf4d6c6d91e1a31d321e1364cca1eb43c90"
+              "sha256": "540e00bd788a8dbe45fbc0279dacfdb1009869a7fa6c0d909553eb7c3a6fd980"
             },
             {
               "path": "apps/web/src/components/CatalogueRelationEditor.tsx",
-              "sha256": "2c61293ee3613373426e4693fa91bf49a9e8a9a1a06f1e3da6056d21472ccefd"
+              "sha256": "2c43adeabfaa774c30f8bd35235b8f5f39b990da7fbd39f455a1a04b8a337a6e"
             },
             {
               "path": "apps/web/src/components/CatalogueRecordTable.tsx",
@@ -453527,7 +453527,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/lib/knowledge-policy-form.ts",
@@ -453551,7 +453551,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueRelationEditor.tsx",
-              "sha256": "2c61293ee3613373426e4693fa91bf49a9e8a9a1a06f1e3da6056d21472ccefd"
+              "sha256": "2c43adeabfaa774c30f8bd35235b8f5f39b990da7fbd39f455a1a04b8a337a6e"
             },
             {
               "path": "apps/web/src/components/CatalogueRecordTable.tsx",
@@ -453579,11 +453579,11 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
+              "sha256": "9e61e7b35e7ed65cbfadd4d86efa32628bf6d15b6bebe543bfff409d204eb1a7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "168b0219671314ef34ee248de979423ec4b89e50c6b5a8e1c8363fcd6063999e"
+              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -453904,7 +453904,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/lib/knowledge-policy-form.ts",
@@ -453928,7 +453928,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueRelationEditor.tsx",
-              "sha256": "2c61293ee3613373426e4693fa91bf49a9e8a9a1a06f1e3da6056d21472ccefd"
+              "sha256": "2c43adeabfaa774c30f8bd35235b8f5f39b990da7fbd39f455a1a04b8a337a6e"
             },
             {
               "path": "apps/web/src/components/CatalogueRecordTable.tsx",
@@ -453956,11 +453956,11 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
+              "sha256": "9e61e7b35e7ed65cbfadd4d86efa32628bf6d15b6bebe543bfff409d204eb1a7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "168b0219671314ef34ee248de979423ec4b89e50c6b5a8e1c8363fcd6063999e"
+              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -454277,7 +454277,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/lib/knowledge-policy-form.ts",
@@ -454301,7 +454301,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueRelationEditor.tsx",
-              "sha256": "2c61293ee3613373426e4693fa91bf49a9e8a9a1a06f1e3da6056d21472ccefd"
+              "sha256": "2c43adeabfaa774c30f8bd35235b8f5f39b990da7fbd39f455a1a04b8a337a6e"
             },
             {
               "path": "apps/web/src/components/CatalogueRecordTable.tsx",
@@ -454329,11 +454329,11 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
+              "sha256": "9e61e7b35e7ed65cbfadd4d86efa32628bf6d15b6bebe543bfff409d204eb1a7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "168b0219671314ef34ee248de979423ec4b89e50c6b5a8e1c8363fcd6063999e"
+              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -454666,7 +454666,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -454682,7 +454682,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
@@ -454730,7 +454730,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
-              "sha256": "f309e28ca33fc1cdb08382d94824b1cfc5fc26c962e6d41892ba20b03473ad91"
+              "sha256": "f2d62f219ad6fbef31e8e4d5a61ca282338f0fc9fdf42c32827e23bdf1e4210d"
             },
             {
               "path": "apps/web/e2e/agent-slots.spec.ts",
@@ -454738,7 +454738,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agent-slot-forms.spec.ts",
-              "sha256": "64c7700355db2f1a329d72a3bb733602921c444e7451c0bb67c6bbae3efabaae"
+              "sha256": "32eb797f16cd23ec797d139dd576ffb42e01aab32beebccd26aaeb8368d6c475"
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
@@ -455143,7 +455143,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -455159,7 +455159,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
@@ -455207,7 +455207,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
-              "sha256": "f309e28ca33fc1cdb08382d94824b1cfc5fc26c962e6d41892ba20b03473ad91"
+              "sha256": "f2d62f219ad6fbef31e8e4d5a61ca282338f0fc9fdf42c32827e23bdf1e4210d"
             },
             {
               "path": "apps/web/e2e/agent-slots.spec.ts",
@@ -455215,7 +455215,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agent-slot-forms.spec.ts",
-              "sha256": "64c7700355db2f1a329d72a3bb733602921c444e7451c0bb67c6bbae3efabaae"
+              "sha256": "32eb797f16cd23ec797d139dd576ffb42e01aab32beebccd26aaeb8368d6c475"
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
@@ -455646,7 +455646,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -455662,7 +455662,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
@@ -455710,7 +455710,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
-              "sha256": "f309e28ca33fc1cdb08382d94824b1cfc5fc26c962e6d41892ba20b03473ad91"
+              "sha256": "f2d62f219ad6fbef31e8e4d5a61ca282338f0fc9fdf42c32827e23bdf1e4210d"
             },
             {
               "path": "apps/web/e2e/agent-slots.spec.ts",
@@ -455718,7 +455718,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agent-slot-forms.spec.ts",
-              "sha256": "64c7700355db2f1a329d72a3bb733602921c444e7451c0bb67c6bbae3efabaae"
+              "sha256": "32eb797f16cd23ec797d139dd576ffb42e01aab32beebccd26aaeb8368d6c475"
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
@@ -456122,7 +456122,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -456138,7 +456138,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
@@ -456186,7 +456186,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
-              "sha256": "f309e28ca33fc1cdb08382d94824b1cfc5fc26c962e6d41892ba20b03473ad91"
+              "sha256": "f2d62f219ad6fbef31e8e4d5a61ca282338f0fc9fdf42c32827e23bdf1e4210d"
             },
             {
               "path": "apps/web/e2e/agent-slots.spec.ts",
@@ -456194,7 +456194,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agent-slot-forms.spec.ts",
-              "sha256": "64c7700355db2f1a329d72a3bb733602921c444e7451c0bb67c6bbae3efabaae"
+              "sha256": "32eb797f16cd23ec797d139dd576ffb42e01aab32beebccd26aaeb8368d6c475"
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
@@ -456623,7 +456623,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -456639,7 +456639,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
@@ -456687,7 +456687,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
-              "sha256": "f309e28ca33fc1cdb08382d94824b1cfc5fc26c962e6d41892ba20b03473ad91"
+              "sha256": "f2d62f219ad6fbef31e8e4d5a61ca282338f0fc9fdf42c32827e23bdf1e4210d"
             },
             {
               "path": "apps/web/e2e/agent-slots.spec.ts",
@@ -456695,7 +456695,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agent-slot-forms.spec.ts",
-              "sha256": "64c7700355db2f1a329d72a3bb733602921c444e7451c0bb67c6bbae3efabaae"
+              "sha256": "32eb797f16cd23ec797d139dd576ffb42e01aab32beebccd26aaeb8368d6c475"
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
@@ -457170,7 +457170,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -457735,7 +457735,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -458298,7 +458298,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -458861,7 +458861,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -459923,7 +459923,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -460578,7 +460578,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
-              "sha256": "f309e28ca33fc1cdb08382d94824b1cfc5fc26c962e6d41892ba20b03473ad91"
+              "sha256": "f2d62f219ad6fbef31e8e4d5a61ca282338f0fc9fdf42c32827e23bdf1e4210d"
             },
             {
               "path": "apps/web/e2e/assistant-chat-forms.spec.ts",
@@ -460610,7 +460610,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -460678,7 +460678,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
@@ -461659,7 +461659,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -462221,7 +462221,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -462784,7 +462784,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -463348,7 +463348,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -463934,7 +463934,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -464496,7 +464496,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -490544,7 +490544,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "docs/design/design-system.md",
@@ -490954,7 +490954,7 @@
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseDocumentPicker.tsx",
-              "sha256": "693be3b4020559489ad4508526d4d2230468395eb5086da313090d875f0f3f39"
+              "sha256": "067bbd10fdbca1d47af938c77d5d1ccd7f7c4bbc16fe17e390cf2d1e781b40a4"
             },
             {
               "path": "apps/web/src/components/LegalProfileDocuments.tsx",
@@ -491098,7 +491098,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
@@ -491106,7 +491106,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -491170,7 +491170,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -491927,7 +491927,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "docs/design/design-system.md",
@@ -492633,7 +492633,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AdminBusinessWorkCounts.tsx",
@@ -492793,11 +492793,11 @@
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseDocumentPicker.tsx",
-              "sha256": "693be3b4020559489ad4508526d4d2230468395eb5086da313090d875f0f3f39"
+              "sha256": "067bbd10fdbca1d47af938c77d5d1ccd7f7c4bbc16fe17e390cf2d1e781b40a4"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseUpload.tsx",
-              "sha256": "24d8868101b2d7b7cd57f58d3e23436d48d1393c9281979f92780a1f11c8294b"
+              "sha256": "a150f2d20208a75b3529fe14a69ace3e3df2d286dd855d352eb1f815f7d953b7"
             },
             {
               "path": "apps/web/src/components/LatestOrdersWidget.tsx",
@@ -494285,7 +494285,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
@@ -494321,7 +494321,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -495167,7 +495167,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
@@ -495203,7 +495203,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -495990,7 +495990,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
@@ -496026,7 +496026,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -497450,7 +497450,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AdminBusinessWorkCounts.tsx",
@@ -497610,11 +497610,11 @@
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseDocumentPicker.tsx",
-              "sha256": "693be3b4020559489ad4508526d4d2230468395eb5086da313090d875f0f3f39"
+              "sha256": "067bbd10fdbca1d47af938c77d5d1ccd7f7c4bbc16fe17e390cf2d1e781b40a4"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseUpload.tsx",
-              "sha256": "24d8868101b2d7b7cd57f58d3e23436d48d1393c9281979f92780a1f11c8294b"
+              "sha256": "a150f2d20208a75b3529fe14a69ace3e3df2d286dd855d352eb1f815f7d953b7"
             },
             {
               "path": "apps/web/src/components/LatestOrdersWidget.tsx",
@@ -511459,7 +511459,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
@@ -511467,7 +511467,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -511519,7 +511519,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -512137,11 +512137,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -515190,7 +515190,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "97bd214e29b8ad98a93dc1ca9d1b937450e4341aa8d3fd52eb3b3ae6c9cf0739"
+              "sha256": "eb0f31b1ca902cbaa28683a1ef061ffc8a194a44f2b9037c1590d82ce5a8e5f0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -515570,7 +515570,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "97bd214e29b8ad98a93dc1ca9d1b937450e4341aa8d3fd52eb3b3ae6c9cf0739"
+              "sha256": "eb0f31b1ca902cbaa28683a1ef061ffc8a194a44f2b9037c1590d82ce5a8e5f0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516009,7 +516009,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "97bd214e29b8ad98a93dc1ca9d1b937450e4341aa8d3fd52eb3b3ae6c9cf0739"
+              "sha256": "eb0f31b1ca902cbaa28683a1ef061ffc8a194a44f2b9037c1590d82ce5a8e5f0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516496,7 +516496,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "97bd214e29b8ad98a93dc1ca9d1b937450e4341aa8d3fd52eb3b3ae6c9cf0739"
+              "sha256": "eb0f31b1ca902cbaa28683a1ef061ffc8a194a44f2b9037c1590d82ce5a8e5f0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516704,7 +516704,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Checkout, bank receipts, onboarding, staff manual invoices and both correction modes, claimant and staff recovery, shared OTP controls, CRM address, identity corrections, profile archive, document retention, legal holds, destruction approval, contract template and upload policies have current required-state evidence. Verify the other native, conditional and schema-only required states and linked errors before acceptance."
+        "Checkout, bank receipts, onboarding, staff manual invoices and both correction modes, claimant and staff recovery, shared OTP controls, CRM address, identity corrections, profile archive, document retention, legal holds, destruction approval, contract template, upload policies, AI agent and policy, and knowledge catalogue forms have current required-state evidence. Verify the other native, conditional and schema-only required states and linked errors before acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -516731,7 +516731,8 @@
           "release-0.5-onboarding-required",
           "release-0.5-invoice-recovery-required",
           "release-0.5-crm-required-fields",
-          "release-0.5-document-governance-fields"
+          "release-0.5-document-governance-fields",
+          "release-0.5-ai-knowledge-required-fields"
         ],
         "current_acceptance": null
       }
@@ -516912,7 +516913,7 @@
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseUpload.tsx",
-              "sha256": "24d8868101b2d7b7cd57f58d3e23436d48d1393c9281979f92780a1f11c8294b"
+              "sha256": "a150f2d20208a75b3529fe14a69ace3e3df2d286dd855d352eb1f815f7d953b7"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
@@ -517000,7 +517001,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "97bd214e29b8ad98a93dc1ca9d1b937450e4341aa8d3fd52eb3b3ae6c9cf0739"
+              "sha256": "eb0f31b1ca902cbaa28683a1ef061ffc8a194a44f2b9037c1590d82ce5a8e5f0"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -517808,7 +517809,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "97bd214e29b8ad98a93dc1ca9d1b937450e4341aa8d3fd52eb3b3ae6c9cf0739"
+              "sha256": "eb0f31b1ca902cbaa28683a1ef061ffc8a194a44f2b9037c1590d82ce5a8e5f0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -518236,7 +518237,7 @@
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseUpload.tsx",
-              "sha256": "24d8868101b2d7b7cd57f58d3e23436d48d1393c9281979f92780a1f11c8294b"
+              "sha256": "a150f2d20208a75b3529fe14a69ace3e3df2d286dd855d352eb1f815f7d953b7"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
@@ -518324,7 +518325,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "97bd214e29b8ad98a93dc1ca9d1b937450e4341aa8d3fd52eb3b3ae6c9cf0739"
+              "sha256": "eb0f31b1ca902cbaa28683a1ef061ffc8a194a44f2b9037c1590d82ce5a8e5f0"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -518662,7 +518663,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agent-slot-forms.spec.ts",
-              "sha256": "64c7700355db2f1a329d72a3bb733602921c444e7451c0bb67c6bbae3efabaae"
+              "sha256": "32eb797f16cd23ec797d139dd576ffb42e01aab32beebccd26aaeb8368d6c475"
             },
             {
               "path": "apps/web/e2e/ai-catalogue-tables.spec.ts",
@@ -518766,15 +518767,15 @@
             },
             {
               "path": "apps/web/e2e/knowledge-documents.spec.ts",
-              "sha256": "d674d781e4521a2ee5e898b476db59d57f3e17986fc13f966a92ce84a0794898"
+              "sha256": "61620ba487e7173fd6b71eb8b3152c27eef845c3e6cf352207ca9f0752be57f4"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
+              "sha256": "9e61e7b35e7ed65cbfadd4d86efa32628bf6d15b6bebe543bfff409d204eb1a7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "168b0219671314ef34ee248de979423ec4b89e50c6b5a8e1c8363fcd6063999e"
+              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-tables.spec.ts",
@@ -519042,7 +519043,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "97bd214e29b8ad98a93dc1ca9d1b937450e4341aa8d3fd52eb3b3ae6c9cf0739"
+              "sha256": "eb0f31b1ca902cbaa28683a1ef061ffc8a194a44f2b9037c1590d82ce5a8e5f0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -519490,7 +519491,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agent-slot-forms.spec.ts",
-              "sha256": "64c7700355db2f1a329d72a3bb733602921c444e7451c0bb67c6bbae3efabaae"
+              "sha256": "32eb797f16cd23ec797d139dd576ffb42e01aab32beebccd26aaeb8368d6c475"
             },
             {
               "path": "apps/web/e2e/ai-catalogue-tables.spec.ts",
@@ -519594,15 +519595,15 @@
             },
             {
               "path": "apps/web/e2e/knowledge-documents.spec.ts",
-              "sha256": "d674d781e4521a2ee5e898b476db59d57f3e17986fc13f966a92ce84a0794898"
+              "sha256": "61620ba487e7173fd6b71eb8b3152c27eef845c3e6cf352207ca9f0752be57f4"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
+              "sha256": "9e61e7b35e7ed65cbfadd4d86efa32628bf6d15b6bebe543bfff409d204eb1a7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "168b0219671314ef34ee248de979423ec4b89e50c6b5a8e1c8363fcd6063999e"
+              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-tables.spec.ts",
@@ -519870,7 +519871,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "97bd214e29b8ad98a93dc1ca9d1b937450e4341aa8d3fd52eb3b3ae6c9cf0739"
+              "sha256": "eb0f31b1ca902cbaa28683a1ef061ffc8a194a44f2b9037c1590d82ce5a8e5f0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -520392,7 +520393,7 @@
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseUpload.tsx",
-              "sha256": "24d8868101b2d7b7cd57f58d3e23436d48d1393c9281979f92780a1f11c8294b"
+              "sha256": "a150f2d20208a75b3529fe14a69ace3e3df2d286dd855d352eb1f815f7d953b7"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
@@ -520480,7 +520481,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "97bd214e29b8ad98a93dc1ca9d1b937450e4341aa8d3fd52eb3b3ae6c9cf0739"
+              "sha256": "eb0f31b1ca902cbaa28683a1ef061ffc8a194a44f2b9037c1590d82ce5a8e5f0"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -520818,7 +520819,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agent-slot-forms.spec.ts",
-              "sha256": "64c7700355db2f1a329d72a3bb733602921c444e7451c0bb67c6bbae3efabaae"
+              "sha256": "32eb797f16cd23ec797d139dd576ffb42e01aab32beebccd26aaeb8368d6c475"
             },
             {
               "path": "apps/web/e2e/ai-catalogue-tables.spec.ts",
@@ -520922,15 +520923,15 @@
             },
             {
               "path": "apps/web/e2e/knowledge-documents.spec.ts",
-              "sha256": "d674d781e4521a2ee5e898b476db59d57f3e17986fc13f966a92ce84a0794898"
+              "sha256": "61620ba487e7173fd6b71eb8b3152c27eef845c3e6cf352207ca9f0752be57f4"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
+              "sha256": "9e61e7b35e7ed65cbfadd4d86efa32628bf6d15b6bebe543bfff409d204eb1a7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "168b0219671314ef34ee248de979423ec4b89e50c6b5a8e1c8363fcd6063999e"
+              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-tables.spec.ts",
@@ -521198,7 +521199,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "97bd214e29b8ad98a93dc1ca9d1b937450e4341aa8d3fd52eb3b3ae6c9cf0739"
+              "sha256": "eb0f31b1ca902cbaa28683a1ef061ffc8a194a44f2b9037c1590d82ce5a8e5f0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -545092,7 +545093,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -545104,7 +545105,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -545152,7 +545153,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -546957,7 +546958,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -546969,7 +546970,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -547017,7 +547018,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -548823,7 +548824,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -548835,7 +548836,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -548883,7 +548884,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -550658,7 +550659,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -550670,7 +550671,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -550718,7 +550719,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -552519,7 +552520,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -552531,7 +552532,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -552579,7 +552580,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -554389,7 +554390,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -554401,7 +554402,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -554449,7 +554450,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -556232,7 +556233,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -556244,7 +556245,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -556292,7 +556293,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -558039,7 +558040,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -558051,7 +558052,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -558099,7 +558100,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -559846,7 +559847,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -559858,7 +559859,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -559906,7 +559907,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -561654,7 +561655,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -561666,7 +561667,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -561714,7 +561715,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -563461,7 +563462,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -563473,7 +563474,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -563521,7 +563522,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -565298,7 +565299,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -565310,7 +565311,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -565354,7 +565355,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -567192,7 +567193,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -567204,7 +567205,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -567248,7 +567249,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -569137,7 +569138,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -569149,7 +569150,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -569193,7 +569194,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -571031,7 +571032,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -571043,7 +571044,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -571087,7 +571088,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -572925,7 +572926,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -572937,7 +572938,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -572981,7 +572982,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -574819,7 +574820,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -574831,7 +574832,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -574875,7 +574876,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -576713,7 +576714,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -576725,7 +576726,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -576769,7 +576770,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -578607,7 +578608,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -578619,7 +578620,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -578663,7 +578664,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -580501,7 +580502,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -580513,7 +580514,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -580557,7 +580558,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -582395,7 +582396,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -582407,7 +582408,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -582451,7 +582452,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -584289,7 +584290,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -584301,7 +584302,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -584345,7 +584346,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -586183,7 +586184,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -586195,7 +586196,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -586239,7 +586240,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -588077,7 +588078,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -588089,7 +588090,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -588133,7 +588134,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -590710,7 +590711,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -590722,7 +590723,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -590766,7 +590767,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -592604,7 +592605,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -592616,7 +592617,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -592660,7 +592661,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -594555,7 +594556,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -594567,7 +594568,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -594615,7 +594616,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -596358,7 +596359,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -596370,7 +596371,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -596418,7 +596419,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -598161,7 +598162,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -598173,7 +598174,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -598221,7 +598222,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -599964,7 +599965,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -599976,7 +599977,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -600024,7 +600025,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -601767,7 +601768,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -601779,7 +601780,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -601827,7 +601828,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -603570,7 +603571,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -603582,7 +603583,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -603630,7 +603631,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -605373,7 +605374,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -605385,7 +605386,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -605433,7 +605434,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -633043,7 +633044,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
@@ -633051,7 +633052,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -633107,7 +633108,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -634167,7 +634168,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
@@ -634175,7 +634176,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -634231,7 +634232,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -635291,7 +635292,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
@@ -635299,7 +635300,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -635355,7 +635356,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -636418,7 +636419,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
@@ -636426,7 +636427,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -636482,7 +636483,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -637545,7 +637546,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
@@ -637553,7 +637554,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -637609,7 +637610,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -638699,7 +638700,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
@@ -638707,7 +638708,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -638763,7 +638764,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -639822,7 +639823,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
@@ -639830,7 +639831,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -639886,7 +639887,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -640945,7 +640946,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
@@ -640953,7 +640954,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -641009,7 +641010,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -642069,7 +642070,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
@@ -642077,7 +642078,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -642133,7 +642134,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -643211,7 +643212,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
@@ -643219,7 +643220,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -643275,7 +643276,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -644336,7 +644337,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
@@ -644344,7 +644345,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -644400,7 +644401,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -657231,7 +657232,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -657355,7 +657356,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -657913,7 +657914,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -658037,7 +658038,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -658597,7 +658598,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -658721,7 +658722,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -659279,7 +659280,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -659403,7 +659404,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -659960,7 +659961,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -660084,7 +660085,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -661140,7 +661141,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -661264,7 +661265,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -661822,7 +661823,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -661946,7 +661947,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -662505,7 +662506,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -662629,7 +662630,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -663186,7 +663187,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -663310,7 +663311,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -663866,7 +663867,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -663990,7 +663991,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -664546,7 +664547,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -664670,7 +664671,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -665226,7 +665227,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -665350,7 +665351,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -675836,7 +675837,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
@@ -675844,7 +675845,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -675900,7 +675901,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -676958,7 +676959,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
@@ -676966,7 +676967,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -677022,7 +677023,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -678080,7 +678081,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
@@ -678088,7 +678089,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -678144,7 +678145,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -679202,7 +679203,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
@@ -679210,7 +679211,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -679266,7 +679267,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -700754,11 +700755,11 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/ai-agent-slot-forms.spec.ts",
-              "sha256": "64c7700355db2f1a329d72a3bb733602921c444e7451c0bb67c6bbae3efabaae"
+              "sha256": "32eb797f16cd23ec797d139dd576ffb42e01aab32beebccd26aaeb8368d6c475"
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
-              "sha256": "f309e28ca33fc1cdb08382d94824b1cfc5fc26c962e6d41892ba20b03473ad91"
+              "sha256": "f2d62f219ad6fbef31e8e4d5a61ca282338f0fc9fdf42c32827e23bdf1e4210d"
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
@@ -700770,11 +700771,11 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
+              "sha256": "9e61e7b35e7ed65cbfadd4d86efa32628bf6d15b6bebe543bfff409d204eb1a7"
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AdminAiSections.test.tsx",
@@ -700790,7 +700791,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
@@ -700798,11 +700799,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/routes/admin/agent-slots.tsx",
@@ -716934,11 +716935,11 @@
             },
             {
               "path": "apps/web/e2e/ai-agent-slot-forms.spec.ts",
-              "sha256": "64c7700355db2f1a329d72a3bb733602921c444e7451c0bb67c6bbae3efabaae"
+              "sha256": "32eb797f16cd23ec797d139dd576ffb42e01aab32beebccd26aaeb8368d6c475"
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
-              "sha256": "f309e28ca33fc1cdb08382d94824b1cfc5fc26c962e6d41892ba20b03473ad91"
+              "sha256": "f2d62f219ad6fbef31e8e4d5a61ca282338f0fc9fdf42c32827e23bdf1e4210d"
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
@@ -717030,15 +717031,15 @@
             },
             {
               "path": "apps/web/e2e/knowledge-documents.spec.ts",
-              "sha256": "d674d781e4521a2ee5e898b476db59d57f3e17986fc13f966a92ce84a0794898"
+              "sha256": "61620ba487e7173fd6b71eb8b3152c27eef845c3e6cf352207ca9f0752be57f4"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
+              "sha256": "9e61e7b35e7ed65cbfadd4d86efa32628bf6d15b6bebe543bfff409d204eb1a7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "168b0219671314ef34ee248de979423ec4b89e50c6b5a8e1c8363fcd6063999e"
+              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -717126,7 +717127,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AgentPromptTextarea.test.tsx",
@@ -717154,7 +717155,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueQueryEditor.tsx",
-              "sha256": "b066a646a0289bca2ae29b8f3fd94cf4d6c6d91e1a31d321e1364cca1eb43c90"
+              "sha256": "540e00bd788a8dbe45fbc0279dacfdb1009869a7fa6c0d909553eb7c3a6fd980"
             },
             {
               "path": "apps/web/src/components/CatalogueRecordTable.tsx",
@@ -717162,7 +717163,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueRelationEditor.tsx",
-              "sha256": "2c61293ee3613373426e4693fa91bf49a9e8a9a1a06f1e3da6056d21472ccefd"
+              "sha256": "2c43adeabfaa774c30f8bd35235b8f5f39b990da7fbd39f455a1a04b8a337a6e"
             },
             {
               "path": "apps/web/src/components/ConfigPreviewCard.tsx",
@@ -717226,11 +717227,11 @@
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseDocumentPicker.tsx",
-              "sha256": "693be3b4020559489ad4508526d4d2230468395eb5086da313090d875f0f3f39"
+              "sha256": "067bbd10fdbca1d47af938c77d5d1ccd7f7c4bbc16fe17e390cf2d1e781b40a4"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseUpload.tsx",
-              "sha256": "24d8868101b2d7b7cd57f58d3e23436d48d1393c9281979f92780a1f11c8294b"
+              "sha256": "a150f2d20208a75b3529fe14a69ace3e3df2d286dd855d352eb1f815f7d953b7"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -717518,7 +717519,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -717530,7 +717531,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminDeliveryProvidersPage.tsx",
@@ -717554,7 +717555,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -720815,11 +720816,11 @@
             },
             {
               "path": "apps/web/e2e/ai-agent-slot-forms.spec.ts",
-              "sha256": "64c7700355db2f1a329d72a3bb733602921c444e7451c0bb67c6bbae3efabaae"
+              "sha256": "32eb797f16cd23ec797d139dd576ffb42e01aab32beebccd26aaeb8368d6c475"
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
-              "sha256": "f309e28ca33fc1cdb08382d94824b1cfc5fc26c962e6d41892ba20b03473ad91"
+              "sha256": "f2d62f219ad6fbef31e8e4d5a61ca282338f0fc9fdf42c32827e23bdf1e4210d"
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
@@ -720911,15 +720912,15 @@
             },
             {
               "path": "apps/web/e2e/knowledge-documents.spec.ts",
-              "sha256": "d674d781e4521a2ee5e898b476db59d57f3e17986fc13f966a92ce84a0794898"
+              "sha256": "61620ba487e7173fd6b71eb8b3152c27eef845c3e6cf352207ca9f0752be57f4"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
+              "sha256": "9e61e7b35e7ed65cbfadd4d86efa32628bf6d15b6bebe543bfff409d204eb1a7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "168b0219671314ef34ee248de979423ec4b89e50c6b5a8e1c8363fcd6063999e"
+              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -720999,7 +721000,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "1922dfca064a278ea641681e105cd0352360b6646b7a4a89ac2eabafeea02bff"
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
             },
             {
               "path": "apps/web/src/components/AgentPromptTextarea.test.tsx",
@@ -721027,7 +721028,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueQueryEditor.tsx",
-              "sha256": "b066a646a0289bca2ae29b8f3fd94cf4d6c6d91e1a31d321e1364cca1eb43c90"
+              "sha256": "540e00bd788a8dbe45fbc0279dacfdb1009869a7fa6c0d909553eb7c3a6fd980"
             },
             {
               "path": "apps/web/src/components/CatalogueRecordTable.tsx",
@@ -721035,7 +721036,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueRelationEditor.tsx",
-              "sha256": "2c61293ee3613373426e4693fa91bf49a9e8a9a1a06f1e3da6056d21472ccefd"
+              "sha256": "2c43adeabfaa774c30f8bd35235b8f5f39b990da7fbd39f455a1a04b8a337a6e"
             },
             {
               "path": "apps/web/src/components/ConfigPreviewCard.tsx",
@@ -721099,11 +721100,11 @@
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseDocumentPicker.tsx",
-              "sha256": "693be3b4020559489ad4508526d4d2230468395eb5086da313090d875f0f3f39"
+              "sha256": "067bbd10fdbca1d47af938c77d5d1ccd7f7c4bbc16fe17e390cf2d1e781b40a4"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseUpload.tsx",
-              "sha256": "24d8868101b2d7b7cd57f58d3e23436d48d1393c9281979f92780a1f11c8294b"
+              "sha256": "a150f2d20208a75b3529fe14a69ace3e3df2d286dd855d352eb1f815f7d953b7"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -721383,7 +721384,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -721395,7 +721396,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminDeliveryProvidersPage.tsx",
@@ -721419,7 +721420,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -723606,7 +723607,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Document retention, holds, destruction approval, review reasons, template and upload policy fields and staff confirmation passwords passed browser checks. Previously verified CRM form and consumer contrast evidence remains current. Wider form, contrast, command feedback and route state acceptance remain open."
+        "AI agent, policy, and knowledge catalogue forms passed required-state and field feedback checks. Previously verified document, CRM and consumer contrast evidence remains current. Wider form, contrast, command feedback and route state acceptance remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723692,7 +723693,8 @@
           "release-0.5-invoice-receipt-read-deadlines",
           "release-0.5-otp-and-saving-contrast",
           "release-0.5-crm-required-fields",
-          "release-0.5-document-governance-fields"
+          "release-0.5-document-governance-fields",
+          "release-0.5-ai-knowledge-required-fields"
         ]
       }
     },
@@ -724028,7 +724030,7 @@
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseDocumentPicker.tsx",
-              "sha256": "693be3b4020559489ad4508526d4d2230468395eb5086da313090d875f0f3f39"
+              "sha256": "067bbd10fdbca1d47af938c77d5d1ccd7f7c4bbc16fe17e390cf2d1e781b40a4"
             },
             {
               "path": "apps/web/src/components/LanguageSwitcher.tsx",
@@ -724580,7 +724582,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "a152ad5a45c534cea94f471b3199fd4893b4d0acb0c0f994aeb3385817633b6f"
+              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
@@ -724588,7 +724590,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "06e4d8a7818a73529f78fc9dddfbfb0045a4bd6f9403e1dc58b683478945cf77"
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -724672,7 +724674,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "90ec62701be9b4802fbbd44be94087db95e34f7a9bc540b4be5089632c9eeae8"
+              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -725233,6 +725235,22 @@
             {
               "path": "packages/i18n/src/documents.ts",
               "sha256": "a4ca9205a2ccaa96883507807823acb73a685e42376f4cacf3b38dfdf140a751"
+            },
+            {
+              "path": "apps/web/src/components/AdminAgentTestChat.tsx",
+              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+            },
+            {
+              "path": "apps/web/src/components/CatalogueQueryEditor.tsx",
+              "sha256": "540e00bd788a8dbe45fbc0279dacfdb1009869a7fa6c0d909553eb7c3a6fd980"
+            },
+            {
+              "path": "apps/web/src/components/CatalogueRelationEditor.tsx",
+              "sha256": "2c43adeabfaa774c30f8bd35235b8f5f39b990da7fbd39f455a1a04b8a337a6e"
+            },
+            {
+              "path": "apps/web/src/components/KnowledgeBaseUpload.tsx",
+              "sha256": "a150f2d20208a75b3529fe14a69ace3e3df2d286dd855d352eb1f815f7d953b7"
             }
           ],
           "checks": [
@@ -725263,7 +725281,8 @@
             "Invoice receipt deadline recovery passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-receipt-read-deadlines/proof.json",
             "One-time-code and saving checkout contrast passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-otp-and-saving-contrast/proof.json",
             "CRM form accessibility and the public auth copy split passed current source coverage, production size and both immediate and delayed cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-required-fields/proof.json",
-            "Document governance and staff confirmation accessibility passed source coverage and browser checks. Both final asset trees matched the checked production build with all budgets and cold authentication transfers passing. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-governance-fields/proof.json"
+            "Document governance and staff confirmation accessibility passed source coverage and browser checks. Both final asset trees matched the checked production build with all budgets and cold authentication transfers passing. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-governance-fields/proof.json",
+            "AI and knowledge catalogue form accessibility passed source coverage and browser checks. Both final asset trees matched the checked production build with all budgets and cold authentication transfers passing. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-knowledge-required-fields/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -792182,6 +792201,91 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-governance-fields/reviewed.patch",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-governance-fields",
       "release_disposition": "Document governance form evidence recorded. Wider form and v0.5.0 release criteria remain open."
+    },
+    "release-0.5-ai-knowledge-required-fields": {
+      "batch": "release-0.5-ai-knowledge-required-fields",
+      "base_commit": "b772a75cffe660cd0140390c663082cda927fdb4",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/ai-agent-slot-forms.spec.ts",
+          "sha256": "32eb797f16cd23ec797d139dd576ffb42e01aab32beebccd26aaeb8368d6c475"
+        },
+        {
+          "path": "apps/web/e2e/ai-agents.spec.ts",
+          "sha256": "f2d62f219ad6fbef31e8e4d5a61ca282338f0fc9fdf42c32827e23bdf1e4210d"
+        },
+        {
+          "path": "apps/web/e2e/knowledge-documents.spec.ts",
+          "sha256": "61620ba487e7173fd6b71eb8b3152c27eef845c3e6cf352207ca9f0752be57f4"
+        },
+        {
+          "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
+          "sha256": "9e61e7b35e7ed65cbfadd4d86efa32628bf6d15b6bebe543bfff409d204eb1a7"
+        },
+        {
+          "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
+          "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
+        },
+        {
+          "path": "apps/web/src/components/AdminAgentTestChat.tsx",
+          "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+        },
+        {
+          "path": "apps/web/src/components/CatalogueQueryEditor.tsx",
+          "sha256": "540e00bd788a8dbe45fbc0279dacfdb1009869a7fa6c0d909553eb7c3a6fd980"
+        },
+        {
+          "path": "apps/web/src/components/CatalogueRelationEditor.tsx",
+          "sha256": "2c43adeabfaa774c30f8bd35235b8f5f39b990da7fbd39f455a1a04b8a337a6e"
+        },
+        {
+          "path": "apps/web/src/components/KnowledgeBaseDocumentPicker.tsx",
+          "sha256": "067bbd10fdbca1d47af938c77d5d1ccd7f7c4bbc16fe17e390cf2d1e781b40a4"
+        },
+        {
+          "path": "apps/web/src/components/KnowledgeBaseUpload.tsx",
+          "sha256": "a150f2d20208a75b3529fe14a69ace3e3df2d286dd855d352eb1f815f7d953b7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
+          "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
+          "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+        },
+        {
+          "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
+          "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+        },
+        {
+          "path": "docs/design/accessibility.md",
+          "sha256": "eb0f31b1ca902cbaa28683a1ef061ffc8a194a44f2b9037c1590d82ce5a8e5f0"
+        }
+      ],
+      "checks": [
+        "Agent editing and test chat expose their required inputs. System prompts, model defaults and test slots retain their optional semantics. Rejected agent links and numeric limits still point to their own fields.",
+        "Knowledge editors mark title, audience, source type and chunk settings required. URL and API source addresses are required only when shown. URL instructions and errors, optional embedding selection, queries and file attachment controls were verified.",
+        "Policy type, title, priority and the displayed rules expose their conditional required states. Membership selectors are required while priority overrides remain optional. Detachment and unlinking still require the existing typed phrase.",
+        "40 Chromium and 16 Mobile Safari cases, 133 web tests, eight coverage groups, all 98 bundle budgets and six cold authentication transfers passed.",
+        "Critical web coverage includes 17 prior verified arms whose full source spans and branch locations still match. Newly changed controls have fresh scoped browser and unit evidence.",
+        "Thirteen prior native-required entries now have required-state evidence. Nineteen other native declarations and schema-only requirements elsewhere remain to verify."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-knowledge-required-fields/proof.json",
+      "source_scope_proof_sha256": "f3c3798b16192715010a5a4460711335ba139b91f8824833c2cde1003b2db1eb",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-knowledge-required-fields/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-knowledge-required-fields/reviewed.patch",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-knowledge-required-fields",
+      "release_disposition": "AI and knowledge catalogue form evidence recorded. Wider form and v0.5.0 release criteria remain open."
     }
   },
   "historical_improvements": [

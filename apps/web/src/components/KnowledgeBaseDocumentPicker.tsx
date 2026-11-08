@@ -197,6 +197,7 @@ export function KnowledgeBaseDocumentPicker(props: Props) {
             <select
               {...selection.bind('storageKey')}
               id="kb-file"
+              aria-required="true"
               className="max-w-full rounded-md border bg-background p-2"
               value={chosen}
               onChange={(event) => selection.field('storageKey')[1](event.target.value)}
