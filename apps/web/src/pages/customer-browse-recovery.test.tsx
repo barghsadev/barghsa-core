@@ -144,6 +144,40 @@ it('saving catalogue keeps its empty state and history navigation', async () => 
     await close();
   }
 });
+it('saving catalogue reports malformed prices locally and removes purchase links on stale or denied data', async () => {
+  let response = () => Response.json({ plans: [browseSavingPlan] });
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async () => response())
+  );
+  const { host, close } = await mount(SavingsPage);
+  const orderLink = () => host.querySelector('a[href="/savings/order"]');
+  try {
+    expect(orderLink()).not.toBeNull();
+    for (const plan of [
+      { ...browseSavingPlan, hardware: null },
+      { ...browseSavingPlan, price: '1e3' },
+      { ...browseSavingPlan, hardware: [{ ...browseSavingPlan.hardware[0], price: '150.5' }] },
+      { ...browseSavingPlan, agreement: { ...browseSavingPlan.agreement, body: {} } },
+    ]) {
+      response = () => Response.json({ plans: [plan] });
+      await act(async () => button(host, 'Refresh plans').click());
+      expect(host.querySelector('[role="alert"]')).not.toBeNull();
+      expect(host.textContent).toContain(browseSavingPlan.title.en);
+      expect(orderLink()).toBeNull();
+    }
+    response = () => Response.json({ plans: [browseSavingPlan] });
+    await act(async () => button(host, 'Try again').click());
+    expect(orderLink()).not.toBeNull();
+    response = () => new Response('{}', { status: 401 });
+    await act(async () => button(host, 'Refresh plans').click());
+    expect(host.textContent).not.toContain(browseSavingPlan.title.en);
+    expect(orderLink()).toBeNull();
+    expect(host.querySelector('[data-slot="list-content"] button')).toBeNull();
+  } finally {
+    await close();
+  }
+});
 it('malformed electricity refresh retains validated cards and reports the failure', async () => {
   let malformed = false;
   vi.stubGlobal(

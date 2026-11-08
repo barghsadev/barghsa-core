@@ -8,6 +8,7 @@ import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useManualServerRead } from '../hooks/useServerQuery.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { queryKeys } from '../lib/query-keys.js';
+import { ServerQueryError } from '../lib/server-query-client.js';
 
 interface Product {
   id: string;
@@ -20,8 +21,46 @@ interface Product {
 }
 interface SavingPlan extends Product {
   hardware: Product[];
-  agreement: { versionId: string; title: string; body: string; effectiveFrom: string } | null;
+  agreement: { versionId: string; title: string; body: string } | null;
   available: boolean;
+}
+
+function record(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === 'object' && !Array.isArray(value);
+}
+
+function localizedText(value: unknown): boolean {
+  return record(value) && typeof value.fa === 'string' && typeof value.en === 'string';
+}
+
+function validProduct(value: unknown): boolean {
+  return (
+    record(value) &&
+    typeof value.id === 'string' &&
+    value.id.length > 0 &&
+    localizedText(value.title) &&
+    (value.description === null || localizedText(value.description)) &&
+    (value.price === null || (typeof value.price === 'string' && /^-?\d+$/.test(value.price))) &&
+    typeof value.status === 'string' &&
+    (value.stock_tracking === undefined || typeof value.stock_tracking === 'boolean') &&
+    (value.available_count === undefined || Number.isSafeInteger(value.available_count))
+  );
+}
+
+function validPlan(value: unknown): value is SavingPlan {
+  if (!record(value) || !validProduct(value)) return false;
+  const { agreement, hardware } = value;
+  return (
+    typeof value.available === 'boolean' &&
+    Array.isArray(hardware) &&
+    hardware.every(validProduct) &&
+    (agreement === null ||
+      (record(agreement) &&
+        typeof agreement.versionId === 'string' &&
+        agreement.versionId.length > 0 &&
+        typeof agreement.title === 'string' &&
+        typeof agreement.body === 'string'))
+  );
 }
 
 export function SavingsPage() {
@@ -50,20 +89,22 @@ export function SavingsPage() {
     );
     void read(key, controller.signal, async (signal) => {
       const response = await fetch(path, { credentials: 'include', signal });
-      if (!response.ok) throw new Error(String(response.status));
-      const result = (await response.json()) as { plans: SavingPlan[] };
-      if (!result || !Array.isArray(result.plans)) throw new Error('Invalid saving catalogue');
-      return result;
+      if (!response.ok) throw new ServerQueryError(response.status);
+      const result: unknown = await response.json();
+      if (!record(result) || !Array.isArray(result.plans) || !result.plans.every(validPlan)) {
+        throw new Error('Invalid saving catalogue');
+      }
+      return result.plans;
     })
-      .then((result) => {
+      .then((validatedPlans) => {
         if (!controller.signal.aborted) {
-          setPlans(result.plans);
+          setPlans(validatedPlans);
           setState('ready');
         }
       })
       .catch((cause: unknown) => {
         if (controller.signal.aborted) return;
-        if (cause instanceof Error && cause.message === '403') {
+        if (cause instanceof ServerQueryError && (cause.status === 401 || cause.status === 403)) {
           setPlans([]);
           setState('denied');
         } else setState('error');
@@ -171,7 +212,7 @@ export function SavingsPage() {
                   ) : (
                     <p className="text-sm text-muted-foreground">{copy('noAgreement')}</p>
                   )}
-                  {plan.available && (
+                  {state === 'ready' && plan.available && (
                     <Link
                       to="/savings/order"
                       className="touch-action inline-flex min-h-11 items-center rounded-md bg-primary px-4 text-primary-foreground hover:shadow-md"

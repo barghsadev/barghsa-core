@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T18:12:09+00:00",
-  "source_commit": "e7676b842c66b6f63aef505c40ce9cb26fc996cd",
+  "updated": "2026-11-08T18:18:45+00:00",
+  "source_commit": "fb4ee8a6a6c35b83e1fd159d24ae586dbb628acf",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -491363,7 +491363,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -494455,7 +494455,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
@@ -495338,7 +495338,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
@@ -496162,7 +496162,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
+              "sha256": "53fd0a52af242fec2777a184aaf21ba7820336a5dd2eafdf1e6433214a5bfce9"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -508321,7 +508321,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -512336,7 +512336,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
+              "sha256": "53fd0a52af242fec2777a184aaf21ba7820336a5dd2eafdf1e6433214a5bfce9"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -519005,7 +519005,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
+              "sha256": "53fd0a52af242fec2777a184aaf21ba7820336a5dd2eafdf1e6433214a5bfce9"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -520616,7 +520616,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -521444,7 +521444,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -522772,7 +522772,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -567521,7 +567521,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
+              "sha256": "53fd0a52af242fec2777a184aaf21ba7820336a5dd2eafdf1e6433214a5bfce9"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -569416,7 +569416,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
+              "sha256": "53fd0a52af242fec2777a184aaf21ba7820336a5dd2eafdf1e6433214a5bfce9"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -572532,7 +572532,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
@@ -573068,7 +573068,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
+              "sha256": "53fd0a52af242fec2777a184aaf21ba7820336a5dd2eafdf1e6433214a5bfce9"
             },
             {
               "path": "scripts/check-changed-coverage.py",
@@ -574198,7 +574198,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
+              "sha256": "53fd0a52af242fec2777a184aaf21ba7820336a5dd2eafdf1e6433214a5bfce9"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -576093,7 +576093,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
+              "sha256": "53fd0a52af242fec2777a184aaf21ba7820336a5dd2eafdf1e6433214a5bfce9"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577988,7 +577988,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
+              "sha256": "53fd0a52af242fec2777a184aaf21ba7820336a5dd2eafdf1e6433214a5bfce9"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -579883,7 +579883,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
+              "sha256": "53fd0a52af242fec2777a184aaf21ba7820336a5dd2eafdf1e6433214a5bfce9"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581778,7 +581778,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
+              "sha256": "53fd0a52af242fec2777a184aaf21ba7820336a5dd2eafdf1e6433214a5bfce9"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -583673,7 +583673,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
+              "sha256": "53fd0a52af242fec2777a184aaf21ba7820336a5dd2eafdf1e6433214a5bfce9"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -585568,7 +585568,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
+              "sha256": "53fd0a52af242fec2777a184aaf21ba7820336a5dd2eafdf1e6433214a5bfce9"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -587463,7 +587463,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
+              "sha256": "53fd0a52af242fec2777a184aaf21ba7820336a5dd2eafdf1e6433214a5bfce9"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589358,7 +589358,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
+              "sha256": "53fd0a52af242fec2777a184aaf21ba7820336a5dd2eafdf1e6433214a5bfce9"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591253,7 +591253,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
+              "sha256": "53fd0a52af242fec2777a184aaf21ba7820336a5dd2eafdf1e6433214a5bfce9"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593148,7 +593148,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
+              "sha256": "53fd0a52af242fec2777a184aaf21ba7820336a5dd2eafdf1e6433214a5bfce9"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594412,7 +594412,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
+              "sha256": "53fd0a52af242fec2777a184aaf21ba7820336a5dd2eafdf1e6433214a5bfce9"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595783,7 +595783,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
+              "sha256": "53fd0a52af242fec2777a184aaf21ba7820336a5dd2eafdf1e6433214a5bfce9"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -597678,7 +597678,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
+              "sha256": "53fd0a52af242fec2777a184aaf21ba7820336a5dd2eafdf1e6433214a5bfce9"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -598482,7 +598482,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The customer dashboard now has current scoped loading, empty, error and malformed-response evidence. Earlier scoped team, ownership, saving/solar detail, document, contract, activation rules, raw electricity drafts, direct catalogue, VAT, branding and settings evidence remains on record. Reconcile the saving catalogue and remaining conditional list and detail states."
+        "The saving catalogue and customer dashboard have current scoped loading, empty and recovery evidence. Earlier scoped team, ownership, saving/solar detail, document, contract, activation rules, raw electricity drafts, direct catalogue, VAT, branding and settings evidence remains on record. Reconcile remaining conditional list and detail states against the route census."
       ],
       "owner": null,
       "depends_on": [],
@@ -598581,7 +598581,8 @@
           "release-0.5-ownership-decision-receipt",
           "release-0.5-activation-raw-draft-recovery",
           "release-0.5-team-member-recovery",
-          "release-0.5-dashboard-state-recovery"
+          "release-0.5-dashboard-state-recovery",
+          "release-0.5-saving-catalogue-recovery"
         ],
         "current_acceptance": null
       }
@@ -637789,7 +637790,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -638913,7 +638914,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -640037,7 +640038,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -641164,7 +641165,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -642291,7 +642292,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -643445,7 +643446,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -644568,7 +644569,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -645691,7 +645692,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -646815,7 +646816,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -647957,7 +647958,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -649082,7 +649083,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -680582,7 +680583,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -681704,7 +681705,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -682826,7 +682827,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -683948,7 +683949,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -728225,7 +728226,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Command feedback is accepted and customer dashboard conditional recovery has current evidence. Remaining conditional UI states, required GitHub accessibility enforcement and the staging Sentry receipt remain open."
+        "Command feedback is accepted. Customer dashboard and saving catalogue conditional recovery have current evidence. Remaining conditional UI states, required GitHub accessibility enforcement and the staging Sentry receipt remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -728389,7 +728390,8 @@
           "release-0.5-ownership-decision-receipt",
           "release-0.5-activation-raw-draft-recovery",
           "release-0.5-team-member-recovery",
-          "release-0.5-dashboard-state-recovery"
+          "release-0.5-dashboard-state-recovery",
+          "release-0.5-saving-catalogue-recovery"
         ]
       }
     },
@@ -729529,7 +729531,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+              "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
             },
             {
               "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
@@ -730293,7 +730295,8 @@
             "Renewed ownership decision browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-decision-receipt/proof.json",
             "Renewed activation rule and raw draft browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-activation-raw-draft-recovery/proof.json",
             "Renewed membership recovery browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-member-recovery/proof.json",
-            "Renewed dashboard browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-state-recovery/proof.json"
+            "Renewed dashboard browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-state-recovery/proof.json",
+            "Renewed saving catalogue browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-catalogue-recovery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -805413,6 +805416,96 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-state-recovery/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-state-recovery/reviewed.patch",
       "release_disposition": "Recorded customer dashboard conditional recovery. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-saving-catalogue-recovery": {
+      "batch": "release-0.5-saving-catalogue-recovery",
+      "base_commit": "fb4ee8a6a6c35b83e1fd159d24ae586dbb628acf",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+        },
+        {
+          "path": "apps/api/src/catalogue/saving-catalogue.controller.ts",
+          "sha256": "c8a166410a665e3e7a4ff800c4fd791202702780eef02a18bdf9427364985349"
+        },
+        {
+          "path": "apps/api/src/catalogue/saving-catalogue.service.ts",
+          "sha256": "2535ab1ed97d1980b98814f54420c443577b9a20da534710abd2daf9df41b44e"
+        },
+        {
+          "path": "apps/web/e2e/customer-browse-recovery.spec.ts",
+          "sha256": "a6fcc7d0e5c3d9ff7266248f353fc5fe69c9782c89197234086278b0d87c5ed4"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/hooks/useServerQuery.ts",
+          "sha256": "d48dcb712ea4eee821a3b101e12b3d7ee81f11277a8b42ab8aeb594cb2fab47d"
+        },
+        {
+          "path": "apps/web/src/lib/profile-context.ts",
+          "sha256": "fb6524f0764564f78d2ee7d9e18631b8294702fffdac58228e31041aa12e9c4d"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "apps/web/src/pages/SavingsPage.tsx",
+          "sha256": "532b8de5a44664ecfc969dfcdd09c941332d44c8dcbe5e27f5ce18264808785e"
+        },
+        {
+          "path": "apps/web/src/pages/customer-browse-recovery.test.tsx",
+          "sha256": "a6ec516fc9419443fc75831781c2a324a3aac4f04ceba4ce752f9d31e03ba7c5"
+        },
+        {
+          "path": "apps/web/src/pages/saving-catalogue.test.tsx",
+          "sha256": "53e52e70e820afd20bfe58dc031bc222d09de74c371e2831634c86d1af67a281"
+        },
+        {
+          "path": "apps/web/src/test/customer-browse-fixtures.ts",
+          "sha256": "251acc5e3d33f2b8afe2d86b16693b7683c9b0dbeafcc12ca7746999fe060c7d"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "53fd0a52af242fec2777a184aaf21ba7820336a5dd2eafdf1e6433214a5bfce9"
+        },
+        {
+          "path": "packages/i18n/src/numbers.ts",
+          "sha256": "42dbecfe63da4d21a29a55b81379a8c3f4bfa331d7c024e4cdc044f6d524f658"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "The saving catalogue validates plan, hardware, price and agreement data before rendering. A recoverable refresh retains the last validated information and expanded terms. Purchase links reappear after a successful read, and either HTTP 401 or 403 clears the previous cards.",
+        "Four native Chromium and mobile Safari cases passed in English and Persian, including scoped accessibility checks. Two instrumented Chromium cases and eleven targeted unit tests passed. All nine coverage groups, 100 bundle budgets, typecheck, lint and formatting passed. All 31 cold-auth assets match the six previously verified browser checks.",
+        "The prior census establishes 93 populated routes and five redirects. This batch supplies conditional evidence for the saving catalogue. Other conditional states remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-catalogue-recovery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-catalogue-recovery/proof.json",
+      "source_scope_proof_sha256": "d5b5a19ddd78d3860b17f1570eac2fe1fedff472102847195825c4723a7b474c",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-catalogue-recovery/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-catalogue-recovery/reviewed.patch",
+      "release_disposition": "Recorded saving catalogue conditional recovery. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -805463,12 +805556,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Reconcile the saving catalogue and remaining v0.5.0 conditional list and detail states against the current route census and scoped evidence. Live Sentry delivery and required GitHub accessibility enforcement remain separate gates."
+    "goal": "Reconcile remaining v0.5.0 conditional list and detail states against the current route census and scoped evidence. Live Sentry delivery and required GitHub accessibility enforcement remain separate gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 command feedback is accepted and customer dashboard conditional recovery has current evidence. Four launch-required criteria remain open, including conditional UI states, full adoption, staging Sentry delivery and GitHub accessibility enforcement. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 command feedback is accepted and conditional recovery for the customer dashboard and saving catalogue has current evidence. Four launch-required criteria remain open, including conditional UI states, full adoption, staging Sentry delivery and GitHub accessibility enforcement. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {

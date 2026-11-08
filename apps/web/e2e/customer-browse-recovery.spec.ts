@@ -89,6 +89,7 @@ for (const { kind, path, api, copy, refresh, retry, denied, title, response } of
       let status = 503,
         hold = false,
         held: Route | undefined;
+      let catalogueResponse: unknown = response;
       const queries: string[] = [];
       await page.route(
         (url) => url.pathname === api,
@@ -100,7 +101,7 @@ for (const { kind, path, api, copy, refresh, retry, denied, title, response } of
             return;
           }
           return status === 200
-            ? route.fulfill({ json: response })
+            ? route.fulfill({ json: catalogueResponse })
             : route.fulfill({ status, json: {} });
         }
       );
@@ -141,6 +142,9 @@ for (const { kind, path, api, copy, refresh, retry, denied, title, response } of
           .check();
       }
       if (kind === 'saving') {
+        await expect(
+          content.getByRole('link', { name: tSaving('startOrder', locale) })
+        ).toBeVisible();
         await content.locator('summary').click();
         await expect(content.getByText('Accepted text', { exact: true })).toBeVisible();
       }
@@ -151,6 +155,10 @@ for (const { kind, path, api, copy, refresh, retry, denied, title, response } of
       await expect(refreshButton).toBeDisabled();
       await expect(content).toHaveAttribute('aria-busy', 'true');
       await expect(content.getByText(title[locale], { exact: true })).toBeVisible();
+      if (kind === 'saving')
+        await expect(
+          content.getByRole('link', { name: tSaving('startOrder', locale) })
+        ).toHaveCount(0);
       if (kind === 'consultation')
         await expect(
           main.getByRole('button', { name: tConsultation('request', locale), exact: true })
@@ -178,8 +186,18 @@ for (const { kind, path, api, copy, refresh, retry, denied, title, response } of
           main.getByRole('button', { name: tConsultation('request', locale), exact: true })
         ).toBeEnabled();
       }
-      if (kind === 'saving')
+      if (kind === 'saving') {
         await expect(content.getByText('Accepted text', { exact: true })).toBeVisible();
+        catalogueResponse = { plans: [{ ...browseSavingPlan, price: '1e3' }] };
+        await refreshButton.click();
+        await expect(content.getByRole('alert')).toContainText(tSaving('error', locale));
+        await expect(content.getByText(title[locale], { exact: true })).toBeVisible();
+        const startOrder = content.getByRole('link', { name: tSaving('startOrder', locale) });
+        await expect(startOrder).toHaveCount(0);
+        catalogueResponse = response;
+        await content.getByRole('button', { name: retry(locale), exact: true }).click();
+        await expect(startOrder).toBeVisible();
+      }
       expect(await list.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
       expect(
         (await new AxeBuilder({ page }).include('[data-slot="list-page"]').analyze()).violations
@@ -194,6 +212,17 @@ for (const { kind, path, api, copy, refresh, retry, denied, title, response } of
       await expect(content.getByRole('alert')).toContainText(copy(denied, locale));
       await expect(content.getByText(title[locale], { exact: true })).toHaveCount(0);
       await expect(content.getByRole('button')).toHaveCount(0);
+      if (kind === 'saving') {
+        const startOrder = content.getByRole('link', { name: tSaving('startOrder', locale) });
+        status = 200;
+        await refreshButton.click();
+        await expect(startOrder).toBeVisible();
+        status = 401;
+        await refreshButton.click();
+        await expect(content.getByRole('alert')).toContainText(copy(denied, locale));
+        await expect(content.getByText(title[locale], { exact: true })).toHaveCount(0);
+        await expect(startOrder).toHaveCount(0);
+      }
       if (kind === 'consultation') {
         await expect(
           main.getByRole('checkbox', { name: tConsultation('confirm', locale), exact: true })

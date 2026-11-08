@@ -149,3 +149,5 @@ For a raw electricity draft, staff check the same order, reason, approval and re
 Team role changes, member removals and invitation withdrawals wait up to 15 seconds for an acknowledgement. An unconfirmed result keeps the old confirmation disabled until a successful membership read. Closing the confirmation keeps the warning and the recovery control in the member details. A fresh read retires the old review and never repeats the write. If the current member changed their own roles or removed their own membership and the recovery read returns unauthorized, the member returns to sign-in.
 
 A customer dashboard widget checks the active profile and its own response before rendering. An incomplete or malformed response opens a retry in that widget while successful cards stay available. A successful empty response keeps its empty-state message. Wallet and invoice amounts stay in exact integer rials.
+
+The saving catalogue keeps its last verified plans and published terms visible during a recoverable refresh. A fresh, valid catalogue is required before it offers an order link again. A sign-in or permission denial clears the previously displayed plans.
