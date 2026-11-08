@@ -102,6 +102,7 @@ const fa: Record<string, string> = {
   'team.username': 'ایمیل یا شماره موبایل',
   'team.role': 'نقش',
   'team.roles': 'نقش‌ها',
+  'team.rolesRequired': 'نقش‌ها (حداقل یک نقش انتخاب کنید)',
   'team.sendInvite': 'ارسال دعوت‌نامه',
   'team.consent':
     'دسترسی فقط پس از پذیرش گیرنده آغاز می‌شود. دعوت‌نامه‌ها پس از هفت روز منقضی می‌شوند.',
@@ -232,6 +233,7 @@ const en: Record<string, string> = {
   'team.username': 'Email or mobile number',
   'team.role': 'Role',
   'team.roles': 'Roles',
+  'team.rolesRequired': 'Roles (choose at least one)',
   'team.sendInvite': 'Send invitation',
   'team.consent':
     'Access starts only after the recipient accepts. Invitations expire after seven days.',

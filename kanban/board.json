@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T02:14:11+00:00",
-  "source_commit": "193388a62f01aa3b9a826feb47e153ace360e955",
+  "updated": "2026-11-08T02:20:40+00:00",
+  "source_commit": "63c746a4e4544e20f4536d5cdb030bf6d2aa4887",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -50766,7 +50766,7 @@
             },
             {
               "path": "packages/i18n/src/team.ts",
-              "sha256": "a65f38a80019cbbbefebe78726f8bb15cedd432bbab61c6804cde9d83efdfc9b"
+              "sha256": "c3bbcbbdf704619a3c7a91be1daa684b67aba8e137cd337079fb26e92030f938"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -51564,7 +51564,7 @@
             },
             {
               "path": "packages/i18n/src/team.ts",
-              "sha256": "a65f38a80019cbbbefebe78726f8bb15cedd432bbab61c6804cde9d83efdfc9b"
+              "sha256": "c3bbcbbdf704619a3c7a91be1daa684b67aba8e137cd337079fb26e92030f938"
             },
             {
               "path": "packages/shared/src/admin/background-jobs.ts",
@@ -53224,7 +53224,7 @@
             },
             {
               "path": "packages/i18n/src/team.ts",
-              "sha256": "a65f38a80019cbbbefebe78726f8bb15cedd432bbab61c6804cde9d83efdfc9b"
+              "sha256": "c3bbcbbdf704619a3c7a91be1daa684b67aba8e137cd337079fb26e92030f938"
             },
             {
               "path": "apps/api/src/profiles/agents.controller.ts",
@@ -54578,7 +54578,7 @@
             },
             {
               "path": "packages/i18n/src/team.ts",
-              "sha256": "a65f38a80019cbbbefebe78726f8bb15cedd432bbab61c6804cde9d83efdfc9b"
+              "sha256": "c3bbcbbdf704619a3c7a91be1daa684b67aba8e137cd337079fb26e92030f938"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -511427,7 +511427,7 @@
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
-              "sha256": "6943d7534d297fa4888bb6ec2a5a09864c09b268e54cc76793b3da4cf52c1e88"
+              "sha256": "44315e735f17aa31b2642f544e5ae05f8866ae3ca8ff3550838ff72f97972d91"
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.tsx",
@@ -512061,7 +512061,7 @@
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
-              "sha256": "6943d7534d297fa4888bb6ec2a5a09864c09b268e54cc76793b3da4cf52c1e88"
+              "sha256": "44315e735f17aa31b2642f544e5ae05f8866ae3ca8ff3550838ff72f97972d91"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -516704,7 +516704,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The full native-required declaration inventory is resolved with current evidence. Previously verified checkout, recovery, CRM, document, AI and knowledge journeys remain current. Verify schema-only and conditional required states and remaining label and error links before acceptance."
+        "Native-required declarations and both customer team role editors have current evidence. Previously verified checkout, recovery, CRM, document, AI and knowledge journeys retain their evidence. Verify the other schema-only and conditional required states and remaining label and error links before acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -516733,7 +516733,8 @@
           "release-0.5-crm-required-fields",
           "release-0.5-document-governance-fields",
           "release-0.5-ai-knowledge-required-fields",
-          "release-0.5-remaining-native-form-controls"
+          "release-0.5-remaining-native-form-controls",
+          "release-0.5-required-team-role-group"
         ],
         "current_acceptance": null
       }
@@ -692953,7 +692954,7 @@
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
-              "sha256": "6943d7534d297fa4888bb6ec2a5a09864c09b268e54cc76793b3da4cf52c1e88"
+              "sha256": "44315e735f17aa31b2642f544e5ae05f8866ae3ca8ff3550838ff72f97972d91"
             },
             {
               "path": "apps/web/src/components/profile-availability-query.test.tsx",
@@ -693583,7 +693584,7 @@
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
-              "sha256": "6943d7534d297fa4888bb6ec2a5a09864c09b268e54cc76793b3da4cf52c1e88"
+              "sha256": "44315e735f17aa31b2642f544e5ae05f8866ae3ca8ff3550838ff72f97972d91"
             },
             {
               "path": "apps/web/src/components/profile-availability-query.test.tsx",
@@ -694213,7 +694214,7 @@
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
-              "sha256": "6943d7534d297fa4888bb6ec2a5a09864c09b268e54cc76793b3da4cf52c1e88"
+              "sha256": "44315e735f17aa31b2642f544e5ae05f8866ae3ca8ff3550838ff72f97972d91"
             },
             {
               "path": "apps/web/src/components/profile-availability-query.test.tsx",
@@ -694844,7 +694845,7 @@
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
-              "sha256": "6943d7534d297fa4888bb6ec2a5a09864c09b268e54cc76793b3da4cf52c1e88"
+              "sha256": "44315e735f17aa31b2642f544e5ae05f8866ae3ca8ff3550838ff72f97972d91"
             },
             {
               "path": "apps/web/src/components/profile-availability-query.test.tsx",
@@ -695474,7 +695475,7 @@
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
-              "sha256": "6943d7534d297fa4888bb6ec2a5a09864c09b268e54cc76793b3da4cf52c1e88"
+              "sha256": "44315e735f17aa31b2642f544e5ae05f8866ae3ca8ff3550838ff72f97972d91"
             },
             {
               "path": "apps/web/src/components/profile-availability-query.test.tsx",
@@ -696104,7 +696105,7 @@
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
-              "sha256": "6943d7534d297fa4888bb6ec2a5a09864c09b268e54cc76793b3da4cf52c1e88"
+              "sha256": "44315e735f17aa31b2642f544e5ae05f8866ae3ca8ff3550838ff72f97972d91"
             },
             {
               "path": "apps/web/src/components/profile-availability-query.test.tsx",
@@ -696734,7 +696735,7 @@
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
-              "sha256": "6943d7534d297fa4888bb6ec2a5a09864c09b268e54cc76793b3da4cf52c1e88"
+              "sha256": "44315e735f17aa31b2642f544e5ae05f8866ae3ca8ff3550838ff72f97972d91"
             },
             {
               "path": "apps/web/src/components/profile-availability-query.test.tsx",
@@ -697365,7 +697366,7 @@
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
-              "sha256": "6943d7534d297fa4888bb6ec2a5a09864c09b268e54cc76793b3da4cf52c1e88"
+              "sha256": "44315e735f17aa31b2642f544e5ae05f8866ae3ca8ff3550838ff72f97972d91"
             },
             {
               "path": "apps/web/src/components/profile-availability-query.test.tsx",
@@ -697995,7 +697996,7 @@
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
-              "sha256": "6943d7534d297fa4888bb6ec2a5a09864c09b268e54cc76793b3da4cf52c1e88"
+              "sha256": "44315e735f17aa31b2642f544e5ae05f8866ae3ca8ff3550838ff72f97972d91"
             },
             {
               "path": "apps/web/src/components/profile-availability-query.test.tsx",
@@ -698625,7 +698626,7 @@
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
-              "sha256": "6943d7534d297fa4888bb6ec2a5a09864c09b268e54cc76793b3da4cf52c1e88"
+              "sha256": "44315e735f17aa31b2642f544e5ae05f8866ae3ca8ff3550838ff72f97972d91"
             },
             {
               "path": "apps/web/src/components/profile-availability-query.test.tsx",
@@ -711677,7 +711678,7 @@
             },
             {
               "path": "packages/i18n/src/team.ts",
-              "sha256": "a65f38a80019cbbbefebe78726f8bb15cedd432bbab61c6804cde9d83efdfc9b"
+              "sha256": "c3bbcbbdf704619a3c7a91be1daa684b67aba8e137cd337079fb26e92030f938"
             },
             {
               "path": "apps/api/src/profiles/agents.controller.ts",
@@ -723611,7 +723612,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The native-required declaration inventory and scoped wallet confirmation recovery have current evidence. Schema-only forms, contrast, broader command feedback and remaining route state adoption stay open."
+        "The native-required declaration inventory, scoped wallet confirmation recovery and both customer team role editors have current evidence. Remaining schema-only forms, contrast, broader command feedback and route state adoption stay open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723700,7 +723701,8 @@
           "release-0.5-document-governance-fields",
           "release-0.5-ai-knowledge-required-fields",
           "release-0.5-remaining-native-form-controls",
-          "release-0.5-wallet-return-deadline"
+          "release-0.5-wallet-return-deadline",
+          "release-0.5-required-team-role-group"
         ]
       }
     },
@@ -724256,7 +724258,7 @@
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
-              "sha256": "6943d7534d297fa4888bb6ec2a5a09864c09b268e54cc76793b3da4cf52c1e88"
+              "sha256": "44315e735f17aa31b2642f544e5ae05f8866ae3ca8ff3550838ff72f97972d91"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
@@ -725265,6 +725267,10 @@
             {
               "path": "packages/i18n/src/wallet-payment-return.ts",
               "sha256": "86d0b06d631e1c9df3bbbe639676a5a5f583be9233b695970a5cfad4e2860126"
+            },
+            {
+              "path": "packages/i18n/src/team.ts",
+              "sha256": "c3bbcbbdf704619a3c7a91be1daa684b67aba8e137cd337079fb26e92030f938"
             }
           ],
           "checks": [
@@ -725298,7 +725304,8 @@
             "Document governance and staff confirmation accessibility passed source coverage and browser checks. Both final asset trees matched the checked production build with all budgets and cold authentication transfers passing. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-governance-fields/proof.json",
             "AI and knowledge catalogue form accessibility passed source coverage and browser checks. Both final asset trees matched the checked production build with all budgets and cold authentication transfers passing. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-knowledge-required-fields/proof.json",
             "Remaining native form controls and related validation links passed source coverage and browser checks. Both final asset trees matched the checked production build with all budgets and cold authentication transfers passing. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-remaining-native-form-controls/proof.json",
-            "Wallet return recovery passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-return-deadline/final/proof.json"
+            "Wallet return recovery passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-return-deadline/final/proof.json",
+            "Customer team role group passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-team-role-group/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -792494,6 +792501,44 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-return-deadline/final/reviewed.patch",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-return-deadline/final",
       "release_disposition": "Wallet return recovery and hosted accessibility step receipts recorded. The v0.5.0 milestone remains open."
+    },
+    "release-0.5-required-team-role-group": {
+      "batch": "release-0.5-required-team-role-group",
+      "base_commit": "63c746a4e4544e20f4536d5cdb030bf6d2aa4887",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/team-form-validation.spec.ts",
+          "sha256": "0e0234c39a1cad3c6feb917b4a7fad5f5168d1344cb5d0393c93eeb9baceee03"
+        },
+        {
+          "path": "apps/web/src/components/TeamMemberFields.tsx",
+          "sha256": "44315e735f17aa31b2642f544e5ae05f8866ae3ca8ff3550838ff72f97972d91"
+        },
+        {
+          "path": "packages/i18n/src/team.ts",
+          "sha256": "c3bbcbbdf704619a3c7a91be1daa684b67aba8e137cd337079fb26e92030f938"
+        }
+      ],
+      "checks": [
+        "Customer team role assignment shows the minimum selection in the native fieldset legend before submission in both the member row and the agent detail dialog. The requirement belongs to the checkbox group. Each role remains independently optional.",
+        "Browser checks verified the visible accessible name, fieldset and focused checkbox error descriptions, no request on empty selection, and retained choices through validated and authorized retry.",
+        "Sixteen production browser cases in Chromium and Mobile Safari covered Persian and English, light and dark. Eight Chromium coverage cases, 62 team unit cases, eight changed-coverage groups, 98 bundle budgets, lint, formatting and both typechecks passed. Six cold auth checks carry forward against 30 identical auth build files."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-team-role-group/proof.json",
+      "source_scope_proof_sha256": "959b75b01c8aa920c42d89c0394c029021f0f516a4d52f9cc1955bf13adb0f2a",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-team-role-group/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-team-role-group/reviewed.patch",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-team-role-group",
+      "release_disposition": "Required role selection verified in both customer team editors. The v0.5.0 milestone remains open."
     }
   },
   "historical_improvements": [

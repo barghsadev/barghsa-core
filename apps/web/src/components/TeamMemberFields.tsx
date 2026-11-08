@@ -136,7 +136,7 @@ export function TeamRoleFields({
             aria-invalid={!!draft.errors.roles || undefined}
             aria-describedby={draft.errors.roles ? draft.errorId('roles') : undefined}
           >
-            <legend className="sr-only">{word('roles')}</legend>
+            <legend className="mb-1 text-sm font-medium">{word('rolesRequired')}</legend>
             {TEAM_ROLES.map((role, index) => (
               <label key={role} className="touch-label flex items-center gap-2">
                 <input

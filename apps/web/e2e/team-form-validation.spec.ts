@@ -233,6 +233,12 @@ for (const locale of ['en', 'fa'] as const)
       const managerName = fa ? 'مدیر' : 'Manager',
         financeName = fa ? 'مالی' : 'Finance',
         legalName = fa ? 'حقوقی' : 'Legal';
+      const roleRequirement = fa
+        ? 'نقش‌ها (حداقل یک نقش انتخاب کنید)'
+        : 'Roles (choose at least one)';
+      const invalidRoles = fa
+        ? 'حداقل یک نقش معتبر انتخاب کنید؛ هر نقش فقط یک بار.'
+        : 'Choose at least one valid role, without duplicates.';
       for (const details of [false, true]) {
         attempts = 0;
         if (details)
@@ -241,14 +247,18 @@ for (const locale of ['en', 'fa'] as const)
             .first()
             .click();
         const editor = details ? page.getByRole('dialog') : page.locator('main');
-        const manager = editor.getByRole('checkbox', { name: managerName, exact: true });
-        const finance = editor.getByRole('checkbox', { name: financeName, exact: true });
-        const legal = editor.getByRole('checkbox', { name: legalName, exact: true });
+        const roles = editor.getByRole('group', { name: roleRequirement, exact: true });
+        await expect(roles.getByText(roleRequirement, { exact: true })).toBeVisible();
+        const manager = roles.getByRole('checkbox', { name: managerName, exact: true });
+        const finance = roles.getByRole('checkbox', { name: financeName, exact: true });
+        const legal = roles.getByRole('checkbox', { name: legalName, exact: true });
         for (const checkbox of [manager, finance, legal])
           if (await checkbox.isChecked()) await checkbox.uncheck();
         await expect(manager).toHaveAttribute('aria-invalid', 'true');
         await editor.getByRole('button', { name: saveName, exact: true }).click();
         await expect(manager).toBeFocused();
+        await expect(roles).toHaveAccessibleDescription(invalidRoles);
+        await expect(manager).toHaveAccessibleDescription(invalidRoles);
         expect(attempts).toBe(0);
         await finance.check();
         await expect(manager).not.toHaveAttribute('aria-invalid', 'true');
