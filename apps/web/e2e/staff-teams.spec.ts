@@ -1,8 +1,10 @@
 import { fullNavigation } from './navigation-fixture';
 import { test, expect } from './coverage-fixture';
 import { DEFAULT_STAFF_ASSIGNMENT_RULES, type StaffAssignmentRules } from '@barghsa/shared/admin';
+import { tStaffTeams as t } from '@barghsa/i18n/staff-team-forms';
+import { approveRiskConfirmation } from './confirmation-fixture';
 const id = '11111111-1111-4111-8111-111111111111';
-for (const locale of ['en', 'fa'])
+for (const locale of ['en', 'fa'] as const)
   test(`staff team and routing changes survive confirmation and failure (${locale})`, async ({
     page,
   }) => {
@@ -100,10 +102,19 @@ for (const locale of ['en', 'fa'])
     fail = true;
     await page.getByRole('button', { name: text.save, exact: true }).click();
     await dialog.getByRole('button', { name: text.confirm, exact: true }).click();
-    await expect(dialog.getByRole('alert')).toBeVisible();
+    const unverified = t('admin.teams.unverified', locale);
+    const confirm = dialog.getByRole('button', { name: text.confirm, exact: true });
+    await expect(dialog.getByRole('alert').filter({ hasText: unverified })).toBeVisible();
+    await expect(confirm).toBeDisabled();
     expect(teams[0].name).toBe('Support');
     fail = false;
-    await dialog.getByRole('button', { name: text.confirm, exact: true }).click();
+    await dialog
+      .getByRole('button', { name: t('admin.teams.refresh', locale), exact: true })
+      .click();
+    await expect(dialog).toHaveCount(0);
+    await expect(page.getByLabel(text.name, { exact: true })).toHaveValue('Support revised');
+    await page.getByRole('button', { name: text.save, exact: true }).click();
+    await confirm.click();
     await expect(dialog).toHaveCount(0);
     expect(teams[0].name).toBe('Support revised');
     await page.getByLabel(text.team, { exact: true }).first().selectOption(id);
@@ -113,7 +124,9 @@ for (const locale of ['en', 'fa'])
     await expect(dialog).toHaveCount(0);
     expect(rules.ticket).toEqual({ teamId: id, strategy: 'load' });
     await page.getByRole('button', { name: text.remove, exact: true }).click();
-    await dialog.getByRole('button', { name: text.confirm, exact: true }).click();
+    await expect(confirm).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'destructive');
+    await confirm.click();
     await expect(dialog).toHaveCount(0);
     expect(teams).toEqual([]);
     await expect(page.getByLabel(text.team, { exact: true }).first()).toHaveValue(id);
@@ -138,7 +151,7 @@ test('denied team settings show a retry without mutation controls', async ({ pag
   await expect(page.locator('form')).toHaveCount(0);
 });
 
-for (const locale of ['en', 'fa']) {
+for (const locale of ['en', 'fa'] as const) {
   test(`fallback priorities reorder, survive failed saves and clear on manual selection (${locale})`, async ({
     page,
   }) => {
@@ -172,14 +185,20 @@ for (const locale of ['en', 'fa']) {
       ticket: { teamId: first, strategy: 'load' },
     };
     let fail = true;
+    let stall = false;
+    const writes: unknown[] = [];
+    await page.clock.install();
     await page.route('**/api/admin/staff-teams', (route) => route.fulfill({ json: teams }));
     await page.route('**/api/admin/staff-teams/members?*', (route) =>
       route.fulfill({ json: { items: [], selected: [], hasMore: false } })
     );
     await page.route('**/api/admin/config/assignment-rules', (route) => {
       if (route.request().method() === 'PUT') {
+        const body = route.request().postDataJSON();
+        writes.push(body);
         if (fail) return route.fulfill({ status: 503, json: {} });
-        rules = route.request().postDataJSON();
+        if (stall) return;
+        rules = body;
       }
       return route.fulfill({ json: rules });
     });
@@ -229,23 +248,49 @@ for (const locale of ['en', 'fa']) {
       exact: true,
     });
     await confirm.click();
-    await expect(dialog.getByRole('alert')).toBeVisible();
+    const refresh = dialog.getByRole('button', {
+      name: t('admin.teams.refreshRules', locale),
+      exact: true,
+    });
+    const unverified = dialog
+      .getByRole('alert')
+      .filter({ hasText: t('admin.teams.unverified', locale) });
+    await expect(unverified).toBeVisible();
+    await expect(confirm).toBeDisabled();
     expect(rules.ticket.fallbacks).toBeUndefined();
+    expect(writes).toHaveLength(1);
     fail = false;
+    await refresh.click();
+    await expect(dialog).toHaveCount(0);
+    await expect(page.locator('#fallback-strategy-ticket-2')).toHaveValue('expertise');
+    stall = true;
+    await save.click();
+    await confirm.click();
+    await expect.poll(() => writes.length).toBe(2);
+    await expect(refresh).toBeDisabled();
+    await page.clock.fastForward(15_001);
+    await expect(unverified).toBeVisible();
+    await expect(confirm).toBeDisabled();
+    expect(rules.ticket.fallbacks).toBeUndefined();
+    await refresh.click();
+    await expect(dialog).toHaveCount(0);
+    stall = false;
+    await save.click();
     await confirm.click();
     await expect(dialog).toHaveCount(0);
+    expect(writes).toHaveLength(3);
+    expect(writes[1]).toEqual(writes[0]);
+    expect(writes[2]).toEqual(writes[0]);
     expect(rules.ticket).toEqual({
       teamId: first,
       strategy: 'load',
       fallbacks: [{ teamId: second, strategy: 'expertise' }],
     });
-    await expect(
-      page.getByText(locale === 'fa' ? 'تغییرات ذخیره شد.' : 'Changes saved.', { exact: true })
-    ).toBeVisible();
+    const saved = t('admin.teams.saved', locale);
+    const savedStatus = page.locator('main').getByRole('status').filter({ hasText: saved });
+    await expect(savedStatus).toHaveText(saved);
     await page.locator('#fallback-strategy-ticket-2').selectOption('load');
-    await expect(
-      page.getByText(locale === 'fa' ? 'تغییرات ذخیره شد.' : 'Changes saved.', { exact: true })
-    ).toHaveCount(0);
+    await expect(savedStatus).toHaveCount(0);
     await page.reload();
     await expect(page.locator('#fallback-team-ticket-2')).toHaveValue(second);
     await page.locator('#team-ticket').selectOption('');

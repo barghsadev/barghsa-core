@@ -88,6 +88,8 @@ Delivery-window saves keep the minute-precision draft after an unknown reply. Re
 
 Single and bulk failed-job retries and resolutions use the same deadline. After an unknown reply, the existing outcome review reads each selected job by ID. Returning from that review clears the selection and requires a fresh queue before another command.
 
+Staff team creation, editing, deletion and assignment-rule writes use the same response deadline. After an unconfirmed write, only a successful read of the affected resource started after the failure can retire the confirmation. A proposal whose saved basis has changed needs an explicit reset. If a creation's name already appears in the refreshed team list, the local draft stays locked until reset. These recovery reads never repeat the write.
+
 Customer contact corrections keep the exact reviewed note when a write reply times out or fails receipt validation. Refreshing the open queue permits another explicit confirmation only when the same correction is still open. Staff can check completed history or discard their local note. A fresh read that denies authority clears the local note and hides private rows. Completing the correction leaves email suppression in place.
 
 Default invoice due-period changes wait up to 15 seconds for the acknowledgement. An unknown outcome leaves the draft in place and blocks writes until a fresh settings read succeeds. Manual issuance and invoice corrections use the same deadline for their acknowledgement and for password verification. A timed-out verification leaves the invoice command unsent. An unknown write keeps the reviewed amount, review hash and idempotency key for an explicit retry.

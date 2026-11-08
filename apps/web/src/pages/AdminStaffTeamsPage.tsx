@@ -145,6 +145,7 @@ export default function AdminStaffTeamsPage() {
     [memberError, setMemberError] = useState(false),
     [hasMore, setHasMore] = useState(false);
   const [action, setAction] = useState<TeamAction | null>(null);
+  const [writePending, setWritePending] = useState(false);
   const [rulesLoading, setRulesLoading] = useState(true),
     [rulesError, setRulesError] = useState(false),
     [rulesRevision, setRulesRevision] = useState(0),
@@ -159,6 +160,8 @@ export default function AdminStaffTeamsPage() {
     teamSnapshot = useRef<Team[]>([]),
     editedTeam = useRef<Team | null>(null),
     actionRef = useRef<TeamAction | null>(null),
+    teamRecovery = useRef<TeamAction | null>(null),
+    rulesRecovery = useRef<TeamAction | null>(null),
     knownRef = useRef<Record<string, Member>>({});
   actionRef.current = action;
   knownRef.current = known;
@@ -169,6 +172,19 @@ export default function AdminStaffTeamsPage() {
     actionRef.current = null;
     invalidFocus.current = null;
     setAction(null);
+    setWritePending(false);
+  }
+  function holdUnconfirmed(command: TeamAction, invalidReceipt = false) {
+    setSaved(false);
+    if (command.path === '/api/admin/config/assignment-rules') {
+      rulesRecovery.current = command;
+      setRulesUncertain(true);
+      if (invalidReceipt) setRulesStale(true);
+    } else {
+      teamRecovery.current = command;
+      setTeamUncertain(true);
+      if (invalidReceipt) setTeamStale(true);
+    }
   }
   function denyAccess() {
     ++denialGeneration.current;
@@ -185,6 +201,8 @@ export default function AdminStaffTeamsPage() {
     setRulesStale(false);
     setTeamUncertain(false);
     setRulesUncertain(false);
+    teamRecovery.current = null;
+    rulesRecovery.current = null;
     invalidFocus.current = null;
     rulesDirty.current = false;
     rulesSnapshot.current = null;
@@ -265,7 +283,8 @@ export default function AdminStaffTeamsPage() {
   };
   const load = useCallback(async () => {
     const current = ++generation.current,
-      owner = denialGeneration.current;
+      owner = denialGeneration.current,
+      recovering = teamRecovery.current;
     teamRequest.current?.abort();
     const controller = new AbortController();
     teamRequest.current = controller;
@@ -318,7 +337,16 @@ export default function AdminStaffTeamsPage() {
       deniedRef.current = false;
       setDenied(false);
       teamSnapshot.current = data;
-      setTeamUncertain(false);
+      if (recovering && teamRecovery.current === recovering) {
+        teamRecovery.current = null;
+        setTeamUncertain(false);
+        if (actionRef.current === recovering) clearAction();
+        if (
+          recovering.method === 'POST' &&
+          data.some((team) => team.name === (recovering.body as ReturnType<typeof teamBody>).name)
+        )
+          setTeamStale(true);
+      }
       setTeams(data);
     } catch {
       if (current === generation.current && owner === denialGeneration.current) setError(true);
@@ -336,7 +364,8 @@ export default function AdminStaffTeamsPage() {
   }, [load]);
   useEffect(() => {
     const controller = new AbortController(),
-      owner = denialGeneration.current;
+      owner = denialGeneration.current,
+      recovering = rulesRecovery.current;
     setRulesLoading(true);
     setRulesError(false);
     void (async () => {
@@ -371,7 +400,11 @@ export default function AdminStaffTeamsPage() {
           setSaved(false);
         }
         rulesSnapshot.current = data;
-        setRulesUncertain(false);
+        if (recovering && rulesRecovery.current === recovering) {
+          rulesRecovery.current = null;
+          setRulesUncertain(false);
+          if (actionRef.current === recovering) clearAction();
+        }
         if (!rulesDirty.current) setRules(data);
       } catch {
         if (!controller.signal.aborted && owner === denialGeneration.current) setRulesError(true);
@@ -525,6 +558,7 @@ export default function AdminStaffTeamsPage() {
             method: kind === 'team' && !editing ? 'POST' : 'PUT',
             ...(kind === 'team' && !editing ? { successStatus: 201 } : {}),
             body,
+            responseDeadline: true,
             forbiddenMessage: label('forbidden'),
           };
           actionRef.current = next;
@@ -640,7 +674,7 @@ export default function AdminStaffTeamsPage() {
                 <Button
                   variant="outline"
                   className="min-h-11"
-                  disabled={disabled}
+                  disabled={disabled || teamUncertain}
                   onClick={() => {
                     setSaved(false);
                     const next: TeamAction = {
@@ -648,6 +682,7 @@ export default function AdminStaffTeamsPage() {
                       description: `${team.name}. ${label('deleteNote')}`,
                       path: `/api/admin/staff-teams/${team.id}`,
                       method: 'DELETE',
+                      responseDeadline: true,
                       forbiddenMessage: label('forbidden'),
                     };
                     actionRef.current = next;
@@ -1018,6 +1053,12 @@ export default function AdminStaffTeamsPage() {
           onDenied={() => {
             if (actionGeneration === workGeneration.current) denyAccess();
           }}
+          onPendingChange={(value) => {
+            if (actionGeneration === workGeneration.current) setWritePending(value);
+          }}
+          onUnconfirmed={() => {
+            if (actionGeneration === workGeneration.current) holdUnconfirmed(action);
+          }}
           onValidationError={(fields) =>
             actionGeneration === workGeneration.current &&
             action.method !== 'DELETE' &&
@@ -1028,7 +1069,10 @@ export default function AdminStaffTeamsPage() {
               <Button
                 type="button"
                 variant="outline"
-                disabled={action.path.includes('/assignment-rules') ? rulesLoading : loading}
+                disabled={
+                  writePending ||
+                  (action.path.includes('/assignment-rules') ? rulesLoading : loading)
+                }
                 onClick={() =>
                   action.path.includes('/assignment-rules')
                     ? setRulesRevision((v) => v + 1)
@@ -1062,8 +1106,7 @@ export default function AdminStaffTeamsPage() {
                       editedTeam.current
                     );
               if (!matches) {
-                setTeamUncertain(true);
-                setTeamStale(true);
+                holdUnconfirmed(action, true);
                 throw new Error('Unverified staff-team acknowledgement');
               }
               if (
@@ -1090,8 +1133,7 @@ export default function AdminStaffTeamsPage() {
                 !validRouting(result) ||
                 routingBasis(result) !== routingBasis(action.body as StaffAssignmentRules)
               ) {
-                setRulesUncertain(true);
-                setRulesStale(true);
+                holdUnconfirmed(action, true);
                 throw new Error('Unverified assignment-rules acknowledgement');
               }
               rulesSnapshot.current = result;

@@ -1,6 +1,7 @@
 import { checkRoutePresentation } from './route-presentation';
 import { test, expect } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { tStaffTeams as t } from '@barghsa/i18n/staff-team-forms';
 import {
   staffTeam,
@@ -247,3 +248,73 @@ for (const locale of ['en', 'fa'] as const)
       );
     });
   }
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`lost team creation and deletion replies require fresh review (${locale})`, async ({
+    page,
+  }) => {
+    await setupCatalogueForms(page, locale, locale === 'fa');
+    await page.clock.install();
+    const text = (key: string) => t(`admin.teams.${key}`, locale);
+    const name = 'Settlement review';
+    let teams: (typeof staffTeam)[] = [];
+    const writes: string[] = [];
+    await page.route('**/api/admin/staff-teams', (route) => {
+      if (route.request().method() === 'GET') return route.fulfill({ json: teams });
+      expect(route.request().method()).toBe('POST');
+      const body = route.request().postDataJSON();
+      expect(body).toMatchObject({ name, memberUserIds: [staffMember.id] });
+      writes.push('create');
+      teams = [{ ...staffTeam, ...body }];
+    });
+    await page.route(`**/api/admin/staff-teams/${staffTeamId}`, (route) => {
+      expect(route.request().method()).toBe('DELETE');
+      writes.push('delete');
+      teams = [];
+    });
+    await page.route('**/api/admin/staff-teams/members?*', (route) =>
+      route.fulfill({ json: { items: [staffMember], selected: [], hasMore: false } })
+    );
+    await page.route('**/api/admin/config/assignment-rules', (route) =>
+      route.fulfill({ json: staffRoutingRules })
+    );
+    await page.goto('/admin/staff-teams');
+    const input = page.locator('#staff-team-name');
+    const save = page.getByRole('button', { name: text('saveTeam'), exact: true });
+    const dialog = page.getByRole('dialog');
+    const confirm = dialog.locator('button[type=submit]');
+    const refresh = dialog.getByRole('button', { name: text('refresh'), exact: true });
+    const unverified = dialog.getByRole('alert').filter({ hasText: text('unverified') });
+    await input.fill(name);
+    await page.getByRole('checkbox', { name: staffMember.name, exact: true }).check();
+    await save.click();
+    await confirm.click();
+    await expect.poll(() => writes).toEqual(['create']);
+    await expect(refresh).toBeDisabled();
+    await page.clock.fastForward(15_001);
+    await expect(unverified).toBeVisible();
+    await expect(confirm).toBeDisabled();
+    await refresh.click();
+    await expect(dialog).toHaveCount(0);
+    await expect(page.getByRole('heading', { name, exact: true })).toBeVisible();
+    await expect(input).toHaveValue(name);
+    await expect(save).toBeDisabled();
+    await expect(page.getByText(text('saved'), { exact: true })).toHaveCount(0);
+    await page.getByRole('button', { name: text('resetTeam'), exact: true }).click();
+    await expect(input).toHaveValue('');
+
+    await page.getByRole('button', { name: text('delete'), exact: true }).click();
+    await expect(confirm).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'destructive');
+    await confirm.click();
+    await expect.poll(() => writes).toEqual(['create', 'delete']);
+    await page.clock.fastForward(15_001);
+    await expect(unverified).toBeVisible();
+    await expect(confirm).toBeDisabled();
+    await refresh.click();
+    await expect(dialog).toHaveCount(0);
+    await expect(page.getByText(name, { exact: true })).toHaveCount(0);
+    await expect(page.getByText(text('saved'), { exact: true })).toHaveCount(0);
+    expect(writes).toEqual(['create', 'delete']);
+  });
+}

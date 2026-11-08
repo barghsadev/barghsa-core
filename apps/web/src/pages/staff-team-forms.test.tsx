@@ -20,6 +20,7 @@ interface Command {
   onClose: () => void;
   onValidationError: (fields: unknown[]) => boolean;
   onDenied: () => void;
+  onUnconfirmed: () => void;
 }
 const harness = vi.hoisted(() => ({
   locale: 'en' as 'en' | 'fa',
@@ -229,6 +230,42 @@ for (const kind of ['team', 'rules'] as const)
     await click(kind === 'team' ? 'Reset team draft' : 'Reset to current rules');
     if (kind === 'team') expect(input('#staff-team-name').value).toBe('');
     else expect(input('#team-ticket').value).toBe('');
+  });
+for (const kind of ['team', 'rules'] as const)
+  it(`${kind}: a read started before the lost reply cannot unlock the captured write`, async () => {
+    await mount();
+    if (kind === 'team') await fill('#staff-team-name', 'Retained team');
+    else await fill('#team-ticket', staffTeamId);
+    await submit(kind);
+    const previous = harness.command!;
+    expect(previous.action.responseDeadline).toBe(true);
+
+    const fetcher = vi.mocked(fetch);
+    const read = fetcher.getMockImplementation()!;
+    let finish!: (response: Response) => void;
+    const early = new Promise<Response>((resolve) => {
+      finish = resolve;
+    });
+    const endpoint =
+      kind === 'team' ? '/api/admin/staff-teams' : '/api/admin/config/assignment-rules';
+    let earlyReads = 0;
+    fetcher.mockImplementation((path, init) =>
+      path === endpoint && earlyReads++ === 0 ? early : read(path, init)
+    );
+    const refresh = kind === 'team' ? 'Refresh team list' : 'Refresh assignment rules';
+    await click(refresh);
+    expect(earlyReads).toBe(1);
+    await act(async () => previous.onUnconfirmed());
+    await act(async () => finish(Response.json(kind === 'team' ? teams : rules)));
+    expect(harness.command!.confirmationDisabled).toBe(true);
+    expect(harness.command!.action).toBe(previous.action);
+
+    await click(refresh);
+    expect(earlyReads).toBe(2);
+    expect(host.querySelector('[data-testid=confirmation]')).toBeNull();
+    await submit(kind);
+    expect(harness.command!.action).not.toBe(previous.action);
+    expect(harness.command!.action.body).toEqual(previous.action.body);
   });
 it('schema loading locks both forms synchronously and discards obsolete validation after access denial', async () => {
   let denyRules!: (response: Response) => void;
