@@ -140,25 +140,66 @@ it.each([401, 403])(
 );
 
 it('loads an exact invoice from a staff deep link', async () => {
+  const canonical = 'abcdef00-1111-7111-8111-111111111111';
+  const supplied = canonical.toUpperCase();
+  const selected = { ...row, invoiceId: canonical };
   const fetcher = vi.fn(
     async (input: RequestInfo | URL) =>
       new Response(
         JSON.stringify(
-          String(input).endsWith(`/${ID}`)
-            ? { ...row, lines: [], activity: { payments: [], bankReceipts: [], refunds: [] } }
-            : { items: [row], nextCursor: null }
+          String(input).endsWith(`/${supplied}`)
+            ? { ...selected, lines: [], activity: { payments: [], bankReceipts: [], refunds: [] } }
+            : { items: [selected], nextCursor: null }
         )
       )
   );
   vi.stubGlobal('fetch', fetcher);
+  const due = vi.fn();
   await act(async () =>
     root.render(
-      <InvoiceLedger initialInvoiceId={ID} onSelectForDueAt={vi.fn()} onOpenReceipt={vi.fn()} />
+      <InvoiceLedger initialInvoiceId={supplied} onSelectForDueAt={due} onOpenReceipt={vi.fn()} />
     )
   );
-  expect(fetcher.mock.calls.some(([url]) => String(url).includes(`invoiceId=${ID}`))).toBe(true);
-  expect(fetcher.mock.calls.some(([url]) => String(url).endsWith(`/${ID}`))).toBe(true);
+  expect(fetcher.mock.calls.some(([url]) => String(url).includes(`invoiceId=${supplied}`))).toBe(
+    true
+  );
+  expect(fetcher.mock.calls.some(([url]) => String(url).endsWith(`/${supplied}`))).toBe(true);
   expect(container.querySelector('#invoice-ledger-detail-title')).not.toBeNull();
+  await act(async () =>
+    [...container.querySelectorAll('button')]
+      .find((button) => button.textContent === 'Use in due-date tool')!
+      .click()
+  );
+  expect(due).toHaveBeenCalledExactlyOnceWith(canonical);
+});
+
+it('keeps ledger actions hidden until the selected invoice detail is valid', async () => {
+  const valid = { ...row, lines: [], activity: { payments: [], bankReceipts: [], refunds: [] } };
+  const details = [{ ...valid, invoiceId: ORDER }, { ...valid, lines: null }, valid];
+  const fetcher = vi.fn(async (url: string) =>
+    Response.json(url.endsWith(`/${ID}`) ? details.shift() : { items: [row], nextCursor: null })
+  );
+  vi.stubGlobal('fetch', fetcher);
+  const due = vi.fn();
+  await act(async () =>
+    root.render(
+      <InvoiceLedger initialInvoiceId={ID} onSelectForDueAt={due} onOpenReceipt={vi.fn()} />
+    )
+  );
+  const detail = container.querySelector('[aria-labelledby="invoice-ledger-detail-title"]')!;
+  const button = (label: string) =>
+    [...detail.querySelectorAll('button')].find((item) => item.textContent === label);
+  for (let count = 2; count > 0; count--) {
+    expect(details).toHaveLength(count);
+    expect(detail.querySelector('[role="alert"]')?.textContent).toContain(
+      'Could not load details.'
+    );
+    expect(button('Use in due-date tool')).toBeUndefined();
+    expect(detail.textContent).not.toContain(ORDER);
+    await act(async () => button('Retry')!.click());
+  }
+  await act(async () => button('Use in due-date tool')!.click());
+  expect(due).toHaveBeenCalledExactlyOnceWith(ID);
 });
 
 it('keeps customer and order filters when loading the next ledger page', async () => {
@@ -220,6 +261,7 @@ it('keeps customer and order filters when loading the next ledger page', async (
 it('retries a failed cursor without reloading selected invoice details or earlier rows', async () => {
   const older = '44444444-4444-7444-8444-444444444444';
   let fail = true;
+  let malformedCursor = false;
   const fetcher = vi.fn(async (input: RequestInfo | URL) => {
     const path = String(input);
     if (path.endsWith(`/${ID}`))
@@ -231,6 +273,11 @@ it('retries a failed cursor without reloading selected invoice details or earlie
         })
       );
     if (path.includes('beforeAt=') && fail) return new Response(null, { status: 503 });
+    if (path.includes('beforeAt=') && malformedCursor)
+      return Response.json({
+        items: [{ ...row, invoiceId: older }],
+        nextCursor: { beforeAt: 'invalid', beforeId: older },
+      });
     return new Response(
       JSON.stringify({
         items: [{ ...row, invoiceId: path.includes('beforeAt=') ? older : ID }],
@@ -259,6 +306,14 @@ it('retries a failed cursor without reloading selected invoice details or earlie
     selected
   );
   fail = false;
+  malformedCursor = true;
+  await act(async () => click('Retry'));
+  expect(fetcher.mock.calls.at(-1)![0]).toBe(failed);
+  expect(container.querySelectorAll('tbody button')).toHaveLength(1);
+  expect(container.querySelector('section[aria-labelledby="invoice-ledger-detail-title"]')).toBe(
+    selected
+  );
+  malformedCursor = false;
   await act(async () => click('Retry'));
   expect(fetcher.mock.calls.at(-1)![0]).toBe(failed);
   expect(fetcher.mock.calls.filter(([url]) => String(url).endsWith(`/${ID}`))).toHaveLength(1);

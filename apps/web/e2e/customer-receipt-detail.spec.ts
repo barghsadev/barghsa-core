@@ -207,7 +207,7 @@ for (const locale of ['en', 'fa'] as const) {
       true
     );
     await page.screenshot({
-      path: `/tmp/barghsa-receipt-detail-${locale}-${test.info().project.name}.png`,
+      path: test.info().outputPath(`receipt-detail-${locale}.png`),
     });
     await page.locator(`#bank-receipt-${other} summary`).click();
     await expect.poll(() => otherRequests).toBe(1);

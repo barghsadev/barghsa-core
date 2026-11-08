@@ -155,6 +155,7 @@ for (const locale of ['en', 'fa'] as const) {
   }, info) => {
     await shell(page, locale);
     let hold = false,
+      malformed = false,
       held: Route | undefined;
     const queries: string[] = [];
     let accessReads = 0;
@@ -168,7 +169,13 @@ for (const locale of ['en', 'fa'] as const) {
         held = route;
         return;
       }
-      return route.fulfill({ json: [reconciliationItem] });
+      return route.fulfill({
+        json: [
+          malformed
+            ? { ...reconciliationItem, description: { invalid: true } }
+            : reconciliationItem,
+        ],
+      });
     });
     await page.goto('/admin/reconciliation');
     await expect(
@@ -192,6 +199,12 @@ for (const locale of ['en', 'fa'] as const) {
     const failedQuery = queries.at(-1),
       permissionReads = accessReads;
     hold = false;
+    malformed = true;
+    await dialog.getByRole('button', { name: r('retry'), exact: true }).click();
+    await expect(dialog.getByRole('alert')).toBeVisible();
+    await expect(page.locator('#rex-note')).toHaveValue('Keep ledger review');
+    expect(queries.at(-1)).toBe(failedQuery);
+    malformed = false;
     await dialog.getByRole('button', { name: r('retry'), exact: true }).click();
     await expect(dialog.getByRole('alert')).toHaveCount(0);
     await expect(page.locator('#rex-note')).toHaveValue('Keep ledger review');

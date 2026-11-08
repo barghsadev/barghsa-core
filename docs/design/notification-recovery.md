@@ -153,3 +153,5 @@ A customer dashboard widget checks the active profile and its own response befor
 The saving catalogue keeps its last verified plans and published terms visible during a recoverable refresh. A fresh, valid catalogue is required before it offers an order link again. A sign-in or permission denial clears the previously displayed plans.
 
 Invoice details check line items, linked invoices and activity before rendering. Consultation details check the display text, timeline, dates and recorded payment flag before offering actions. An invalid initial response leaves the detail heading and an explicit retry available.
+
+The staff invoice ledger validates rows and page cursors before replacing the current results. Its detail must match the selected invoice before the due-date and refund actions appear. A malformed reconciliation refresh keeps the last verified rows and open note. Staff retry the same query before reviewing another action.

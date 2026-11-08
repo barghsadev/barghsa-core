@@ -25,6 +25,7 @@ import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useManualServerRead } from '../hooks/useServerQuery.js';
 import { queryKeys } from '../lib/query-keys.js';
+import { validInvoiceActivity, validInvoiceLine } from '../lib/customer-invoices.js';
 
 interface InvoiceRow {
   invoiceId: string;
@@ -90,10 +91,71 @@ const states = [
 ];
 const base = '/api/admin/invoices/ledger';
 
-async function getJson<T>(path: string, signal: AbortSignal): Promise<T> {
+function record(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === 'object' && !Array.isArray(value);
+}
+
+function validRow(value: unknown): value is InvoiceRow {
+  return (
+    record(value) &&
+    typeof value.invoiceId === 'string' &&
+    isInvoiceUuid(value.invoiceId) &&
+    typeof value.profileId === 'string' &&
+    typeof value.state === 'string' &&
+    [value.totalAmount, value.paidAmount, value.refundedAmount].every(
+      (amount) => typeof amount === 'string' && /^-?\d+$/.test(amount)
+    ) &&
+    [
+      value.orderId,
+      value.type,
+      value.issuedAt,
+      value.dueAt,
+      value.periodStart,
+      value.periodEnd,
+    ].every((field) => field == null || typeof field === 'string')
+  );
+}
+
+function validPage(value: unknown): value is Page {
+  return (
+    record(value) &&
+    Array.isArray(value.items) &&
+    value.items.every(validRow) &&
+    (value.nextCursor === null ||
+      (record(value.nextCursor) &&
+        !!decodeFinanceCursor([value.nextCursor.beforeAt, value.nextCursor.beforeId])))
+  );
+}
+
+function validDetail(value: unknown, invoiceId: string): value is InvoiceDetail {
+  if (
+    !record(value) ||
+    !validRow(value) ||
+    value.invoiceId.toLowerCase() !== invoiceId.trim().toLowerCase()
+  )
+    return false;
+  const { lines, activity } = value;
+  return (
+    Array.isArray(lines) &&
+    lines.every(validInvoiceLine) &&
+    validInvoiceActivity(activity) &&
+    Array.isArray(activity.payments) &&
+    Array.isArray(activity.bankReceipts) &&
+    Array.isArray(activity.refunds) &&
+    activity.refunds.every((refund) => typeof refund.createdAt === 'string')
+  );
+}
+
+async function getJson<T>(
+  path: string,
+  signal: AbortSignal,
+  validate: (value: unknown) => value is T
+): Promise<T> {
   const response = await fetch(path, { credentials: 'include', signal });
   if (!response.ok) throw new Error(String(response.status));
-  return (await response.json()) as T;
+  const data: unknown = await response.json();
+  if (!validate(data)) throw new Error('Invalid invoice ledger response');
+  return data;
 }
 
 type InvoiceLedgerProps = {
@@ -195,7 +257,7 @@ function OwnedInvoiceLedger({
     const path = `${base}${params.size ? `?${params}` : ''}`;
     params.set('endpoint', base);
     const key = queryKeys.invoices.list(authority, params);
-    void read(key, controller.signal, (signal) => getJson<Page>(path, signal))
+    void read(key, controller.signal, (signal) => getJson(path, signal, validPage))
       .then((page) => {
         if (controller.signal.aborted) return;
         setAccepted((current) => {
@@ -239,7 +301,7 @@ function OwnedInvoiceLedger({
     setDetailStatus('loading');
     const path = `${base}/${encodeURIComponent(selectedId)}`;
     void read(queryKeys.invoices.detail(authority, path), controller.signal, (signal) =>
-      getJson<InvoiceDetail>(path, signal)
+      getJson(path, signal, (value): value is InvoiceDetail => validDetail(value, selectedId))
     )
       .then((value) => {
         if (!controller.signal.aborted) {

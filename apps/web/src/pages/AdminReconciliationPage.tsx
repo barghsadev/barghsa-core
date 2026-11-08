@@ -268,7 +268,8 @@ function OwnedReconciliation({ queries }: { queries?: ListQueryBinding }) {
         const rows = await read(key, controller.signal, (signal) =>
           reconciliationRead(`${endpoint}?${search}`, signal)
         );
-        if (!Array.isArray(rows)) throw new Error('Invalid list');
+        if (!Array.isArray(rows) || !rows.every(isReconciliationItem))
+          throw new Error('Invalid list');
         if (controller.signal.aborted || !accessValid.current) return;
         if (
           reviewed.current &&

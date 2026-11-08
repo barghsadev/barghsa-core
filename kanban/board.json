@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T18:29:38+00:00",
-  "source_commit": "171b42f03ee99dc6ebbc617dc0475b6a191f1ff5",
+  "updated": "2026-11-08T18:46:34+00:00",
+  "source_commit": "30f7cfffc0132bee9d35843ccaf5628b1965ade4",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35480,7 +35480,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminServiceTargetsPage.tsx",
@@ -63176,7 +63176,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminServiceTargetsPage.tsx",
@@ -125117,7 +125117,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -126109,7 +126109,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -127101,7 +127101,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -128093,7 +128093,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -129085,7 +129085,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -130077,7 +130077,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -131169,7 +131169,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/sms-providers-api.ts",
@@ -132273,7 +132273,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -133365,7 +133365,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/sms-providers-api.ts",
@@ -134469,7 +134469,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -136967,7 +136967,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
@@ -146092,7 +146092,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
-              "sha256": "49ed7a3c1a6506f13f1b82f6e192525c0398996f76902989887f419a7f96aee6"
+              "sha256": "d33f65b0cd98fc27a8788758a993de29dc710d8c57a2527c1c5a69128e20b846"
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
@@ -146140,7 +146140,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
@@ -146682,7 +146682,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
-              "sha256": "49ed7a3c1a6506f13f1b82f6e192525c0398996f76902989887f419a7f96aee6"
+              "sha256": "d33f65b0cd98fc27a8788758a993de29dc710d8c57a2527c1c5a69128e20b846"
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
@@ -146734,7 +146734,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
@@ -147302,7 +147302,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
-              "sha256": "49ed7a3c1a6506f13f1b82f6e192525c0398996f76902989887f419a7f96aee6"
+              "sha256": "d33f65b0cd98fc27a8788758a993de29dc710d8c57a2527c1c5a69128e20b846"
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
@@ -147350,7 +147350,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
@@ -147939,7 +147939,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
-              "sha256": "49ed7a3c1a6506f13f1b82f6e192525c0398996f76902989887f419a7f96aee6"
+              "sha256": "d33f65b0cd98fc27a8788758a993de29dc710d8c57a2527c1c5a69128e20b846"
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
@@ -147987,7 +147987,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
@@ -148678,7 +148678,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
-              "sha256": "49ed7a3c1a6506f13f1b82f6e192525c0398996f76902989887f419a7f96aee6"
+              "sha256": "d33f65b0cd98fc27a8788758a993de29dc710d8c57a2527c1c5a69128e20b846"
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
@@ -148726,7 +148726,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
@@ -149180,7 +149180,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
-              "sha256": "49ed7a3c1a6506f13f1b82f6e192525c0398996f76902989887f419a7f96aee6"
+              "sha256": "d33f65b0cd98fc27a8788758a993de29dc710d8c57a2527c1c5a69128e20b846"
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
@@ -149228,7 +149228,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
@@ -149660,7 +149660,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
-              "sha256": "49ed7a3c1a6506f13f1b82f6e192525c0398996f76902989887f419a7f96aee6"
+              "sha256": "d33f65b0cd98fc27a8788758a993de29dc710d8c57a2527c1c5a69128e20b846"
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
@@ -149708,7 +149708,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
@@ -150141,7 +150141,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
-              "sha256": "49ed7a3c1a6506f13f1b82f6e192525c0398996f76902989887f419a7f96aee6"
+              "sha256": "d33f65b0cd98fc27a8788758a993de29dc710d8c57a2527c1c5a69128e20b846"
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
@@ -150189,7 +150189,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
@@ -150623,7 +150623,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
-              "sha256": "49ed7a3c1a6506f13f1b82f6e192525c0398996f76902989887f419a7f96aee6"
+              "sha256": "d33f65b0cd98fc27a8788758a993de29dc710d8c57a2527c1c5a69128e20b846"
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
@@ -150671,7 +150671,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
@@ -151113,7 +151113,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
-              "sha256": "49ed7a3c1a6506f13f1b82f6e192525c0398996f76902989887f419a7f96aee6"
+              "sha256": "d33f65b0cd98fc27a8788758a993de29dc710d8c57a2527c1c5a69128e20b846"
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
@@ -151161,7 +151161,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
@@ -151595,7 +151595,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
-              "sha256": "49ed7a3c1a6506f13f1b82f6e192525c0398996f76902989887f419a7f96aee6"
+              "sha256": "d33f65b0cd98fc27a8788758a993de29dc710d8c57a2527c1c5a69128e20b846"
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
@@ -151643,7 +151643,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
@@ -490995,7 +490995,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseDocumentPicker.tsx",
@@ -491227,7 +491227,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
@@ -492826,7 +492826,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.tsx",
@@ -494199,7 +494199,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
@@ -494375,7 +494375,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
@@ -495082,7 +495082,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
@@ -495258,7 +495258,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
@@ -495906,7 +495906,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
@@ -496082,7 +496082,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
@@ -496723,11 +496723,11 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.test.tsx",
-              "sha256": "5d617b450374325f868f32099dc4202a39e7c525ae9fa1e733d256cf936471c0"
+              "sha256": "6f178da1364af11fb8225b45ddb773ebcc41e21162cd23bf94a7c52e971593ab"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "302131481d8f8aeb38ecdc68a3a322442c1ba387a2053d9af806d73c00b14298"
+              "sha256": "1c173f9d0692ef68aad194dfb376de8eaf817be1a621b53b38e2e1f399458784"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -497648,7 +497648,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.tsx",
@@ -508165,7 +508165,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/ProfileSwitchProgress.tsx",
@@ -510134,7 +510134,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -510444,7 +510444,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -510754,7 +510754,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -511064,7 +511064,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -511378,7 +511378,7 @@
             },
             {
               "path": "apps/web/e2e/staff-finance-list-recovery.spec.ts",
-              "sha256": "b69ddc900d36f74bfe784f5aa6cfe13496ca820938b20ec765935edd99ab93c7"
+              "sha256": "3e038f24f3c19b26745574af9eea1988b20cea6513658f239cb9d578e793faba"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -511442,11 +511442,11 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.test.tsx",
-              "sha256": "5d617b450374325f868f32099dc4202a39e7c525ae9fa1e733d256cf936471c0"
+              "sha256": "6f178da1364af11fb8225b45ddb773ebcc41e21162cd23bf94a7c52e971593ab"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
@@ -511578,7 +511578,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
@@ -512052,7 +512052,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
@@ -517485,7 +517485,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantPanel.tsx",
@@ -517909,7 +517909,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "302131481d8f8aeb38ecdc68a3a322442c1ba387a2053d9af806d73c00b14298"
+              "sha256": "1c173f9d0692ef68aad194dfb376de8eaf817be1a621b53b38e2e1f399458784"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -518431,7 +518431,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseUpload.tsx",
@@ -518837,7 +518837,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/ProfileSwitchProgress.tsx",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "302131481d8f8aeb38ecdc68a3a322442c1ba387a2053d9af806d73c00b14298"
+              "sha256": "1c173f9d0692ef68aad194dfb376de8eaf817be1a621b53b38e2e1f399458784"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -519870,7 +519870,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseUpload.tsx",
@@ -522026,7 +522026,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseUpload.tsx",
@@ -547112,7 +547112,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -548978,7 +548978,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -550845,7 +550845,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -552681,7 +552681,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -554543,7 +554543,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -556414,7 +556414,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -558258,7 +558258,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -560066,7 +560066,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -561874,7 +561874,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -563683,7 +563683,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -565491,7 +565491,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -567033,7 +567033,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -567365,7 +567365,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -567521,7 +567521,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "302131481d8f8aeb38ecdc68a3a322442c1ba387a2053d9af806d73c00b14298"
+              "sha256": "1c173f9d0692ef68aad194dfb376de8eaf817be1a621b53b38e2e1f399458784"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568928,7 +568928,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -569260,7 +569260,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -569416,7 +569416,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "302131481d8f8aeb38ecdc68a3a322442c1ba387a2053d9af806d73c00b14298"
+              "sha256": "1c173f9d0692ef68aad194dfb376de8eaf817be1a621b53b38e2e1f399458784"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -571236,11 +571236,11 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.test.tsx",
-              "sha256": "5d617b450374325f868f32099dc4202a39e7c525ae9fa1e733d256cf936471c0"
+              "sha256": "6f178da1364af11fb8225b45ddb773ebcc41e21162cd23bf94a7c52e971593ab"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -571984,7 +571984,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/default-profile-command.ts",
@@ -572372,7 +572372,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
@@ -572808,7 +572808,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -573068,7 +573068,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "302131481d8f8aeb38ecdc68a3a322442c1ba387a2053d9af806d73c00b14298"
+              "sha256": "1c173f9d0692ef68aad194dfb376de8eaf817be1a621b53b38e2e1f399458784"
             },
             {
               "path": "scripts/check-changed-coverage.py",
@@ -573710,7 +573710,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -574042,7 +574042,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -574198,7 +574198,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "302131481d8f8aeb38ecdc68a3a322442c1ba387a2053d9af806d73c00b14298"
+              "sha256": "1c173f9d0692ef68aad194dfb376de8eaf817be1a621b53b38e2e1f399458784"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -575605,7 +575605,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -575937,7 +575937,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -576093,7 +576093,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "302131481d8f8aeb38ecdc68a3a322442c1ba387a2053d9af806d73c00b14298"
+              "sha256": "1c173f9d0692ef68aad194dfb376de8eaf817be1a621b53b38e2e1f399458784"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577500,7 +577500,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -577832,7 +577832,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -577988,7 +577988,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "302131481d8f8aeb38ecdc68a3a322442c1ba387a2053d9af806d73c00b14298"
+              "sha256": "1c173f9d0692ef68aad194dfb376de8eaf817be1a621b53b38e2e1f399458784"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -579395,7 +579395,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -579727,7 +579727,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -579883,7 +579883,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "302131481d8f8aeb38ecdc68a3a322442c1ba387a2053d9af806d73c00b14298"
+              "sha256": "1c173f9d0692ef68aad194dfb376de8eaf817be1a621b53b38e2e1f399458784"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581290,7 +581290,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -581622,7 +581622,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -581778,7 +581778,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "302131481d8f8aeb38ecdc68a3a322442c1ba387a2053d9af806d73c00b14298"
+              "sha256": "1c173f9d0692ef68aad194dfb376de8eaf817be1a621b53b38e2e1f399458784"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -583185,7 +583185,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -583517,7 +583517,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -583673,7 +583673,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "302131481d8f8aeb38ecdc68a3a322442c1ba387a2053d9af806d73c00b14298"
+              "sha256": "1c173f9d0692ef68aad194dfb376de8eaf817be1a621b53b38e2e1f399458784"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -585080,7 +585080,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -585412,7 +585412,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -585568,7 +585568,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "302131481d8f8aeb38ecdc68a3a322442c1ba387a2053d9af806d73c00b14298"
+              "sha256": "1c173f9d0692ef68aad194dfb376de8eaf817be1a621b53b38e2e1f399458784"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -586975,7 +586975,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -587307,7 +587307,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -587463,7 +587463,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "302131481d8f8aeb38ecdc68a3a322442c1ba387a2053d9af806d73c00b14298"
+              "sha256": "1c173f9d0692ef68aad194dfb376de8eaf817be1a621b53b38e2e1f399458784"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -588870,7 +588870,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -589202,7 +589202,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -589358,7 +589358,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "302131481d8f8aeb38ecdc68a3a322442c1ba387a2053d9af806d73c00b14298"
+              "sha256": "1c173f9d0692ef68aad194dfb376de8eaf817be1a621b53b38e2e1f399458784"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -590765,7 +590765,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -591097,7 +591097,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -591253,7 +591253,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "302131481d8f8aeb38ecdc68a3a322442c1ba387a2053d9af806d73c00b14298"
+              "sha256": "1c173f9d0692ef68aad194dfb376de8eaf817be1a621b53b38e2e1f399458784"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592660,7 +592660,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -592992,7 +592992,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -593148,7 +593148,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "302131481d8f8aeb38ecdc68a3a322442c1ba387a2053d9af806d73c00b14298"
+              "sha256": "1c173f9d0692ef68aad194dfb376de8eaf817be1a621b53b38e2e1f399458784"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594088,11 +594088,11 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.test.tsx",
-              "sha256": "5d617b450374325f868f32099dc4202a39e7c525ae9fa1e733d256cf936471c0"
+              "sha256": "6f178da1364af11fb8225b45ddb773ebcc41e21162cd23bf94a7c52e971593ab"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -594412,7 +594412,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "302131481d8f8aeb38ecdc68a3a322442c1ba387a2053d9af806d73c00b14298"
+              "sha256": "1c173f9d0692ef68aad194dfb376de8eaf817be1a621b53b38e2e1f399458784"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595295,7 +595295,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -595627,7 +595627,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -595783,7 +595783,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "302131481d8f8aeb38ecdc68a3a322442c1ba387a2053d9af806d73c00b14298"
+              "sha256": "1c173f9d0692ef68aad194dfb376de8eaf817be1a621b53b38e2e1f399458784"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -597190,7 +597190,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -597522,7 +597522,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -597678,7 +597678,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "302131481d8f8aeb38ecdc68a3a322442c1ba387a2053d9af806d73c00b14298"
+              "sha256": "1c173f9d0692ef68aad194dfb376de8eaf817be1a621b53b38e2e1f399458784"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -598482,7 +598482,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Current scoped evidence covers the customer dashboard and saving catalogue, invoice and consultation detail recovery, and six customer histories including denial, timeout and empty states. Existing evidence also covers saving and solar details and the earlier admin paths. Match remaining staff queue and settings conditional routes to their current evidence and verify gaps."
+        "Current scoped evidence includes the staff invoice ledger, reconciliation, failed jobs, failed notifications, agent slots and service targets alongside earlier customer and staff route evidence. Reconcile remaining staff service queue and detail cases against the current route census. Check solar construction and consultation queue response boundaries first."
       ],
       "owner": null,
       "depends_on": [],
@@ -598583,7 +598583,8 @@
           "release-0.5-team-member-recovery",
           "release-0.5-dashboard-state-recovery",
           "release-0.5-saving-catalogue-recovery",
-          "release-0.5-owned-financial-detail-reads"
+          "release-0.5-owned-financial-detail-reads",
+          "release-0.5-staff-finance-read-validation"
         ],
         "current_acceptance": null
       }
@@ -599500,7 +599501,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -601304,7 +601305,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -603108,7 +603109,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -604912,7 +604913,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -606716,7 +606717,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -608520,7 +608521,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -610324,7 +610325,7 @@
             },
             {
               "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
-              "sha256": "9e7dae1f9090a2215e5d9774f25122030ceeffbe6ef833291618af3014bf5806"
+              "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -637511,7 +637512,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -637707,7 +637708,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
@@ -638635,7 +638636,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -638831,7 +638832,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
@@ -639759,7 +639760,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -639955,7 +639956,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
@@ -640886,7 +640887,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -641082,7 +641083,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
@@ -642013,7 +642014,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -642209,7 +642210,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
@@ -643167,7 +643168,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -643363,7 +643364,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
@@ -644290,7 +644291,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -644486,7 +644487,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
@@ -645413,7 +645414,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -645609,7 +645610,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
@@ -646537,7 +646538,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -646733,7 +646734,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
@@ -647679,7 +647680,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -647875,7 +647876,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
@@ -648804,7 +648805,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -649000,7 +649001,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
@@ -650128,7 +650129,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/documents.test.ts",
@@ -650957,7 +650958,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/documents.test.ts",
@@ -651794,7 +651795,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/documents.test.ts",
@@ -652615,7 +652616,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/documents.test.ts",
@@ -653435,7 +653436,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/documents.test.ts",
@@ -680304,7 +680305,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -680500,7 +680501,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
@@ -681426,7 +681427,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -681622,7 +681623,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
@@ -682548,7 +682549,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -682744,7 +682745,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
@@ -683670,7 +683671,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -683866,7 +683867,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
@@ -688343,7 +688344,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/electricity-status-tone.test.ts",
@@ -689184,7 +689185,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/electricity-status-tone.test.ts",
@@ -690027,7 +690028,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/electricity-status-tone.test.ts",
@@ -690868,7 +690869,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/electricity-status-tone.test.ts",
@@ -691709,7 +691710,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/electricity-status-tone.test.ts",
@@ -692554,7 +692555,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/electricity-status-tone.test.ts",
@@ -693399,7 +693400,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/electricity-status-tone.test.ts",
@@ -694240,7 +694241,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/electricity-status-tone.test.ts",
@@ -695081,7 +695082,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/electricity-status-tone.test.ts",
@@ -695923,7 +695924,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/electricity-status-tone.test.ts",
@@ -696770,7 +696771,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/electricity-status-tone.test.ts",
@@ -707688,7 +707689,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/assignment-settings-recovery.spec.ts",
-              "sha256": "579381044e979674dcfdf12259709488d616460a71137dd1d64c44467e29ee87"
+              "sha256": "edc0ac5751a70740577e644740c4247c1b10af4699b442c4ff5673037f93361b"
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
@@ -712113,7 +712114,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
@@ -712881,7 +712882,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
-              "sha256": "49ed7a3c1a6506f13f1b82f6e192525c0398996f76902989887f419a7f96aee6"
+              "sha256": "d33f65b0cd98fc27a8788758a993de29dc710d8c57a2527c1c5a69128e20b846"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -728227,7 +728228,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Command feedback is accepted. The current invoice and consultation detail paths and six customer histories have source-bound conditional evidence. Remaining staff conditional states, required GitHub accessibility enforcement and the staging Sentry receipt remain open."
+        "Customer history and staff finance and operations recovery have current evidence. Remaining staff service queue and detail states, required GitHub accessibility enforcement and the staging Sentry receipt remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -728393,7 +728394,8 @@
           "release-0.5-team-member-recovery",
           "release-0.5-dashboard-state-recovery",
           "release-0.5-saving-catalogue-recovery",
-          "release-0.5-owned-financial-detail-reads"
+          "release-0.5-owned-financial-detail-reads",
+          "release-0.5-staff-finance-read-validation"
         ]
       }
     },
@@ -728717,7 +728719,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "440fdd55b2cfb8f8fd1369dbce4d087f37322c130ae251bdb03a6b7a660d9694"
+              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantLauncher.tsx",
@@ -729197,7 +729199,7 @@
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
-              "sha256": "f64e227e8b9bed4a600e222db4a10dafac1535d44ae4dd13b365424145451434"
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
             },
             {
               "path": "apps/web/src/lib/default-profile-command.ts",
@@ -729389,7 +729391,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
-              "sha256": "196241f8aeb5bb43ee8010e101710441fe302ef01ca388638d1f9b3b3b82d1fc"
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
@@ -730299,7 +730301,8 @@
             "Renewed membership recovery browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-member-recovery/proof.json",
             "Renewed dashboard browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-state-recovery/proof.json",
             "Renewed saving catalogue browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-catalogue-recovery/proof.json",
-            "Renewed customer detail and history browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-financial-detail-reads/proof.json"
+            "Renewed customer detail and history browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-financial-detail-reads/proof.json",
+            "Renewed staff finance and operations browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-finance-read-validation/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -805696,6 +805699,185 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-financial-detail-reads/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-financial-detail-reads/reviewed-final.patch",
       "release_disposition": "Verified customer financial detail and history recovery. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-staff-finance-read-validation": {
+      "batch": "release-0.5-staff-finance-read-validation",
+      "base_commit": "30f7cfffc0132bee9d35843ccaf5628b1965ade4",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+        },
+        {
+          "path": "apps/api/src/admin/invoice-ledger.service.ts",
+          "sha256": "2d7c2576c34f0a4f627f3384d09b76adaafb2384ad093f6e633df4389c0e1735"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "sha256": "d75ee5d1a230cc8adcf10d5baca543ba1b63552ab79812a6fa4108c924ca12ab"
+        },
+        {
+          "path": "apps/web/e2e/assignment-settings-recovery.spec.ts",
+          "sha256": "edc0ac5751a70740577e644740c4247c1b10af4699b442c4ff5673037f93361b"
+        },
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "07949862684b86d6ff241d5f71e59e6c71a5cc1ddc70655b0d508beb53865dac"
+        },
+        {
+          "path": "apps/web/e2e/crm-shell-fixture.ts",
+          "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+        },
+        {
+          "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
+          "sha256": "d33f65b0cd98fc27a8788758a993de29dc710d8c57a2527c1c5a69128e20b846"
+        },
+        {
+          "path": "apps/web/e2e/decision-queue-query.spec.ts",
+          "sha256": "389ec1455872088797557cd12e6bb3635c48a6a9e6f556045dfda98467602f9d"
+        },
+        {
+          "path": "apps/web/e2e/finance-list-query.spec.ts",
+          "sha256": "cc1b7b3c9dda79a3f55b4144b869a527ca7c3a1c893046e198ce95bb51c29879"
+        },
+        {
+          "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
+          "sha256": "549793a0ac3cbb878a0eda4f745a4efb6f4c4a9ccb5eda00fb4591c9b3b15687"
+        },
+        {
+          "path": "apps/web/e2e/operational-queue-recovery.spec.ts",
+          "sha256": "8ee68d7684fb4406a740638a2206a4d0cac3fc6e49e572f085811b9b67c5af3b"
+        },
+        {
+          "path": "apps/web/e2e/payment-review-recovery.spec.ts",
+          "sha256": "bb9e8b3109689c7f2c41ab31d00bc1cb260d25eb457fd861e2aba634a60ead4f"
+        },
+        {
+          "path": "apps/web/e2e/staff-finance-list-recovery.spec.ts",
+          "sha256": "3e038f24f3c19b26745574af9eea1988b20cea6513658f239cb9d578e793faba"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/DeadLetterPanel.tsx",
+          "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+        },
+        {
+          "path": "apps/web/src/components/InvoiceLedger.test.tsx",
+          "sha256": "6f178da1364af11fb8225b45ddb773ebcc41e21162cd23bf94a7c52e971593ab"
+        },
+        {
+          "path": "apps/web/src/components/InvoiceLedger.tsx",
+          "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+        },
+        {
+          "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
+          "sha256": "5d5d6c4e53e74eaf966cb53f4f2e2ffeefa44ae1dc16af09356410eccaadf2ec"
+        },
+        {
+          "path": "apps/web/src/hooks/useServerQuery.ts",
+          "sha256": "d48dcb712ea4eee821a3b101e12b3d7ee81f11277a8b42ab8aeb594cb2fab47d"
+        },
+        {
+          "path": "apps/web/src/lib/customer-invoices.ts",
+          "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
+        },
+        {
+          "path": "apps/web/src/lib/finance-list-query.ts",
+          "sha256": "bb06123c5829331321c30cea6ac9eb5ac132dff362c4090cda7b81243e173ba0"
+        },
+        {
+          "path": "apps/web/src/lib/reconciliation-form.ts",
+          "sha256": "87531468dd966c9022e11b878ece6f793326d102b7c719799d1ead5f5845cfed"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
+          "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
+        },
+        {
+          "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
+          "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
+          "sha256": "a62973132825b7800d32abc470912796421a28adf9ec38d1844c5e15597c8872"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "0552f30faffe8b9f6fa5799e21e7c313fd9b2aab9a1f334c081bf693288fb16d"
+        },
+        {
+          "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
+          "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminServiceTargetsPage.tsx",
+          "sha256": "2392b25a7002228b8305bc4ba14254d4057c3ec9423fc04bdd458a842265847c"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "83398256015140a33ac12aeb2e3c7d02ee1724df06c7fda26c83672d29a85ccf"
+        },
+        {
+          "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
+          "sha256": "cf06b456b6082a4ccc266ec428a981db53fc1f028767c62ef1384f82ee188447"
+        },
+        {
+          "path": "apps/web/src/pages/payment-review-recovery.test.tsx",
+          "sha256": "827775041ab7b8d5b795ca2a67fbc1e8c32ce49236cd6fc13d228590d88faea5"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "1c173f9d0692ef68aad194dfb376de8eaf817be1a621b53b38e2e1f399458784"
+        },
+        {
+          "path": "package.json",
+          "sha256": "886264b44b4a98229d8f38d01775db77f95128e8eb80eb1f70f2c41f97c784ff"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "aab5a31e236ab70a7c588c676e3a0a2cf0bb8250e8d96ecdc469c9be175dcfa2"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "The staff invoice ledger rejects invalid rows and cursors and accepts a detail only for the selected UUID. An uppercase deep link still resolves its canonical ID. Malformed pages preserve prior rows and exact-cursor retry. Foreign details expose no due-date or refund actions.",
+        "The reconciliation queue validates each row with the existing reviewed-item validator. Failed or malformed refreshes retain the note and retry the exact query. Permission denial and a changed valid row still retire private work.",
+        "Passed 68 native browser cases and ten instrumented Chromium cases. The 64 targeted units include eight ledger cases rechecked on final production source. All nine coverage groups, 100 budgets, typecheck, lint and formatting passed.",
+        "A receipt capture exhausted system temporary space and passed with Playwright's per-test artifact path. A service-target scan caught a toast mid-fade. It now checks that the visible toast reaches full opacity before the unchanged full-page accessibility scan. All eight service-target cases passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-finance-read-validation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-finance-read-validation/proof.json",
+      "source_scope_proof_sha256": "68cd793a55653b1ef00846a060f1b70361d7295b6f91a567d51594ffc6b22473",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-finance-read-validation/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-finance-read-validation/reviewed-all.patch",
+      "release_disposition": "Verified staff financial detail and operations recovery. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -805746,12 +805928,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Reconcile staff queue and settings list and detail states against the current route census and scoped evidence. Live Sentry delivery and required GitHub accessibility enforcement remain separate gates."
+    "goal": "Reconcile staff service queue and detail states against the route census, starting with solar construction and consultation list reads. Live Sentry delivery and required GitHub accessibility enforcement remain separate gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 command feedback is accepted and customer financial detail and history recovery have current evidence. Four launch-required criteria remain open, including conditional UI states, full adoption, staging Sentry delivery and GitHub accessibility enforcement. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 command feedback is accepted and customer and staff finance recovery have current evidence. Four launch-required criteria remain open, including conditional UI states, full adoption, staging Sentry delivery and GitHub accessibility enforcement. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {

@@ -164,6 +164,9 @@ for (const locale of ['en', 'fa'] as const)
           await expect(dialog).toHaveCount(0);
           await expect(input).toHaveValue('72');
           await expect(form.locator('button[type=submit]')).toBeDisabled();
+          const saved = page.locator('[data-sonner-toast][data-type="success"][data-front="true"]');
+          await expect(saved).toBeVisible();
+          await expect(saved).toHaveCSS('opacity', '1');
           expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
           if (
             (locale === 'en' && theme === 'light' && info.project.name === 'chromium') ||

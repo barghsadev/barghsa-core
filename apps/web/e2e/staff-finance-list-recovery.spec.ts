@@ -71,6 +71,7 @@ for (const locale of ['en', 'fa'] as const) {
     await shell(page, locale);
     let held: Route | undefined,
       fail = true,
+      malformedPage = false,
       detailReads = 0;
     const queries: string[] = [];
     await page.route(/\/api\/admin\/invoices\/ledger(?:\?|$)/, (route) => {
@@ -79,6 +80,9 @@ for (const locale of ['en', 'fa'] as const) {
       if (query.has('beforeAt') && fail) {
         held = route;
         return;
+      }
+      if (query.has('beforeAt') && malformedPage) {
+        return route.fulfill({ json: { items: [null], nextCursor: null } });
       }
       return route.fulfill({
         json: {
@@ -91,7 +95,7 @@ for (const locale of ['en', 'fa'] as const) {
       detailReads++;
       return route.fulfill({
         json: {
-          ...invoice(first),
+          ...invoice(detailReads === 1 ? older : first),
           lines: [],
           activity: { payments: [], bankReceipts: [], refunds: [] },
         },
@@ -103,6 +107,10 @@ for (const locale of ['en', 'fa'] as const) {
       .getByRole('button', { name: `${ledgerWord('detail')}: ${first}`, exact: true })
       .click();
     const detail = ledger.getByRole('region', { name: ledgerWord('detail'), exact: true });
+    await expect(detail.getByRole('alert')).toContainText(ledgerWord('detailError'));
+    await expect(detail.getByText(older, { exact: true })).toHaveCount(0);
+    await expect(detail.getByRole('button', { name: ledgerWord('useDueAt') })).toHaveCount(0);
+    await detail.getByRole('button', { name: ledgerWord('retry'), exact: true }).click();
     await expect(detail.getByText(first, { exact: true })).toBeVisible();
     const content = ledger.locator('[data-slot="list-content"]');
     const more = ledger.getByRole('button', { name: ledgerWord('more'), exact: true });
@@ -119,13 +127,21 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(retry).toBeVisible();
     const failed = queries.at(-1);
     fail = false;
+    malformedPage = true;
+    await retry.click();
+    await expect(retry).toBeVisible();
+    await expect(
+      content.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+    ).toHaveCount(1);
+    expect(queries.at(-1)).toBe(failed);
+    malformedPage = false;
     await retry.click();
     await expect(
       content.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
     ).toHaveCount(2);
     expect(queries.at(-1)).toBe(failed);
     expect(new URLSearchParams(failed).get('beforeAt')).toBe(stamp);
-    expect(detailReads).toBe(1);
+    expect(detailReads).toBe(2);
     const scroll = detail.locator('[data-slot="scroll-area-viewport"]');
     await scroll.focus();
     await page.keyboard.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');

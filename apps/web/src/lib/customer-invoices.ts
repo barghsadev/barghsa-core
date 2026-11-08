@@ -194,7 +194,7 @@ function optionalText(value: unknown): boolean {
   return value == null || typeof value === 'string';
 }
 
-function validInvoiceLine(value: unknown): boolean {
+export function validInvoiceLine(value: unknown): boolean {
   return (
     record(value) &&
     typeof value.description === 'string' &&
@@ -240,23 +240,11 @@ function validActivityRow(row: Record<string, unknown>): boolean {
   return typeof row.id === 'string' && typeof row.state === 'string' && amount(row.amount);
 }
 
-function validInvoiceDetails(value: unknown, invoiceId: string): value is CustomerInvoiceDetails {
+export function validInvoiceActivity(
+  value: unknown
+): value is Pick<CustomerInvoiceDetails, 'payments' | 'bankReceipts' | 'refunds'> {
   return (
     record(value) &&
-    value.viewedInvoiceId === invoiceId &&
-    typeof value.originalInvoiceId === 'string' &&
-    validInvoiceNode(value.invoice) &&
-    value.invoice.invoiceId === invoiceId &&
-    Array.isArray(value.chain) &&
-    value.chain.every(validInvoiceNode) &&
-    [
-      value.consultationId,
-      value.contractId,
-      value.contractState,
-      value.electricityOrderId,
-      value.savingOrderId,
-      value.solarRequestId,
-    ].every(optionalText) &&
     optionalRows(
       value.payments,
       (row) =>
@@ -288,6 +276,27 @@ function validInvoiceDetails(value: unknown, invoiceId: string): value is Custom
         typeof row.destination === 'string' &&
         typeof row.updatedAt === 'string'
     )
+  );
+}
+
+function validInvoiceDetails(value: unknown, invoiceId: string): value is CustomerInvoiceDetails {
+  return (
+    record(value) &&
+    value.viewedInvoiceId === invoiceId &&
+    typeof value.originalInvoiceId === 'string' &&
+    validInvoiceNode(value.invoice) &&
+    value.invoice.invoiceId === invoiceId &&
+    Array.isArray(value.chain) &&
+    value.chain.every(validInvoiceNode) &&
+    [
+      value.consultationId,
+      value.contractId,
+      value.contractState,
+      value.electricityOrderId,
+      value.savingOrderId,
+      value.solarRequestId,
+    ].every(optionalText) &&
+    validInvoiceActivity(value)
   );
 }
 

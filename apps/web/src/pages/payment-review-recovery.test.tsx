@@ -283,6 +283,38 @@ it('reconciliation read recovery keeps an open note and retries the same applied
     accessReads
   );
 });
+it('a malformed reconciliation refresh keeps the last accepted investigation and note', async () => {
+  const pending = deferred();
+  let hold = false;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn((url: RequestInfo | URL) =>
+      hold && String(url).startsWith('/api/admin/reconciliation/items?')
+        ? pending.promise
+        : Promise.resolve(read(url))
+    )
+  );
+  await act(async () => root.render(<QueryProvider>{<Reconciliation />}</QueryProvider>));
+  hold = true;
+  await click('Refresh exceptions');
+  await click('Ledger mismatch');
+  await fill('#rex-note', 'Keep this investigation');
+  await act(async () =>
+    pending.resolve(Response.json([{ ...reconciliationItem, description: { invalid: true } }]))
+  );
+  const dialog = document.querySelector('[role="dialog"]')!;
+  expect(dialog.querySelector('[role="alert"]')).not.toBeNull();
+  expect(dialog.querySelector<HTMLTextAreaElement>('#rex-note')?.value).toBe(
+    'Keep this investigation'
+  );
+  hold = false;
+  await click('Retry', dialog);
+  expect(dialog.querySelector('[role="alert"]')).toBeNull();
+  expect(dialog.querySelector<HTMLTextAreaElement>('#rex-note')?.value).toBe(
+    'Keep this investigation'
+  );
+});
+
 it('reconciliation permission recovery retains work on a transient error and clears it on denial', async () => {
   const pending = deferred();
   let accessStatus = 200,
