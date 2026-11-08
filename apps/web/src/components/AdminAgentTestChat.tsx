@@ -2,9 +2,12 @@ import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Button } from '@barghsa/ui';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { assistantChatFormText } from '@barghsa/i18n/assistant-chat-forms';
+import { confirmationText } from '@barghsa/i18n/confirmation';
+import { authErrorCode } from '../lib/auth-errors.js';
 import { withCsrf } from '../lib/csrf.js';
 import { inputErrorFields } from '../lib/input-error-fields.js';
 import { chatSlots, readTestChatResult, type TestChatResult } from '../lib/assistant-chat.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -28,6 +31,7 @@ type Request = {
   requestId: string;
 };
 const blank = () => ({ agentId: '', slotKey: '', message: '' });
+const TEST_CHAT_DEADLINE_MS = 300_000;
 interface Turn {
   id: string;
   sentAt: number;
@@ -150,50 +154,59 @@ export function AdminAgentTestChat({
     setBusy(true);
     setError('');
     try {
-      const response = await fetch('/api/admin/ai/test-chat', {
-        method: 'POST',
-        credentials: 'include',
-        signal: request.signal,
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify(payload),
-      });
+      const { response, data, accessDenied } = await readWithDeadline(
+        request.signal,
+        async (signal) => {
+          const response = await fetch('/api/admin/ai/test-chat', {
+            method: 'POST',
+            credentials: 'include',
+            signal,
+            headers: withCsrf({ 'Content-Type': 'application/json' }),
+            body: JSON.stringify(payload),
+          });
+          const accessDenied = response.status === 401 || response.status === 403;
+          const data: unknown = accessDenied ? null : await response.json().catch(() => null);
+          return { response, data, accessDenied };
+        },
+        TEST_CHAT_DEADLINE_MS
+      );
       if (request.signal.aborted || !mounted.current) return;
+      const { status } = response;
       if (!response.ok) {
-        if (response.status === 401 || response.status === 403) {
+        if (accessDenied) {
           clear(true);
           setDenied(true);
           setError(copy('denied'));
           live.current.onDenied?.();
           return;
         }
-        const fields = inputErrorFields(
-          await response.json().catch(() => null),
-          response.status
-        ).fields;
-        if (request.signal.aborted || !mounted.current) return;
-        if (response.status === 429) {
+        const fields = inputErrorFields(data, status).fields;
+        const unconfirmed =
+          status === 408 || (status === 409 && authErrorCode(data) === 'AI_TEST_CHAT_IN_PROGRESS');
+        if (status === 429) {
           setQuota(0);
           cooldown.read(response);
           setError(label('rateLimited'));
         } else if (fields && ownedFields(fields)) {
           setServerFields(fields as (keyof Draft)[]);
           setError(copy('invalid'));
-        } else if (response.status === 422) {
+        } else if (status === 422) {
           setError(label('policyBlocked'));
-        } else if (response.status === 409) {
+        } else if (unconfirmed) {
+          setError(confirmationText('unconfirmed', locale));
+        } else if (status === 409) {
           setError(label('unavailable'));
         } else {
           setError(label('error'));
         }
-        if (response.status < 500 && response.status !== 429) {
+        if (status < 500 && status !== 429 && !unconfirmed) {
           setPending(null);
           captured.current = null;
         }
         return;
       }
-      const result = readTestChatResult(await response.json(), payload.conversationId);
-      if (request.signal.aborted || !mounted.current) return;
-      if (response.status !== 200 || !result) throw new Error('Invalid answer');
+      const result = readTestChatResult(data, payload.conversationId);
+      if (status !== 200 || !result) throw new Error('Invalid answer');
       setTurns((current) => [
         ...current,
         { id: payload.requestId, sentAt, receivedAt: Date.now(), message: payload.message, result },
@@ -204,7 +217,8 @@ export function AdminAgentTestChat({
       setPending(null);
       captured.current = null;
     } catch {
-      if (!request.signal.aborted && mounted.current) setError(label('error'));
+      if (!request.signal.aborted && mounted.current)
+        setError(confirmationText('unconfirmed', locale));
     } finally {
       if (controller.current === request) {
         controller.current = null;

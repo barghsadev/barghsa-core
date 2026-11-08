@@ -28,6 +28,8 @@ The customer guide allows up to 300 seconds for retrieval, answer generation and
 
 The public and staff question forms allow up to 300 seconds for the response, including its body. A timeout keeps the question in the field and releases the send control. Sending it again takes an explicit action. A response from a timed-out request or an obsolete workspace cannot replace the current answer.
 
+Admin agent previews allow the same 300 seconds. After a timeout or an in-progress response, Retry checks the same request ID and keeps the captured message and conversation until its receipt arrives.
+
 Consultation intake and replies allow up to 15 seconds for a response, including its body. A timeout leaves the outcome unconfirmed. Intake allows an explicit retry of the original product and submission key. A reply remains locked until a fresh request history confirms the captured information. A late acknowledgement cannot substitute for that history check.
 
 Consultation offer preview and decision responses have the same deadline. An unconfirmed decision closes its review and refreshes the saved request. While the same offer remains pending, only the same decision can be reviewed again. Each new review requires fresh confirmation. Open invoice payment only after a receipt confirms the reviewed request, offer and invoice.

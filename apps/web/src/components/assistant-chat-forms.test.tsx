@@ -74,6 +74,7 @@ beforeEach(async () => {
 afterEach(async () => {
   await act(async () => root.unmount());
   host.remove();
+  vi.useRealTimers();
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
 });
@@ -379,6 +380,62 @@ for (const kind of ['customer', 'admin'] as const) {
     expect(input().value).toBe('');
   });
 }
+for (const stalled of ['headers', 'body'] as const)
+  it(`admin: rechecks the captured request after stalled ${stalled} and in-progress receipts`, async () => {
+    vi.useFakeTimers();
+    let late!: () => void;
+    const request = vi.fn(async (_url: RequestInfo | URL, _options: RequestInit) => {
+      switch (request.mock.calls.length) {
+        case 1: {
+          const old = { ...result, reply: 'Obsolete answer' };
+          if (stalled === 'headers')
+            return new Promise<Response>((resolve) => {
+              late = () => resolve(Response.json(old));
+            });
+          const response = Response.json(null);
+          vi.spyOn(response, 'json').mockImplementation(
+            () => new Promise((resolve) => (late = () => resolve(old)))
+          );
+          return response;
+        }
+        case 2:
+          return Response.json({ error: 'AI_TEST_CHAT_IN_PROGRESS' }, { status: 409 });
+        case 3:
+          return Response.json({}, { status: 408 });
+        default:
+          return Response.json(result);
+      }
+    });
+    vi.stubGlobal('fetch', request);
+    await prepare('admin');
+    await submit();
+    await vi.waitFor(() => expect(request).toHaveBeenCalledTimes(1));
+    expect(input().closest('form')?.getAttribute('aria-busy')).toBe('true');
+    await act(async () => vi.advanceTimersByTimeAsync(300_000));
+    expect(request.mock.calls[0]![1].signal?.aborted).toBe(true);
+    expect(input().closest('form')?.getAttribute('aria-busy')).toBe('false');
+    expect(input().value).toBe('  Draft question  ');
+    expect(input().disabled).toBe(true);
+    expect(request).toHaveBeenCalledTimes(1);
+    expect(host.textContent).toContain('The outcome is unconfirmed.');
+
+    await act(async () => late());
+    expect(host.textContent).not.toContain('Obsolete answer');
+    for (const attempts of [2, 3]) {
+      await act(async () => button('Retry').click());
+      expect(request).toHaveBeenCalledTimes(attempts);
+      expect(input().disabled).toBe(true);
+      expect(host.textContent).toContain('The outcome is unconfirmed.');
+    }
+    await act(async () => button('Retry').click());
+    expect(request).toHaveBeenCalledTimes(4);
+    expect(new Set(request.mock.calls.map(([, options]) => options.body))).toEqual(
+      new Set([request.mock.calls[0]![1].body])
+    );
+    expect(host.textContent).toContain('Verified guide answer');
+    expect(input().value).toBe('');
+  });
+
 it('customer: explicitly edits a failed question without losing text and restores focus', async () => {
   vi.stubGlobal(
     'fetch',

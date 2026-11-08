@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T20:34:07+00:00",
-  "source_commit": "f5546cd7d133b76c384729a93fd57b7bf1141b4e",
+  "updated": "2026-11-08T20:43:48+00:00",
+  "source_commit": "da3612aad943af8e202d986cf297f4a5e78dc195",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -103634,11 +103634,11 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -104476,7 +104476,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -104484,7 +104484,7 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
@@ -104504,7 +104504,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/hooks/useChatRetryAfter.ts",
@@ -454722,11 +454722,11 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -455200,11 +455200,11 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -455704,11 +455704,11 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -456181,11 +456181,11 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -456683,11 +456683,11 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -457215,7 +457215,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -457223,11 +457223,11 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/hooks/useChatRetryAfter.ts",
@@ -457780,7 +457780,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -457788,11 +457788,11 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/hooks/useChatRetryAfter.ts",
@@ -458343,7 +458343,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -458351,11 +458351,11 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/hooks/useChatRetryAfter.ts",
@@ -458906,7 +458906,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -458914,11 +458914,11 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/hooks/useChatRetryAfter.ts",
@@ -459968,7 +459968,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -459976,11 +459976,11 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/hooks/useChatRetryAfter.ts",
@@ -460655,7 +460655,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -460663,7 +460663,7 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
@@ -460683,7 +460683,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/hooks/useChatRetryAfter.ts",
@@ -461704,7 +461704,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -461712,11 +461712,11 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/hooks/useChatRetryAfter.ts",
@@ -462266,7 +462266,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -462274,11 +462274,11 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/hooks/useChatRetryAfter.ts",
@@ -462829,7 +462829,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -462837,11 +462837,11 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/hooks/useChatRetryAfter.ts",
@@ -463393,7 +463393,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -463401,11 +463401,11 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/hooks/useChatRetryAfter.ts",
@@ -463979,7 +463979,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -463987,11 +463987,11 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/hooks/useChatRetryAfter.ts",
@@ -464541,7 +464541,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -464549,11 +464549,11 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/hooks/useChatRetryAfter.ts",
@@ -492678,7 +492678,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AdminBusinessWorkCounts.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
+              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -497500,7 +497500,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AdminBusinessWorkCounts.tsx",
@@ -508161,7 +508161,7 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
@@ -512012,7 +512012,7 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/ContractActivationRules.tsx",
@@ -517341,7 +517341,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AdminSettingsLayout.tsx",
@@ -517353,7 +517353,7 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
+              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -518833,7 +518833,7 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
+              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -567523,7 +567523,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
+              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -569418,7 +569418,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
+              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -571018,7 +571018,7 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -573070,7 +573070,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
+              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
             },
             {
               "path": "scripts/check-changed-coverage.py",
@@ -574200,7 +574200,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
+              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -576095,7 +576095,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
+              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577990,7 +577990,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
+              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -579885,7 +579885,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
+              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581780,7 +581780,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
+              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -583675,7 +583675,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
+              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -585570,7 +585570,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
+              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -587465,7 +587465,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
+              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589360,7 +589360,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
+              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591255,7 +591255,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
+              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593150,7 +593150,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
+              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594414,7 +594414,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
+              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595785,7 +595785,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
+              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -597680,7 +597680,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9051c113958972bfd7be8670ac35a5a600334e9eb6ae1dbc0d443283b31b46f5"
+              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -598484,7 +598484,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The shared sensitive-action OTP now recovers from stalled delivery or verification without dispatching the protected operation. Finish matching the remaining route and widget conditional states to current implementation and test receipts."
+        "The shared sensitive-action OTP and admin test chat now have bounded, explicit recovery. Match the remaining original route and widget loading, empty, error and stale-state criteria to current implementation and exact test receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -598593,7 +598593,8 @@
           "release-0.5-wallet-ledger-read-recovery",
           "release-0.5-record-workspace-read-states",
           "release-0.5-route-theme-layout",
-          "release-0.5-sensitive-otp-deadline"
+          "release-0.5-sensitive-otp-deadline",
+          "release-0.5-admin-test-chat-deadline"
         ],
         "current_acceptance": null
       }
@@ -661833,7 +661834,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -661841,7 +661842,7 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -661869,7 +661870,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
@@ -662515,7 +662516,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -662523,7 +662524,7 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -662551,7 +662552,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
@@ -663199,7 +663200,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -663207,7 +663208,7 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -663235,7 +663236,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
@@ -663881,7 +663882,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -663889,7 +663890,7 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -663917,7 +663918,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
@@ -664562,7 +664563,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -664570,7 +664571,7 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -664598,7 +664599,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
@@ -665742,7 +665743,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -665750,7 +665751,7 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -665778,7 +665779,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
@@ -666424,7 +666425,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -666432,7 +666433,7 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -666460,7 +666461,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
@@ -667107,7 +667108,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -667115,7 +667116,7 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -667143,7 +667144,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
@@ -667331,7 +667332,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "The isolated admin preview keeps its request ID after a timeout or pending receipt. The shared chat composer and all 101 budgets passed scoped verification. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-test-chat-deadline/proof.json"
           ],
           "criterion_result": "AdminAgentTestChat reuses shared input/messages, lists every agent with inactive drafts disabled, refuses forged inactive selection, retains captured session-owned conversations and shows source/policy/token/latency metadata. Current permission/agent removal clears private work and uncertain retries retain request identity.",
           "limitations": [
@@ -667788,7 +667790,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -667796,7 +667798,7 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -667824,7 +667826,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
@@ -668468,7 +668470,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -668476,7 +668478,7 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -668504,7 +668506,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
@@ -669148,7 +669150,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -669156,7 +669158,7 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -669184,7 +669186,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
@@ -669828,7 +669830,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
@@ -669836,7 +669838,7 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -669864,7 +669866,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
@@ -670052,7 +670054,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "The isolated admin preview keeps its request ID after a timeout or pending receipt. The shared chat composer and all 101 budgets passed scoped verification. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-test-chat-deadline/proof.json"
           ],
           "criterion_result": "Admin preview uses separate session-owned ai_test_chat_turns with bounded history, request hashes and expiry. It does not mutate production conversations or business data; actual budgets/redaction/current source and mandatory marked append-only admin_test_chat security audits remain active. UI history reset does not delete audit evidence.",
           "limitations": [
@@ -705394,7 +705397,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AdminAiSections.test.tsx",
@@ -721756,7 +721759,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AgentPromptTextarea.test.tsx",
@@ -721776,7 +721779,7 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/BrandedEmailPreview.tsx",
@@ -721916,7 +721919,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
@@ -725630,7 +725633,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/AgentPromptTextarea.test.tsx",
@@ -725650,7 +725653,7 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/BrandedEmailPreview.tsx",
@@ -725782,7 +725785,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
-              "sha256": "0ec01c9035e0d5f135406c495edcd5cd479630a6ae426f6bceabacfabcd541ae"
+              "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
@@ -728238,7 +728241,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The layout census and selected navigation theme contrast have their own receipts. Reconcile the carried layout cells and remaining original route and shared-pattern acceptance. The shared sensitive-action OTP now has bounded, verified recovery."
+        "Reconcile the carried layout cells and the remaining original route and shared-pattern acceptance. The selected navigation, sensitive-action OTP, and admin chat timeout and mobile composer checks have separate passing receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -728413,7 +728416,8 @@
           "release-0.5-record-workspace-read-states",
           "release-0.5-route-theme-layout",
           "release-0.5-navigation-theme-transition",
-          "release-0.5-sensitive-otp-deadline"
+          "release-0.5-sensitive-otp-deadline",
+          "release-0.5-admin-test-chat-deadline"
         ]
       }
     },
@@ -728545,7 +728549,7 @@
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
-              "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
             },
             {
               "path": "apps/web/src/components/AuditLogViewer.tsx",
@@ -729957,7 +729961,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
-              "sha256": "cf0c6fbb88e60ab68c5693085fa34228c95c840d0d6185cc72088aae2d11a0a8"
+              "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
             },
             {
               "path": "apps/web/src/components/CatalogueQueryEditor.tsx",
@@ -730335,7 +730339,8 @@
             "Renewed wallet history route budgets, changed-source coverage and cold auth asset comparison. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-ledger-read-recovery/proof.json",
             "Renewed record workspace route budgets, measured coverage and cold auth evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-record-workspace-read-states/proof.json",
             "The selected navigation palette now retains 4.5:1 across both account theme changes. All 101 route and interaction budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-navigation-theme-transition/proof.json",
-            "Sensitive-action OTP deadlines passed across all 32 scoped native cases. The critical coverage group and all 101 bundle budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-sensitive-otp-deadline/proof.json"
+            "Sensitive-action OTP deadlines passed across all 32 scoped native cases. The critical coverage group and all 101 bundle budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-sensitive-otp-deadline/proof.json",
+            "The isolated admin preview keeps its request ID after a timeout or pending receipt. The shared chat composer and all 101 budgets passed scoped verification. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-test-chat-deadline/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -806775,6 +806780,52 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-sensitive-otp-deadline/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-sensitive-otp-deadline/reviewed.patch",
       "release_disposition": "Verified bounded recovery in the shared sensitive-action OTP dialog. v0.5.0 remains open."
+    },
+    "release-0.5-admin-test-chat-deadline": {
+      "batch": "release-0.5-admin-test-chat-deadline",
+      "base_commit": "da3612aad943af8e202d986cf297f4a5e78dc195",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "07-ui-ux-design.md#T-07.21.01.01",
+        "07-ui-ux-design.md#T-07.21.01.05",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/components/AdminAgentTestChat.tsx",
+          "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
+        },
+        {
+          "path": "apps/web/src/components/AssistantChatComponents.tsx",
+          "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
+        },
+        {
+          "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
+          "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
+        }
+      ],
+      "checks": [
+        "Admin agent test chat bounds response headers and JSON using the established 300-second AI request allowance. A deadline, 408 or the server's in-progress receipt keeps the same captured request, message and conversation. An explicit retry checks the same request ID, and an obsolete response cannot publish a second answer.",
+        "The normal 401/403 withdrawal, 429 cooldown, policy denial, response parsing and source review still have focused checks. The admin path continues using the existing server-owned request receipts.",
+        "The first mobile Safari run exposed a 64 px composer after reset instead of the existing 80 px expectation. The prior runtime reproduced it in both languages and showed the generic 44 px touch minimum overriding the composer minimum. The shared composer now retains its 80 px minimum on those mobile views. The original 80 px and 240 px assertions passed.",
+        "64 targeted units and 24 production browser cases passed across Chromium and mobile Safari, both languages, admin agent previews and customer/admin shared inputs. The changed-source coverage gate passed both groups. The class-only composer edit adds no executable coverage statement.",
+        "The first application build exceeded the existing staff wallet receipt budget with 500007 bytes. The final scoped response parsing and composer source passed all 101 unchanged budgets, including the 500 KB staff wallet receipt cap at 499.95 KB. Typecheck, formatting and lint passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-test-chat-deadline",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-test-chat-deadline/proof.json",
+      "source_scope_proof_sha256": "13ed3c885fb2879aba2be3b48f4e24111fcb83497dce05dd858a6349fb89c186",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-test-chat-deadline/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-test-chat-deadline/reviewed.patch",
+      "release_disposition": "Verified bounded admin test chat and the shared mobile composer. v0.5.0 remains open."
     }
   },
   "historical_improvements": [
@@ -806825,12 +806876,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Resolve the demonstrated stalled admin agent test-chat response, then reconcile remaining route and widget conditional states against existing source-bound checks. GitHub merge enforcement and staging Sentry delivery remain independent gates."
+    "goal": "Reconcile carried layout cells and the remaining named route and widget conditions against current implementation and exact receipts. GitHub merge enforcement and staging Sentry delivery remain independent gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 has the populated route census, verified navigation contrast and bounded sensitive OTP recovery. Four launch-required criteria remain open and the November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 has the route census and verified shared navigation, OTP, and admin chat repairs. Four launch-required criteria remain open and the November 9 sequence remains at risk."
   },
   "capabilities": [
     {

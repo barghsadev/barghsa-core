@@ -167,7 +167,7 @@ export function ChatInput({
         }}
         rows={2}
         disabled={busy || textareaProps.disabled}
-        className="min-h-20 max-h-60 w-full resize-none overflow-y-auto rounded-lg border bg-background px-3 py-2 text-sm leading-6 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        className="min-h-20! max-h-60 w-full resize-none overflow-y-auto rounded-lg border bg-background px-3 py-2 text-sm leading-6 outline-none focus-visible:ring-2 focus-visible:ring-primary"
         onKeyDown={(event) => {
           textareaProps.onKeyDown?.(event);
           if (event.defaultPrevented) return;
