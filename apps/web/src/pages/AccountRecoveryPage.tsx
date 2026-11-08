@@ -10,8 +10,12 @@ import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialo
 import { uploadVerificationEvidence } from '../lib/invoice-bank-receipt-upload.js';
 interface RecoveryAction extends TeamAction {
   expectedState?: string;
-  codeReceipt?: boolean;
+  caseId?: string;
+  submissionKey?: string;
+  previousChallengeId?: string | null;
 }
+const emptyDraft = { profileId: '', newLogin: '', supportReference: '', reason: '' };
+const emptyNotices = { oldContact: '', newContact: '' };
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 interface RecoveryCase {
   id: string;
@@ -59,55 +63,78 @@ export default function AccountRecoveryPage() {
 }
 function RecoveryWorkflow({ actor }: { actor: string | null }) {
   const locale = useLocale();
-  const [draft, setDraft] = useState({
-    profileId: '',
-    newLogin: '',
-    supportReference: '',
-    reason: '',
-  });
+  const [draft, setDraft] = useState(emptyDraft);
   const [caseId, setCaseId] = useState(''),
     [selectedId, setSelectedId] = useState<string | null>(null);
   const [files, setFiles] = useState<File[]>([]),
     [notes, setNotes] = useState('');
-  const [notices, setNotices] = useState({ oldContact: '', newContact: '' });
+  const [notices, setNotices] = useState(emptyNotices);
   const [action, setAction] = useState<RecoveryAction | null>(null),
+    [heldCreation, setHeldCreation] = useState<RecoveryAction | null>(null),
+    [caseRecovery, setCaseRecovery] = useState<number | null>(null),
     [busy, setBusy] = useState(false),
     [error, setError] = useState(false);
   const mounted = useRef(true),
     inFlight = useRef(false);
+  const upload = useRef<AbortController | null>(null);
+  const fileInput = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
     mounted.current = true;
     return () => {
       mounted.current = false;
+      upload.current?.abort();
     };
   }, []);
   const denied = useCallback(() => {
+    upload.current?.abort();
     setAction(null);
+    setHeldCreation(null);
+    setCaseRecovery(null);
     setSelectedId(null);
+    setCaseId('');
+    setDraft(emptyDraft);
+    setFiles([]);
+    setNotes('');
+    setNotices(emptyNotices);
+    if (fileInput.current) fileInput.current.value = '';
   }, []);
   const scope = useCatalogueScope(denied);
+  const validateCase = useCallback(
+    (value: unknown): value is RecoveryCase => valid(value) && value.id === selectedId,
+    [selectedId]
+  );
   const read = useCatalogueResource(
     scope,
     selectedId ? `/api/crm/account-recovery/${selectedId}` : null,
-    valid
+    validateCase
   );
   const data = read.data;
-  const blocked = busy || !!action || read.loading || scope.denied || read.error;
+  const blocked =
+    busy ||
+    !!action ||
+    !!heldCreation ||
+    read.loading ||
+    scope.denied ||
+    read.error ||
+    (caseRecovery !== null && (read.readAttempt ?? -1) < caseRecovery);
   async function create(event: FormEvent) {
     event.preventDefault();
-    if (inFlight.current || busy || action || !files.length) return;
+    if (inFlight.current || busy || action || heldCreation || scope.denied || !files.length) return;
     inFlight.current = true;
     setBusy(true);
     setError(false);
     const input = { ...draft };
+    const controller = new AbortController();
+    upload.current = controller;
     const keys: string[] = [];
     try {
       for (const file of files) {
-        const key = await uploadVerificationEvidence(file, input.profileId);
-        if (!mounted.current) return;
+        const key = await uploadVerificationEvidence(file, input.profileId, controller.signal);
+        if (!mounted.current || controller.signal.aborted) return;
         if (!key) throw new Error();
         keys.push(key);
       }
+      const submissionKey = crypto.randomUUID();
       setAction({
         title: t('auth.recovery.create', locale),
         description: `${input.profileId} · ${input.newLogin} · ${input.supportReference}`,
@@ -115,25 +142,29 @@ function RecoveryWorkflow({ actor }: { actor: string | null }) {
         method: 'POST',
         successStatus: 201,
         expectedState: 'open',
-        body: { ...input, evidenceKeys: keys },
+        submissionKey,
+        body: { ...input, evidenceKeys: keys, submissionKey },
       });
     } catch {
-      if (mounted.current) setError(true);
+      if (mounted.current && !controller.signal.aborted) setError(true);
     } finally {
       inFlight.current = false;
+      upload.current = null;
       if (mounted.current) setBusy(false);
     }
   }
-  function command(kind: string, body?: unknown) {
+  function command(kind: 'approve' | 'reject' | 'sendCode' | 'apply' | 'complete', body?: unknown) {
     if (!data || blocked) return;
     setError(false);
+    setCaseRecovery(null);
     setAction({
       title: t(`auth.recovery.${kind}`, locale),
       description: `${data.id} · ${data.targetUserId} · ${data.oldLogin} → ${data.newLogin}`,
       path: `/api/crm/account-recovery/${data.id}/${kind === 'approve' || kind === 'reject' ? 'review' : kind === 'sendCode' ? 'code' : kind}`,
       method: 'POST',
+      caseId: data.id,
       ...(kind === 'sendCode'
-        ? { codeReceipt: true }
+        ? { previousChallengeId: data.challengeId, body: { expectedChallengeId: data.challengeId } }
         : {
             expectedState:
               kind === 'approve'
@@ -152,7 +183,10 @@ function RecoveryWorkflow({ actor }: { actor: string | null }) {
       <h1 className="text-2xl font-semibold">{t('auth.recovery.title', locale)}</h1>
       <p>{t('auth.recovery.instructions', locale)}</p>
       <form onSubmit={(e) => void create(e)} className="rounded border p-4 space-y-3">
-        <fieldset disabled={busy || !!action || scope.denied} className="space-y-3">
+        <fieldset
+          disabled={busy || !!action || !!heldCreation || scope.denied}
+          className="space-y-3"
+        >
           {(Object.keys(draft) as Array<keyof typeof draft>).map((key) => (
             <div key={key}>
               <Label htmlFor={`recovery-${key}`}>{t(`auth.recovery.${key}`, locale)}</Label>
@@ -168,6 +202,7 @@ function RecoveryWorkflow({ actor }: { actor: string | null }) {
           <div>
             <Label htmlFor="recovery-evidence">{t('auth.recovery.evidence', locale)}</Label>
             <Input
+              ref={fileInput}
               id="recovery-evidence"
               type="file"
               required
@@ -182,6 +217,15 @@ function RecoveryWorkflow({ actor }: { actor: string | null }) {
           </Button>
         </fieldset>
       </form>
+      {heldCreation && !action && (
+        <div className="space-y-2">
+          <p role="alert">{confirmationText('unconfirmed', locale)}</p>
+          <Button variant="outline" onClick={() => setAction({ ...heldCreation })}>
+            {t('auth.recovery.retryCreation', locale)}
+          </Button>
+        </div>
+      )}
+      {caseRecovery !== null && <p role="alert">{confirmationText('unconfirmed', locale)}</p>}
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -196,14 +240,17 @@ function RecoveryWorkflow({ actor }: { actor: string | null }) {
             required
             aria-required="true"
             value={caseId}
-            disabled={busy || !!action}
+            disabled={busy || !!action || !!heldCreation}
             onChange={(e) => {
               setCaseId(e.target.value);
               setSelectedId(null);
+              setCaseRecovery(null);
+              setNotes('');
+              setNotices(emptyNotices);
             }}
           />
         </div>
-        <Button type="submit" disabled={busy || !!action}>
+        <Button type="submit" disabled={busy || !!action || !!heldCreation}>
           {t('auth.recovery.load', locale)}
         </Button>
       </form>
@@ -364,8 +411,17 @@ function RecoveryWorkflow({ actor }: { actor: string | null }) {
       {action && (
         <TeamActionDialog
           action={action}
+          summary={heldCreation ? <p>{confirmationText('unconfirmed', locale)}</p> : undefined}
           onClose={() => setAction(null)}
           onDenied={() => scope.deny()}
+          onUnconfirmed={() => {
+            if (action.submissionKey) {
+              setHeldCreation(action);
+            } else {
+              setCaseRecovery(read.retry());
+              setAction(null);
+            }
+          }}
           onSuccess={async (result) => {
             if (!mounted.current) return;
             if (
@@ -384,13 +440,25 @@ function RecoveryWorkflow({ actor }: { actor: string | null }) {
             )
               throw new Error('Unconfirmed recovery state');
             if (
-              action.codeReceipt &&
+              action.previousChallengeId !== undefined &&
               (!('challengeId' in result) ||
                 typeof result.challengeId !== 'string' ||
-                !uuidPattern.test(result.challengeId))
+                !uuidPattern.test(result.challengeId) ||
+                result.challengeId === action.previousChallengeId)
             )
               throw new Error('Unconfirmed recovery challenge');
-            if (selectedId && result.id !== selectedId) throw new Error('Wrong recovery receipt');
+            if (action.caseId && result.id !== action.caseId)
+              throw new Error('Wrong recovery receipt');
+            if (action.submissionKey) {
+              if (!('submissionKey' in result) || result.submissionKey !== action.submissionKey)
+                throw new Error('Wrong creation receipt');
+              setHeldCreation(null);
+              setDraft(emptyDraft);
+              setFiles([]);
+              setNotes('');
+              setNotices(emptyNotices);
+              if (fileInput.current) fileInput.current.value = '';
+            }
             setCaseId(result.id);
             setSelectedId(result.id);
             setAction(null);

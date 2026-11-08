@@ -5,7 +5,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { createHash } from 'node:crypto';
 import { getDbPool, type AccountRecoveryCase } from '@barghsa/db';
+import { idempotencyKeyExpiresAt } from '@barghsa/shared/finance';
 import { normalizeUsername } from '@barghsa/shared/validation';
 import { v7 as uuidv7 } from 'uuid';
 import type { PoolClient } from 'pg';
@@ -15,17 +17,20 @@ import { requireCurrentSession, requireSessionStepUp } from '../session/session-
 import type { ValidatedSession } from '../session/session.service.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { VerificationEvidenceService } from './verification-evidence.service.js';
+import { IdempotencyKeysRepository } from '../idempotency/idempotency-keys.repository.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 type SnakeCase<S extends string> = S extends `${infer First}${infer Rest}`
   ? `${First extends Lowercase<First> ? First : `_${Lowercase<First>}`}${SnakeCase<Rest>}`
   : S;
 type Row = { [K in keyof AccountRecoveryCase as SnakeCase<K>]: AccountRecoveryCase[K] };
+const CREATION_ENTITY = 'account_recovery_create';
 @Injectable()
 export class AccountRecoveryService {
   constructor(
     private readonly evidence: VerificationEvidenceService,
-    private readonly otp: OtpService
+    private readonly otp: OtpService,
+    private readonly idempotency: IdempotencyKeysRepository
   ) {}
   private async audit(
     client: PoolClient,
@@ -110,6 +115,7 @@ export class AccountRecoveryService {
       supportReference: string;
       reason: string;
       evidenceKeys: string[];
+      submissionKey?: string | undefined;
     },
     ip: string
   ) {
@@ -137,6 +143,42 @@ export class AccountRecoveryService {
         auth_version: user.auth_version,
       } as Row;
       await this.currentTarget(client, row, actor);
+      const id = uuidv7();
+      const key = input.submissionKey;
+      const fingerprint = createHash('sha256')
+        .update(
+          JSON.stringify([
+            actor.userId,
+            hint.user_id,
+            input.profileId,
+            newLogin,
+            input.supportReference,
+            input.reason,
+            input.evidenceKeys,
+          ])
+        )
+        .digest('hex');
+      if (key) {
+        const now = new Date();
+        const claim = await this.idempotency.claimOrLoad(client, {
+          key,
+          entityType: CREATION_ENTITY,
+          entityId: id,
+          now,
+          expiresAt: idempotencyKeyExpiresAt(now),
+        });
+        if (claim.kind === 'in_flight') throw new ConflictException();
+        if (claim.kind === 'cached') {
+          if (
+            !claim.entityId ||
+            (claim.response as { fingerprint?: unknown } | null)?.fingerprint !== fingerprint
+          )
+            throw new ConflictException();
+          await requireSessionStepUp(client, actor);
+          await client.query('COMMIT');
+          return { id: claim.entityId, state: 'open', submissionKey: key };
+        }
+      }
       if (user.username === newLogin) throw new BadRequestException('New contact must differ');
       const evidence = await this.evidence.seal(
         client,
@@ -144,7 +186,6 @@ export class AccountRecoveryService {
         actor.userId,
         input.profileId
       );
-      const id = uuidv7();
       await client.query(
         `INSERT INTO account_recovery_cases(id,profile_id,target_user_id,auth_version,old_login,new_login,support_reference,reason,evidence_keys,created_by) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9::jsonb,$10)`,
         [
@@ -172,9 +213,16 @@ export class AccountRecoveryService {
         },
         ip
       );
+      if (key)
+        await this.idempotency.persistResponse(client, {
+          key,
+          entityType: CREATION_ENTITY,
+          entityId: id,
+          response: { fingerprint },
+        });
       await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
-      return { id, state: 'open' };
+      return { id, state: 'open', ...(key ? { submissionKey: key } : {}) };
     } catch (e) {
       await client.query('ROLLBACK').catch(() => {});
       if (typeof e === 'object' && e !== null && 'code' in e && e.code === '23505')
@@ -286,13 +334,15 @@ export class AccountRecoveryService {
       client.release();
     }
   }
-  async sendCode(actor: Actor, id: string, ip: string) {
+  async sendCode(actor: Actor, id: string, ip: string, expectedChallengeId?: string | null) {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
       const row = await this.staffCase(client, actor, id, 'crm:verify');
       if (row.state !== 'approved' || (row.approval_expires_at?.getTime() ?? 0) <= Date.now())
         throw new ConflictException('Approval unavailable or expired');
+      if (expectedChallengeId !== undefined && expectedChallengeId !== row.challenge_id)
+        throw new ConflictException('Recovery challenge changed');
       await this.currentTarget(client, row, actor);
       if (row.challenge_id)
         await client.query(

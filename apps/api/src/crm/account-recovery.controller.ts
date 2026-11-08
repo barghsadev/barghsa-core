@@ -26,7 +26,11 @@ const createInput = z
     supportReference: z.string().trim().min(1).max(200),
     reason: z.string().trim().min(1).max(2000),
     evidenceKeys: z.array(z.string().min(1).max(1024)).min(1).max(5),
+    submissionKey: z.string().uuid().toLowerCase().optional(),
   })
+  .strict();
+const sendCodeInput = z
+  .object({ expectedChallengeId: z.string().uuid().nullable().optional() })
   .strict();
 const reviewInput = z
   .object({ decision: z.enum(['approved', 'rejected']), notes: z.string().trim().min(1).max(2000) })
@@ -84,9 +88,15 @@ export class AccountRecoveryController {
   @Post(':id/code')
   @RequiresStepUp()
   @HttpCode(200)
+  @ApiZodBody(sendCodeInput)
   @ApiOperation({ summary: 'Send a purpose-bound code to the approved new contact' })
-  send(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
-    return this.service.sendCode(req.session, id, req.ip ?? '');
+  send(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    const input = parse(sendCodeInput, body ?? {});
+    return this.service.sendCode(req.session, id, req.ip ?? '', input.expectedChallengeId);
   }
   @Post(':id/apply')
   @RequiresStepUp()

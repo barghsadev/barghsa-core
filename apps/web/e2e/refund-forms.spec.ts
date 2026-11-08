@@ -83,12 +83,14 @@ for (const locale of ['en', 'fa'] as const)
       await shell(page, locale, dark);
       const word = (key: string) => adminText('admin.invoices.walletRefunds.' + key, locale);
       let requested = false,
-        attempt = 0;
+        attempt = 0,
+        reviews = 0;
       const attempts: unknown[] = [];
       await page.route(/\/api\/admin\/wallet-refunds\?/, (route) =>
         route.fulfill({ json: { invoice: balance(), refunds: [], nextBefore: null } })
       );
       await page.route('**/api/admin/wallet-refunds/review', (route) => {
+        reviews++;
         const body = route.request().postDataJSON();
         expect(body).toEqual({ invoiceId, amount: '40', reason: 'Raw request reason' });
         return route.fulfill({
@@ -184,6 +186,20 @@ for (const locale of ['en', 'fa'] as const)
         await confirm.click();
         await expect(dialog.getByRole('alert')).toBeVisible();
         await expect(reason).toHaveValue('  Raw request reason  ');
+        if (index === 0) {
+          await dialog.getByRole('button', { name: t('team.cancel', locale), exact: true }).click();
+          await expect(dialog).toHaveCount(0);
+          await expect(
+            panel.getByRole('button', { name: word('request'), exact: true })
+          ).toBeDisabled();
+          await expect(reason).toBeDisabled();
+          expect(attempts).toHaveLength(3);
+          await panel.getByRole('button', { name: word('retryRequest'), exact: true }).click();
+          await expect(confirm).toBeDisabled();
+          await approveRiskConfirmation(page, locale, 'financial');
+          expect(reviews).toBe(2);
+          expect(attempts).toHaveLength(3);
+        }
       }
       await confirm.click();
       await expect(dialog).toHaveCount(0);

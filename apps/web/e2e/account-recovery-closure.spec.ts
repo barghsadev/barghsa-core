@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/recovery';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { test, expect } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 const id = '22222222-2222-4222-8222-222222222222',
@@ -166,6 +167,147 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       page.getByRole('alert').filter({ hasText: t('auth.recovery.error', locale) })
     ).toBeVisible();
+  });
+  test(`staff retries the captured case and reads a lost code-send outcome (${locale})`, async ({
+    page,
+  }) => {
+    await crmShell(page, locale);
+    const word = (key: string) => t('auth.recovery.' + key, locale);
+    const evidenceKey = `uploads/document/${profileId}.pdf`;
+    const submissions: unknown[] = [],
+      sends: unknown[] = [];
+    let uploads = 0,
+      approved = false,
+      issued = false,
+      readFailure = false;
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    await page.route('**/api/upload/presigned-url', (route) => {
+      uploads++;
+      expect(route.request().postDataJSON()).toMatchObject({
+        profileId,
+        purpose: 'verification_evidence',
+      });
+      return route.fulfill({ json: { key: evidenceKey, presignedUrl: '/recovery-evidence-put' } });
+    });
+    await page.route('**/recovery-evidence-put', (route) => route.fulfill({ status: 200 }));
+    await page.route('**/api/upload/*/verify', (route) =>
+      route.fulfill({ json: { status: 'confirmed' } })
+    );
+    await page.route('**/api/upload/*/record', (route) =>
+      route.fulfill({ json: { status: 'recorded' } })
+    );
+    await page.route('**/api/crm/account-recovery', async (route) => {
+      const body = route.request().postDataJSON();
+      submissions.push(body);
+      if (submissions.length === 1) {
+        await held;
+        return route.abort().catch(() => {});
+      }
+      return route.fulfill({
+        status: 201,
+        json: { id, state: 'open', submissionKey: body.submissionKey },
+      });
+    });
+    await page.route(`**/api/crm/account-recovery/${id}`, (route) =>
+      route.fulfill(
+        readFailure
+          ? { status: 503, json: {} }
+          : {
+              json: {
+                id,
+                profileId,
+                targetUserId: 'claimant',
+                oldLogin: 'old@example.test',
+                newLogin: 'new@example.test',
+                state: approved ? 'approved' : 'open',
+                createdBy: 'collector',
+                reviewedBy: null,
+                supportReference: 'support-1',
+                reason: 'Identity checked',
+                reviewerNotes: null,
+                challengeId: issued ? challengeId : null,
+                contactVerified: false,
+                evidenceDownloadUrls: [],
+                history: [],
+              },
+            }
+      )
+    );
+    await page.route(`**/api/crm/account-recovery/${id}/code`, (route) => {
+      sends.push(route.request().postDataJSON());
+      issued = true;
+      readFailure = true;
+      return route.fulfill({ status: 503, json: {} });
+    });
+    await page.goto('/admin/crm/recovery');
+    for (const [key, value] of Object.entries({
+      profileId,
+      newLogin: 'new@example.test',
+      supportReference: 'support-1',
+      reason: 'Identity checked',
+    }))
+      await page.getByLabel(word(key), { exact: true }).fill(value);
+    await page.locator('#recovery-evidence').setInputFiles({
+      name: 'evidence.pdf',
+      mimeType: 'application/pdf',
+      buffer: Buffer.from('%PDF-1.7\n'),
+    });
+    const create = page.getByRole('button', { name: word('create'), exact: true });
+    await create.click();
+    const dialog = page.getByRole('dialog');
+    const confirm = dialog.getByRole('button', {
+      name: locale === 'fa' ? 'تأیید' : 'Confirm',
+      exact: true,
+    });
+    await expect(dialog).toContainText('support-1');
+    await page.clock.install();
+    await confirm.click();
+    await expect.poll(() => submissions.length).toBe(1);
+    await page.clock.runFor(15_100);
+    await expect(
+      dialog.getByText(confirmationText('unconfirmed', locale), { exact: true })
+    ).toBeVisible();
+    await dialog
+      .getByRole('button', { name: locale === 'fa' ? 'انصراف' : 'Cancel', exact: true })
+      .click();
+    release();
+    await expect(create).toBeDisabled();
+    await page.getByRole('button', { name: word('retryCreation'), exact: true }).click();
+    expect(submissions).toHaveLength(1);
+    await confirm.click();
+    await expect(dialog).toHaveCount(0);
+    await expect(page.getByText('old@example.test', { exact: true })).toBeVisible();
+    expect(uploads).toBe(1);
+    expect(submissions).toHaveLength(2);
+    expect(submissions[0]).toMatchObject({
+      profileId,
+      evidenceKeys: [evidenceKey],
+      submissionKey: expect.any(String),
+    });
+    expect(submissions[1]).toEqual(submissions[0]);
+    approved = true;
+    await page
+      .getByRole('button', { name: word('load'), exact: true })
+      .last()
+      .click();
+    const send = page.getByRole('button', { name: word('sendCode'), exact: true });
+    await send.click();
+    await confirm.click();
+    await expect(dialog).toHaveCount(0);
+    await expect(send).toBeDisabled();
+    expect(sends).toEqual([{ expectedChallengeId: null }]);
+    await expect(page.getByRole('alert').filter({ hasText: word('error') })).toBeVisible();
+    readFailure = false;
+    await page
+      .getByRole('alert')
+      .filter({ hasText: word('error') })
+      .getByRole('button')
+      .click();
+    await expect(page.getByText(challengeId, { exact: true })).toBeVisible();
+    expect(sends).toHaveLength(1);
   });
 }
 test('native browser CSP reports carry the provenance required by the bounded telemetry guard', async ({

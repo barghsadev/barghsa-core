@@ -1,5 +1,6 @@
 import { AuthModule } from '../auth/auth.module.js';
 import { AccountRecoveryService } from './account-recovery.service.js';
+import { IdempotencyKeysRepository } from '../idempotency/idempotency-keys.repository.js';
 import {
   AccountRecoveryController,
   RecoveryContactController,
@@ -30,6 +31,7 @@ import { NotificationsModule } from '../notifications/index.js';
   ],
   providers: [
     AccountRecoveryService,
+    IdempotencyKeysRepository,
     VerifiedAttachmentsService,
     VerificationEvidenceService,
     CrmService,

@@ -14,6 +14,8 @@ import {
   StatusBadge,
 } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { isInvoiceUuid } from '../lib/invoice-uuid.js';
 import { normalizeProfileDigits } from '../lib/profile-digits.js';
@@ -108,8 +110,13 @@ const externalKeys = new Set([
 
 type PanelProps = { destination: 'wallet' | 'external_bank'; selectedInvoiceId?: string };
 export function RefundPanel(props: PanelProps) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
   return (
-    <RefundWorkspace key={props.destination + ':' + (props.selectedInvoiceId ?? '')} {...props} />
+    <RefundWorkspace
+      key={JSON.stringify([actor, revision, props.destination, props.selectedInvoiceId])}
+      {...props}
+    />
   );
 }
 function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
@@ -140,6 +147,10 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
   const [action, setAction] = useState<TeamAction | null>(null),
     [summary, setSummary] = useState<React.ReactNode>(null),
     [reviewBusy, setReviewBusy] = useState(false);
+  const [heldRequest, setHeldRequest] = useState<{
+    action: TeamAction;
+    summary: React.ReactNode;
+  } | null>(null);
   const [reviewError, setReviewError] = useState<'conflict' | 'forbidden' | 'error' | null>(null),
     [decisionError, setDecisionError] = useState<
       'conflict' | 'forbidden' | 'error' | 'unconfirmed' | null
@@ -178,6 +189,7 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
   }
   function deny() {
     close();
+    setHeldRequest(null);
     readController.current?.abort();
     accepted.current = { invoice: null, refunds: [] };
     cachedDrafts.current = {};
@@ -241,7 +253,13 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
   }
   function load(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (pending.current !== null || current.current || lookup.form.isSubmissionPending()) return;
+    if (
+      heldRequest ||
+      pending.current !== null ||
+      current.current ||
+      lookup.form.isSubmissionPending()
+    )
+      return;
     void lookup.form.handleSubmit((values) => {
       if (!live.current || pending.current !== null || current.current) return;
       const id = values.invoiceId.trim().toLowerCase();
@@ -263,6 +281,7 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
     if (
       pending.current !== null ||
       current.current ||
+      heldRequest ||
       statusRef.current !== 'ready' ||
       !accepted.current.invoice ||
       lookup.form.getValues('invoiceId').trim().toLowerCase() !== invoiceId
@@ -356,11 +375,21 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
           actionTools.current = {
             apply: draft.applyServerErrors,
             reset: () => draft.form.reset({ amount: '', reason: '' }),
-            receipt: (result) =>
+            receipt: (result, replay) =>
               validRefundReceipt(
                 result,
                 { invoiceId: command.invoiceId, destination, amount: command.amount },
-                ['Requested', 'Approved']
+                replay
+                  ? [
+                      'Requested',
+                      'Approved',
+                      'Processing',
+                      'Completed',
+                      'Failed',
+                      'Rejected',
+                      'Cancelled',
+                    ]
+                  : ['Requested', 'Approved']
               ),
           };
         } catch (error) {
@@ -372,7 +401,7 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
   const actionTools = useRef<{
     apply: (fields: unknown[]) => boolean;
     reset: () => void;
-    receipt: (result: unknown) => boolean;
+    receipt: (result: unknown, replay: boolean) => boolean;
   } | null>(null);
   function decide(refund: WalletRefund, operation: RefundOperation, form: RefundDecisionDraft) {
     const owner = claim(refund);
@@ -452,7 +481,7 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
       .finally(() => finish(owner));
   }
   const matches = input.trim().toLowerCase() === invoiceId;
-  const unavailable = status !== 'ready' || busy || !matches;
+  const unavailable = status !== 'ready' || busy || !matches || !!heldRequest;
   return (
     <section
       id={destination === 'wallet' ? 'wallet-refunds-panel' : 'external-refunds-panel'}
@@ -474,7 +503,7 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
             dir="ltr"
             value={input}
             {...lookup.bind('invoiceId')}
-            disabled={busy || lookup.form.formState.isSubmitting}
+            disabled={busy || !!heldRequest || lookup.form.formState.isSubmitting}
             onChange={(event) => setInput(event.target.value)}
           />
           <RefundFieldFeedback
@@ -483,7 +512,10 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
             message={word('invalidInvoiceId')}
           />
         </Field>
-        <Button type="submit" disabled={busy || lookup.form.formState.isSubmitting}>
+        <Button
+          type="submit"
+          disabled={busy || !!heldRequest || lookup.form.formState.isSubmitting}
+        >
           {lookup.form.formState.isSubmitting && (
             <span
               aria-hidden="true"
@@ -528,6 +560,25 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
               ))}
             </CardContent>
           </Card>
+          {heldRequest && !action && (
+            <div className="space-y-2">
+              <RefundFormAlert message={confirmationText('unconfirmed', locale)} />
+              <Button
+                type="button"
+                variant="outline"
+                disabled={status !== 'ready' || !matches || busy}
+                onClick={() => {
+                  if (current.current) return;
+                  const captured = { ...heldRequest.action };
+                  current.current = captured;
+                  setAction(captured);
+                  setSummary(heldRequest.summary);
+                }}
+              >
+                {word('retryRequest')}
+              </Button>
+            </div>
+          )}
           {invoice.requestable ? (
             <form
               noValidate
@@ -661,7 +712,12 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
         <TeamActionDialog
           risk="financial"
           action={action}
-          summary={summary}
+          summary={
+            <>
+              {heldRequest && <p>{confirmationText('unconfirmed', locale)}</p>}
+              {summary}
+            </>
+          }
           confirmationDisabled={status !== 'ready'}
           finalFocus={() => document.getElementById(fieldPrefix + '-amount')}
           onClose={() => {
@@ -670,24 +726,26 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
           onDenied={() => {
             if (live.current && current.current === action) deny();
           }}
-          {...(selection.current?.refund
-            ? {
-                onUnconfirmed: () => {
-                  if (!live.current || current.current !== action) return;
-                  close();
-                  setDecisionError('unconfirmed');
-                  refresh();
-                },
-              }
-            : {})}
+          onUnconfirmed={() => {
+            if (!live.current || current.current !== action) return;
+            if (!selection.current?.refund) {
+              setHeldRequest({ action, summary });
+              return;
+            }
+            close();
+            setDecisionError('unconfirmed');
+            refresh();
+          }}
           onValidationError={(fields) =>
             live.current && current.current === action && !!actionTools.current?.apply(fields)
           }
           onSuccess={async (result) => {
             if (!live.current || current.current !== action) return;
             const tools = actionTools.current;
-            if (!tools?.receipt(result)) throw new Error('Refund acknowledgement mismatch');
+            if (!tools?.receipt(result, !!heldRequest))
+              throw new Error('Refund acknowledgement mismatch');
             toast.success(contractText('refundUpdateRecorded', locale));
+            setHeldRequest(null);
             tools.reset();
             close();
             refresh();

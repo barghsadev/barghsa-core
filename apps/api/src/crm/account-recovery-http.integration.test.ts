@@ -63,7 +63,7 @@ const post = (path: string, body: unknown = {}, actor = 'recovery-reviewer') =>
     headers: headers[actor]!,
     body: JSON.stringify(body),
   });
-async function create() {
+async function create(submissionKey?: string) {
   const user = 'claimant-' + randomUUID(),
     oldLogin = user + '@example.test',
     newLogin = 'new-' + user + '@example.test';
@@ -98,20 +98,26 @@ async function create() {
       bytes.length,
     ]
   );
-  const response = await post(
-    '',
-    {
-      profileId,
-      newLogin,
-      supportReference: 'support-' + user,
-      reason: 'Original identity and representative authority checked',
-      evidenceKeys: [key],
-    },
-    'recovery-creator'
+  const body = {
+    profileId,
+    newLogin,
+    supportReference: 'support-' + user,
+    reason: 'Original identity and representative authority checked',
+    evidenceKeys: [key],
+    ...(submissionKey ? { submissionKey } : {}),
+  };
+  const responses = await Promise.all(
+    Array.from({ length: submissionKey ? 2 : 1 }, () => post('', body, 'recovery-creator'))
   );
-  expect(response.status, http.logs()).toBe(201);
-  const { id } = (await response.json()) as { id: string };
-  return { id, user, oldLogin, newLogin, profileId };
+  const receipts = await Promise.all(
+    responses.map(async (response) => {
+      expect(response.status, http.logs()).toBe(201);
+      return (await response.json()) as { id: string; state: string; submissionKey?: string };
+    })
+  );
+  const { id } = receipts[0]!;
+  if (submissionKey) expect(receipts).toEqual(Array(2).fill({ id, state: 'open', submissionKey }));
+  return { id, user, oldLogin, newLogin, profileId, body };
 }
 async function approved() {
   const row = await create();
@@ -144,6 +150,43 @@ const verify = (caseId: string, challengeId: string, value = '123456') =>
   });
 const read = (id: string, actor = 'recovery-reviewer') =>
   fetch(http.base + '/api/crm/account-recovery/' + id, { headers: headers[actor]! });
+it('replays one authorized case creation and refuses a changed proposal or stale code send', async () => {
+  const key = randomUUID();
+  const row = await create(key);
+  expect(
+    (
+      await post('/' + row.id + '/review', {
+        decision: 'approved',
+        notes: 'Independent check',
+      })
+    ).status
+  ).toBe(200);
+  const replay = await post('', row.body, 'recovery-creator');
+  expect(replay.status).toBe(201);
+  await expect(replay.json()).resolves.toEqual({ id: row.id, state: 'open', submissionKey: key });
+  expect(
+    (await post('', { ...row.body, reason: 'Changed evidence proposal' }, 'recovery-creator'))
+      .status
+  ).toBe(409);
+  expect((await post('', row.body, 'recovery-reviewer')).status).toBe(409);
+  expect((await post('', row.body, 'recovery-denied')).status).toBe(403);
+  const send = await post('/' + row.id + '/code', { expectedChallengeId: null });
+  expect(send.status).toBe(200);
+  const { challengeId } = (await send.json()) as { challengeId: string };
+  expect((await post('/' + row.id + '/code', { expectedChallengeId: null })).status).toBe(409);
+  const saved = await read(row.id);
+  await expect(saved.json()).resolves.toMatchObject({
+    id: row.id,
+    state: 'approved',
+    challengeId,
+    evidenceDownloadUrls: [expect.any(String)],
+    history: [
+      expect.objectContaining({ event: 'account_recovery_created' }),
+      expect.objectContaining({ event: 'account_recovery_reviewed' }),
+      expect.objectContaining({ event: 'account_recovery_code_sent' }),
+    ],
+  });
+});
 it('requires independent review, sealed evidence, current permissions and recent step-up', async () => {
   const row = await create();
   expect(

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T15:54:28+00:00",
-  "source_commit": "8a75c0039ef8b00a89997162a26f146f1ee48788",
+  "updated": "2026-11-08T16:10:52+00:00",
+  "source_commit": "ca8f0205557e966538a2c6e088e2bfb6b87677a9",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -24206,7 +24206,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -24214,19 +24214,19 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
-              "sha256": "3108eb6a848bd69052f75f27252c21c6195dc6100b8377d3d64d004a215d804a"
+              "sha256": "7b967b53342134f25be1244cda23f2de0e33031bf61ef50f76eecaee7115e3a6"
             },
             {
               "path": "apps/api/src/crm/account-recovery.controller.ts",
-              "sha256": "295f24cdb43b4086cec46563b8154b5aa667d5f7aecff8b4552a1a2c5f94bb37"
+              "sha256": "103ff80de59ef1ce52eebc535c4b9698de4c1d2d3f9fd06c5f4dcc7c23ef1af5"
             },
             {
               "path": "apps/api/src/crm/account-recovery.service.ts",
-              "sha256": "9be059fce6720290d38a0ccbdabfd416298c911ebf88e490751073e9e8ef1141"
+              "sha256": "3c95563456fc50fda944eceec8a64ba67719084aba6d5764c2645e271bfb55a1"
             },
             {
               "path": "apps/api/src/crm/crm.module.ts",
-              "sha256": "052f9678d619ad0cdeb2c26eabd03cfcb9b79b54ef1bfbb152e53553bfe57421"
+              "sha256": "a49e0cb1717ee867f0da3f9ec388b8e32620410497e50010ee37f1f2780c1310"
             },
             {
               "path": "apps/api/src/csp-report/csp-report-http.integration.test.ts",
@@ -24262,7 +24262,7 @@
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
-              "sha256": "efd3c7fa73b3abf7e6266aa05bcccb1791c0bf0db7761fe1f451bb3167208a13"
+              "sha256": "c8492c674d6273b0580c3533ad92c2801829798cec94e1b3514067f47f798618"
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
@@ -24290,7 +24290,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
+              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -24362,7 +24362,7 @@
             },
             {
               "path": "packages/i18n/src/recovery.ts",
-              "sha256": "e22b2a6d4fe0480fc3c6cecd26b4d37063a66344bf0b1a435ef4fde1060a1239"
+              "sha256": "e18e241cd24043006286e5436fcab44b0376256f2666c416ba9ac38ef1bd2f69"
             },
             {
               "path": "packages/i18n/src/workspace.ts",
@@ -27344,7 +27344,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -28497,7 +28497,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -28505,19 +28505,19 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
-              "sha256": "3108eb6a848bd69052f75f27252c21c6195dc6100b8377d3d64d004a215d804a"
+              "sha256": "7b967b53342134f25be1244cda23f2de0e33031bf61ef50f76eecaee7115e3a6"
             },
             {
               "path": "apps/api/src/crm/account-recovery.controller.ts",
-              "sha256": "295f24cdb43b4086cec46563b8154b5aa667d5f7aecff8b4552a1a2c5f94bb37"
+              "sha256": "103ff80de59ef1ce52eebc535c4b9698de4c1d2d3f9fd06c5f4dcc7c23ef1af5"
             },
             {
               "path": "apps/api/src/crm/account-recovery.service.ts",
-              "sha256": "9be059fce6720290d38a0ccbdabfd416298c911ebf88e490751073e9e8ef1141"
+              "sha256": "3c95563456fc50fda944eceec8a64ba67719084aba6d5764c2645e271bfb55a1"
             },
             {
               "path": "apps/api/src/crm/crm.module.ts",
-              "sha256": "052f9678d619ad0cdeb2c26eabd03cfcb9b79b54ef1bfbb152e53553bfe57421"
+              "sha256": "a49e0cb1717ee867f0da3f9ec388b8e32620410497e50010ee37f1f2780c1310"
             },
             {
               "path": "apps/api/src/csp-report/csp-report-http.integration.test.ts",
@@ -28553,7 +28553,7 @@
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
-              "sha256": "efd3c7fa73b3abf7e6266aa05bcccb1791c0bf0db7761fe1f451bb3167208a13"
+              "sha256": "c8492c674d6273b0580c3533ad92c2801829798cec94e1b3514067f47f798618"
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
@@ -28581,7 +28581,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
+              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -28653,7 +28653,7 @@
             },
             {
               "path": "packages/i18n/src/recovery.ts",
-              "sha256": "e22b2a6d4fe0480fc3c6cecd26b4d37063a66344bf0b1a435ef4fde1060a1239"
+              "sha256": "e18e241cd24043006286e5436fcab44b0376256f2666c416ba9ac38ef1bd2f69"
             },
             {
               "path": "packages/i18n/src/workspace.ts",
@@ -38611,7 +38611,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/tos-http.integration.test.ts",
@@ -39967,7 +39967,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/tos-http.integration.test.ts",
@@ -41331,7 +41331,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/tos-http.integration.test.ts",
@@ -42694,7 +42694,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/crm/crm-list-http.integration.test.ts",
@@ -43461,7 +43461,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/crm/crm-legal-documents.controller.ts",
@@ -43497,7 +43497,7 @@
             },
             {
               "path": "apps/api/src/crm/crm.module.ts",
-              "sha256": "052f9678d619ad0cdeb2c26eabd03cfcb9b79b54ef1bfbb152e53553bfe57421"
+              "sha256": "a49e0cb1717ee867f0da3f9ec388b8e32620410497e50010ee37f1f2780c1310"
             },
             {
               "path": "apps/api/src/profiles/legal-documents-http.integration.test.ts",
@@ -44300,7 +44300,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -51472,7 +51472,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
@@ -53377,7 +53377,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -55259,7 +55259,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/crm/crm-dashboard.integration.test.ts",
@@ -62385,7 +62385,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -63783,7 +63783,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
@@ -64444,7 +64444,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
@@ -65104,7 +65104,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
@@ -65763,7 +65763,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
@@ -75853,7 +75853,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -76262,7 +76262,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -76693,7 +76693,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -89372,7 +89372,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -95825,7 +95825,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/gift-code-http.integration.test.ts",
@@ -104212,7 +104212,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/scripts/telegram-test-fetch.cjs",
@@ -106871,7 +106871,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/gift-code-http.integration.test.ts",
@@ -124969,7 +124969,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -125961,7 +125961,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -126953,7 +126953,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -127945,7 +127945,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -128937,7 +128937,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -129929,7 +129929,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -131005,7 +131005,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -132125,7 +132125,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -133201,7 +133201,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -134321,7 +134321,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -142941,7 +142941,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/finance/financial-submission-actor.ts",
@@ -152088,7 +152088,7 @@
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
+              "sha256": "d0d2cffd6c65f0f7ad8a3e9b8d0507a841f09d1069ac4c66462b55ec1bcc9a7f"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -152112,7 +152112,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -153119,7 +153119,7 @@
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
+              "sha256": "d0d2cffd6c65f0f7ad8a3e9b8d0507a841f09d1069ac4c66462b55ec1bcc9a7f"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -153143,7 +153143,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -154170,7 +154170,7 @@
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
+              "sha256": "d0d2cffd6c65f0f7ad8a3e9b8d0507a841f09d1069ac4c66462b55ec1bcc9a7f"
             },
             {
               "path": "apps/web/e2e/refund-review-fixture.ts",
@@ -154742,7 +154742,7 @@
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
+              "sha256": "d0d2cffd6c65f0f7ad8a3e9b8d0507a841f09d1069ac4c66462b55ec1bcc9a7f"
             },
             {
               "path": "apps/web/e2e/refund-review-fixture.ts",
@@ -155294,7 +155294,7 @@
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
+              "sha256": "d0d2cffd6c65f0f7ad8a3e9b8d0507a841f09d1069ac4c66462b55ec1bcc9a7f"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -155318,7 +155318,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -156326,7 +156326,7 @@
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
+              "sha256": "d0d2cffd6c65f0f7ad8a3e9b8d0507a841f09d1069ac4c66462b55ec1bcc9a7f"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -156350,7 +156350,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -157355,7 +157355,7 @@
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
+              "sha256": "d0d2cffd6c65f0f7ad8a3e9b8d0507a841f09d1069ac4c66462b55ec1bcc9a7f"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -157379,7 +157379,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -158384,7 +158384,7 @@
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
+              "sha256": "d0d2cffd6c65f0f7ad8a3e9b8d0507a841f09d1069ac4c66462b55ec1bcc9a7f"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -158408,7 +158408,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -159434,7 +159434,7 @@
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
+              "sha256": "d0d2cffd6c65f0f7ad8a3e9b8d0507a841f09d1069ac4c66462b55ec1bcc9a7f"
             },
             {
               "path": "apps/web/e2e/refund-review-fixture.ts",
@@ -159983,7 +159983,7 @@
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
+              "sha256": "d0d2cffd6c65f0f7ad8a3e9b8d0507a841f09d1069ac4c66462b55ec1bcc9a7f"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -160007,7 +160007,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -161011,7 +161011,7 @@
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
+              "sha256": "d0d2cffd6c65f0f7ad8a3e9b8d0507a841f09d1069ac4c66462b55ec1bcc9a7f"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -161035,7 +161035,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -162039,7 +162039,7 @@
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
+              "sha256": "d0d2cffd6c65f0f7ad8a3e9b8d0507a841f09d1069ac4c66462b55ec1bcc9a7f"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -162063,7 +162063,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -182253,7 +182253,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -191620,7 +191620,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -253158,7 +253158,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -254296,7 +254296,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -255430,7 +255430,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -256563,7 +256563,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -257697,7 +257697,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -258831,7 +258831,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -259970,7 +259970,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -261107,7 +261107,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -262242,7 +262242,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -263380,7 +263380,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -264520,7 +264520,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -265655,7 +265655,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -266789,7 +266789,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -267924,7 +267924,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -269059,7 +269059,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -270195,7 +270195,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -290211,7 +290211,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -290219,19 +290219,19 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
-              "sha256": "3108eb6a848bd69052f75f27252c21c6195dc6100b8377d3d64d004a215d804a"
+              "sha256": "7b967b53342134f25be1244cda23f2de0e33031bf61ef50f76eecaee7115e3a6"
             },
             {
               "path": "apps/api/src/crm/account-recovery.controller.ts",
-              "sha256": "295f24cdb43b4086cec46563b8154b5aa667d5f7aecff8b4552a1a2c5f94bb37"
+              "sha256": "103ff80de59ef1ce52eebc535c4b9698de4c1d2d3f9fd06c5f4dcc7c23ef1af5"
             },
             {
               "path": "apps/api/src/crm/account-recovery.service.ts",
-              "sha256": "9be059fce6720290d38a0ccbdabfd416298c911ebf88e490751073e9e8ef1141"
+              "sha256": "3c95563456fc50fda944eceec8a64ba67719084aba6d5764c2645e271bfb55a1"
             },
             {
               "path": "apps/api/src/crm/crm.module.ts",
-              "sha256": "052f9678d619ad0cdeb2c26eabd03cfcb9b79b54ef1bfbb152e53553bfe57421"
+              "sha256": "a49e0cb1717ee867f0da3f9ec388b8e32620410497e50010ee37f1f2780c1310"
             },
             {
               "path": "apps/api/src/csp-report/csp-report-http.integration.test.ts",
@@ -290267,7 +290267,7 @@
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
-              "sha256": "efd3c7fa73b3abf7e6266aa05bcccb1791c0bf0db7761fe1f451bb3167208a13"
+              "sha256": "c8492c674d6273b0580c3533ad92c2801829798cec94e1b3514067f47f798618"
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
@@ -290295,7 +290295,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
+              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -290367,7 +290367,7 @@
             },
             {
               "path": "packages/i18n/src/recovery.ts",
-              "sha256": "e22b2a6d4fe0480fc3c6cecd26b4d37063a66344bf0b1a435ef4fde1060a1239"
+              "sha256": "e18e241cd24043006286e5436fcab44b0376256f2666c416ba9ac38ef1bd2f69"
             },
             {
               "path": "packages/i18n/src/workspace.ts",
@@ -297754,7 +297754,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -297762,19 +297762,19 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
-              "sha256": "3108eb6a848bd69052f75f27252c21c6195dc6100b8377d3d64d004a215d804a"
+              "sha256": "7b967b53342134f25be1244cda23f2de0e33031bf61ef50f76eecaee7115e3a6"
             },
             {
               "path": "apps/api/src/crm/account-recovery.controller.ts",
-              "sha256": "295f24cdb43b4086cec46563b8154b5aa667d5f7aecff8b4552a1a2c5f94bb37"
+              "sha256": "103ff80de59ef1ce52eebc535c4b9698de4c1d2d3f9fd06c5f4dcc7c23ef1af5"
             },
             {
               "path": "apps/api/src/crm/account-recovery.service.ts",
-              "sha256": "9be059fce6720290d38a0ccbdabfd416298c911ebf88e490751073e9e8ef1141"
+              "sha256": "3c95563456fc50fda944eceec8a64ba67719084aba6d5764c2645e271bfb55a1"
             },
             {
               "path": "apps/api/src/crm/crm.module.ts",
-              "sha256": "052f9678d619ad0cdeb2c26eabd03cfcb9b79b54ef1bfbb152e53553bfe57421"
+              "sha256": "a49e0cb1717ee867f0da3f9ec388b8e32620410497e50010ee37f1f2780c1310"
             },
             {
               "path": "apps/api/src/csp-report/csp-report-http.integration.test.ts",
@@ -297810,7 +297810,7 @@
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
-              "sha256": "efd3c7fa73b3abf7e6266aa05bcccb1791c0bf0db7761fe1f451bb3167208a13"
+              "sha256": "c8492c674d6273b0580c3533ad92c2801829798cec94e1b3514067f47f798618"
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
@@ -297838,7 +297838,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
+              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -297910,7 +297910,7 @@
             },
             {
               "path": "packages/i18n/src/recovery.ts",
-              "sha256": "e22b2a6d4fe0480fc3c6cecd26b4d37063a66344bf0b1a435ef4fde1060a1239"
+              "sha256": "e18e241cd24043006286e5436fcab44b0376256f2666c416ba9ac38ef1bd2f69"
             },
             {
               "path": "packages/i18n/src/workspace.ts",
@@ -318293,7 +318293,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -318301,19 +318301,19 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
-              "sha256": "3108eb6a848bd69052f75f27252c21c6195dc6100b8377d3d64d004a215d804a"
+              "sha256": "7b967b53342134f25be1244cda23f2de0e33031bf61ef50f76eecaee7115e3a6"
             },
             {
               "path": "apps/api/src/crm/account-recovery.controller.ts",
-              "sha256": "295f24cdb43b4086cec46563b8154b5aa667d5f7aecff8b4552a1a2c5f94bb37"
+              "sha256": "103ff80de59ef1ce52eebc535c4b9698de4c1d2d3f9fd06c5f4dcc7c23ef1af5"
             },
             {
               "path": "apps/api/src/crm/account-recovery.service.ts",
-              "sha256": "9be059fce6720290d38a0ccbdabfd416298c911ebf88e490751073e9e8ef1141"
+              "sha256": "3c95563456fc50fda944eceec8a64ba67719084aba6d5764c2645e271bfb55a1"
             },
             {
               "path": "apps/api/src/crm/crm.module.ts",
-              "sha256": "052f9678d619ad0cdeb2c26eabd03cfcb9b79b54ef1bfbb152e53553bfe57421"
+              "sha256": "a49e0cb1717ee867f0da3f9ec388b8e32620410497e50010ee37f1f2780c1310"
             },
             {
               "path": "apps/api/src/csp-report/csp-report-http.integration.test.ts",
@@ -318349,7 +318349,7 @@
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
-              "sha256": "efd3c7fa73b3abf7e6266aa05bcccb1791c0bf0db7761fe1f451bb3167208a13"
+              "sha256": "c8492c674d6273b0580c3533ad92c2801829798cec94e1b3514067f47f798618"
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
@@ -318377,7 +318377,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
+              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -318449,7 +318449,7 @@
             },
             {
               "path": "packages/i18n/src/recovery.ts",
-              "sha256": "e22b2a6d4fe0480fc3c6cecd26b4d37063a66344bf0b1a435ef4fde1060a1239"
+              "sha256": "e18e241cd24043006286e5436fcab44b0376256f2666c416ba9ac38ef1bd2f69"
             },
             {
               "path": "packages/i18n/src/workspace.ts",
@@ -327237,7 +327237,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -328299,7 +328299,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -329361,7 +329361,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -330423,7 +330423,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -331485,7 +331485,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -332547,7 +332547,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -333609,7 +333609,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -348922,7 +348922,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -348930,19 +348930,19 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
-              "sha256": "3108eb6a848bd69052f75f27252c21c6195dc6100b8377d3d64d004a215d804a"
+              "sha256": "7b967b53342134f25be1244cda23f2de0e33031bf61ef50f76eecaee7115e3a6"
             },
             {
               "path": "apps/api/src/crm/account-recovery.controller.ts",
-              "sha256": "295f24cdb43b4086cec46563b8154b5aa667d5f7aecff8b4552a1a2c5f94bb37"
+              "sha256": "103ff80de59ef1ce52eebc535c4b9698de4c1d2d3f9fd06c5f4dcc7c23ef1af5"
             },
             {
               "path": "apps/api/src/crm/account-recovery.service.ts",
-              "sha256": "9be059fce6720290d38a0ccbdabfd416298c911ebf88e490751073e9e8ef1141"
+              "sha256": "3c95563456fc50fda944eceec8a64ba67719084aba6d5764c2645e271bfb55a1"
             },
             {
               "path": "apps/api/src/crm/crm.module.ts",
-              "sha256": "052f9678d619ad0cdeb2c26eabd03cfcb9b79b54ef1bfbb152e53553bfe57421"
+              "sha256": "a49e0cb1717ee867f0da3f9ec388b8e32620410497e50010ee37f1f2780c1310"
             },
             {
               "path": "apps/api/src/csp-report/csp-report-http.integration.test.ts",
@@ -348978,7 +348978,7 @@
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
-              "sha256": "efd3c7fa73b3abf7e6266aa05bcccb1791c0bf0db7761fe1f451bb3167208a13"
+              "sha256": "c8492c674d6273b0580c3533ad92c2801829798cec94e1b3514067f47f798618"
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
@@ -349006,7 +349006,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
+              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -349078,7 +349078,7 @@
             },
             {
               "path": "packages/i18n/src/recovery.ts",
-              "sha256": "e22b2a6d4fe0480fc3c6cecd26b4d37063a66344bf0b1a435ef4fde1060a1239"
+              "sha256": "e18e241cd24043006286e5436fcab44b0376256f2666c416ba9ac38ef1bd2f69"
             },
             {
               "path": "packages/i18n/src/workspace.ts",
@@ -370171,7 +370171,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
@@ -371453,7 +371453,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
@@ -372735,7 +372735,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
@@ -374017,7 +374017,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
@@ -375300,7 +375300,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
@@ -397596,7 +397596,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -398169,7 +398169,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -398742,7 +398742,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -399316,7 +399316,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -399893,7 +399893,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -400466,7 +400466,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -401040,7 +401040,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -401615,7 +401615,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -402188,7 +402188,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -402761,7 +402761,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -403340,7 +403340,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -404686,7 +404686,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -406033,7 +406033,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -407379,7 +407379,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -408725,7 +408725,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -410072,7 +410072,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -411420,7 +411420,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -412764,7 +412764,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -414071,7 +414071,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -415416,7 +415416,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -416757,7 +416757,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -418057,7 +418057,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -419357,7 +419357,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
@@ -421450,7 +421450,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/wallet/staff-wallet-balance-http.integration.test.ts",
@@ -436474,7 +436474,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
@@ -460391,7 +460391,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/scripts/telegram-test-fetch.cjs",
@@ -491055,7 +491055,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
@@ -492906,7 +492906,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
@@ -493090,7 +493090,7 @@
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
-              "sha256": "cdf9b474fb83a0b423e802a22f3fecc1371682d3f2b91c5c0f0e4da5d6778e40"
+              "sha256": "dfbec1d94ee1876d86b05e187154fee6879bedcaadd15f4e2d60db521fc5f620"
             },
             {
               "path": "packages/i18n/src/workspace-admin.ts",
@@ -494327,7 +494327,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
+              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -495210,7 +495210,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
+              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -496034,7 +496034,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
+              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -496739,7 +496739,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
+              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -497728,7 +497728,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
@@ -497912,7 +497912,7 @@
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
-              "sha256": "cdf9b474fb83a0b423e802a22f3fecc1371682d3f2b91c5c0f0e4da5d6778e40"
+              "sha256": "dfbec1d94ee1876d86b05e187154fee6879bedcaadd15f4e2d60db521fc5f620"
             },
             {
               "path": "packages/i18n/src/workspace-admin.ts",
@@ -498841,7 +498841,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -499385,7 +499385,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -499929,7 +499929,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -500473,7 +500473,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -501017,7 +501017,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -501561,7 +501561,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -502105,7 +502105,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -502649,7 +502649,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -503193,7 +503193,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -503737,7 +503737,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -504281,7 +504281,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -504825,7 +504825,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -505369,7 +505369,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -505913,7 +505913,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -516817,7 +516817,7 @@
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
-              "sha256": "efd3c7fa73b3abf7e6266aa05bcccb1791c0bf0db7761fe1f451bb3167208a13"
+              "sha256": "c8492c674d6273b0580c3533ad92c2801829798cec94e1b3514067f47f798618"
             },
             {
               "path": "apps/web/e2e/account-settings-forms.spec.ts",
@@ -517837,7 +517837,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
+              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
+              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -518479,7 +518479,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
+              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
+              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -519918,7 +519918,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
+              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -522074,7 +522074,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
+              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -523285,7 +523285,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -524193,7 +524193,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -525101,7 +525101,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -526009,7 +526009,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -526917,7 +526917,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -527825,7 +527825,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -528733,7 +528733,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -529641,7 +529641,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -530549,7 +530549,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -531457,7 +531457,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -532365,7 +532365,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -533273,7 +533273,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -534181,7 +534181,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -535089,7 +535089,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -535997,7 +535997,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -536905,7 +536905,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -537813,7 +537813,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -538721,7 +538721,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -539629,7 +539629,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -540537,7 +540537,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -546532,7 +546532,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -548398,7 +548398,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -550265,7 +550265,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -552101,7 +552101,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -553963,7 +553963,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -555834,7 +555834,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -557678,7 +557678,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -559486,7 +559486,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -561294,7 +561294,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -563103,7 +563103,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -564911,7 +564911,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -566505,7 +566505,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -567521,7 +567521,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
+              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568400,7 +568400,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -569416,7 +569416,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
+              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570220,7 +570220,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Wallet payments, invoice refund decisions, contract refund decisions and dual approvals have current uncertainty recovery evidence. Reconcile refund creation when the operator leaves a lost response and protected account recovery commands. Match remaining command surfaces to their current dispatch and feedback."
+        "Refund and lost-contact creation now preserve exact reviewed retries. Existing-case decisions and challenge sends have fresh-read recovery. Reconcile the remaining confirmation call sites against their dispatch paths and feedback requirements."
       ],
       "owner": null,
       "depends_on": [],
@@ -570297,7 +570297,8 @@
           "release-0.5-onboarding-command-recovery",
           "release-0.5-reconciliation-command-deadline",
           "release-0.5-shared-confirmation-deadlines",
-          "release-0.5-financial-confirmation-recovery"
+          "release-0.5-financial-confirmation-recovery",
+          "release-0.5-protected-creation-recovery"
         ],
         "current_acceptance": null
       }
@@ -570392,7 +570393,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -571408,7 +571409,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
+              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -572287,7 +572288,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -573303,7 +573304,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
+              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -574182,7 +574183,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -575198,7 +575199,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
+              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -576077,7 +576078,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -577093,7 +577094,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
+              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577972,7 +577973,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -578988,7 +578989,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
+              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -579867,7 +579868,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -580883,7 +580884,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
+              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581762,7 +581763,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -582778,7 +582779,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
+              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -583657,7 +583658,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -584673,7 +584674,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
+              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -585552,7 +585553,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -586568,7 +586569,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
+              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -587447,7 +587448,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -588463,7 +588464,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
+              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589342,7 +589343,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -590358,7 +590359,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
+              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591314,7 +591315,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -591622,7 +591623,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
+              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591977,7 +591978,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -592993,7 +592994,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
+              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593872,7 +593873,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -594888,7 +594889,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
+              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595692,7 +595693,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Current wallet, refund and approval recovery is verified with native browser evidence. Reconcile remaining conditional list, detail and dashboard states against the route census."
+        "Protected creation and saved case recovery have current native evidence. Match the remaining list, detail and dashboard states against the route census and scoped cases."
       ],
       "owner": null,
       "depends_on": [],
@@ -595780,7 +595781,8 @@
           "release-0.5-onboarding-command-recovery",
           "release-0.5-reconciliation-command-deadline",
           "release-0.5-shared-confirmation-deadlines",
-          "release-0.5-financial-confirmation-recovery"
+          "release-0.5-financial-confirmation-recovery",
+          "release-0.5-protected-creation-recovery"
         ],
         "current_acceptance": null
       }
@@ -596117,7 +596119,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -597921,7 +597923,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -599725,7 +599727,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -601529,7 +601531,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -603333,7 +603335,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -605137,7 +605139,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -606941,7 +606943,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -608503,7 +608505,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -609330,7 +609332,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -610157,7 +610159,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -610984,7 +610986,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -611811,7 +611813,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -624620,7 +624622,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -625447,7 +625449,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -626274,7 +626276,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -627101,7 +627103,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -627928,7 +627930,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -628755,7 +628757,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -629582,7 +629584,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -630409,7 +630411,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -631236,7 +631238,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -632063,7 +632065,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -632890,7 +632892,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -633717,7 +633719,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -658768,7 +658770,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -659450,7 +659452,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -660134,7 +660136,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -660816,7 +660818,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -661497,7 +661499,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -662677,7 +662679,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -663359,7 +663361,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -664042,7 +664044,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -664723,7 +664725,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -665403,7 +665405,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -666083,7 +666085,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -666763,7 +666765,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -701599,7 +701601,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -702632,7 +702634,7 @@
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
-              "sha256": "cdf9b474fb83a0b423e802a22f3fecc1371682d3f2b91c5c0f0e4da5d6778e40"
+              "sha256": "dfbec1d94ee1876d86b05e187154fee6879bedcaadd15f4e2d60db521fc5f620"
             },
             {
               "path": "packages/ui/src/components/ui/scrollable-tabs-list.tsx",
@@ -703948,7 +703950,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/package.json",
@@ -704440,7 +704442,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -705125,7 +705127,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -709162,7 +709164,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -710318,7 +710320,7 @@
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
+              "sha256": "d0d2cffd6c65f0f7ad8a3e9b8d0507a841f09d1069ac4c66462b55ec1bcc9a7f"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -710342,7 +710344,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -713623,7 +713625,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -717634,7 +717636,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -721536,7 +721538,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "050a53aead11368b1d39593088ecac8afed3ef0ea991471ac77541d16d1da10e"
+              "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -725424,7 +725426,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Current staff and customer financial confirmation recovery is verified. Complete remaining scoped CRUD and conditional-state reconciliation. Required GitHub accessibility enforcement and the staging Sentry receipt remain open."
+        "Protected financial and identity creation and decision recovery have current native evidence. Remaining scoped command feedback and conditional UI states require reconciliation. Required GitHub accessibility enforcement and the staging Sentry receipt remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -725577,7 +725579,8 @@
           "release-0.5-onboarding-command-recovery",
           "release-0.5-reconciliation-command-deadline",
           "release-0.5-shared-confirmation-deadlines",
-          "release-0.5-financial-confirmation-recovery"
+          "release-0.5-financial-confirmation-recovery",
+          "release-0.5-protected-creation-recovery"
         ]
       }
     },
@@ -726041,7 +726044,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
@@ -726457,7 +726460,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
+              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -727309,7 +727312,7 @@
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
-              "sha256": "cdf9b474fb83a0b423e802a22f3fecc1371682d3f2b91c5c0f0e4da5d6778e40"
+              "sha256": "dfbec1d94ee1876d86b05e187154fee6879bedcaadd15f4e2d60db521fc5f620"
             },
             {
               "path": "apps/api/src/crm/verification-case.controller.ts",
@@ -727346,6 +727349,22 @@
             {
               "path": "packages/i18n/src/onboarding-drafts.ts",
               "sha256": "539ca0dc0c49776b8ce5217f9d58c49ae843d8d0f927bc0862186a216ceedc38"
+            },
+            {
+              "path": "apps/api/src/crm/account-recovery.controller.ts",
+              "sha256": "103ff80de59ef1ce52eebc535c4b9698de4c1d2d3f9fd06c5f4dcc7c23ef1af5"
+            },
+            {
+              "path": "apps/api/src/crm/account-recovery.service.ts",
+              "sha256": "3c95563456fc50fda944eceec8a64ba67719084aba6d5764c2645e271bfb55a1"
+            },
+            {
+              "path": "apps/api/src/crm/crm.module.ts",
+              "sha256": "a49e0cb1717ee867f0da3f9ec388b8e32620410497e50010ee37f1f2780c1310"
+            },
+            {
+              "path": "packages/i18n/src/recovery.ts",
+              "sha256": "e18e241cd24043006286e5436fcab44b0376256f2666c416ba9ac38ef1bd2f69"
             }
           ],
           "checks": [
@@ -727442,7 +727461,8 @@
             "Renewed onboarding recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-command-recovery/proof.json",
             "Renewed staff reconciliation, verification-banner and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-reconciliation-command-deadline/proof.json",
             "Renewed confirmation dialog and document template budget and browser evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-confirmation-deadlines/proof.json",
-            "Renewed financial recovery native browser and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-confirmation-recovery/proof.json"
+            "Renewed financial recovery native browser and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-confirmation-recovery/proof.json",
+            "Renewed protected creation browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-creation-recovery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -801323,6 +801343,139 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-confirmation-recovery/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-confirmation-recovery/reviewed.patch",
       "release_disposition": "Verified wallet payment and staff refund and approval confirmation recovery. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-protected-creation-recovery": {
+      "batch": "release-0.5-protected-creation-recovery",
+      "base_commit": "ca8f0205557e966538a2c6e088e2bfb6b87677a9",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "756b502548edc55eb5f1032083e433a2094c293e20b5754c3ab405afc518b77e"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+        },
+        {
+          "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
+          "sha256": "7b967b53342134f25be1244cda23f2de0e33031bf61ef50f76eecaee7115e3a6"
+        },
+        {
+          "path": "apps/api/src/crm/account-recovery.controller.ts",
+          "sha256": "103ff80de59ef1ce52eebc535c4b9698de4c1d2d3f9fd06c5f4dcc7c23ef1af5"
+        },
+        {
+          "path": "apps/api/src/crm/account-recovery.service.ts",
+          "sha256": "3c95563456fc50fda944eceec8a64ba67719084aba6d5764c2645e271bfb55a1"
+        },
+        {
+          "path": "apps/api/src/crm/crm.module.ts",
+          "sha256": "a49e0cb1717ee867f0da3f9ec388b8e32620410497e50010ee37f1f2780c1310"
+        },
+        {
+          "path": "apps/api/src/crm/verification-evidence.service.ts",
+          "sha256": "00986bd462dcafd242daec1502f7af1aef6d0247f655f90ba16e5c61cc592719"
+        },
+        {
+          "path": "apps/api/src/idempotency/idempotency-keys.repository.ts",
+          "sha256": "e374dd1a2166c843a594418060975674400d5dbcb837234844d5a05569716fa7"
+        },
+        {
+          "path": "apps/api/src/refund/refund.service.ts",
+          "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "b11b691680a16cfd244d5430449a7c91c918a09f5f3e5b5c09ed31299d80359c"
+        },
+        {
+          "path": "apps/api/vitest.config.ts",
+          "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+        },
+        {
+          "path": "apps/web/e2e/account-recovery-closure.spec.ts",
+          "sha256": "c8492c674d6273b0580c3533ad92c2801829798cec94e1b3514067f47f798618"
+        },
+        {
+          "path": "apps/web/e2e/refund-forms.spec.ts",
+          "sha256": "d0d2cffd6c65f0f7ad8a3e9b8d0507a841f09d1069ac4c66462b55ec1bcc9a7f"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/RefundPanel.tsx",
+          "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
+        },
+        {
+          "path": "apps/web/src/hooks/useCatalogueResource.ts",
+          "sha256": "a189459305295c7cef7c9741922109d25540db7eba3141d8e8d8a61941792dee"
+        },
+        {
+          "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
+          "sha256": "271ed8545709b1274eae3325cdf98bf83fe300d391a6bed3a188ac8607c6b9c9"
+        },
+        {
+          "path": "apps/web/src/lib/refund-receipt.ts",
+          "sha256": "845f71a47349b03004ee9944ad7b2400ffdf991b7c5eebf16ec38a86b433310c"
+        },
+        {
+          "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
+          "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
+        },
+        {
+          "path": "packages/i18n/src/recovery.ts",
+          "sha256": "e18e241cd24043006286e5436fcab44b0376256f2666c416ba9ac38ef1bd2f69"
+        },
+        {
+          "path": "packages/i18n/src/workspace-admin-messages.ts",
+          "sha256": "dfbec1d94ee1876d86b05e187154fee6879bedcaadd15f4e2d60db521fc5f620"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "Unconfirmed refund creation retains the reviewed amount, reason, hash and original request key when the dialog closes. The current staff workspace offers an explicit review of the captured request. Other writes are held until the exact receipt resolves the request or current authority retires the workspace.",
+        "Lost-contact creation keeps its verified evidence keys and submission key. Current staff authority is rechecked and the idempotency store binds the original case receipt to the exact proposal in the creation transaction. An unconfirmed case decision requires a fresh matching case read. Code sends compare the reviewed challenge under the case lock before creating a replacement.",
+        "Passed 54 production-browser cases across Chromium and mobile Safari, 12 instrumented Chromium cases, 30 web unit tests, eight recovery HTTP tests and six idempotency unit tests. Fresh PostgreSQL 17 ran the existing production migrations. OpenAPI, type checking, formatting, lint and 100 bundle budgets passed.",
+        "The focused API coverage runs passed all tests but measured 63.15% and 68.96% functions on their limited sets. The unchanged package thresholds were met with exact reused source-bound coverage plus renewed measurements for the three changed API files. The combined 554-file result is 86.31% functions. All nine changed-source groups passed, and the 31 cold-auth assets match the six accepted prior cases."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-creation-recovery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-creation-recovery/proof.json",
+      "source_scope_proof_sha256": "21b1be9a09c7ebad6af0849dc4276710f6a2f237997d12fb5384ff3a229d1ff8",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-creation-recovery/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-creation-recovery/reviewed.patch",
+      "release_disposition": "Verified exact refund and lost-contact creation retries, authorized case reads and stale challenge protection. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -801373,12 +801526,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Continue v0.5.0 protected command reconciliation. Inspect refund creation recovery after leaving the confirmation and lost-contact commands. Resolve demonstrated gaps, then reconcile remaining loading, empty and error states. Sentry and required GitHub accessibility enforcement remain separate gates."
+    "goal": "Close remaining v0.5.0 conditional list, detail and dashboard states against the current route census. Reconcile the remaining confirmation sites and CRUD feedback using the existing command recovery rules. Live Sentry and required GitHub accessibility enforcement remain separate gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 wallet payment, refund decision and dual approval recovery has current native browser evidence. Five launch-required criteria remain open, including staging Sentry delivery, GitHub accessibility enforcement and scoped UI reconciliation. The November 9 release sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 protected refund and lost-contact creation recovery has current browser and HTTP evidence. Five launch-required criteria remain open, including staging Sentry delivery, GitHub accessibility enforcement and remaining UI reconciliation. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {
