@@ -16,7 +16,7 @@ import {
 } from '@barghsa/ui';
 import { t, type Locale } from '@barghsa/i18n/conversation-identity';
 import { confirmationText } from '@barghsa/i18n/confirmation';
-import { toast } from '../lib/toast-api.js';
+import { sendToast, toast } from '../lib/toast-api.js';
 import { withCsrf } from '../lib/csrf.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
 import { isConversationPhoto, uploadConversationPhoto } from '../lib/branding-logo-upload.js';
@@ -28,6 +28,9 @@ type Identity = {
   revision: number;
   shareInActivity: boolean;
   shareInPaymentActivity: boolean;
+};
+type IdentityCommand = Omit<Identity, 'avatarUrl' | 'avatarUploadKey'> & {
+  avatarUploadKey?: string | null;
 };
 const endpoint = '/api/user/settings/conversation-identity';
 async function readIdentity(response: Response): Promise<Identity> {
@@ -57,7 +60,17 @@ async function readIdentity(response: Response): Promise<Identity> {
 
 function loadIdentity(parent: AbortSignal) {
   return readWithDeadline(parent, async (signal) =>
-    readIdentity(await fetch(endpoint, { credentials: 'include', signal }))
+    readIdentity(await fetch(endpoint, { credentials: 'include', cache: 'no-store', signal }))
+  );
+}
+
+function matchesIdentity(saved: Identity, command: IdentityCommand) {
+  return (
+    saved.displayName === command.displayName &&
+    saved.shareInActivity === command.shareInActivity &&
+    saved.shareInPaymentActivity === command.shareInPaymentActivity &&
+    (command.avatarUploadKey === undefined || saved.avatarUploadKey === command.avatarUploadKey) &&
+    (saved.revision === command.revision || saved.revision === command.revision + 1)
   );
 }
 
@@ -69,7 +82,9 @@ export function ConversationIdentityDialog({
   onClose: () => void;
 }) {
   const id = useId();
+  const nameInput = useRef<HTMLInputElement | null>(null);
   const photoInput = useRef<HTMLInputElement | null>(null);
+  const checkButton = useRef<HTMLButtonElement | null>(null);
   const [identity, setIdentity] = useState<Identity | null>(null);
   const [name, setName] = useState('');
   const [shareInActivity, setShareInActivity] = useState(false);
@@ -77,6 +92,7 @@ export function ConversationIdentityDialog({
   const [file, setFile] = useState<File | null>(null);
   const [removePhoto, setRemovePhoto] = useState(false);
   const [pending, setPending] = useState(false);
+  const [unconfirmed, setUnconfirmed] = useState<IdentityCommand | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
   const controller = useRef<AbortController | null>(null);
@@ -101,76 +117,130 @@ export function ConversationIdentityDialog({
       });
     return () => abort.abort();
   }, [attempt]);
+  useEffect(() => {
+    if (unconfirmed && !pending) checkButton.current?.focus();
+  }, [unconfirmed, pending]);
+
+  function reportFailure(code: 'denied' | 'conflict' | 'save' | 'unconfirmed' | 'checkFailed') {
+    setError(code);
+    const message = t(`conversationIdentity.${code}`, locale);
+    if (code === 'unconfirmed') sendToast('warning', message);
+    else toast.error(message);
+    if (code === 'denied') {
+      setName('');
+      setShareInActivity(false);
+      setShareInPaymentActivity(false);
+      setFile(null);
+      setRemovePhoto(false);
+      uploaded.current = null;
+      setIdentity(null);
+      setUnconfirmed(null);
+    }
+  }
+
+  function confirmSaved(saved: Identity, command: IdentityCommand) {
+    if (saved.revision !== command.revision) toast.success(confirmationText('recorded', locale));
+    onClose();
+  }
+
+  async function checkSaved() {
+    if (!unconfirmed || submitting.current) return;
+    const signal = controller.current!.signal;
+    submitting.current = true;
+    setPending(true);
+    try {
+      const latest = await loadIdentity(signal);
+      if (signal.aborted) return;
+      if (latest.revision < unconfirmed.revision) throw new Error('load');
+      if (matchesIdentity(latest, unconfirmed)) {
+        confirmSaved(latest, unconfirmed);
+        return;
+      }
+      setIdentity(latest);
+      setUnconfirmed(null);
+      setError(latest.revision === unconfirmed.revision ? 'retrySave' : 'conflict');
+    } catch (reason) {
+      if (!signal.aborted)
+        reportFailure(
+          reason instanceof Error && reason.message === 'denied' ? 'denied' : 'checkFailed'
+        );
+    } finally {
+      submitting.current = false;
+      if (!signal.aborted) setPending(false);
+    }
+  }
 
   async function save() {
-    if (!identity || submitting.current) return;
+    if (!identity || unconfirmed || submitting.current) return;
     const displayName = name.trim() || null;
     if (
       displayName &&
       (displayName.length > 80 || /[\p{Cc}\u202a-\u202e\u2066-\u2069]/u.test(displayName))
     ) {
       setError('nameError');
+      nameInput.current?.focus();
       return;
     }
     submitting.current = true;
     setPending(true);
     setError(null);
     const signal = controller.current!.signal;
+    let command: IdentityCommand | undefined;
     try {
       let avatarUploadKey: string | null | undefined = removePhoto ? null : undefined;
       if (file) {
         if (uploaded.current?.file !== file)
-          uploaded.current = { file, key: await uploadConversationPhoto(file, signal) };
+          uploaded.current = {
+            file,
+            key: await readWithDeadline(
+              signal,
+              (transport) => uploadConversationPhoto(file, transport),
+              30_000
+            ),
+          };
         avatarUploadKey = uploaded.current.key;
       }
       if (signal.aborted) return;
-      const response = await fetch(endpoint, {
-        method: 'PUT',
-        credentials: 'include',
-        signal,
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({
-          displayName,
-          revision: identity.revision,
-          shareInActivity: displayName !== null && shareInActivity,
-          shareInPaymentActivity: displayName !== null && shareInPaymentActivity,
-          ...(avatarUploadKey !== undefined ? { avatarUploadKey } : {}),
-        }),
+      const request: IdentityCommand = {
+        displayName,
+        revision: identity.revision,
+        shareInActivity: displayName !== null && shareInActivity,
+        shareInPaymentActivity: displayName !== null && shareInPaymentActivity,
+        ...(avatarUploadKey !== undefined ? { avatarUploadKey } : {}),
+      };
+      command = request;
+      const saved = await readWithDeadline(signal, async (transport) => {
+        const response = await fetch(endpoint, {
+          method: 'PUT',
+          credentials: 'include',
+          signal: transport,
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify(request),
+        });
+        if (response.status === 409) return null;
+        if (!response.ok)
+          throw new Error(response.status === 401 || response.status === 403 ? 'denied' : 'save');
+        return readIdentity(response);
       });
-      if (!response.ok) {
-        if (response.status === 409) {
-          const latest = await loadIdentity(signal);
-          if (!signal.aborted) setIdentity(latest);
-          throw new Error('conflict');
-        }
-        throw new Error(response.status === 401 || response.status === 403 ? 'denied' : 'save');
-      }
-      const saved = await readIdentity(response);
       if (signal.aborted) return;
-      if (
-        saved.displayName !== displayName ||
-        saved.shareInActivity !== (displayName !== null && shareInActivity) ||
-        saved.shareInPaymentActivity !== (displayName !== null && shareInPaymentActivity) ||
-        (avatarUploadKey !== undefined && saved.avatarUploadKey !== avatarUploadKey) ||
-        (saved.revision !== identity.revision && saved.revision !== identity.revision + 1)
-      )
-        throw new Error('save');
-      if (saved.revision !== identity.revision) toast.success(confirmationText('recorded', locale));
-      onClose();
+      if (!saved) {
+        const latest = await loadIdentity(signal);
+        if (signal.aborted) return;
+        if (latest.revision < identity.revision) throw new Error('load');
+        setIdentity(latest);
+        throw new Error('conflict');
+      }
+      if (!matchesIdentity(saved, request)) throw new Error('receipt');
+      confirmSaved(saved, request);
     } catch (reason) {
       if (!signal.aborted) {
-        const message = reason instanceof Error ? reason.message : 'save';
-        const code = message === 'denied' || message === 'conflict' ? message : 'save';
-        setError(code);
-        toast.error(t(`conversationIdentity.${code}`, locale));
-        if (message === 'denied') {
-          setName('');
-          setShareInActivity(false);
-          setShareInPaymentActivity(false);
-          setFile(null);
-          uploaded.current = null;
-          setIdentity(null);
-        }
+        const message = reason instanceof Error ? reason.message : '';
+        if (message === 'denied' || message === 'conflict' || message === 'save')
+          reportFailure(message);
+        else if (command) {
+          setUnconfirmed(command);
+          reportFailure('unconfirmed');
+        } else reportFailure('save');
       }
     } finally {
       submitting.current = false;
@@ -179,6 +249,8 @@ export function ConversationIdentityDialog({
   }
   const text = (key: string) => t(`conversationIdentity.${key}`, locale);
   const avatar = !removePhoto && !file ? identity?.avatarUrl : null;
+  const locked = pending || unconfirmed !== null;
+  const errorId = `${id}-error`;
   return (
     <Dialog
       open
@@ -211,6 +283,7 @@ export function ConversationIdentityDialog({
           </div>
         ) : (
           <form
+            aria-busy={pending || undefined}
             onSubmit={(event) => {
               event.preventDefault();
               void save();
@@ -221,26 +294,32 @@ export function ConversationIdentityDialog({
               <Label htmlFor={`${id}-name`}>{text('name')}</Label>
               <Input
                 id={`${id}-name`}
+                ref={nameInput}
                 dir="auto"
                 value={name}
                 maxLength={80}
-                disabled={pending}
+                disabled={locked}
+                aria-invalid={error === 'nameError' || undefined}
+                aria-describedby={`${id}-name-help${error === 'nameError' ? ` ${errorId}` : ''}`}
                 onChange={(event) => {
                   setName(event.target.value);
+                  if (error === 'nameError') setError(null);
                   if (!event.target.value.trim()) {
                     setShareInActivity(false);
                     setShareInPaymentActivity(false);
                   }
                 }}
               />
-              <p className="text-xs text-muted-foreground">{text('nameHelp')}</p>
+              <p id={`${id}-name-help`} className="text-xs text-muted-foreground">
+                {text('nameHelp')}
+              </p>
             </div>
             <div className="space-y-2">
               <div className="flex items-start gap-2">
                 <Checkbox
                   id={`${id}-activity`}
                   checked={shareInActivity}
-                  disabled={pending || !name.trim()}
+                  disabled={locked || !name.trim()}
                   aria-describedby={`${id}-activity-help`}
                   onCheckedChange={(checked) => setShareInActivity(checked === true)}
                 />
@@ -257,7 +336,7 @@ export function ConversationIdentityDialog({
                 <Checkbox
                   id={`${id}-payment-activity`}
                   checked={shareInPaymentActivity}
-                  disabled={pending || !name.trim()}
+                  disabled={locked || !name.trim()}
                   aria-describedby={`${id}-payment-activity-help`}
                   onCheckedChange={(checked) => setShareInPaymentActivity(checked === true)}
                 />
@@ -288,7 +367,7 @@ export function ConversationIdentityDialog({
                   hidden
                   type="file"
                   accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp"
-                  disabled={pending}
+                  disabled={locked}
                   onChange={(event) => {
                     const selected = event.target.files?.[0];
                     event.target.value = '';
@@ -306,9 +385,9 @@ export function ConversationIdentityDialog({
                 <Button
                   type="button"
                   variant="outline"
-                  disabled={pending}
+                  disabled={locked}
                   className="flex-1"
-                  aria-describedby={`${id}-photo-help`}
+                  aria-describedby={`${id}-photo-help${error === 'photoError' ? ` ${errorId}` : ''}`}
                   onClick={() => photoInput.current?.click()}
                 >
                   {text('choosePhoto')}
@@ -326,7 +405,7 @@ export function ConversationIdentityDialog({
                 <Button
                   type="button"
                   variant="outline"
-                  disabled={pending}
+                  disabled={locked}
                   onClick={() => {
                     setFile(null);
                     uploaded.current = null;
@@ -338,7 +417,7 @@ export function ConversationIdentityDialog({
               )}
             </div>
             {error && (
-              <p role="alert" className="text-sm text-destructive">
+              <p id={errorId} role="alert" className="text-sm text-destructive">
                 {text(error)}
               </p>
             )}
@@ -346,9 +425,20 @@ export function ConversationIdentityDialog({
               <Button type="button" variant="outline" disabled={pending} onClick={onClose}>
                 {text('cancel')}
               </Button>
-              <Button type="submit" disabled={pending}>
-                {text(pending ? 'saving' : 'saveAction')}
-              </Button>
+              {unconfirmed ? (
+                <Button
+                  ref={checkButton}
+                  type="button"
+                  disabled={pending}
+                  onClick={() => void checkSaved()}
+                >
+                  {text(pending ? 'loading' : 'checkSaved')}
+                </Button>
+              ) : (
+                <Button type="submit" disabled={pending}>
+                  {text(pending ? 'saving' : 'saveAction')}
+                </Button>
+              )}
             </DialogFooter>
           </form>
         )}

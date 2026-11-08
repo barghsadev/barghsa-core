@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T05:00:23+00:00",
-  "source_commit": "42aa702931fd6e37b25b39b4286c2e1e04c82a12",
+  "updated": "2026-11-08T05:10:31+00:00",
+  "source_commit": "4b253844569f1b5af5421e3f10f64d9bd98d1c36",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -494021,7 +494021,7 @@
             },
             {
               "path": "apps/web/e2e/conversation-identity.spec.ts",
-              "sha256": "604d8609b29997f5402147379a4c5f2f41c40f087ca318c89d820fe69ee3cd7a"
+              "sha256": "3130d3676d8deabc99e25731ab148ea9cfd673dda99a855265237c3f95294544"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -494085,11 +494085,11 @@
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.test.tsx",
-              "sha256": "d9d691e1993b26cad7e644caa803f4377423e21edbc5a021de399dc4f2d15df5"
+              "sha256": "b794453dbdb72fb0474a2c335bc64afff078f97b4dbfa0915f88a24717a4c447"
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
-              "sha256": "8808406a9eb4ca4100c96ca253185e8ffed019cd8bde91c7dca8389b860c0554"
+              "sha256": "ae5035d95579e61de2169b37d5da72d143d2018ed0d45e91c887b5aacb88bee0"
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -494903,7 +494903,7 @@
             },
             {
               "path": "apps/web/e2e/conversation-identity.spec.ts",
-              "sha256": "604d8609b29997f5402147379a4c5f2f41c40f087ca318c89d820fe69ee3cd7a"
+              "sha256": "3130d3676d8deabc99e25731ab148ea9cfd673dda99a855265237c3f95294544"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -494967,11 +494967,11 @@
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.test.tsx",
-              "sha256": "d9d691e1993b26cad7e644caa803f4377423e21edbc5a021de399dc4f2d15df5"
+              "sha256": "b794453dbdb72fb0474a2c335bc64afff078f97b4dbfa0915f88a24717a4c447"
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
-              "sha256": "8808406a9eb4ca4100c96ca253185e8ffed019cd8bde91c7dca8389b860c0554"
+              "sha256": "ae5035d95579e61de2169b37d5da72d143d2018ed0d45e91c887b5aacb88bee0"
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -495726,7 +495726,7 @@
             },
             {
               "path": "apps/web/e2e/conversation-identity.spec.ts",
-              "sha256": "604d8609b29997f5402147379a4c5f2f41c40f087ca318c89d820fe69ee3cd7a"
+              "sha256": "3130d3676d8deabc99e25731ab148ea9cfd673dda99a855265237c3f95294544"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -495790,11 +495790,11 @@
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.test.tsx",
-              "sha256": "d9d691e1993b26cad7e644caa803f4377423e21edbc5a021de399dc4f2d15df5"
+              "sha256": "b794453dbdb72fb0474a2c335bc64afff078f97b4dbfa0915f88a24717a4c447"
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
-              "sha256": "8808406a9eb4ca4100c96ca253185e8ffed019cd8bde91c7dca8389b860c0554"
+              "sha256": "ae5035d95579e61de2169b37d5da72d143d2018ed0d45e91c887b5aacb88bee0"
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -496998,7 +496998,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "bc857d6bf499bd0f7eb317bfec14579a68bcf921f1da12f3a36d7ca4befb3e40"
+              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516704,7 +516704,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Native required controls, customer team roles and the saved-address, maintenance activation and reconciliation forms have current required and error-link evidence. Previously verified checkout, recovery, CRM, document, AI and knowledge journeys retain their evidence. Remaining conditional and schema-only controls need verification before acceptance."
+        "Existing checkout, recovery, CRM, document, AI and knowledge controls retain their evidence. Conversation identity now links name and photo validation errors to their controls in the customer and staff workspaces. Other conditional and schema-only fields still need verification."
       ],
       "owner": null,
       "depends_on": [],
@@ -516735,7 +516735,8 @@
           "release-0.5-ai-knowledge-required-fields",
           "release-0.5-remaining-native-form-controls",
           "release-0.5-required-team-role-group",
-          "release-0.5-schema-form-census"
+          "release-0.5-schema-form-census",
+          "release-0.5-identity-recovery"
         ],
         "current_acceptance": null
       }
@@ -516816,7 +516817,7 @@
             },
             {
               "path": "apps/web/e2e/conversation-identity.spec.ts",
-              "sha256": "604d8609b29997f5402147379a4c5f2f41c40f087ca318c89d820fe69ee3cd7a"
+              "sha256": "3130d3676d8deabc99e25731ab148ea9cfd673dda99a855265237c3f95294544"
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
@@ -516888,7 +516889,7 @@
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
-              "sha256": "8808406a9eb4ca4100c96ca253185e8ffed019cd8bde91c7dca8389b860c0554"
+              "sha256": "ae5035d95579e61de2169b37d5da72d143d2018ed0d45e91c887b5aacb88bee0"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -517694,7 +517695,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "bc857d6bf499bd0f7eb317bfec14579a68bcf921f1da12f3a36d7ca4befb3e40"
+              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -518250,7 +518251,7 @@
             },
             {
               "path": "apps/web/e2e/conversation-identity.spec.ts",
-              "sha256": "604d8609b29997f5402147379a4c5f2f41c40f087ca318c89d820fe69ee3cd7a"
+              "sha256": "3130d3676d8deabc99e25731ab148ea9cfd673dda99a855265237c3f95294544"
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
@@ -518322,7 +518323,7 @@
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
-              "sha256": "8808406a9eb4ca4100c96ca253185e8ffed019cd8bde91c7dca8389b860c0554"
+              "sha256": "ae5035d95579e61de2169b37d5da72d143d2018ed0d45e91c887b5aacb88bee0"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -520406,7 +520407,7 @@
             },
             {
               "path": "apps/web/e2e/conversation-identity.spec.ts",
-              "sha256": "604d8609b29997f5402147379a4c5f2f41c40f087ca318c89d820fe69ee3cd7a"
+              "sha256": "3130d3676d8deabc99e25731ab148ea9cfd673dda99a855265237c3f95294544"
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
@@ -520478,7 +520479,7 @@
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
-              "sha256": "8808406a9eb4ca4100c96ca253185e8ffed019cd8bde91c7dca8389b860c0554"
+              "sha256": "ae5035d95579e61de2169b37d5da72d143d2018ed0d45e91c887b5aacb88bee0"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -565965,7 +565966,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "bc857d6bf499bd0f7eb317bfec14579a68bcf921f1da12f3a36d7ca4befb3e40"
+              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -567859,7 +567860,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "bc857d6bf499bd0f7eb317bfec14579a68bcf921f1da12f3a36d7ca4befb3e40"
+              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568662,7 +568663,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Invoice and wallet receipts, discussions, wallet returns, profile lifecycle commands and the customer guide retain current feedback evidence. Contract-limit settings now announce one warning for an unconfirmed receipt and one success for a verified save. Wider command feedback adoption stays open."
+        "Verified invoice, wallet, discussion, profile, guide and contract-limit command feedback retains its evidence. Conversation identity now warns on an uncertain save and confirms only the matching response or current saved state. Wider command feedback adoption stays open."
       ],
       "owner": null,
       "depends_on": [],
@@ -568697,7 +568698,8 @@
           "release-0.5-wallet-return-deadline",
           "release-0.5-profile-export-deadlines",
           "release-0.5-assistant-stream-deadlines",
-          "release-0.5-contrast-mode-closure"
+          "release-0.5-contrast-mode-closure",
+          "release-0.5-identity-recovery"
         ],
         "current_acceptance": null
       }
@@ -569808,7 +569810,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "bc857d6bf499bd0f7eb317bfec14579a68bcf921f1da12f3a36d7ca4befb3e40"
+              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -571702,7 +571704,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "bc857d6bf499bd0f7eb317bfec14579a68bcf921f1da12f3a36d7ca4befb3e40"
+              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -573596,7 +573598,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "bc857d6bf499bd0f7eb317bfec14579a68bcf921f1da12f3a36d7ca4befb3e40"
+              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -575490,7 +575492,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "bc857d6bf499bd0f7eb317bfec14579a68bcf921f1da12f3a36d7ca4befb3e40"
+              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577384,7 +577386,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "bc857d6bf499bd0f7eb317bfec14579a68bcf921f1da12f3a36d7ca4befb3e40"
+              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -579278,7 +579280,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "bc857d6bf499bd0f7eb317bfec14579a68bcf921f1da12f3a36d7ca4befb3e40"
+              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581172,7 +581174,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "bc857d6bf499bd0f7eb317bfec14579a68bcf921f1da12f3a36d7ca4befb3e40"
+              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -583066,7 +583068,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "bc857d6bf499bd0f7eb317bfec14579a68bcf921f1da12f3a36d7ca4befb3e40"
+              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -584960,7 +584962,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "bc857d6bf499bd0f7eb317bfec14579a68bcf921f1da12f3a36d7ca4befb3e40"
+              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -586854,7 +586856,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "bc857d6bf499bd0f7eb317bfec14579a68bcf921f1da12f3a36d7ca4befb3e40"
+              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -588748,7 +588750,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "bc857d6bf499bd0f7eb317bfec14579a68bcf921f1da12f3a36d7ca4befb3e40"
+              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -590011,7 +590013,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "bc857d6bf499bd0f7eb317bfec14579a68bcf921f1da12f3a36d7ca4befb3e40"
+              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591381,7 +591383,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "bc857d6bf499bd0f7eb317bfec14579a68bcf921f1da12f3a36d7ca4befb3e40"
+              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593275,7 +593277,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "bc857d6bf499bd0f7eb317bfec14579a68bcf921f1da12f3a36d7ca4befb3e40"
+              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594078,7 +594080,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Invoice receipt, security and preference reads, commerce previews, wallet confirmation, staff knowledge test searches and notification header recovery retain their evidence. Profile export ticket creation, job preparation, job progress and customer guide answer streaming have bounded recovery. Remaining bespoke list, detail and staff states need verification."
+        "Existing commerce, guide, notification and profile export recovery retains its evidence. The conversation identity editor now bounds both photo upload and save response, preserves its draft and recovers the current revision explicitly. Remaining bespoke list, detail and staff states need verification."
       ],
       "owner": null,
       "depends_on": [],
@@ -594124,7 +594126,8 @@
           "release-0.5-knowledge-query-deadline",
           "release-0.5-header-notification-deadlines",
           "release-0.5-profile-export-deadlines",
-          "release-0.5-assistant-stream-deadlines"
+          "release-0.5-assistant-stream-deadlines",
+          "release-0.5-identity-recovery"
         ],
         "current_acceptance": null
       }
@@ -723730,7 +723733,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Supported themes and the previously inconclusive text and conditional cue states now have contrast evidence. Saving notices can transiently overlap passive step labels. Conditional form semantics, verified command feedback, bespoke recovery and the live policy gates still need closure."
+        "Supported themes and conditional control contrast retain their evidence. Conversation identity recovery, consent preservation and field feedback now have customer and staff evidence. Transient saving notice visibility, wider conditional form semantics, verified command feedback, bespoke recovery and live policy gates remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723832,7 +723835,8 @@
           "release-0.5-reveal-clipped-text",
           "release-0.5-remaining-contrast",
           "release-0.5-order-notice-placement",
-          "release-0.5-conditional-control-contrast"
+          "release-0.5-conditional-control-contrast",
+          "release-0.5-identity-recovery"
         ]
       }
     },
@@ -724044,7 +724048,7 @@
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
-              "sha256": "8808406a9eb4ca4100c96ca253185e8ffed019cd8bde91c7dca8389b860c0554"
+              "sha256": "ae5035d95579e61de2169b37d5da72d143d2018ed0d45e91c887b5aacb88bee0"
             },
             {
               "path": "apps/web/src/components/CrmLegalDocuments.tsx",
@@ -725437,6 +725441,10 @@
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
               "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
+            },
+            {
+              "path": "packages/i18n/src/conversation-identity.ts",
+              "sha256": "194873c3474fb80d24fdefc30ff6a20c352ea5a8ad8b493f16637ef3e7c9de34"
             }
           ],
           "checks": [
@@ -725482,7 +725490,8 @@
             "Renewed auth layout transfer, bundle and browser evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-reveal-clipped-text/proof.json",
             "Renewed shared dialog motion, cold-auth and bundle evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-remaining-contrast/proof.json",
             "Renewed order notice placement, cold-auth and bundle evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-order-notice-placement/proof.json",
-            "Renewed conditional control contrast and package performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-control-contrast/proof.json"
+            "Renewed conditional control contrast and package performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-control-contrast/proof.json",
+            "Renewed identity dialog recovery and package performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-identity-recovery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -793719,6 +793728,77 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-control-contrast/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-control-contrast/reviewed.patch",
       "release_disposition": "Accepted the contrast task. Other v0.5.0 product adoption and operational gates remain open."
+    },
+    "release-0.5-identity-recovery": {
+      "batch": "release-0.5-identity-recovery",
+      "base_commit": "4b253844569f1b5af5421e3f10f64d9bd98d1c36",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/user-settings/conversation-identity.service.ts",
+          "sha256": "687f462c2465720990b3f82b520d31fe39518435f13d109910a66b787a68eed2"
+        },
+        {
+          "path": "apps/web/e2e/conversation-identity.spec.ts",
+          "sha256": "3130d3676d8deabc99e25731ab148ea9cfd673dda99a855265237c3f95294544"
+        },
+        {
+          "path": "apps/web/src/components/ConversationIdentityDialog.test.tsx",
+          "sha256": "b794453dbdb72fb0474a2c335bc64afff078f97b4dbfa0915f88a24717a4c447"
+        },
+        {
+          "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
+          "sha256": "ae5035d95579e61de2169b37d5da72d143d2018ed0d45e91c887b5aacb88bee0"
+        },
+        {
+          "path": "apps/web/src/components/ProfileMenu.tsx",
+          "sha256": "a2a3efb2b165ad500ebb5516857df6a54ab76d36e7ad998153bd48a9099672b8"
+        },
+        {
+          "path": "apps/web/src/lib/branding-logo-upload.ts",
+          "sha256": "76258bdf019ce46ea4330f816e4f0db222476e97d039a5aac5086438cb775b74"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "apps/web/src/lib/toast-api.ts",
+          "sha256": "19bb9d7b3de334e1b002e5759b9a581354885611c69d8d59297230d9a4d254bd"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
+        },
+        {
+          "path": "packages/i18n/src/conversation-identity.ts",
+          "sha256": "194873c3474fb80d24fdefc30ff6a20c352ea5a8ad8b493f16637ef3e7c9de34"
+        }
+      ],
+      "checks": [
+        "The name field links its localized help and validation error and receives focus after invalid submission. The photo picker describes its rejected file error. The dialog preserves the optional name and photo semantics and the two separate sharing consents.",
+        "The identity save deadline covers the response body. After an ambiguous write the dialog preserves the draft, focuses the readback action and holds another write until it verifies the current revision. A matching saved state completes the original attempt. A different current state keeps the draft for explicit review. Stale responses cannot close the editor.",
+        "A stalled photo upload reaches a bounded error and keeps the local draft. The client issues no identity write from that failed upload. Known rejected requests retain the existing revision-bound retry. The backend already serializes revision checks and exact repeat commands without duplicate audit or photo sealing.",
+        "16 production browser journeys in both languages across customer and staff, eight instrumented Chromium journeys, 38 distinct unit checks, eight changed-coverage groups, 98 bundle budgets, six cold-auth measurements, scoped formatting and lint, i18n build and web typecheck passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-identity-recovery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-identity-recovery/proof.json",
+      "source_scope_proof_sha256": "ad22979543e38d613d3a144da60b2e3012fcbed4efa327aef43b75dac9f774bd",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-identity-recovery/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-identity-recovery/reviewed.patch",
+      "release_disposition": "Verified bounded conversation identity uploads, saved-state recovery and field feedback. Other v0.5.0 launch-required criteria remain open."
     }
   },
   "historical_improvements": [

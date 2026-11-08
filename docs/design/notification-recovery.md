@@ -20,6 +20,8 @@ Online wallet returns wait up to 15 seconds for confirmation, including the rece
 
 Profile export requests and preparation use the same browser deadline. An explicit retry keeps the original request key or saved export ticket. If a retry of a failed job times out, reload its status before offering another retry. The server may have queued the job even if the browser never received the receipt.
 
+Conversation identity keeps the draft while it uploads a photo for up to 30 seconds or waits up to 15 seconds for the save response, including its body. If a save cannot be confirmed, the editor offers a fresh read. A matching saved revision completes the attempt. A different saved state leaves the draft available for review and a new explicit save.
+
 The customer guide allows up to 300 seconds for retrieval, answer generation and delivery, with a 15-second limit between stream reads. Partial text stays labelled unfinished until the final receipt validates the answer and its sources. After a timeout or an in-progress response, an explicit recheck uses the original request ID.
 
 In electricity and saving order discussions, an explicit retry after a transport failure announces the connection retry. Keep the failed page cursor, existing comments and unsent draft. HTTP errors and invalid response bodies retain inline recovery.

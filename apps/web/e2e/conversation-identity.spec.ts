@@ -291,6 +291,18 @@ for (const staff of [false, true])
       const held = new Promise<void>((done) => {
         release = done;
       });
+      let releaseSave!: () => void;
+      const heldSave = new Promise<void>((done) => {
+        releaseSave = done;
+      });
+      const saved = {
+        displayName: 'My draft',
+        avatarUrl: null,
+        avatarUploadKey: null,
+        revision: 3,
+        shareInActivity: true,
+        shareInPaymentActivity: true,
+      };
       const copy = (key: string) => identityText(`conversationIdentity.${key}`, locale);
       await page.route('**/api/user/settings/conversation-identity', async (route) => {
         if (route.request().method() === 'PUT') {
@@ -306,18 +318,12 @@ for (const staff of [false, true])
             shareInActivity: true,
             shareInPaymentActivity: true,
           });
-          return route.fulfill({
-            json: {
-              displayName: 'My draft',
-              avatarUrl: null,
-              avatarUploadKey: null,
-              revision: 3,
-              shareInActivity: true,
-              shareInPaymentActivity: true,
-            },
-          });
+          await heldSave;
+          await route.fulfill({ json: saved }).catch(() => undefined);
+          return;
         }
         const read = ++reads;
+        if (read === 4) return route.fulfill({ json: saved });
         if (read === 1) await held;
         await route
           .fulfill({
@@ -364,6 +370,9 @@ for (const staff of [false, true])
         buffer: Buffer.from('<svg/>'),
       });
       await expect(editor.getByRole('alert')).toHaveText(copy('photoError'));
+      await expect(
+        editor.getByRole('button', { name: copy('choosePhoto'), exact: true })
+      ).toHaveAccessibleDescription(`${copy('photoHelp')} ${copy('photoError')}`);
       await editor.getByRole('button', { name: copy('saveAction'), exact: true }).click();
       await expect(editor.getByRole('alert')).toHaveText(copy('conflict'));
       await expect(page.locator('[data-sonner-toast][data-type=error]')).toContainText(
@@ -388,8 +397,24 @@ for (const staff of [false, true])
       expect(await editor.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(
         true
       );
-      await editor.getByRole('button', { name: copy('saveAction'), exact: true }).click();
-      await expect(editor).toHaveCount(0);
+      try {
+        await editor.getByRole('button', { name: copy('saveAction'), exact: true }).click();
+        await expect.poll(() => writes).toBe(2);
+        await page.clock.fastForward(15_001);
+        await expect(editor.getByRole('alert')).toHaveText(copy('unconfirmed'));
+        await expect(editor.getByLabel(copy('name'), { exact: true })).toHaveValue('My draft');
+        await expect(
+          editor.getByRole('button', { name: copy('saveAction'), exact: true })
+        ).toHaveCount(0);
+        const checkSaved = editor.getByRole('button', { name: copy('checkSaved'), exact: true });
+        await expect(checkSaved).toBeFocused();
+        expect(reads).toBe(3);
+        await checkSaved.click();
+        await expect(editor).toHaveCount(0);
+        expect(reads).toBe(4);
+      } finally {
+        releaseSave();
+      }
       expect(writes).toBe(2);
     });
   }

@@ -24,6 +24,13 @@ export const fa = {
   'conversationIdentity.load': 'دریافت اطلاعات ناموفق بود. دوباره تلاش کنید.',
   'conversationIdentity.retry': 'تلاش دوباره',
   'conversationIdentity.save': 'ذخیره ناموفق بود. تغییرات شما برای تلاش دوباره حفظ شده است.',
+  'conversationIdentity.unconfirmed':
+    'نتیجهٔ ذخیره مشخص نشد. پیش از ذخیرهٔ دوباره، اطلاعات ذخیره‌شده را بررسی کنید.',
+  'conversationIdentity.checkSaved': 'بررسی اطلاعات ذخیره‌شده',
+  'conversationIdentity.checkFailed':
+    'بررسی اطلاعات ذخیره‌شده ناموفق بود. تغییرات شما حفظ شده است. دوباره بررسی کنید.',
+  'conversationIdentity.retrySave':
+    'اطلاعات ذخیره‌شده با پیش‌نویس شما مطابقت ندارد. تغییرات را بررسی کنید و در صورت نیاز ذخیره کنید.',
   'conversationIdentity.conflict':
     'اطلاعات در جای دیگری تغییر کرده است. تغییرات خود را بررسی کنید و دوباره ذخیره کنید.',
   'conversationIdentity.denied': 'دسترسی شما تغییر کرده است. دوباره وارد حساب شوید.',
@@ -54,6 +61,13 @@ export const en = {
   'conversationIdentity.load': 'Could not load your details. Please retry.',
   'conversationIdentity.retry': 'Retry',
   'conversationIdentity.save': 'Could not save. Your changes are kept for retry.',
+  'conversationIdentity.unconfirmed':
+    'The save could not be confirmed. Check the saved details before saving again.',
+  'conversationIdentity.checkSaved': 'Check saved details',
+  'conversationIdentity.checkFailed':
+    'Could not check the saved details. Your changes are kept. Try checking again.',
+  'conversationIdentity.retrySave':
+    'The saved details differ from your draft. Review your changes and save when ready.',
   'conversationIdentity.conflict':
     'Your details changed elsewhere. Check your changes and save again.',
   'conversationIdentity.denied': 'Your access changed. Sign in again.',

@@ -28,6 +28,7 @@ beforeEach(() => {
 });
 afterEach(async () => {
   await act(async () => root.unmount());
+  vi.useRealTimers();
   host.remove();
   document.cookie = 'barghsa_csrf=; Max-Age=0';
   vi.unstubAllGlobals();
@@ -198,11 +199,100 @@ it('rejects unsafe photo selection and directional-control names without a write
   await render();
   await choose(new File(['svg'], 'photo.svg', { type: 'image/svg+xml' }));
   expect(document.body.textContent).toContain(t('conversationIdentity.photoError', 'en'));
+  const photo = [...document.body.querySelectorAll('button')].find(
+    (button) => button.textContent === t('conversationIdentity.choosePhoto', 'en')
+  )!;
+  const photoError = document.body.querySelector('[role=alert]')!;
+  expect(photoError.id).not.toBe('');
+  expect(photo.getAttribute('aria-describedby')?.split(' ')).toContain(photoError.id);
   await name('Name\u202ereversed');
   await submit();
   expect(document.body.textContent).toContain(t('conversationIdentity.nameError', 'en'));
+  const nameError = document.body.querySelector('[role=alert]')!;
+  expect(nameInput().getAttribute('aria-invalid')).toBe('true');
+  expect(nameInput().getAttribute('aria-describedby')?.split(' ')).toContain(nameError.id);
+  expect(document.activeElement).toBe(nameInput());
+  await name('Corrected name');
+  expect(nameInput().hasAttribute('aria-invalid')).toBe(false);
   expect(request).toHaveBeenCalledTimes(1);
   expect(upload).not.toHaveBeenCalled();
+});
+
+it('checks the current revision before another save after a stalled response body', async () => {
+  const unfinished = response(null);
+  let finish!: (body: unknown) => void;
+  vi.spyOn(unfinished, 'json').mockImplementation(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      })
+  );
+  const request = vi
+    .fn<typeof fetch>()
+    .mockResolvedValueOnce(response(initial))
+    .mockResolvedValueOnce(unfinished)
+    .mockResolvedValueOnce(response({}, 503))
+    .mockResolvedValueOnce(response({ ...initial, displayName: 'Other edit', revision: 3 }))
+    .mockResolvedValueOnce(response({ ...initial, displayName: 'My retained edit', revision: 4 }));
+  vi.stubGlobal('fetch', request);
+  const close = await render();
+  await name('My retained edit');
+  vi.useFakeTimers();
+  await submit();
+  expect(request).toHaveBeenCalledTimes(2);
+  await act(async () => vi.advanceTimersByTimeAsync(15_000));
+  expect(nameInput().value).toBe('My retained edit');
+  expect(document.body.textContent).toContain(t('conversationIdentity.unconfirmed', 'en'));
+  expect(request.mock.calls[1]![1]!.signal?.aborted).toBe(true);
+  await submit();
+  expect(request).toHaveBeenCalledTimes(2);
+  const check = async () => {
+    await act(async () =>
+      [...document.body.querySelectorAll('button')]
+        .find((button) => button.textContent === t('conversationIdentity.checkSaved', 'en'))!
+        .click()
+    );
+  };
+  await check();
+  expect(document.body.textContent).toContain(t('conversationIdentity.checkFailed', 'en'));
+  await submit();
+  expect(request).toHaveBeenCalledTimes(3);
+  await check();
+  expect(request.mock.calls.slice(2, 4).map(([, options]) => options?.method)).toEqual([
+    undefined,
+    undefined,
+  ]);
+  expect(nameInput().value).toBe('My retained edit');
+  await act(async () => finish({ ...initial, displayName: 'My retained edit', revision: 3 }));
+  expect(close).not.toHaveBeenCalled();
+  await submit();
+  expect(JSON.parse(request.mock.calls[4]![1]!.body as string)).toMatchObject({
+    displayName: 'My retained edit',
+    revision: 3,
+  });
+  expect(close).toHaveBeenCalledTimes(1);
+});
+
+it('bounds a stalled photo upload and retains the draft without sending an identity write', async () => {
+  const request = vi.fn<typeof fetch>().mockResolvedValueOnce(response(initial));
+  vi.stubGlobal('fetch', request);
+  upload.mockImplementationOnce(() => new Promise(() => undefined));
+  const close = await render();
+  await name('Retained alias');
+  await choose(new File(['png'], 'retained.png', { type: 'image/png' }));
+  vi.useFakeTimers();
+  await submit();
+  expect(upload).toHaveBeenCalledTimes(1);
+  await act(async () => vi.advanceTimersByTimeAsync(30_000));
+  expect((upload.mock.calls[0]![1] as AbortSignal).aborted).toBe(true);
+  expect(nameInput().disabled).toBe(false);
+  expect(nameInput().value).toBe('Retained alias');
+  expect(document.body.textContent).toContain('retained.png');
+  expect(document.body.querySelector('[role=alert]')?.textContent).toBe(
+    t('conversationIdentity.save', 'en')
+  );
+  expect(request).toHaveBeenCalledTimes(1);
+  expect(close).not.toHaveBeenCalled();
 });
 it('clears personal drafts after access denial', async () => {
   const request = vi
