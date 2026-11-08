@@ -20,6 +20,7 @@ export const fa: I18nDictionary = {
   'tos.modal.accepting': 'در حال ثبت...',
   'tos.modal.success': 'قوانین استفاده با موفقیت پذیرفته شد.',
   'tos.modal.error': 'خطا در پذیرش قوانین. لطفاً دوباره تلاش کنید.',
+  'tos.modal.unconfirmed': 'ثبت پذیرش قوانین تأیید نشد. ابتدا وضعیت پذیرش را بررسی کنید.',
 };
 export const en: I18nDictionary = {
   'tos.page.title': 'Terms of Service',
@@ -39,6 +40,7 @@ export const en: I18nDictionary = {
   'tos.modal.accepting': 'Accepting...',
   'tos.modal.success': 'Terms of Service accepted successfully.',
   'tos.modal.error': 'Failed to accept Terms of Service. Please try again.',
+  'tos.modal.unconfirmed': 'Acceptance could not be confirmed. Check the current status first.',
 };
 export function t(key: string, locale: Locale = 'fa'): string {
   return lookup(locale === 'fa' ? fa : en, key) ?? lookup(en, key) ?? key;

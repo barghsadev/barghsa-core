@@ -15,7 +15,11 @@ import { shellText } from '@barghsa/i18n/shell';
 import { useAsyncData } from '../hooks/useAsyncData.js';
 import { parseSessionContext } from '../lib/session-role.js';
 import { withCsrf } from '../lib/csrf.js';
-import { OperatingContextSwitch } from './OperatingContextSwitch.js';
+const OperatingContextSwitch = lazy(() =>
+  import('./OperatingContextSwitch.js').then((module) => ({
+    default: module.OperatingContextSwitch,
+  }))
+);
 const ConversationIdentityDialog = lazy(() =>
   import('./ConversationIdentityDialog.js').then((module) => ({
     default: module.ConversationIdentityDialog,
@@ -43,6 +47,7 @@ export function ProfileMenu({
 }) {
   const account = useAsyncData('/api/auth/user', { read: readAccount });
   const [open, setOpen] = useState(false);
+  const [opened, setOpened] = useState(false);
   const [identityOpen, setIdentityOpen] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState(false);
@@ -67,6 +72,11 @@ export function ProfileMenu({
       setError(true);
     }
   }
+  const accountLoading = (
+    <LoadingStatus className="text-sm text-muted-foreground">
+      {shellText('accountLoading', locale)}
+    </LoadingStatus>
+  );
   const linkClass =
     'flex min-h-11 items-center gap-2 rounded-md px-3 py-2 text-foreground hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
   return (
@@ -76,6 +86,7 @@ export function ProfileMenu({
         onOpenChange={(value) => {
           setOpen(value);
           if (value) {
+            setOpened(true);
             account.retry();
             onOpen?.();
           }
@@ -114,9 +125,7 @@ export function ProfileMenu({
           <div className="min-w-0 space-y-1">
             <PopoverTitle>{shellText('account', locale)}</PopoverTitle>
             {account.status === 'loading' ? (
-              <LoadingStatus className="text-sm text-muted-foreground">
-                {shellText('accountLoading', locale)}
-              </LoadingStatus>
+              accountLoading
             ) : account.status === 'error' ? (
               <div role="alert" className="space-y-2">
                 <p className="text-sm text-muted-foreground">{shellText('accountError', locale)}</p>
@@ -145,7 +154,11 @@ export function ProfileMenu({
             )}
           </div>
           <div className="space-y-2 border-t pt-3">
-            <OperatingContextSwitch area={area} locale={locale} session={user} />
+            {opened && (
+              <Suspense fallback={account.status === 'loading' ? null : accountLoading}>
+                <OperatingContextSwitch area={area} locale={locale} session={user} />
+              </Suspense>
+            )}
             {preferences}
           </div>
           <nav aria-label={shellText('account', locale)} className="space-y-1 border-t pt-3">

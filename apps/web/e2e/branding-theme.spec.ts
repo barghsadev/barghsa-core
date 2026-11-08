@@ -199,6 +199,57 @@ for (const locale of ['fa', 'en'] as const)
   }
 
 for (const locale of ['fa', 'en'] as const) {
+  test(`a stalled theme save requires a fresh preference read (${locale})`, async ({ page }) => {
+    await crmShell(page, locale);
+    await page.emulateMedia({ colorScheme: 'light' });
+    let writes = 0;
+    let reads = 0;
+    let saved: 'light' | 'dark' = 'light';
+    let release!: () => void;
+    const stalled = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    await page.route('**/api/user/settings/theme', async (route) => {
+      if (route.request().method() === 'GET') {
+        reads++;
+        return route.fulfill({ json: { mode: saved } });
+      }
+      writes++;
+      const { mode } = route.request().postDataJSON() as { mode: typeof saved };
+      saved = mode;
+      await stalled;
+      await route.fulfill({ json: { mode } }).catch(() => {});
+    });
+    await page.goto('/app');
+    await page.getByRole('button', { name: shellText('accountMenu', locale), exact: true }).click();
+    const theme = page.getByRole('combobox', { name: shellText('theme', locale) });
+    await expect(theme).toHaveValue('light');
+    await expect(theme).toBeEnabled();
+    await page.clock.install();
+    try {
+      await theme.selectOption('dark');
+      await expect.poll(() => writes).toBe(1);
+      await page.clock.fastForward(15_001);
+      await expect(
+        page.getByText(shellText('changeUnconfirmed', locale), { exact: true })
+      ).toBeVisible();
+      await expect(theme).toHaveValue('light');
+      await expect(theme).toBeDisabled();
+      const readsBeforeCheck = reads;
+      await page
+        .getByRole('button', { name: shellText('checkTheme', locale), exact: true })
+        .click();
+      await expect.poll(() => reads).toBeGreaterThan(readsBeforeCheck);
+      await expect(theme).toHaveValue('dark');
+      await expect(theme).toBeEnabled();
+      await expect(page.locator('html')).toHaveClass(/dark/);
+      expect(writes).toBe(1);
+    } finally {
+      release();
+    }
+    await expect(page.getByText(shellText('themeSaved', locale), { exact: true })).toHaveCount(0);
+  });
+
   test(`published admin policy controls the account UI without writing user preferences (${locale})`, async ({
     page,
   }) => {

@@ -72,4 +72,8 @@ Terms draft saves, publication and discard use the same response deadline. An un
 
 Team invitation sends and recipient actions use the same deadline. An unknown send keeps the draft and refreshes the team. Only a pending row with the same normalized recipient, role and message confirms a matching invitation. A failed refresh leaves sending disabled. A recipient decision or profile switch needs its matching receipt, and a failed attempt waits for a fresh invitations read before another action.
 
+Workspace mode changes, theme saves and terms acceptance wait up to 15 seconds for their response and receipt. An unconfirmed mode change offers a fresh workspace entry through the normal session guard. An unconfirmed theme save keeps the displayed theme until the server preference is read again. An unconfirmed terms decision offers a fresh consent check and loads the current terms if consent is still required. These checks do not replay the writes.
+
+The workspace mode switch loads when the account menu first opens and stays mounted for the current workspace. The terms acceptance request code loads when the user accepts. Each interaction has a separate budget, and the initial route budgets count all eager shell code.
+
 The auth build excludes customer-only profile and verification imports. Its existing route guard hands off non-authentication URLs before those workspaces can mount. Purchase components remain eager; their pending and error views can load separately. Budget checks still count the full emitted payload and retain the original limits. A Register facade emitted under a hashed manifest key uses the existing unique dynamic-entry selector, `chunk:index`; an ambiguous or missing entry fails the check.

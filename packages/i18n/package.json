@@ -197,6 +197,11 @@
       "import": "./dist/shell.js",
       "default": "./dist/shell.js"
     },
+    "./workspace-mode": {
+      "types": "./dist/workspace-mode.d.ts",
+      "import": "./dist/workspace-mode.js",
+      "default": "./dist/workspace-mode.js"
+    },
     "./public-shell": {
       "types": "./dist/public-shell.d.ts",
       "import": "./dist/public-shell.js",

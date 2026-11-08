@@ -2,6 +2,7 @@ import { fullNavigation } from './navigation-fixture';
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { shellText } from '@barghsa/i18n/shell';
+import { workspaceModeText } from '@barghsa/i18n/workspace-mode';
 import { t } from '@barghsa/i18n/app';
 
 for (const locale of ['en', 'fa'] as const) {
@@ -166,10 +167,10 @@ for (const locale of ['en', 'fa'] as const) {
         popup.getByRole('link', { name: shellText('myProfile', locale) })
       ).toHaveAttribute('href', area === 'staff' ? '/settings/username' : '/settings/profile');
       await expect(
-        popup.getByRole('button', { name: shellText('switchToStaff', locale) })
+        popup.getByRole('button', { name: workspaceModeText('toStaff', locale) })
       ).toHaveCount(0);
       await expect(
-        popup.getByRole('button', { name: shellText('switchToCustomer', locale) })
+        popup.getByRole('button', { name: workspaceModeText('toCustomer', locale) })
       ).toHaveCount(area === 'staff' ? 1 : 0);
       const theme = popup.getByRole('combobox', { name: shellText('theme', locale) });
       await expect(theme).toBeEnabled();

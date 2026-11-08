@@ -16,7 +16,7 @@ import {
   DialogFooter,
 } from '@barghsa/ui';
 import { AlertCircleIcon, Loader2Icon } from 'lucide-react';
-import { withCsrf } from '../lib/csrf.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 
 const TosContent = lazy(() => import('./TosContent.js'));
 
@@ -81,7 +81,8 @@ function OwnedTosBanner({ locale = 'fa' }: TosBannerProps) {
   const renderKey = currentTos ? `${currentTos.id}:${locale}` : null;
   const markRendered = useCallback(() => setRenderedVersion(renderKey), [renderKey]);
   const [accepting, setAccepting] = useState(false);
-  const acceptancePending = useRef(false);
+  const acceptanceRequest = useRef<AbortController | null>(null);
+  const [acceptanceUnconfirmed, setAcceptanceUnconfirmed] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [dismissedAutoModal, setDismissedAutoModal] = useState(false);
 
@@ -181,11 +182,22 @@ function OwnedTosBanner({ locale = 'fa' }: TosBannerProps) {
     }
   }, [locale, readReview]);
 
+  const reviewAfterChecking = async () => {
+    if (acceptanceUnconfirmed) {
+      const required = await checkTosStatus();
+      if (required === null) return;
+      setAcceptanceUnconfirmed(false);
+      if (!required) return;
+    }
+    await openReviewModal();
+  };
+
   useEffect(() => {
     let cancelled = false;
     const reviewRequired = () => {
       void checkTosStatus().then((required) => {
         if (cancelled || !required) return;
+        setAcceptanceUnconfirmed(false);
         setDismissedAutoModal(true);
         void openReviewModal();
       });
@@ -215,6 +227,7 @@ function OwnedTosBanner({ locale = 'fa' }: TosBannerProps) {
   }, [automaticReviewAllowed]);
   useLayoutEffect(
     () => () => {
+      acceptanceRequest.current?.abort();
       reviewController.current?.abort();
       reviewRequest.current++;
     },
@@ -224,41 +237,40 @@ function OwnedTosBanner({ locale = 'fa' }: TosBannerProps) {
   // ── Accept TOS ──────────────────────────────────────────────────
 
   const handleAccept = useCallback(async () => {
-    if (!currentTos || renderedVersion !== renderKey || acceptancePending.current) return;
+    if (
+      !currentTos ||
+      renderedVersion !== renderKey ||
+      acceptanceRequest.current ||
+      acceptanceUnconfirmed
+    )
+      return;
 
-    acceptancePending.current = true;
+    const controller = new AbortController();
+    acceptanceRequest.current = controller;
     const review = reviewRequest.current;
     const current = () =>
-      review === reviewRequest.current && revision === getProfileContextRevision();
-    const failed = () => {
+      !controller.signal.aborted &&
+      review === reviewRequest.current &&
+      revision === getProfileContextRevision();
+    const failed = (needsStatus: boolean, uncertainMessage = needsStatus) => {
       if (!current()) return;
-      const message = t('tos.modal.error', locale);
+      setAcceptanceUnconfirmed(needsStatus);
+      const message = t(uncertainMessage ? 'tos.modal.unconfirmed' : 'tos.modal.error', locale);
       setError(message);
-      sendToast('error', message);
+      sendToast(uncertainMessage ? 'warning' : 'error', message);
     };
 
     setAccepting(true);
     setError(null);
 
     try {
-      const response = await fetch(`/api/tos/accept/${encodeURIComponent(currentTos.id)}`, {
-        method: 'POST',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
+      const outcome = await readWithDeadline(controller.signal, async (signal) => {
+        const { acceptReviewedTerms } = await import('../lib/terms-acceptance.js');
+        return acceptReviewedTerms(currentTos.id, signal);
       });
 
       if (!current()) return;
-      if (!response.ok) return failed();
-
-      const receipt: unknown = await response.json();
-      if (!current()) return;
-      if (
-        !receipt ||
-        typeof receipt !== 'object' ||
-        !('acceptedVersionId' in receipt) ||
-        receipt.acceptedVersionId !== currentTos.id
-      ) {
-        return failed();
-      }
+      if (outcome !== 'accepted') return failed(outcome !== 'denied', outcome === 'unconfirmed');
 
       statusController.current?.abort();
       statusRequest.current++;
@@ -268,12 +280,14 @@ function OwnedTosBanner({ locale = 'fa' }: TosBannerProps) {
       setShowModal(false);
       sendToast('success', t('tos.modal.success', locale));
     } catch {
-      failed();
+      failed(true);
     } finally {
-      acceptancePending.current = false;
-      if (revision === getProfileContextRevision()) setAccepting(false);
+      if (acceptanceRequest.current === controller) {
+        acceptanceRequest.current = null;
+        if (revision === getProfileContextRevision()) setAccepting(false);
+      }
     }
-  }, [currentTos, locale, renderedVersion, renderKey, revision]);
+  }, [acceptanceUnconfirmed, currentTos, locale, renderedVersion, renderKey, revision]);
 
   // ── Render ──────────────────────────────────────────────────────
 
@@ -309,7 +323,7 @@ function OwnedTosBanner({ locale = 'fa' }: TosBannerProps) {
           <span className="text-foreground">{t('tos.banner.text', locale)}</span>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <Button variant="default" size="sm" onClick={openReviewModal}>
+          <Button variant="default" size="sm" onClick={reviewAfterChecking}>
             {t('tos.banner.review', locale)}
           </Button>
         </div>
@@ -375,10 +389,20 @@ function OwnedTosBanner({ locale = 'fa' }: TosBannerProps) {
           </div>
 
           <DialogFooter>
+            {acceptanceUnconfirmed && (
+              <Button variant="outline" onClick={reviewAfterChecking}>
+                {t('tos.banner.retry', locale)}
+              </Button>
+            )}
             <Button
               onClick={handleAccept}
               disabled={
-                accepting || loadingTos || !!error || !currentTos || renderedVersion !== renderKey
+                accepting ||
+                acceptanceUnconfirmed ||
+                loadingTos ||
+                !!error ||
+                !currentTos ||
+                renderedVersion !== renderKey
               }
             >
               {accepting ? (

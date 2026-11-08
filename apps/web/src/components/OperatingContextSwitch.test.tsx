@@ -18,6 +18,7 @@ afterEach(async () => {
   await act(async () => root.unmount());
   container.remove();
   document.cookie = 'barghsa_csrf=; Max-Age=0; path=/';
+  vi.useRealTimers();
   vi.unstubAllGlobals();
 });
 
@@ -90,4 +91,39 @@ it('uses an already validated account result instead of issuing a duplicate iden
   );
   expect(container.querySelector('[aria-label="Switch to customer"]')).toBeTruthy();
   expect(fetchMock).not.toHaveBeenCalled();
+});
+
+it('holds a workspace switch for a fresh check when the receipt body stalls', async () => {
+  vi.useFakeTimers();
+  let release!: (value: unknown) => void;
+  const pendingBody = new Promise((resolve) => {
+    release = resolve;
+  });
+  const json = vi.fn(() => pendingBody);
+  const fetchMock = vi.fn().mockResolvedValue({ ok: true, json });
+  vi.stubGlobal('fetch', fetchMock);
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <OperatingContextSwitch
+          area="admin"
+          locale="en"
+          session={{ isStaff: true, operatingContext: 'staff', canSwitchContext: true }}
+        />
+      </QueryProvider>
+    )
+  );
+  const button = container.querySelector<HTMLButtonElement>('[aria-label="Switch to customer"]')!;
+  await act(async () => button.click());
+  expect(json).toHaveBeenCalledOnce();
+  expect(button.disabled).toBe(true);
+  await act(async () => vi.advanceTimersByTimeAsync(15_001));
+  expect(container.querySelector('[role="alert"]')?.textContent).toContain(
+    'could not be confirmed'
+  );
+  expect(container.textContent).toContain('Check current mode');
+  await act(async () => release({ operatingContext: 'customer' }));
+  expect(button.disabled).toBe(true);
+  expect(container.textContent).toContain('Staff mode');
+  expect(fetchMock).toHaveBeenCalledOnce();
 });

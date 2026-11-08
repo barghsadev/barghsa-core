@@ -3,7 +3,13 @@ import { fullNavigation } from './navigation-fixture';
 import { t } from '@barghsa/i18n/terms';
 
 for (const locale of ['en', 'fa'] as const) {
-  for (const invalid of ['empty', 'wrong-version', 'no-body', 'obsolete-http-error'] as const) {
+  for (const invalid of [
+    'empty',
+    'wrong-version',
+    'no-body',
+    'obsolete-http-error',
+    'stalled-saved',
+  ] as const) {
     test(`terms acceptance retains review after ${invalid} acknowledgement and sends once (${locale})`, async ({
       page,
       baseURL,
@@ -75,6 +81,11 @@ for (const locale of ['en', 'fa'] as const) {
         writes++;
         expect(route.request().headers()['x-csrf-token']).toBe('terms-csrf');
         if (writes === 1) {
+          if (invalid === 'stalled-saved') {
+            required = false;
+            await old;
+            return route.fulfill({ json: { acceptedVersionId: version } }).catch(() => {});
+          }
           if (invalid === 'obsolete-http-error') {
             await old;
             return route.fulfill({ status: 503, json: {} });
@@ -100,7 +111,29 @@ for (const locale of ['en', 'fa'] as const) {
         exact: true,
       });
       await expect(accept).toBeEnabled();
+      if (invalid === 'stalled-saved') await page.clock.install();
       await accept.click();
+      if (invalid === 'stalled-saved') {
+        try {
+          await expect.poll(() => writes).toBe(1);
+          const reads = statusReads;
+          await page.clock.fastForward(15_001);
+          await expect(dialog.getByRole('alert')).toHaveText(t('tos.modal.unconfirmed', locale));
+          await expect(accept).toBeDisabled();
+          await expect(success).toHaveCount(0);
+          await dialog.getByRole('button', { name: t('tos.banner.retry', locale) }).click();
+          await expect.poll(() => statusReads).toBeGreaterThan(reads);
+          await expect(dialog).toHaveCount(0);
+          await expect(page.getByText(t('tos.banner.text', locale), { exact: true })).toHaveCount(
+            0
+          );
+          expect(writes).toBe(1);
+        } finally {
+          releaseOld();
+        }
+        await expect(success).toHaveCount(0);
+        return;
+      }
       if (invalid === 'obsolete-http-error') {
         await expect.poll(() => writes).toBe(1);
         try {

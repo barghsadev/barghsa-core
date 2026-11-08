@@ -317,6 +317,18 @@
     "limitKB": 5
   },
   {
+    "name": "Workspace mode switch on account menu open",
+    "phase": "interaction",
+    "entries": ["src/components/OperatingContextSwitch.tsx"],
+    "limitKB": 15
+  },
+  {
+    "name": "Reviewed terms acceptance on demand",
+    "phase": "interaction",
+    "entries": ["src/lib/terms-acceptance.ts"],
+    "limitKB": 5
+  },
+  {
     "name": "More navigation sheet on demand",
     "entries": ["src/components/MobileNavigationSheet.tsx"],
     "phase": "interaction",
