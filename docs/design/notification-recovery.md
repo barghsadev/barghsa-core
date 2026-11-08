@@ -183,3 +183,7 @@ Public support distinguishes a failed guide availability check from confirmed un
 After an invoice receipt is saved, a failed history read leaves the submission confirmation visible. The retry reads the invoice and shows progress while the request is in flight. If access is denied, the page withdraws the invoice details and receipt history.
 
 Sign-in, registration and password recovery allow up to 15 seconds for the CSRF bootstrap and complete response. An uncertain response opens the form’s existing recovery action. A late bootstrap cannot send a command, and a late response cannot finish the retired attempt. The CSRF guard still permits one retry when it explicitly rejects a raced anonymous token.
+
+Registration announces when it is loading the current terms and when it is opening the versioned terms dialog. Consent becomes available after the current terms are loaded. A failed terms read offers a retry that only fetches the terms.
+
+Profile setup announces when the unfinished-profile list is loading. Creating a new profile waits for the list to be verified. An existing setup can resume independently.

@@ -10,6 +10,7 @@ import {
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { createFileRoute, useRouter } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
+import { t as draftText } from '@barghsa/i18n/onboarding-drafts';
 import { LoadingStatus, Button } from '@barghsa/ui';
 
 export const Route = createFileRoute('/onboarding/')({ component: OnboardingPage });
@@ -112,7 +113,11 @@ function OnboardingContent({ accountId }: { accountId: string }) {
           <p className="text-muted-foreground">{t('onboarding.welcome.subtitle', locale)}</p>
         </div>
         <InvitationBanner locale={locale} accountId={accountId} />
-        <Suspense fallback={null}>
+        <Suspense
+          fallback={
+            <LoadingStatus className="text-sm">{draftText('loading', locale)}</LoadingStatus>
+          }
+        >
           <OnboardingDraftList locale={locale} onReady={setDraftListReady} disabled={submitting} />
         </Suspense>
         {loading ? (

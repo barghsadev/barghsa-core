@@ -84,6 +84,11 @@ function RegisterPage() {
       });
     return () => controller.abort();
   }, [locale, form.setValue, termsRevision]);
+  const termsLoading = (
+    <p role="status" className="text-sm text-muted-foreground">
+      {t('tos.page.loading', locale)}
+    </p>
+  );
   return (
     <AuthLayout
       locale={locale}
@@ -324,6 +329,7 @@ function RegisterPage() {
                       </div>
                     </div>
                     <FormMessage />
+                    {!terms && !tosError && termsLoading}
                     {tosError && (
                       <div className="space-y-2">
                         <p role="alert" className="text-sm text-destructive">
@@ -362,7 +368,7 @@ function RegisterPage() {
           </Form>
         </div>
         {termsOpen && terms && (
-          <Suspense fallback={null}>
+          <Suspense fallback={termsLoading}>
             <RegistrationTermsDialog
               locale={locale}
               versionId={terms.versionId}

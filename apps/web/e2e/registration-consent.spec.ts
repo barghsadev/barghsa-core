@@ -1,6 +1,8 @@
 import { mockPublicAuthCsrf } from './public-auth-fixture';
 import { formatBrowserDate } from './browser-date';
-import { test, expect } from './coverage-fixture';
+import { test, expect, type Route } from './coverage-fixture';
+import { productionManifest } from './production-manifest';
+import { t } from '@barghsa/i18n/auth';
 
 // Client contract checks; real publication/acceptance is covered by the API HTTP suite.
 test('registration shows and submits the same terms version', async ({
@@ -98,6 +100,77 @@ for (const locale of ['en', 'fa']) {
     mismatch = false;
     await page.locator('main button').click();
     await expect(article).toContainText('pinned-v1');
+  });
+}
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`registration announces pending consent and its versioned dialog (${locale})`, async ({
+    page,
+  }, info) => {
+    await page.addInitScript(
+      (language) => localStorage.setItem('barghsa.locale', language),
+      locale
+    );
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.clock.install();
+    await page.route('**/api/auth/user', (route) => route.fulfill({ status: 401, json: {} }));
+    let first: Route | undefined;
+    let reads = 0;
+    let submissions = 0;
+    const id = '00000000-0000-4000-8000-000000000001';
+    const terms = {
+      id,
+      versionId: 'consent-recovered',
+      content: 'Recovered terms',
+      updatedAt: '2026-09-01T00:00:00Z',
+      publishedAt: '2026-09-01T00:00:00Z',
+    };
+    await page.route('**/api/tos/current?*', (route) => {
+      if (++reads === 1) {
+        first = route;
+        return;
+      }
+      return route.fulfill({ json: terms });
+    });
+    await page.route('**/api/auth/register', (route) => {
+      submissions++;
+      return route.fulfill({ status: 500 });
+    });
+    const manifest = await productionManifest('auth');
+    const file = manifest['src/components/RegistrationTermsDialog.tsx']!.file;
+    let dialogModule: Route | undefined;
+    await page.route(`**/auth/${file}`, (route) => {
+      dialogModule = route;
+    });
+    await page.goto('/register');
+    const loading = page.getByRole('status').filter({ hasText: t('tos.page.loading', locale) });
+    const consent = page.getByRole('checkbox');
+    const submit = page.locator('button[type="submit"]');
+    await expect.poll(() => !!first).toBe(true);
+    await expect(loading).toBeVisible();
+    await expect(consent).toBeDisabled();
+    await expect(submit).toBeDisabled();
+    if (locale === 'fa')
+      await page
+        .getByRole('main')
+        .screenshot({ path: info.outputPath('registration-terms-loading-fa.png') });
+    await page.clock.fastForward(15_001);
+    await expect(page.getByRole('alert')).toContainText(t('tos.page.error', locale));
+    await expect(loading).toHaveCount(0);
+    await page.getByRole('button', { name: t('tos.page.retry', locale), exact: true }).click();
+    await expect(consent).toBeEnabled();
+    const link = page.locator('#tos-label a');
+    await expect(link).toHaveAttribute('href', `/terms?lang=${locale}&version=${id}`);
+    await first!.fulfill({ json: { ...terms, id: 'old-terms' } }).catch(() => {});
+    await link.click();
+    await expect.poll(() => !!dialogModule).toBe(true);
+    await expect(loading).toBeVisible();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await dialogModule!.continue();
+    await expect(page.getByRole('dialog')).toContainText('consent-recovered');
+    await expect(loading).toHaveCount(0);
+    expect(reads).toBe(2);
+    expect(submissions).toBe(0);
   });
 }
 

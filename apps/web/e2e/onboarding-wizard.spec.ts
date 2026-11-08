@@ -7,6 +7,7 @@ import { skipToMain } from './critical-accessibility';
 import { test, expect, type Page, type Route } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
 import { dismissMessages } from './dismiss-messages';
+import { productionManifest } from './production-manifest';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
 const provinceId = '22222222-2222-4222-8222-222222222222';
@@ -1430,6 +1431,38 @@ test('unfinished profile pages retain accepted rows and retry the same cursor', 
   await expect(section.getByRole('listitem')).toHaveCount(51);
   expect(cursors).toEqual([id(51), id(51)]);
 });
+for (const locale of ['en', 'fa'] as const) {
+  test(`onboarding announces a held draft directory before enabling creation (${locale})`, async ({
+    page,
+  }) => {
+    const state = await combinedFixture(page, locale);
+    const manifest = await productionManifest();
+    const file = manifest['src/components/OnboardingDraftList.tsx']!.file;
+    let module: Route | undefined;
+    let reads = 0;
+    await page.route(`**/${file}`, (route) => {
+      module = route;
+    });
+    await page.route('**/api/onboarding/drafts', (route) => {
+      reads++;
+      return route.fulfill({ json: { drafts: [], nextAfter: null } });
+    });
+    await page.goto('/onboarding', { waitUntil: 'commit' });
+    await page.getByRole('checkbox', { name: t('onboarding.profile.individual', locale) }).check();
+    const proceed = page.getByRole('button', { name: t('onboarding.type.continue', locale) });
+    const loading = page.getByRole('status').filter({ hasText: draftText('loading', locale) });
+    await expect.poll(() => !!module).toBe(true);
+    await expect(loading).toBeVisible();
+    await expect(proceed).toBeDisabled();
+    expect(reads).toBe(0);
+    await module!.continue();
+    await expect(proceed).toBeEnabled();
+    await expect(loading).toHaveCount(0);
+    expect(reads).toBe(1);
+    expect(state.starts).toHaveLength(0);
+  });
+}
+
 test('a stalled or failed draft directory blocks new profiles until retry succeeds', async ({
   page,
 }) => {
