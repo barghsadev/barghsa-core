@@ -1,4 +1,3 @@
-import { confirmationText } from '@barghsa/i18n/confirmation';
 import { t } from '@barghsa/i18n/admin-ui';
 import { Alert, Button, Input, Label } from '@barghsa/ui';
 import type { ContractElectricityLimits } from '@barghsa/shared/admin';
@@ -68,6 +67,7 @@ export default function AdminContractLimitsPage() {
       </header>
       <CatalogueEditorStatus
         {...editor}
+        announceUncertain={false}
         label={label}
         loading={editor.resource.loading}
         error={editor.resource.error}
@@ -81,8 +81,6 @@ export default function AdminContractLimitsPage() {
           noValidate
           aria-busy={editor.pending || undefined}
           className="max-w-xl"
-          saved={editor.saved}
-          savedMessage={label('saved')}
           onSubmit={(event) =>
             void editor.submit(event, (draft) => ({
               title: label('save'),
@@ -167,7 +165,6 @@ export default function AdminContractLimitsPage() {
             editor.resource.accept(result as ContractElectricityLimits);
             editor.complete();
             editor.resource.retry();
-            return confirmationText('recorded', locale);
           }}
         />
       )}

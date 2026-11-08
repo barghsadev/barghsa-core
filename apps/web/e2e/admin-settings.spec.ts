@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { electricityLimits } from '../src/test/contract-settings-fixtures';
 import { crmShell } from './crm-shell-fixture';
 import { test, expect } from './coverage-fixture';
@@ -98,7 +99,12 @@ for (const width of [390, 1440]) {
               .getByRole('alert')
               .filter({ hasText: t('admin.contractLimits.unverified', locale) })
           ).toBeVisible();
-          await expect(page.locator('[data-sonner-toast]')).toHaveCount(0);
+          const toasts = page.locator('[data-sonner-toast]');
+          const success = page.locator('[data-sonner-toast][data-type="success"]');
+          await expect(toasts).toHaveCount(1);
+          await expect(toasts).toHaveAttribute('data-type', 'warning');
+          await expect(toasts).toContainText(confirmationText('unconfirmed', locale));
+          await expect(success).toHaveCount(0);
           await expect(lead).toHaveValue('14');
           await expect(confirm).toBeDisabled();
           expect(writes).toHaveLength(1);
@@ -109,9 +115,8 @@ for (const width of [390, 1440]) {
           expect(writes).toHaveLength(1);
           await confirm.click();
           await expect(dialog).toHaveCount(0);
-          await expect(page.locator('[data-sonner-toast]')).toContainText(
-            t('admin.contractLimits.saved', locale)
-          );
+          await expect(success).toHaveCount(1);
+          await expect(success).toContainText(t('admin.contractLimits.saved', locale));
           expect(writes).toEqual(
             Array(2).fill({
               max_quantity_increase_percent: config.maxQuantityIncreasePercent,
@@ -128,7 +133,7 @@ for (const width of [390, 1440]) {
           ).toBe(true);
           if (locale === 'fa' && info.project.name === 'mobile-safari')
             await page.screenshot({
-              path: `/tmp/barghsa-admin-settings-${width}-${darkMode ? 'dark' : 'light'}.png`,
+              path: info.outputPath(`admin-settings-${width}-${darkMode ? 'dark' : 'light'}.png`),
               fullPage: true,
             });
           await page.goto('/admin/tickets');

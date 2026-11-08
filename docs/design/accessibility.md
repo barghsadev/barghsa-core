@@ -40,6 +40,11 @@ other theme as unmeasured. Reveal clipped text in its scroll container and
 check it again. Run page landmark assertions before opening a modal, then
 measure the dialog while it owns focus.
 
+Settings navigation sits on the configurable page canvas. Inactive links
+use the page foreground. Hovered and selected links use the foreground
+paired with their active fill. The public brand tile and bolt use the paired
+primary fill and foreground.
+
 Keep readable content opaque during page and list entrance animations. Even
 a brief fade of the whole row can put its text below the contrast floor.
 
@@ -106,6 +111,10 @@ text, an attachment, or both, so its text field is not individually required.
 On an uncertain save, keep the original request and a visible recovery
 action. Announce the uncertainty once per captured request; show success only
 after the matching receipt passes validation.
+
+For contract limits, the confirmation dialog owns the unconfirmed warning.
+The editor owns the saved status and its success toast after the matching
+receipt.
 
 Shared list, detail and widget reads stop after 15 seconds and surface the
 page's retry action. A timeout keeps already verified rows only in the same

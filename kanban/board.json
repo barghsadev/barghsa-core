@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T03:28:19+00:00",
-  "source_commit": "def7e57e295b53ad4c3ca89981fa5ae4b2f86223",
+  "updated": "2026-11-08T03:47:17+00:00",
+  "source_commit": "43daade0600ba44710262bde3cf66b9164fa698d",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -24314,7 +24314,7 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "docs/runbooks/account-recovery.md",
@@ -28604,7 +28604,7 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "docs/runbooks/account-recovery.md",
@@ -29189,7 +29189,7 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "deploy/pilot/nginx.conf",
@@ -35451,7 +35451,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
-              "sha256": "5f8e8a1dfcdbb3772aeaea53e8f4b010b52709b7dfe3f46c84ae7f9f176983ee"
+              "sha256": "040e925c1e7a1d613f72067eb05e0462932867949d960efff5bfe6f09e044970"
             },
             {
               "path": "apps/web/src/pages/AdminDashboard.tsx",
@@ -35583,7 +35583,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "packages/i18n/src/date-time.test.ts",
@@ -38730,7 +38730,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "packages/db/src/schema/tos-acceptances.ts",
@@ -40086,7 +40086,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "packages/db/src/schema/tos-acceptances.ts",
@@ -41450,7 +41450,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "packages/db/src/schema/tos-acceptances.ts",
@@ -63140,7 +63140,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
-              "sha256": "5f8e8a1dfcdbb3772aeaea53e8f4b010b52709b7dfe3f46c84ae7f9f176983ee"
+              "sha256": "040e925c1e7a1d613f72067eb05e0462932867949d960efff5bfe6f09e044970"
             },
             {
               "path": "apps/web/src/pages/AdminDashboard.tsx",
@@ -104536,7 +104536,7 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
@@ -290295,7 +290295,7 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "docs/runbooks/account-recovery.md",
@@ -297838,7 +297838,7 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "docs/runbooks/account-recovery.md",
@@ -318377,7 +318377,7 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "docs/runbooks/account-recovery.md",
@@ -349006,7 +349006,7 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "docs/runbooks/account-recovery.md",
@@ -383733,7 +383733,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/SavingInventoryPanel.tsx",
@@ -384590,7 +384590,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/SavingInventoryPanel.tsx",
@@ -385448,7 +385448,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/SavingInventoryPanel.tsx",
@@ -460690,7 +460690,7 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
@@ -489937,7 +489937,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "18da2028d1612fc68b0e7594a38c1dbd3496118ecf72ea72dd420d19e1857db5"
+              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -490211,7 +490211,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "18da2028d1612fc68b0e7594a38c1dbd3496118ecf72ea72dd420d19e1857db5"
+              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -490922,7 +490922,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
@@ -491378,7 +491378,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "docs/design/design-system.md",
@@ -492641,7 +492641,7 @@
             },
             {
               "path": "apps/web/src/components/AdminSettingsLayout.tsx",
-              "sha256": "2c5e06375f7a04c43587df13e3146f302eb802f287b498d4d44876ec7ab34cbd"
+              "sha256": "6af1deb3af8919eae290051251018bf6eb53694c804b5ce19fa69bcffbf1a6d4"
             },
             {
               "path": "apps/web/src/components/ApprovalDecisionForm.tsx",
@@ -496842,7 +496842,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
-              "sha256": "5f8e8a1dfcdbb3772aeaea53e8f4b010b52709b7dfe3f46c84ae7f9f176983ee"
+              "sha256": "040e925c1e7a1d613f72067eb05e0462932867949d960efff5bfe6f09e044970"
             },
             {
               "path": "apps/web/src/pages/AdminDashboard.tsx",
@@ -497458,7 +497458,7 @@
             },
             {
               "path": "apps/web/src/components/AdminSettingsLayout.tsx",
-              "sha256": "2c5e06375f7a04c43587df13e3146f302eb802f287b498d4d44876ec7ab34cbd"
+              "sha256": "6af1deb3af8919eae290051251018bf6eb53694c804b5ce19fa69bcffbf1a6d4"
             },
             {
               "path": "apps/web/src/components/ApprovalDecisionForm.tsx",
@@ -498894,7 +498894,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/DirectionAware.tsx",
@@ -499438,7 +499438,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/DirectionAware.tsx",
@@ -499982,7 +499982,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/DirectionAware.tsx",
@@ -500526,7 +500526,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/DirectionAware.tsx",
@@ -501070,7 +501070,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/DirectionAware.tsx",
@@ -501614,7 +501614,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/DirectionAware.tsx",
@@ -502158,7 +502158,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/DirectionAware.tsx",
@@ -502702,7 +502702,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/DirectionAware.tsx",
@@ -503246,7 +503246,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/DirectionAware.tsx",
@@ -503790,7 +503790,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/DirectionAware.tsx",
@@ -504334,7 +504334,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/DirectionAware.tsx",
@@ -504878,7 +504878,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/DirectionAware.tsx",
@@ -505422,7 +505422,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/DirectionAware.tsx",
@@ -505966,7 +505966,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/DirectionAware.tsx",
@@ -506452,7 +506452,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -507036,7 +507036,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -507620,7 +507620,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -512568,7 +512568,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "18da2028d1612fc68b0e7594a38c1dbd3496118ecf72ea72dd420d19e1857db5"
+              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -513367,7 +513367,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "18da2028d1612fc68b0e7594a38c1dbd3496118ecf72ea72dd420d19e1857db5"
+              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -514165,7 +514165,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "18da2028d1612fc68b0e7594a38c1dbd3496118ecf72ea72dd420d19e1857db5"
+              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -515050,7 +515050,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "18da2028d1612fc68b0e7594a38c1dbd3496118ecf72ea72dd420d19e1857db5"
+              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -515178,11 +515178,11 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -515190,7 +515190,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "5b63bbb558f1b49f135609fb1ce3b19d0504ac1a1dc4772c75580d2087a1f1f6"
+              "sha256": "ccac09f6e18293277758dbda4a3dc9e7218a5d3dbbc4047d5c44d8e8eb9edf5a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -515570,7 +515570,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "5b63bbb558f1b49f135609fb1ce3b19d0504ac1a1dc4772c75580d2087a1f1f6"
+              "sha256": "ccac09f6e18293277758dbda4a3dc9e7218a5d3dbbc4047d5c44d8e8eb9edf5a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516009,7 +516009,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "5b63bbb558f1b49f135609fb1ce3b19d0504ac1a1dc4772c75580d2087a1f1f6"
+              "sha256": "ccac09f6e18293277758dbda4a3dc9e7218a5d3dbbc4047d5c44d8e8eb9edf5a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516356,7 +516356,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "18da2028d1612fc68b0e7594a38c1dbd3496118ecf72ea72dd420d19e1857db5"
+              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -516484,11 +516484,11 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -516496,7 +516496,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "5b63bbb558f1b49f135609fb1ce3b19d0504ac1a1dc4772c75580d2087a1f1f6"
+              "sha256": "ccac09f6e18293277758dbda4a3dc9e7218a5d3dbbc4047d5c44d8e8eb9edf5a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -517004,7 +517004,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "5b63bbb558f1b49f135609fb1ce3b19d0504ac1a1dc4772c75580d2087a1f1f6"
+              "sha256": "ccac09f6e18293277758dbda4a3dc9e7218a5d3dbbc4047d5c44d8e8eb9edf5a"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -517597,7 +517597,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Current text scans measured 93 of 93 populated route patterns. Shared component cues, high contrast persistence and notification page numbers passed numeric checks. Resolve 4338 incomplete observations and the missing locale/theme cells and conditional control states before acceptance."
+        "The populated fixture census now covers light, dark and high-contrast states in both languages across 93 route patterns. Settings navigation and the public brand marks have direct contrast regressions with current evidence. Clipping, overlap and gradient observations still need review. Remaining conditional control states need evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -517622,7 +517622,8 @@
           "release-0.5-route-contrast-matrix",
           "release-0.5-banner-dismiss-contrast",
           "release-0.5-otp-and-saving-contrast",
-          "release-0.5-current-contrast"
+          "release-0.5-current-contrast",
+          "release-0.5-contrast-mode-closure"
         ],
         "current_acceptance": null
       }
@@ -517813,7 +517814,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "5b63bbb558f1b49f135609fb1ce3b19d0504ac1a1dc4772c75580d2087a1f1f6"
+              "sha256": "ccac09f6e18293277758dbda4a3dc9e7218a5d3dbbc4047d5c44d8e8eb9edf5a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -518329,7 +518330,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "5b63bbb558f1b49f135609fb1ce3b19d0504ac1a1dc4772c75580d2087a1f1f6"
+              "sha256": "ccac09f6e18293277758dbda4a3dc9e7218a5d3dbbc4047d5c44d8e8eb9edf5a"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -518659,7 +518660,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
-              "sha256": "ccae9296071caa4b8e8f424a2a4a19e51cf6263065f8889a443b8bae14837dea"
+              "sha256": "5ab7ab4b46f953276c7ad660e2a935d706ebe002f6000ab570fd1699431f4eb9"
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
@@ -518795,7 +518796,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "18da2028d1612fc68b0e7594a38c1dbd3496118ecf72ea72dd420d19e1857db5"
+              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -518815,7 +518816,7 @@
             },
             {
               "path": "apps/web/e2e/public-theme.spec.ts",
-              "sha256": "9ec52a55788ae726b25971a0bcb6ada4c3c48375804eb5c0921944d6e2f51178"
+              "sha256": "f776d7ac833ee74bbca82a627e4951341454640b5b78e592170813ae9fc6384e"
             },
             {
               "path": "apps/web/e2e/purchase-loading.spec.ts",
@@ -519035,11 +519036,11 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -519047,7 +519048,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "5b63bbb558f1b49f135609fb1ce3b19d0504ac1a1dc4772c75580d2087a1f1f6"
+              "sha256": "ccac09f6e18293277758dbda4a3dc9e7218a5d3dbbc4047d5c44d8e8eb9edf5a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -519487,7 +519488,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
-              "sha256": "ccae9296071caa4b8e8f424a2a4a19e51cf6263065f8889a443b8bae14837dea"
+              "sha256": "5ab7ab4b46f953276c7ad660e2a935d706ebe002f6000ab570fd1699431f4eb9"
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
@@ -519623,7 +519624,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "18da2028d1612fc68b0e7594a38c1dbd3496118ecf72ea72dd420d19e1857db5"
+              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -519643,7 +519644,7 @@
             },
             {
               "path": "apps/web/e2e/public-theme.spec.ts",
-              "sha256": "9ec52a55788ae726b25971a0bcb6ada4c3c48375804eb5c0921944d6e2f51178"
+              "sha256": "f776d7ac833ee74bbca82a627e4951341454640b5b78e592170813ae9fc6384e"
             },
             {
               "path": "apps/web/e2e/purchase-loading.spec.ts",
@@ -519863,11 +519864,11 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -519875,7 +519876,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "5b63bbb558f1b49f135609fb1ce3b19d0504ac1a1dc4772c75580d2087a1f1f6"
+              "sha256": "ccac09f6e18293277758dbda4a3dc9e7218a5d3dbbc4047d5c44d8e8eb9edf5a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -520485,7 +520486,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "5b63bbb558f1b49f135609fb1ce3b19d0504ac1a1dc4772c75580d2087a1f1f6"
+              "sha256": "ccac09f6e18293277758dbda4a3dc9e7218a5d3dbbc4047d5c44d8e8eb9edf5a"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -520815,7 +520816,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
-              "sha256": "ccae9296071caa4b8e8f424a2a4a19e51cf6263065f8889a443b8bae14837dea"
+              "sha256": "5ab7ab4b46f953276c7ad660e2a935d706ebe002f6000ab570fd1699431f4eb9"
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
@@ -520951,7 +520952,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "18da2028d1612fc68b0e7594a38c1dbd3496118ecf72ea72dd420d19e1857db5"
+              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -520971,7 +520972,7 @@
             },
             {
               "path": "apps/web/e2e/public-theme.spec.ts",
-              "sha256": "9ec52a55788ae726b25971a0bcb6ada4c3c48375804eb5c0921944d6e2f51178"
+              "sha256": "f776d7ac833ee74bbca82a627e4951341454640b5b78e592170813ae9fc6384e"
             },
             {
               "path": "apps/web/e2e/purchase-loading.spec.ts",
@@ -521191,11 +521192,11 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -521203,7 +521204,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "5b63bbb558f1b49f135609fb1ce3b19d0504ac1a1dc4772c75580d2087a1f1f6"
+              "sha256": "ccac09f6e18293277758dbda4a3dc9e7218a5d3dbbc4047d5c44d8e8eb9edf5a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -564896,7 +564897,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/CommandFeedback.tsx",
@@ -565844,7 +565845,7 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -566790,7 +566791,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/CommandFeedback.tsx",
@@ -567738,7 +567739,7 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -568553,7 +568554,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer invoice and wallet receipts distinguish acknowledged pending results from unknown outcomes. Electricity and saving discussions announce explicit transport retries. Wallet returns, profile lifecycle commands and customer guide answers explain unconfirmed outcomes and offer a scoped retry or status recheck. Wider verified CRUD and read feedback adoption remains open."
+        "Invoice and wallet receipts, discussions, wallet returns, profile lifecycle commands and the customer guide retain current feedback evidence. Contract-limit settings now announce one warning for an unconfirmed receipt and one success for a verified save. Wider command feedback adoption stays open."
       ],
       "owner": null,
       "depends_on": [],
@@ -568587,7 +568588,8 @@
           "release-0.5-receipt-and-comment-feedback",
           "release-0.5-wallet-return-deadline",
           "release-0.5-profile-export-deadlines",
-          "release-0.5-assistant-stream-deadlines"
+          "release-0.5-assistant-stream-deadlines",
+          "release-0.5-contrast-mode-closure"
         ],
         "current_acceptance": null
       }
@@ -568738,7 +568740,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/CommandFeedback.tsx",
@@ -569686,7 +569688,7 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -570632,7 +570634,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/CommandFeedback.tsx",
@@ -571580,7 +571582,7 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -572526,7 +572528,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/CommandFeedback.tsx",
@@ -573474,7 +573476,7 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -574420,7 +574422,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/CommandFeedback.tsx",
@@ -575368,7 +575370,7 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -576314,7 +576316,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/CommandFeedback.tsx",
@@ -577262,7 +577264,7 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -578208,7 +578210,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/CommandFeedback.tsx",
@@ -579156,7 +579158,7 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -580102,7 +580104,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/CommandFeedback.tsx",
@@ -581050,7 +581052,7 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -581996,7 +581998,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/CommandFeedback.tsx",
@@ -582944,7 +582946,7 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -583890,7 +583892,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/CommandFeedback.tsx",
@@ -584838,7 +584840,7 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -585784,7 +585786,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/CommandFeedback.tsx",
@@ -586732,7 +586734,7 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -587678,7 +587680,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/CommandFeedback.tsx",
@@ -588626,7 +588628,7 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -589745,7 +589747,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
-              "sha256": "5f8e8a1dfcdbb3772aeaea53e8f4b010b52709b7dfe3f46c84ae7f9f176983ee"
+              "sha256": "040e925c1e7a1d613f72067eb05e0462932867949d960efff5bfe6f09e044970"
             },
             {
               "path": "apps/web/src/pages/AdminDashboard.tsx",
@@ -590311,7 +590313,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/CommandFeedback.tsx",
@@ -591259,7 +591261,7 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -592205,7 +592207,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/CommandFeedback.tsx",
@@ -593153,7 +593155,7 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -607180,7 +607182,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -608007,7 +608009,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -608834,7 +608836,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -609661,7 +609663,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -610488,7 +610490,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -610968,7 +610970,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "18da2028d1612fc68b0e7594a38c1dbd3496118ecf72ea72dd420d19e1857db5"
+              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -611766,7 +611768,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "18da2028d1612fc68b0e7594a38c1dbd3496118ecf72ea72dd420d19e1857db5"
+              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -612564,7 +612566,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "18da2028d1612fc68b0e7594a38c1dbd3496118ecf72ea72dd420d19e1857db5"
+              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -613362,7 +613364,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "18da2028d1612fc68b0e7594a38c1dbd3496118ecf72ea72dd420d19e1857db5"
+              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -614164,7 +614166,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "18da2028d1612fc68b0e7594a38c1dbd3496118ecf72ea72dd420d19e1857db5"
+              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -614962,7 +614964,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "18da2028d1612fc68b0e7594a38c1dbd3496118ecf72ea72dd420d19e1857db5"
+              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -615760,7 +615762,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "18da2028d1612fc68b0e7594a38c1dbd3496118ecf72ea72dd420d19e1857db5"
+              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -616559,7 +616561,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "18da2028d1612fc68b0e7594a38c1dbd3496118ecf72ea72dd420d19e1857db5"
+              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -617358,7 +617360,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "18da2028d1612fc68b0e7594a38c1dbd3496118ecf72ea72dd420d19e1857db5"
+              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -618157,7 +618159,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "18da2028d1612fc68b0e7594a38c1dbd3496118ecf72ea72dd420d19e1857db5"
+              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -618956,7 +618958,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "18da2028d1612fc68b0e7594a38c1dbd3496118ecf72ea72dd420d19e1857db5"
+              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -619755,7 +619757,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "18da2028d1612fc68b0e7594a38c1dbd3496118ecf72ea72dd420d19e1857db5"
+              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -620554,7 +620556,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "18da2028d1612fc68b0e7594a38c1dbd3496118ecf72ea72dd420d19e1857db5"
+              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -621353,7 +621355,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "18da2028d1612fc68b0e7594a38c1dbd3496118ecf72ea72dd420d19e1857db5"
+              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -622152,7 +622154,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "18da2028d1612fc68b0e7594a38c1dbd3496118ecf72ea72dd420d19e1857db5"
+              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -623297,7 +623299,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -624124,7 +624126,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -624951,7 +624953,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -625778,7 +625780,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -626605,7 +626607,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -627432,7 +627434,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -628259,7 +628261,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -629086,7 +629088,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -629913,7 +629915,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -630740,7 +630742,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -631567,7 +631569,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -632394,7 +632396,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -657257,7 +657259,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantLauncher.tsx",
@@ -657939,7 +657941,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantLauncher.tsx",
@@ -658623,7 +658625,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantLauncher.tsx",
@@ -659305,7 +659307,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantLauncher.tsx",
@@ -659986,7 +659988,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantLauncher.tsx",
@@ -661166,7 +661168,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantLauncher.tsx",
@@ -661848,7 +661850,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantLauncher.tsx",
@@ -662531,7 +662533,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantLauncher.tsx",
@@ -663212,7 +663214,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantLauncher.tsx",
@@ -663892,7 +663894,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantLauncher.tsx",
@@ -664572,7 +664574,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantLauncher.tsx",
@@ -665252,7 +665254,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantLauncher.tsx",
@@ -699033,11 +699035,11 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
-              "sha256": "ccae9296071caa4b8e8f424a2a4a19e51cf6263065f8889a443b8bae14837dea"
+              "sha256": "5ab7ab4b46f953276c7ad660e2a935d706ebe002f6000ab570fd1699431f4eb9"
             },
             {
               "path": "apps/web/src/components/AdminSettingsLayout.tsx",
-              "sha256": "2c5e06375f7a04c43587df13e3146f302eb802f287b498d4d44876ec7ab34cbd"
+              "sha256": "6af1deb3af8919eae290051251018bf6eb53694c804b5ce19fa69bcffbf1a6d4"
             },
             {
               "path": "apps/web/src/components/admin-settings-layout.test.tsx",
@@ -699130,7 +699132,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
-              "sha256": "5f8e8a1dfcdbb3772aeaea53e8f4b010b52709b7dfe3f46c84ae7f9f176983ee"
+              "sha256": "040e925c1e7a1d613f72067eb05e0462932867949d960efff5bfe6f09e044970"
             },
             {
               "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
@@ -700982,7 +700984,7 @@
             },
             {
               "path": "apps/web/src/components/AdminSettingsLayout.tsx",
-              "sha256": "2c5e06375f7a04c43587df13e3146f302eb802f287b498d4d44876ec7ab34cbd"
+              "sha256": "6af1deb3af8919eae290051251018bf6eb53694c804b5ce19fa69bcffbf1a6d4"
             },
             {
               "path": "apps/web/src/components/OperationalQueueTable.tsx",
@@ -701030,7 +701032,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
-              "sha256": "5f8e8a1dfcdbb3772aeaea53e8f4b010b52709b7dfe3f46c84ae7f9f176983ee"
+              "sha256": "040e925c1e7a1d613f72067eb05e0462932867949d960efff5bfe6f09e044970"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
@@ -701235,7 +701237,7 @@
             },
             {
               "path": "apps/web/src/components/AdminSettingsLayout.tsx",
-              "sha256": "2c5e06375f7a04c43587df13e3146f302eb802f287b498d4d44876ec7ab34cbd"
+              "sha256": "6af1deb3af8919eae290051251018bf6eb53694c804b5ce19fa69bcffbf1a6d4"
             },
             {
               "path": "apps/web/src/components/OperationalQueueTable.tsx",
@@ -701469,7 +701471,7 @@
             },
             {
               "path": "apps/web/src/components/AdminSettingsLayout.tsx",
-              "sha256": "2c5e06375f7a04c43587df13e3146f302eb802f287b498d4d44876ec7ab34cbd"
+              "sha256": "6af1deb3af8919eae290051251018bf6eb53694c804b5ce19fa69bcffbf1a6d4"
             },
             {
               "path": "apps/web/src/components/OperationalQueueTable.tsx",
@@ -701700,7 +701702,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/OperationalQueueTable.tsx",
@@ -701918,7 +701920,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -703106,7 +703108,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/OperationalQueueTable.tsx",
@@ -717680,7 +717682,7 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "apps/web/src/test/ai-catalogue-fixtures.ts",
@@ -723620,7 +723622,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Scoped forms, verified wallet confirmation, staff knowledge search, notifications, export and guide recovery retain current evidence. The current populated route contrast census and direct control measurements narrow the open contrast work. Wider contrast, conditional forms, verified command feedback and route-state adoption remain open."
+        "Existing forms, wallet, staff knowledge search, notifications, export and guide recovery retain current evidence. The populated contrast census has all locale and theme cells, with direct checks for settings navigation and public marks. Contract-limit feedback is verified. Unresolved contrast observations and broader conditional UI adoption remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723716,7 +723718,8 @@
           "release-0.5-profile-export-deadlines",
           "release-0.5-assistant-stream-deadlines",
           "release-0.5-schema-form-census",
-          "release-0.5-current-contrast"
+          "release-0.5-current-contrast",
+          "release-0.5-contrast-mode-closure"
         ]
       }
     },
@@ -723828,7 +723831,7 @@
             },
             {
               "path": "apps/web/src/components/AdminSettingsLayout.tsx",
-              "sha256": "2c5e06375f7a04c43587df13e3146f302eb802f287b498d4d44876ec7ab34cbd"
+              "sha256": "6af1deb3af8919eae290051251018bf6eb53694c804b5ce19fa69bcffbf1a6d4"
             },
             {
               "path": "apps/web/src/components/AgentDetailDialog.tsx",
@@ -723876,7 +723879,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
-              "sha256": "98a3de15bd8ed0ac939b47057d64d43ea68535803572d08260aa1e10378c1953"
+              "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
             },
             {
               "path": "apps/web/src/components/CommandFeedback.tsx",
@@ -724636,7 +724639,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
-              "sha256": "5f8e8a1dfcdbb3772aeaea53e8f4b010b52709b7dfe3f46c84ae7f9f176983ee"
+              "sha256": "040e925c1e7a1d613f72067eb05e0462932867949d960efff5bfe6f09e044970"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -724988,11 +724991,11 @@
             },
             {
               "path": "apps/web/src/routes/support.tsx",
-              "sha256": "b7014bf50e70df2aff96d8b236bdd76ff9784367d7c2980e0ef2eec675fb8e04"
+              "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "b1427f63080c60f47d2bfe45068a6af9dcd368b71917f005ab6cbd775696620e"
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -725348,7 +725351,8 @@
             "Shared notification header recovery passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-header-notification-deadlines/candidate/proof.json",
             "Profile export deadline recovery passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-export-deadlines/proof.json",
             "Customer guide answer deadlines passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-assistant-stream-deadlines/proof.json",
-            "Saved-address, maintenance and reconciliation form semantics passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-schema-form-census/proof.json"
+            "Saved-address, maintenance and reconciliation form semantics passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-schema-form-census/proof.json",
+            "Renewed production contrast and verified settings feedback checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-contrast-mode-closure/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -793199,6 +793203,72 @@
       "source_scope_proof_sha256": "48728f021e9d1771e15a797ce6a03118460f27982aeae5577410a505b1e619ab",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-contrast/renewed-bindings.json",
       "release_disposition": "Measured contrast on current populated route fixtures and renewed the shared control checks. Remaining contrast evidence and other v0.5.0 gates stay open."
+    },
+    "release-0.5-contrast-mode-closure": {
+      "batch": "release-0.5-contrast-mode-closure",
+      "base_commit": "43daade0600ba44710262bde3cf66b9164fa698d",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/admin-settings.spec.ts",
+          "sha256": "5ab7ab4b46f953276c7ad660e2a935d706ebe002f6000ab570fd1699431f4eb9"
+        },
+        {
+          "path": "apps/web/e2e/mobile-navigation.spec.ts",
+          "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+        },
+        {
+          "path": "apps/web/e2e/public-theme.spec.ts",
+          "sha256": "f776d7ac833ee74bbca82a627e4951341454640b5b78e592170813ae9fc6384e"
+        },
+        {
+          "path": "apps/web/src/components/AdminSettingsLayout.tsx",
+          "sha256": "6af1deb3af8919eae290051251018bf6eb53694c804b5ce19fa69bcffbf1a6d4"
+        },
+        {
+          "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
+          "sha256": "3806be54a595d82528f104b6005a2512da8def717cd07bda0f5d9baf9ec68e6b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
+          "sha256": "040e925c1e7a1d613f72067eb05e0462932867949d960efff5bfe6f09e044970"
+        },
+        {
+          "path": "apps/web/src/routes/support.tsx",
+          "sha256": "c371f6b8ce84288eee0c9dad29bdea9f0c82a67aaeded22441b923987c100904"
+        },
+        {
+          "path": "apps/web/src/routes/terms.tsx",
+          "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
+        },
+        {
+          "path": "docs/design/accessibility.md",
+          "sha256": "ccac09f6e18293277758dbda4a3dc9e7218a5d3dbbc4047d5c44d8e8eb9edf5a"
+        }
+      ],
+      "checks": [
+        "The 44 Chromium journeys supplied all 92 missing language, theme and contrast cells on 23 routes by temporarily changing only the fixture's published theme and restoring it before subsequent actions. Six final-source journeys renewed the 12 cells affected by the settings navigation. The alternate-theme scans reported zero confirmed contrast violations. Inconclusive text and conditional controls remain open.",
+        "Settings navigation now uses the page foreground for inactive links. Before the fix those links measured 3.54:1 in light mode and 3.43:1 in dark mode on valid canvases. Eight Chromium and Mobile Safari cases verified 1456 scrolled or hovered text measurements in the settings and workspace navigation. The settings minimum was 4.5096:1.",
+        "The public support and terms marks now pair the primary tile with its matching glyph. Mobile and desktop white-brand cases failed on the old light theme and passed in both languages, themes and browsers on the candidate.",
+        "Contract-limit saves preserve one warning for a malformed receipt, the existing read-before-retry gate, and exactly one localized success after the matching receipt. Page status remains available after the verified command. The browser cases verify payload matching, the locked confirmation and exact write counts.",
+        "Fifty-eight final production browser cases across Chromium and Mobile Safari, 22 Chromium coverage cases, 81 related unit cases, eight source-bound coverage groups, 98 bundle budgets, six fresh cold-auth checks, scoped formatting, lint and web typecheck passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contrast-mode-closure",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contrast-mode-closure/proof.json",
+      "source_scope_proof_sha256": "f69f5e4ff6966571e154b3385b4c1f3f66eaddd8ea046dbc0bedf4cf4de50466",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contrast-mode-closure/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contrast-mode-closure/reviewed.patch",
+      "release_disposition": "Closed the missing populated contrast theme cells and verified repairs to settings navigation, public marks and contract-limit feedback. Other v0.5.0 acceptance criteria remain open."
     }
   },
   "historical_improvements": [

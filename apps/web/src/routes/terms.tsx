@@ -126,7 +126,7 @@ function TermsPage() {
             aria-hidden="true"
             className="shrink-0"
           >
-            <rect width="32" height="32" rx="8" fill="currentColor" />
+            <rect width="32" height="32" rx="8" fill="var(--primary)" />
             <path d="M18 6L9 18h5l-1 8 9-12h-5l1-8z" fill="var(--primary-foreground)" />
           </svg>
           <span>{name}</span>
@@ -149,7 +149,7 @@ function TermsPage() {
             aria-hidden="true"
             className="shrink-0"
           >
-            <rect width="32" height="32" rx="8" fill="currentColor" />
+            <rect width="32" height="32" rx="8" fill="var(--primary)" />
             <path d="M18 6L9 18h5l-1 8 9-12h-5l1-8z" fill="var(--primary-foreground)" />
           </svg>
           <span>{name}</span>

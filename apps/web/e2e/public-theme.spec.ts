@@ -63,6 +63,27 @@ for (const locale of ['fa', 'en'] as const) {
           .toBe('#ffffff');
         await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
         await skipToMain(page, locale);
+        if (path === '/support' || path.startsWith('/terms?')) {
+          for (const width of [390, 1024]) {
+            await page.setViewportSize({ width, height: 844 });
+            const mark = page
+              .getByRole('link', {
+                name: locale === 'fa' ? 'بررسی پوسته' : 'Theme checks',
+                exact: true,
+              })
+              .filter({ visible: true })
+              .locator('svg');
+            const fills = await mark.evaluate((icon) => ({
+              tile: getComputedStyle(icon.querySelector('rect')!).fill,
+              bolt: getComputedStyle(icon.querySelector('path')!).fill,
+            }));
+            expect.soft(fills, `${path} brand mark at ${width}px`).toEqual({
+              tile: 'rgb(255, 255, 255)',
+              bolt: 'rgb(0, 0, 0)',
+            });
+          }
+          await page.setViewportSize({ width: 390, height: 844 });
+        }
         const violations = (await new AxeBuilder({ page }).withRules(['color-contrast']).analyze())
           .violations;
         expect

@@ -40,6 +40,7 @@ export function CatalogueEditorStatus({
   denied,
   saved,
   uncertain,
+  announceUncertain = true,
   refresh,
   busy,
 }: {
@@ -49,13 +50,16 @@ export function CatalogueEditorStatus({
   denied: boolean;
   saved: boolean;
   uncertain: boolean;
+  announceUncertain?: boolean;
   refresh: () => void;
   busy: boolean;
 }) {
   useCommandFeedback({
     success: saved && !denied && !uncertain && !error ? label('saved') : null,
     error: uncertain
-      ? label('unverified')
+      ? announceUncertain
+        ? label('unverified')
+        : null
       : denied
         ? label('forbidden')
         : error

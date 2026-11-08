@@ -6,6 +6,8 @@ import { shellText } from '@barghsa/i18n/shell';
 import { t } from '@barghsa/i18n/app';
 import { test, expect, type Page } from './coverage-fixture';
 import { fulfillDashboard } from './dashboard-fixture';
+import { brandSettings } from '../src/test/branding-settings-fixtures';
+import { measureControlContrast } from './control-contrast';
 
 async function setup(page: Page, locale: 'en' | 'fa', area: 'customer' | 'admin') {
   await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
@@ -210,6 +212,74 @@ for (const locale of ['en', 'fa'] as const)
       await page.screenshot({ path: info.outputPath(`navigation-${area}-${locale}.png`) });
     });
   }
+
+for (const locale of ['en', 'fa'] as const) {
+  for (const theme of ['light', 'dark'] as const) {
+    test(`scrollable admin navigation stays readable on a custom canvas (${locale}, ${theme})`, async ({
+      page,
+    }, info) => {
+      await setup(page, locale, 'admin');
+      await page.setViewportSize({ width: 1280, height: 640 });
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.route('**/api/public/branding/config', (route) =>
+        route.fulfill({
+          json: {
+            ...brandSettings,
+            themeMode: theme,
+            darkMode: theme === 'dark',
+            backgroundColor: '#999999',
+            darkBackgroundColor: '#6b6b6b',
+          },
+        })
+      );
+      await page.goto('/admin/maintenance');
+      await expect(page.locator('html')).toHaveCSS('--brand-light-background', '#999999');
+      await expect(page.locator('html')).toHaveClass(theme === 'dark' ? /dark/ : /^(?!.*dark)/);
+      const settings = page.getByTestId('admin-settings-layout').getByRole('navigation');
+      const sidebar = page.locator('#admin-navigation').getByRole('navigation');
+      await expect(settings).toBeVisible();
+      await expect(sidebar).toBeVisible();
+      const rows = [];
+      for (const high of [false, true]) {
+        await page.locator('html').evaluate((node, high) => {
+          if (high) node.dataset.contrast = 'more';
+          else delete node.dataset.contrast;
+        }, high);
+        await page.mouse.move(640, 1);
+        for (const [surface, nav] of [
+          ['settings', settings],
+          ['workspace', sidebar],
+        ] as const) {
+          const entries = await nav
+            .locator('a.shell-navigation-link, p.text-muted-foreground')
+            .all();
+          expect(entries.length).toBeGreaterThan(10);
+          for (const entry of entries) {
+            await entry.scrollIntoViewIfNeeded();
+            const label = (await entry.textContent())?.trim();
+            const ratio = await measureControlContrast(entry, 'text');
+            rows.push({ surface, high, label, ratio });
+            expect
+              .soft(ratio, `${surface} ${label} with high contrast=${high}`)
+              .toBeGreaterThanOrEqual(4.5);
+          }
+          const link = nav.locator('a.shell-navigation-link:not([aria-current])').first();
+          await link.hover();
+          const ratio = await measureControlContrast(link, 'text');
+          rows.push({ surface, high, hovered: true, ratio });
+          expect
+            .soft(ratio, `${surface} hover with high contrast=${high}`)
+            .toBeGreaterThanOrEqual(4.5);
+          await page.mouse.move(640, 1);
+        }
+      }
+      await info.attach('scrollable-navigation-contrast', {
+        body: JSON.stringify({ locale, theme, rows }),
+        contentType: 'application/json',
+      });
+    });
+  }
+}
 
 test('record breadcrumbs never display raw record IDs and return to the actual invoice list', async ({
   page,

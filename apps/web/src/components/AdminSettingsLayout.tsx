@@ -40,7 +40,7 @@ export function AdminSettingsLayout({
     <div className="flex min-w-0 flex-col gap-6 lg:flex-row" data-testid="admin-settings-layout">
       <nav
         aria-label={navigationLabel}
-        className="hidden w-48 shrink-0 flex-col gap-5 lg:sticky lg:top-0 lg:flex lg:max-h-[calc(100dvh-10rem)] lg:self-start lg:overflow-y-auto"
+        className="hidden w-48 shrink-0 flex-col gap-5 [--sidebar-foreground:var(--foreground)] lg:sticky lg:top-0 lg:flex lg:max-h-[calc(100dvh-10rem)] lg:self-start lg:overflow-y-auto"
       >
         {settings.map((group) => (
           <div key={group.label}>
