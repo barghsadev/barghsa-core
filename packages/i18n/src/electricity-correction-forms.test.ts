@@ -10,7 +10,8 @@ it('localizes electricity corrections and staff decision ownership in both dicti
       .filter((key) => /electricity\.(correctionForm|staffReasonForm)\./.test(key))
       .sort()
   );
-  expect(keys).toHaveLength(16);
+  expect(keys).toHaveLength(17);
+  expect(keys).toContain('electricity.correctionForm.quantitiesHelp');
   for (const key of keys) {
     expect(t(key, 'en')).not.toBe(key);
     expect(t(key, 'fa')).not.toBe(key);

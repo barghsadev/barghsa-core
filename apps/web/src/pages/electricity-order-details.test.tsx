@@ -41,7 +41,35 @@ it('reviews the exact cancellation refund before submitting its hash', async () 
     totalIrR: '1000',
     paidIrR: '500',
     refundedIrR: '0',
-    lines: [],
+    lines: [
+      {
+        productId: '88888888-8888-7888-8888-888888888888',
+        systemKey: 'thermal',
+        title: { en: 'Thermal' },
+        quantityKwh: '10',
+        unitPriceIrR: '100',
+        lineTotalIrR: '1000',
+      },
+    ],
+    pricingSnapshot: {
+      lines: [
+        {
+          productId: '88888888-8888-7888-8888-888888888888',
+          subtotalIrR: '1000',
+          discountIrR: '100',
+          netIrR: '800',
+          vatIrR: '1876',
+        },
+      ],
+    },
+  };
+  const pricingLine = {
+    systemKey: 'thermal',
+    quantityKwh: '10',
+    unitPriceIrR: '100',
+    discountIrR: '100',
+    netIrR: '900',
+    vatIrR: '100',
   };
   const review = {
     schemaVersion: 1,
@@ -63,7 +91,18 @@ it('reviews the exact cancellation refund before submitting its hash', async () 
       periodStart,
       periodEnd,
       totalKwh: '10',
-      pricingSnapshot: { lines: [] },
+      pricingSnapshot: {
+        lines: [
+          pricingLine,
+          null,
+          'PRIVATE_MALFORMED_LINE',
+          ...Object.keys(pricingLine).map((field) => ({
+            ...pricingLine,
+            systemKey: 'PRIVATE_MALFORMED_LINE',
+            [field]: null,
+          })),
+        ],
+      },
       outcome: 'refund_obligation',
       refundAmount: '500',
       releasesGiftCode: false,
@@ -101,6 +140,8 @@ it('reviews the exact cancellation refund before submitting its hash', async () 
         </QueryProvider>
       )
     );
+    expect(container.textContent).toContain('Thermal · 10 kWh');
+    expect(container.textContent).not.toContain('1876');
     const reason = [...container.querySelectorAll('textarea')].find((item) =>
       item.closest('label')?.textContent?.includes('Cancellation reason')
     )!;
@@ -138,6 +179,11 @@ it('reviews the exact cancellation refund before submitting its hash', async () 
     );
     expect(document.body.textContent).toContain('Start wallet refund');
     expect(document.body.textContent).toContain('500');
+    const dialog = document.body.querySelector('[role="dialog"]')!;
+    expect(dialog.textContent).toContain('Thermal electricity · 10 kWh');
+    expect(dialog.textContent).toContain('After discount:');
+    expect(dialog.textContent).toContain('900');
+    expect(dialog.textContent).not.toContain('PRIVATE_MALFORMED_LINE');
     const confirm = [...document.body.querySelectorAll('button')].find(
       (button) => button.closest('[role="dialog"]') && button.textContent === 'Cancel order'
     );
@@ -234,6 +280,18 @@ it('loads an order confirmation with its invoice and contract references', async
                 totalIrR: '2500000',
                 paidIrR: '0',
                 refundedIrR: '0',
+                pricingSnapshot: {
+                  lines: [
+                    null,
+                    {
+                      productId: '88888888-8888-7888-8888-888888888888',
+                      subtotalIrR: '2500000',
+                      discountIrR: '100000',
+                      netIrR: '2400000',
+                      vatIrR: '100000',
+                    },
+                  ],
+                },
                 lines: [
                   {
                     productId: '88888888-8888-7888-8888-888888888888',
@@ -278,6 +336,10 @@ it('loads an order confirmation with its invoice and contract references', async
       expect.any(Object)
     );
     expect(container.textContent).toContain('2500000');
+    const thermal = [...container.querySelectorAll('div')].find(
+      (node) => node.firstElementChild?.textContent === 'Thermal · 10 kWh'
+    );
+    expect(thermal?.textContent).toContain('VAT: 100000');
     expect(container.textContent).toContain('Awaiting staff review');
     expect(container.textContent).toContain('Current status');
     expect(container.textContent).toContain('Who acts next');

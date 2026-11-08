@@ -1157,12 +1157,14 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                               {name === 'responseNote' ? (
                                 <Textarea
                                   {...field}
+                                  aria-required="true"
                                   maxLength={1000}
                                   disabled={!!correctionLock.owner}
                                 />
                               ) : (
                                 <Input
                                   {...field}
+                                  aria-required="true"
                                   maxLength={name === 'fullAddress' ? 500 : 10}
                                   inputMode={name === 'postalCode' ? 'numeric' : 'text'}
                                   disabled={!!correctionLock.owner}

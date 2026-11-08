@@ -80,6 +80,7 @@ export const fa: I18nDictionary = {
     'اصلاح دیگری در انتظار است. پیش از ارسال این فرم آن را تکمیل کنید.',
   'electricity.correctionForm.help':
     'اگر فیلدی نیاز به اصلاح داشته باشد، سایر داده‌های شما حفظ می‌شود.',
+  'electricity.correctionForm.quantitiesHelp': 'برای حداقل یک محصول مقدار مثبت وارد کنید.',
   'electricity.correctionForm.loading': 'در حال بررسی اصلاح…',
   'electricity.staffReasonForm.invalid': 'دلیل باید بین ۱ تا ۱٬۰۰۰ نویسه باشد.',
   'electricity.staffReasonForm.help':
@@ -1057,6 +1058,8 @@ export const en: I18nDictionary = {
   'electricity.correctionForm.busy':
     'Another correction is pending. Finish it before submitting here.',
   'electricity.correctionForm.help': 'Your other entries are kept if a field needs correction.',
+  'electricity.correctionForm.quantitiesHelp':
+    'Enter a positive quantity for at least one product.',
   'electricity.correctionForm.loading': 'Checking correction…',
   'electricity.staffReasonForm.invalid': 'Enter a reason of 1 to 1,000 characters.',
   'electricity.staffReasonForm.help':

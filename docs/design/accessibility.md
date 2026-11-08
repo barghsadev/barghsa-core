@@ -106,6 +106,11 @@ kind determines whether its amount or description is required. Draft changes,
 activation edits and staff requests for changes require a reason. Activation
 dates, the initial invoice and the linked order stay optional.
 
+Electricity address corrections require the address, postal code and response
+note. Full revisions also require the location and delivery period. Advanced
+revisions announce the requirement for a positive quantity at the product
+group, while each product quantity and the gift code remain optional.
+
 Document retention years, legal reasons, and hold expiry each link to their
 own validation errors. Hold expiry remains optional. Upload policy formats
 require at least one selection, so the group explains the requirement without

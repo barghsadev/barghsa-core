@@ -4,7 +4,7 @@ import AxeBuilder from '@axe-core/playwright';
 import type { Locator, Page } from '@playwright/test';
 import { t } from '@barghsa/i18n/app';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
-import { test, expect } from './coverage-fixture';
+import { checkpointBrowserCoverage, test, expect } from './coverage-fixture';
 import {
   correctionOrder,
   correctionProfile,
@@ -193,6 +193,8 @@ for (const [locale, theme] of [
       exact: true,
     });
     await expect(note).toBeVisible();
+    for (const field of [address, postal, note])
+      await expect(field).toHaveAttribute('aria-required', 'true');
     await postal.fill('123');
     await submit.click();
     await focusedError(postal);
@@ -249,6 +251,7 @@ for (const [locale, theme] of [
     await expect(
       page.locator('[data-slot=status-timeline] script,[data-slot=status-timeline] img')
     ).toHaveCount(0);
+    await checkpointBrowserCoverage(page);
     // Adjacent rejection keeps the same authoritative review and receipt contract.
     state.context = 'staff';
     state.staff = {
@@ -345,13 +348,37 @@ for (const [locale, theme] of [
       });
       await expect(note).toBeVisible();
       await expect(note).not.toHaveAttribute('aria-invalid', 'true');
+      for (const field of [
+        address,
+        postal,
+        note,
+        form.locator('#revision-province'),
+        form.locator('#revision-city'),
+      ])
+        await expect(field).toHaveAttribute('aria-required', 'true');
+      await expect(form.locator('#revision-gift')).not.toHaveAttribute('aria-required', 'true');
       if (advanced) {
-        await expect(
-          page.getByLabel(copy('electricity.advanced.start'), { exact: true })
-        ).toHaveAttribute('id', 'revision-start-date');
-        await expect(
-          page.getByLabel(copy('electricity.advanced.end'), { exact: true })
-        ).toHaveAttribute('id', 'revision-end-date');
+        for (const [boundary, id] of [
+          ['start', 'revision-start-date'],
+          ['end', 'revision-end-date'],
+        ] as const) {
+          const date = form.getByRole('combobox', {
+            name: copy(`electricity.advanced.${boundary}`),
+            exact: true,
+          });
+          await expect(date).toHaveAttribute('id', id);
+          await expect(date).toHaveAttribute('aria-required', 'true');
+        }
+        const products = form.getByRole('group', {
+          name: copy('electricity.advanced.stepProducts'),
+          exact: true,
+        });
+        await expect(products).toHaveAccessibleDescription(
+          copy('electricity.correctionForm.quantitiesHelp')
+        );
+        await expect(products.getByRole('textbox')).toHaveCount(3);
+        for (const field of await products.getByRole('textbox').all())
+          await expect(field).not.toHaveAttribute('aria-required', 'true');
         const startClock = form.locator('fieldset').first();
         await expect(
           startClock.getByRole('combobox', { name: locale === 'fa' ? 'ساعت' : 'Hour', exact: true })
@@ -362,6 +389,9 @@ for (const [locale, theme] of [
             exact: true,
           })
         ).toHaveValue('0');
+      } else {
+        await expect(form.locator('#revision-period')).toHaveAttribute('aria-required', 'true');
+        await expect(quantity).toHaveAttribute('aria-required', 'true');
       }
       // Isolate each local error so focus follows its owned field.
       await note.fill('Quantity validation companion note');
@@ -472,6 +502,7 @@ for (const [locale, theme] of [
         'Revised terms after staff feedback'
       );
       if (!advanced) {
+        await checkpointBrowserCoverage(page);
         // Missing-resource authority clears both independent drafts and the reviewed quote.
         state.detail = correctionDetail(false);
         state.quoteMode = 'success';

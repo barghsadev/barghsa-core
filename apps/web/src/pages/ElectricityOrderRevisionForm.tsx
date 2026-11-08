@@ -687,10 +687,16 @@ export function ElectricityOrderRevisionForm({
           <FormLabel>{label}</FormLabel>
           <FormControl>
             {multiline ? (
-              <Textarea {...field} disabled={locked} maxLength={maxLength} />
+              <Textarea {...field} aria-required="true" disabled={locked} maxLength={maxLength} />
             ) : (
               <Input
                 {...field}
+                aria-required={
+                  name === 'totalKwh' ||
+                  name === 'fullAddress' ||
+                  name === 'postalCode' ||
+                  undefined
+                }
                 disabled={locked}
                 maxLength={maxLength}
                 inputMode={numeric ? 'numeric' : 'text'}
@@ -768,6 +774,7 @@ export function ElectricityOrderRevisionForm({
                           onBlur={field.onBlur}
                           triggerProps={{
                             ref: field.ref,
+                            'aria-required': true,
                             'aria-labelledby':
                               name === 'startAt' ? 'revision-start-label' : 'revision-end-label',
                           }}
@@ -778,23 +785,31 @@ export function ElectricityOrderRevisionForm({
                   )}
                 />
               ))}
-              <div className="grid gap-3 sm:grid-cols-2">
-                {systemKeys.map((key) =>
-                  key === 'green' && mandatoryGreen ? (
-                    <div key={key}>
-                      <p className="text-sm">{t('electricity.advanced.greenDerived', locale)}</p>
-                    </div>
-                  ) : (
-                    text(
-                      systemFields[key],
-                      `${order.lines?.find((line) => line.systemKey === key)?.title?.[locale] ?? t(`electricity.order.revision.${key}`, locale)} (kWh)`,
-                      `revision-${key.replace('_', '-')}`,
-                      19,
-                      true
+              <fieldset className="min-w-0 space-y-2" aria-describedby="revision-quantities-help">
+                <legend className="text-sm font-medium">
+                  {t('electricity.advanced.stepProducts', locale)}
+                </legend>
+                <p id="revision-quantities-help" className="text-sm text-muted-foreground">
+                  {copy('quantitiesHelp')}
+                </p>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {systemKeys.map((key) =>
+                    key === 'green' && mandatoryGreen ? (
+                      <div key={key}>
+                        <p className="text-sm">{t('electricity.advanced.greenDerived', locale)}</p>
+                      </div>
+                    ) : (
+                      text(
+                        systemFields[key],
+                        `${order.lines?.find((line) => line.systemKey === key)?.title?.[locale] ?? t(`electricity.order.revision.${key}`, locale)} (kWh)`,
+                        `revision-${key.replace('_', '-')}`,
+                        19,
+                        true
+                      )
                     )
-                  )
-                )}
-              </div>
+                  )}
+                </div>
+              </fieldset>
             </>
           ) : (
             <>
@@ -807,6 +822,7 @@ export function ElectricityOrderRevisionForm({
                     <FormControl>
                       <NativeSelect
                         {...field}
+                        aria-required="true"
                         className="w-full"
                         disabled={locked || !periods.length}
                       >
@@ -847,6 +863,7 @@ export function ElectricityOrderRevisionForm({
                   <FormControl>
                     <NativeSelect
                       {...field}
+                      aria-required="true"
                       className="w-full"
                       disabled={locked || !provinceOptions.ready}
                       onChange={(event) => {
@@ -884,6 +901,7 @@ export function ElectricityOrderRevisionForm({
                   <FormControl>
                     <DependentSelect
                       {...field}
+                      aria-required="true"
                       className="w-full rounded-md border bg-background p-2 pointer-coarse:h-11"
                       disabled={locked}
                       dependencyValue={provinceId}

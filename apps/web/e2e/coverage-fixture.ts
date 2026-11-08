@@ -1,4 +1,4 @@
-import { test as base } from '@playwright/test';
+import { test as base, type Page } from '@playwright/test';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join, basename } from 'node:path';
 import { randomUUID } from 'node:crypto';
@@ -6,8 +6,13 @@ import { randomUUID } from 'node:crypto';
 export * from '@playwright/test';
 
 const componentBuilds = new Map<string, string>();
+const checkpoints = new WeakMap<Page, () => Promise<void>>();
 export function registerComponentCoverage(origin: string, directory: string) {
   componentBuilds.set(new URL(origin).origin, basename(directory));
+}
+
+export function checkpointBrowserCoverage(page: Page) {
+  return checkpoints.get(page)?.();
 }
 
 export const test = base.extend<{ browserCoverage: void }>({
@@ -17,10 +22,16 @@ export const test = base.extend<{ browserCoverage: void }>({
       if (!directory) return use();
       if (browserName !== 'chromium') throw new Error('Browser coverage requires Chromium');
       await page.coverage.startJSCoverage({ resetOnNavigation: false });
+      const samples: Awaited<ReturnType<typeof page.coverage.stopJSCoverage>> = [];
+      checkpoints.set(page, async () => {
+        samples.push(...(await page.coverage.stopJSCoverage()));
+        await page.coverage.startJSCoverage({ resetOnNavigation: false });
+      });
       try {
         await use();
       } finally {
-        const entries = await page.coverage.stopJSCoverage();
+        checkpoints.delete(page);
+        const entries = samples.concat(await page.coverage.stopJSCoverage());
         await mkdir(directory, { recursive: true });
         await writeFile(
           join(directory, `${randomUUID()}.json`),

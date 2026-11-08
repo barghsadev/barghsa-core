@@ -692,6 +692,7 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
                           <select
                             {...field}
                             id="document-template-kind"
+                            aria-required="true"
                             className="h-10 w-full rounded-md border bg-background px-3"
                             disabled={locked}
                           >

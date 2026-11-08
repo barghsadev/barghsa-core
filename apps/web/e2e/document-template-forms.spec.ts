@@ -1,4 +1,4 @@
-import { test, expect, type Page } from './coverage-fixture';
+import { test, expect, type Page, type TestInfo } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { documentTemplateText } from '@barghsa/i18n/document-templates';
@@ -62,16 +62,16 @@ async function setup(page: Page, locale: 'en' | 'fa') {
   };
 }
 
-async function inspect(page: Page, locale: string, project: string, kind: string) {
+async function inspect(page: Page, locale: string, info: TestInfo, kind: string) {
   expect((await new AxeBuilder({ page }).include('main > div').analyze()).violations).toEqual([]);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  if (locale === 'fa' && project === 'chromium') {
+  if (locale === 'fa' && info.project.name === 'chromium') {
     await page.setViewportSize({ width: 1600, height: 1000 });
     await page
       .getByRole('heading', { name: documentTemplateText('title', 'fa'), exact: true })
       .scrollIntoViewIfNeeded();
     await page.screenshot({
-      path: `/Users/majid/.local/state/barghsa-manual-batches/document-template-authoring/${kind}-fa.png`,
+      path: info.outputPath(`${kind}-fa.png`),
       fullPage: true,
     });
   }
@@ -95,7 +95,10 @@ for (const locale of ['en', 'fa'] as const) {
         return route.fulfill({
           status: 400,
           json: {
-            error: { code: 'VALIDATION:INPUT:INVALID', fields: ['title', 'privateUnknown'] },
+            error: {
+              code: 'VALIDATION:INPUT:INVALID',
+              fields: ['title', 'category', 'privateUnknown'],
+            },
           },
         });
       await pending;
@@ -107,10 +110,13 @@ for (const locale of ['en', 'fa'] as const) {
     const title = page.locator('#document-template-title');
     const details = page.locator('#document-template-description');
     const form = page.getByRole('form', { name: word('edit'), exact: true });
+    const category = form.getByRole('combobox', { name: word('category'), exact: true });
     await expect(form.getByRole('textbox', { name: word('name'), exact: true })).toHaveAttribute(
       'aria-required',
       'true'
     );
+    await expect(category).toHaveAttribute('aria-required', 'true');
+    await expect(details).not.toHaveAttribute('aria-required', 'true');
     await title.fill('   ');
     await form.getByRole('button', { name: word('save'), exact: true }).click();
     await expect(title).toHaveAttribute('aria-invalid', 'true');
@@ -127,6 +133,11 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(details).toHaveValue('  توضیحات قرارداد  ');
     await expect(title).toHaveAttribute('aria-invalid', 'true');
     await expect(title).toBeFocused();
+    await expect(category).toHaveAttribute('aria-invalid', 'true');
+    await expect(category).toHaveAttribute('aria-describedby', 'document-template-kind-message');
+    await expect(page.locator('#document-template-kind-message')).toHaveText(
+      word('categoryInvalid')
+    );
     await title.fill('  قرارداد به‌روز مشتری  ');
     await form.getByRole('button', { name: word('save'), exact: true }).click();
     await confirm().click();
@@ -158,7 +169,43 @@ for (const locale of ['en', 'fa'] as const) {
       page.getByRole('heading', { name: 'قرارداد به‌روز مشتری', exact: true })
     ).toBeVisible();
     await expect(page.locator('#document-template-summary')).toHaveValue('');
-    await inspect(page, locale, info.project.name, 'metadata');
+    await inspect(page, locale, info, 'metadata');
+
+    const newTemplate = {
+      ...templateDetail,
+      id: '34567890-3456-4456-8456-345678901234',
+      title: 'قالب صورتحساب جدید',
+      description: '',
+      category: 'invoice' as const,
+      versionCount: 0,
+      versions: [],
+    };
+    const creates: unknown[] = [];
+    await page.route(
+      (url) => url.pathname === '/api/admin/document-templates',
+      async (route) => {
+        if (route.request().method() !== 'POST') return route.fallback();
+        creates.push(route.request().postDataJSON());
+        save(newTemplate);
+        await route.fulfill({ status: 201, json: newTemplate });
+      }
+    );
+    await page.route(`**/api/admin/document-templates/${newTemplate.id}`, (route) =>
+      route.fulfill({ json: newTemplate })
+    );
+    await page.getByRole('button', { name: word('add'), exact: true }).click();
+    const newForm = page.getByRole('form').filter({
+      has: page.getByRole('heading', { name: word('add'), exact: true }),
+    });
+    const newCategory = newForm.getByRole('combobox', { name: word('category'), exact: true });
+    await expect(newCategory).toHaveAttribute('aria-required', 'true');
+    await newCategory.selectOption('invoice');
+    await newForm.getByRole('textbox', { name: word('name'), exact: true }).fill(newTemplate.title);
+    await newForm.getByRole('button', { name: word('save'), exact: true }).click();
+    await confirm().click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: newTemplate.title, exact: true })).toBeVisible();
+    expect(creates).toEqual([{ title: newTemplate.title, description: '', category: 'invoice' }]);
   });
 
   test(`document versions validate combined files and recover uncertain publication before deliberate retry (${locale})`, async ({
@@ -279,6 +326,6 @@ for (const locale of ['en', 'fa'] as const) {
       'Initial terms'
     );
     expect(commands).toHaveLength(3);
-    await inspect(page, locale, info.project.name, 'version');
+    await inspect(page, locale, info, 'version');
   });
 }
