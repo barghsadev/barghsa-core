@@ -94,7 +94,8 @@ it('requires step-up and keeps the old owner until exact-transfer acceptance', a
   expect((await post('ownership-accept', 'target', { transferId: id })).status).toBe(403);
   await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='target'");
   const accepted = await post('ownership-accept', 'target', { transferId: id });
-  expect(accepted.status, (await accepted.text()) + http.logs()).toBe(200);
+  expect(accepted.status, (await accepted.clone().text()) + http.logs()).toBe(200);
+  expect(await accepted.json()).toEqual({ profileId, transferId: id, status: 'Completed' });
   expect(
     (await http.pool.query('SELECT user_id,is_default FROM profiles WHERE id=$1', [profileId]))
       .rows[0]
@@ -157,6 +158,11 @@ it.each(['decline', 'cancel'])(
       const status = (
         await http.pool.query('SELECT status FROM profile_ownership_transfers WHERE id=$1', [id])
       ).rows[0].status;
+      expect(await results.find((result) => result.ok)!.json()).toEqual({
+        profileId,
+        transferId: id,
+        status,
+      });
       expect(
         (await http.pool.query('SELECT user_id FROM profiles WHERE id=$1', [profileId])).rows[0]
           .user_id

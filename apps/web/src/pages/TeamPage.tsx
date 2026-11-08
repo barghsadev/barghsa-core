@@ -66,25 +66,46 @@ export function TeamPage() {
   const revision = useProfileContextRevision();
   return <TeamCatalogue key={revision} />;
 }
+const transferStatus = {
+  accept: 'Completed',
+  decline: 'Declined',
+  cancelTransfer: 'Cancelled',
+} as const;
+type TransferDecision = keyof typeof transferStatus;
 function TeamCatalogue() {
   const locale = useLocale();
   const time = useAccountTime();
   const word = (key: string) => t(`team.${key}`, locale);
-  const [review, setReview] = useState<{ action: TeamAction; id: string; basis: string } | null>(
-    null
-  );
+  const [review, setReview] = useState<{
+    action: TeamAction;
+    decision: TransferDecision;
+    profileId: string;
+    id: string;
+    basis: string;
+  } | null>(null);
+  const [decisionPending, setDecisionPending] = useState(false);
+  const [decisionRecovery, setDecisionRecovery] = useState<{
+    after: number;
+    decision: TransferDecision;
+  } | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   useCommandFeedback({ success: notice });
   const clearPrivate = useCallback(() => {
     setReview(null);
+    setDecisionPending(false);
+    setDecisionRecovery(null);
     setNotice(null);
   }, []);
   const scope = useCatalogueScope(clearPrivate);
   const profiles = useCatalogueResource(scope, '/api/profiles', validTeamProfiles);
+  const checkSessionAfterAcceptance = useCallback(() => {
+    if (decisionRecovery?.decision === 'accept') window.location.assign('/login');
+  }, [decisionRecovery]);
   const transfers = useCatalogueResource(
     scope,
     '/api/profiles/ownership-transfers',
-    validTransfers
+    validTransfers,
+    { onUnauthorized: checkSessionAfterAcceptance }
   );
   const [requestedTransferRead, setRequestedTransferRead] = useState<number | null>(null);
   const reloadTransfers = () => setRequestedTransferRead(transfers.retry());
@@ -99,6 +120,7 @@ function TeamCatalogue() {
   const transferReady = !transferLoading && !transfers.error && !!transfers.data;
   const transferAllowed =
     transferReady &&
+    !decisionRecovery &&
     !transfers.data?.transfers.some(
       (transfer) => transfer.profileId === active?.id && transfer.direction === 'outgoing'
     );
@@ -106,11 +128,17 @@ function TeamCatalogue() {
   const selected = transfers.data?.transfers.find((row) => row.id === review?.id);
   const stale = !!review && (!selected || transferBasis(selected) !== review.basis);
   useEffect(() => {
-    if (review && transferReady && stale) {
+    if (!transferReady || decisionPending) return;
+    if (decisionRecovery) {
+      if ((transfers.readAttempt ?? -1) < decisionRecovery.after) return;
+      setDecisionRecovery(null);
+      setReview(null);
+      refreshTransfers.current?.focus();
+    } else if (review && stale) {
       setReview(null);
       refreshTransfers.current?.focus();
     }
-  }, [review, transferReady, stale]);
+  }, [review, transferReady, stale, decisionPending, decisionRecovery, transfers.readAttempt]);
   return (
     <div
       className="mx-auto min-w-0 max-w-4xl space-y-6 rounded-lg bg-background p-4 text-foreground"
@@ -132,11 +160,15 @@ function TeamCatalogue() {
             <Button
               ref={refreshTransfers}
               variant="outline"
+              disabled={decisionPending || transferLoading}
               onClick={() => (scope.denied ? scope.recover() : reloadTransfers())}
             >
               {word('refreshTransfers')}
             </Button>
           </ListPage.Toolbar>
+          {decisionRecovery && !review && (
+            <p role="alert">{confirmationText('unconfirmed', locale)}</p>
+          )}
           <ListPage.Content
             loading={transferLoading}
             error={transfers.error || scope.denied}
@@ -159,17 +191,19 @@ function TeamCatalogue() {
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {(transfer.direction === 'incoming'
-                      ? ['accept', 'decline']
-                      : ['cancelTransfer']
+                      ? (['accept', 'decline'] as const)
+                      : (['cancelTransfer'] as const)
                     ).map((decision) => (
                       <Button
                         key={decision}
                         variant={decision === 'accept' ? 'default' : 'outline'}
-                        disabled={!transferReady || !!review}
+                        disabled={!transferReady || !!review || !!decisionRecovery}
                         onClick={() => {
                           setNotice(null);
                           setReview({
                             id: transfer.id,
+                            profileId: transfer.profileId,
+                            decision,
                             basis: transferBasis(transfer),
                             action: {
                               risk: 'destructive',
@@ -180,7 +214,6 @@ function TeamCatalogue() {
                               path: `/api/profiles/${encodeURIComponent(transfer.profileId)}/ownership-${decision === 'cancelTransfer' ? 'cancel' : decision}`,
                               method: 'POST',
                               body: { transferId: transfer.id },
-                              signsOut: decision === 'accept',
                             },
                           });
                         }}
@@ -233,17 +266,44 @@ function TeamCatalogue() {
       {review && (
         <TeamActionDialog
           action={review.action}
-          onClose={() => setReview(null)}
+          onClose={() => {
+            setDecisionPending(false);
+            setReview(null);
+          }}
           onDenied={scope.deny}
-          confirmationDisabled={!transferReady || stale}
+          onPendingChange={setDecisionPending}
+          onUnconfirmed={() =>
+            setDecisionRecovery({ after: transfers.nextReadAttempt(), decision: review.decision })
+          }
+          confirmationDisabled={!transferReady || stale || !!decisionRecovery}
           finalFocus={refreshTransfers}
           summary={
-            <Button variant="outline" disabled={transferLoading} onClick={reloadTransfers}>
+            <Button
+              variant="outline"
+              disabled={decisionPending || transferLoading}
+              onClick={reloadTransfers}
+            >
               {word('refreshTransfers')}
             </Button>
           }
-          onSuccess={async () => {
-            if (!transferReady || stale) return;
+          onSuccess={async (result) => {
+            if (
+              !transferReady ||
+              stale ||
+              !result ||
+              typeof result !== 'object' ||
+              !('profileId' in result) ||
+              result.profileId !== review.profileId ||
+              !('transferId' in result) ||
+              result.transferId !== review.id ||
+              !('status' in result) ||
+              result.status !== transferStatus[review.decision]
+            )
+              throw new Error('Unconfirmed ownership decision');
+            if (review.decision === 'accept') {
+              window.location.assign('/login');
+              return;
+            }
             reloadTransfers();
             setNotice(word('saved'));
           }}
@@ -631,6 +691,9 @@ function TeamMembers({
   };
   const finished = async (result: unknown) => {
     if (!mounted.current || reviewBasis.current !== liveBasis.current) return;
+    const receipt = result && typeof result === 'object' ? result : null;
+    const sessionRevoked =
+      receipt && 'sessionRevoked' in receipt && receipt.sessionRevoked === true;
     if (action?.method === 'PUT' && action.path.endsWith('/roles')) {
       const expected = (action.body as { roles: Role[] }).roles;
       const actual =
@@ -644,7 +707,6 @@ function TeamMembers({
         throw new Error();
     }
     if (action?.method === 'DELETE') {
-      const receipt = result && typeof result === 'object' ? result : null;
       const accepted = action.path.includes('/invitations/')
         ? receipt &&
           'id' in receipt &&
@@ -658,6 +720,10 @@ function TeamMembers({
     if (action?.path === `${base}/transfer-ownership`) {
       if (!z.object({ id: z.uuid() }).safeParse(result).success) throw new Error();
       refreshTransfers();
+    }
+    if (sessionRevoked && (action?.path.endsWith('/roles') || action?.path.includes('/agents/'))) {
+      window.location.assign('/login');
+      return;
     }
     action?.onConfirmed?.();
     setActivityRevision((value) => value + 1);

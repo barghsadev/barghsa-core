@@ -618,7 +618,7 @@ test('incoming ownership is visible and acceptance sends the bound transfer then
   );
   await page.route(`**/api/profiles/${profileId}/ownership-accept`, (route) => {
     expect(route.request().postDataJSON()).toEqual({ transferId });
-    return route.fulfill({ json: { status: 'Completed' } });
+    return route.fulfill({ json: { profileId, transferId, status: 'Completed' } });
   });
   await page.goto('/dashboard');
   await page.getByRole('link', { name: /pending ownership request/ }).click();
@@ -632,6 +632,7 @@ test('incoming ownership is visible and acceptance sends the bound transfer then
   );
   await page.getByRole('button', { name: 'Accept ownership' }).click();
   await expect(page.getByRole('dialog')).toContainText('signs both owners out');
+  await authorizeAction(page);
   await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
   await expect(page).toHaveURL(/\/login$/);
 });
@@ -658,9 +659,127 @@ test('stale transfer remains an error and never reports acceptance', async ({ pa
   );
   await page.goto('/settings/team');
   await page.getByRole('button', { name: 'Accept ownership' }).click();
+  await authorizeAction(page);
   await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
   await expect(page.getByRole('dialog').getByRole('alert')).toContainText('changed or expired');
   await expect(page).toHaveURL(/\/settings\/team$/);
+});
+
+test('an unconfirmed acceptance checks the revoked session without replaying the write', async ({
+  page,
+}) => {
+  await shell(page);
+  let attempts = 0;
+  let transferReads = 0;
+  let revoked = false;
+  await page.route('**/api/profiles/ownership-transfers', (route) => {
+    transferReads++;
+    return route.fulfill(
+      revoked
+        ? { status: 401, json: {} }
+        : {
+            json: {
+              transfers: [
+                {
+                  id: transferId,
+                  profileId,
+                  profileName: 'Example company',
+                  expiresAt: '2026-09-13T00:00:00Z',
+                  direction: 'incoming',
+                },
+              ],
+            },
+          }
+    );
+  });
+  await page.route(`**/api/profiles/${profileId}/ownership-accept`, (route) => {
+    attempts++;
+    expect(route.request().postDataJSON()).toEqual({ transferId });
+    return route.fulfill({
+      json: { profileId, transferId: profileId, status: 'Completed', sessionRevoked: true },
+    });
+  });
+  await page.goto('/settings/team');
+  await page.getByRole('button', { name: 'Accept ownership' }).click();
+  const readsBeforeDecision = transferReads;
+  await authorizeAction(page);
+  const dialog = page.getByRole('dialog');
+  const confirm = dialog.getByRole('button', { name: 'Confirm', exact: true });
+  await confirm.click();
+  await expect(dialog.getByRole('alert')).toHaveText(confirmationText('unconfirmed', 'en'));
+  await expect(confirm).toBeDisabled();
+  await expect(page).toHaveURL(/\/settings\/team$/);
+  expect(transferReads).toBe(readsBeforeDecision);
+  revoked = true;
+  await dialog.getByRole('button', { name: 'Refresh ownership requests' }).click();
+  await expect(page).toHaveURL(/\/login$/);
+  expect(attempts).toBe(1);
+  expect(transferReads).toBe(readsBeforeDecision + 1);
+});
+
+test('a failed decline receipt and failed refresh keep the original write locked', async ({
+  page,
+}) => {
+  const locale = 'fa';
+  await shell(page, locale);
+  const copy = (key: string) => teamText('team.' + key, locale);
+  let attempts = 0;
+  let readFailed = false;
+  let stillPending = true;
+  await page.route('**/api/profiles/ownership-transfers', (route) =>
+    route.fulfill(
+      readFailed
+        ? { status: 503, json: {} }
+        : {
+            json: {
+              transfers: stillPending
+                ? [
+                    {
+                      id: transferId,
+                      profileId,
+                      profileName: 'شرکت نمونه',
+                      expiresAt: '2026-09-13T00:00:00Z',
+                      direction: 'incoming',
+                    },
+                  ]
+                : [],
+            },
+          }
+    )
+  );
+  await page.route(`**/api/profiles/${profileId}/ownership-decline`, (route) => {
+    attempts++;
+    expect(route.request().postDataJSON()).toEqual({ transferId });
+    return route.fulfill({
+      json: { profileId, transferId, status: 'Cancelled' },
+    });
+  });
+  await page.goto('/settings/team');
+  await page.getByRole('button', { name: copy('decline'), exact: true }).click();
+  await authorizeAction(page, locale);
+  const dialog = page.getByRole('dialog');
+  const confirm = dialog.getByRole('button', {
+    name: confirmationText('confirm', locale),
+    exact: true,
+  });
+  await confirm.click();
+  await expect(dialog.getByRole('alert')).toHaveText(confirmationText('unconfirmed', locale));
+  await expect(confirm).toBeDisabled();
+  if (test.info().project.name === 'mobile-safari')
+    await page.screenshot({ path: test.info().outputPath('ownership-decision-fa-mobile.png') });
+  readFailed = true;
+  const refresh = dialog.getByRole('button', { name: copy('refreshTransfers'), exact: true });
+  await refresh.click();
+  await expect(refresh).toBeEnabled();
+  await expect(confirm).toBeDisabled();
+  expect(attempts).toBe(1);
+  readFailed = false;
+  stillPending = false;
+  await refresh.click();
+  await expect(dialog).toHaveCount(0);
+  await expect(page.getByText(copy('noTransfers'), { exact: true })).toBeVisible();
+  await expect(page.getByText(copy('saved'), { exact: true })).toHaveCount(0);
+  expect(attempts).toBe(1);
 });
 
 for (const action of [
@@ -709,7 +828,11 @@ for (const action of [
           ? { id: 'invitation-one', status: 'Withdrawn' }
           : action.suffix.startsWith('agents/')
             ? { removed: true }
-            : { saved: true },
+            : {
+                profileId,
+                transferId,
+                status: action.suffix === 'ownership-cancel' ? 'Cancelled' : 'Declined',
+              },
       });
     });
     await page.goto('/settings/team');
@@ -1033,11 +1156,18 @@ for (const locale of ['en', 'fa'] as const) {
       await shell(page, locale, false);
       await page.route(
         `**/api/profiles/${profileId}/agents/member${operation === 'roles' ? '/roles' : ''}`,
-        (route) => route.fulfill({ json: { sessionRevoked: true } })
+        (route) =>
+          route.fulfill({
+            json:
+              operation === 'roles'
+                ? { roles: ['Manager', 'Finance'], sessionRevoked: true }
+                : { removed: true, sessionRevoked: true },
+          })
       );
       await page.goto('/settings/team');
       const member = page
         .getByRole('row')
+        .or(page.getByRole('listitem'))
         .filter({ has: page.getByRole('heading', { name: 'm***@example.test' }) });
       if (operation === 'roles') {
         await member
@@ -1051,6 +1181,7 @@ for (const locale of ['en', 'fa'] as const) {
           .getByRole('button', { name: locale === 'fa' ? 'حذف عضو' : 'Remove member' })
           .click();
       }
+      await authorizeAction(page, locale);
       await page
         .getByRole('dialog')
         .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })

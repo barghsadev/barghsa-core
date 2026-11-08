@@ -1134,7 +1134,7 @@ export class AgentsService {
     transferId: string,
     actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     decision: 'accept' | 'decline' | 'cancel'
-  ): Promise<{ status: string }> {
+  ): Promise<{ profileId: string; transferId: string; status: string }> {
     const userId = actor.userId;
     const correlationId = correlationIdStorage.getStore() ?? uuidv7();
     const client = await getDbPool().connect();
@@ -1280,7 +1280,7 @@ export class AgentsService {
           },
           409
         );
-      return { status };
+      return { profileId, transferId, status };
     } catch (error) {
       if (!committed) await client.query('ROLLBACK').catch(() => {});
       throw error;

@@ -39,7 +39,6 @@ export interface TeamAction {
   risk?: 'destructive' | 'financial' | 'both';
   body?: unknown;
   successStatus?: number;
-  signsOut?: boolean;
   requiresPassword?: boolean;
   requiresOtp?: boolean;
   /** Override the deadline inherited by callers with an unconfirmed-result handler. */
@@ -292,10 +291,6 @@ export function TeamActionDialog({
       if (action.successStatus !== undefined && response.status !== action.successStatus) {
         onUnconfirmed?.();
         showError(t('team.error', locale), true);
-        return;
-      }
-      if (action.signsOut || data?.sessionRevoked === true) {
-        window.location.assign('/login');
         return;
       }
       const message = await onSuccess(data);

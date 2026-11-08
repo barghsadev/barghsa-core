@@ -75,6 +75,21 @@ const profileFieldNames = [
   'nationalIdentifier',
 ];
 
+const ownershipDecisionInput = z.object({ transferId: z.uuid() });
+const ownershipDecisionResponse = (status: 'Completed' | 'Declined' | 'Cancelled') =>
+  ApiResponse({
+    status: 200,
+    schema: {
+      type: 'object',
+      required: ['profileId', 'transferId', 'status'],
+      properties: {
+        profileId: { type: 'string', format: 'uuid' },
+        transferId: { type: 'string', format: 'uuid' },
+        status: { type: 'string', enum: [status] },
+      },
+    },
+  });
+
 @ApiTags('Profiles')
 @Controller('api/profiles')
 @UseGuards(SessionAuthGuard)
@@ -329,6 +344,8 @@ export class ProfilesController {
 
   @Post(':profileId/ownership-accept')
   @HttpCode(200)
+  @ApiZodBody(ownershipDecisionInput)
+  @ownershipDecisionResponse('Completed')
   @RequiresStepUp()
   @UseGuards(StepUpGuard)
   async acceptOwnership(
@@ -341,6 +358,8 @@ export class ProfilesController {
 
   @Post(':profileId/ownership-decline')
   @HttpCode(200)
+  @ApiZodBody(ownershipDecisionInput)
+  @ownershipDecisionResponse('Declined')
   @RequiresStepUp()
   @UseGuards(StepUpGuard)
   async declineOwnership(
@@ -353,6 +372,8 @@ export class ProfilesController {
 
   @Post(':profileId/ownership-cancel')
   @HttpCode(200)
+  @ApiZodBody(ownershipDecisionInput)
+  @ownershipDecisionResponse('Cancelled')
   @RequiresStepUp()
   @UseGuards(StepUpGuard)
   async cancelOwnership(
@@ -369,7 +390,7 @@ export class ProfilesController {
     req: AuthenticatedRequest,
     decision: 'accept' | 'decline' | 'cancel'
   ) {
-    const parsed = z.object({ transferId: z.uuid() }).safeParse(body);
+    const parsed = ownershipDecisionInput.safeParse(body);
     if (!parsed.success || !z.uuid().safeParse(profileId).success) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },

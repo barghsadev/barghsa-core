@@ -1,6 +1,7 @@
 import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryProvider } from '../test/query-provider.js';
 import { validTeamActivity } from '@barghsa/shared/team-activity';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { act, StrictMode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -741,7 +742,7 @@ it.each(['agent', 'invitation'] as const)(
     await click(type === 'agent' ? 'Remove member' : 'Withdraw invitation', true);
     expect(requests.mock.calls.filter(([, init]) => init?.method === 'DELETE')).toHaveLength(0);
     await click('Confirm', true);
-    expect(detailDialog().textContent).toContain('The action could not be completed');
+    expect(detailDialog().textContent).toContain(confirmationText('unconfirmed', 'en'));
     expect(host.textContent).not.toContain('Change saved');
     valid = true;
     await click('Confirm', true);
