@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { withCsrf } from '../lib/csrf.js';
 import { inputErrorFields } from '../lib/input-error-fields.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import type { SettingsCoordination, SettingsOwner } from '../lib/settings-form.js';
 export type SettingsCommand = {
   owner: SettingsOwner;
@@ -24,11 +25,10 @@ export function useSettingsCommand(
   current.current = scope;
   const alive = useRef(true),
     owner = useRef<SettingsOwner | null>(null),
-    sending = useRef(false);
+    sending = useRef<AbortController | null>(null);
   const capture = useRef<{
     command: SettingsCommand;
     json: string | undefined;
-    scope: string;
     attempted: boolean;
     acknowledged: boolean;
     uncertain: boolean;
@@ -37,10 +37,14 @@ export function useSettingsCommand(
     [busy, setBusy] = useState(false),
     [phase, setPhase] = useState<'ready' | 'uncertain' | 'confirmation'>('ready'),
     [error, setError] = useState('');
-  function reset() {
+  function clearAttempt() {
     owner.current = null;
     capture.current = null;
-    sending.current = false;
+    sending.current?.abort();
+    sending.current = null;
+  }
+  function reset() {
+    clearAttempt();
     setLocked(null);
     setBusy(false);
     setPhase('ready');
@@ -77,8 +81,7 @@ export function useSettingsCommand(
     alive.current = true;
     return () => {
       alive.current = false;
-      owner.current = null;
-      capture.current = null;
+      clearAttempt();
     };
   }, []);
   useEffect(() => {
@@ -94,7 +97,6 @@ export function useSettingsCommand(
     capture.current = {
       command,
       json: command.body ? JSON.stringify(command.body) : undefined,
-      scope,
       attempted: false,
       acknowledged: false,
       uncertain: false,
@@ -102,7 +104,7 @@ export function useSettingsCommand(
     return true;
   }
   function heldCurrent(held: NonNullable<typeof capture.current>) {
-    if (!isCurrent() || capture.current !== held || held.scope !== scope) return false;
+    if (!isCurrent() || capture.current !== held) return false;
     if (!authorized(held.command)) {
       coordination.denied();
       return false;
@@ -111,19 +113,18 @@ export function useSettingsCommand(
   }
   async function accept(held: NonNullable<typeof capture.current>, value: unknown) {
     if (!heldCurrent(held)) return false;
+    const controller = sending.current;
     capture.current = null;
     setPhase('ready');
-    setError('');
     try {
       await held.command.accepted(value);
     } finally {
-      if (isCurrent() && owner.current === held.command.owner) {
+      if (isCurrent() && sending.current === controller && owner.current === held.command.owner) {
         owner.current = null;
         setLocked(null);
-        setBusy(false);
       }
     }
-    return isCurrent();
+    return isCurrent() && sending.current === controller;
   }
   async function confirm(held: NonNullable<typeof capture.current>) {
     if (!held.command.confirmation || !held.command.confirmed) return false;
@@ -137,62 +138,57 @@ export function useSettingsCommand(
   async function send(readOnly = false): Promise<boolean> {
     const held = capture.current;
     if (!held || sending.current || !heldCurrent(held)) return false;
-    if (readOnly && !held.command.confirmation) return false;
-    sending.current = true;
+    const { command, json } = held;
+    if (readOnly && !command.confirmation) return false;
+    const controller = new AbortController();
+    sending.current = controller;
     setBusy(true);
     setError('');
     try {
-      if (readOnly || held.acknowledged || (!held.command.keyed && held.attempted))
+      if (readOnly || held.acknowledged || (!command.keyed && held.attempted))
         return await confirm(held);
       held.attempted = true;
-      const response = await fetch(held.command.path, {
-        method: held.command.method,
-        credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        ...(held.json === undefined ? {} : { body: held.json }),
+      const receipt = await readWithDeadline(controller.signal, async (signal) => {
+        const init: RequestInit = {
+          method: command.method,
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          signal,
+        };
+        if (json !== undefined) init.body = json;
+        const response = await fetch(command.path, init);
+        const { status } = response;
+        if ([401, 403, 404].includes(status)) return null;
+        const value: unknown = await response.json();
+        return { status, value };
       });
       if (!heldCurrent(held)) return false;
-      if ([401, 403, 404].includes(response.status)) {
+      if (!receipt) {
         coordination.denied();
         return false;
       }
-      const value: unknown = await response.json().catch(() => null);
-      if (!heldCurrent(held)) return false;
-      if (response.status === held.command.status && held.command.receipt(value)) {
+      const { status, value } = receipt;
+      if (status === command.status && command.receipt(value)) {
         held.acknowledged = true;
-        return held.command.confirmation ? await confirm(held) : await accept(held, value);
+        return command.confirmation ? await confirm(held) : await accept(held, value);
       }
-      const fields = inputErrorFields(value, response.status).fields;
-      if (
-        !held.uncertain &&
-        response.status === 400 &&
-        Array.isArray(fields) &&
-        held.command.fields?.(fields)
-      ) {
-        capture.current = null;
-        owner.current = null;
-        setLocked(null);
-        setPhase('ready');
-        setError('');
+      const fields = inputErrorFields(value, status).fields;
+      if (!held.uncertain && status === 400 && Array.isArray(fields) && command.fields?.(fields)) {
+        reset();
         return false;
       }
-      held.uncertain = true;
-      setPhase(held.command.keyed ? 'uncertain' : 'confirmation');
-      setError('error');
-      return false;
     } catch {
-      if (heldCurrent(held)) {
-        held.uncertain = true;
-        setPhase(held.acknowledged || !held.command.keyed ? 'confirmation' : 'uncertain');
-        setError('error');
-      }
-      return false;
+      if (!heldCurrent(held)) return false;
     } finally {
-      if (isCurrent() && (capture.current === held || !capture.current)) {
-        sending.current = false;
+      if (isCurrent() && sending.current === controller) {
+        sending.current = null;
         setBusy(false);
       }
     }
+    held.uncertain = true;
+    setPhase(held.acknowledged || !command.keyed ? 'confirmation' : 'uncertain');
+    setError('error');
+    return false;
   }
   async function submit(command: SettingsCommand) {
     return stage(command) ? send() : false;

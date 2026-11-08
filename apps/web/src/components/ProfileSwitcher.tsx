@@ -98,18 +98,19 @@ export function ProfileWorkspaceProvider({
   async function load() {
     const token = identity,
       request = ++generation.current;
+    const isLatest = () => permitted(token) && generation.current === request;
     setLoading(true);
     try {
       const value = await read(token);
-      if (permitted(token) && generation.current === request) {
+      if (isLatest()) {
         latest.current = value;
         setAccepted({ identity: token, data: value });
         setError(false);
       }
     } catch {
-      if (permitted(token) && generation.current === request) denied();
+      if (isLatest()) denied();
     } finally {
-      if (permitted(token) && generation.current === request) setLoading(false);
+      if (isLatest()) setLoading(false);
     }
   }
   useEffect(() => {
@@ -122,10 +123,10 @@ export function ProfileWorkspaceProvider({
     };
   }, [identity]);
   useEffect(() => {
-    if (!command.coordination.isLocked()) void load();
     const refresh = () => {
       if (!command.coordination.isLocked()) void load();
     };
+    refresh();
     window.addEventListener('barghsa:profiles-changed', refresh);
     return () => window.removeEventListener('barghsa:profiles-changed', refresh);
   }, [identity, pathname]);
@@ -139,23 +140,20 @@ export function ProfileWorkspaceProvider({
     )
       return;
     const token = identity;
+    const matchesTarget = (value: unknown) =>
+      !!value &&
+      typeof value === 'object' &&
+      'activeProfileId' in value &&
+      value.activeProfileId === id;
     await command.submit({
       owner: 'default',
       path: '/api/profiles/switch/' + encodeURIComponent(id),
       method: 'POST',
       status: 200,
       keyed: false,
-      receipt: (value) =>
-        !!value &&
-        typeof value === 'object' &&
-        'activeProfileId' in value &&
-        value.activeProfileId === id,
+      receipt: matchesTarget,
       confirmation: () => read(token),
-      confirmed: (value) =>
-        !!value &&
-        typeof value === 'object' &&
-        'activeProfileId' in value &&
-        value.activeProfileId === id,
+      confirmed: matchesTarget,
       accepted: () => {
         if (permitted(token)) refreshProfileContext();
       },

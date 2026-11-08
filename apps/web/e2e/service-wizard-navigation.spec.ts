@@ -303,6 +303,7 @@ for (const locale of ['en', 'fa'] as const)
       if (route.request().method() !== 'POST') return route.fallback();
       const body = route.request().postDataJSON();
       writes.push(body);
+      if (writes.length === 2) return;
       return route.fulfill({
         status: 201,
         json: {
@@ -339,10 +340,21 @@ for (const locale of ['en', 'fa'] as const)
     );
     await expect(button(page, 'electricity.order.next', locale)).toBeDisabled();
     await expect(save).toBeDisabled();
-    await page.getByRole('button', { name: tSaving('retryAddress', locale), exact: true }).click();
+    const retry = page.getByRole('button', { name: tSaving('retryAddress', locale), exact: true });
+    await page.clock.install();
+    await retry.click();
+    await expect.poll(() => writes.length).toBe(2);
+    await expect(retry).toBeDisabled();
+    await page.clock.fastForward(15_001);
+    await expect(retry).toBeEnabled();
+    await expect(page.getByLabel(tSaving('fullAddress', locale), { exact: true })).toHaveValue(
+      'Retained new address'
+    );
+    expect(writes).toHaveLength(2);
+    await retry.click();
     await expect(page.locator('#saving-address-city')).toHaveCount(0);
     await expect(page.locator('main')).toContainText('Retained new address');
-    expect(writes).toHaveLength(2);
+    expect(writes).toHaveLength(3);
     expect(writes[0]).toEqual({
       provinceId,
       cityId,
@@ -351,6 +363,7 @@ for (const locale of ['en', 'fa'] as const)
       idempotencyKey: expect.stringMatching(/^[a-f0-9-]{36}$/),
     });
     expect(writes[1]).toEqual(writes[0]);
+    expect(writes[2]).toEqual(writes[0]);
     expect(state.orders).toHaveLength(0);
   });
 async function leave(page: Page, mode: Mode) {

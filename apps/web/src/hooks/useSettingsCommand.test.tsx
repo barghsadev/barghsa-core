@@ -52,6 +52,7 @@ const record = (value: unknown): value is Record<string, unknown> =>
 const disposals: (() => Promise<void>)[] = [];
 afterEach(async () => {
   for (const dispose of disposals.splice(0)) await dispose();
+  vi.useRealTimers();
   vi.unstubAllGlobals();
   document.cookie = 'barghsa_csrf=; Max-Age=0; path=/';
 });
@@ -150,6 +151,41 @@ it('retries the exact captured JSON and key with the current CSRF while synchron
   expect(h.current.phase).toBe('ready');
 });
 
+it('times out a stalled settings receipt body and discards it after exact replay', async () => {
+  vi.useFakeTimers();
+  const first = deferred<unknown>();
+  const json = vi.fn(() => first.promise);
+  const receipt = { ...projection, title: 'Captured title' };
+  const accepted = vi.fn();
+  const requests = vi
+    .fn<typeof fetch>()
+    .mockResolvedValueOnce(Object.assign(new Response(), { json }))
+    .mockResolvedValueOnce(Response.json(receipt));
+  vi.stubGlobal('fetch', requests);
+  const h = await harness();
+  let pending!: Promise<boolean>;
+  await act(async () => {
+    expect(h.current.coordination.claim('profile')).toBe(true);
+    pending = h.current.submit(command({ accepted }));
+  });
+  expect(json).toHaveBeenCalledOnce();
+  const signal = requests.mock.calls[0]![1]?.signal;
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(15_000);
+    expect(await pending).toBe(false);
+  });
+  expect(signal?.aborted).toBe(true);
+  expect(h.current.busy).toBe(false);
+  expect(h.current.locked).toBe('profile');
+  expect(h.current.phase).toBe('uncertain');
+  expect(requests).toHaveBeenCalledTimes(1);
+  await act(async () => expect(await h.current.send()).toBe(true));
+  expect(requests.mock.calls[1]![1]?.body).toBe(requests.mock.calls[0]![1]?.body);
+  await act(async () => first.resolve({ ...receipt, updatedAt: 'late' }));
+  expect(accepted).toHaveBeenCalledExactlyOnceWith(receipt);
+  expect(h.current.locked).toBeNull();
+});
+
 it('keeps a valid projected acknowledgement and recovers only its authorized confirmation read without another PUT', async () => {
   const accepted = vi.fn();
   const requests = vi
@@ -201,40 +237,48 @@ it('keeps a valid projected acknowledgement and recovers only its authorized con
   expect(h.current.locked).toBeNull();
 });
 
-it('recovers an unkeyed default companion only through context confirmation without blindly repeating POST', async () => {
-  const accepted = vi.fn();
-  const context = { profiles: [projection], activeProfileId: profileId, hasDefault: true };
-  const requests = vi
-    .fn<typeof fetch>()
-    .mockRejectedValueOnce(new TypeError('Default acknowledgement lost'))
-    .mockResolvedValueOnce(Response.json(context));
-  vi.stubGlobal('fetch', requests);
-  const h = await harness();
-  const captured = command({
-    owner: 'default',
-    path: '/api/profiles/default/' + profileId,
-    method: 'POST',
-    keyed: false,
-    receipt: (value) => record(value) && value.activeProfileId === profileId,
-    confirmation: async () => (await fetch('/api/profiles', { credentials: 'include' })).json(),
-    confirmed: (value) => record(value) && value.activeProfileId === profileId,
-    accepted,
-  });
-  delete captured.body;
-  await act(async () => {
-    expect(h.current.coordination.claim('default')).toBe(true);
-    expect(await h.current.submit(captured)).toBe(false);
-  });
-  expect(h.current.phase).toBe('confirmation');
-  expect(accepted).not.toHaveBeenCalled();
-  await act(async () => expect(await h.current.send()).toBe(true));
-  expect(requests.mock.calls.map(([path, init]) => [path, init?.method ?? 'GET'])).toEqual([
-    ['/api/profiles/default/' + profileId, 'POST'],
-    ['/api/profiles', 'GET'],
-  ]);
-  expect(requests.mock.calls[0]![1]).not.toHaveProperty('body');
-  expect(accepted).toHaveBeenCalledExactlyOnceWith(context);
-});
+it.each(['network failure', 'timeout'])(
+  'recovers an unkeyed default companion after %s through context confirmation without repeating POST',
+  async (failure) => {
+    const accepted = vi.fn();
+    const context = { profiles: [projection], activeProfileId: profileId, hasDefault: true };
+    const requests = vi.fn<typeof fetch>();
+    if (failure === 'timeout') {
+      vi.useFakeTimers();
+      requests.mockImplementationOnce(() => deferred<Response>().promise);
+    } else requests.mockRejectedValueOnce(new TypeError('Default acknowledgement lost'));
+    requests.mockResolvedValueOnce(Response.json(context));
+    vi.stubGlobal('fetch', requests);
+    const h = await harness();
+    const captured = command({
+      owner: 'default',
+      path: '/api/profiles/default/' + profileId,
+      method: 'POST',
+      keyed: false,
+      receipt: (value) => record(value) && value.activeProfileId === profileId,
+      confirmation: async () => (await fetch('/api/profiles', { credentials: 'include' })).json(),
+      confirmed: (value) => record(value) && value.activeProfileId === profileId,
+      accepted,
+    });
+    delete captured.body;
+    await act(async () => {
+      expect(h.current.coordination.claim('default')).toBe(true);
+      const pending = h.current.submit(captured);
+      if (failure === 'timeout') await vi.advanceTimersByTimeAsync(15_000);
+      expect(await pending).toBe(false);
+    });
+    if (failure === 'timeout') expect(requests.mock.calls[0]![1]?.signal?.aborted).toBe(true);
+    expect(h.current.phase).toBe('confirmation');
+    expect(accepted).not.toHaveBeenCalled();
+    await act(async () => expect(await h.current.send()).toBe(true));
+    expect(requests.mock.calls.map(([path, init]) => [path, init?.method ?? 'GET'])).toEqual([
+      ['/api/profiles/default/' + profileId, 'POST'],
+      ['/api/profiles', 'GET'],
+    ]);
+    expect(requests.mock.calls[0]![1]).not.toHaveProperty('body');
+    expect(accepted).toHaveBeenCalledExactlyOnceWith(context);
+  }
+);
 
 it.each([200, 403])(
   'ignores old-scope %s and old release while keeping a fresh same-owner capture locked',
@@ -352,6 +396,7 @@ it('withdraws an in-flight capture on current grant loss and ignores its later r
   await h.render('actor-a/profile-a', () => false);
   expect(h.denied).toHaveBeenCalledTimes(1);
   expect(h.current.locked).toBeNull();
+  expect(requests.mock.calls[0]![1]?.signal?.aborted).toBe(true);
   await act(async () => {
     response.resolve(Response.json({ ...projection, title: 'Captured title' }));
     expect(await sending).toBe(false);
