@@ -8,6 +8,7 @@ import { t } from '@barghsa/i18n/app';
 import { timezoneText } from '@barghsa/i18n/timezone';
 import { shellText } from '@barghsa/i18n/shell';
 import { tPreferenceSettingsForms as copy } from '@barghsa/i18n/preference-settings-forms';
+import { preferencesText } from '@barghsa/i18n/preferences';
 import { scanCriticalMain } from './critical-accessibility';
 type Locale = 'en' | 'fa';
 const profileId = '10000000-0000-4000-8000-000000000002';
@@ -227,6 +228,59 @@ async function capture(
   await owner.screenshot({ path: testInfo.outputPath(name) });
 }
 for (const locale of ['en', 'fa'] as const) {
+  test(`preference deadline keeps changes disabled until the explicit retry (${locale})`, async ({
+    page,
+  }, info) => {
+    const state = await setup(page, locale);
+    await page.clock.install();
+    const isNotification = locale === 'en';
+    const endpoint = `/api/user/settings/${isNotification ? 'notifications' : 'marketing-consent'}`;
+    let held: Route | undefined;
+    let reads = 0;
+    await page.route(`**${endpoint}`, (route) => {
+      reads++;
+      if (reads === 1) {
+        held = route;
+        return;
+      }
+      return route.fallback();
+    });
+    await page.goto('/settings');
+    const form = (name: 'notifications' | 'marketing') =>
+      page.getByRole('form', {
+        name: t(`settings.${name}.title`, locale),
+        exact: true,
+      });
+    const pending = form(isNotification ? 'notifications' : 'marketing');
+    const companion = form(isNotification ? 'marketing' : 'notifications');
+    const save = pending.locator('button[type=submit]');
+    const otherSave = companion.locator('button[type=submit]');
+    const retry = page.getByRole('button', { name: preferencesText('retry', locale), exact: true });
+    const loading = page.getByRole('status').filter({ hasText: copy('loading', locale) });
+    const failed = page
+      .getByRole('alert')
+      .filter({ hasText: preferencesText('loadFailed', locale) });
+    await expect.poll(() => reads).toBe(1);
+    await expect(otherSave).toBeEnabled();
+    await expect(save).toBeDisabled();
+    await expect(loading).toBeVisible();
+    await page.clock.fastForward(15_200);
+    await expect(failed).toBeVisible();
+    await expect(loading).toHaveCount(0);
+    await expect(otherSave).toBeEnabled();
+    await expect(save).toBeDisabled();
+    await pending.evaluate((node: HTMLFormElement) => node.requestSubmit());
+    expect(state.writes).toEqual([]);
+    expect(reads).toBe(1);
+    await failed.screenshot({ path: info.outputPath('preference-read-retry.png') });
+    await retry.click();
+    await expect(save).toBeEnabled();
+    await expect(failed).toHaveCount(0);
+    expect(reads).toBe(2);
+    expect(state.writes).toEqual([]);
+    await held!.abort().catch(() => {});
+  });
+
   test(`notification and marketing native forms retain companion choices and prove saved settings (${locale})`, async ({
     page,
   }, testInfo) => {

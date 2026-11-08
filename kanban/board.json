@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T00:45:59+00:00",
-  "source_commit": "6b08c91beb8c6a1fdf56259ffa22ec877bcb1d85",
+  "updated": "2026-11-08T00:52:36+00:00",
+  "source_commit": "797828249a0cbdb9ca48530f435ee254d5d0a91b",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -81377,7 +81377,7 @@
             },
             {
               "path": "apps/web/src/hooks/usePreferenceSettingsForm.ts",
-              "sha256": "ee372c7be2e24bf68f7b054807b106e9ec1c3a555621466edf3c736f2d76c644"
+              "sha256": "79500fcb7b5597bd096135d7c053fef5a1d8976696a4f6cb434a0a7368263432"
             },
             {
               "path": "apps/web/src/hooks/useSettingsFormFeedback.ts",
@@ -81405,7 +81405,7 @@
             },
             {
               "path": "apps/web/e2e/preference-settings-forms.spec.ts",
-              "sha256": "05ad0d048f5bf7d36d7052d47d01748ba1e3d57deb0c35496a822673db75f5ad"
+              "sha256": "e66bb98e394f146055a3be4964eebd7cad2cb4845acc08ffbfb24ae501d12a67"
             },
             {
               "path": "apps/worker/src/notifications/channel-availability.ts",
@@ -496998,7 +496998,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ce1fad889a5af1e47ba5151805a1f43b8bbfa59c2f28b95cc11af70e7f8f4ca4"
+              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -514860,7 +514860,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
+              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
@@ -515502,7 +515502,7 @@
             },
             {
               "path": "apps/web/e2e/preference-settings-forms.spec.ts",
-              "sha256": "05ad0d048f5bf7d36d7052d47d01748ba1e3d57deb0c35496a822673db75f5ad"
+              "sha256": "e66bb98e394f146055a3be4964eebd7cad2cb4845acc08ffbfb24ae501d12a67"
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
@@ -515941,7 +515941,7 @@
             },
             {
               "path": "apps/web/e2e/preference-settings-forms.spec.ts",
-              "sha256": "05ad0d048f5bf7d36d7052d47d01748ba1e3d57deb0c35496a822673db75f5ad"
+              "sha256": "e66bb98e394f146055a3be4964eebd7cad2cb4845acc08ffbfb24ae501d12a67"
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
@@ -517737,7 +517737,7 @@
             },
             {
               "path": "apps/web/e2e/preference-settings-forms.spec.ts",
-              "sha256": "05ad0d048f5bf7d36d7052d47d01748ba1e3d57deb0c35496a822673db75f5ad"
+              "sha256": "e66bb98e394f146055a3be4964eebd7cad2cb4845acc08ffbfb24ae501d12a67"
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
@@ -518799,7 +518799,7 @@
             },
             {
               "path": "apps/web/e2e/preference-settings-forms.spec.ts",
-              "sha256": "05ad0d048f5bf7d36d7052d47d01748ba1e3d57deb0c35496a822673db75f5ad"
+              "sha256": "e66bb98e394f146055a3be4964eebd7cad2cb4845acc08ffbfb24ae501d12a67"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -519627,7 +519627,7 @@
             },
             {
               "path": "apps/web/e2e/preference-settings-forms.spec.ts",
-              "sha256": "05ad0d048f5bf7d36d7052d47d01748ba1e3d57deb0c35496a822673db75f5ad"
+              "sha256": "e66bb98e394f146055a3be4964eebd7cad2cb4845acc08ffbfb24ae501d12a67"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -520955,7 +520955,7 @@
             },
             {
               "path": "apps/web/e2e/preference-settings-forms.spec.ts",
-              "sha256": "05ad0d048f5bf7d36d7052d47d01748ba1e3d57deb0c35496a822673db75f5ad"
+              "sha256": "e66bb98e394f146055a3be4964eebd7cad2cb4845acc08ffbfb24ae501d12a67"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -544681,7 +544681,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
+              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -546546,7 +546546,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
+              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -548412,7 +548412,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
+              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -550247,7 +550247,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
+              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -552108,7 +552108,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
+              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -553978,7 +553978,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
+              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -555821,7 +555821,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
+              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -557628,7 +557628,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
+              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -559435,7 +559435,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
+              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -561243,7 +561243,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
+              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -563050,7 +563050,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
+              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -565847,7 +565847,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ce1fad889a5af1e47ba5151805a1f43b8bbfa59c2f28b95cc11af70e7f8f4ca4"
+              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -567741,7 +567741,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ce1fad889a5af1e47ba5151805a1f43b8bbfa59c2f28b95cc11af70e7f8f4ca4"
+              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -569686,7 +569686,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ce1fad889a5af1e47ba5151805a1f43b8bbfa59c2f28b95cc11af70e7f8f4ca4"
+              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -571580,7 +571580,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ce1fad889a5af1e47ba5151805a1f43b8bbfa59c2f28b95cc11af70e7f8f4ca4"
+              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -573474,7 +573474,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ce1fad889a5af1e47ba5151805a1f43b8bbfa59c2f28b95cc11af70e7f8f4ca4"
+              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -575368,7 +575368,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ce1fad889a5af1e47ba5151805a1f43b8bbfa59c2f28b95cc11af70e7f8f4ca4"
+              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577262,7 +577262,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ce1fad889a5af1e47ba5151805a1f43b8bbfa59c2f28b95cc11af70e7f8f4ca4"
+              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -579156,7 +579156,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ce1fad889a5af1e47ba5151805a1f43b8bbfa59c2f28b95cc11af70e7f8f4ca4"
+              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581050,7 +581050,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ce1fad889a5af1e47ba5151805a1f43b8bbfa59c2f28b95cc11af70e7f8f4ca4"
+              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -582944,7 +582944,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ce1fad889a5af1e47ba5151805a1f43b8bbfa59c2f28b95cc11af70e7f8f4ca4"
+              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -584838,7 +584838,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ce1fad889a5af1e47ba5151805a1f43b8bbfa59c2f28b95cc11af70e7f8f4ca4"
+              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -586732,7 +586732,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ce1fad889a5af1e47ba5151805a1f43b8bbfa59c2f28b95cc11af70e7f8f4ca4"
+              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -588626,7 +588626,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ce1fad889a5af1e47ba5151805a1f43b8bbfa59c2f28b95cc11af70e7f8f4ca4"
+              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589889,7 +589889,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ce1fad889a5af1e47ba5151805a1f43b8bbfa59c2f28b95cc11af70e7f8f4ca4"
+              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591259,7 +591259,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ce1fad889a5af1e47ba5151805a1f43b8bbfa59c2f28b95cc11af70e7f8f4ca4"
+              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593153,7 +593153,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ce1fad889a5af1e47ba5151805a1f43b8bbfa59c2f28b95cc11af70e7f8f4ca4"
+              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593956,7 +593956,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer electricity and saving checkout, electricity revision and cancellation, solar intake and paid saving staff address previews recover from held reads. Remaining bespoke list, detail and staff route states require verification."
+        "Owned security session and trusted-device reads and preference reads now stop loading on their deadline and recover explicitly. Customer and staff commerce preview evidence remains current. Remaining bespoke list, detail and staff route states need verification."
       ],
       "owner": null,
       "depends_on": [],
@@ -593995,7 +593995,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.5-checkout-read-recovery",
           "release-0.5-staff-saving-address-read",
-          "release-0.5-customer-review-deadlines"
+          "release-0.5-customer-review-deadlines",
+          "release-0.5-settings-read-deadlines"
         ],
         "current_acceptance": null
       }
@@ -594142,7 +594143,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
+              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -595945,7 +595946,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
+              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -597748,7 +597749,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
+              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -599551,7 +599552,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
+              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -601354,7 +601355,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
+              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -603157,7 +603158,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
+              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -604960,7 +604961,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
+              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -717077,7 +717078,7 @@
             },
             {
               "path": "apps/web/e2e/preference-settings-forms.spec.ts",
-              "sha256": "05ad0d048f5bf7d36d7052d47d01748ba1e3d57deb0c35496a822673db75f5ad"
+              "sha256": "e66bb98e394f146055a3be4964eebd7cad2cb4845acc08ffbfb24ae501d12a67"
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
@@ -717309,7 +717310,7 @@
             },
             {
               "path": "apps/web/src/hooks/usePreferenceSettingsForm.ts",
-              "sha256": "ee372c7be2e24bf68f7b054807b106e9ec1c3a555621466edf3c736f2d76c644"
+              "sha256": "79500fcb7b5597bd096135d7c053fef5a1d8976696a4f6cb434a0a7368263432"
             },
             {
               "path": "apps/web/src/hooks/useProviderCatalogue.ts",
@@ -720958,7 +720959,7 @@
             },
             {
               "path": "apps/web/e2e/preference-settings-forms.spec.ts",
-              "sha256": "05ad0d048f5bf7d36d7052d47d01748ba1e3d57deb0c35496a822673db75f5ad"
+              "sha256": "e66bb98e394f146055a3be4964eebd7cad2cb4845acc08ffbfb24ae501d12a67"
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
@@ -721174,7 +721175,7 @@
             },
             {
               "path": "apps/web/src/hooks/usePreferenceSettingsForm.ts",
-              "sha256": "ee372c7be2e24bf68f7b054807b106e9ec1c3a555621466edf3c736f2d76c644"
+              "sha256": "79500fcb7b5597bd096135d7c053fef5a1d8976696a4f6cb434a0a7368263432"
             },
             {
               "path": "apps/web/src/hooks/useProviderCatalogue.ts",
@@ -723601,7 +723602,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer receipt outcomes and discussion pagination retry feedback have current evidence. Wider form, contrast, command feedback and route state acceptance remain open."
+        "Security and account preference loading and retry have current bilingual browser evidence. Wider form, contrast, command feedback and route state acceptance remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723682,7 +723683,8 @@
           "release-0.5-staff-saving-address-read",
           "release-0.5-customer-review-deadlines",
           "release-0.5-invoice-recovery-required",
-          "release-0.5-receipt-and-comment-feedback"
+          "release-0.5-receipt-and-comment-feedback",
+          "release-0.5-settings-read-deadlines"
         ]
       }
     },
@@ -724414,7 +724416,7 @@
             },
             {
               "path": "apps/web/src/hooks/usePreferenceSettingsForm.ts",
-              "sha256": "ee372c7be2e24bf68f7b054807b106e9ec1c3a555621466edf3c736f2d76c644"
+              "sha256": "79500fcb7b5597bd096135d7c053fef5a1d8976696a4f6cb434a0a7368263432"
             },
             {
               "path": "apps/web/src/hooks/useProfileSettingsEditor.ts",
@@ -725195,6 +725197,10 @@
             {
               "path": "apps/web/src/components/InvoiceCorrectionsPanel.tsx",
               "sha256": "ebf20e782877f50e037abc79f86a348213a45b8902b47932275c1a5063ab9c42"
+            },
+            {
+              "path": "apps/web/src/hooks/useSecuritySettings.ts",
+              "sha256": "b147234e1376089f842f94f1a6969c0336715489441a8b0f922b8411af54005b"
             }
           ],
           "checks": [
@@ -725220,7 +725226,8 @@
             "Solar and electricity customer review recovery passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-review-deadlines/proof.json",
             "Critical and advisory browser cases pass and prior performance evidence is renewed by exact asset equality. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-accessibility-advisory/proof.json",
             "Required invoice and recovery fields passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-recovery-required/proof.json",
-            "Receipt and comment feedback passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-receipt-and-comment-feedback/proof.json"
+            "Receipt and comment feedback passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-receipt-and-comment-feedback/proof.json",
+            "Settings deadline recovery passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-read-deadlines/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -791810,6 +791817,52 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-receipt-and-comment-feedback/reviewed.patch",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-receipt-and-comment-feedback",
       "release_disposition": "Customer receipt outcome and order discussion retry evidence recorded. Wider command/read feedback and v0.5.0 release criteria remain open."
+    },
+    "release-0.5-settings-read-deadlines": {
+      "batch": "release-0.5-settings-read-deadlines",
+      "base_commit": "797828249a0cbdb9ca48530f435ee254d5d0a91b",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/preference-settings-forms.spec.ts",
+          "sha256": "e66bb98e394f146055a3be4964eebd7cad2cb4845acc08ffbfb24ae501d12a67"
+        },
+        {
+          "path": "apps/web/e2e/security-settings-forms.spec.ts",
+          "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
+        },
+        {
+          "path": "apps/web/src/hooks/usePreferenceSettingsForm.ts",
+          "sha256": "79500fcb7b5597bd096135d7c053fef5a1d8976696a4f6cb434a0a7368263432"
+        },
+        {
+          "path": "apps/web/src/hooks/useSecuritySettings.ts",
+          "sha256": "b147234e1376089f842f94f1a6969c0336715489441a8b0f922b8411af54005b"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
+        }
+      ],
+      "checks": [
+        "Security session and trusted-device reads now leave loading on the existing query deadline and expose their owned retry. The unaffected list keeps its confirmed data, and a successful empty list is shown only after retry.",
+        "Notification and marketing forms keep writes disabled after a timed-out read until an explicit retry returns valid source data. Companion settings remain independently available. Timezone and security revocation recovery and authority controls retained their existing behavior.",
+        "The four held-read regressions exercised Persian and English on Chromium and Mobile Safari. Across the two affected browser specs, 28 cases passed. All 43 affected unit cases, eight changed-coverage groups, 98 size budgets, three cold auth transfers, formatting, scoped lint and web typecheck passed."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-read-deadlines/proof.json",
+      "source_scope_proof_sha256": "5935370ce16ee8d46b4c598a9bcc83fa6931c6b9c6c1235995135ca6946b8cb5",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-read-deadlines/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-read-deadlines/reviewed.patch",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-read-deadlines",
+      "release_disposition": "Account settings deadline recovery recorded. Wider route state verification and v0.5.0 release criteria remain open."
     }
   },
   "historical_improvements": [

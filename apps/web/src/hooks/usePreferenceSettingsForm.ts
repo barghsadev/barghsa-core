@@ -109,8 +109,8 @@ export function usePreferenceSettingsForm<Values extends FieldValues, Source>(
   const activeOptions = useRef(options);
   activeOptions.current = options;
   const [result, setResult] = useState<{ key: string; value: Source } | null>(null);
-  const [loading, setLoading] = useState(true),
-    [loadFailed, setLoadFailed] = useState(false);
+  const [readPending, setLoading] = useState(true),
+    [readFailed, setLoadFailed] = useState(false);
   const [busy, setBusy] = useState(false),
     [uncertain, setUncertain] = useState(false);
   const [checked, setChecked] = useState(false),
@@ -138,7 +138,6 @@ export function usePreferenceSettingsForm<Values extends FieldValues, Source>(
     copy('error'),
     !!result && scope.isCurrent()
   );
-  const ready = scope.isCurrent() && result?.key === scope.key && !loading && !loadFailed;
   const queryScope = actor
     ? { context: 'account' as const, ownerId: actor, accountId: actor, revision: profileRevision }
     : null;
@@ -225,6 +224,10 @@ export function usePreferenceSettingsForm<Values extends FieldValues, Source>(
     manual: true,
     read: load,
   });
+  // A deadline rejects the query even if the transport never settles.
+  const loading = query.isFetching || (readPending && !query.isError);
+  const loadFailed = !loading && (readFailed || query.isError);
+  const ready = scope.isCurrent() && result?.key === scope.key && !loading && !loadFailed;
   async function read(signal?: AbortSignal): Promise<Source | null> {
     if (!queryKey || !scope.isCurrent() || signal?.aborted) return null;
     const request = ++readSequence.current;
@@ -240,6 +243,7 @@ export function usePreferenceSettingsForm<Values extends FieldValues, Source>(
     try {
       const result = await query.refetch();
       return current() &&
+        !result.isError &&
         result.data &&
         result.data.attempt > baseline &&
         result.data.attempt === sequence.current

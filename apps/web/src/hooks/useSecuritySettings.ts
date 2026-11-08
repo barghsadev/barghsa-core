@@ -30,8 +30,8 @@ export function useSecuritySettingsLists(scope: SecurityOwner) {
   const accepted = useRef({ sessions: [] as SecuritySession[], devices: [] as TrustedDevice[] });
   const sequence = useRef({ sessions: 0, devices: 0 });
   const [data, setData] = useState({ key: scope.key, ...accepted.current });
-  const [loading, setLoading] = useState({ sessions: true, devices: true });
-  const [failed, setFailed] = useState({ sessions: false, devices: false });
+  const [readPending, setLoading] = useState({ sessions: true, devices: true });
+  const [readFailed, setFailed] = useState({ sessions: false, devices: false });
   async function load(family: 'sessions' | 'devices', signal: AbortSignal) {
     const attempt = ++sequence.current[family];
     setLoading((v) => ({ ...v, [family]: true }));
@@ -104,6 +104,15 @@ export function useSecuritySettingsLists(scope: SecurityOwner) {
     manual: true,
     read: (signal) => load('devices', signal),
   });
+  // The query owns the deadline. Its error also ends a read that never settles.
+  const loading = {
+    sessions: sessions.isFetching || (readPending.sessions && !sessions.isError),
+    devices: devices.isFetching || (readPending.devices && !devices.isError),
+  };
+  const failed = {
+    sessions: !loading.sessions && (readFailed.sessions || sessions.isError),
+    devices: !loading.devices && (readFailed.devices || devices.isError),
+  };
   async function read(family: 'sessions' | 'devices', signal?: AbortSignal) {
     if (!scope.isCurrent() || signal?.aborted) return false;
     const request = ++refreshSequence.current[family];
@@ -123,6 +132,7 @@ export function useSecuritySettingsLists(scope: SecurityOwner) {
       const result = await (family === 'sessions' ? sessions : devices).refetch();
       return (
         current() &&
+        !result.isError &&
         result.data?.ok === true &&
         result.data.attempt > baseline &&
         result.data.attempt === sequence.current[family]

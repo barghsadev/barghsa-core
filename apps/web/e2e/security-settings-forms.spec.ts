@@ -195,6 +195,72 @@ async function capture(target: Locator, name: string) {
   await target.screenshot({ path: `test-results/${name}.png` });
 }
 for (const locale of ['en', 'fa'] as const) {
+  test(`security list deadline offers retry without hiding the companion list (${locale})`, async ({
+    page,
+  }, info) => {
+    const state = await setup(page, locale);
+    await page.clock.install();
+    const isSessions = locale === 'en';
+    const endpoint = `/api/auth/${isSessions ? 'sessions' : 'trusted-devices'}`;
+    let held: Route | undefined;
+    let reads = 0;
+    await page.route(`**${endpoint}`, (route) => {
+      reads++;
+      if (reads === 1) {
+        held = route;
+        return;
+      }
+      return route.fallback();
+    });
+    await page.goto('/settings/security');
+    const sessions = page.getByRole('region', {
+      name: t('settings.security.sessionsTitle', locale),
+      exact: true,
+    });
+    const devices = page.getByRole('region', {
+      name: trustedDeviceText('title', locale),
+      exact: true,
+    });
+    const pending = isSessions ? sessions : devices;
+    const companion = isSessions
+      ? devices.getByText(trustedDeviceText('current', locale), { exact: true })
+      : sessions.getByText(t('settings.security.currentSession', locale), { exact: true });
+    const retry = pending.getByRole('button', {
+      name: isSessions ? copy('refresh', locale) : trustedDeviceText('refresh', locale),
+      exact: true,
+    });
+    await expect.poll(() => reads).toBe(1);
+    await expect(companion).toBeVisible();
+    await expect(pending.getByText(copy('loading', locale), { exact: true })).toBeVisible();
+    await expect(retry).toBeDisabled();
+    await page.clock.fastForward(15_200);
+    await expect(pending.getByRole('alert')).toContainText(
+      isSessions
+        ? t('settings.security.error.load', locale)
+        : trustedDeviceText('loadError', locale)
+    );
+    await expect(pending.getByText(copy('loading', locale), { exact: true })).toHaveCount(0);
+    await expect(retry).toBeEnabled();
+    await expect(companion).toBeVisible();
+    expect(reads).toBe(1);
+    await pending.screenshot({ path: info.outputPath('security-read-retry.png') });
+    if (!isSessions) state.devices = [];
+    await retry.click();
+    await expect(
+      pending.getByText(
+        isSessions
+          ? t('settings.security.currentSession', locale)
+          : trustedDeviceText('empty', locale),
+        { exact: true }
+      )
+    ).toBeVisible();
+    await expect(pending.getByRole('alert')).toHaveCount(0);
+    await expect(companion).toBeVisible();
+    expect(reads).toBe(2);
+    expect(state.requests.filter(({ method }) => method !== 'GET')).toEqual([]);
+    await held!.abort().catch(() => {});
+  });
+
   test(`security native single/all forms retain rejected passwords and rotated authority (${locale})`, async ({
     page,
   }, info) => {
