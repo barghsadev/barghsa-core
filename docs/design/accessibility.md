@@ -128,6 +128,10 @@ visibility choice. Staff profile closure requires confirmation and a current
 password. Session and trusted-device revocation mark the password required
 when the action calls for step-up.
 
+Sign-in, registration, recovery and staff activation expose their required
+account and password fields. Registration also marks terms acceptance
+required. Trusting a device during sign-in remains optional.
+
 Document retention years, legal reasons, and hold expiry each link to their
 own validation errors. Hold expiry remains optional. Upload policy formats
 require at least one selection, so the group explains the requirement without

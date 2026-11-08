@@ -193,6 +193,7 @@ export function PasswordField({
           onKeyDown={(event) => {
             if (event.key === 'Enter') setFocused(false);
           }}
+          aria-required="true"
           aria-invalid={!!error}
           aria-describedby={
             error ? `${id}-error` : showStrengthMeter ? `${id}-strength` : undefined

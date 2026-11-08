@@ -70,7 +70,7 @@ async function setup(page: Page, locale: Locale) {
 async function submit(page: Page) {
   await page.locator('form').evaluate((form: HTMLFormElement) => form.requestSubmit());
 }
-async function capture(page: Page, name: string) {
+async function capture(page: Page, path: string) {
   const panel = page.locator('div.space-y-6[dir]');
   await expect(panel).toBeVisible();
   await expect
@@ -92,7 +92,7 @@ async function capture(page: Page, name: string) {
     ).violations
   ).toEqual([]);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await panel.screenshot({ path: `test-results/${name}.png` });
+  await panel.screenshot({ path });
 }
 for (const locale of ['en', 'fa'] as const) {
   test(`native registration validates destination and consent and holds an uncertain captured start (${locale})`, async ({
@@ -100,20 +100,24 @@ for (const locale of ['en', 'fa'] as const) {
   }, info) => {
     const state = await setup(page, locale);
     await page.goto('/register');
+    await expect(page.locator('#username')).toHaveAttribute('aria-required', 'true');
+    await expect(page.locator('#password')).toHaveCount(0);
+    await expect(page.getByRole('checkbox')).toHaveAttribute('aria-required', 'true');
     await page.locator('#username').fill('invalid value');
     await submit(page);
     await expect(page.locator('#username')).toHaveAttribute('aria-invalid', 'true');
     await expect(page.locator('#username')).toBeFocused();
     expect(state.writes).toHaveLength(0);
-    await capture(page, `registration-destination-invalid-${locale}-${info.project.name}`);
+    await capture(page, info.outputPath(`registration-destination-invalid-${locale}.png`));
     await page.locator('#username').fill(' Draft@Example.test ');
     await page.locator('#username').press('Tab');
+    await expect(page.locator('#password')).toHaveAttribute('aria-required', 'true');
     await page.locator('#password').fill(secret);
     await submit(page);
     await expect(page.getByRole('checkbox')).toHaveAttribute('aria-invalid', 'true');
     await expect(page.getByRole('checkbox')).toBeFocused();
     expect(state.writes).toHaveLength(0);
-    await capture(page, `registration-consent-invalid-${locale}-${info.project.name}`);
+    await capture(page, info.outputPath(`registration-consent-invalid-${locale}.png`));
     await page.getByRole('checkbox').check();
     await page.locator('form').evaluate((form: HTMLFormElement) => {
       form.requestSubmit();
@@ -138,7 +142,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.getByRole('checkbox')).toBeChecked();
     await submit(page);
     expect(state.writes).toHaveLength(1);
-    await capture(page, `registration-start-uncertain-${locale}-${info.project.name}`);
+    await capture(page, info.outputPath(`registration-start-uncertain-${locale}.png`));
     await page.locator('form').evaluate((form: HTMLFormElement) => {
       const password = form.querySelector<HTMLInputElement>('#password')!,
         consent = form.querySelector<HTMLElement>('[role="checkbox"]')!;
@@ -205,7 +209,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.locator('#registration-code')).toHaveValue('1');
     await expect(page.locator('#registration-code')).toBeDisabled();
     await page.clock.runFor(1_000);
-    await capture(page, `registration-code-uncertain-${locale}-${info.project.name}`);
+    await capture(page, info.outputPath(`registration-code-uncertain-${locale}.png`));
     await submit(page);
     await resend.evaluate((button: HTMLButtonElement) => button.click());
     expect(state.writes).toHaveLength(2);

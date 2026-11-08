@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T07:38:08+00:00",
-  "source_commit": "93560a7fecedcde86c50400020e442ef7f6cf280",
+  "updated": "2026-11-08T07:43:20+00:00",
+  "source_commit": "59664778c686f365e03eebaec32d265a57ba5660",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -14529,7 +14529,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -14545,7 +14545,7 @@
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
-              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
@@ -15145,7 +15145,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -15161,7 +15161,7 @@
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
-              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
@@ -15713,7 +15713,7 @@
             },
             {
               "path": "apps/web/src/components/PasswordField.tsx",
-              "sha256": "2e6ed00ba528a1db9f0bff8a2673ca02ea0eee12aaa1a1d9989497178cec1290"
+              "sha256": "7de3e8ba6b6766d50cb8275048bd117a7c1eb41d2b7714251775cf6c22e380c1"
             },
             {
               "path": "apps/web/src/components/strength.test.ts",
@@ -15887,7 +15887,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -15903,7 +15903,7 @@
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
-              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
@@ -16494,7 +16494,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -16510,7 +16510,7 @@
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
-              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
@@ -17115,7 +17115,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -17131,7 +17131,7 @@
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
-              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
@@ -17737,7 +17737,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -17753,7 +17753,7 @@
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
-              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
@@ -18358,7 +18358,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -18374,7 +18374,7 @@
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
-              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
@@ -18983,7 +18983,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -18999,7 +18999,7 @@
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
-              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
@@ -19651,15 +19651,15 @@
             },
             {
               "path": "apps/web/src/components/PasswordField.tsx",
-              "sha256": "2e6ed00ba528a1db9f0bff8a2673ca02ea0eee12aaa1a1d9989497178cec1290"
+              "sha256": "7de3e8ba6b6766d50cb8275048bd117a7c1eb41d2b7714251775cf6c22e380c1"
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "packages/db/drizzle/production/0082_restore_foundation_constraints.sql",
@@ -20489,7 +20489,7 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "packages/db/drizzle/production/0082_restore_foundation_constraints.sql",
@@ -21358,7 +21358,7 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "packages/db/drizzle/production/0082_restore_foundation_constraints.sql",
@@ -22138,11 +22138,11 @@
             },
             {
               "path": "apps/web/src/components/PasswordField.tsx",
-              "sha256": "2e6ed00ba528a1db9f0bff8a2673ca02ea0eee12aaa1a1d9989497178cec1290"
+              "sha256": "7de3e8ba6b6766d50cb8275048bd117a7c1eb41d2b7714251775cf6c22e380c1"
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "packages/db/drizzle/production/0082_restore_foundation_constraints.sql",
@@ -26727,7 +26727,7 @@
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
-              "sha256": "fa9b1aa221df7b7f2bcadf0ed5fc1e12999c8ba72d72e94ed9ae1052b115e9b4"
+              "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
             },
             {
               "path": "packages/shared/src/password-hash.ts",
@@ -27403,7 +27403,7 @@
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
-              "sha256": "fa9b1aa221df7b7f2bcadf0ed5fc1e12999c8ba72d72e94ed9ae1052b115e9b4"
+              "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
             },
             {
               "path": "packages/db/drizzle/production/0122_password_reset_authorization.sql",
@@ -493101,7 +493101,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
+              "sha256": "4a701474705ca10b8ce53c7584446380e5371218e0f2ca5e858e16467b0a44fd"
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
@@ -497918,7 +497918,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
+              "sha256": "4a701474705ca10b8ce53c7584446380e5371218e0f2ca5e858e16467b0a44fd"
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
@@ -512325,7 +512325,7 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
@@ -515170,7 +515170,7 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "apps/web/src/routes/onboarding.tsx",
@@ -515190,7 +515190,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "093d28b13fd4fe1ddb75cdd624b07c0ae50b9347cb0b69d309721c037c9201c6"
+              "sha256": "abedbd20a4dbf8a390cdab1266d24f5158f3e5e188bf105b6f7080945eda591d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -515570,7 +515570,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "093d28b13fd4fe1ddb75cdd624b07c0ae50b9347cb0b69d309721c037c9201c6"
+              "sha256": "abedbd20a4dbf8a390cdab1266d24f5158f3e5e188bf105b6f7080945eda591d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516009,7 +516009,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "093d28b13fd4fe1ddb75cdd624b07c0ae50b9347cb0b69d309721c037c9201c6"
+              "sha256": "abedbd20a4dbf8a390cdab1266d24f5158f3e5e188bf105b6f7080945eda591d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516476,7 +516476,7 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "apps/web/src/routes/onboarding.tsx",
@@ -516496,7 +516496,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "093d28b13fd4fe1ddb75cdd624b07c0ae50b9347cb0b69d309721c037c9201c6"
+              "sha256": "abedbd20a4dbf8a390cdab1266d24f5158f3e5e188bf105b6f7080945eda591d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516704,7 +516704,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Staff saving address changes and customer consultation replies now expose their required inputs. Public sign-in, registration and password-recovery forms still have required username, password, confirmation or terms controls without explicit markers. Reconcile shared and conditional controls before closing."
+        "Public sign-in, registration, recovery and activation now expose required account, password and terms controls. The account settings forms for changing a username or contact and choosing a timezone still have required fields without explicit markers. Reconcile remaining conditional controls."
       ],
       "owner": null,
       "depends_on": [],
@@ -516742,7 +516742,8 @@
           "release-0.5-correction-template-required",
           "release-0.5-correction-command-deadlines",
           "release-0.5-comment-security-required",
-          "release-0.5-service-response-required"
+          "release-0.5-service-response-required",
+          "release-0.5-public-auth-required"
         ],
         "current_acceptance": null
       }
@@ -517011,7 +517012,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "093d28b13fd4fe1ddb75cdd624b07c0ae50b9347cb0b69d309721c037c9201c6"
+              "sha256": "abedbd20a4dbf8a390cdab1266d24f5158f3e5e188bf105b6f7080945eda591d"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -517697,7 +517698,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "093d28b13fd4fe1ddb75cdd624b07c0ae50b9347cb0b69d309721c037c9201c6"
+              "sha256": "abedbd20a4dbf8a390cdab1266d24f5158f3e5e188bf105b6f7080945eda591d"
             },
             {
               "path": "docs/design/notification-recovery.md",
@@ -517934,7 +517935,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "093d28b13fd4fe1ddb75cdd624b07c0ae50b9347cb0b69d309721c037c9201c6"
+              "sha256": "abedbd20a4dbf8a390cdab1266d24f5158f3e5e188bf105b6f7080945eda591d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -518450,7 +518451,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "093d28b13fd4fe1ddb75cdd624b07c0ae50b9347cb0b69d309721c037c9201c6"
+              "sha256": "abedbd20a4dbf8a390cdab1266d24f5158f3e5e188bf105b6f7080945eda591d"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -519124,7 +519125,7 @@
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
-              "sha256": "fa9b1aa221df7b7f2bcadf0ed5fc1e12999c8ba72d72e94ed9ae1052b115e9b4"
+              "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
             },
             {
               "path": "apps/web/src/routes/login-native-forms.test.tsx",
@@ -519132,7 +519133,7 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "apps/web/src/routes/onboarding.tsx",
@@ -519144,7 +519145,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -519168,7 +519169,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "093d28b13fd4fe1ddb75cdd624b07c0ae50b9347cb0b69d309721c037c9201c6"
+              "sha256": "abedbd20a4dbf8a390cdab1266d24f5158f3e5e188bf105b6f7080945eda591d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -519952,7 +519953,7 @@
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
-              "sha256": "fa9b1aa221df7b7f2bcadf0ed5fc1e12999c8ba72d72e94ed9ae1052b115e9b4"
+              "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
             },
             {
               "path": "apps/web/src/routes/login-native-forms.test.tsx",
@@ -519960,7 +519961,7 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "apps/web/src/routes/onboarding.tsx",
@@ -519972,7 +519973,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -519996,7 +519997,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "093d28b13fd4fe1ddb75cdd624b07c0ae50b9347cb0b69d309721c037c9201c6"
+              "sha256": "abedbd20a4dbf8a390cdab1266d24f5158f3e5e188bf105b6f7080945eda591d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -520606,7 +520607,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "093d28b13fd4fe1ddb75cdd624b07c0ae50b9347cb0b69d309721c037c9201c6"
+              "sha256": "abedbd20a4dbf8a390cdab1266d24f5158f3e5e188bf105b6f7080945eda591d"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -521280,7 +521281,7 @@
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
-              "sha256": "fa9b1aa221df7b7f2bcadf0ed5fc1e12999c8ba72d72e94ed9ae1052b115e9b4"
+              "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
             },
             {
               "path": "apps/web/src/routes/login-native-forms.test.tsx",
@@ -521288,7 +521289,7 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "apps/web/src/routes/onboarding.tsx",
@@ -521300,7 +521301,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -521324,7 +521325,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "093d28b13fd4fe1ddb75cdd624b07c0ae50b9347cb0b69d309721c037c9201c6"
+              "sha256": "abedbd20a4dbf8a390cdab1266d24f5158f3e5e188bf105b6f7080945eda591d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -521928,7 +521929,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -522835,7 +522836,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -523742,7 +523743,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -524649,7 +524650,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -525556,7 +525557,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -526463,7 +526464,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -527370,7 +527371,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -528277,7 +528278,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -529184,7 +529185,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -530091,7 +530092,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -530998,7 +530999,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -531905,7 +531906,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -532812,7 +532813,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -533719,7 +533720,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -534626,7 +534627,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -535533,7 +535534,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -536440,7 +536441,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -537347,7 +537348,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -538254,7 +538255,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -539161,7 +539162,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -607077,7 +607078,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
+              "sha256": "4a701474705ca10b8ce53c7584446380e5371218e0f2ca5e858e16467b0a44fd"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -607093,7 +607094,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "ebe65e57622a7ee6d518698ce7343ad4e00f84d9d5ac5b8363036db33426b600"
+              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -607105,7 +607106,7 @@
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
-              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
             },
             {
               "path": "apps/web/e2e/registration-strength.spec.ts",
@@ -607113,7 +607114,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "6d8b2cfb6027d67c24f8f06ac36ec2c6f3e8ae554d751285cc8d0876f1bbb2a0"
+              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -607161,7 +607162,7 @@
             },
             {
               "path": "apps/web/src/components/PasswordField.tsx",
-              "sha256": "2e6ed00ba528a1db9f0bff8a2673ca02ea0eee12aaa1a1d9989497178cec1290"
+              "sha256": "7de3e8ba6b6766d50cb8275048bd117a7c1eb41d2b7714251775cf6c22e380c1"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -607297,7 +607298,7 @@
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
-              "sha256": "fa9b1aa221df7b7f2bcadf0ed5fc1e12999c8ba72d72e94ed9ae1052b115e9b4"
+              "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
             },
             {
               "path": "apps/web/src/routes/login-native-forms.test.tsx",
@@ -607305,11 +607306,11 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -607904,7 +607905,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
+              "sha256": "4a701474705ca10b8ce53c7584446380e5371218e0f2ca5e858e16467b0a44fd"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -607920,7 +607921,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "ebe65e57622a7ee6d518698ce7343ad4e00f84d9d5ac5b8363036db33426b600"
+              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -607932,7 +607933,7 @@
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
-              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
             },
             {
               "path": "apps/web/e2e/registration-strength.spec.ts",
@@ -607940,7 +607941,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "6d8b2cfb6027d67c24f8f06ac36ec2c6f3e8ae554d751285cc8d0876f1bbb2a0"
+              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -607988,7 +607989,7 @@
             },
             {
               "path": "apps/web/src/components/PasswordField.tsx",
-              "sha256": "2e6ed00ba528a1db9f0bff8a2673ca02ea0eee12aaa1a1d9989497178cec1290"
+              "sha256": "7de3e8ba6b6766d50cb8275048bd117a7c1eb41d2b7714251775cf6c22e380c1"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -608124,7 +608125,7 @@
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
-              "sha256": "fa9b1aa221df7b7f2bcadf0ed5fc1e12999c8ba72d72e94ed9ae1052b115e9b4"
+              "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
             },
             {
               "path": "apps/web/src/routes/login-native-forms.test.tsx",
@@ -608132,11 +608133,11 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -608731,7 +608732,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
+              "sha256": "4a701474705ca10b8ce53c7584446380e5371218e0f2ca5e858e16467b0a44fd"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -608747,7 +608748,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "ebe65e57622a7ee6d518698ce7343ad4e00f84d9d5ac5b8363036db33426b600"
+              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -608759,7 +608760,7 @@
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
-              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
             },
             {
               "path": "apps/web/e2e/registration-strength.spec.ts",
@@ -608767,7 +608768,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "6d8b2cfb6027d67c24f8f06ac36ec2c6f3e8ae554d751285cc8d0876f1bbb2a0"
+              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -608815,7 +608816,7 @@
             },
             {
               "path": "apps/web/src/components/PasswordField.tsx",
-              "sha256": "2e6ed00ba528a1db9f0bff8a2673ca02ea0eee12aaa1a1d9989497178cec1290"
+              "sha256": "7de3e8ba6b6766d50cb8275048bd117a7c1eb41d2b7714251775cf6c22e380c1"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -608951,7 +608952,7 @@
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
-              "sha256": "fa9b1aa221df7b7f2bcadf0ed5fc1e12999c8ba72d72e94ed9ae1052b115e9b4"
+              "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
             },
             {
               "path": "apps/web/src/routes/login-native-forms.test.tsx",
@@ -608959,11 +608960,11 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -609558,7 +609559,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
+              "sha256": "4a701474705ca10b8ce53c7584446380e5371218e0f2ca5e858e16467b0a44fd"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -609574,7 +609575,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "ebe65e57622a7ee6d518698ce7343ad4e00f84d9d5ac5b8363036db33426b600"
+              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -609586,7 +609587,7 @@
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
-              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
             },
             {
               "path": "apps/web/e2e/registration-strength.spec.ts",
@@ -609594,7 +609595,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "6d8b2cfb6027d67c24f8f06ac36ec2c6f3e8ae554d751285cc8d0876f1bbb2a0"
+              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -609642,7 +609643,7 @@
             },
             {
               "path": "apps/web/src/components/PasswordField.tsx",
-              "sha256": "2e6ed00ba528a1db9f0bff8a2673ca02ea0eee12aaa1a1d9989497178cec1290"
+              "sha256": "7de3e8ba6b6766d50cb8275048bd117a7c1eb41d2b7714251775cf6c22e380c1"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -609778,7 +609779,7 @@
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
-              "sha256": "fa9b1aa221df7b7f2bcadf0ed5fc1e12999c8ba72d72e94ed9ae1052b115e9b4"
+              "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
             },
             {
               "path": "apps/web/src/routes/login-native-forms.test.tsx",
@@ -609786,11 +609787,11 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -610385,7 +610386,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
+              "sha256": "4a701474705ca10b8ce53c7584446380e5371218e0f2ca5e858e16467b0a44fd"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -610401,7 +610402,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "ebe65e57622a7ee6d518698ce7343ad4e00f84d9d5ac5b8363036db33426b600"
+              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -610413,7 +610414,7 @@
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
-              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
             },
             {
               "path": "apps/web/e2e/registration-strength.spec.ts",
@@ -610421,7 +610422,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "6d8b2cfb6027d67c24f8f06ac36ec2c6f3e8ae554d751285cc8d0876f1bbb2a0"
+              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -610469,7 +610470,7 @@
             },
             {
               "path": "apps/web/src/components/PasswordField.tsx",
-              "sha256": "2e6ed00ba528a1db9f0bff8a2673ca02ea0eee12aaa1a1d9989497178cec1290"
+              "sha256": "7de3e8ba6b6766d50cb8275048bd117a7c1eb41d2b7714251775cf6c22e380c1"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -610605,7 +610606,7 @@
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
-              "sha256": "fa9b1aa221df7b7f2bcadf0ed5fc1e12999c8ba72d72e94ed9ae1052b115e9b4"
+              "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
             },
             {
               "path": "apps/web/src/routes/login-native-forms.test.tsx",
@@ -610613,11 +610614,11 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -623194,7 +623195,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
+              "sha256": "4a701474705ca10b8ce53c7584446380e5371218e0f2ca5e858e16467b0a44fd"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -623210,7 +623211,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "ebe65e57622a7ee6d518698ce7343ad4e00f84d9d5ac5b8363036db33426b600"
+              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -623222,7 +623223,7 @@
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
-              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
             },
             {
               "path": "apps/web/e2e/registration-strength.spec.ts",
@@ -623230,7 +623231,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "6d8b2cfb6027d67c24f8f06ac36ec2c6f3e8ae554d751285cc8d0876f1bbb2a0"
+              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -623278,7 +623279,7 @@
             },
             {
               "path": "apps/web/src/components/PasswordField.tsx",
-              "sha256": "2e6ed00ba528a1db9f0bff8a2673ca02ea0eee12aaa1a1d9989497178cec1290"
+              "sha256": "7de3e8ba6b6766d50cb8275048bd117a7c1eb41d2b7714251775cf6c22e380c1"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -623414,7 +623415,7 @@
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
-              "sha256": "fa9b1aa221df7b7f2bcadf0ed5fc1e12999c8ba72d72e94ed9ae1052b115e9b4"
+              "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
             },
             {
               "path": "apps/web/src/routes/login-native-forms.test.tsx",
@@ -623422,11 +623423,11 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -624021,7 +624022,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
+              "sha256": "4a701474705ca10b8ce53c7584446380e5371218e0f2ca5e858e16467b0a44fd"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -624037,7 +624038,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "ebe65e57622a7ee6d518698ce7343ad4e00f84d9d5ac5b8363036db33426b600"
+              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -624049,7 +624050,7 @@
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
-              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
             },
             {
               "path": "apps/web/e2e/registration-strength.spec.ts",
@@ -624057,7 +624058,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "6d8b2cfb6027d67c24f8f06ac36ec2c6f3e8ae554d751285cc8d0876f1bbb2a0"
+              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -624105,7 +624106,7 @@
             },
             {
               "path": "apps/web/src/components/PasswordField.tsx",
-              "sha256": "2e6ed00ba528a1db9f0bff8a2673ca02ea0eee12aaa1a1d9989497178cec1290"
+              "sha256": "7de3e8ba6b6766d50cb8275048bd117a7c1eb41d2b7714251775cf6c22e380c1"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -624241,7 +624242,7 @@
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
-              "sha256": "fa9b1aa221df7b7f2bcadf0ed5fc1e12999c8ba72d72e94ed9ae1052b115e9b4"
+              "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
             },
             {
               "path": "apps/web/src/routes/login-native-forms.test.tsx",
@@ -624249,11 +624250,11 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -624848,7 +624849,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
+              "sha256": "4a701474705ca10b8ce53c7584446380e5371218e0f2ca5e858e16467b0a44fd"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -624864,7 +624865,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "ebe65e57622a7ee6d518698ce7343ad4e00f84d9d5ac5b8363036db33426b600"
+              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -624876,7 +624877,7 @@
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
-              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
             },
             {
               "path": "apps/web/e2e/registration-strength.spec.ts",
@@ -624884,7 +624885,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "6d8b2cfb6027d67c24f8f06ac36ec2c6f3e8ae554d751285cc8d0876f1bbb2a0"
+              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -624932,7 +624933,7 @@
             },
             {
               "path": "apps/web/src/components/PasswordField.tsx",
-              "sha256": "2e6ed00ba528a1db9f0bff8a2673ca02ea0eee12aaa1a1d9989497178cec1290"
+              "sha256": "7de3e8ba6b6766d50cb8275048bd117a7c1eb41d2b7714251775cf6c22e380c1"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -625068,7 +625069,7 @@
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
-              "sha256": "fa9b1aa221df7b7f2bcadf0ed5fc1e12999c8ba72d72e94ed9ae1052b115e9b4"
+              "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
             },
             {
               "path": "apps/web/src/routes/login-native-forms.test.tsx",
@@ -625076,11 +625077,11 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -625675,7 +625676,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
+              "sha256": "4a701474705ca10b8ce53c7584446380e5371218e0f2ca5e858e16467b0a44fd"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -625691,7 +625692,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "ebe65e57622a7ee6d518698ce7343ad4e00f84d9d5ac5b8363036db33426b600"
+              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -625703,7 +625704,7 @@
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
-              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
             },
             {
               "path": "apps/web/e2e/registration-strength.spec.ts",
@@ -625711,7 +625712,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "6d8b2cfb6027d67c24f8f06ac36ec2c6f3e8ae554d751285cc8d0876f1bbb2a0"
+              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -625759,7 +625760,7 @@
             },
             {
               "path": "apps/web/src/components/PasswordField.tsx",
-              "sha256": "2e6ed00ba528a1db9f0bff8a2673ca02ea0eee12aaa1a1d9989497178cec1290"
+              "sha256": "7de3e8ba6b6766d50cb8275048bd117a7c1eb41d2b7714251775cf6c22e380c1"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -625895,7 +625896,7 @@
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
-              "sha256": "fa9b1aa221df7b7f2bcadf0ed5fc1e12999c8ba72d72e94ed9ae1052b115e9b4"
+              "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
             },
             {
               "path": "apps/web/src/routes/login-native-forms.test.tsx",
@@ -625903,11 +625904,11 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -626502,7 +626503,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
+              "sha256": "4a701474705ca10b8ce53c7584446380e5371218e0f2ca5e858e16467b0a44fd"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -626518,7 +626519,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "ebe65e57622a7ee6d518698ce7343ad4e00f84d9d5ac5b8363036db33426b600"
+              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -626530,7 +626531,7 @@
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
-              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
             },
             {
               "path": "apps/web/e2e/registration-strength.spec.ts",
@@ -626538,7 +626539,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "6d8b2cfb6027d67c24f8f06ac36ec2c6f3e8ae554d751285cc8d0876f1bbb2a0"
+              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -626586,7 +626587,7 @@
             },
             {
               "path": "apps/web/src/components/PasswordField.tsx",
-              "sha256": "2e6ed00ba528a1db9f0bff8a2673ca02ea0eee12aaa1a1d9989497178cec1290"
+              "sha256": "7de3e8ba6b6766d50cb8275048bd117a7c1eb41d2b7714251775cf6c22e380c1"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -626722,7 +626723,7 @@
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
-              "sha256": "fa9b1aa221df7b7f2bcadf0ed5fc1e12999c8ba72d72e94ed9ae1052b115e9b4"
+              "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
             },
             {
               "path": "apps/web/src/routes/login-native-forms.test.tsx",
@@ -626730,11 +626731,11 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -627329,7 +627330,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
+              "sha256": "4a701474705ca10b8ce53c7584446380e5371218e0f2ca5e858e16467b0a44fd"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -627345,7 +627346,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "ebe65e57622a7ee6d518698ce7343ad4e00f84d9d5ac5b8363036db33426b600"
+              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -627357,7 +627358,7 @@
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
-              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
             },
             {
               "path": "apps/web/e2e/registration-strength.spec.ts",
@@ -627365,7 +627366,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "6d8b2cfb6027d67c24f8f06ac36ec2c6f3e8ae554d751285cc8d0876f1bbb2a0"
+              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -627413,7 +627414,7 @@
             },
             {
               "path": "apps/web/src/components/PasswordField.tsx",
-              "sha256": "2e6ed00ba528a1db9f0bff8a2673ca02ea0eee12aaa1a1d9989497178cec1290"
+              "sha256": "7de3e8ba6b6766d50cb8275048bd117a7c1eb41d2b7714251775cf6c22e380c1"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -627549,7 +627550,7 @@
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
-              "sha256": "fa9b1aa221df7b7f2bcadf0ed5fc1e12999c8ba72d72e94ed9ae1052b115e9b4"
+              "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
             },
             {
               "path": "apps/web/src/routes/login-native-forms.test.tsx",
@@ -627557,11 +627558,11 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -628156,7 +628157,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
+              "sha256": "4a701474705ca10b8ce53c7584446380e5371218e0f2ca5e858e16467b0a44fd"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -628172,7 +628173,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "ebe65e57622a7ee6d518698ce7343ad4e00f84d9d5ac5b8363036db33426b600"
+              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -628184,7 +628185,7 @@
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
-              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
             },
             {
               "path": "apps/web/e2e/registration-strength.spec.ts",
@@ -628192,7 +628193,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "6d8b2cfb6027d67c24f8f06ac36ec2c6f3e8ae554d751285cc8d0876f1bbb2a0"
+              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -628240,7 +628241,7 @@
             },
             {
               "path": "apps/web/src/components/PasswordField.tsx",
-              "sha256": "2e6ed00ba528a1db9f0bff8a2673ca02ea0eee12aaa1a1d9989497178cec1290"
+              "sha256": "7de3e8ba6b6766d50cb8275048bd117a7c1eb41d2b7714251775cf6c22e380c1"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -628376,7 +628377,7 @@
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
-              "sha256": "fa9b1aa221df7b7f2bcadf0ed5fc1e12999c8ba72d72e94ed9ae1052b115e9b4"
+              "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
             },
             {
               "path": "apps/web/src/routes/login-native-forms.test.tsx",
@@ -628384,11 +628385,11 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -628983,7 +628984,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
+              "sha256": "4a701474705ca10b8ce53c7584446380e5371218e0f2ca5e858e16467b0a44fd"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -628999,7 +629000,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "ebe65e57622a7ee6d518698ce7343ad4e00f84d9d5ac5b8363036db33426b600"
+              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -629011,7 +629012,7 @@
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
-              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
             },
             {
               "path": "apps/web/e2e/registration-strength.spec.ts",
@@ -629019,7 +629020,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "6d8b2cfb6027d67c24f8f06ac36ec2c6f3e8ae554d751285cc8d0876f1bbb2a0"
+              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -629067,7 +629068,7 @@
             },
             {
               "path": "apps/web/src/components/PasswordField.tsx",
-              "sha256": "2e6ed00ba528a1db9f0bff8a2673ca02ea0eee12aaa1a1d9989497178cec1290"
+              "sha256": "7de3e8ba6b6766d50cb8275048bd117a7c1eb41d2b7714251775cf6c22e380c1"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -629203,7 +629204,7 @@
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
-              "sha256": "fa9b1aa221df7b7f2bcadf0ed5fc1e12999c8ba72d72e94ed9ae1052b115e9b4"
+              "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
             },
             {
               "path": "apps/web/src/routes/login-native-forms.test.tsx",
@@ -629211,11 +629212,11 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -629810,7 +629811,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
+              "sha256": "4a701474705ca10b8ce53c7584446380e5371218e0f2ca5e858e16467b0a44fd"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -629826,7 +629827,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "ebe65e57622a7ee6d518698ce7343ad4e00f84d9d5ac5b8363036db33426b600"
+              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -629838,7 +629839,7 @@
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
-              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
             },
             {
               "path": "apps/web/e2e/registration-strength.spec.ts",
@@ -629846,7 +629847,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "6d8b2cfb6027d67c24f8f06ac36ec2c6f3e8ae554d751285cc8d0876f1bbb2a0"
+              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -629894,7 +629895,7 @@
             },
             {
               "path": "apps/web/src/components/PasswordField.tsx",
-              "sha256": "2e6ed00ba528a1db9f0bff8a2673ca02ea0eee12aaa1a1d9989497178cec1290"
+              "sha256": "7de3e8ba6b6766d50cb8275048bd117a7c1eb41d2b7714251775cf6c22e380c1"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -630030,7 +630031,7 @@
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
-              "sha256": "fa9b1aa221df7b7f2bcadf0ed5fc1e12999c8ba72d72e94ed9ae1052b115e9b4"
+              "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
             },
             {
               "path": "apps/web/src/routes/login-native-forms.test.tsx",
@@ -630038,11 +630039,11 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -630637,7 +630638,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
+              "sha256": "4a701474705ca10b8ce53c7584446380e5371218e0f2ca5e858e16467b0a44fd"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -630653,7 +630654,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "ebe65e57622a7ee6d518698ce7343ad4e00f84d9d5ac5b8363036db33426b600"
+              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -630665,7 +630666,7 @@
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
-              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
             },
             {
               "path": "apps/web/e2e/registration-strength.spec.ts",
@@ -630673,7 +630674,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "6d8b2cfb6027d67c24f8f06ac36ec2c6f3e8ae554d751285cc8d0876f1bbb2a0"
+              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -630721,7 +630722,7 @@
             },
             {
               "path": "apps/web/src/components/PasswordField.tsx",
-              "sha256": "2e6ed00ba528a1db9f0bff8a2673ca02ea0eee12aaa1a1d9989497178cec1290"
+              "sha256": "7de3e8ba6b6766d50cb8275048bd117a7c1eb41d2b7714251775cf6c22e380c1"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -630857,7 +630858,7 @@
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
-              "sha256": "fa9b1aa221df7b7f2bcadf0ed5fc1e12999c8ba72d72e94ed9ae1052b115e9b4"
+              "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
             },
             {
               "path": "apps/web/src/routes/login-native-forms.test.tsx",
@@ -630865,11 +630866,11 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -631464,7 +631465,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
+              "sha256": "4a701474705ca10b8ce53c7584446380e5371218e0f2ca5e858e16467b0a44fd"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -631480,7 +631481,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "ebe65e57622a7ee6d518698ce7343ad4e00f84d9d5ac5b8363036db33426b600"
+              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -631492,7 +631493,7 @@
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
-              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
             },
             {
               "path": "apps/web/e2e/registration-strength.spec.ts",
@@ -631500,7 +631501,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "6d8b2cfb6027d67c24f8f06ac36ec2c6f3e8ae554d751285cc8d0876f1bbb2a0"
+              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -631548,7 +631549,7 @@
             },
             {
               "path": "apps/web/src/components/PasswordField.tsx",
-              "sha256": "2e6ed00ba528a1db9f0bff8a2673ca02ea0eee12aaa1a1d9989497178cec1290"
+              "sha256": "7de3e8ba6b6766d50cb8275048bd117a7c1eb41d2b7714251775cf6c22e380c1"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -631684,7 +631685,7 @@
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
-              "sha256": "fa9b1aa221df7b7f2bcadf0ed5fc1e12999c8ba72d72e94ed9ae1052b115e9b4"
+              "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
             },
             {
               "path": "apps/web/src/routes/login-native-forms.test.tsx",
@@ -631692,11 +631693,11 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -632291,7 +632292,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
+              "sha256": "4a701474705ca10b8ce53c7584446380e5371218e0f2ca5e858e16467b0a44fd"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -632307,7 +632308,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "ebe65e57622a7ee6d518698ce7343ad4e00f84d9d5ac5b8363036db33426b600"
+              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -632319,7 +632320,7 @@
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
-              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
             },
             {
               "path": "apps/web/e2e/registration-strength.spec.ts",
@@ -632327,7 +632328,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "6d8b2cfb6027d67c24f8f06ac36ec2c6f3e8ae554d751285cc8d0876f1bbb2a0"
+              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -632375,7 +632376,7 @@
             },
             {
               "path": "apps/web/src/components/PasswordField.tsx",
-              "sha256": "2e6ed00ba528a1db9f0bff8a2673ca02ea0eee12aaa1a1d9989497178cec1290"
+              "sha256": "7de3e8ba6b6766d50cb8275048bd117a7c1eb41d2b7714251775cf6c22e380c1"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -632511,7 +632512,7 @@
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
-              "sha256": "fa9b1aa221df7b7f2bcadf0ed5fc1e12999c8ba72d72e94ed9ae1052b115e9b4"
+              "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
             },
             {
               "path": "apps/web/src/routes/login-native-forms.test.tsx",
@@ -632519,11 +632520,11 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -723757,7 +723758,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Current saving address and consultation response journeys verify required semantics, linked errors and existing exact receipt or recovery checks. Remaining conditional form, command, bespoke state and live policy criteria need closure."
+        "Current public auth journeys verify required semantics alongside unchanged consent, password, OTP and ownership rules. Remaining conditional form, command, bespoke state and live policy criteria need closure."
       ],
       "owner": null,
       "depends_on": [],
@@ -723871,7 +723872,8 @@
           "release-0.5-correction-template-required",
           "release-0.5-correction-command-deadlines",
           "release-0.5-comment-security-required",
-          "release-0.5-service-response-required"
+          "release-0.5-service-response-required",
+          "release-0.5-public-auth-required"
         ]
       }
     },
@@ -724275,7 +724277,7 @@
             },
             {
               "path": "apps/web/src/components/PasswordField.tsx",
-              "sha256": "2e6ed00ba528a1db9f0bff8a2673ca02ea0eee12aaa1a1d9989497178cec1290"
+              "sha256": "7de3e8ba6b6766d50cb8275048bd117a7c1eb41d2b7714251775cf6c22e380c1"
             },
             {
               "path": "apps/web/src/components/PreferenceSettingsStatus.tsx",
@@ -725107,11 +725109,11 @@
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
-              "sha256": "fa9b1aa221df7b7f2bcadf0ed5fc1e12999c8ba72d72e94ed9ae1052b115e9b4"
+              "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
             },
             {
               "path": "apps/web/src/routes/onboarding.tsx",
@@ -725135,7 +725137,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
@@ -725565,7 +725567,8 @@
             "Renewed correction, template and affected route performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-correction-template-required/proof.json",
             "Renewed affected form and correction route performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-correction-command-deadlines/proof.json",
             "Renewed comment and account security performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-comment-security-required/proof.json",
-            "Renewed saving address and consultation response performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-response-required/proof.json"
+            "Renewed saving address and consultation response performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-response-required/proof.json",
+            "Renewed public auth and affected route performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-public-auth-required/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -795019,6 +795022,109 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-response-required/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-response-required/reviewed.patch",
       "release_disposition": "Verified required saving address and consultation response controls. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-public-auth-required": {
+      "batch": "release-0.5-public-auth-required",
+      "base_commit": "59664778c686f365e03eebaec32d265a57ba5660",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/login-native-forms.spec.ts",
+          "sha256": "4a701474705ca10b8ce53c7584446380e5371218e0f2ca5e858e16467b0a44fd"
+        },
+        {
+          "path": "apps/web/e2e/login-ui.spec.ts",
+          "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
+        },
+        {
+          "path": "apps/web/e2e/password-recovery-forms.spec.ts",
+          "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
+        },
+        {
+          "path": "apps/web/e2e/public-auth-fixture.ts",
+          "sha256": "80d98db1c5750fb377130dc173b2138ef90dba347baca8783fbdc998711b18f1"
+        },
+        {
+          "path": "apps/web/e2e/registration-native-forms.spec.ts",
+          "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
+        },
+        {
+          "path": "apps/web/e2e/staff-activation.spec.ts",
+          "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
+        },
+        {
+          "path": "apps/web/src/components/OtpInput.tsx",
+          "sha256": "9a29151dc34a901a6ed898563e6402ed4ff707ff99b56e7486ee50ba7d88abc2"
+        },
+        {
+          "path": "apps/web/src/components/PasswordField.tsx",
+          "sha256": "7de3e8ba6b6766d50cb8275048bd117a7c1eb41d2b7714251775cf6c22e380c1"
+        },
+        {
+          "path": "apps/web/src/lib/account-settings-form-schemas.ts",
+          "sha256": "ee570bd22867a10a3feeac5daf102996d7e779975e607199ab8b37c82d3a6d97"
+        },
+        {
+          "path": "apps/web/src/lib/login-form-schemas.ts",
+          "sha256": "3c0130e5f92c9987157c486af6ce3396e51cb45392b3de460ee52e8a0eedcd6b"
+        },
+        {
+          "path": "apps/web/src/lib/password-recovery-form-schemas.ts",
+          "sha256": "165ee15bad462f229f4996c1447e1da7f2ed5f0f2b30f7b0c90e30b2c774b572"
+        },
+        {
+          "path": "apps/web/src/lib/registration-form-schemas.ts",
+          "sha256": "b3380c896ed0a21dff6365375d343f37b284a28dcc5e37072d0b4c219181b1e7"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/timezone.tsx",
+          "sha256": "1d4d303ed0336f8f7164914c700f3bdca31de700883d093619bddab865b1bed3"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/username.tsx",
+          "sha256": "249530a5772d5bbabe8f295730410278b710531b065d81a0b73c9d936ddaf192"
+        },
+        {
+          "path": "apps/web/src/routes/activate.tsx",
+          "sha256": "9c3658b7298d46356ee01563d424444ca8fbc4e45d3a0b07a24b447e2894425a"
+        },
+        {
+          "path": "apps/web/src/routes/forgot-password.tsx",
+          "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
+        },
+        {
+          "path": "apps/web/src/routes/login.tsx",
+          "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+        },
+        {
+          "path": "apps/web/src/routes/register/index.tsx",
+          "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+        },
+        {
+          "path": "docs/design/accessibility.md",
+          "sha256": "abedbd20a4dbf8a390cdab1266d24f5158f3e5e188bf105b6f7080945eda591d"
+        }
+      ],
+      "checks": [
+        "Four baseline Chromium cases reproduced missing required markers in sign-in, registration, password recovery and staff activation.",
+        "Sign-in, password change, registration, recovery and staff activation expose required account and password fields. Registration terms are marked required and the optional trusted-device choice remains optional.",
+        "The initial registration browser assertion ran before the valid destination blur reveals the password field. The corrected test verifies that the field is absent initially and required once revealed. The four focused cases passed against the same runtime build. Existing consent, password, OTP and write assertions are intact.",
+        "50 web unit cases, 38 distinct production-browser cases across Chromium and Mobile Safari, 19 instrumented Chromium cases, all eight combined coverage groups, 98 gzip budgets, six cold-auth checks, lint, formatting and web typecheck passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-public-auth-required",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-public-auth-required/proof.json",
+      "source_scope_proof_sha256": "8dfebff725aea3ea498b6e3513f3e82422911ce57aa3e1ec908f8b1142b7a518",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-public-auth-required/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-public-auth-required/reviewed.patch",
+      "release_disposition": "Verified required public authentication controls. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -795070,7 +795176,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Close the demonstrated sign-in, registration and recovery field markers, then reconcile remaining route and command evidence. Resolve accessibility enforcement and live route reporting before accepting v0.5.0."
+    "goal": "Close the demonstrated username, contact and timezone field markers, then reconcile remaining route and command evidence. Resolve accessibility enforcement and live route reporting before accepting v0.5.0."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",

@@ -212,6 +212,7 @@ function RegisterPage() {
                       <Input
                         {...field}
                         type="text"
+                        aria-required="true"
                         autoComplete="username"
                         maxLength={255}
                         placeholder={t('auth.register.usernamePlaceholder', locale)}
@@ -273,6 +274,7 @@ function RegisterPage() {
                       <FormControl>
                         <Checkbox
                           aria-labelledby="tos-label"
+                          aria-required="true"
                           name={field.name}
                           ref={field.ref}
                           checked={field.value}

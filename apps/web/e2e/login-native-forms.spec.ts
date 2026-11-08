@@ -70,7 +70,7 @@ async function setup(page: Page, locale: Locale) {
 async function submit(page: Page) {
   await page.locator('form').evaluate((form: HTMLFormElement) => form.requestSubmit());
 }
-async function capture(page: Page, name: string) {
+async function capture(page: Page, path: string) {
   const panel = page.locator('div.space-y-6[dir]');
   await expect(panel).toBeVisible();
   await expect
@@ -92,7 +92,7 @@ async function capture(page: Page, name: string) {
     ).violations
   ).toEqual([]);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await panel.screenshot({ path: `test-results/${name}.png` });
+  await panel.screenshot({ path });
 }
 for (const locale of ['en', 'fa'] as const) {
   test(`native login validates credentials and owns an unknown sign-in through explicit restart (${locale})`, async ({
@@ -100,12 +100,14 @@ for (const locale of ['en', 'fa'] as const) {
   }, info) => {
     const state = await setup(page, locale);
     await page.goto('/login');
+    await expect(page.locator('#username')).toHaveAttribute('aria-required', 'true');
+    await expect(page.locator('#password')).toHaveAttribute('aria-required', 'true');
     await page.locator('#username').fill('invalid');
     await submit(page);
     await expect(page.locator('#username')).toHaveAttribute('aria-invalid', 'true');
     await expect(page.locator('#username')).toBeFocused();
     expect(state.writes).toHaveLength(0);
-    await capture(page, `login-credentials-invalid-${locale}-${info.project.name}`);
+    await capture(page, info.outputPath(`login-credentials-invalid-${locale}.png`));
     await page.locator('#username').fill(' Draft@Example.test ');
     await page.locator('#password').fill(secret);
     await page.locator('form').evaluate((form: HTMLFormElement) => {
@@ -121,7 +123,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.getByRole('alert')).toContainText(loginFormText('uncertain', locale));
     await expect(page.locator('#password')).toHaveValue(secret);
     await expect(page.locator('button[type=submit]')).toBeDisabled();
-    await capture(page, `login-credentials-uncertain-${locale}-${info.project.name}`);
+    await capture(page, info.outputPath(`login-credentials-uncertain-${locale}.png`));
     await page.evaluate(
       (restart) => {
         const form = document.querySelector('form')!,
@@ -152,6 +154,8 @@ for (const locale of ['en', 'fa'] as const) {
     await page.locator('#username').fill(' Draft@Example.test ');
     await page.locator('#password').fill(secret);
     await submit(page);
+    await expect(page.locator('#new-password')).toHaveAttribute('aria-required', 'true');
+    await expect(page.locator('#confirm-password')).toHaveAttribute('aria-required', 'true');
     await page.locator('#new-password').fill('weak');
     await page.locator('#confirm-password').fill('different');
     await submit(page);
@@ -159,7 +163,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.locator('#confirm-password')).toHaveAttribute('aria-invalid', 'true');
     await expect(page.locator('#new-password')).toBeFocused();
     expect(state.writes).toHaveLength(1);
-    await capture(page, `login-change-invalid-${locale}-${info.project.name}`);
+    await capture(page, info.outputPath(`login-change-invalid-${locale}.png`));
     await page.locator('#new-password').fill(newSecret);
     await submit(page);
     await expect(page.locator('#confirm-password')).toBeFocused();
@@ -206,10 +210,11 @@ for (const locale of ['en', 'fa'] as const) {
     await digits.first().fill('۱۲۳۴۵۶');
     // Completing the code must leave time to opt into device trust.
     await expect(page.locator('#trust-device')).toBeEnabled();
+    await expect(page.locator('#trust-device')).not.toHaveAttribute('aria-required', 'true');
     expect(state.writes.filter((x) => x.path.endsWith('/verify'))).toHaveLength(0);
     await page.locator('#trust-device').check();
     await page.screenshot({
-      path: `test-results/login-trust-ready-${locale}-${info.project.name}.png`,
+      path: info.outputPath(`login-trust-ready-${locale}.png`),
       fullPage: true,
     });
     await page.locator('button[type=submit]').click();
@@ -228,7 +233,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(digits.first()).toBeDisabled();
     await expect(page.locator('#trust-device')).toBeChecked();
     await expect(page).toHaveURL(/\/login$/);
-    await capture(page, `login-otp-uncertain-${locale}-${info.project.name}`);
+    await capture(page, info.outputPath(`login-otp-uncertain-${locale}.png`));
     await page.getByRole('button', { name: loginFormText('restart', locale), exact: true }).click();
     await expect(page.locator('#password')).toHaveValue('');
     await expect(digits).toHaveCount(0);

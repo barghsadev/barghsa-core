@@ -440,6 +440,7 @@ function LoginPage() {
                         <Input
                           {...field}
                           type="text"
+                          aria-required="true"
                           dir="ltr"
                           autoComplete="username"
                           maxLength={255}
@@ -484,6 +485,7 @@ function LoginPage() {
                         <Input
                           {...field}
                           type="password"
+                          aria-required="true"
                           autoComplete="new-password"
                           disabled={model.locked}
                           onChange={(event) => edit(field, event)}

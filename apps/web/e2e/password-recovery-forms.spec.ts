@@ -82,7 +82,7 @@ async function passwords(page: Page) {
   await page.locator('#new-password').fill(' Raw synthetic recovery value 12A ');
   await page.locator('#confirm-password').fill(' Raw synthetic recovery value 12A ');
 }
-async function capture(form: Locator, name: string) {
+async function capture(form: Locator, path: string) {
   const page = form.page();
   const panel = form.locator('..');
   await expect(panel).toBeVisible();
@@ -107,7 +107,7 @@ async function capture(form: Locator, name: string) {
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true
   );
-  await panel.screenshot({ path: `test-results/${name}.png` });
+  await panel.screenshot({ path });
 }
 for (const locale of ['en', 'fa'] as const) {
   test(`native password recovery validates each stage and retains rejected code/password (${locale})`, async ({
@@ -115,6 +115,7 @@ for (const locale of ['en', 'fa'] as const) {
   }, info) => {
     const state = await setup(page, locale);
     await page.goto('/forgot-password');
+    await expect(page.locator('#username')).toHaveAttribute('aria-required', 'true');
     await page.locator('#username').fill('invalid value');
     await submit(page);
     await expect(page.locator('#username')).toHaveAttribute('aria-invalid', 'true');
@@ -122,7 +123,7 @@ for (const locale of ['en', 'fa'] as const) {
     expect(state.writes).toHaveLength(0);
     await capture(
       page.locator('form'),
-      `recovery-destination-invalid-${locale}-${info.project.name}`
+      info.outputPath(`recovery-destination-invalid-${locale}.png`)
     );
     await page.locator('#username').fill(' Recovery@Example.test ');
     await submit(page);
@@ -143,6 +144,8 @@ for (const locale of ['en', 'fa'] as const) {
     state.mode = 'success';
     await code(page, locale);
     await expect(page.locator('#new-password')).toBeFocused();
+    await expect(page.locator('#new-password')).toHaveAttribute('aria-required', 'true');
+    await expect(page.locator('#confirm-password')).toHaveAttribute('aria-required', 'true');
     await page.locator('#new-password').fill('weak');
     await page.locator('#confirm-password').fill('weak');
     await submit(page);
@@ -166,7 +169,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.locator('form')).not.toContainText('private');
     await capture(
       page.locator('form'),
-      `recovery-password-rejected-${locale}-${info.project.name}`
+      info.outputPath(`recovery-password-rejected-${locale}.png`)
     );
     state.mode = 'success';
     await submit(page);
@@ -198,7 +201,7 @@ for (const locale of ['en', 'fa'] as const) {
     expect(state.writes).toHaveLength(2);
     await expect(page.locator('#recovery-code')).toHaveValue('1');
     await expect(page.locator('#new-password')).toHaveCount(0);
-    await capture(page.locator('form'), `recovery-code-uncertain-${locale}-${info.project.name}`);
+    await capture(page.locator('form'), info.outputPath(`recovery-code-uncertain-${locale}.png`));
     await page.getByRole('button', { name: copy('restart', locale), exact: true }).click();
     await expect(page.locator('#username')).toHaveValue(' Recovery@Example.test ');
     await page.clock.runFor(61_000);
@@ -218,7 +221,7 @@ for (const locale of ['en', 'fa'] as const) {
     state.held = null;
     await expect(page.getByRole('alert')).toHaveText(copy('uncertain', locale));
     await expect(page.locator('#new-password')).toHaveValue(' Raw synthetic recovery value 12A ');
-    await capture(page.locator('form'), `recovery-reset-uncertain-${locale}-${info.project.name}`);
+    await capture(page.locator('form'), info.outputPath(`recovery-reset-uncertain-${locale}.png`));
     await page.locator('form').evaluate(
       (form: HTMLFormElement, restartLabel) => {
         Array.from(form.querySelectorAll<HTMLButtonElement>('button'))

@@ -14,6 +14,8 @@ for (const locale of ['fa', 'en'] as const) {
     await page.evaluate((value) => {
       document.documentElement.lang = value;
     }, locale);
+    await expect(page.locator('#activation-password')).toHaveAttribute('aria-required', 'true');
+    await expect(page.locator('#activation-confirmation')).toHaveAttribute('aria-required', 'true');
     await page.locator('#activation-password').fill('Activated-browser-password-123!');
     await page.locator('#activation-confirmation').fill('Activated-browser-password-123!');
     const submitted = page.waitForRequest('**/api/auth/activate-staff');

@@ -75,6 +75,7 @@ function ForgotPasswordPage() {
                     <FormControl>
                       <Input
                         {...field}
+                        aria-required="true"
                         autoComplete="username"
                         maxLength={255}
                         disabled={model.locked}
