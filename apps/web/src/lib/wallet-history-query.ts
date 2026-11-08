@@ -36,7 +36,7 @@ export const walletHistoryQueryOptions: ListQueryOptions = {
     max: (value) => parseNumberRange(undefined, value)?.max ?? '',
   },
 };
-export function walletHistorySearch(raw: Record<string, unknown>) {
+export function walletHistorySearch(raw: Record<string, unknown>): Record<string, unknown> {
   const dates = parseDateRangeFilter(raw.history_from, raw.history_to) ?? {};
   const amounts = parseNumberRange(raw.history_min, raw.history_max) ?? {};
   const cursor = raw.history_cursor;
@@ -54,20 +54,16 @@ export function walletHistorySearch(raw: Record<string, unknown>) {
     {}
   );
   // Payment return values belong to the existing route component's validation.
-  return Object.fromEntries(
-    [
-      'paymentOrderId',
-      'paymentAuthority',
-      'returnInvoiceId',
-      'history_q',
-      'history_order',
-      'history_type',
-      'history_state',
-      'history_from',
-      'history_to',
-      'history_min',
-      'history_max',
-      'history_cursor',
-    ].map((key) => [key, normalized[key]])
-  );
+  const { paymentOrderId, paymentAuthority, returnInvoiceId } = normalized;
+  return {
+    paymentOrderId,
+    paymentAuthority,
+    returnInvoiceId,
+    ...Object.fromEntries(
+      ['q', 'order', ...Object.keys(walletHistoryQueryOptions.filters), 'cursor'].map((field) => {
+        const key = `history_${field}`;
+        return [key, normalized[key]];
+      })
+    ),
+  };
 }

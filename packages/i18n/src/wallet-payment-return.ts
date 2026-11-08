@@ -8,7 +8,7 @@ const fa: Record<string, string> = {
   'wallet.return.auth':
     'ابتدا در برگه جدید وارد حساب شوید، سپس به این صفحه برگردید و پرداخت را دوباره بررسی کنید.',
   'wallet.return.login': 'ورود در برگه جدید',
-  'wallet.return.error': 'بررسی پرداخت انجام نشد. دوباره تلاش کنید.',
+  'wallet.return.error': 'نتیجه پرداخت مشخص نیست. می‌توانید دوباره آن را بررسی کنید.',
 };
 const en: Record<string, string> = {
   'wallet.return.title': 'Online payment result',
@@ -19,7 +19,7 @@ const en: Record<string, string> = {
   'wallet.return.unpaid': 'The provider has not confirmed payment. You can check again.',
   'wallet.return.auth': 'Sign in in a new tab, then return here and check the payment again.',
   'wallet.return.login': 'Sign in in a new tab',
-  'wallet.return.error': 'Payment could not be checked. Please try again.',
+  'wallet.return.error': 'The payment result is unknown. You can check it again.',
 };
 export function tWalletPaymentReturn(key: string, locale: 'fa' | 'en'): string {
   const messages = locale === 'fa' ? fa : en;

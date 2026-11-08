@@ -1,5 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
-import { test, expect, type Page } from './coverage-fixture';
+import { test, expect, type Page, type Route } from './coverage-fixture';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
 const orderId = '22222222-2222-4222-8222-222222222222';
@@ -142,5 +142,55 @@ for (const locale of ['en', 'fa']) {
     await expect(page.getByTestId('payment-return-status')).toHaveAttribute('role', 'alert');
     await expect(button).toBeEnabled();
     await expect(page.getByTestId('wallet-balance')).toContainText(locale === 'fa' ? '۰' : '0');
+  });
+
+  test(`payment return gives an explicit retry after a stalled confirmation (${locale})`, async ({
+    page,
+  }) => {
+    const { credit } = await setup(page, locale);
+    const requests: unknown[] = [];
+    let held: Route | undefined;
+    const receipt = { ok: true, credited: true, transactionId: orderId };
+    await page.route('**/api/wallet/top-ups/return', (route) => {
+      requests.push(route.request().postDataJSON());
+      if (!held) {
+        held = route;
+        return;
+      }
+      return route.fulfill({ json: receipt });
+    });
+    await page.clock.install();
+    const button = page.getByTestId('payment-return-check');
+    const status = page.getByTestId('payment-return-status');
+    const balance = page.getByTestId('wallet-balance');
+    const payment = { orderId, authority: 'auth-1' };
+    try {
+      await expect(balance).toBeVisible();
+      expect(requests).toEqual([]);
+      await button.click();
+      await expect.poll(() => requests).toEqual([payment]);
+      await expect(button).toBeDisabled();
+      await page.clock.fastForward(15_200);
+      await expect(status).toHaveAttribute('role', 'alert');
+      await expect(status).toHaveText(
+        locale === 'fa'
+          ? 'نتیجه پرداخت مشخص نیست. می‌توانید دوباره آن را بررسی کنید.'
+          : 'The payment result is unknown. You can check it again.'
+      );
+      await expect(button).toBeEnabled();
+
+      credit();
+      await held!.fulfill({ json: receipt }).catch(() => {});
+      await expect(status).toHaveAttribute('role', 'alert');
+      await expect(balance).toContainText(locale === 'fa' ? '۰' : '0');
+      expect(requests).toEqual([payment]);
+
+      await button.click();
+      await expect(button).toHaveCount(0);
+      await expect(balance).toContainText(locale === 'fa' ? '۱٬۰۰۰' : '1,000');
+      expect(requests).toEqual([payment, payment]);
+    } finally {
+      await held?.abort().catch(() => {});
+    }
   });
 }

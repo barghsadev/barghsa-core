@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T02:01:41+00:00",
-  "source_commit": "7d4205ae216825a0e2f64519f345288cad336297",
+  "updated": "2026-11-08T02:14:11+00:00",
+  "source_commit": "193388a62f01aa3b9a826feb47e153ace360e955",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35383,7 +35383,7 @@
             },
             {
               "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
-              "sha256": "dacc49a1a4f6e2d22365482423b8c819bc09b7d9e00910d09cca65b285d09ae5"
+              "sha256": "daa6b756237729e31aad44fc9a88d7927faea55728817eb8fd171ec3a77dd333"
             },
             {
               "path": "apps/web/src/components/ProfileSwitcher.tsx",
@@ -63084,7 +63084,7 @@
             },
             {
               "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
-              "sha256": "dacc49a1a4f6e2d22365482423b8c819bc09b7d9e00910d09cca65b285d09ae5"
+              "sha256": "daa6b756237729e31aad44fc9a88d7927faea55728817eb8fd171ec3a77dd333"
             },
             {
               "path": "apps/web/src/components/ProfileSwitcher.tsx",
@@ -96238,7 +96238,7 @@
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.ts",
-              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -107201,7 +107201,7 @@
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.ts",
-              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -140081,11 +140081,11 @@
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
-              "sha256": "c5e3a1f0a7fc8d8ad596f2724ec2d88ad438c2b6a44de677a303a50ceecc3023"
+              "sha256": "fe07f9c918c5d3dcc5fca19495e4a8fd5fd3ee3a0bd8f9b722074dd489e72aba"
             },
             {
               "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
-              "sha256": "dacc49a1a4f6e2d22365482423b8c819bc09b7d9e00910d09cca65b285d09ae5"
+              "sha256": "daa6b756237729e31aad44fc9a88d7927faea55728817eb8fd171ec3a77dd333"
             },
             {
               "path": "apps/web/src/hooks/useReceiptForm.ts",
@@ -140426,11 +140426,11 @@
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
-              "sha256": "c5e3a1f0a7fc8d8ad596f2724ec2d88ad438c2b6a44de677a303a50ceecc3023"
+              "sha256": "fe07f9c918c5d3dcc5fca19495e4a8fd5fd3ee3a0bd8f9b722074dd489e72aba"
             },
             {
               "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
-              "sha256": "dacc49a1a4f6e2d22365482423b8c819bc09b7d9e00910d09cca65b285d09ae5"
+              "sha256": "daa6b756237729e31aad44fc9a88d7927faea55728817eb8fd171ec3a77dd333"
             },
             {
               "path": "apps/web/src/routes/_app/wallet.tsx",
@@ -140438,7 +140438,7 @@
             },
             {
               "path": "packages/i18n/src/wallet-payment-return.ts",
-              "sha256": "89cde148eff2e6f04c52da36381226705de38f1e0b41a7f58ba55d481603058f"
+              "sha256": "86d0b06d631e1c9df3bbbe639676a5a5f583be9233b695970a5cfad4e2860126"
             },
             {
               "path": "packages/shared/src/finance/wallet-chargeback.ts",
@@ -145067,11 +145067,11 @@
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
-              "sha256": "c5e3a1f0a7fc8d8ad596f2724ec2d88ad438c2b6a44de677a303a50ceecc3023"
+              "sha256": "fe07f9c918c5d3dcc5fca19495e4a8fd5fd3ee3a0bd8f9b722074dd489e72aba"
             },
             {
               "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
-              "sha256": "dacc49a1a4f6e2d22365482423b8c819bc09b7d9e00910d09cca65b285d09ae5"
+              "sha256": "daa6b756237729e31aad44fc9a88d7927faea55728817eb8fd171ec3a77dd333"
             },
             {
               "path": "apps/web/src/routes/_app/wallet.tsx",
@@ -145079,7 +145079,7 @@
             },
             {
               "path": "packages/i18n/src/wallet-payment-return.ts",
-              "sha256": "89cde148eff2e6f04c52da36381226705de38f1e0b41a7f58ba55d481603058f"
+              "sha256": "86d0b06d631e1c9df3bbbe639676a5a5f583be9233b695970a5cfad4e2860126"
             },
             {
               "path": "packages/shared/src/finance/wallet-chargeback.ts",
@@ -146132,7 +146132,7 @@
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.ts",
-              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
             },
             {
               "path": "apps/web/src/pages/InvoiceActivity.tsx",
@@ -146730,7 +146730,7 @@
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.ts",
-              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
             },
             {
               "path": "apps/web/src/pages/InvoiceActivity.tsx",
@@ -147342,7 +147342,7 @@
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.ts",
-              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
             },
             {
               "path": "apps/web/src/pages/InvoiceActivity.tsx",
@@ -147979,7 +147979,7 @@
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.ts",
-              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
             },
             {
               "path": "apps/web/src/pages/InvoiceActivity.tsx",
@@ -148718,7 +148718,7 @@
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.ts",
-              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
             },
             {
               "path": "apps/web/src/pages/InvoiceActivity.tsx",
@@ -149220,7 +149220,7 @@
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.ts",
-              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
             },
             {
               "path": "apps/web/src/pages/InvoiceActivity.tsx",
@@ -149700,7 +149700,7 @@
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.ts",
-              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
             },
             {
               "path": "apps/web/src/pages/InvoiceActivity.tsx",
@@ -150181,7 +150181,7 @@
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.ts",
-              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
             },
             {
               "path": "apps/web/src/pages/InvoiceActivity.tsx",
@@ -150663,7 +150663,7 @@
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.ts",
-              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
             },
             {
               "path": "apps/web/src/pages/InvoiceActivity.tsx",
@@ -151153,7 +151153,7 @@
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.ts",
-              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
             },
             {
               "path": "apps/web/src/pages/InvoiceActivity.tsx",
@@ -151635,7 +151635,7 @@
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.ts",
-              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
             },
             {
               "path": "apps/web/src/pages/InvoiceActivity.tsx",
@@ -483065,7 +483065,7 @@
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
-              "sha256": "c5e3a1f0a7fc8d8ad596f2724ec2d88ad438c2b6a44de677a303a50ceecc3023"
+              "sha256": "fe07f9c918c5d3dcc5fca19495e4a8fd5fd3ee3a0bd8f9b722074dd489e72aba"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -483073,7 +483073,7 @@
             },
             {
               "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
-              "sha256": "dacc49a1a4f6e2d22365482423b8c819bc09b7d9e00910d09cca65b285d09ae5"
+              "sha256": "daa6b756237729e31aad44fc9a88d7927faea55728817eb8fd171ec3a77dd333"
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
@@ -483657,7 +483657,7 @@
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
-              "sha256": "c5e3a1f0a7fc8d8ad596f2724ec2d88ad438c2b6a44de677a303a50ceecc3023"
+              "sha256": "fe07f9c918c5d3dcc5fca19495e4a8fd5fd3ee3a0bd8f9b722074dd489e72aba"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -483665,7 +483665,7 @@
             },
             {
               "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
-              "sha256": "dacc49a1a4f6e2d22365482423b8c819bc09b7d9e00910d09cca65b285d09ae5"
+              "sha256": "daa6b756237729e31aad44fc9a88d7927faea55728817eb8fd171ec3a77dd333"
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
@@ -484249,7 +484249,7 @@
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
-              "sha256": "c5e3a1f0a7fc8d8ad596f2724ec2d88ad438c2b6a44de677a303a50ceecc3023"
+              "sha256": "fe07f9c918c5d3dcc5fca19495e4a8fd5fd3ee3a0bd8f9b722074dd489e72aba"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -484257,7 +484257,7 @@
             },
             {
               "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
-              "sha256": "dacc49a1a4f6e2d22365482423b8c819bc09b7d9e00910d09cca65b285d09ae5"
+              "sha256": "daa6b756237729e31aad44fc9a88d7927faea55728817eb8fd171ec3a77dd333"
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
@@ -484841,7 +484841,7 @@
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
-              "sha256": "c5e3a1f0a7fc8d8ad596f2724ec2d88ad438c2b6a44de677a303a50ceecc3023"
+              "sha256": "fe07f9c918c5d3dcc5fca19495e4a8fd5fd3ee3a0bd8f9b722074dd489e72aba"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -484849,7 +484849,7 @@
             },
             {
               "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
-              "sha256": "dacc49a1a4f6e2d22365482423b8c819bc09b7d9e00910d09cca65b285d09ae5"
+              "sha256": "daa6b756237729e31aad44fc9a88d7927faea55728817eb8fd171ec3a77dd333"
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
@@ -496998,7 +496998,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
+              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -515058,7 +515058,7 @@
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
-              "sha256": "c5e3a1f0a7fc8d8ad596f2724ec2d88ad438c2b6a44de677a303a50ceecc3023"
+              "sha256": "fe07f9c918c5d3dcc5fca19495e4a8fd5fd3ee3a0bd8f9b722074dd489e72aba"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -515094,7 +515094,7 @@
             },
             {
               "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
-              "sha256": "dacc49a1a4f6e2d22365482423b8c819bc09b7d9e00910d09cca65b285d09ae5"
+              "sha256": "daa6b756237729e31aad44fc9a88d7927faea55728817eb8fd171ec3a77dd333"
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
@@ -515498,7 +515498,7 @@
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
-              "sha256": "c5e3a1f0a7fc8d8ad596f2724ec2d88ad438c2b6a44de677a303a50ceecc3023"
+              "sha256": "fe07f9c918c5d3dcc5fca19495e4a8fd5fd3ee3a0bd8f9b722074dd489e72aba"
             },
             {
               "path": "apps/web/e2e/preference-settings-forms.spec.ts",
@@ -515542,7 +515542,7 @@
             },
             {
               "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
-              "sha256": "dacc49a1a4f6e2d22365482423b8c819bc09b7d9e00910d09cca65b285d09ae5"
+              "sha256": "daa6b756237729e31aad44fc9a88d7927faea55728817eb8fd171ec3a77dd333"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
@@ -515937,7 +515937,7 @@
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
-              "sha256": "c5e3a1f0a7fc8d8ad596f2724ec2d88ad438c2b6a44de677a303a50ceecc3023"
+              "sha256": "fe07f9c918c5d3dcc5fca19495e4a8fd5fd3ee3a0bd8f9b722074dd489e72aba"
             },
             {
               "path": "apps/web/e2e/preference-settings-forms.spec.ts",
@@ -515981,7 +515981,7 @@
             },
             {
               "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
-              "sha256": "dacc49a1a4f6e2d22365482423b8c819bc09b7d9e00910d09cca65b285d09ae5"
+              "sha256": "daa6b756237729e31aad44fc9a88d7927faea55728817eb8fd171ec3a77dd333"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
@@ -516364,7 +516364,7 @@
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
-              "sha256": "c5e3a1f0a7fc8d8ad596f2724ec2d88ad438c2b6a44de677a303a50ceecc3023"
+              "sha256": "fe07f9c918c5d3dcc5fca19495e4a8fd5fd3ee3a0bd8f9b722074dd489e72aba"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -516400,7 +516400,7 @@
             },
             {
               "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
-              "sha256": "dacc49a1a4f6e2d22365482423b8c819bc09b7d9e00910d09cca65b285d09ae5"
+              "sha256": "daa6b756237729e31aad44fc9a88d7927faea55728817eb8fd171ec3a77dd333"
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
@@ -517738,7 +517738,7 @@
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
-              "sha256": "c5e3a1f0a7fc8d8ad596f2724ec2d88ad438c2b6a44de677a303a50ceecc3023"
+              "sha256": "fe07f9c918c5d3dcc5fca19495e4a8fd5fd3ee3a0bd8f9b722074dd489e72aba"
             },
             {
               "path": "apps/web/e2e/preference-settings-forms.spec.ts",
@@ -517782,7 +517782,7 @@
             },
             {
               "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
-              "sha256": "dacc49a1a4f6e2d22365482423b8c819bc09b7d9e00910d09cca65b285d09ae5"
+              "sha256": "daa6b756237729e31aad44fc9a88d7927faea55728817eb8fd171ec3a77dd333"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
@@ -521561,7 +521561,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Fast and full CI now distinguish strict critical Axe checks and non-critical accessibility advisories. The fast sample and manual triage are recorded. GitHub main has no required accessibility check. The owner merge-policy decision remains open."
+        "GitHub Actions run 42436808648 passed the critical accessibility, advisory and upload steps on main. Advisory artifact 13599848733 is present. GitHub main still has no required accessibility check. The owner merge-policy decision remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -521575,7 +521575,8 @@
           "release-0.5-main-exact-source-coverage",
           "release-0.5-required-input-semantics",
           "release-0.5-onboarding-deadlines-coverage",
-          "release-0.5-accessibility-advisory"
+          "release-0.5-accessibility-advisory",
+          "release-0.5-wallet-return-deadline"
         ],
         "current_acceptance": null
       }
@@ -565852,7 +565853,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
+              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -567746,7 +567747,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
+              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568549,7 +568550,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer invoice and wallet receipts announce acknowledged pending results and distinguish unconfirmed outcomes. Electricity and saving discussions announce explicit transport retries while preserving owned cursors and drafts. Wider CRUD and read feedback adoption remains open."
+        "Customer invoice and wallet receipts distinguish acknowledged pending results from unknown outcomes. Electricity and saving discussions announce explicit transport retries. Online wallet returns announce unknown outcomes after a deadline and offer an explicit recheck. Wider verified CRUD and read feedback adoption remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -568580,7 +568581,8 @@
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-geography-retry-feedback",
-          "release-0.5-receipt-and-comment-feedback"
+          "release-0.5-receipt-and-comment-feedback",
+          "release-0.5-wallet-return-deadline"
         ],
         "current_acceptance": null
       }
@@ -569691,7 +569693,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
+              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -571585,7 +571587,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
+              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -573479,7 +573481,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
+              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -575373,7 +575375,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
+              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577267,7 +577269,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
+              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -579161,7 +579163,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
+              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581055,7 +581057,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
+              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -582949,7 +582951,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
+              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -584843,7 +584845,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
+              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -586737,7 +586739,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
+              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -588631,7 +588633,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
+              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589894,7 +589896,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
+              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591264,7 +591266,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
+              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593158,7 +593160,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
+              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593961,7 +593963,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Invoice receipt authority and review timeouts have bounded recovery while keeping the staged draft and current confirmation gate. Security and preference reads and the other scoped commerce previews retain current evidence. Remaining bespoke list, detail and staff route states need verification."
+        "Invoice receipt authority and review reads, security and preference reads, and scoped commerce previews retain recovery evidence. Online wallet confirmation now bounds the request and receipt body. Remaining bespoke list, detail and staff route states need verification."
       ],
       "owner": null,
       "depends_on": [],
@@ -594002,7 +594004,8 @@
           "release-0.5-staff-saving-address-read",
           "release-0.5-customer-review-deadlines",
           "release-0.5-settings-read-deadlines",
-          "release-0.5-invoice-receipt-read-deadlines"
+          "release-0.5-invoice-receipt-read-deadlines",
+          "release-0.5-wallet-return-deadline"
         ],
         "current_acceptance": null
       }
@@ -683807,7 +683810,7 @@
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.ts",
-              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
@@ -684648,7 +684651,7 @@
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.ts",
-              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
@@ -685491,7 +685494,7 @@
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.ts",
-              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
@@ -686332,7 +686335,7 @@
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.ts",
-              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
@@ -687173,7 +687176,7 @@
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.ts",
-              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
@@ -688018,7 +688021,7 @@
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.ts",
-              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
@@ -688863,7 +688866,7 @@
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.ts",
-              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
@@ -689704,7 +689707,7 @@
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.ts",
-              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
@@ -690545,7 +690548,7 @@
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.ts",
-              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
@@ -691387,7 +691390,7 @@
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.ts",
-              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
@@ -692234,7 +692237,7 @@
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.ts",
-              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
@@ -703799,7 +703802,7 @@
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
-              "sha256": "c5e3a1f0a7fc8d8ad596f2724ec2d88ad438c2b6a44de677a303a50ceecc3023"
+              "sha256": "fe07f9c918c5d3dcc5fca19495e4a8fd5fd3ee3a0bd8f9b722074dd489e72aba"
             },
             {
               "path": "apps/web/e2e/profile-switch.spec.ts",
@@ -705875,7 +705878,7 @@
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
-              "sha256": "c5e3a1f0a7fc8d8ad596f2724ec2d88ad438c2b6a44de677a303a50ceecc3023"
+              "sha256": "fe07f9c918c5d3dcc5fca19495e4a8fd5fd3ee3a0bd8f9b722074dd489e72aba"
             },
             {
               "path": "apps/web/e2e/profile-switch.spec.ts",
@@ -707897,11 +707900,11 @@
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
-              "sha256": "c5e3a1f0a7fc8d8ad596f2724ec2d88ad438c2b6a44de677a303a50ceecc3023"
+              "sha256": "fe07f9c918c5d3dcc5fca19495e4a8fd5fd3ee3a0bd8f9b722074dd489e72aba"
             },
             {
               "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
-              "sha256": "dacc49a1a4f6e2d22365482423b8c819bc09b7d9e00910d09cca65b285d09ae5"
+              "sha256": "daa6b756237729e31aad44fc9a88d7927faea55728817eb8fd171ec3a77dd333"
             },
             {
               "path": "apps/api/src/finance/claim-bank-receipt-attachment.ts",
@@ -708321,7 +708324,7 @@
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.ts",
-              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
             },
             {
               "path": "apps/web/src/pages/InvoiceActivity.tsx",
@@ -723608,7 +723611,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The full native-required declaration inventory is resolved. Schema-only form cases, contrast, command feedback and route state adoption remain open. Wider form, contrast, command feedback and route state acceptance remain open."
+        "The native-required declaration inventory and scoped wallet confirmation recovery have current evidence. Schema-only forms, contrast, broader command feedback and remaining route state adoption stay open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723696,7 +723699,8 @@
           "release-0.5-crm-required-fields",
           "release-0.5-document-governance-fields",
           "release-0.5-ai-knowledge-required-fields",
-          "release-0.5-remaining-native-form-controls"
+          "release-0.5-remaining-native-form-controls",
+          "release-0.5-wallet-return-deadline"
         ]
       }
     },
@@ -724076,7 +724080,7 @@
             },
             {
               "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
-              "sha256": "dacc49a1a4f6e2d22365482423b8c819bc09b7d9e00910d09cca65b285d09ae5"
+              "sha256": "daa6b756237729e31aad44fc9a88d7927faea55728817eb8fd171ec3a77dd333"
             },
             {
               "path": "apps/web/src/components/OnlineTopUpReviewDialog.tsx",
@@ -725253,6 +725257,14 @@
             {
               "path": "apps/web/src/components/KnowledgeBaseUpload.tsx",
               "sha256": "a150f2d20208a75b3529fe14a69ace3e3df2d286dd855d352eb1f815f7d953b7"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-history-query.ts",
+              "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
+            },
+            {
+              "path": "packages/i18n/src/wallet-payment-return.ts",
+              "sha256": "86d0b06d631e1c9df3bbbe639676a5a5f583be9233b695970a5cfad4e2860126"
             }
           ],
           "checks": [
@@ -725285,7 +725297,8 @@
             "CRM form accessibility and the public auth copy split passed current source coverage, production size and both immediate and delayed cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-required-fields/proof.json",
             "Document governance and staff confirmation accessibility passed source coverage and browser checks. Both final asset trees matched the checked production build with all budgets and cold authentication transfers passing. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-governance-fields/proof.json",
             "AI and knowledge catalogue form accessibility passed source coverage and browser checks. Both final asset trees matched the checked production build with all budgets and cold authentication transfers passing. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-knowledge-required-fields/proof.json",
-            "Remaining native form controls and related validation links passed source coverage and browser checks. Both final asset trees matched the checked production build with all budgets and cold authentication transfers passing. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-remaining-native-form-controls/proof.json"
+            "Remaining native form controls and related validation links passed source coverage and browser checks. Both final asset trees matched the checked production build with all budgets and cold authentication transfers passing. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-remaining-native-form-controls/proof.json",
+            "Wallet return recovery passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-return-deadline/final/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -792430,6 +792443,57 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-remaining-native-form-controls/reviewed.patch",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-remaining-native-form-controls",
       "release_disposition": "Explicit native-required declarations verified. Wider form and v0.5.0 release criteria remain open."
+    },
+    "release-0.5-wallet-return-deadline": {
+      "batch": "release-0.5-wallet-return-deadline",
+      "base_commit": "193388a62f01aa3b9a826feb47e153ace360e955",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/online-payment-return.spec.ts",
+          "sha256": "fe07f9c918c5d3dcc5fca19495e4a8fd5fd3ee3a0bd8f9b722074dd489e72aba"
+        },
+        {
+          "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
+          "sha256": "daa6b756237729e31aad44fc9a88d7927faea55728817eb8fd171ec3a77dd333"
+        },
+        {
+          "path": "apps/web/src/lib/wallet-history-query.ts",
+          "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
+        },
+        {
+          "path": "packages/i18n/src/wallet-payment-return.ts",
+          "sha256": "86d0b06d631e1c9df3bbbe639676a5a5f583be9233b695970a5cfad4e2860126"
+        }
+      ],
+      "checks": [
+        "An explicit wallet payment check ends after 15 seconds, including receipt-body reads. An unknown outcome is announced in Persian and English. The customer can retry the same order with current CSRF. There is no background resend or balance refresh on an unverified result.",
+        "Only a matching transaction receipt in the current wallet view updates status or requests a balance refresh. Existing timeout, network loss, authentication, unpaid and malformed receipt distinctions retain explicit recovery. Customer and staff wallet history retain the existing route-key allowlist and exact filter validation.",
+        "Twenty production browser cases on Chromium and Mobile Safari, six Chromium coverage cases and 32 web unit cases passed. Eight source-bound coverage groups, all 98 bundle budgets, scoped format and lint, and web/i18n typechecks passed. The six prior cold authentication checks apply to 30 byte-identical auth assets.",
+        "GitHub Actions run 42436808648 on 193388a62f01aa3b9a826feb47e153ace360e955 passed the critical accessibility, advisory, and advisory upload steps. Artifact 13599848733 is present. Main branch rules did not require the check."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-return-deadline/final/proof.json",
+      "source_scope_proof_sha256": "26f06c4a72e5506187777c99016f337cd86f0234234a5448e4217985ee9b8798",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-return-deadline/final/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-return-deadline/final/reviewed.patch",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-return-deadline/final",
+      "release_disposition": "Wallet return recovery and hosted accessibility step receipts recorded. The v0.5.0 milestone remains open."
     }
   },
   "historical_improvements": [

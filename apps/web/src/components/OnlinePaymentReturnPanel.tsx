@@ -1,7 +1,8 @@
-import { useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import type { Locale } from '@barghsa/i18n/app';
 import { tWalletPaymentReturn as t } from '@barghsa/i18n/wallet-payment-return';
 import { withCsrf } from '../lib/csrf.js';
+import { getProfileContextRevision } from '../lib/profile-context.js';
 
 export interface WalletPaymentReturn {
   orderId: string;
@@ -18,27 +19,42 @@ export function OnlinePaymentReturnPanel({
   locale: Locale;
   onConfirmed: () => void;
 }) {
-  const busy = useRef(false);
+  const pending = useRef<AbortController | null>(null);
+  useLayoutEffect(
+    () => () => {
+      pending.current?.abort();
+      pending.current = null;
+    },
+    []
+  );
   const [status, setStatus] = useState<
     'idle' | 'checking' | 'credited' | 'unpaid' | 'auth' | 'error'
   >('idle');
   async function checkPayment() {
-    if (busy.current || status === 'credited') return;
-    busy.current = true;
+    if (pending.current || status === 'credited') return;
+    const request = new AbortController();
+    const revision = getProfileContextRevision();
+    pending.current = request;
+    const owns = () => pending.current === request && getProfileContextRevision() === revision;
+    const deadline = setTimeout(() => request.abort(), 15_000);
     setStatus('checking');
     try {
       const response = await fetch('/api/wallet/top-ups/return', {
         method: 'POST',
         credentials: 'include',
+        signal: request.signal,
         headers: withCsrf({ 'Content-Type': 'application/json' }),
         body: JSON.stringify(payment),
       });
+      if (!owns()) return;
       if (response.status === 401 || response.status === 403) {
         setStatus('auth');
         return;
       }
       if (!response.ok) throw new Error('Payment verification unavailable');
       const result: unknown = await response.json();
+      if (!owns()) return;
+      request.signal.throwIfAborted();
       if (!result || typeof result !== 'object') throw new Error('Invalid payment result');
       const body = result as { ok?: unknown; transactionId?: unknown; credited?: unknown };
       if (
@@ -50,9 +66,10 @@ export function OnlinePaymentReturnPanel({
       setStatus(body.credited ? 'credited' : 'unpaid');
       if (body.credited) onConfirmed();
     } catch {
-      setStatus('error');
+      if (owns()) setStatus('error');
     } finally {
-      busy.current = false;
+      clearTimeout(deadline);
+      if (pending.current === request) pending.current = null;
     }
   }
   return (
