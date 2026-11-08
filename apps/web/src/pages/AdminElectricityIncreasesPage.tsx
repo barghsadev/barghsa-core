@@ -183,6 +183,7 @@ function IncreaseDecisionEditor({
               <FormControl>
                 <Input
                   {...field}
+                  aria-required={decision === 'reject' || undefined}
                   type={decision === 'approve' ? 'datetime-local' : 'text'}
                   disabled={disabled || dateUnavailable}
                   onChange={(event) => {
@@ -215,6 +216,7 @@ function IncreaseDecisionEditor({
                 <FormControl>
                   <Input
                     {...field}
+                    aria-required="true"
                     disabled={disabled || dateUnavailable}
                     onChange={(event) => {
                       field.onChange(event);
@@ -674,6 +676,7 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
               description: copy('reviewConfirm'),
               path,
               method: 'POST',
+              responseDeadline: true,
               successStatus: 201,
               body: {
                 idempotencyKey: crypto.randomUUID(),

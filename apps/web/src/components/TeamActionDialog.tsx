@@ -26,6 +26,7 @@ import {
 } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { StepUpAuthGate } from './StepUpAuthGate.js';
 import { getProfileContextRevision } from '../lib/profile-context.js';
 import { sendToast } from '../lib/toast-api.js';
@@ -41,6 +42,8 @@ export interface TeamAction {
   signsOut?: boolean;
   requiresPassword?: boolean;
   requiresOtp?: boolean;
+  /** Opt in when the caller owns recovery of a potentially committed command. */
+  responseDeadline?: true;
   conflictMessage?: string;
   forbiddenMessage?: string;
   errorMessages?: Record<string, string | ((response: unknown) => string)>;
@@ -104,6 +107,7 @@ export function TeamActionDialog({
   const numbers = useNumberFormatting(locale);
   const [busy, setBusy] = useState(false);
   const inFlight = useRef(false);
+  const requestTransport = useRef<AbortController | null>(null);
   const mounted = useRef(false);
   const currentAction = useRef(action);
   const canConfirm = useRef(!confirmationDisabled && gate.allowed);
@@ -113,6 +117,7 @@ export function TeamActionDialog({
     mounted.current = true;
     return () => {
       mounted.current = false;
+      requestTransport.current?.abort();
     };
   }, []);
 
@@ -158,6 +163,8 @@ export function TeamActionDialog({
     if (needsOtp && !otpVerified) return;
     if (!canConfirm.current || inFlight.current || retryAt > Date.now()) return;
     const profileRevision = getProfileContextRevision();
+    const transport = action?.responseDeadline ? new AbortController() : null;
+    requestTransport.current = transport;
     inFlight.current = true;
     setBusy(true);
     onPendingChange?.(true);
@@ -176,14 +183,19 @@ export function TeamActionDialog({
         );
     };
     let commandSent = false;
+    const request = <T,>(send: (signal?: AbortSignal) => Promise<T>) =>
+      transport ? readWithDeadline(transport.signal, send) : send();
     try {
       if (!otpVerified && (needsPassword || !action)) {
-        const verified = await fetch('/api/auth/step-up', {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({ password }),
-        });
+        const verified = await request((signal) =>
+          fetch('/api/auth/step-up', {
+            method: 'POST',
+            credentials: 'include',
+            headers: withCsrf({ 'Content-Type': 'application/json' }),
+            body: JSON.stringify({ password }),
+            ...(signal ? { signal } : {}),
+          })
+        );
         if (!owned() || !canConfirm.current) return;
         setPassword('');
         if (rateLimited(verified)) return;
@@ -207,16 +219,19 @@ export function TeamActionDialog({
             ? action.body
             : JSON.stringify(action.body);
       commandSent = true;
-      const response = await fetch(action.path, {
-        method: action.method,
-        credentials: 'include',
-        headers: withCsrf({
-          ...(multipart ? {} : { 'Content-Type': 'application/json' }),
-          'Accept-Language': locale,
-        }),
-        ...(requestBody === undefined ? {} : { body: requestBody }),
+      const { response, data } = await request(async (signal) => {
+        const response = await fetch(action.path, {
+          method: action.method,
+          credentials: 'include',
+          headers: withCsrf({
+            ...(multipart ? {} : { 'Content-Type': 'application/json' }),
+            'Accept-Language': locale,
+          }),
+          ...(requestBody === undefined ? {} : { body: requestBody }),
+          ...(signal ? { signal } : {}),
+        });
+        return { response, data: await response.json().catch(() => null) };
       });
-      const data = await response.json().catch(() => null);
       if (!owned()) return;
       const code = typeof data?.error === 'string' ? data.error : data?.error?.code;
       if (
@@ -282,6 +297,7 @@ export function TeamActionDialog({
         showError(t('team.error', locale), commandSent);
       }
     } finally {
+      requestTransport.current = null;
       inFlight.current = false;
       if (mounted.current) setBusy(false);
       if (mounted.current && currentAction.current === action) onPendingChange?.(false);

@@ -169,6 +169,56 @@ for (const [locale, theme] of [
     expect(state.request!.contractState).toBe('Active');
   });
 
+  test(`staff electricity increase approval recovers from a stalled acknowledgement (${locale}, ${theme})`, async ({
+    page,
+  }) => {
+    await page.clock.install();
+    const state = await setupElectricityQuantityIncreaseForms(page, locale, theme === 'dark');
+    state.auth.context = 'staff';
+    state.auth.actor = increaseStaffId;
+    state.decisionMode = 'success';
+    await page.goto('/admin/electricity-increases');
+    const approveForm = page.getByTestId('electricity-increase-approve-form').first();
+    const date = page.locator(`#increase-effective-${increaseRequestId}`);
+    await date.fill('2026-10-13T12:00');
+    await page.locator(`#increase-approval-reason-${increaseRequestId}`).fill('Capacity reviewed');
+    const approve = approveForm.getByRole('button', { name: staffText('approve'), exact: true });
+    await approve.click();
+    const dialog = page.getByRole('dialog');
+    await approveRiskConfirmation(page, locale, 'financial');
+    await dialog.locator('button[type=submit]').click();
+    await expect.poll(() => !!state.decisionWriteRoute).toBe(true);
+    const stale = state.decisionWriteRoute!;
+    const original = stale.request().postData();
+    const captured = state.decisionWrites[0];
+    expect(captured?.body.idempotencyKey).toMatch(/^[0-9a-f-]{36}$/);
+    await page.clock.fastForward(15_001);
+    const retry = page.getByRole('button', {
+      name: copy('electricity.increaseDecisionForm.retryCaptured'),
+      exact: true,
+    });
+    await expect(retry).toBeEnabled({ timeout: 2_000 });
+    await expect(dialog).toHaveCount(0);
+    await expect(date).toHaveValue('2026-10-13T12:00');
+    await expect(approve).toBeDisabled();
+    expect(state.decisionWrites).toEqual([captured]);
+    await stale.fulfill({ status: 403, json: { error: 'AUTHZ:FORBIDDEN' } }).catch(() => {});
+    await expect(retry).toBeEnabled();
+    state.decisionWriteMode = 'success';
+    await retry.click();
+    await expect(dialog.locator('button[type=submit]')).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'financial');
+    const replay = page.waitForRequest(
+      (request) => request.method() === 'POST' && request.url() === stale.request().url()
+    );
+    await dialog.locator('button[type=submit]').click();
+    expect((await replay).postData()).toBe(original);
+    await expect(dialog).toHaveCount(0);
+    await expect(date).toHaveCount(0);
+    expect(state.decisionWrites).toEqual([captured, captured]);
+    expect(state.decisionPreviews).toHaveLength(1);
+  });
+
   test(`staff increase date and rejection forms preserve bound decisions (${locale}, ${theme})`, async ({
     page,
   }, info) => {
@@ -181,6 +231,9 @@ for (const [locale, theme] of [
     let rejectForm = page.getByTestId('electricity-increase-reject-form').first();
     const date = page.locator(`#increase-effective-${increaseRequestId}`);
     const approvalReason = page.locator(`#increase-approval-reason-${increaseRequestId}`);
+    await expect(date).not.toHaveAttribute('aria-required', 'true');
+    for (const field of [approvalReason, rejectForm.locator('input,textarea')])
+      await expect(field).toHaveAttribute('aria-required', 'true');
     await approvalReason.fill('  Capacity reviewed  ');
     await date.fill('2026-10-13T12:00');
     const approve = approveForm.getByRole('button', { name: staffText('approve'), exact: true });

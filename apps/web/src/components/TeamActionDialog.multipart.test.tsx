@@ -55,6 +55,7 @@ it('submits a captured multipart action with CSRF and a browser-generated bounda
   await act(async () => confirm!.click());
   const options = fetcher.mock.calls[0]![1]!;
   expect(options.body).toBe(body);
+  expect(options.signal).toBeUndefined();
   const headers = options.headers as Headers;
   expect(headers.get('content-type')).toBeNull();
   expect(headers.get('x-csrf-token')).toBe('test-token');
@@ -126,6 +127,56 @@ it('keeps successful step-up verification across a failed save and retries the i
   expect(fetcher.mock.calls[1]![1]?.body).toBe(JSON.stringify(body));
   expect(fetcher.mock.calls[2]![1]?.body).toBe(JSON.stringify(body));
   expect(onSuccess).toHaveBeenCalledOnce();
+});
+
+it('ends a stalled step-up without sending or marking the captured command uncertain', async () => {
+  const fetcher = vi.fn(
+    (_input: RequestInfo | URL, _init?: RequestInit) => new Promise<Response>(() => {})
+  );
+  vi.stubGlobal('fetch', fetcher);
+  const onUnconfirmed = vi.fn(),
+    onSuccess = vi.fn(async () => {});
+  await act(async () =>
+    root.render(
+      <TeamActionDialog
+        action={{
+          title: 'Record decision',
+          description: 'Reviewed command',
+          path: '/api/staff/electricity/reviewed',
+          method: 'POST',
+          requiresPassword: true,
+          responseDeadline: true,
+        }}
+        onClose={vi.fn()}
+        onSuccess={onSuccess}
+        onUnconfirmed={onUnconfirmed}
+      />
+    )
+  );
+  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+  try {
+    const form = document.body.querySelector('form')!;
+    const password = form.querySelector<HTMLInputElement>('input[type=password]')!;
+    const confirm = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+    await act(async () => {
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+        password,
+        'reviewed test credential'
+      );
+      password.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    await act(async () => confirm.click());
+    expect(fetcher.mock.calls.map(([path]) => path)).toEqual(['/api/auth/step-up']);
+    await act(async () => vi.advanceTimersByTimeAsync(15_001));
+    expect(fetcher.mock.calls[0]?.[1]?.signal?.aborted).toBe(true);
+    expect(confirm.disabled).toBe(false);
+    expect(document.body.querySelector('[role=alert]')).not.toBeNull();
+    expect(onUnconfirmed).not.toHaveBeenCalled();
+    expect(onSuccess).not.toHaveBeenCalled();
+    expect(fetcher).toHaveBeenCalledOnce();
+  } finally {
+    vi.useRealTimers();
+  }
 });
 
 it.each([

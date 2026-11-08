@@ -58,4 +58,6 @@ Username, contact and Telegram linking commands wait up to 15 seconds for an ack
 
 Timezone, notification and marketing saves use the same response deadline. A timed-out save keeps its choices and asks for a fresh settings read. Only a matching saved value completes the pending save.
 
+Staff electricity quantity decisions and price adjustments apply the same deadline to the shared confirmation dialog. If a write has been sent, the existing recovery keeps the reviewed command, idempotency key and lock. An explicit retry requires the same confirmation and receipt checks.
+
 The auth build excludes customer-only profile and verification imports. Its existing route guard hands off non-authentication URLs before those workspaces can mount. Purchase components remain eager; their pending and error views can load separately. Budget checks still count the full emitted payload and retain the original limits. A Register facade emitted under a hashed manifest key uses the existing unique dynamic-entry selector, `chunk:index`; an ambiguous or missing entry fails the check.

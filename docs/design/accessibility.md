@@ -113,6 +113,9 @@ group, while each product quantity and the gift code remain optional.
 Quantity increase requests require the requested amount. A stalled correction
 submission offers a manual retry of the same reviewed request and keeps other
 corrections locked while its outcome is uncertain.
+Staff quantity increase approvals and rejections require a reason. Staff may
+leave the proposed approval date blank for the server to select it. Price proposals require a contract, percentage,
+effective date, reason and contractual basis.
 
 Saving hardware changes require a replacement product and a reason. Cancelling
 an upgrade requires its own reason. Staff changes to a paid saving order's

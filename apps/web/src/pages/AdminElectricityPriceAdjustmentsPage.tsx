@@ -216,7 +216,7 @@ function OwnedAdminElectricityPriceAdjustmentsPage({
               <FormItem id="electricity-price-contract" className="min-w-0 flex-1 basis-64">
                 <FormLabel>{copy('contractId')}</FormLabel>
                 <FormControl>
-                  <Input {...field} dir="ltr" disabled={selectionLocked} />
+                  <Input {...field} aria-required="true" dir="ltr" disabled={selectionLocked} />
                 </FormControl>
                 <FormDescription>{formCopy('contractHelp')}</FormDescription>
                 <FormMessage reserveSpace />
@@ -662,6 +662,7 @@ function PriceWorkspace({
               description: copy('publishConfirm'),
               path: `/api/staff/electricity/contracts/${encodeURIComponent(contractId)}/price-adjustments`,
               method: 'POST',
+              responseDeadline: true,
               successStatus: 201,
               body: {
                 ...proposal,
@@ -731,6 +732,7 @@ function PriceWorkspace({
         description: copy(`${operation}Confirm`),
         path: `/api/staff/electricity/price-adjustments/${encodeURIComponent(adjustment.adjustmentId)}/${operation}`,
         method: 'POST',
+        responseDeadline: true,
         successStatus: 201,
         body: {
           idempotencyKey: crypto.randomUUID(),
@@ -856,6 +858,7 @@ function PriceWorkspace({
                             <FormControl>
                               <Input
                                 {...field}
+                                aria-required="true"
                                 type={name === 'effectiveFrom' ? 'datetime-local' : 'text'}
                                 inputMode={name === 'percentage' ? 'decimal' : undefined}
                                 disabled={frozen || (name === 'effectiveFrom' && !timezone)}

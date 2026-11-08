@@ -64,6 +64,7 @@ for (const [locale, theme] of [
     const pickerForm = page.getByTestId('electricity-price-contract-form');
     const picker = page.locator('#electricity-price-contract');
     const open = pickerForm.getByRole('button', { name: copy('open'), exact: true });
+    await expect(picker).toHaveAttribute('aria-required', 'true');
     await expect(picker).not.toHaveAttribute('aria-invalid', 'true');
     await open.click();
     await expect(open).toBeDisabled();
@@ -90,6 +91,8 @@ for (const [locale, theme] of [
     const reason = page.locator('#price-reason');
     const basis = page.locator('#price-basis');
     const review = form.getByRole('button', { name: copy('reviewProposal'), exact: true });
+    for (const field of [percentage, date, reason, basis])
+      await expect(field).toHaveAttribute('aria-required', 'true');
     await percentage.fill('0');
     await date.fill('2026-10-09T12:00');
     await reason.fill('  Draft <script> tariff  ');
@@ -251,6 +254,60 @@ for (const [locale, theme] of [
       'finalized'
     );
   });
+  test(`staff electricity price proposal recovers from a stalled acknowledgement (${locale}, ${theme})`, async ({
+    page,
+  }) => {
+    await page.clock.install();
+    const state = await setupElectricityPriceAdjustmentForms(page, locale, theme === 'dark');
+    state.auth.context = 'staff';
+    state.reviewMode = 'success';
+    await page.goto('/admin/electricity-price-adjustments');
+    const picker = page.locator('#electricity-price-contract');
+    await picker.fill(contractId);
+    await picker.press('Enter');
+    const form = page.getByTestId('electricity-price-proposal-form');
+    const review = form.getByRole('button', { name: copy('reviewProposal'), exact: true });
+    await page.locator('#price-percent').fill('10.25');
+    await page.locator('#price-effective').fill('2026-10-09T12:00');
+    const reason = page.locator('#price-reason');
+    await reason.fill('  Tariff reviewed  ');
+    await page.locator('#price-basis').fill('Contract clause 7');
+    await review.click();
+    const dialog = page.getByRole('dialog');
+    await approveRiskConfirmation(page, locale, 'financial');
+    await dialog.locator('button[type=submit]').click();
+    await expect.poll(() => !!state.writeRoute).toBe(true);
+    const stale = state.writeRoute!;
+    const original = stale.request().postData();
+    const captured = state.writes[0];
+    expect(captured?.body.idempotencyKey).toMatch(/^[0-9a-f-]{36}$/);
+    await page.clock.fastForward(15_001);
+    const retry = page.getByRole('button', {
+      name: app('electricity.priceForm.retryCaptured'),
+      exact: true,
+    });
+    await expect(retry).toBeEnabled({ timeout: 2_000 });
+    await expect(dialog).toHaveCount(0);
+    await expect(reason).toHaveValue('  Tariff reviewed  ');
+    await expect(review).toBeDisabled();
+    expect(state.writes).toEqual([captured]);
+    await stale.fulfill({ status: 403, json: { error: 'AUTHZ:FORBIDDEN' } }).catch(() => {});
+    await expect(retry).toBeEnabled();
+    state.writeMode = 'success';
+    await retry.click();
+    await expect(dialog.locator('button[type=submit]')).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'financial');
+    const replay = page.waitForRequest(
+      (request) => request.method() === 'POST' && request.url() === stale.request().url()
+    );
+    await dialog.locator('button[type=submit]').click();
+    expect((await replay).postData()).toBe(original);
+    await expect(dialog).toHaveCount(0);
+    await expect(page.getByRole('button', { name: copy('cancel'), exact: true })).toBeEnabled();
+    expect(state.writes).toEqual([captured, captured]);
+    expect(state.previews).toHaveLength(1);
+  });
+
   test(`customer price disclosure rejects malformed rows and denied recovery (${locale}, ${theme})`, async ({
     page,
   }, info) => {
