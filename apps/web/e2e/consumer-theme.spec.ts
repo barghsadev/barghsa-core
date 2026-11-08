@@ -6,8 +6,11 @@ import { test, expect, type Locator } from './coverage-fixture';
 import { tSaving } from '@barghsa/i18n/saving';
 import { providerText } from '@barghsa/i18n/providers';
 import { t } from '@barghsa/i18n/admin-ui';
+import { feedbackText } from '@barghsa/i18n/feedback';
+import { shellText } from '@barghsa/i18n/shell';
 import { measureControlContrast } from './control-contrast';
 import { approveRiskConfirmation } from './confirmation-fixture';
+import { crmShell } from './crm-shell-fixture';
 
 const pages = [
   '/dashboard',
@@ -19,6 +22,48 @@ const pages = [
   '/admin/tos',
   '/admin/wallet-receipts',
 ];
+
+test('active staff navigation stays readable when the account theme changes', async ({ page }) => {
+  await crmShell(page);
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'no-preference' });
+  let mode = 'light';
+  await page.route('**/api/user/settings/theme', (route) => {
+    if (route.request().method() === 'PUT') mode = route.request().postDataJSON().mode;
+    return route.fulfill({ json: { mode } });
+  });
+  await page.goto('/admin/agents');
+  const theme = page.getByRole('combobox', { name: shellText('theme', 'en'), exact: true });
+  const active = page
+    .getByTestId('admin-settings-layout')
+    .locator('.shell-navigation-link[aria-current="page"][href="/admin/agents"]');
+  await expect(active).toBeVisible();
+  await expect(theme).toHaveValue('light');
+  await expect(theme).toBeEnabled();
+
+  for (const next of ['dark', 'light']) {
+    await active.evaluate((link) => {
+      const observer = new MutationObserver(() => {
+        observer.disconnect();
+        // Freeze the first frame so the measurement includes the palette change itself.
+        for (const animation of link.getAnimations()) {
+          animation.pause();
+          animation.currentTime = 0;
+        }
+      });
+      observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    });
+    await theme.selectOption(next);
+    await expect(theme).toHaveValue(next);
+    await expect
+      .poll(() => page.locator('html').evaluate((node) => node.classList.contains('dark')))
+      .toBe(next === 'dark');
+    expect.soft(await measureControlContrast(active, 'text'), next).toBeGreaterThanOrEqual(4.5);
+    await active.evaluate((link) =>
+      link.getAnimations().forEach((animation) => animation.finish())
+    );
+  }
+});
 
 for (const locale of ['en', 'fa'] as const)
   for (const dark of [false, true])
@@ -246,12 +291,17 @@ for (const locale of ['en', 'fa'] as const)
         await approveRiskConfirmation(page, locale, 'destructive');
         await confirm.click();
       };
-      for (const [kind, label] of [
-        ['error', t('admin.notifications.dismissError', locale)],
-        ['notice', providerText('admin.providers.dismissNotice', locale)],
-      ]) {
+      for (const kind of ['error', 'notice'] as const) {
         await rollback();
-        const dismiss = page.getByRole('button', { name: label, exact: true });
+        const dismiss =
+          kind === 'error'
+            ? page.getByRole('button', {
+                name: t('admin.notifications.dismissError', locale),
+                exact: true,
+              })
+            : page
+                .getByRole('region', { name: feedbackText('region', locale), exact: true })
+                .getByRole('button', { name: feedbackText('close', locale), exact: true });
         await expect(dismiss).toBeVisible();
         for (const high of [false, true]) {
           await setHighContrast(high);

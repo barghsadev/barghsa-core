@@ -872,6 +872,7 @@
   }
   .shell-navigation-link[aria-current='page'] {
     font-weight: 650;
+    transition: none;
   }
   .auth-form :where(h1) {
     font-size: clamp(1.75rem, 2.5vw, 2.125rem);
