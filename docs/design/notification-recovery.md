@@ -70,4 +70,6 @@ Onboarding start, profile completion and dashboard-profile selection use the sam
 
 Terms draft saves, publication and discard use the same response deadline. An unknown result keeps local draft text, retires the old publication preview and disables writes until version history is read again. Revision checks and explicit publication or discard confirmation still apply to a new attempt.
 
+Team invitation sends and recipient actions use the same deadline. An unknown send keeps the draft and refreshes the team. Only a pending row with the same normalized recipient, role and message confirms a matching invitation. A failed refresh leaves sending disabled. A recipient decision or profile switch needs its matching receipt, and a failed attempt waits for a fresh invitations read before another action.
+
 The auth build excludes customer-only profile and verification imports. Its existing route guard hands off non-authentication URLs before those workspaces can mount. Purchase components remain eager; their pending and error views can load separately. Budget checks still count the full emitted payload and retain the original limits. A Register facade emitted under a hashed manifest key uses the existing unique dynamic-entry selector, `chunk:index`; an ambiguous or missing entry fails the check.

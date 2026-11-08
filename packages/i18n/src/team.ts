@@ -107,6 +107,9 @@ const fa: Record<string, string> = {
   'team.consent':
     'دسترسی فقط پس از پذیرش گیرنده آغاز می‌شود. دعوت‌نامه‌ها پس از هفت روز منقضی می‌شوند.',
   'team.invited': 'دعوت‌نامه ارسال شد. گیرنده باید برای عضویت آن را بپذیرد.',
+  'team.invitePendingFound': 'دعوت‌نامه‌ای با همین مشخصات در انتظار پاسخ است.',
+  'team.inviteNotConfirmed':
+    'دعوت‌نامه تأیید نشد. پیش از ارسال دوباره، فهرست فعلی تیم را بررسی کنید.',
   'team.members': 'اعضا و دعوت‌نامه‌ها',
   'team.empty': 'هنوز نماینده‌ای وجود ندارد. تیم خود را دعوت کنید.',
   'team.saveRoles': 'ذخیره نقش‌ها',
@@ -238,6 +241,9 @@ const en: Record<string, string> = {
   'team.consent':
     'Access starts only after the recipient accepts. Invitations expire after seven days.',
   'team.invited': 'Invitation sent. The recipient must accept to join.',
+  'team.invitePendingFound': 'A matching invitation is pending.',
+  'team.inviteNotConfirmed':
+    'The invitation could not be confirmed. Review the current team before sending again.',
   'team.members': 'Members and invitations',
   'team.empty': 'No agents yet. Invite your team.',
   'team.saveRoles': 'Save roles',

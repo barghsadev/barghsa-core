@@ -3,8 +3,11 @@ import { crmShell } from './crm-shell-fixture';
 import { cookieResponse } from './cookie-response';
 import AxeBuilder from '@axe-core/playwright';
 import { formatBrowserDate } from './browser-date';
-import { test, expect, type Page } from './coverage-fixture';
+import { test, expect, type Page, type Route } from './coverage-fixture';
 import { confirmationText } from '@barghsa/i18n/confirmation';
+import { t as teamText } from '@barghsa/i18n/team';
+import { t as workspaceText } from '@barghsa/i18n/workspace';
+import { teamCatalogue, teamInvitation } from '../src/test/team-catalogue-fixtures';
 
 const profileId = '00000000-0000-4000-8000-000000000001';
 const transferId = '00000000-0000-4000-8000-000000000002';
@@ -192,6 +195,7 @@ for (const locale of ['fa', 'en'] as const) {
     page,
   }) => {
     const fa = locale === 'fa';
+    await page.setViewportSize({ width: 1280, height: 800 });
     await shell(page, locale);
     const sent: unknown[] = [];
     await page.route(`**/api/profiles/${profileId}/invitations`, (route) => {
@@ -267,6 +271,80 @@ for (const locale of ['fa', 'en'] as const) {
     ]);
   });
 
+  test(`a stalled invitation send finds the exact pending invitation without resending (${locale})`, async ({
+    page,
+  }) => {
+    const word = (key: string) => teamText(`team.${key}`, locale);
+    await shell(page, locale);
+    let heldInvite: Route | undefined;
+    let heldDirectory: Route | undefined;
+    let recover = false;
+    const writes: unknown[] = [];
+    const directory = teamCatalogue();
+    await page.route(`**/api/profiles/${profileId}/agents`, (route) => {
+      if (!recover) return route.fulfill({ json: directory });
+      heldDirectory = route;
+    });
+    await page.route(`**/api/profiles/${profileId}/invitations`, (route) => {
+      writes.push(route.request().postDataJSON());
+      heldInvite = route;
+    });
+    await page.goto('/settings/team');
+    const invite = page.getByRole('button', { name: word('invite'), exact: true });
+    await invite.click();
+    const dialog = page.getByRole('dialog');
+    const address = dialog.locator('#team-username');
+    const message = dialog.locator('#invite-message');
+    const submit = dialog.getByRole('button', { name: word('sendInvite'), exact: true });
+    await address.fill(' 09121234567 ');
+    await dialog.locator('#invite-role').selectOption('Finance');
+    await message.fill('  Reviewed invitation  ');
+    await page.clock.install();
+    await submit.click();
+    await expect.poll(() => !!heldInvite).toBe(true);
+    recover = true;
+    await page.clock.fastForward(15_001);
+    await expect(dialog.getByRole('alert')).toContainText(confirmationText('unconfirmed', locale));
+    await expect.poll(() => !!heldDirectory).toBe(true);
+    await expect(address).toHaveValue(' 09121234567 ');
+    await expect(message).toHaveValue('  Reviewed invitation  ');
+    await expect(submit).toBeDisabled();
+    await heldInvite!
+      .fulfill({ status: 201, json: { id: 'recovered-invitation' } })
+      .catch(() => {});
+    expect(writes).toEqual([
+      { username: '09121234567', role: 'Finance', message: 'Reviewed invitation' },
+    ]);
+    const failedRead = heldDirectory!;
+    await failedRead.fulfill({ status: 503, json: {} });
+    const refresh = dialog.getByRole('button', { name: word('refreshMembers'), exact: true });
+    await expect(refresh).toBeEnabled();
+    await expect(submit).toBeDisabled();
+    await expect(message).toHaveValue('  Reviewed invitation  ');
+    await refresh.click();
+    await expect.poll(() => heldDirectory !== failedRead).toBe(true);
+    await heldDirectory!.fulfill({
+      json: {
+        ...directory,
+        agents: [
+          ...directory.agents,
+          {
+            ...teamInvitation(),
+            id: 'recovered-invitation',
+            username: '+989121234567',
+            message: 'Reviewed invitation',
+          },
+        ],
+      },
+    });
+    await expect(dialog).toHaveCount(0);
+    await expect(
+      page.getByRole('status').filter({ hasText: word('invitePendingFound') })
+    ).toBeVisible();
+    await expect(invite).toBeFocused();
+    expect(writes).toHaveLength(1);
+  });
+
   test(`invitation banner retries loading and shows private details before a decision (${locale})`, async ({
     page,
   }) => {
@@ -274,6 +352,7 @@ for (const locale of ['fa', 'en'] as const) {
     await shell(page, locale);
     let loads = 0,
       decisions = 0;
+    let heldDecision: Route | undefined;
     const decision = fa ? 'decline' : 'accept';
     await page.route('**/api/invitations/pending', (route) =>
       route.fulfill(
@@ -306,8 +385,12 @@ for (const locale of ['fa', 'en'] as const) {
           expectedProfileId: profileId,
           expectedRole: 'Finance',
         });
+        if (++decisions === 2) {
+          heldDecision = route;
+          return;
+        }
         return route.fulfill(
-          ++decisions === 1
+          decisions === 1
             ? { status: 409, json: {} }
             : {
                 json: {
@@ -362,21 +445,44 @@ for (const locale of ['fa', 'en'] as const) {
     expect(decisions).toBe(0);
     const act = banner.getByRole('button', { name: fa ? 'رد کردن' : 'Accept', exact: true });
     await act.click();
-    await expect(
-      page.getByRole('alert').filter({ hasText: fa ? 'خطا' : 'Error processing invitation' })
-    ).toBeVisible();
+    const decisionError = banner
+      .getByRole('alert')
+      .filter({ hasText: workspaceText('invitation.banner.error', locale) });
+    await expect(decisionError).toBeVisible();
     await expect(act).toBeDisabled();
+    await banner.getByRole('button', { name: fa ? 'تلاش دوباره' : 'Retry', exact: true }).click();
+    await expect(act).toBeEnabled();
+    await page.clock.install();
+    await act.click();
+    await expect.poll(() => !!heldDecision).toBe(true);
+    await page.clock.fastForward(15_001);
+    await expect(decisionError).toBeVisible();
+    await expect(act).toBeDisabled();
+    await heldDecision!
+      .fulfill({
+        json: {
+          invitation: {
+            id: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
+            profileId,
+            role: 'Finance',
+            status: decision === 'accept' ? 'Accepted' : 'Declined',
+          },
+        },
+      })
+      .catch(() => {});
+    expect(decisions).toBe(2);
     await banner.getByRole('button', { name: fa ? 'تلاش دوباره' : 'Retry', exact: true }).click();
     await expect(act).toBeEnabled();
     await act.click();
     await expect(act).toHaveCount(0);
     await expect(banner.getByRole('status')).toContainText('Inviting company');
-    expect(decisions).toBe(2);
+    expect(decisions).toBe(3);
   });
 
   test(`invite and save additive roles through password confirmation (${locale})`, async ({
     page,
   }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
     await shell(page, locale);
     const requests: unknown[] = [];
     let verified = false;
@@ -452,6 +558,7 @@ for (const locale of ['fa', 'en'] as const) {
       .getByRole('button', { name: locale === 'fa' ? 'ذخیره نقش‌ها' : 'Save roles' })
       .click();
     const dialog = page.getByRole('dialog');
+    await authorizeAction(page, locale);
     await dialog
       .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
       .click();

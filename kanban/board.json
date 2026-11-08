@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T10:01:20+00:00",
-  "source_commit": "051389b1c8db426db15910369d0bb05d2fa03a7c",
+  "updated": "2026-11-08T10:12:35+00:00",
+  "source_commit": "5fe52617e4f2df24df1e877f8d186c6c68b11057",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -50737,7 +50737,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -50753,7 +50753,7 @@
             },
             {
               "path": "apps/web/src/lib/invitation-action.ts",
-              "sha256": "cf411d58a68807ba4f8d17d911e7f91eca3bcc7ac25acbe6754a8d0ea594ff77"
+              "sha256": "ba201095534f083411e3b4b9752d4e2b6f49de1201eb9b2db813d924f70290aa"
             },
             {
               "path": "apps/web/src/lib/invitation-api.ts",
@@ -50761,7 +50761,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "packages/db/drizzle/production/0111_account_login_identifiers.sql",
@@ -50773,7 +50773,7 @@
             },
             {
               "path": "packages/i18n/src/team.ts",
-              "sha256": "c3bbcbbdf704619a3c7a91be1daa684b67aba8e137cd337079fb26e92030f938"
+              "sha256": "f67918ee8d2b95e13412c783594b075125360e9b63d018d222afde4f36967554"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -51516,7 +51516,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -51532,7 +51532,7 @@
             },
             {
               "path": "apps/web/src/lib/invitation-action.ts",
-              "sha256": "cf411d58a68807ba4f8d17d911e7f91eca3bcc7ac25acbe6754a8d0ea594ff77"
+              "sha256": "ba201095534f083411e3b4b9752d4e2b6f49de1201eb9b2db813d924f70290aa"
             },
             {
               "path": "apps/web/src/lib/invitation-api.ts",
@@ -51540,7 +51540,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -51572,7 +51572,7 @@
             },
             {
               "path": "packages/i18n/src/team.ts",
-              "sha256": "c3bbcbbdf704619a3c7a91be1daa684b67aba8e137cd337079fb26e92030f938"
+              "sha256": "f67918ee8d2b95e13412c783594b075125360e9b63d018d222afde4f36967554"
             },
             {
               "path": "packages/shared/src/admin/background-jobs.ts",
@@ -52466,7 +52466,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -52486,7 +52486,7 @@
             },
             {
               "path": "apps/web/src/lib/invitation-action.ts",
-              "sha256": "cf411d58a68807ba4f8d17d911e7f91eca3bcc7ac25acbe6754a8d0ea594ff77"
+              "sha256": "ba201095534f083411e3b4b9752d4e2b6f49de1201eb9b2db813d924f70290aa"
             },
             {
               "path": "apps/web/src/lib/invitation-api.ts",
@@ -53217,7 +53217,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -53225,7 +53225,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -53233,7 +53233,7 @@
             },
             {
               "path": "packages/i18n/src/team.ts",
-              "sha256": "c3bbcbbdf704619a3c7a91be1daa684b67aba8e137cd337079fb26e92030f938"
+              "sha256": "f67918ee8d2b95e13412c783594b075125360e9b63d018d222afde4f36967554"
             },
             {
               "path": "apps/api/src/profiles/agents.controller.ts",
@@ -54548,7 +54548,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -54568,7 +54568,7 @@
             },
             {
               "path": "apps/web/src/lib/invitation-action.ts",
-              "sha256": "cf411d58a68807ba4f8d17d911e7f91eca3bcc7ac25acbe6754a8d0ea594ff77"
+              "sha256": "ba201095534f083411e3b4b9752d4e2b6f49de1201eb9b2db813d924f70290aa"
             },
             {
               "path": "apps/web/src/lib/invitation-api.ts",
@@ -54576,7 +54576,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "packages/db/drizzle/production/0111_account_login_identifiers.sql",
@@ -54588,7 +54588,7 @@
             },
             {
               "path": "packages/i18n/src/team.ts",
-              "sha256": "c3bbcbbdf704619a3c7a91be1daa684b67aba8e137cd337079fb26e92030f938"
+              "sha256": "f67918ee8d2b95e13412c783594b075125360e9b63d018d222afde4f36967554"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -55910,7 +55910,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -491383,7 +491383,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -494463,7 +494463,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -495346,7 +495346,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -496170,7 +496170,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
+              "sha256": "977a70a37e4ff791fb2a8b4a4d3e3f759c40bf0af3eeb4c72f60d5285212050f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -508329,7 +508329,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -511646,7 +511646,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/team-catalogue-recovery.test.tsx",
@@ -512356,7 +512356,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -517277,7 +517277,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/e2e/telegram-link.spec.ts",
@@ -518013,7 +518013,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
+              "sha256": "977a70a37e4ff791fb2a8b4a4d3e3f759c40bf0af3eeb4c72f60d5285212050f"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -518153,7 +518153,7 @@
             },
             {
               "path": "packages/i18n/src/team.ts",
-              "sha256": "c3bbcbbdf704619a3c7a91be1daa684b67aba8e137cd337079fb26e92030f938"
+              "sha256": "f67918ee8d2b95e13412c783594b075125360e9b63d018d222afde4f36967554"
             },
             {
               "path": "packages/i18n/src/ticket-forms.ts",
@@ -519017,7 +519017,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
+              "sha256": "977a70a37e4ff791fb2a8b4a4d3e3f759c40bf0af3eeb4c72f60d5285212050f"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -520500,7 +520500,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
@@ -521328,7 +521328,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
@@ -522656,7 +522656,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
@@ -546907,7 +546907,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
@@ -548773,7 +548773,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
@@ -550640,7 +550640,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
@@ -552476,7 +552476,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
@@ -554338,7 +554338,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
@@ -556209,7 +556209,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
@@ -558053,7 +558053,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
@@ -559861,7 +559861,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
@@ -561669,7 +561669,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
@@ -563478,7 +563478,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
@@ -565286,7 +565286,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
@@ -567136,7 +567136,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -567520,7 +567520,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
+              "sha256": "977a70a37e4ff791fb2a8b4a4d3e3f759c40bf0af3eeb4c72f60d5285212050f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -569031,7 +569031,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -569415,7 +569415,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
+              "sha256": "977a70a37e4ff791fb2a8b4a4d3e3f759c40bf0af3eeb4c72f60d5285212050f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570219,7 +570219,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Scoped launch service, contract, staff receipt, onboarding and terms commands distinguish a verified acknowledgement from an unknown result. Remaining ordinary command feedback still needs reconciliation."
+        "Scoped launch service, contract, staff receipt, onboarding, terms and invitation commands distinguish verified acknowledgements from unknown results. Reconcile the remaining ordinary command feedback across customer and staff route entries."
       ],
       "owner": null,
       "depends_on": [],
@@ -570270,7 +570270,8 @@
           "release-0.5-contract-confirmation",
           "release-0.5-staff-receipt-acknowledgement",
           "release-0.5-onboarding-acknowledgement",
-          "release-0.5-terms-acknowledgement"
+          "release-0.5-terms-acknowledgement",
+          "release-0.5-team-invitation-acknowledgement"
         ],
         "current_acceptance": null
       }
@@ -570997,7 +570998,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -571381,7 +571382,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
+              "sha256": "977a70a37e4ff791fb2a8b4a4d3e3f759c40bf0af3eeb4c72f60d5285212050f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -572892,7 +572893,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -573276,7 +573277,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
+              "sha256": "977a70a37e4ff791fb2a8b4a4d3e3f759c40bf0af3eeb4c72f60d5285212050f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -574787,7 +574788,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -575171,7 +575172,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
+              "sha256": "977a70a37e4ff791fb2a8b4a4d3e3f759c40bf0af3eeb4c72f60d5285212050f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -576682,7 +576683,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -577066,7 +577067,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
+              "sha256": "977a70a37e4ff791fb2a8b4a4d3e3f759c40bf0af3eeb4c72f60d5285212050f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -578577,7 +578578,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -578961,7 +578962,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
+              "sha256": "977a70a37e4ff791fb2a8b4a4d3e3f759c40bf0af3eeb4c72f60d5285212050f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -580472,7 +580473,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -580856,7 +580857,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
+              "sha256": "977a70a37e4ff791fb2a8b4a4d3e3f759c40bf0af3eeb4c72f60d5285212050f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -582367,7 +582368,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -582751,7 +582752,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
+              "sha256": "977a70a37e4ff791fb2a8b4a4d3e3f759c40bf0af3eeb4c72f60d5285212050f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -584262,7 +584263,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -584646,7 +584647,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
+              "sha256": "977a70a37e4ff791fb2a8b4a4d3e3f759c40bf0af3eeb4c72f60d5285212050f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -586157,7 +586158,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -586541,7 +586542,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
+              "sha256": "977a70a37e4ff791fb2a8b4a4d3e3f759c40bf0af3eeb4c72f60d5285212050f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -588052,7 +588053,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -588436,7 +588437,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
+              "sha256": "977a70a37e4ff791fb2a8b4a4d3e3f759c40bf0af3eeb4c72f60d5285212050f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589947,7 +589948,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -590331,7 +590332,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
+              "sha256": "977a70a37e4ff791fb2a8b4a4d3e3f759c40bf0af3eeb4c72f60d5285212050f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591595,7 +591596,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
+              "sha256": "977a70a37e4ff791fb2a8b4a4d3e3f759c40bf0af3eeb4c72f60d5285212050f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592582,7 +592583,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -592966,7 +592967,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
+              "sha256": "977a70a37e4ff791fb2a8b4a4d3e3f759c40bf0af3eeb4c72f60d5285212050f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594477,7 +594478,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -594861,7 +594862,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
+              "sha256": "977a70a37e4ff791fb2a8b4a4d3e3f759c40bf0af3eeb4c72f60d5285212050f"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595665,7 +595666,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Terms saves, publication and discard now leave stalled states and require fresh history before another write. Reconcile remaining bespoke route loading, empty and error states."
+        "Team invitations now recover stalled sender and recipient actions using fresh read evidence. Reconcile remaining bespoke route loading, empty and error states."
       ],
       "owner": null,
       "depends_on": [],
@@ -595728,7 +595729,8 @@
           "release-0.5-contract-confirmation",
           "release-0.5-staff-receipt-acknowledgement",
           "release-0.5-onboarding-acknowledgement",
-          "release-0.5-terms-acknowledgement"
+          "release-0.5-terms-acknowledgement",
+          "release-0.5-team-invitation-acknowledgement"
         ],
         "current_acceptance": null
       }
@@ -596441,7 +596443,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
@@ -598245,7 +598247,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
@@ -600049,7 +600051,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
@@ -601853,7 +601855,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
@@ -603657,7 +603659,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
@@ -605461,7 +605463,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
@@ -607265,7 +607267,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
@@ -634944,7 +634946,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -636068,7 +636070,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -637192,7 +637194,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -638319,7 +638321,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -639446,7 +639448,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -640600,7 +640602,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -641723,7 +641725,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -642846,7 +642848,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -643970,7 +643972,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -645112,7 +645114,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -646237,7 +646239,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -651146,7 +651148,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/package.json",
@@ -651786,7 +651788,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/package.json",
@@ -652426,7 +652428,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/package.json",
@@ -653064,7 +653066,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/package.json",
@@ -653702,7 +653704,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/package.json",
@@ -654342,7 +654344,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/package.json",
@@ -654981,7 +654983,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/package.json",
@@ -655620,7 +655622,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/package.json",
@@ -656259,7 +656261,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/package.json",
@@ -656898,7 +656900,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/package.json",
@@ -657537,7 +657539,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/package.json",
@@ -658176,7 +658178,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/package.json",
@@ -677737,7 +677739,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -678859,7 +678861,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -679981,7 +679983,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -681103,7 +681105,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -694631,7 +694633,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -694723,7 +694725,7 @@
             },
             {
               "path": "apps/web/src/lib/invitation-action.ts",
-              "sha256": "cf411d58a68807ba4f8d17d911e7f91eca3bcc7ac25acbe6754a8d0ea594ff77"
+              "sha256": "ba201095534f083411e3b4b9752d4e2b6f49de1201eb9b2db813d924f70290aa"
             },
             {
               "path": "apps/web/src/lib/invitation-api.test.ts",
@@ -694783,7 +694785,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/team-catalogue-recovery.test.tsx",
@@ -695262,7 +695264,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -695354,7 +695356,7 @@
             },
             {
               "path": "apps/web/src/lib/invitation-action.ts",
-              "sha256": "cf411d58a68807ba4f8d17d911e7f91eca3bcc7ac25acbe6754a8d0ea594ff77"
+              "sha256": "ba201095534f083411e3b4b9752d4e2b6f49de1201eb9b2db813d924f70290aa"
             },
             {
               "path": "apps/web/src/lib/invitation-api.test.ts",
@@ -695414,7 +695416,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/team-catalogue-recovery.test.tsx",
@@ -695893,7 +695895,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -695985,7 +695987,7 @@
             },
             {
               "path": "apps/web/src/lib/invitation-action.ts",
-              "sha256": "cf411d58a68807ba4f8d17d911e7f91eca3bcc7ac25acbe6754a8d0ea594ff77"
+              "sha256": "ba201095534f083411e3b4b9752d4e2b6f49de1201eb9b2db813d924f70290aa"
             },
             {
               "path": "apps/web/src/lib/invitation-api.test.ts",
@@ -696045,7 +696047,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/team-catalogue-recovery.test.tsx",
@@ -696525,7 +696527,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -696617,7 +696619,7 @@
             },
             {
               "path": "apps/web/src/lib/invitation-action.ts",
-              "sha256": "cf411d58a68807ba4f8d17d911e7f91eca3bcc7ac25acbe6754a8d0ea594ff77"
+              "sha256": "ba201095534f083411e3b4b9752d4e2b6f49de1201eb9b2db813d924f70290aa"
             },
             {
               "path": "apps/web/src/lib/invitation-api.test.ts",
@@ -696677,7 +696679,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/team-catalogue-recovery.test.tsx",
@@ -697156,7 +697158,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -697248,7 +697250,7 @@
             },
             {
               "path": "apps/web/src/lib/invitation-action.ts",
-              "sha256": "cf411d58a68807ba4f8d17d911e7f91eca3bcc7ac25acbe6754a8d0ea594ff77"
+              "sha256": "ba201095534f083411e3b4b9752d4e2b6f49de1201eb9b2db813d924f70290aa"
             },
             {
               "path": "apps/web/src/lib/invitation-api.test.ts",
@@ -697308,7 +697310,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/team-catalogue-recovery.test.tsx",
@@ -697787,7 +697789,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -697879,7 +697881,7 @@
             },
             {
               "path": "apps/web/src/lib/invitation-action.ts",
-              "sha256": "cf411d58a68807ba4f8d17d911e7f91eca3bcc7ac25acbe6754a8d0ea594ff77"
+              "sha256": "ba201095534f083411e3b4b9752d4e2b6f49de1201eb9b2db813d924f70290aa"
             },
             {
               "path": "apps/web/src/lib/invitation-api.test.ts",
@@ -697939,7 +697941,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/team-catalogue-recovery.test.tsx",
@@ -698418,7 +698420,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -698510,7 +698512,7 @@
             },
             {
               "path": "apps/web/src/lib/invitation-action.ts",
-              "sha256": "cf411d58a68807ba4f8d17d911e7f91eca3bcc7ac25acbe6754a8d0ea594ff77"
+              "sha256": "ba201095534f083411e3b4b9752d4e2b6f49de1201eb9b2db813d924f70290aa"
             },
             {
               "path": "apps/web/src/lib/invitation-api.test.ts",
@@ -698570,7 +698572,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/team-catalogue-recovery.test.tsx",
@@ -699050,7 +699052,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -699142,7 +699144,7 @@
             },
             {
               "path": "apps/web/src/lib/invitation-action.ts",
-              "sha256": "cf411d58a68807ba4f8d17d911e7f91eca3bcc7ac25acbe6754a8d0ea594ff77"
+              "sha256": "ba201095534f083411e3b4b9752d4e2b6f49de1201eb9b2db813d924f70290aa"
             },
             {
               "path": "apps/web/src/lib/invitation-api.test.ts",
@@ -699202,7 +699204,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/team-catalogue-recovery.test.tsx",
@@ -699681,7 +699683,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -699773,7 +699775,7 @@
             },
             {
               "path": "apps/web/src/lib/invitation-action.ts",
-              "sha256": "cf411d58a68807ba4f8d17d911e7f91eca3bcc7ac25acbe6754a8d0ea594ff77"
+              "sha256": "ba201095534f083411e3b4b9752d4e2b6f49de1201eb9b2db813d924f70290aa"
             },
             {
               "path": "apps/web/src/lib/invitation-api.test.ts",
@@ -699833,7 +699835,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/team-catalogue-recovery.test.tsx",
@@ -700312,7 +700314,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -700404,7 +700406,7 @@
             },
             {
               "path": "apps/web/src/lib/invitation-action.ts",
-              "sha256": "cf411d58a68807ba4f8d17d911e7f91eca3bcc7ac25acbe6754a8d0ea594ff77"
+              "sha256": "ba201095534f083411e3b4b9752d4e2b6f49de1201eb9b2db813d924f70290aa"
             },
             {
               "path": "apps/web/src/lib/invitation-api.test.ts",
@@ -700464,7 +700466,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/team-catalogue-recovery.test.tsx",
@@ -713419,7 +713421,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "9210256c7bbd5957afe3d708e3eea0effd6dd5e2827845c50d97830d3d1df127"
+              "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -713427,7 +713429,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -713435,7 +713437,7 @@
             },
             {
               "path": "packages/i18n/src/team.ts",
-              "sha256": "c3bbcbbdf704619a3c7a91be1daa684b67aba8e137cd337079fb26e92030f938"
+              "sha256": "f67918ee8d2b95e13412c783594b075125360e9b63d018d222afde4f36967554"
             },
             {
               "path": "apps/api/src/profiles/agents.controller.ts",
@@ -725372,7 +725374,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Form semantics are accepted. Scoped financial, fulfillment, receipt, onboarding and terms commands pass bounded acknowledgement and recovery. Ordinary command feedback, bespoke route states, configured live Sentry receipt and GitHub accessibility enforcement remain open."
+        "Form semantics are accepted. Scoped financial, fulfillment, receipt, onboarding, terms and invitation workflows pass bounded acknowledgement and recovery. Ordinary command feedback, bespoke route states, configured live Sentry receipt and GitHub accessibility enforcement remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -725499,7 +725501,8 @@
           "release-0.5-contract-confirmation",
           "release-0.5-staff-receipt-acknowledgement",
           "release-0.5-onboarding-acknowledgement",
-          "release-0.5-terms-acknowledgement"
+          "release-0.5-terms-acknowledgement",
+          "release-0.5-team-invitation-acknowledgement"
         ]
       }
     },
@@ -726663,7 +726666,7 @@
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
-              "sha256": "a5988b9067fc6a2d5dee03caf81737d2d3c0e22a1272b6552b2539c6d6127a2b"
+              "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
             },
             {
               "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -727067,7 +727070,7 @@
             },
             {
               "path": "packages/i18n/src/team.ts",
-              "sha256": "c3bbcbbdf704619a3c7a91be1daa684b67aba8e137cd337079fb26e92030f938"
+              "sha256": "f67918ee8d2b95e13412c783594b075125360e9b63d018d222afde4f36967554"
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
@@ -727156,6 +727159,10 @@
             {
               "path": "apps/web/src/hooks/useRouteErrorReport.ts",
               "sha256": "b64d5f6932d0a07a373d8cde4ef3a6fb455ce748b8de277ed7cf2fcd0ec40fb0"
+            },
+            {
+              "path": "apps/web/src/lib/invitation-action.ts",
+              "sha256": "ba201095534f083411e3b4b9752d4e2b6f49de1201eb9b2db813d924f70290aa"
             }
           ],
           "checks": [
@@ -727227,7 +727234,8 @@
             "Renewed contract acknowledgement browser coverage and launch bundle measurements. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-confirmation/proof.json",
             "Renewed staff receipt review browser coverage and launch bundle measurements. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-receipt-acknowledgement/proof.json",
             "Renewed onboarding recovery and launch bundle measurements. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-acknowledgement/proof.json",
-            "Renewed terms editor recovery and launch bundle measurements. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-terms-acknowledgement/proof.json"
+            "Renewed terms editor recovery and launch bundle measurements. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-terms-acknowledgement/proof.json",
+            "Renewed team invitation recovery and launch bundle measurements. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-invitation-acknowledgement/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -798276,6 +798284,127 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-terms-acknowledgement/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-terms-acknowledgement/reviewed.patch",
       "release_disposition": "Verified bounded terms editor writes and fresh-history recovery. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-team-invitation-acknowledgement": {
+      "batch": "release-0.5-team-invitation-acknowledgement",
+      "base_commit": "5fe52617e4f2df24df1e877f8d186c6c68b11057",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "3e22df1ae210db450940af0674c699c1b6c8f9df91db74ff0f2b2488d5d0f946"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.ts",
+          "sha256": "63efa8249d7f98d915a10759fcd3139ac994180d78bc3b1da921a9ad1e5c7ac3"
+        },
+        {
+          "path": "apps/api/src/profiles/invitations.controller.ts",
+          "sha256": "117d5bd1e4e9aead5dad488b1ef29a4dd51478e2f3f3f05298e5f534ab0d377c"
+        },
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "07949862684b86d6ff241d5f71e59e6c71a5cc1ddc70655b0d508beb53865dac"
+        },
+        {
+          "path": "apps/web/e2e/team-form-validation.spec.ts",
+          "sha256": "0e0234c39a1cad3c6feb917b4a7fad5f5168d1344cb5d0393c93eeb9baceee03"
+        },
+        {
+          "path": "apps/web/e2e/team.spec.ts",
+          "sha256": "75ed80ed93a8333a409736cea9a03bbdb2cf9fba5e556c8b9bf068acd8179127"
+        },
+        {
+          "path": "apps/web/src/components/InvitationBanner.test.tsx",
+          "sha256": "cc7c55ce6b1a7dc87757e54879254907d29ec360c2337aca81d918d5712b2c91"
+        },
+        {
+          "path": "apps/web/src/components/InvitationBanner.tsx",
+          "sha256": "1ad609e0914b939fd6b6eeb4145e5e22661f119856dde50a27c95e045bcdcf6a"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+        },
+        {
+          "path": "apps/web/src/hooks/useCatalogueResource.ts",
+          "sha256": "a189459305295c7cef7c9741922109d25540db7eba3141d8e8d8a61941792dee"
+        },
+        {
+          "path": "apps/web/src/lib/csrf.ts",
+          "sha256": "9ae9d43859271c9fcf38aa560cc4369e5a9930a679fccb54b6b754f6f43ef209"
+        },
+        {
+          "path": "apps/web/src/lib/invitation-action.ts",
+          "sha256": "ba201095534f083411e3b4b9752d4e2b6f49de1201eb9b2db813d924f70290aa"
+        },
+        {
+          "path": "apps/web/src/lib/invitation-api.test.ts",
+          "sha256": "dbc7edd5fac488496337e179dc36344b2080c14d775574e2dd3546f68416fed6"
+        },
+        {
+          "path": "apps/web/src/lib/invitation-api.ts",
+          "sha256": "5eaa5871b1fe418ca7b350a65875147fcf4441bae87ac145a89a7bdba36af5dc"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "apps/web/src/lib/team-catalogue.ts",
+          "sha256": "f52b3df04c55dd15084f8688156d22e332cc4f2515f0cb6460527db4501c68b7"
+        },
+        {
+          "path": "apps/web/src/pages/TeamPage.tsx",
+          "sha256": "cc46dd9c9a8a43fad97ea843178e2ec010fb4ddccf42155c919ab7ad16d4c86e"
+        },
+        {
+          "path": "apps/web/src/pages/team-catalogue-recovery.test.tsx",
+          "sha256": "ec88edda643a211d6c290350565ed6d2a63f4240af0c1b39830ffde89c25a4d8"
+        },
+        {
+          "path": "apps/web/src/test/team-catalogue-fixtures.ts",
+          "sha256": "b275fb94c8a256baee23d105d562a16a4e81e3bcb81179d5b382048b894a13f6"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "977a70a37e4ff791fb2a8b4a4d3e3f759c40bf0af3eeb4c72f60d5285212050f"
+        },
+        {
+          "path": "packages/i18n/src/team.ts",
+          "sha256": "f67918ee8d2b95e13412c783594b075125360e9b63d018d222afde4f36967554"
+        },
+        {
+          "path": "packages/shared/src/validation/normalize-username.ts",
+          "sha256": "986d58199bfcc06d6c624f7b7ad4a6e6844c5c641ee531d49e9db59d9c8a8274"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "Two production baseline cases reproduced the stalled sender and recipient invitation commands.",
+        "Invitation send, accept, decline and open now bound response headers and body. An unknown send retains the draft and requires the new directory receipt. Only a pending row with the same normalized recipient, role and message closes recovery. A failed refresh stays locked. Recipient recovery requires a new invitations read and an explicit decision.",
+        "Twenty-four distinct production browser cases passed in English and Persian across Chromium and Mobile Safari. Twelve unaffected passes carry forward from the first run and the twelve changed cases passed on rerun. The fixture changes scope the Persian alert, specify a desktop viewport for table checks and enter the existing typed confirmation. Sixteen instrumented Chromium cases and 81 targeted unit cases passed. The initial unit run was interrupted by disk exhaustion.",
+        "All eight changed-coverage groups, 98 gzip budgets, six byte-matched cold-auth checks, formatting, scoped lint and web typecheck passed. The verified production runtime was reused after only browser fixtures changed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-invitation-acknowledgement",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-invitation-acknowledgement/proof.json",
+      "source_scope_proof_sha256": "843192f38b76c01ffc7ac86ca6c56b16beaacc7b3fceb23edb339db38f7eb404",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-invitation-acknowledgement/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-invitation-acknowledgement/reviewed.patch",
+      "release_disposition": "Verified bounded team invitation commands and fresh-status recovery. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -798326,12 +798455,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Reconcile demonstrated gaps in bespoke route loading, empty and error states and ordinary command feedback. v0.5.0 still requires a configured live Sentry receipt and GitHub accessibility enforcement."
+    "goal": "Compare the remaining route loading, empty, error and ordinary command feedback requirements against current route and command evidence. Resolve demonstrated gaps and record any uncovered acceptance criteria together. v0.5.0 still requires a configured live Sentry receipt and GitHub accessibility enforcement."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, onboarding recovery and bounded terms editor commands are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics and scoped onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {

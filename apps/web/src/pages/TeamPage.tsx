@@ -10,6 +10,7 @@ import {
   type FormEvent,
 } from 'react';
 import { t } from '@barghsa/i18n/team';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import {
   LoadingStatus,
   Alert,
@@ -37,6 +38,7 @@ import { useWizardForm as useDraftForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { maskDestination } from '../lib/mask-destination.js';
 import { withCsrf } from '../lib/csrf.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { AgentDetailDialog } from '../components/AgentDetailDialog.js';
 import {
@@ -317,6 +319,12 @@ function TeamMembers({
   );
   const [inviting, setInviting] = useState(false);
   const [invitationOpen, setInvitationOpen] = useState(false);
+  const [inviteRecovery, setInviteRecovery] = useState<{
+    username: string;
+    role: Role;
+    message: string | null;
+    readAttempt: number;
+  } | null>(null);
   const inviteTrigger = useRef<HTMLButtonElement>(null);
   const restoreInviteFocus = useRef(false);
   const focusRefreshPending = useRef(false);
@@ -327,6 +335,7 @@ function TeamMembers({
   const reviewBasis = useRef<string | null>(null);
   const refreshMembers = useRef<HTMLButtonElement>(null);
   const invitationPending = useRef(false);
+  const inviteRequest = useRef<AbortController | null>(null);
   const word = (key: string) => t(`team.${key}`, locale);
 
   const clearPrivate = useCallback(() => {
@@ -335,6 +344,8 @@ function TeamMembers({
     restoreTransferFocus.current = false;
     focusRefreshPending.current = false;
     invitationPending.current = false;
+    inviteRequest.current?.abort();
+    setInviteRecovery(null);
     setInviting(false);
     setInvitationOpen(false);
     setDetail(null);
@@ -381,6 +392,7 @@ function TeamMembers({
     return () => {
       mounted.current = false;
       generation.current++;
+      inviteRequest.current?.abort();
     };
   }, []);
   useEffect(() => {
@@ -395,6 +407,42 @@ function TeamMembers({
     focusRefreshPending.current = true;
     resource.retry();
   };
+  function reloadMembers() {
+    if (scope.denied) {
+      scope.recover();
+      return;
+    }
+    const readAttempt = resource.retry();
+    setInviteRecovery((pending) => (pending ? { ...pending, readAttempt } : null));
+  }
+  useEffect(() => {
+    if (!ready || !inviteRecovery || resource.readAttempt !== inviteRecovery.readAttempt) return;
+    const matched = resource.data?.agents.some(
+      (entry) =>
+        entry.type === 'invitation' &&
+        entry.username === inviteRecovery.username &&
+        entry.role === inviteRecovery.role &&
+        (entry.message ?? null) === inviteRecovery.message
+    );
+    setInviteRecovery(null);
+    if (matched) {
+      resetInvitation({ username: '', role: inviteRecovery.role, message: '' });
+      restoreInviteFocus.current = invitationOpen;
+      setInvitationOpen(false);
+      setError(null);
+      setNotice(t('team.invitePendingFound', locale));
+    } else {
+      setError(t('team.inviteNotConfirmed', locale));
+    }
+  }, [
+    ready,
+    inviteRecovery,
+    resource.readAttempt,
+    resource.data,
+    invitationOpen,
+    resetInvitation,
+    locale,
+  ]);
   useEffect(() => {
     if (loading) focusRefreshPending.current = false;
     if (
@@ -425,7 +473,7 @@ function TeamMembers({
 
   async function invite(event: FormEvent) {
     event.preventDefault();
-    if (!ready || !team || invitationPending.current) return;
+    if (!ready || !team || invitationPending.current || inviteRecovery) return;
     const version = generation.current,
       epoch = scope.version;
     const current = () =>
@@ -434,31 +482,55 @@ function TeamMembers({
     try {
       await invitation.form.handleSubmit(async (values) => {
         if (!current()) return;
+        const normalized = normalizeUsername(values.username);
+        if (!normalized) return;
+        const message = values.message.trim() || null;
+        const controller = new AbortController();
+        inviteRequest.current = controller;
+        const recover = () => {
+          setError(confirmationText('unconfirmed', locale));
+          setInviteRecovery({
+            username: normalized,
+            role: values.role,
+            message,
+            readAttempt: resource.retry(),
+          });
+        };
         setInviting(true);
         setError(null);
         setNotice(null);
-        const response = await fetch(
-          `/api/profiles/${encodeURIComponent(team.profileId)}/invitations`,
-          {
-            method: 'POST',
-            credentials: 'include',
-            headers: withCsrf({ 'Content-Type': 'application/json' }),
-            body: JSON.stringify({
-              username: values.username.trim(),
-              role: values.role,
-              ...(values.message.trim() ? { message: values.message.trim() } : {}),
-            }),
-          }
-        );
+        const packet = await readWithDeadline(controller.signal, async (signal) => {
+          const response = await fetch(
+            `/api/profiles/${encodeURIComponent(team.profileId)}/invitations`,
+            {
+              method: 'POST',
+              credentials: 'include',
+              signal,
+              headers: withCsrf({ 'Content-Type': 'application/json' }),
+              body: JSON.stringify({
+                username: values.username.trim(),
+                role: values.role,
+                ...(message ? { message } : {}),
+              }),
+            }
+          );
+          const body: unknown =
+            response.ok || response.status === 400 ? await response.json().catch(() => null) : null;
+          return { response, body };
+        }).catch(() => null);
         if (!current()) return;
+        if (!packet || packet.response.status >= 500) {
+          recover();
+          return;
+        }
+        const { response, body } = packet;
         if (response.status === 401 || response.status === 403) {
           denyTeam(response.status);
           return;
         }
         if (!response.ok) {
           if (response.status === 400) {
-            const failure: unknown = await response.json().catch(() => null);
-            if (!current()) return;
+            const failure = body;
             if (
               failure &&
               typeof failure === 'object' &&
@@ -486,8 +558,7 @@ function TeamMembers({
           );
           return;
         }
-        const result: unknown = await response.json().catch(() => null);
-        if (!current()) return;
+        const result = body;
         if (
           response.status !== 201 ||
           !result ||
@@ -496,7 +567,7 @@ function TeamMembers({
           typeof result.id !== 'string' ||
           !/^[a-zA-Z0-9_-]{1,100}$/.test(result.id)
         ) {
-          setError(word('error'));
+          recover();
           return;
         }
         resetInvitation({ username: '', role: values.role, message: '' });
@@ -509,6 +580,7 @@ function TeamMembers({
       if (current()) setError(word('error'));
     } finally {
       if (current()) {
+        inviteRequest.current = null;
         invitationPending.current = false;
         setInviting(false);
       }
@@ -662,11 +734,7 @@ function TeamMembers({
       )}
       <ListPage>
         <ListPage.Toolbar>
-          <Button
-            ref={refreshMembers}
-            variant="outline"
-            onClick={() => (scope.denied ? scope.recover() : resource.retry())}
-          >
+          <Button ref={refreshMembers} variant="outline" onClick={reloadMembers}>
             {word('refreshMembers')}
           </Button>
           {team?.canTransferOwnership &&
@@ -703,7 +771,7 @@ function TeamMembers({
                 ref={inviteTrigger}
                 disabled={!ready || !!action || !!ownershipStep}
                 onClick={() => {
-                  setError(null);
+                  if (!inviteRecovery) setError(null);
                   setInvitationOpen(true);
                 }}
               >
@@ -896,7 +964,7 @@ function TeamMembers({
                   maxLength={254}
                   value={username}
                   onChange={(event) => setUsername(event.target.value)}
-                  disabled={inviting}
+                  disabled={inviting || !!inviteRecovery}
                 />
                 {invitation.errors.username && (
                   <p
@@ -918,7 +986,7 @@ function TeamMembers({
                   className="block rounded border border-input bg-background text-foreground p-2"
                   value={role}
                   onChange={(event) => setRole(event.target.value as Role)}
-                  disabled={inviting}
+                  disabled={inviting || !!inviteRecovery}
                 >
                   {ROLES.map((item) => (
                     <option key={item} value={item}>
@@ -949,7 +1017,7 @@ function TeamMembers({
                   ]
                     .filter(Boolean)
                     .join(' ')}
-                  disabled={inviting}
+                  disabled={inviting || !!inviteRecovery}
                   onChange={(event) => setMessage(event.target.value)}
                 />
                 <p id="invite-message-hint" className="text-sm text-muted-foreground">
@@ -973,7 +1041,7 @@ function TeamMembers({
                     .replace('{entity}', team?.profileName ?? word('legalEntity'))}
                 </p>
               )}
-              <Button type="button" variant="outline" disabled={loading} onClick={resource.retry}>
+              <Button type="button" variant="outline" disabled={loading} onClick={reloadMembers}>
                 {word('refreshMembers')}
               </Button>
               <DialogFooter>
@@ -992,7 +1060,9 @@ function TeamMembers({
                 <Button
                   type="submit"
                   aria-busy={inviting || invitation.form.formState.isSubmitting || undefined}
-                  disabled={!ready || inviting || invitation.form.formState.isSubmitting}
+                  disabled={
+                    !ready || inviting || !!inviteRecovery || invitation.form.formState.isSubmitting
+                  }
                 >
                   {inviting && (
                     <Loader2
