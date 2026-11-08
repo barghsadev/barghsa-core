@@ -1,4 +1,3 @@
-import { toast } from '../lib/toast-api.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
@@ -50,6 +49,7 @@ import {
   modelBody,
   matchesModelReceipt,
   matchesBudgetReceipt,
+  readModelTestReceipt,
 } from '../lib/ai-model-form.js';
 export default function AdminAiModelsPage() {
   const actor = useAccountUser();
@@ -367,6 +367,7 @@ function OwnedAiModelsPage({
           description: label('confirmSave'),
           path: `/api/admin/ai-models${value.id ? `/${value.id}` : ''}`,
           method: value.id ? 'PUT' : 'POST',
+          responseDeadline: true,
           body: modelBody(value),
           successStatus: value.id ? 200 : 201,
           forbiddenMessage: label('forbidden'),
@@ -395,6 +396,9 @@ function OwnedAiModelsPage({
       ),
       path: `/api/admin/ai-models/${model.id}${kind === 'test' ? '/test' : ''}`,
       method: kind === 'test' ? 'POST' : kind === 'delete' ? 'DELETE' : 'PUT',
+      // The model worker can wait up to 90 seconds before returning an outcome.
+      responseDeadline: kind === 'test' ? 100_000 : true,
+      successStatus: kind === 'delete' ? 204 : 200,
       ...(['enable', 'disable'].includes(kind) ? { body: { isEnabled: kind === 'enable' } } : {}),
       forbiddenMessage: label('forbidden'),
       errorMessages: errors,
@@ -429,6 +433,7 @@ function OwnedAiModelsPage({
           description: label('budgetConfirm'),
           path: `/api/admin/ai-models/${value.modelId}/budget`,
           method: 'PUT',
+          responseDeadline: true,
           body: budgetBody(value),
           successStatus: 200,
           forbiddenMessage: label('forbidden'),
@@ -868,6 +873,7 @@ function OwnedAiModelsPage({
             onSuccess={((command, commandVersion) => async (value: unknown) => {
               if (commandVersion !== generation.current || actionRef.current !== command) return;
               const captured = capture.current;
+              let result = { ok: true, text: '' };
               if (captured) {
                 const matches =
                   captured.kind === 'model'
@@ -880,21 +886,31 @@ function OwnedAiModelsPage({
                   model,
                 ];
                 setModels(previousModels.current);
-                toast.success(label('success'));
+              } else if (command.method !== 'DELETE') {
+                const id = commandBasis.current?.id;
+                if (!id) throw new Error('Missing reviewed model');
+                if (command.method === 'POST') {
+                  const tested = readModelTestReceipt(value, id);
+                  if (!tested) throw new Error('Unconfirmed model test');
+                  result = tested;
+                } else {
+                  const rows = [value];
+                  const settings = command.body as { isEnabled: boolean };
+                  if (
+                    !validModels(rows) ||
+                    rows[0]?.id !== id ||
+                    rows[0].isEnabled !== settings.isEnabled
+                  )
+                    throw new Error('Unconfirmed model availability');
+                }
               }
-              const data = value as {
-                test?: { ok: boolean; responsePreview?: string; error?: string };
-              } | null;
-              setResult(
-                data?.test
-                  ? { ok: data.test.ok, text: data.test.responsePreview ?? data.test.error ?? '' }
-                  : { ok: true, text: '' }
-              );
+              setResult(result);
               if (command.body && typeof command.body === 'object' && 'config' in command.body)
                 setDraft(null);
               if (command.path.endsWith('/budget')) setBudgetDraft(null);
               commandBasis.current = null;
               setRevision((v) => v + 1);
+              return result.ok ? label('success') : undefined;
             })(action, commandGeneration.current)}
           />
         </Suspense>

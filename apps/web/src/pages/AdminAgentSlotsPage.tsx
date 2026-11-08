@@ -304,6 +304,7 @@ export default function AdminAgentSlotsPage() {
                               description: `${label(slot.slotKey)}: ${slot.agent?.title ?? label('unassigned')} → ${selected?.title ?? label('unassigned')}. ${selected && !selected.enabled ? label('disabledHelp') : ''} ${shared.length ? `${label('shared')}: ${shared.join(locale === 'fa' ? '، ' : ', ')}. ` : ''}${label('confirm')}`,
                               path: `/api/admin/agent-slots/${slot.slotKey}/agent`,
                               method: 'PUT',
+                              responseDeadline: true,
                               successStatus: 200,
                               body: { agentId },
                               forbiddenMessage: label('denied'),

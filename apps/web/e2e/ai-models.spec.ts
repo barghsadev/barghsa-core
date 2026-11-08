@@ -1,10 +1,11 @@
-import { test, expect } from './coverage-fixture';
+import { test, expect, type Route } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/admin-ui';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { cookieResponse } from './cookie-response';
 import { aiModel } from '../src/test/ai-catalogue-fixtures';
 import { approveRiskConfirmation } from './confirmation-fixture';
+import { aiModelFormText } from '@barghsa/i18n/ai-model-forms';
 for (const locale of ['en', 'fa'] as const)
   test(`AI model form retries captured input after password verification (${locale})`, async ({
     page,
@@ -139,11 +140,15 @@ for (const locale of ['en', 'fa'] as const)
       present = false;
       return route.fulfill({ status: 204 });
     });
-    await page.route(`**/api/admin/ai-models/${model.id}/test`, (route) =>
-      route.fulfill({
-        json: { model, test: { ok: true, responsePreview: '<script>provider reply</script>' } },
-      })
-    );
+    await page.route(`**/api/admin/ai-models/${model.id}/test`, (route) => {
+      model.status = 'reachable';
+      return route.fulfill({
+        json: {
+          model,
+          test: { ok: true, latencyMs: 15, responsePreview: '<script>provider reply</script>' },
+        },
+      });
+    });
     const readable = async () =>
       expect(
         (await new AxeBuilder({ page }).include('main').withRules(['color-contrast']).analyze())
@@ -256,3 +261,42 @@ for (const locale of ['en', 'fa'] as const)
       .or(page.getByRole('listitem').filter({ has: title }));
     await expect(record).toContainText(new Intl.NumberFormat(locale).format(10_000));
   });
+
+test('model test allows the worker budget and recovers a stalled reply without resending', async ({
+  page,
+}) => {
+  const label = (key: string) => t(`admin.aiModels.${key}`, 'en');
+  let pending: Route | undefined;
+  let attempts = 0;
+  await setupCatalogueForms(page, 'en', false);
+  await page.route('**/api/admin/ai-models', (route) => route.fulfill({ json: [aiModel] }));
+  await page.route(`**/api/admin/ai-models/${aiModel.id}/test`, (route) => {
+    pending = route;
+    attempts++;
+  });
+  await page.clock.install();
+  await page.goto('/admin/ai-models');
+  const testModel = page.getByRole('button', { name: label('test'), exact: true });
+  await testModel.click();
+  const dialog = page.getByRole('dialog');
+  const confirm = dialog.getByRole('button', { name: t('team.confirm', 'en'), exact: true });
+  await confirm.click();
+  await expect.poll(() => attempts).toBe(1);
+
+  await page.clock.fastForward(90_000);
+  const pendingConfirmation = dialog.locator('button[type=submit]');
+  await expect(pendingConfirmation).toBeDisabled();
+  await expect(pendingConfirmation).toHaveAttribute('aria-busy', 'true');
+  await page.clock.fastForward(10_500);
+  await expect(dialog).toHaveCount(0);
+  await expect(page.getByText(aiModelFormText('uncertain', 'en'), { exact: true })).toBeVisible();
+  await expect(testModel).toBeDisabled();
+  await pending!
+    .fulfill({ json: { model: aiModel, test: { ok: true, latencyMs: 30 } } })
+    .catch(() => {});
+  expect(attempts).toBe(1);
+
+  await page.getByRole('button', { name: aiModelFormText('reset', 'en'), exact: true }).click();
+  await expect(testModel).toBeEnabled();
+  expect(attempts).toBe(1);
+});

@@ -284,3 +284,22 @@ export function matchesBudgetReceipt(value: unknown, draft: BudgetDraft): value 
   const budget = value.budget;
   return record(budget) && Object.entries(body).every(([key, field]) => budget[key] === field);
 }
+
+export function readModelTestReceipt(value: unknown, id: string) {
+  if (!record(value) || !record(value.test)) return null;
+  const { test } = value;
+  const models = [value.model];
+  if (
+    !validModels(models) ||
+    models[0]?.id !== id ||
+    typeof test.ok !== 'boolean' ||
+    models[0].status !== (test.ok ? 'reachable' : 'unreachable') ||
+    typeof test.latencyMs !== 'number' ||
+    !Number.isFinite(test.latencyMs) ||
+    test.latencyMs < 0 ||
+    (test.responsePreview !== undefined && typeof test.responsePreview !== 'string') ||
+    (test.error !== undefined && typeof test.error !== 'string')
+  )
+    return null;
+  return { ok: test.ok, text: (test.ok ? test.responsePreview : test.error) ?? '' };
+}

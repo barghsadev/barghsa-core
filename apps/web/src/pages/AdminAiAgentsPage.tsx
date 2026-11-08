@@ -506,6 +506,7 @@ function OwnedAiAgentsPage({
     const next: TeamAction = {
       path,
       method,
+      responseDeadline: true,
       ...(method === 'PUT' &&
       body &&
       typeof body === 'object' &&

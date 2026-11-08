@@ -43,7 +43,7 @@ export interface TeamAction {
   requiresPassword?: boolean;
   requiresOtp?: boolean;
   /** Opt in when the caller owns recovery of a potentially committed command. */
-  responseDeadline?: true;
+  responseDeadline?: true | number;
   conflictMessage?: string;
   forbiddenMessage?: string;
   errorMessages?: Record<string, string | ((response: unknown) => string)>;
@@ -186,8 +186,8 @@ export function TeamActionDialog({
         );
     };
     let commandSent = false;
-    const request = <T,>(send: (signal?: AbortSignal) => Promise<T>) =>
-      transport ? readWithDeadline(transport.signal, send) : send();
+    const request = <T,>(send: (signal?: AbortSignal) => Promise<T>, timeoutMs?: number) =>
+      transport ? readWithDeadline(transport.signal, send, timeoutMs) : send();
     try {
       if (!otpVerified && (needsPassword || !action)) {
         const verified = await request((signal) =>
@@ -221,21 +221,24 @@ export function TeamActionDialog({
           : action.body instanceof FormData
             ? action.body
             : JSON.stringify(action.body);
-      const { response, data } = await request(async (signal) => {
-        commandSent = true;
-        onCommandDispatch?.(true);
-        const response = await fetch(action.path, {
-          method: action.method,
-          credentials: 'include',
-          headers: withCsrf({
-            ...(multipart ? {} : { 'Content-Type': 'application/json' }),
-            'Accept-Language': locale,
-          }),
-          ...(requestBody === undefined ? {} : { body: requestBody }),
-          ...(signal ? { signal } : {}),
-        });
-        return { response, data: await response.json().catch(() => null) };
-      });
+      const { response, data } = await request(
+        async (signal) => {
+          commandSent = true;
+          onCommandDispatch?.(true);
+          const response = await fetch(action.path, {
+            method: action.method,
+            credentials: 'include',
+            headers: withCsrf({
+              ...(multipart ? {} : { 'Content-Type': 'application/json' }),
+              'Accept-Language': locale,
+            }),
+            ...(requestBody === undefined ? {} : { body: requestBody }),
+            ...(signal ? { signal } : {}),
+          });
+          return { response, data: await response.json().catch(() => null) };
+        },
+        typeof action.responseDeadline === 'number' ? action.responseDeadline : undefined
+      );
       if (!owned()) return;
       const code = typeof data?.error === 'string' ? data.error : data?.error?.code;
       if (

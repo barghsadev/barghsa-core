@@ -8,6 +8,7 @@ import {
   invalidModelFields,
   matchesBudgetReceipt,
   matchesModelReceipt,
+  readModelTestReceipt,
   modelBody,
   modelDraftFor,
   usdMicros,
@@ -127,4 +128,23 @@ describe('AI model and budget form boundaries', () => {
     expect(matchesBudgetReceipt({ ...aiModel, budget: null }, cleared)).toBe(true);
     expect(matchesBudgetReceipt(aiModel, cleared)).toBe(false);
   });
+});
+
+it('requires a model test receipt to match the reviewed model and persisted outcome', () => {
+  const model = { ...aiModel, status: 'reachable' };
+  const test = { ok: true, latencyMs: 12, responsePreview: 'Ready' };
+  expect(readModelTestReceipt({ model, test }, model.id)).toEqual({ ok: true, text: 'Ready' });
+  expect(readModelTestReceipt({ model, test }, 'other-model')).toBeNull();
+  expect(
+    readModelTestReceipt({ model: { ...model, status: 'unknown' }, test }, model.id)
+  ).toBeNull();
+  expect(readModelTestReceipt({ model, test: { ...test, latencyMs: -1 } }, model.id)).toBeNull();
+  expect(readModelTestReceipt({}, model.id)).toBeNull();
+  const failed = { ...model, status: 'unreachable' };
+  expect(
+    readModelTestReceipt(
+      { model: failed, test: { ok: false, latencyMs: 21, error: 'Unavailable' } },
+      model.id
+    )
+  ).toEqual({ ok: false, text: 'Unavailable' });
 });

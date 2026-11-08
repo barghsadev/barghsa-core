@@ -222,9 +222,26 @@ it('model test completion preserves unrelated creation draft', async () => {
   await click('Add model');
   await fill('#ai-model-title', 'Keep new model');
   await click('Test connection');
-  await act(async () => captured.success!({ test: { ok: true, responsePreview: 'Healthy' } }));
+  await act(async () =>
+    captured.success!({
+      model: { ...aiModel, status: 'reachable' },
+      test: { ok: true, latencyMs: 12, responsePreview: 'Healthy' },
+    })
+  );
   expect(host.querySelector<HTMLInputElement>('#ai-model-title')!.value).toBe('Keep new model');
   expect(host.textContent).toContain('Healthy');
+});
+it('model availability feedback requires the reviewed model and requested state', async () => {
+  modelsFetch();
+  await render(Models);
+  await click('Disable');
+  const receipt = captured.success!;
+  expect(captured.action).toMatchObject({ body: { isEnabled: false }, responseDeadline: true });
+  await expect(receipt({ ...aiModel, isEnabled: false, id: 'another-model' })).rejects.toThrow();
+  await expect(receipt(aiModel)).rejects.toThrow();
+  expect(host.textContent).not.toContain('Action completed.');
+  await act(async () => receipt({ ...aiModel, isEnabled: false }));
+  expect(host.textContent).toContain('Action completed.');
 });
 it('model denial clears secrets, rows and pending command', async () => {
   let deny = false;

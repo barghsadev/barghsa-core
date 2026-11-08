@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T14:34:20+00:00",
-  "source_commit": "a6d38f8a89434b2f2dd8db1f61237666e2563557",
+  "updated": "2026-11-08T14:48:33+00:00",
+  "source_commit": "2ed8f94d3aa3cb8de3608e5b2f4cdc461571655d",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -25374,7 +25374,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security.tsx",
@@ -44396,7 +44396,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useListQuery.ts",
@@ -45627,7 +45627,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useListQuery.ts",
@@ -46796,7 +46796,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useListQuery.ts",
@@ -47940,7 +47940,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -49670,7 +49670,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -50385,7 +50385,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -50749,7 +50749,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/lib/invitation-action.ts",
@@ -51528,7 +51528,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/lib/invitation-action.ts",
@@ -53221,7 +53221,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -54564,7 +54564,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/lib/invitation-action.ts",
@@ -59554,7 +59554,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useSettingsSnapshot.ts",
@@ -69421,7 +69421,7 @@
             },
             {
               "path": "docs/operations/ai-model-tests.md",
-              "sha256": "8154d938ec63402691416c6806d22e9b8c51fd9c7020bd8758efe7076397eaf1"
+              "sha256": "9a97aa231d15a907784f6baf548c859b1ccd0bb6b156932a4a4e3939a7323380"
             }
           ],
           "checks": [
@@ -73639,7 +73639,7 @@
             },
             {
               "path": "docs/operations/ai-model-tests.md",
-              "sha256": "8154d938ec63402691416c6806d22e9b8c51fd9c7020bd8758efe7076397eaf1"
+              "sha256": "9a97aa231d15a907784f6baf548c859b1ccd0bb6b156932a4a4e3939a7323380"
             }
           ],
           "checks": [
@@ -86927,7 +86927,7 @@
             },
             {
               "path": "docs/operations/ai-model-tests.md",
-              "sha256": "8154d938ec63402691416c6806d22e9b8c51fd9c7020bd8758efe7076397eaf1"
+              "sha256": "9a97aa231d15a907784f6baf548c859b1ccd0bb6b156932a4a4e3939a7323380"
             }
           ],
           "checks": [
@@ -87524,7 +87524,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/lib/email-providers-api.ts",
@@ -90040,7 +90040,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.test.tsx",
@@ -91448,7 +91448,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.test.tsx",
@@ -98742,7 +98742,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.test.tsx",
@@ -101894,7 +101894,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/components/AiModelRecordTable.tsx",
@@ -101910,15 +101910,15 @@
             },
             {
               "path": "apps/web/src/lib/ai-model-form.ts",
-              "sha256": "19b2ef4ccd56ffeefe672c222771c319fcd329701757f30a787e2e55bcc1abdc"
+              "sha256": "3aad92f1d3987fb1712122be3ccf405a5e3b5751a00ba39d73bbbf309fb6f85b"
             },
             {
               "path": "apps/web/src/lib/ai-model-form.test.ts",
-              "sha256": "2aad741bc4d2b5fabc602d980713c6abe658a2efcab69e697ab179e653677a07"
+              "sha256": "3270f377b15b47bfb4fcd226a18c72e9f789fb9cf5347107a57b5af38146cdea"
             },
             {
               "path": "apps/web/e2e/ai-models.spec.ts",
-              "sha256": "e86cf06fd6381f207ab52e91f8383860917f067a840573c6999c285ab42d8101"
+              "sha256": "2752ef5d2141b50918253d4fb1e14eb06751cf5167936579a6570a96214ecb8e"
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
@@ -101934,7 +101934,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -102545,7 +102545,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -103110,7 +103110,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
@@ -103618,11 +103618,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/components/AgentPromptTextarea.tsx",
@@ -103642,7 +103642,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/lib/ai-agent-form.ts",
@@ -103674,7 +103674,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
@@ -104544,7 +104544,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
@@ -105692,7 +105692,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -106408,7 +106408,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -108952,7 +108952,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -109704,7 +109704,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/lib/staff-access-form-schemas.ts",
@@ -436177,7 +436177,7 @@
             },
             {
               "path": "docs/operations/ai-model-tests.md",
-              "sha256": "8154d938ec63402691416c6806d22e9b8c51fd9c7020bd8758efe7076397eaf1"
+              "sha256": "9a97aa231d15a907784f6baf548c859b1ccd0bb6b156932a4a4e3939a7323380"
             }
           ],
           "checks": [
@@ -437614,7 +437614,7 @@
             },
             {
               "path": "docs/operations/ai-model-tests.md",
-              "sha256": "8154d938ec63402691416c6806d22e9b8c51fd9c7020bd8758efe7076397eaf1"
+              "sha256": "9a97aa231d15a907784f6baf548c859b1ccd0bb6b156932a4a4e3939a7323380"
             }
           ],
           "checks": [
@@ -440017,7 +440017,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/ConfigPreviewCard.tsx",
@@ -440295,7 +440295,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/ConfigPreviewCard.tsx",
@@ -440575,7 +440575,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/ConfigPreviewCard.tsx",
@@ -440853,7 +440853,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/ConfigPreviewCard.tsx",
@@ -441132,7 +441132,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/ConfigPreviewCard.tsx",
@@ -449910,7 +449910,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/components/AiModelRecordTable.tsx",
@@ -449926,15 +449926,15 @@
             },
             {
               "path": "apps/web/src/lib/ai-model-form.ts",
-              "sha256": "19b2ef4ccd56ffeefe672c222771c319fcd329701757f30a787e2e55bcc1abdc"
+              "sha256": "3aad92f1d3987fb1712122be3ccf405a5e3b5751a00ba39d73bbbf309fb6f85b"
             },
             {
               "path": "apps/web/src/lib/ai-model-form.test.ts",
-              "sha256": "2aad741bc4d2b5fabc602d980713c6abe658a2efcab69e697ab179e653677a07"
+              "sha256": "3270f377b15b47bfb4fcd226a18c72e9f789fb9cf5347107a57b5af38146cdea"
             },
             {
               "path": "apps/web/e2e/ai-models.spec.ts",
-              "sha256": "e86cf06fd6381f207ab52e91f8383860917f067a840573c6999c285ab42d8101"
+              "sha256": "2752ef5d2141b50918253d4fb1e14eb06751cf5167936579a6570a96214ecb8e"
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
@@ -449950,7 +449950,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -450391,7 +450391,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/components/AiModelRecordTable.tsx",
@@ -450407,15 +450407,15 @@
             },
             {
               "path": "apps/web/src/lib/ai-model-form.ts",
-              "sha256": "19b2ef4ccd56ffeefe672c222771c319fcd329701757f30a787e2e55bcc1abdc"
+              "sha256": "3aad92f1d3987fb1712122be3ccf405a5e3b5751a00ba39d73bbbf309fb6f85b"
             },
             {
               "path": "apps/web/src/lib/ai-model-form.test.ts",
-              "sha256": "2aad741bc4d2b5fabc602d980713c6abe658a2efcab69e697ab179e653677a07"
+              "sha256": "3270f377b15b47bfb4fcd226a18c72e9f789fb9cf5347107a57b5af38146cdea"
             },
             {
               "path": "apps/web/e2e/ai-models.spec.ts",
-              "sha256": "e86cf06fd6381f207ab52e91f8383860917f067a840573c6999c285ab42d8101"
+              "sha256": "2752ef5d2141b50918253d4fb1e14eb06751cf5167936579a6570a96214ecb8e"
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
@@ -450431,7 +450431,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -450874,7 +450874,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/components/AiModelRecordTable.tsx",
@@ -450890,15 +450890,15 @@
             },
             {
               "path": "apps/web/src/lib/ai-model-form.ts",
-              "sha256": "19b2ef4ccd56ffeefe672c222771c319fcd329701757f30a787e2e55bcc1abdc"
+              "sha256": "3aad92f1d3987fb1712122be3ccf405a5e3b5751a00ba39d73bbbf309fb6f85b"
             },
             {
               "path": "apps/web/src/lib/ai-model-form.test.ts",
-              "sha256": "2aad741bc4d2b5fabc602d980713c6abe658a2efcab69e697ab179e653677a07"
+              "sha256": "3270f377b15b47bfb4fcd226a18c72e9f789fb9cf5347107a57b5af38146cdea"
             },
             {
               "path": "apps/web/e2e/ai-models.spec.ts",
-              "sha256": "e86cf06fd6381f207ab52e91f8383860917f067a840573c6999c285ab42d8101"
+              "sha256": "2752ef5d2141b50918253d4fb1e14eb06751cf5167936579a6570a96214ecb8e"
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
@@ -450914,7 +450914,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -451355,7 +451355,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/components/AiModelRecordTable.tsx",
@@ -451371,15 +451371,15 @@
             },
             {
               "path": "apps/web/src/lib/ai-model-form.ts",
-              "sha256": "19b2ef4ccd56ffeefe672c222771c319fcd329701757f30a787e2e55bcc1abdc"
+              "sha256": "3aad92f1d3987fb1712122be3ccf405a5e3b5751a00ba39d73bbbf309fb6f85b"
             },
             {
               "path": "apps/web/src/lib/ai-model-form.test.ts",
-              "sha256": "2aad741bc4d2b5fabc602d980713c6abe658a2efcab69e697ab179e653677a07"
+              "sha256": "3270f377b15b47bfb4fcd226a18c72e9f789fb9cf5347107a57b5af38146cdea"
             },
             {
               "path": "apps/web/e2e/ai-models.spec.ts",
-              "sha256": "e86cf06fd6381f207ab52e91f8383860917f067a840573c6999c285ab42d8101"
+              "sha256": "2752ef5d2141b50918253d4fb1e14eb06751cf5167936579a6570a96214ecb8e"
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
@@ -451395,7 +451395,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -451856,7 +451856,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -452309,7 +452309,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -452764,7 +452764,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -453218,7 +453218,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -453596,7 +453596,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
@@ -453974,7 +453974,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
@@ -454348,7 +454348,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
@@ -454706,11 +454706,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/components/AgentPromptTextarea.tsx",
@@ -454730,7 +454730,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/lib/ai-agent-form.ts",
@@ -454762,7 +454762,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
@@ -455184,11 +455184,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/components/AgentPromptTextarea.tsx",
@@ -455208,7 +455208,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/lib/ai-agent-form.ts",
@@ -455240,7 +455240,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
@@ -455688,11 +455688,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/components/AgentPromptTextarea.tsx",
@@ -455712,7 +455712,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/lib/ai-agent-form.ts",
@@ -455744,7 +455744,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
@@ -456165,11 +456165,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/components/AgentPromptTextarea.tsx",
@@ -456189,7 +456189,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/lib/ai-agent-form.ts",
@@ -456221,7 +456221,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
@@ -456667,11 +456667,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/components/AgentPromptTextarea.tsx",
@@ -456691,7 +456691,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/lib/ai-agent-form.ts",
@@ -456723,7 +456723,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
@@ -460723,7 +460723,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
@@ -490589,7 +490589,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "docs/design/design-system.md",
@@ -491139,15 +491139,15 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -491972,7 +491972,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "docs/design/design-system.md",
@@ -492950,7 +492950,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
@@ -494251,7 +494251,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
@@ -494331,11 +494331,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -495134,7 +495134,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
@@ -495214,11 +495214,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -495958,7 +495958,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
@@ -496038,11 +496038,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -496771,7 +496771,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -497772,7 +497772,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
@@ -511506,15 +511506,15 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -512188,7 +512188,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -516841,7 +516841,7 @@
             },
             {
               "path": "apps/web/e2e/ai-models.spec.ts",
-              "sha256": "e86cf06fd6381f207ab52e91f8383860917f067a840573c6999c285ab42d8101"
+              "sha256": "2752ef5d2141b50918253d4fb1e14eb06751cf5167936579a6570a96214ecb8e"
             },
             {
               "path": "apps/web/e2e/assistant-chat-forms.spec.ts",
@@ -517609,7 +517609,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -517841,15 +517841,15 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -523377,7 +523377,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -524285,7 +524285,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -525193,7 +525193,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -526101,7 +526101,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -527009,7 +527009,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -527917,7 +527917,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -528825,7 +528825,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -529733,7 +529733,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -530641,7 +530641,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -531549,7 +531549,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -532457,7 +532457,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -533365,7 +533365,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -534273,7 +534273,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -535181,7 +535181,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -536089,7 +536089,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -536997,7 +536997,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -537905,7 +537905,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -538813,7 +538813,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -539721,7 +539721,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -540629,7 +540629,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -546588,7 +546588,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -546748,11 +546748,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -546760,7 +546760,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -546948,7 +546948,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -548454,7 +548454,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -548614,11 +548614,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -548626,7 +548626,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -548814,7 +548814,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -550321,7 +550321,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -550481,11 +550481,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -550493,7 +550493,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -550681,7 +550681,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -552157,7 +552157,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -552317,11 +552317,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -552329,7 +552329,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -552517,7 +552517,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -554019,7 +554019,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -554179,11 +554179,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -554191,7 +554191,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -554379,7 +554379,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -555890,7 +555890,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -556050,11 +556050,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -556062,7 +556062,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -556250,7 +556250,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -557734,7 +557734,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -557894,11 +557894,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -557906,7 +557906,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -558094,7 +558094,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -559542,7 +559542,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -559702,11 +559702,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -559714,7 +559714,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -559902,7 +559902,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -561350,7 +561350,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -561510,11 +561510,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -561522,7 +561522,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -561710,7 +561710,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -563159,7 +563159,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -563319,11 +563319,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -563331,7 +563331,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -563519,7 +563519,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -564967,7 +564967,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -565127,11 +565127,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -565139,7 +565139,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -565327,7 +565327,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -566745,7 +566745,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -566965,11 +566965,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -566977,7 +566977,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -567193,7 +567193,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -568640,7 +568640,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -568860,11 +568860,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -568872,7 +568872,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -569088,7 +569088,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -570220,7 +570220,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Email and SMS draft, lifecycle and test-send recovery now require current validated provider reads and explicit review after uncertain acknowledgements. Reconcile the remaining customer and staff transactional and CRUD feedback inventory against source-bound checks."
+        "AI model, agent and slot confirmations now have bounded receipts. Model toggle, delete and test feedback also validates the reviewed operation. Reconcile remaining customer and staff CRUD feedback against source-bound checks."
       ],
       "owner": null,
       "depends_on": [],
@@ -570292,7 +570292,8 @@
           "release-0.5-staff-team-command-recovery",
           "release-0.5-staff-directory-command-recovery",
           "release-0.5-crm-correction-command-recovery",
-          "release-0.5-provider-command-recovery"
+          "release-0.5-provider-command-recovery",
+          "release-0.5-ai-admin-command-recovery"
         ],
         "current_acceptance": null
       }
@@ -570627,7 +570628,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -570847,11 +570848,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -570859,7 +570860,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -571075,7 +571076,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -572522,7 +572523,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -572742,11 +572743,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -572754,7 +572755,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -572970,7 +572971,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -574417,7 +574418,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -574637,11 +574638,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -574649,7 +574650,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -574865,7 +574866,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -576312,7 +576313,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -576532,11 +576533,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -576544,7 +576545,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -576760,7 +576761,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -578207,7 +578208,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -578427,11 +578428,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -578439,7 +578440,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -578655,7 +578656,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -580102,7 +580103,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -580322,11 +580323,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -580334,7 +580335,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -580550,7 +580551,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -581997,7 +581998,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -582217,11 +582218,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -582229,7 +582230,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -582445,7 +582446,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -583892,7 +583893,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -584112,11 +584113,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -584124,7 +584125,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -584340,7 +584341,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -585787,7 +585788,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -586007,11 +586008,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -586019,7 +586020,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -586235,7 +586236,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -587682,7 +587683,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -587902,11 +587903,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -587914,7 +587915,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -588130,7 +588131,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -589577,7 +589578,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -589797,11 +589798,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -589809,7 +589810,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -590025,7 +590026,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -591341,7 +591342,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -592212,7 +592213,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -592432,11 +592433,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -592444,7 +592445,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -592660,7 +592661,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -594107,7 +594108,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -594327,11 +594328,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -594339,7 +594340,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -594555,7 +594556,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -595687,7 +595688,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Provider reads and command recovery now retain safe drafts and wait for a validated read begun after the uncertain reply. Match any remaining conditional customer or staff list, detail and dashboard states to the existing route census and current native evidence."
+        "AI model and budget, agent and slot confirmations now reach existing fresh-read recovery on a stalled command. Match any remaining conditional customer or staff list, detail and dashboard states to the existing route census and current native evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -595770,7 +595771,8 @@
           "release-0.5-staff-team-command-recovery",
           "release-0.5-staff-directory-command-recovery",
           "release-0.5-crm-correction-command-recovery",
-          "release-0.5-provider-command-recovery"
+          "release-0.5-provider-command-recovery",
+          "release-0.5-ai-admin-command-recovery"
         ],
         "current_acceptance": null
       }
@@ -596163,7 +596165,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -596323,11 +596325,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -596335,7 +596337,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -596523,7 +596525,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -597967,7 +597969,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -598127,11 +598129,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -598139,7 +598141,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -598327,7 +598329,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -599771,7 +599773,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -599931,11 +599933,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -599943,7 +599945,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -600131,7 +600133,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -601575,7 +601577,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -601735,11 +601737,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -601747,7 +601749,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -601935,7 +601937,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -603379,7 +603381,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -603539,11 +603541,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -603551,7 +603553,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -603739,7 +603741,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -605183,7 +605185,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -605343,11 +605345,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -605355,7 +605357,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -605543,7 +605545,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -606987,7 +606989,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -607147,11 +607149,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -607159,7 +607161,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -607347,7 +607349,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -634818,15 +634820,15 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -635942,15 +635944,15 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -637066,15 +637068,15 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -638193,15 +638195,15 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -639320,15 +639322,15 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -640474,15 +640476,15 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -641597,15 +641599,15 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -642720,15 +642722,15 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -643844,15 +643846,15 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -644986,15 +644988,15 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -646111,15 +646113,15 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -659134,7 +659136,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -659816,7 +659818,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -660500,7 +660502,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -661182,7 +661184,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -661863,7 +661865,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -663043,7 +663045,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -663725,7 +663727,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -664408,7 +664410,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -665089,7 +665091,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -665769,7 +665771,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -666449,7 +666451,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -667129,7 +667131,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -677611,15 +677613,15 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -678733,15 +678735,15 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -679855,15 +679857,15 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -680977,15 +680979,15 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -681995,7 +681997,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.tsx",
@@ -682569,7 +682571,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.tsx",
@@ -683142,7 +683144,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.tsx",
@@ -683717,7 +683719,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.tsx",
@@ -684290,7 +684292,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.tsx",
@@ -684863,7 +684865,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.tsx",
@@ -694729,7 +694731,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -695360,7 +695362,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -695991,7 +695993,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -696623,7 +696625,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -697254,7 +697256,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -697885,7 +697887,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -698516,7 +698518,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -699148,7 +699150,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -699779,7 +699781,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -700410,7 +700412,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -701463,7 +701465,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
@@ -702582,15 +702584,15 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -702772,7 +702774,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
@@ -703026,7 +703028,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
@@ -703261,7 +703263,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
@@ -703493,7 +703495,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
@@ -703720,7 +703722,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
@@ -704106,7 +704108,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -704510,7 +704512,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
@@ -704903,7 +704905,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
@@ -705195,7 +705197,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
@@ -713465,7 +713467,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -718752,7 +718754,7 @@
             },
             {
               "path": "apps/web/e2e/ai-models.spec.ts",
-              "sha256": "e86cf06fd6381f207ab52e91f8383860917f067a840573c6999c285ab42d8101"
+              "sha256": "2752ef5d2141b50918253d4fb1e14eb06751cf5167936579a6570a96214ecb8e"
             },
             {
               "path": "apps/web/e2e/ai-policies.spec.ts",
@@ -719084,7 +719086,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
@@ -719160,11 +719162,11 @@
             },
             {
               "path": "apps/web/src/lib/ai-model-form.test.ts",
-              "sha256": "2aad741bc4d2b5fabc602d980713c6abe658a2efcab69e697ab179e653677a07"
+              "sha256": "3270f377b15b47bfb4fcd226a18c72e9f789fb9cf5347107a57b5af38146cdea"
             },
             {
               "path": "apps/web/src/lib/ai-model-form.ts",
-              "sha256": "19b2ef4ccd56ffeefe672c222771c319fcd329701757f30a787e2e55bcc1abdc"
+              "sha256": "3aad92f1d3987fb1712122be3ccf405a5e3b5751a00ba39d73bbbf309fb6f85b"
             },
             {
               "path": "apps/web/src/lib/assignment-settings.ts",
@@ -719320,11 +719322,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -719332,7 +719334,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -719392,7 +719394,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -722634,7 +722636,7 @@
             },
             {
               "path": "apps/web/e2e/ai-models.spec.ts",
-              "sha256": "e86cf06fd6381f207ab52e91f8383860917f067a840573c6999c285ab42d8101"
+              "sha256": "2752ef5d2141b50918253d4fb1e14eb06751cf5167936579a6570a96214ecb8e"
             },
             {
               "path": "apps/web/e2e/ai-policies.spec.ts",
@@ -722950,7 +722952,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
@@ -723026,11 +723028,11 @@
             },
             {
               "path": "apps/web/src/lib/ai-model-form.test.ts",
-              "sha256": "2aad741bc4d2b5fabc602d980713c6abe658a2efcab69e697ab179e653677a07"
+              "sha256": "3270f377b15b47bfb4fcd226a18c72e9f789fb9cf5347107a57b5af38146cdea"
             },
             {
               "path": "apps/web/src/lib/ai-model-form.ts",
-              "sha256": "19b2ef4ccd56ffeefe672c222771c319fcd329701757f30a787e2e55bcc1abdc"
+              "sha256": "3aad92f1d3987fb1712122be3ccf405a5e3b5751a00ba39d73bbbf309fb6f85b"
             },
             {
               "path": "apps/web/src/lib/assignment-settings.ts",
@@ -723186,11 +723188,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
@@ -723198,7 +723200,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -723258,7 +723260,7 @@
             },
             {
               "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
-              "sha256": "5f6606b53c212ee2c4193282ab193a1c6f11218eb26a514365353a0392d71b72"
+              "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
             },
             {
               "path": "apps/web/src/pages/ai-model-forms.test.tsx",
@@ -725414,7 +725416,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "CRM correction, staff directory and provider settings journeys have current recovery evidence. Complete reconciliation of the remaining CRUD feedback and conditional states. GitHub main still has no required accessibility check, and staging has no configured route-error Sentry receiver."
+        "AI administration, CRM correction, staff directory and provider settings have current command recovery evidence. Complete remaining feedback and conditional-state reconciliation. The required GitHub accessibility check and staging Sentry receipt remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -725562,7 +725564,8 @@
           "release-0.5-staff-team-command-recovery",
           "release-0.5-staff-directory-command-recovery",
           "release-0.5-crm-correction-command-recovery",
-          "release-0.5-provider-command-recovery"
+          "release-0.5-provider-command-recovery",
+          "release-0.5-ai-admin-command-recovery"
         ]
       }
     },
@@ -726114,7 +726117,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -726446,15 +726449,15 @@
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
-              "sha256": "4d84bc8184071c20a44c99cb6cd91cb5adeb0af68183331942e770a1eae41ab0"
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
-              "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -727315,6 +727318,10 @@
             {
               "path": "packages/i18n/src/provider-forms.ts",
               "sha256": "98e03ef89142bdcd5f52f847b5557e0393d598930cc84ca6882746fbc3553f3d"
+            },
+            {
+              "path": "apps/web/src/lib/ai-model-form.ts",
+              "sha256": "3aad92f1d3987fb1712122be3ccf405a5e3b5751a00ba39d73bbbf309fb6f85b"
             }
           ],
           "checks": [
@@ -727406,7 +727413,8 @@
             "Renewed staff team and assignment-rule recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-team-command-recovery/proof.json",
             "Renewed staff directory recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-directory-command-recovery/proof.json",
             "Renewed CRM correction recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-correction-command-recovery/proof.json",
-            "Renewed email and SMS provider recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-provider-command-recovery/proof.json"
+            "Renewed email and SMS provider recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-provider-command-recovery/proof.json",
+            "Renewed AI administration recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-admin-command-recovery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -800745,6 +800753,102 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-provider-command-recovery/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-provider-command-recovery/reviewed.patch",
       "release_disposition": "Verified email and SMS provider draft, lifecycle and test-send recovery in the active provider settings and current permission scope. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-ai-admin-command-recovery": {
+      "batch": "release-0.5-ai-admin-command-recovery",
+      "base_commit": "2ed8f94d3aa3cb8de3608e5b2f4cdc461571655d",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-model-test-queue.service.ts",
+          "sha256": "1337d434af233e488f588e2b20d0cb45d2cca6589864466e923c960ed40c1ed7"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models.controller.ts",
+          "sha256": "c840b4ea1e0820774d6c6879c15a43b4860546c57e38a2fdf4dc20c2d0bfc7df"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models.service.ts",
+          "sha256": "c47c622fabde926b1d3256afc0da3087d412e5801e7cf7c48a3fdd31e98821c8"
+        },
+        {
+          "path": "apps/web/e2e/ai-models.spec.ts",
+          "sha256": "2752ef5d2141b50918253d4fb1e14eb06751cf5167936579a6570a96214ecb8e"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+        },
+        {
+          "path": "apps/web/src/hooks/useCatalogueResource.ts",
+          "sha256": "a189459305295c7cef7c9741922109d25540db7eba3141d8e8d8a61941792dee"
+        },
+        {
+          "path": "apps/web/src/lib/ai-model-form.test.ts",
+          "sha256": "3270f377b15b47bfb4fcd226a18c72e9f789fb9cf5347107a57b5af38146cdea"
+        },
+        {
+          "path": "apps/web/src/lib/ai-model-form.ts",
+          "sha256": "3aad92f1d3987fb1712122be3ccf405a5e3b5751a00ba39d73bbbf309fb6f85b"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
+          "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
+          "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
+          "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
+        },
+        {
+          "path": "apps/web/src/pages/ai-catalogue-recovery.test.tsx",
+          "sha256": "ac141a84c84d203a3c479f87258b5479bd64235a92a121f36d4f884ba49d71ee"
+        },
+        {
+          "path": "docs/operations/ai-model-tests.md",
+          "sha256": "9a97aa231d15a907784f6baf548c859b1ccd0bb6b156932a4a4e3939a7323380"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "AI model and budget writes, agent saves and removal, and slot assignments now bound the response headers and receipt body using the existing confirmation recovery. Model tests allow 100 seconds for the command and retain the standard shorter password-verification deadline. The existing queue remains bounded to 90 seconds server-side. A timed-out test requires a current read and explicit review before another send.",
+        "Model enable and disable feedback requires the reviewed model and requested enabled state. Delete requires the endpoint's 204. Model tests require the reviewed model ID and a result consistent with the persisted reachable state. The browser rejected an invalid receipt in the focused unit proof and preserved password step-up, masked credentials, current authority, agent linkage and slot safeguards.",
+        "Passed 453 distinct web unit cases, 62 production-browser cases in Chromium and mobile Safari, 19 instrumented cases, nine changed-coverage groups, all 100 unchanged bundle budgets, formatting, scoped lint and web typecheck. The new deadline browser case initially looked for the confirmation button's idle label during a running request. Only the two affected cases were rerun with a stable submit locator and an additional busy assertion. Reused the other 60 browser receipts after verifying the runtime assets were identical and the final source delta was test-only. An earlier broad local unit coverage attempt hit ENOSPC. Focused receipt coverage and the full targeted non-instrumented unit set passed. Two standalone agent cases supplied source coverage omitted when the combined agent and slot tests navigated to their final page."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-admin-command-recovery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-admin-command-recovery/proof.json",
+      "source_scope_proof_sha256": "7e14a2f5be3168c35e71048739cc72e781b7f66b1c9253e8ba5542f8ae461232",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-admin-command-recovery/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-admin-command-recovery/reviewed.patch",
+      "release_disposition": "Verified AI model, agent and slot command recovery with the existing worker budget and current authority. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -800800,7 +800904,7 @@
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, guarded electricity drafts, solar document completion, ticket acknowledgement, verified attachment and verification-mode recovery, shared customer settings acknowledgement and saving intake recovery, staff notification template, customer correction, delivery-window, dead-letter, failed jobs, CRM verification corrections, email and SMS provider acknowledgement recovery, staff directory, staff team and assignment-rule, invoice and reminder recovery, and scoped customer electricity, shell, onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, guarded electricity drafts, solar document completion, ticket acknowledgement, verified attachment and verification-mode recovery, shared customer settings acknowledgement and saving intake recovery, staff notification template, customer correction, delivery-window, dead-letter, failed jobs, CRM verification corrections, email and SMS provider and AI administration acknowledgement recovery, staff directory, staff team and assignment-rule, invoice and reminder recovery, and scoped customer electricity, shell, onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {

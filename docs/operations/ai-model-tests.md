@@ -25,3 +25,7 @@ The final staging checks passed for public, staff, individual and legal-profile 
 The 100,000-token limit applies to application chat through the model budget. Connection diagnostics and knowledge embeddings are separately metered by Liara. USD accounting uses conservative configured estimates of $1.60 per million input and output tokens; it is not the provider invoice or a provider-wide spending cap. No USD monthly ceiling is configured. Reconcile production budgets and provider tariffs before production approval.
 
 v0.4.0 remains blocked on staging Telegram outbound connectivity. The protected customer-bot `getMe` request returned `ECONNREFUSED` at 2026-10-12 04:50 UTC, after earlier `EHOSTUNREACH` results. The existing webhook is preserved. A working outbound route or approved protected proxy is required before the authorized webhook handoff, actual private profile linkage and Telegram isolation/version receipts. No v0.4.0 release announcement or production deployment has occurred.
+
+## Browser recovery
+
+Staff model connection tests allow up to 100 seconds for the response and receipt. Password verification and other AI configuration commands retain the 15-second deadline. After an unconfirmed test, review the refreshed model status before authorizing another test. The result must identify the reviewed model and agree with its saved reachability.
