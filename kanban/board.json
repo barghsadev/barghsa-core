@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T18:57:34+00:00",
-  "source_commit": "975b06c45f6054aefacf2b03713fac9b2246323e",
+  "updated": "2026-11-08T19:14:28+00:00",
+  "source_commit": "5754f3175ba2e25eab767218bd3575f75965108d",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -36463,11 +36463,11 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/src/hooks/useSavedAddressSettingsEditor.ts",
-              "sha256": "11323412ad185ed00e1528d99b80b9c273a9b02693cbbb08027599836258247e"
+              "sha256": "956c87397684c412c002da39a5606b17a591325b53cf47fe5d772d91f6f7baaa"
             },
             {
               "path": "apps/web/src/hooks/useSettingsCommand.ts",
@@ -36527,7 +36527,7 @@
             },
             {
               "path": "packages/i18n/src/addresses.ts",
-              "sha256": "dd00f1d5d8eae271822bd7e78790a581573e851ae04d0e57c539a3489c1f7f45"
+              "sha256": "e51b7dbb757c6872a6459d720c0c1b5a8bda96f37f31abc882245cfda30683fe"
             },
             {
               "path": "apps/api/src/test/submission-audit.ts",
@@ -37342,7 +37342,7 @@
             },
             {
               "path": "apps/web/src/hooks/useSavedAddressSettingsEditor.ts",
-              "sha256": "11323412ad185ed00e1528d99b80b9c273a9b02693cbbb08027599836258247e"
+              "sha256": "956c87397684c412c002da39a5606b17a591325b53cf47fe5d772d91f6f7baaa"
             },
             {
               "path": "apps/web/src/hooks/useSettingsCommand.ts",
@@ -37390,7 +37390,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "packages/i18n/src/saving.ts",
@@ -359828,11 +359828,11 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/src/hooks/useSavedAddressSettingsEditor.ts",
-              "sha256": "11323412ad185ed00e1528d99b80b9c273a9b02693cbbb08027599836258247e"
+              "sha256": "956c87397684c412c002da39a5606b17a591325b53cf47fe5d772d91f6f7baaa"
             },
             {
               "path": "apps/web/src/hooks/useSettingsCommand.ts",
@@ -361539,11 +361539,11 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/src/hooks/useSavedAddressSettingsEditor.ts",
-              "sha256": "11323412ad185ed00e1528d99b80b9c273a9b02693cbbb08027599836258247e"
+              "sha256": "956c87397684c412c002da39a5606b17a591325b53cf47fe5d772d91f6f7baaa"
             },
             {
               "path": "apps/web/src/hooks/useSettingsCommand.ts",
@@ -389431,7 +389431,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -390071,7 +390071,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -489276,11 +489276,11 @@
             },
             {
               "path": "apps/web/e2e/profile-address-forms-fixture.ts",
-              "sha256": "e2e9833a0a403f61c1745720247436c38b123f1b3f9159b195066c140e29dc79"
+              "sha256": "bb4c28de29756bf64228cbac601066f3e61f4ecdd9fcd3c0ff58b9202ed1ef0b"
             },
             {
               "path": "apps/web/e2e/profile-address-forms.spec.ts",
-              "sha256": "8c9db3954b67b796e10a5f76285010255b779867d9367e8b69e3984630695d90"
+              "sha256": "8a9bf3df0be5f867b348bddf2975da88868009d058088950c0aa8540c30d7728"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -489630,11 +489630,11 @@
             },
             {
               "path": "apps/web/e2e/profile-address-forms-fixture.ts",
-              "sha256": "e2e9833a0a403f61c1745720247436c38b123f1b3f9159b195066c140e29dc79"
+              "sha256": "bb4c28de29756bf64228cbac601066f3e61f4ecdd9fcd3c0ff58b9202ed1ef0b"
             },
             {
               "path": "apps/web/e2e/profile-address-forms.spec.ts",
-              "sha256": "8c9db3954b67b796e10a5f76285010255b779867d9367e8b69e3984630695d90"
+              "sha256": "8a9bf3df0be5f867b348bddf2975da88868009d058088950c0aa8540c30d7728"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -491395,7 +491395,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/src/routes/_app/settings/profile.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ad60b7fc60de3576af035930692da65e4a44da627cda0a7cb9bb9e77527f15d4"
+              "sha256": "1bbfda06be630d048e9c402914f9f03d372fad38b4fc781166b53a45d4674cd6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -517117,7 +517117,7 @@
             },
             {
               "path": "apps/web/e2e/profile-address-forms.spec.ts",
-              "sha256": "8c9db3954b67b796e10a5f76285010255b779867d9367e8b69e3984630695d90"
+              "sha256": "8a9bf3df0be5f867b348bddf2975da88868009d058088950c0aa8540c30d7728"
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
@@ -518049,7 +518049,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/src/routes/_app/settings/index.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ad60b7fc60de3576af035930692da65e4a44da627cda0a7cb9bb9e77527f15d4"
+              "sha256": "1bbfda06be630d048e9c402914f9f03d372fad38b4fc781166b53a45d4674cd6"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ad60b7fc60de3576af035930692da65e4a44da627cda0a7cb9bb9e77527f15d4"
+              "sha256": "1bbfda06be630d048e9c402914f9f03d372fad38b4fc781166b53a45d4674cd6"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -523197,7 +523197,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "GitHub Actions run 42436808648 passed the critical accessibility, advisory and upload steps on main. Advisory artifact 13599848733 is present. GitHub main still has no required accessibility check. The owner merge-policy decision remains open."
+        "GitHub Actions run 42512612547 passed the critical accessibility, advisory and upload steps on main. Advisory artifact 13630346874 is present. GitHub reports main unprotected with no active rules. A repository administrator must make the critical accessibility job a required merge check, with the repository's authorized direct push policy preserved."
       ],
       "owner": null,
       "depends_on": [],
@@ -523213,7 +523213,8 @@
           "release-0.5-onboarding-deadlines-coverage",
           "release-0.5-accessibility-advisory",
           "release-0.5-wallet-return-deadline",
-          "release-0.5-hosted-ci-repairs"
+          "release-0.5-hosted-ci-repairs",
+          "release-0.5-address-states-and-route-reconciliation"
         ],
         "current_acceptance": null
       }
@@ -547224,7 +547225,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
@@ -549090,7 +549091,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
@@ -550957,7 +550958,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
@@ -552793,7 +552794,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
@@ -554655,7 +554656,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
@@ -556526,7 +556527,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
@@ -558370,7 +558371,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
@@ -560178,7 +560179,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
@@ -561986,7 +561987,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
@@ -563795,7 +563796,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
@@ -565603,7 +565604,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
@@ -567521,7 +567522,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ad60b7fc60de3576af035930692da65e4a44da627cda0a7cb9bb9e77527f15d4"
+              "sha256": "1bbfda06be630d048e9c402914f9f03d372fad38b4fc781166b53a45d4674cd6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -569416,7 +569417,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ad60b7fc60de3576af035930692da65e4a44da627cda0a7cb9bb9e77527f15d4"
+              "sha256": "1bbfda06be630d048e9c402914f9f03d372fad38b4fc781166b53a45d4674cd6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570728,7 +570729,7 @@
             },
             {
               "path": "apps/web/e2e/profile-address-forms.spec.ts",
-              "sha256": "8c9db3954b67b796e10a5f76285010255b779867d9367e8b69e3984630695d90"
+              "sha256": "8a9bf3df0be5f867b348bddf2975da88868009d058088950c0aa8540c30d7728"
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
@@ -571836,7 +571837,7 @@
             },
             {
               "path": "apps/web/src/hooks/useSavedAddressSettingsEditor.ts",
-              "sha256": "11323412ad185ed00e1528d99b80b9c273a9b02693cbbb08027599836258247e"
+              "sha256": "956c87397684c412c002da39a5606b17a591325b53cf47fe5d772d91f6f7baaa"
             },
             {
               "path": "apps/web/src/hooks/useServerMutation.test.tsx",
@@ -573068,7 +573069,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ad60b7fc60de3576af035930692da65e4a44da627cda0a7cb9bb9e77527f15d4"
+              "sha256": "1bbfda06be630d048e9c402914f9f03d372fad38b4fc781166b53a45d4674cd6"
             },
             {
               "path": "scripts/check-changed-coverage.py",
@@ -574198,7 +574199,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ad60b7fc60de3576af035930692da65e4a44da627cda0a7cb9bb9e77527f15d4"
+              "sha256": "1bbfda06be630d048e9c402914f9f03d372fad38b4fc781166b53a45d4674cd6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -576093,7 +576094,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ad60b7fc60de3576af035930692da65e4a44da627cda0a7cb9bb9e77527f15d4"
+              "sha256": "1bbfda06be630d048e9c402914f9f03d372fad38b4fc781166b53a45d4674cd6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577988,7 +577989,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ad60b7fc60de3576af035930692da65e4a44da627cda0a7cb9bb9e77527f15d4"
+              "sha256": "1bbfda06be630d048e9c402914f9f03d372fad38b4fc781166b53a45d4674cd6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -579883,7 +579884,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ad60b7fc60de3576af035930692da65e4a44da627cda0a7cb9bb9e77527f15d4"
+              "sha256": "1bbfda06be630d048e9c402914f9f03d372fad38b4fc781166b53a45d4674cd6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581778,7 +581779,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ad60b7fc60de3576af035930692da65e4a44da627cda0a7cb9bb9e77527f15d4"
+              "sha256": "1bbfda06be630d048e9c402914f9f03d372fad38b4fc781166b53a45d4674cd6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -583673,7 +583674,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ad60b7fc60de3576af035930692da65e4a44da627cda0a7cb9bb9e77527f15d4"
+              "sha256": "1bbfda06be630d048e9c402914f9f03d372fad38b4fc781166b53a45d4674cd6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -585568,7 +585569,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ad60b7fc60de3576af035930692da65e4a44da627cda0a7cb9bb9e77527f15d4"
+              "sha256": "1bbfda06be630d048e9c402914f9f03d372fad38b4fc781166b53a45d4674cd6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -587463,7 +587464,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ad60b7fc60de3576af035930692da65e4a44da627cda0a7cb9bb9e77527f15d4"
+              "sha256": "1bbfda06be630d048e9c402914f9f03d372fad38b4fc781166b53a45d4674cd6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589358,7 +589359,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ad60b7fc60de3576af035930692da65e4a44da627cda0a7cb9bb9e77527f15d4"
+              "sha256": "1bbfda06be630d048e9c402914f9f03d372fad38b4fc781166b53a45d4674cd6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591253,7 +591254,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ad60b7fc60de3576af035930692da65e4a44da627cda0a7cb9bb9e77527f15d4"
+              "sha256": "1bbfda06be630d048e9c402914f9f03d372fad38b4fc781166b53a45d4674cd6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593148,7 +593149,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ad60b7fc60de3576af035930692da65e4a44da627cda0a7cb9bb9e77527f15d4"
+              "sha256": "1bbfda06be630d048e9c402914f9f03d372fad38b4fc781166b53a45d4674cd6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594412,7 +594413,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ad60b7fc60de3576af035930692da65e4a44da627cda0a7cb9bb9e77527f15d4"
+              "sha256": "1bbfda06be630d048e9c402914f9f03d372fad38b4fc781166b53a45d4674cd6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595783,7 +595784,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ad60b7fc60de3576af035930692da65e4a44da627cda0a7cb9bb9e77527f15d4"
+              "sha256": "1bbfda06be630d048e9c402914f9f03d372fad38b4fc781166b53a45d4674cd6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -597678,7 +597679,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "ad60b7fc60de3576af035930692da65e4a44da627cda0a7cb9bb9e77527f15d4"
+              "sha256": "1bbfda06be630d048e9c402914f9f03d372fad38b4fc781166b53a45d4674cd6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -598482,7 +598483,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Current scoped evidence now includes staff solar construction and consultation queues and details, along with customer histories and staff finance, operations and settings. Reconcile the remaining route cohorts by their actual loading, empty and error views against the 98-route inventory and source-bound evidence. Only rerun cases with missing or invalidated evidence."
+        "Saved addresses now have current loading, retry, access denial, empty and profile-selection evidence. The reconciled 98-route source inventory identifies direct owners and scoped receipts. Match existing focused evidence to the remaining contract and document workspaces, staff inbox and wallet ledger, provider and service settings panes, and customer account/privacy panels before adding cases. Independently verify uncovered state owners and diagnose the hosted web test failures before acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -598585,7 +598586,8 @@
           "release-0.5-saving-catalogue-recovery",
           "release-0.5-owned-financial-detail-reads",
           "release-0.5-staff-finance-read-validation",
-          "release-0.5-staff-service-queue-validation"
+          "release-0.5-staff-service-queue-validation",
+          "release-0.5-address-states-and-route-reconciliation"
         ],
         "current_acceptance": null
       }
@@ -599614,7 +599616,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
@@ -601418,7 +601420,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
@@ -603222,7 +603224,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
@@ -605026,7 +605028,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
@@ -606830,7 +606832,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
@@ -608634,7 +608636,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
@@ -610438,7 +610440,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
@@ -728229,7 +728231,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer history and staff finance, operations and service queue recovery have current scoped evidence. Complete the conditional adoption reconciliation. Required GitHub accessibility enforcement and the staging Sentry receipt remain open."
+        "Saved-address recovery and the 98-route source inventory are recorded. Finish conditional evidence reconciliation and resolve the six affected web test failures reported by GitHub Actions run 42512612547. Required GitHub merge enforcement and a staging Sentry receipt remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -728397,7 +728399,8 @@
           "release-0.5-saving-catalogue-recovery",
           "release-0.5-owned-financial-detail-reads",
           "release-0.5-staff-finance-read-validation",
-          "release-0.5-staff-service-queue-validation"
+          "release-0.5-staff-service-queue-validation",
+          "release-0.5-address-states-and-route-reconciliation"
         ]
       }
     },
@@ -729145,7 +729148,7 @@
             },
             {
               "path": "apps/web/src/hooks/useSavedAddressSettingsEditor.ts",
-              "sha256": "11323412ad185ed00e1528d99b80b9c273a9b02693cbbb08027599836258247e"
+              "sha256": "956c87397684c412c002da39a5606b17a591325b53cf47fe5d772d91f6f7baaa"
             },
             {
               "path": "apps/web/src/hooks/useSecurityRevocationForm.ts",
@@ -729605,7 +729608,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
-              "sha256": "9f0f3dfa0e621fe8a0c339b36ea5a987446f6115b060e113318ff4089800ff43"
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
             },
             {
               "path": "apps/web/src/routes/_app/settings/index.tsx",
@@ -730194,6 +730197,10 @@
             {
               "path": "apps/api/src/profiles/agents.service.ts",
               "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+            },
+            {
+              "path": "packages/i18n/src/addresses.ts",
+              "sha256": "e51b7dbb757c6872a6459d720c0c1b5a8bda96f37f31abc882245cfda30683fe"
             }
           ],
           "checks": [
@@ -730305,7 +730312,8 @@
             "Renewed saving catalogue browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-catalogue-recovery/proof.json",
             "Renewed customer detail and history browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-financial-detail-reads/proof.json",
             "Renewed staff finance and operations browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-finance-read-validation/proof.json",
-            "Renewed staff service queue browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-service-queue-validation/proof.json"
+            "Renewed staff service queue browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-service-queue-validation/proof.json",
+            "Renewed route budgets, changed-source coverage and cold auth asset comparison. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-address-states-and-route-reconciliation/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -806036,6 +806044,132 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-service-queue-validation/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-service-queue-validation/reviewed-final.patch",
       "release_disposition": "Verified staff service queue and detail recovery. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-address-states-and-route-reconciliation": {
+      "batch": "release-0.5-address-states-and-route-reconciliation",
+      "base_commit": "5754f3175ba2e25eab767218bd3575f75965108d",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
+        },
+        {
+          "path": ".size-limit.json",
+          "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.service.ts",
+          "sha256": "c26f01a740273a6fbec8da33c8d4cb0927d56920429c9579c30ad9f918609489"
+        },
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "07949862684b86d6ff241d5f71e59e6c71a5cc1ddc70655b0d508beb53865dac"
+        },
+        {
+          "path": "apps/web/e2e/customer-address-selection.spec.ts",
+          "sha256": "c6a121bd7b04b5e6a8ca3bd917ed9a4804b0a69ecd34d20be88bb453694c8ca1"
+        },
+        {
+          "path": "apps/web/e2e/profile-address-forms-fixture.ts",
+          "sha256": "bb4c28de29756bf64228cbac601066f3e61f4ecdd9fcd3c0ff58b9202ed1ef0b"
+        },
+        {
+          "path": "apps/web/e2e/profile-address-forms.spec.ts",
+          "sha256": "8a9bf3df0be5f867b348bddf2975da88868009d058088950c0aa8540c30d7728"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/ProfileAvailabilityGuard.tsx",
+          "sha256": "421b68cbd71553ed5058c41e961b30060ebd3894445e413bdbe1a9289b680b08"
+        },
+        {
+          "path": "apps/web/src/hooks/useSavedAddressSettingsEditor.ts",
+          "sha256": "956c87397684c412c002da39a5606b17a591325b53cf47fe5d772d91f6f7baaa"
+        },
+        {
+          "path": "apps/web/src/hooks/useSettingsCommand.ts",
+          "sha256": "d26862e04f82d8839ffdee8d100a33ad4aa33119afdff0d129ca336deffbb843"
+        },
+        {
+          "path": "apps/web/src/lib/profile-context.ts",
+          "sha256": "fb6524f0764564f78d2ee7d9e18631b8294702fffdac58228e31041aa12e9c4d"
+        },
+        {
+          "path": "apps/web/src/lib/settings-form.test.ts",
+          "sha256": "e352ee9323f6f6b9f4b1ffeeb12f92467cfc0a8a76e9dc82cda64b2190021053"
+        },
+        {
+          "path": "apps/web/src/lib/settings-form.ts",
+          "sha256": "08b1dec8f4ec1efcb64250859b10ea3f952b48409126147a6372f92680a9badf"
+        },
+        {
+          "path": "apps/web/src/routeTree.gen.ts",
+          "sha256": "c1524622f37c4dc26c3fc7f5746d3a9a2d962c8397db0ab77e61efa0422be658"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/addresses.tsx",
+          "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/settings-native-forms.test.tsx",
+          "sha256": "4c3642cbacb784c36966603f6af2bdf5fbb25e8b6564a89c77b791dcac0c94d3"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "1bbfda06be630d048e9c402914f9f03d372fad38b4fc781166b53a45d4674cd6"
+        },
+        {
+          "path": "package.json",
+          "sha256": "886264b44b4a98229d8f38d01775db77f95128e8eb80eb1f70f2c41f97c784ff"
+        },
+        {
+          "path": "packages/i18n/src/addresses.ts",
+          "sha256": "e51b7dbb757c6872a6459d720c0c1b5a8bda96f37f31abc882245cfda30683fe"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "aab5a31e236ab70a7c588c676e3a0a2cf0bb8250e8d96ecdc469c9be175dcfa2"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "Saved addresses distinguish pending retry, recoverable read error, denied access, a valid empty collection and an account with no active profile. The profile guard still handles accounts without any available profiles. Existing receipt, ownership, draft, CSRF rotation and write-effect assertions passed.",
+        "Passed 16 distinct native Chromium and mobile Safari cases in Persian and English, two instrumented Chromium cases and 19 targeted units. All nine coverage groups, all 100 route budgets, web and i18n type checks, lint and formatting passed. Cold auth runtime retained all 31 verified asset hashes.",
+        "The initial check used stale i18n output. Rebuilding the package and both consumers restored translated copy. A separate fixture failure confused no active selection with no profiles. The fixture now keeps the existing profile visible when the active selection is absent. Only the affected cases were rerun.",
+        "The current router matches all 98 canonical paths. The receipt binds direct route/state source and names selected existing conditional cases. It does not certify unmeasured branches.",
+        "GitHub run 42512612547 passed the critical accessibility and advisory steps. Advisory artifact 13630346874 was verified. The independent affected-test job failed with six web test failures. GitHub shows no active branch rule and the CLI actor lacks repository admin access."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-address-states-and-route-reconciliation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-address-states-and-route-reconciliation/proof.json",
+      "source_scope_proof_sha256": "e5d528a5dcb46a7cd085a79819c2e94c8e0557ea7c7a5658e280538145ef3729",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-address-states-and-route-reconciliation/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-address-states-and-route-reconciliation/reviewed-final.patch",
+      "release_disposition": "Saved-address recovery verified. v0.5.0 remains open."
     }
   },
   "historical_improvements": [
@@ -806086,12 +806220,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Finish the conditional adoption reconciliation against the 98-route inventory. Reuse exact route evidence and target only missing loading, empty and error states. Live Sentry delivery and required GitHub accessibility enforcement remain separate gates."
+    "goal": "Resolve the six hosted affected-web test failures. Match existing conditional evidence to remaining read-owning route panels using the 98-route reconciliation, then test demonstrated gaps. Required GitHub merge enforcement and staging Sentry delivery remain independent gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 command feedback is accepted and staff service queue recovery has current evidence. Four launch-required criteria remain open, including conditional UI states, full adoption, staging Sentry delivery and GitHub accessibility enforcement. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 saved-address recovery passed focused checks. Four launch-required criteria remain open, and the hosted affected test job found six web test failures. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {

@@ -97,7 +97,7 @@ export async function setupSettingsForms(
   ]);
   const state = {
     actor: 'settings/customer:opaque',
-    activeProfileId: profileId,
+    activeProfileId: profileId as string | null,
     denied: false,
     modes: { profile: 'success', create: 'success', edit: 'success' } as Record<Family, Mode>,
     detailMode: 'success' as 'success' | 'failed' | 'malformed' | 'hold',
@@ -147,9 +147,7 @@ export async function setupSettingsForms(
     await route.fulfill({
       json: {
         profiles: [...profiles.values()]
-          .filter(
-            (item) => !state.actor.startsWith('settings/new') || item.id === state.activeProfileId
-          )
+          .filter((item) => !state.actor.startsWith('settings/new') || item.id === otherProfileId)
           .map((item) => ({
             ...item,
             addresses: undefined,
@@ -157,7 +155,7 @@ export async function setupSettingsForms(
             isDefault: item.isDefault,
           })),
         activeProfileId: state.activeProfileId,
-        hasDefault: true,
+        hasDefault: state.activeProfileId !== null,
       },
     });
     if (route.request().headers().accept === 'application/json') state.shellProfileReads++;

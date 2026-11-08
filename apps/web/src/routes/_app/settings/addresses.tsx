@@ -19,6 +19,7 @@ import {
   DialogDescription,
   Alert,
   AlertDescription,
+  EmptyState,
 } from '@barghsa/ui';
 
 import {
@@ -200,7 +201,7 @@ function SettingsAddressesPage() {
 
       {/* Loading */}
       {loading && (
-        <div className="text-center py-8 text-muted-foreground">
+        <div className="text-center py-8 text-muted-foreground" role="status">
           <Skeleton className="h-6 w-20 shrink-0" />
           <p className="text-sm">{t('settings.addresses.loading', locale)}</p>
         </div>
@@ -209,7 +210,7 @@ function SettingsAddressesPage() {
       {denied && <p role="alert">{copy('forbidden')}</p>}
       {command.locked === 'main' && recovery()}
       {/* Address list */}
-      {!loading && loadError && (
+      {!loading && !denied && loadError && (
         <div role="alert">
           <p>{t('settings.addresses.error.load', locale)}</p>
           <Button variant="outline" disabled={locked} onClick={() => void fetchAddresses(true)}>
@@ -217,7 +218,19 @@ function SettingsAddressesPage() {
           </Button>
         </div>
       )}
-      {!loading && !loadError && (
+      {!loading && !denied && !loadError && !profileId && (
+        <EmptyState
+          icon={<MapPinIcon />}
+          title={addressesText('profileRequired', locale)}
+          description={addressesText('profileRequiredHint', locale)}
+          action={
+            <Link to="/app" className="text-sm text-primary underline underline-offset-4">
+              {addressesText('openDashboard', locale)}
+            </Link>
+          }
+        />
+      )}
+      {!loading && !denied && !loadError && profileId && (
         <div className="space-y-3">
           {addresses.length === 0 && (
             <Card>

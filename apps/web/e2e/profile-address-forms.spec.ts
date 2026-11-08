@@ -1,9 +1,10 @@
 import { productionManifest } from './production-manifest';
 import AxeBuilder from '@axe-core/playwright';
-import type { Locator, Page } from '@playwright/test';
+import type { Locator, Page, Route } from '@playwright/test';
 import { t } from '@barghsa/i18n/app';
 import { t as crmText } from '@barghsa/i18n/crm';
 import { tSettingsForms } from '@barghsa/i18n/settings-forms';
+import { addressesText } from '@barghsa/i18n/addresses';
 import { test, expect } from './coverage-fixture';
 import {
   setupSettingsForms,
@@ -370,15 +371,46 @@ for (const locale of ['en', 'fa'] as const) {
     const fixture = await setupSettingsForms(page, locale, 'addresses');
     const { state } = fixture;
     const releaseSchema = await holdFirstSchema(page);
+    let initialAddressRead = true,
+      allowReads = false,
+      heldRetry: Route | undefined;
+    await page.route(`**/api/profiles/${profileId}/addresses`, (route) => {
+      if (allowReads || route.request().method() !== 'GET') return route.fallback();
+      if (initialAddressRead) {
+        initialAddressRead = false;
+        return route.fulfill({ status: 503, json: {} });
+      }
+      heldRetry = route;
+    });
     await page.goto('/settings/addresses?returnTo=%2Felectricity%2Fadvanced');
     // Wait for the guard and modal JSON reads. Later no-read checks count every request.
     await expect.poll(() => state.shellProfileReads).toBe(2);
     await expect
       .poll(() => page.locator('html').evaluate((root) => root.classList.contains('dark')))
       .toBe(locale === 'fa');
-    await page
-      .getByRole('button', { name: t('settings.addresses.add', locale), exact: true })
-      .click();
+    const add = page.getByRole('button', {
+      name: t('settings.addresses.add', locale),
+      exact: true,
+    });
+    const empty = page.getByText(t('settings.addresses.noAddresses', locale), { exact: true });
+    const noProfile = page.getByText(addressesText('profileRequired', locale), { exact: true });
+    const loadError = page
+      .getByRole('alert')
+      .filter({ hasText: t('settings.addresses.error.load', locale) });
+    await expect(loadError).toBeVisible();
+    await expect(add).toBeDisabled();
+    await expect(empty).toHaveCount(0);
+    await loadError.getByRole('button', { name: t('settings.addresses.retry', locale) }).click();
+    await expect.poll(() => Boolean(heldRetry)).toBe(true);
+    await expect(
+      page.getByRole('status').filter({ hasText: t('settings.addresses.loading', locale) })
+    ).toBeVisible();
+    await expect(empty).toHaveCount(0);
+    await expect(noProfile).toHaveCount(0);
+    allowReads = true;
+    await heldRetry!.fulfill({ json: { addresses: [] } });
+    await expect(empty).toBeVisible();
+    await add.click();
     const owner = form(page, 'address');
     const province = page.locator('#addresses-field-1'),
       city = page.locator('#addresses-field-2');
@@ -506,11 +538,24 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.locator('body')).not.toContainText(privateText);
     await expect(page.locator('body')).not.toContainText('Edited saved address');
     await expect(action(page, locale, 'retryOriginal')).toHaveCount(0);
+    await expect(
+      page.getByRole('alert').filter({ hasText: tSettingsForms('forbidden', locale) })
+    ).toBeVisible();
+    await expect(empty).toHaveCount(0);
+    await expect(add).toBeDisabled();
     state.denied = false;
     state.actor = 'settings/new-customer:opaque';
     state.activeProfileId = otherProfileId;
     await profileEpoch(page);
     await expect(page.locator('body')).toContainText(t('settings.addresses.noAddresses', locale));
+    state.activeProfileId = null;
+    await profileEpoch(page);
+    await expect(noProfile).toBeVisible();
+    await expect(empty).toHaveCount(0);
+    await expect(add).toBeDisabled();
+    await expect(
+      page.getByRole('link', { name: addressesText('openDashboard', locale), exact: true })
+    ).toHaveAttribute('href', '/app');
     expect(state.effects).toEqual({ profile: 0, create: 1, edit: 1, history: 0, audit: 2 });
     expect(state.companionWrites).toEqual([]);
   });

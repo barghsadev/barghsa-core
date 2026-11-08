@@ -157,3 +157,5 @@ Invoice details check line items, linked invoices and activity before rendering.
 The staff invoice ledger validates rows and page cursors before replacing the current results. Its detail must match the selected invoice before the due-date and refund actions appear. A malformed reconciliation refresh keeps the last verified rows and open note. Staff retry the same query before reviewing another action.
 
 The solar construction queue and staff consultation queue validate their rows and cursors before accepting a page. A failed queue read keeps the previous rows available while staff retry the same query. Consultation team options and request details recover independently. An invalid financial or payment field keeps consultation actions unavailable until a valid detail arrives.
+
+Saved addresses announce loading again during an explicit retry. The empty-list message requires a successful read for the active profile. A denied read withdraws private addresses and disables editing. An account with profiles but no active selection gets a link to the dashboard to choose a profile.

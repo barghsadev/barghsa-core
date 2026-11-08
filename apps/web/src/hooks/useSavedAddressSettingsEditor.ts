@@ -176,7 +176,7 @@ export function useSavedAddressSettingsEditor(locale: Locale) {
     if (refresh && !command.coordination.claim('read')) return;
     const token = identity,
       read = ++generation.current;
-    if (!refresh) setLoading(true);
+    setLoading(true);
     setLoadError(false);
     try {
       const context = settingsContext(await privateRead('/api/profiles', token));
