@@ -50,7 +50,7 @@ for (const locale of ['en', 'fa'] as const) {
         });
       });
       const reads: Record<string, number> = {};
-      let failOrders = true;
+      let ordersReply: 'unavailable' | 'malformed' | 'empty' = 'unavailable';
       let releaseInvoices!: () => void;
       const held = new Promise<void>((resolve) => {
         releaseInvoices = resolve;
@@ -60,7 +60,11 @@ for (const locale of ['en', 'fa'] as const) {
         expect(url.searchParams.get('profileId')).toBe(profileId);
         const widget = url.pathname.split('/').at(-1)!;
         reads[widget] = (reads[widget] ?? 0) + 1;
-        if (widget === 'orders' && failOrders) return route.fulfill({ status: 503, json: {} });
+        if (widget === 'orders') {
+          if (ordersReply === 'unavailable') return route.fulfill({ status: 503, json: {} });
+          if (ordersReply === 'malformed')
+            return route.fulfill({ json: { profileId, data: { orderId: 'not-a-list' } } });
+        }
         if (widget === 'invoices') await held;
         const data =
           widget === 'wallet'
@@ -119,10 +123,22 @@ for (const locale of ['en', 'fa'] as const) {
         const before = await orders.evaluate(position);
         const invoiceBefore = await invoices.evaluate(position);
         const previousReads = { ...reads };
-        failOrders = false;
+        ordersReply = 'malformed';
+        await orders.getByRole('button', { name: dashboardText('widget.retry', locale) }).click();
+        await expect.poll(() => reads.orders).toBe(previousReads.orders! + 1);
+        await expect(orders.getByRole('alert')).toBeVisible();
+        await expect(page.getByRole('main')).toHaveCount(1);
+        await expect(
+          wallet.getByText(formatCurrencyIrr('9007199254740993', locale), { exact: true }).first()
+        ).toBeVisible();
+        if (locale === 'fa' && testInfo.project.name === 'mobile-safari')
+          await orders.screenshot({
+            path: testInfo.outputPath('dashboard-local-retry-fa-mobile.png'),
+          });
+        ordersReply = 'empty';
         await orders.getByRole('button', { name: dashboardText('widget.retry', locale) }).click();
         await expect(orders.getByText(dashboardText('orders.empty', locale))).toBeVisible();
-        expect(reads.orders).toBe(previousReads.orders! + 1);
+        expect(reads.orders).toBe(previousReads.orders! + 2);
         for (const widget of ['wallet', 'status', 'invoices', 'contracts'])
           expect(reads[widget]).toBe(previousReads[widget]);
         await page.clock.fastForward(15_001);

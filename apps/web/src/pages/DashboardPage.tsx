@@ -43,12 +43,110 @@ interface DashboardContext {
 
 type WidgetKey = 'wallet' | 'status' | 'invoices' | 'orders' | 'contracts';
 
-function useWidget<T>(widget: WidgetKey, profileId: string): AsyncData<T> {
+function record(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === 'object' && !Array.isArray(value);
+}
+function nonempty(value: unknown): value is string {
+  return typeof value === 'string' && value.trim().length > 0;
+}
+function count(value: unknown): boolean {
+  return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0;
+}
+function irr(value: unknown): boolean {
+  return typeof value === 'string'
+    ? /^-?\d{1,19}$/.test(value)
+    : typeof value === 'number' && Number.isSafeInteger(value);
+}
+function instant(value: unknown): boolean {
+  return typeof value === 'string' && Number.isFinite(Date.parse(value));
+}
+function nullableInstant(value: unknown): boolean {
+  return value === null || instant(value);
+}
+function validContext(value: unknown): value is DashboardContext {
+  if (!record(value) || !record(value.profile) || !record(value.access)) return false;
+  const { profile, access } = value;
+  return (
+    nonempty(profile.id) &&
+    typeof profile.name === 'string' &&
+    ['wallet', 'invoices', 'orders', 'contracts'].every((key) => typeof access[key] === 'boolean')
+  );
+}
+function validWallet(value: unknown): value is WalletBalanceCardProps {
+  return (
+    record(value) &&
+    irr(value.balance) &&
+    (value.postedBalance === undefined || irr(value.postedBalance)) &&
+    (value.reservedBalance === undefined || irr(value.reservedBalance)) &&
+    value.currency === 'IRR' &&
+    typeof value.lowBalanceWarning === 'boolean' &&
+    count(value.pendingInvoices)
+  );
+}
+function validStatus(value: unknown): value is QuickStatusCardsProps {
+  return (
+    record(value) &&
+    ['activeContracts', 'pendingOrders', 'openTickets', 'unpaidInvoices'].every((key) =>
+      count(value[key])
+    )
+  );
+}
+function validInvoices(value: unknown): value is UpcomingInvoice[] {
+  return (
+    Array.isArray(value) &&
+    value.every(
+      (row: unknown) =>
+        record(row) &&
+        nonempty(row.invoiceId) &&
+        nullableInstant(row.dueAt) &&
+        nullableInstant(row.payableFrom) &&
+        typeof row.remainingAmount === 'string' &&
+        irr(row.remainingAmount)
+    )
+  );
+}
+function validOrders(value: unknown): value is RecentOrder[] {
+  return (
+    Array.isArray(value) &&
+    value.every(
+      (row: unknown) =>
+        record(row) &&
+        (row.kind === 'electricity' || row.kind === 'saving') &&
+        nonempty(row.orderId) &&
+        nonempty(row.status) &&
+        instant(row.submittedAt) &&
+        (row.amountIrR === null || (typeof row.amountIrR === 'string' && irr(row.amountIrR)))
+    )
+  );
+}
+function validContracts(value: unknown): value is ActiveContract[] {
+  return (
+    Array.isArray(value) &&
+    value.every(
+      (row: unknown) =>
+        record(row) &&
+        nonempty(row.contractId) &&
+        nonempty(row.contractNumber) &&
+        (row.serviceType === 'electricity' ||
+          row.serviceType === 'savings' ||
+          row.serviceType === 'solar') &&
+        row.status === 'Active' &&
+        nullableInstant(row.serviceStartsAt) &&
+        nullableInstant(row.serviceEndsAt)
+    )
+  );
+}
+
+function useWidget<T>(
+  widget: WidgetKey,
+  profileId: string,
+  valid: (value: unknown) => value is T
+): AsyncData<T> {
   const locale = useLocale();
   const revision = useProfileContextRevision();
   const accountId = useAccountUser();
   const scope = { context: 'customer' as const, ownerId: profileId, revision, accountId };
-  const resource = useServerDetailQuery<{ profileId: string; data: T }>({
+  const resource = useServerDetailQuery<unknown>({
     queryKey:
       widget === 'status'
         ? queryKeys.dashboard.detail(scope, widget)
@@ -67,9 +165,9 @@ function useWidget<T>(widget: WidgetKey, profileId: string): AsyncData<T> {
   if (resource.isPending || resource.isFetching) return { status: 'loading', data: null, retry };
   if (
     resource.isError ||
-    !resource.data ||
+    !record(resource.data) ||
     resource.data.profileId !== profileId ||
-    resource.data.data == null
+    !valid(resource.data.data)
   )
     return {
       status: 'error',
@@ -81,7 +179,7 @@ function useWidget<T>(widget: WidgetKey, profileId: string): AsyncData<T> {
 }
 
 function WalletWidget({ profileId, locale }: { profileId: string; locale: Locale }) {
-  const resource = useWidget<Omit<WalletBalanceCardProps, 'locale'>>('wallet', profileId);
+  const resource = useWidget('wallet', profileId, validWallet);
   return (
     <DashboardWidget
       title={t('dashboard.overview.walletBalance', locale)}
@@ -95,7 +193,7 @@ function WalletWidget({ profileId, locale }: { profileId: string; locale: Locale
 }
 
 function StatusWidget({ profileId, locale }: { profileId: string; locale: Locale }) {
-  const resource = useWidget<Omit<QuickStatusCardsProps, 'locale'>>('status', profileId);
+  const resource = useWidget('status', profileId, validStatus);
   return (
     <DashboardWidget
       title={dashboardText('status.title', locale)}
@@ -117,7 +215,7 @@ function InvoicesWidget({
   locale: Locale;
   time: ReturnType<typeof useAccountTime>;
 }) {
-  const resource = useWidget<UpcomingInvoice[]>('invoices', profileId);
+  const resource = useWidget('invoices', profileId, validInvoices);
   return (
     <DashboardWidget
       title={dashboardText('invoice.title', locale)}
@@ -152,7 +250,7 @@ function OrdersWidget({
   locale: Locale;
   time: ReturnType<typeof useAccountTime>;
 }) {
-  const resource = useWidget<RecentOrder[]>('orders', profileId);
+  const resource = useWidget('orders', profileId, validOrders);
   return (
     <DashboardWidget
       title={dashboardText('orders.title', locale)}
@@ -174,7 +272,7 @@ function ContractsWidget({
   locale: Locale;
   time: ReturnType<typeof useAccountTime>;
 }) {
-  const resource = useWidget<ActiveContract[]>('contracts', profileId);
+  const resource = useWidget('contracts', profileId, validContracts);
   return (
     <DashboardWidget
       title={t('dashboard.overview.contractStatus', locale)}
@@ -204,11 +302,9 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
   const documentLocale = useLocale();
   const locale = localeOverride ?? documentLocale;
   const time = useAccountTime(locale);
-  const context = useAsyncData<DashboardContext>('/api/dashboard/context');
-  const ready = context.status === 'ready' && context.data?.profile?.id && context.data.access;
-  const profileName = ready
-    ? context.data.profile.name || t('dashboard.profile.unnamed', locale)
-    : t('dashboard.profile.unnamed', locale);
+  const context = useAsyncData<unknown>('/api/dashboard/context');
+  const dashboard = context.status === 'ready' && validContext(context.data) ? context.data : null;
+  const profileName = dashboard?.profile.name || t('dashboard.profile.unnamed', locale);
   const actions = [
     { label: t('dashboard.overview.newOrder', locale), href: '/electricity' },
     { label: t('dashboard.overview.topUpWallet', locale), href: '/wallet' },
@@ -224,7 +320,7 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
       />
       {context.status === 'loading' ? (
         <LoadingSkeleton label={loadingText('loading', locale)} variant="cards" />
-      ) : !ready ? (
+      ) : !dashboard ? (
         <Alert variant="destructive">
           <AlertDescription>
             <p>{t('dashboard.overview.loadError', locale)}</p>
@@ -235,23 +331,21 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
         </Alert>
       ) : (
         <>
-          {(context.data.access.invoices ||
-            context.data.access.orders ||
-            context.data.access.contracts) &&
+          {(dashboard.access.invoices || dashboard.access.orders || dashboard.access.contracts) &&
             time.notice}
-          <DashboardLayout key={context.data.profile.id}>
-            {context.data.access.wallet && (
-              <WalletWidget profileId={context.data.profile.id} locale={locale} />
+          <DashboardLayout key={dashboard.profile.id}>
+            {dashboard.access.wallet && (
+              <WalletWidget profileId={dashboard.profile.id} locale={locale} />
             )}
-            <StatusWidget profileId={context.data.profile.id} locale={locale} />
-            {context.data.access.invoices && (
-              <InvoicesWidget profileId={context.data.profile.id} locale={locale} time={time} />
+            <StatusWidget profileId={dashboard.profile.id} locale={locale} />
+            {dashboard.access.invoices && (
+              <InvoicesWidget profileId={dashboard.profile.id} locale={locale} time={time} />
             )}
-            {context.data.access.orders && (
-              <OrdersWidget profileId={context.data.profile.id} locale={locale} time={time} />
+            {dashboard.access.orders && (
+              <OrdersWidget profileId={dashboard.profile.id} locale={locale} time={time} />
             )}
-            {context.data.access.contracts && (
-              <ContractsWidget profileId={context.data.profile.id} locale={locale} time={time} />
+            {dashboard.access.contracts && (
+              <ContractsWidget profileId={dashboard.profile.id} locale={locale} time={time} />
             )}
           </DashboardLayout>
         </>

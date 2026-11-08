@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T18:02:06+00:00",
-  "source_commit": "62848cad53d0f51449834fe9c21eea1a39214026",
+  "updated": "2026-11-08T18:12:09+00:00",
+  "source_commit": "e7676b842c66b6f63aef505c40ce9cb26fc996cd",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -20473,7 +20473,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/routeTree.gen.ts",
@@ -35516,7 +35516,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/DocumentsPage.tsx",
@@ -61294,7 +61294,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/components/WalletBalanceCard.tsx",
@@ -61318,7 +61318,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/dashboard-entry.spec.ts",
@@ -61673,7 +61673,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/components/WalletBalanceCard.tsx",
@@ -61697,7 +61697,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/dashboard-entry.spec.ts",
@@ -62053,7 +62053,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/components/WalletBalanceCard.tsx",
@@ -62077,7 +62077,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/dashboard-entry.spec.ts",
@@ -63212,7 +63212,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/DocumentsPage.tsx",
@@ -493042,7 +493042,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/ElectricityIncreasePanel.tsx",
@@ -496943,7 +496943,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "269155f19fd64b96b995107f003b833f1a1e32892cdbbd2eb5702a29ad0c7e02"
+              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -497864,7 +497864,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/ElectricityIncreasePanel.tsx",
@@ -508309,7 +508309,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -510086,7 +510086,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -510138,7 +510138,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -510396,7 +510396,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -510448,7 +510448,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -510706,7 +510706,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -510758,7 +510758,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -511016,7 +511016,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -511068,7 +511068,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -512316,7 +512316,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/ElectricityIncreasePanel.tsx",
@@ -514935,7 +514935,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
@@ -514951,7 +514951,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "packages/i18n/src/dashboard.ts",
@@ -515085,7 +515085,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -515517,7 +515517,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
@@ -515956,7 +515956,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
@@ -516391,7 +516391,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "269155f19fd64b96b995107f003b833f1a1e32892cdbbd2eb5702a29ad0c7e02"
+              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -518993,7 +518993,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "269155f19fd64b96b995107f003b833f1a1e32892cdbbd2eb5702a29ad0c7e02"
+              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -519342,7 +519342,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
@@ -520368,7 +520368,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
@@ -521196,7 +521196,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
@@ -522524,7 +522524,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
@@ -567089,11 +567089,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/DocumentsNavigation.test.tsx",
@@ -567521,7 +567521,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "269155f19fd64b96b995107f003b833f1a1e32892cdbbd2eb5702a29ad0c7e02"
+              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568984,11 +568984,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/DocumentsNavigation.test.tsx",
@@ -569416,7 +569416,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "269155f19fd64b96b995107f003b833f1a1e32892cdbbd2eb5702a29ad0c7e02"
+              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570500,7 +570500,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
@@ -572476,11 +572476,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/DocumentsNavigation.test.tsx",
@@ -573068,7 +573068,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "269155f19fd64b96b995107f003b833f1a1e32892cdbbd2eb5702a29ad0c7e02"
+              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
             },
             {
               "path": "scripts/check-changed-coverage.py",
@@ -573766,11 +573766,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/DocumentsNavigation.test.tsx",
@@ -574198,7 +574198,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "269155f19fd64b96b995107f003b833f1a1e32892cdbbd2eb5702a29ad0c7e02"
+              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -575661,11 +575661,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/DocumentsNavigation.test.tsx",
@@ -576093,7 +576093,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "269155f19fd64b96b995107f003b833f1a1e32892cdbbd2eb5702a29ad0c7e02"
+              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577556,11 +577556,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/DocumentsNavigation.test.tsx",
@@ -577988,7 +577988,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "269155f19fd64b96b995107f003b833f1a1e32892cdbbd2eb5702a29ad0c7e02"
+              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -579451,11 +579451,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/DocumentsNavigation.test.tsx",
@@ -579883,7 +579883,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "269155f19fd64b96b995107f003b833f1a1e32892cdbbd2eb5702a29ad0c7e02"
+              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581346,11 +581346,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/DocumentsNavigation.test.tsx",
@@ -581778,7 +581778,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "269155f19fd64b96b995107f003b833f1a1e32892cdbbd2eb5702a29ad0c7e02"
+              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -583241,11 +583241,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/DocumentsNavigation.test.tsx",
@@ -583673,7 +583673,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "269155f19fd64b96b995107f003b833f1a1e32892cdbbd2eb5702a29ad0c7e02"
+              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -585136,11 +585136,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/DocumentsNavigation.test.tsx",
@@ -585568,7 +585568,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "269155f19fd64b96b995107f003b833f1a1e32892cdbbd2eb5702a29ad0c7e02"
+              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -587031,11 +587031,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/DocumentsNavigation.test.tsx",
@@ -587463,7 +587463,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "269155f19fd64b96b995107f003b833f1a1e32892cdbbd2eb5702a29ad0c7e02"
+              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -588926,11 +588926,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/DocumentsNavigation.test.tsx",
@@ -589358,7 +589358,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "269155f19fd64b96b995107f003b833f1a1e32892cdbbd2eb5702a29ad0c7e02"
+              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -590821,11 +590821,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/DocumentsNavigation.test.tsx",
@@ -591253,7 +591253,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "269155f19fd64b96b995107f003b833f1a1e32892cdbbd2eb5702a29ad0c7e02"
+              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592716,11 +592716,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/DocumentsNavigation.test.tsx",
@@ -593148,7 +593148,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "269155f19fd64b96b995107f003b833f1a1e32892cdbbd2eb5702a29ad0c7e02"
+              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594308,7 +594308,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -594412,7 +594412,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "269155f19fd64b96b995107f003b833f1a1e32892cdbbd2eb5702a29ad0c7e02"
+              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595351,11 +595351,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/DocumentsNavigation.test.tsx",
@@ -595783,7 +595783,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "269155f19fd64b96b995107f003b833f1a1e32892cdbbd2eb5702a29ad0c7e02"
+              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -597246,11 +597246,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/DocumentsNavigation.test.tsx",
@@ -597678,7 +597678,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "269155f19fd64b96b995107f003b833f1a1e32892cdbbd2eb5702a29ad0c7e02"
+              "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -598482,7 +598482,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Team membership and ownership, saving, solar, document, contract, activation rules, raw electricity drafts, direct catalogue, VAT, branding and shared configuration recovery have current scoped evidence. Reconcile remaining conditional route, list and dashboard states against the 93 populated routes and five redirects."
+        "The customer dashboard now has current scoped loading, empty, error and malformed-response evidence. Earlier scoped team, ownership, saving/solar detail, document, contract, activation rules, raw electricity drafts, direct catalogue, VAT, branding and settings evidence remains on record. Reconcile the saving catalogue and remaining conditional list and detail states."
       ],
       "owner": null,
       "depends_on": [],
@@ -598580,7 +598580,8 @@
           "release-0.5-direct-catalogue-recovery",
           "release-0.5-ownership-decision-receipt",
           "release-0.5-activation-raw-draft-recovery",
-          "release-0.5-team-member-recovery"
+          "release-0.5-team-member-recovery",
+          "release-0.5-dashboard-state-recovery"
         ],
         "current_acceptance": null
       }
@@ -653986,7 +653987,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -654166,11 +654167,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -654626,7 +654627,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -654806,11 +654807,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -655266,7 +655267,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -655446,11 +655447,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -655904,7 +655905,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -656084,11 +656085,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -656542,7 +656543,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -656722,11 +656723,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -657182,7 +657183,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -657362,11 +657363,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -657821,7 +657822,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -658001,11 +658002,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -658460,7 +658461,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -658640,11 +658641,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -659099,7 +659100,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -659279,11 +659280,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -659738,7 +659739,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -659918,11 +659919,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -660377,7 +660378,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -660557,11 +660558,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -661016,7 +661017,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -661196,11 +661197,11 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
-              "sha256": "88d921f23356dce26c2ba443b6e1c140f1e6826c1ec7460e1f52c5064f630f24"
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -688420,7 +688421,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -689261,7 +689262,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -690104,7 +690105,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -690945,7 +690946,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -691786,7 +691787,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -692631,7 +692632,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -693476,7 +693477,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -694317,7 +694318,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -695158,7 +695159,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -696000,7 +696001,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -696847,7 +696848,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -728224,7 +728225,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Command feedback is accepted with current scoped evidence. Conditional UI states still require reconciliation. Required GitHub accessibility enforcement and the staging Sentry receipt remain open."
+        "Command feedback is accepted and customer dashboard conditional recovery has current evidence. Remaining conditional UI states, required GitHub accessibility enforcement and the staging Sentry receipt remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -728387,7 +728388,8 @@
           "release-0.5-direct-catalogue-recovery",
           "release-0.5-ownership-decision-receipt",
           "release-0.5-activation-raw-draft-recovery",
-          "release-0.5-team-member-recovery"
+          "release-0.5-team-member-recovery",
+          "release-0.5-dashboard-state-recovery"
         ]
       }
     },
@@ -728463,7 +728465,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "fcd0299299d2589edbb73dd0a5a1a6bf4ff18d8bda0f818a3520920cc917af88"
+              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -729475,7 +729477,7 @@
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
-              "sha256": "e1874784bdee296786dd252a1d01f92be504e5eefaba5f3d712e6fe1aadb9ed2"
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
             },
             {
               "path": "apps/web/src/pages/ElectricityIncreasePanel.tsx",
@@ -730290,7 +730292,8 @@
             "Renewed direct configuration browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-direct-catalogue-recovery/proof.json",
             "Renewed ownership decision browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-decision-receipt/proof.json",
             "Renewed activation rule and raw draft browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-activation-raw-draft-recovery/proof.json",
-            "Renewed membership recovery browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-member-recovery/proof.json"
+            "Renewed membership recovery browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-member-recovery/proof.json",
+            "Renewed dashboard browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-state-recovery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -805304,6 +805307,112 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-member-recovery/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-member-recovery/reviewed.patch",
       "release_disposition": "Accepted command feedback after the team membership recovery checks. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-dashboard-state-recovery": {
+      "batch": "release-0.5-dashboard-state-recovery",
+      "base_commit": "e7676b842c66b6f63aef505c40ce9cb26fc996cd",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+        },
+        {
+          "path": "apps/api/src/dashboard/dashboard.controller.ts",
+          "sha256": "e6cc7add939c33abfd75683fd81ac21d68cb63a1eceeccf938fa572920e2a729"
+        },
+        {
+          "path": "apps/api/src/dashboard/dashboard.service.ts",
+          "sha256": "627d04336ae64b6289adc4162e3bafb7ab04809dd929971bbd1c808a021e41db"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+        },
+        {
+          "path": "apps/web/e2e/dashboard-entry.spec.ts",
+          "sha256": "d0756ebc9e57a3cf1c48345b74a8182bcd3744dbbaa37194d04ee2470335ad35"
+        },
+        {
+          "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
+          "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
+        },
+        {
+          "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
+          "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/ActiveContractsWidget.tsx",
+          "sha256": "e111b7d595f117535aad80333e9d4fbc65e9328136d1b93560b2f8f44044fca6"
+        },
+        {
+          "path": "apps/web/src/components/QuickStatusCards.tsx",
+          "sha256": "82ebca7890c5ecdf05632adc3fd9fff1f821688ea239ef00db4c10330d74c829"
+        },
+        {
+          "path": "apps/web/src/components/WalletBalanceCard.tsx",
+          "sha256": "5b4983ee91f685d455082310283ef8816c34025f3c7739a3e56ac92fba3477f0"
+        },
+        {
+          "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
+          "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDashboard.test.tsx",
+          "sha256": "b25cfa756d64056e139b6dbd72082be24b8b4d4713c900d6d0c39f4307cbd578"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.test.tsx",
+          "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.tsx",
+          "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "face599aa5ecebe19eb58863f201e0afdce03a1ec9fb0c1a56a620729d0f37b3"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/i18n/src/numbers.ts",
+          "sha256": "42dbecfe63da4d21a29a55b81379a8c3f4bfa331d7c024e4cdc044f6d524f658"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "The customer dashboard validates the profile context and each widget response before rendering. The orders card shows local recovery for HTTP failure, deadline expiry, or malformed successful data while a successful peer stays available with its exact integer rial amount. Valid empty lists retain their own empty state.",
+        "Eight native Chromium and mobile Safari cases passed, including English and Persian and the dashboard accessibility and width checks. Three instrumented Chromium cases and nine targeted unit tests passed. All nine coverage groups, all 100 budgets, typecheck, lint and formatting passed. All 31 cold-auth assets match the six previously verified browser checks.",
+        "The previous route census covers populated states at eight widths in both languages and browser engines for 93 routes, plus five redirects. This batch adds current conditional evidence for the customer dashboard. Other conditional routes remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-state-recovery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-state-recovery/proof.json",
+      "source_scope_proof_sha256": "0d1a6b85d5b64188f9458609173d44c8c94803052bd878e7e27d49a35a43c794",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-state-recovery/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-state-recovery/reviewed.patch",
+      "release_disposition": "Recorded customer dashboard conditional recovery. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -805354,12 +805463,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Reconcile v0.5.0 conditional loading, empty, error and denial states against the current route census and scoped evidence. Live Sentry delivery and required GitHub accessibility enforcement remain separate gates."
+    "goal": "Reconcile the saving catalogue and remaining v0.5.0 conditional list and detail states against the current route census and scoped evidence. Live Sentry delivery and required GitHub accessibility enforcement remain separate gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 command feedback is accepted. Four launch-required criteria remain open, including conditional UI states, full adoption, staging Sentry delivery and GitHub accessibility enforcement. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 command feedback is accepted and customer dashboard conditional recovery has current evidence. Four launch-required criteria remain open, including conditional UI states, full adoption, staging Sentry delivery and GitHub accessibility enforcement. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {

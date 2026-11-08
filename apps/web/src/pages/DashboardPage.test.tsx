@@ -99,6 +99,12 @@ it('can retry a failed context without requesting protected widget data first', 
     .mockResolvedValueOnce(response({}, 503))
     .mockResolvedValueOnce(
       response({
+        profile: { id: 'current', name: 'Unconfirmed profile' },
+        access: { wallet: 'false', invoices: false, orders: false, contracts: false },
+      })
+    )
+    .mockResolvedValueOnce(
+      response({
         profile: { id: 'current', name: 'Customer' },
         access: { wallet: false, invoices: false, orders: false, contracts: false },
       })
@@ -120,6 +126,55 @@ it('can retry a failed context without requesting protected widget data first', 
   expect(fetcher).toHaveBeenCalledTimes(1);
   const retry = container.querySelector('[role="alert"] button') as HTMLButtonElement;
   await act(async () => retry.click());
+  expect(container.textContent).not.toContain('Unconfirmed profile');
+  expect(fetcher.mock.calls.map(([url]) => url)).toEqual([
+    '/api/dashboard/context',
+    '/api/dashboard/context',
+  ]);
+  const retryMalformed = container.querySelector('[role="alert"] button') as HTMLButtonElement;
+  await act(async () => retryMalformed.click());
   expect(container.textContent).toContain('Welcome, Customer');
-  expect(fetcher).toHaveBeenCalledTimes(3);
+  expect(fetcher).toHaveBeenCalledTimes(4);
+});
+
+it('contains malformed widget records in their own retry states', async () => {
+  const replies = {
+    wallet: {
+      balance: 9007199254740992,
+      currency: 'IRR',
+      lowBalanceWarning: false,
+      pendingInvoices: 0,
+    },
+    status: { activeContracts: 0, pendingOrders: -1, openTickets: 0, unpaidInvoices: 0 },
+    invoices: [
+      { invoiceId: 'invoice', dueAt: null, payableFrom: 'invalid', remainingAmount: '10' },
+    ],
+    orders: { orderId: 'misplaced-order' },
+    contracts: [null],
+  };
+  const fetcher = vi.fn(async (url: string) =>
+    url.endsWith('/context')
+      ? response({
+          profile: { id: 'current', name: 'Customer' },
+          access: { wallet: true, invoices: true, orders: true, contracts: true },
+        })
+      : response({
+          profileId: 'current',
+          data: replies[url.split('/').at(-1)!.split('?')[0] as keyof typeof replies],
+        })
+  );
+  vi.stubGlobal('fetch', fetcher);
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <DashboardPage />
+      </QueryProvider>
+    )
+  );
+  await vi.waitFor(() => {
+    expect(container.querySelectorAll('[role="region"] [role="alert"]')).toHaveLength(5);
+  });
+  expect(container.textContent).toContain('Welcome, Customer');
+  expect(container.querySelectorAll('[role="region"] [role="alert"] button')).toHaveLength(5);
+  expect(fetcher).toHaveBeenCalledTimes(6);
 });
