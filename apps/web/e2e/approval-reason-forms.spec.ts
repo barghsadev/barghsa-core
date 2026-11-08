@@ -3,6 +3,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { t } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { test, expect, type Page } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 
@@ -62,13 +63,25 @@ for (const linked of [false, true]) {
       }) => {
         await shell(page, locale, darkMode);
         let resolved = false;
+        let recoveryAvailable = true;
         await page.route(/\/api\/admin\/approval-requests\?/, (route) =>
-          route.fulfill({
-            json: [resolved ? { ...request(), status: 'rejected' } : request(), request(second)],
-          })
+          route.fulfill(
+            recoveryAvailable
+              ? {
+                  json: [
+                    resolved ? { ...request(), status: 'rejected' } : request(),
+                    request(second),
+                  ],
+                }
+              : { status: 503, json: {} }
+          )
         );
         await page.route(`**${base}/${first}`, (route) =>
-          route.fulfill({ json: resolved ? { ...request(), status: 'rejected' } : request() })
+          route.fulfill(
+            recoveryAvailable
+              ? { json: resolved ? { ...request(), status: 'rejected' } : request() }
+              : { status: 503, json: {} }
+          )
         );
         let verified = false;
         let verifications = 0;
@@ -98,8 +111,10 @@ for (const linked of [false, true]) {
                 message: 'private-approval-diagnostic',
               },
             });
-          if (mode === 'service')
+          if (mode === 'service') {
+            recoveryAvailable = false;
             return route.fulfill({ status: 503, json: { message: 'private-approval-diagnostic' } });
+          }
           if (mode === 'mismatch')
             return route.fulfill({ json: { ...request(second), status: 'rejected' } });
           resolved = true;
@@ -191,7 +206,7 @@ for (const linked of [false, true]) {
         ) {
           await field.scrollIntoViewIfNeeded();
           await page.screenshot({
-            path: '/tmp/barghsa-approval-rejection-validation-fa-dark-mobile.png',
+            path: test.info().outputPath('approval-rejection-validation-fa-dark-mobile.png'),
           });
         }
         mode = 'mixed';
@@ -206,14 +221,32 @@ for (const linked of [false, true]) {
         mode = 'service';
         await confirm().click();
         await expect.poll(() => writes.length).toBe(4);
-        await expect(confirm()).toBeEnabled();
+        await expect(dialog).toHaveCount(0);
+        await expect(
+          region.getByText(confirmationText('unconfirmed', locale), { exact: true })
+        ).toBeVisible();
+        await expect(reject).toBeDisabled();
+        await expect(field).toHaveValue(raw);
+        recoveryAvailable = true;
+        await region
+          .getByRole('button', { name: t('admin.approvals.retry', locale), exact: true })
+          .click();
+        await reject.click();
+        await expect(confirm()).toBeDisabled();
         await expect(dialog).toContainText(raw.trim());
+        await approveRiskConfirmation(page, locale, 'both');
         mode = 'mismatch';
         await confirm().click();
         await expect.poll(() => writes.length).toBe(5);
-        await expect(confirm()).toBeEnabled();
-        await expect(dialog).toBeVisible();
+        await expect(dialog).toHaveCount(0);
+        await expect(
+          region.getByText(confirmationText('unconfirmed', locale), { exact: true })
+        ).toBeVisible();
         await expect(field).toHaveValue(raw);
+        await reject.click();
+        await expect(confirm()).toBeDisabled();
+        await expect(dialog).toContainText(raw.trim());
+        await approveRiskConfirmation(page, locale, 'both');
         mode = 'success';
         await confirm().click();
         await expect(dialog).toHaveCount(0);

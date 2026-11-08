@@ -5,6 +5,7 @@ import { useProfileContextRevision } from '../lib/profile-context.js';
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { LoadingStatus, Alert, AlertDescription, Button, ScrollArea } from '@barghsa/ui';
 import { tWalletInvoicePayment as t } from '@barghsa/i18n/wallet-invoice-payment';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { isInvoiceUuid } from '../lib/due-at-override.js';
@@ -89,7 +90,8 @@ function OwnedWalletInvoicePaymentPanel({
     [loading, setLoading] = useState(true),
     [error, setError] = useState(false),
     [hidden, setHidden] = useState(false),
-    [open, setOpen] = useState(false);
+    [open, setOpen] = useState(false),
+    [unconfirmed, setUnconfirmed] = useState(false);
   const [result, setResult] = useState<{ amount: string; transactionId: string } | null>(null),
     [refreshError, setRefreshError] = useState(false);
   useCommandFeedback({ success: result ? text('paid') : null, operation: invoiceId });
@@ -205,6 +207,9 @@ function OwnedWalletInvoicePaymentPanel({
           {intent && (
             <div className="space-y-1 text-sm">
               <p>{text('retryHint')}</p>
+              {!open && unconfirmed && (
+                <p role="alert">{confirmationText('unconfirmed', locale)}</p>
+              )}
               <p>
                 {text('request')} <bdi>{intent.idempotencyKey}</bdi>
               </p>
@@ -216,7 +221,10 @@ function OwnedWalletInvoicePaymentPanel({
               disabled={loading || open || !quote?.canPay || time.status !== 'ready'}
               onClick={() => {
                 if (!quote?.canPay || time.status !== 'ready') return;
-                if (!intent) setIntent({ ...quote, idempotencyKey: crypto.randomUUID() });
+                if (!intent) {
+                  setUnconfirmed(false);
+                  setIntent({ ...quote, idempotencyKey: crypto.randomUUID() });
+                }
                 setOpen(true);
               }}
             >
@@ -245,12 +253,14 @@ function OwnedWalletInvoicePaymentPanel({
             summary={
               <>
                 {time.notice}
+                {unconfirmed && <p>{confirmationText('unconfirmed', locale)}</p>}
                 <ScrollArea className="h-[40dvh]" role="region" aria-label={text('reviewTitle')}>
                   <WalletPaymentReviewSummary review={intent.review} formatDate={time.format} />
                 </ScrollArea>
               </>
             }
             onClose={() => setOpen(false)}
+            onUnconfirmed={() => setUnconfirmed(true)}
             onSuccess={async (value) => {
               const data = value as {
                 invoiceId?: unknown;
@@ -273,6 +283,7 @@ function OwnedWalletInvoicePaymentPanel({
                 !isInvoiceUuid(data.walletTransactionId)
               )
                 throw new Error('Unconfirmed payment response');
+              setUnconfirmed(false);
               setResult({
                 amount: intent.remainingAmount,
                 transactionId: data.walletTransactionId,

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { t as appText } from '@barghsa/i18n/workspace';
 import { contractText } from '@barghsa/i18n/contracts';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import {
   LoadingStatus,
   Button,
@@ -17,6 +18,7 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { isInvoiceUuid } from '../lib/invoice-uuid.js';
 import { normalizeProfileDigits } from '../lib/profile-digits.js';
 import { documentRequest, DocumentRequestError } from '../lib/documents.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { requestRefundReview, RefundReviewError } from '../lib/refund-review.js';
 import { validRefundReceipt } from '../lib/refund-receipt.js';
 import { toast } from '../lib/toast-api.js';
@@ -139,7 +141,9 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
     [summary, setSummary] = useState<React.ReactNode>(null),
     [reviewBusy, setReviewBusy] = useState(false);
   const [reviewError, setReviewError] = useState<'conflict' | 'forbidden' | 'error' | null>(null),
-    [decisionError, setDecisionError] = useState<'conflict' | 'forbidden' | 'error' | null>(null);
+    [decisionError, setDecisionError] = useState<
+      'conflict' | 'forbidden' | 'error' | 'unconfirmed' | null
+    >(null);
   const live = useRef(false),
     generation = useRef(0),
     current = useRef<TeamAction | null>(null),
@@ -189,9 +193,11 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
     const controller = new AbortController();
     readController.current = controller;
     setStatus('loading');
-    void documentRequest<RefundPage>(
-      `/api/admin/${path}?invoiceId=${encodeURIComponent(invoiceId)}${before ? '&before=' + encodeURIComponent(before) : ''}`,
-      { signal: controller.signal }
+    void readWithDeadline(controller.signal, (signal) =>
+      documentRequest<RefundPage>(
+        `/api/admin/${path}?invoiceId=${encodeURIComponent(invoiceId)}${before ? '&before=' + encodeURIComponent(before) : ''}`,
+        { signal, cache: 'no-store' }
+      )
     )
       .then((page) => {
         if (controller.signal.aborted) return;
@@ -228,6 +234,8 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
     return () => controller.abort();
   }, [invoiceId, before, revision, destination, path]);
   function refresh() {
+    readController.current?.abort();
+    setStatus('loading');
     setBefore(null);
     setRevision((value) => value + 1);
   }
@@ -239,6 +247,7 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
       const id = values.invoiceId.trim().toLowerCase();
       if (id !== invoiceId) {
         close();
+        setDecisionError(null);
         accepted.current = { invoice: null, refunds: [] };
         cachedDrafts.current = {};
         setInvoice(null);
@@ -584,7 +593,15 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
               {word('refresh')}
             </Button>
           </div>
-          <RefundFormAlert message={decisionError ? word(decisionError) : undefined} />
+          <RefundFormAlert
+            message={
+              decisionError === 'unconfirmed'
+                ? confirmationText('unconfirmed', locale)
+                : decisionError
+                  ? word(decisionError)
+                  : undefined
+            }
+          />
           {!refunds.length && status === 'ready' && <p>{word('empty')}</p>}
           <ul className="space-y-3">
             {refunds.map((refund) => (
@@ -653,6 +670,16 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
           onDenied={() => {
             if (live.current && current.current === action) deny();
           }}
+          {...(selection.current?.refund
+            ? {
+                onUnconfirmed: () => {
+                  if (!live.current || current.current !== action) return;
+                  close();
+                  setDecisionError('unconfirmed');
+                  refresh();
+                },
+              }
+            : {})}
           onValidationError={(fields) =>
             live.current && current.current === action && !!actionTools.current?.apply(fields)
           }

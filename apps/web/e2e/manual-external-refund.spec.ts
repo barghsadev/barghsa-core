@@ -3,6 +3,7 @@ import { test, expect } from './coverage-fixture';
 import { en, fa } from '../../../packages/i18n/src/admin-ui';
 import { t as appText } from '../../../packages/i18n/src/app';
 import { refundDecisionReviewFixture, refundReviewFixture } from './refund-review-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 
 const invoiceId = '11111111-1111-4111-8111-111111111111';
 const refundId = '22222222-2222-4222-8222-222222222222';
@@ -13,6 +14,10 @@ for (const locale of ['en', 'fa'] as const)
     const copy = locale === 'fa' ? fa : en;
     const word = (key: string) => copy[`admin.invoices.externalRefunds.${key}`]!;
     const shared = (key: string) => copy[`admin.invoices.walletRefunds.${key}`]!;
+    await page.addInitScript(
+      (language) => localStorage.setItem('barghsa.locale', language),
+      locale
+    );
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/auth/user', (route) =>
       route.fulfill({ json: { isStaff: true, operatingContext: 'staff', canSwitchContext: true } })
@@ -153,10 +158,7 @@ for (const locale of ['en', 'fa'] as const)
       });
 
     await page.goto(`/admin/invoices?invoiceId=${invoiceId}`);
-    await page.locator('html').evaluate((element, language) => {
-      element.lang = language;
-      element.dir = language === 'fa' ? 'rtl' : 'ltr';
-    }, locale);
+    await expect(page.locator('html')).toHaveAttribute('lang', locale);
     const panel = page.getByRole('region', { name: word('title'), exact: true });
     await expect(panel.getByText(`${shared('available')}:`)).toBeVisible();
     expect(
@@ -165,11 +167,13 @@ for (const locale of ['en', 'fa'] as const)
     await panel.getByLabel(shared('requestAmount')).fill('40');
     await panel.getByLabel(shared('reason'), { exact: true }).fill('Customer return');
     await panel.getByRole('button', { name: word('request'), exact: true }).click();
-    const confirm = async () =>
-      page
+    const confirm = async () => {
+      await approveRiskConfirmation(page, locale, 'financial');
+      await page
         .getByRole('dialog')
-        .getByRole('button', { name: appText('team.confirm', locale) })
+        .getByRole('button', { name: appText('team.confirm', locale), exact: true })
         .click();
+    };
     await confirm();
     await expect(panel.getByText(refundId)).toBeVisible();
     await panel.getByRole('button', { name: shared('approve') }).click();
@@ -184,10 +188,7 @@ for (const locale of ['en', 'fa'] as const)
     await expect(panel.getByText(shared('state.Completed'))).toBeVisible();
     expect(actions).toEqual(['request', 'approve', 'record-transfer', 'reconcile']);
     await page.reload();
-    await page.locator('html').evaluate((element, language) => {
-      element.lang = language;
-      element.dir = language === 'fa' ? 'rtl' : 'ltr';
-    }, locale);
+    await expect(page.locator('html')).toHaveAttribute('lang', locale);
     await expect(
       page.getByRole('region', { name: word('title') }).getByText(bankReference)
     ).toBeVisible();

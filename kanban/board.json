@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T15:39:23+00:00",
-  "source_commit": "27bed3372703c7462a2e5e8a84667046d4a321bc",
+  "updated": "2026-11-08T15:54:28+00:00",
+  "source_commit": "8a75c0039ef8b00a89997162a26f146f1ee48788",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35444,7 +35444,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -63148,7 +63148,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
@@ -90020,7 +90020,7 @@
             },
             {
               "path": "apps/web/e2e/approval-reason-forms.spec.ts",
-              "sha256": "bd3e4b18518eb09f73f2a9e1b6f5e7a308a3120aebf4b7ba173f5ac06ea7b976"
+              "sha256": "0239163c4b7514aa54830768d7fb61ed677002fd44e569158284f7d5c60b15ed"
             },
             {
               "path": "apps/web/e2e/approval-threshold.spec.ts",
@@ -90060,7 +90060,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/limit-settings-forms.test.tsx",
@@ -91428,7 +91428,7 @@
             },
             {
               "path": "apps/web/e2e/approval-reason-forms.spec.ts",
-              "sha256": "bd3e4b18518eb09f73f2a9e1b6f5e7a308a3120aebf4b7ba173f5ac06ea7b976"
+              "sha256": "0239163c4b7514aa54830768d7fb61ed677002fd44e569158284f7d5c60b15ed"
             },
             {
               "path": "apps/web/e2e/approval-threshold.spec.ts",
@@ -91468,7 +91468,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/limit-settings-forms.test.tsx",
@@ -98722,7 +98722,7 @@
             },
             {
               "path": "apps/web/e2e/approval-reason-forms.spec.ts",
-              "sha256": "bd3e4b18518eb09f73f2a9e1b6f5e7a308a3120aebf4b7ba173f5ac06ea7b976"
+              "sha256": "0239163c4b7514aa54830768d7fb61ed677002fd44e569158284f7d5c60b15ed"
             },
             {
               "path": "apps/web/e2e/approval-threshold.spec.ts",
@@ -98762,7 +98762,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/limit-settings-forms.test.tsx",
@@ -136219,7 +136219,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -142997,11 +142997,11 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
+              "sha256": "042cdfecb331feebaab4170e1ab33067f44275b1333ec3641cac2915f0e12056"
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -143851,7 +143851,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
+              "sha256": "042cdfecb331feebaab4170e1ab33067f44275b1333ec3641cac2915f0e12056"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -144178,7 +144178,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
+              "sha256": "042cdfecb331feebaab4170e1ab33067f44275b1333ec3641cac2915f0e12056"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -144490,7 +144490,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
+              "sha256": "042cdfecb331feebaab4170e1ab33067f44275b1333ec3641cac2915f0e12056"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -144770,7 +144770,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
+              "sha256": "042cdfecb331feebaab4170e1ab33067f44275b1333ec3641cac2915f0e12056"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -145304,7 +145304,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
+              "sha256": "042cdfecb331feebaab4170e1ab33067f44275b1333ec3641cac2915f0e12056"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -152080,15 +152080,15 @@
             },
             {
               "path": "apps/web/e2e/manual-external-refund.spec.ts",
-              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+              "sha256": "14e3abc42a49f2bfeef43d806ad9ae5f635d76626c8a296532964d547f18230d"
             },
             {
               "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
-              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+              "sha256": "fe28ad1663677dc0dcb0656d75b48ad096c81a85687dd2eb587334d63844aa17"
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "8196aaddf3378b7ac88f7359c305d59ee129f05553963335f4d69356b351f427"
+              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -152104,7 +152104,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/RefundPanel.test.tsx",
@@ -152112,7 +152112,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -153111,15 +153111,15 @@
             },
             {
               "path": "apps/web/e2e/manual-external-refund.spec.ts",
-              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+              "sha256": "14e3abc42a49f2bfeef43d806ad9ae5f635d76626c8a296532964d547f18230d"
             },
             {
               "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
-              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+              "sha256": "fe28ad1663677dc0dcb0656d75b48ad096c81a85687dd2eb587334d63844aa17"
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "8196aaddf3378b7ac88f7359c305d59ee129f05553963335f4d69356b351f427"
+              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -153135,7 +153135,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/RefundPanel.test.tsx",
@@ -153143,7 +153143,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -154162,15 +154162,15 @@
             },
             {
               "path": "apps/web/e2e/manual-external-refund.spec.ts",
-              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+              "sha256": "14e3abc42a49f2bfeef43d806ad9ae5f635d76626c8a296532964d547f18230d"
             },
             {
               "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
-              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+              "sha256": "fe28ad1663677dc0dcb0656d75b48ad096c81a85687dd2eb587334d63844aa17"
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "8196aaddf3378b7ac88f7359c305d59ee129f05553963335f4d69356b351f427"
+              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
             },
             {
               "path": "apps/web/e2e/refund-review-fixture.ts",
@@ -154734,15 +154734,15 @@
             },
             {
               "path": "apps/web/e2e/manual-external-refund.spec.ts",
-              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+              "sha256": "14e3abc42a49f2bfeef43d806ad9ae5f635d76626c8a296532964d547f18230d"
             },
             {
               "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
-              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+              "sha256": "fe28ad1663677dc0dcb0656d75b48ad096c81a85687dd2eb587334d63844aa17"
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "8196aaddf3378b7ac88f7359c305d59ee129f05553963335f4d69356b351f427"
+              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
             },
             {
               "path": "apps/web/e2e/refund-review-fixture.ts",
@@ -155286,15 +155286,15 @@
             },
             {
               "path": "apps/web/e2e/manual-external-refund.spec.ts",
-              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+              "sha256": "14e3abc42a49f2bfeef43d806ad9ae5f635d76626c8a296532964d547f18230d"
             },
             {
               "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
-              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+              "sha256": "fe28ad1663677dc0dcb0656d75b48ad096c81a85687dd2eb587334d63844aa17"
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "8196aaddf3378b7ac88f7359c305d59ee129f05553963335f4d69356b351f427"
+              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -155310,7 +155310,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/RefundPanel.test.tsx",
@@ -155318,7 +155318,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -156318,15 +156318,15 @@
             },
             {
               "path": "apps/web/e2e/manual-external-refund.spec.ts",
-              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+              "sha256": "14e3abc42a49f2bfeef43d806ad9ae5f635d76626c8a296532964d547f18230d"
             },
             {
               "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
-              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+              "sha256": "fe28ad1663677dc0dcb0656d75b48ad096c81a85687dd2eb587334d63844aa17"
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "8196aaddf3378b7ac88f7359c305d59ee129f05553963335f4d69356b351f427"
+              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -156342,7 +156342,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/RefundPanel.test.tsx",
@@ -156350,7 +156350,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -157347,15 +157347,15 @@
             },
             {
               "path": "apps/web/e2e/manual-external-refund.spec.ts",
-              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+              "sha256": "14e3abc42a49f2bfeef43d806ad9ae5f635d76626c8a296532964d547f18230d"
             },
             {
               "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
-              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+              "sha256": "fe28ad1663677dc0dcb0656d75b48ad096c81a85687dd2eb587334d63844aa17"
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "8196aaddf3378b7ac88f7359c305d59ee129f05553963335f4d69356b351f427"
+              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -157371,7 +157371,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/RefundPanel.test.tsx",
@@ -157379,7 +157379,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -158376,15 +158376,15 @@
             },
             {
               "path": "apps/web/e2e/manual-external-refund.spec.ts",
-              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+              "sha256": "14e3abc42a49f2bfeef43d806ad9ae5f635d76626c8a296532964d547f18230d"
             },
             {
               "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
-              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+              "sha256": "fe28ad1663677dc0dcb0656d75b48ad096c81a85687dd2eb587334d63844aa17"
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "8196aaddf3378b7ac88f7359c305d59ee129f05553963335f4d69356b351f427"
+              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -158400,7 +158400,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/RefundPanel.test.tsx",
@@ -158408,7 +158408,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -159426,15 +159426,15 @@
             },
             {
               "path": "apps/web/e2e/manual-external-refund.spec.ts",
-              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+              "sha256": "14e3abc42a49f2bfeef43d806ad9ae5f635d76626c8a296532964d547f18230d"
             },
             {
               "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
-              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+              "sha256": "fe28ad1663677dc0dcb0656d75b48ad096c81a85687dd2eb587334d63844aa17"
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "8196aaddf3378b7ac88f7359c305d59ee129f05553963335f4d69356b351f427"
+              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
             },
             {
               "path": "apps/web/e2e/refund-review-fixture.ts",
@@ -159975,15 +159975,15 @@
             },
             {
               "path": "apps/web/e2e/manual-external-refund.spec.ts",
-              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+              "sha256": "14e3abc42a49f2bfeef43d806ad9ae5f635d76626c8a296532964d547f18230d"
             },
             {
               "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
-              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+              "sha256": "fe28ad1663677dc0dcb0656d75b48ad096c81a85687dd2eb587334d63844aa17"
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "8196aaddf3378b7ac88f7359c305d59ee129f05553963335f4d69356b351f427"
+              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -159999,7 +159999,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/RefundPanel.test.tsx",
@@ -160007,7 +160007,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -161003,15 +161003,15 @@
             },
             {
               "path": "apps/web/e2e/manual-external-refund.spec.ts",
-              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+              "sha256": "14e3abc42a49f2bfeef43d806ad9ae5f635d76626c8a296532964d547f18230d"
             },
             {
               "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
-              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+              "sha256": "fe28ad1663677dc0dcb0656d75b48ad096c81a85687dd2eb587334d63844aa17"
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "8196aaddf3378b7ac88f7359c305d59ee129f05553963335f4d69356b351f427"
+              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -161027,7 +161027,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/RefundPanel.test.tsx",
@@ -161035,7 +161035,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -162031,15 +162031,15 @@
             },
             {
               "path": "apps/web/e2e/manual-external-refund.spec.ts",
-              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+              "sha256": "14e3abc42a49f2bfeef43d806ad9ae5f635d76626c8a296532964d547f18230d"
             },
             {
               "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
-              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+              "sha256": "fe28ad1663677dc0dcb0656d75b48ad096c81a85687dd2eb587334d63844aa17"
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "8196aaddf3378b7ac88f7359c305d59ee129f05553963335f4d69356b351f427"
+              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -162055,7 +162055,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/RefundPanel.test.tsx",
@@ -162063,7 +162063,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -191620,7 +191620,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -327229,7 +327229,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/RefundPanel.test.tsx",
@@ -327237,7 +327237,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -328291,7 +328291,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/RefundPanel.test.tsx",
@@ -328299,7 +328299,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -329353,7 +329353,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/RefundPanel.test.tsx",
@@ -329361,7 +329361,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -330415,7 +330415,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/RefundPanel.test.tsx",
@@ -330423,7 +330423,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -331477,7 +331477,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/RefundPanel.test.tsx",
@@ -331485,7 +331485,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -332539,7 +332539,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/RefundPanel.test.tsx",
@@ -332547,7 +332547,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -333601,7 +333601,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/RefundPanel.test.tsx",
@@ -333609,7 +333609,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -421494,7 +421494,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
@@ -491055,7 +491055,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
@@ -491127,7 +491127,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
@@ -491155,7 +491155,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -492714,7 +492714,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
@@ -492906,7 +492906,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
@@ -494339,7 +494339,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -495222,7 +495222,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -496046,7 +496046,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -496711,7 +496711,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.tsx",
@@ -496739,7 +496739,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
+              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -497536,7 +497536,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
@@ -497728,7 +497728,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
+              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
+              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -546424,7 +546424,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -546532,7 +546532,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -546604,7 +546604,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -546772,7 +546772,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -548290,7 +548290,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -548398,7 +548398,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -548470,7 +548470,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -548638,7 +548638,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -550157,7 +550157,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -550265,7 +550265,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -550337,7 +550337,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -550505,7 +550505,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -551993,7 +551993,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -552101,7 +552101,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -552173,7 +552173,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -552341,7 +552341,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -553855,7 +553855,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -553963,7 +553963,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -554035,7 +554035,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -554203,7 +554203,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -555726,7 +555726,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -555834,7 +555834,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -555906,7 +555906,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -556074,7 +556074,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -557570,7 +557570,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -557678,7 +557678,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -557750,7 +557750,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -557918,7 +557918,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -559378,7 +559378,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -559486,7 +559486,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -559558,7 +559558,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -559726,7 +559726,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -561186,7 +561186,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -561294,7 +561294,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -561366,7 +561366,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -561534,7 +561534,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -562995,7 +562995,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -563103,7 +563103,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -563175,7 +563175,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -563343,7 +563343,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -564803,7 +564803,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -564911,7 +564911,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -564983,7 +564983,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -565151,7 +565151,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -566761,7 +566761,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -566989,7 +566989,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -567521,7 +567521,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
+              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568656,7 +568656,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -568884,7 +568884,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -569416,7 +569416,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
+              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570220,7 +570220,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Shared confirmation now bounds password verification and commands with unconfirmed-result recovery. Reconcile the remaining wallet invoice payment, refund, approval and lost-contact command paths. Compare their existing dispatch and retry flow before adding deadlines."
+        "Wallet payments, invoice refund decisions, contract refund decisions and dual approvals have current uncertainty recovery evidence. Reconcile refund creation when the operator leaves a lost response and protected account recovery commands. Match remaining command surfaces to their current dispatch and feedback."
       ],
       "owner": null,
       "depends_on": [],
@@ -570296,7 +570296,8 @@
           "release-0.5-ai-admin-command-recovery",
           "release-0.5-onboarding-command-recovery",
           "release-0.5-reconciliation-command-deadline",
-          "release-0.5-shared-confirmation-deadlines"
+          "release-0.5-shared-confirmation-deadlines",
+          "release-0.5-financial-confirmation-recovery"
         ],
         "current_acceptance": null
       }
@@ -570647,7 +570648,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -570875,7 +570876,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -571407,7 +571408,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
+              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -572542,7 +572543,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -572770,7 +572771,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -573302,7 +573303,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
+              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -574437,7 +574438,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -574665,7 +574666,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -575197,7 +575198,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
+              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -576332,7 +576333,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -576560,7 +576561,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -577092,7 +577093,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
+              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -578227,7 +578228,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -578455,7 +578456,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -578987,7 +578988,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
+              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -580122,7 +580123,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -580350,7 +580351,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -580882,7 +580883,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
+              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -582017,7 +582018,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -582245,7 +582246,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -582777,7 +582778,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
+              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -583912,7 +583913,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -584140,7 +584141,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -584672,7 +584673,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
+              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -585807,7 +585808,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -586035,7 +586036,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -586567,7 +586568,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
+              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -587702,7 +587703,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -587930,7 +587931,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -588462,7 +588463,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
+              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589597,7 +589598,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -589825,7 +589826,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -590357,7 +590358,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
+              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591285,7 +591286,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.tsx",
@@ -591313,7 +591314,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -591621,7 +591622,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
+              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592232,7 +592233,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -592460,7 +592461,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -592992,7 +592993,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
+              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594127,7 +594128,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -594355,7 +594356,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -594887,7 +594888,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
+              "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595691,7 +595692,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Shared confirmation recovery, including maintenance and multipart document publication, has current native evidence. Match remaining conditional list, detail and dashboard states to the route census and scoped checks."
+        "Current wallet, refund and approval recovery is verified with native browser evidence. Reconcile remaining conditional list, detail and dashboard states against the route census."
       ],
       "owner": null,
       "depends_on": [],
@@ -595778,7 +595779,8 @@
           "release-0.5-ai-admin-command-recovery",
           "release-0.5-onboarding-command-recovery",
           "release-0.5-reconciliation-command-deadline",
-          "release-0.5-shared-confirmation-deadlines"
+          "release-0.5-shared-confirmation-deadlines",
+          "release-0.5-financial-confirmation-recovery"
         ],
         "current_acceptance": null
       }
@@ -596007,7 +596009,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -596115,7 +596117,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -596187,7 +596189,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -596355,7 +596357,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -597811,7 +597813,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -597919,7 +597921,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -597991,7 +597993,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -598159,7 +598161,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -599615,7 +599617,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -599723,7 +599725,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -599795,7 +599797,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -599963,7 +599965,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -601419,7 +601421,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -601527,7 +601529,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -601599,7 +601601,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -601767,7 +601769,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -603223,7 +603225,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -603331,7 +603333,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -603403,7 +603405,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -603571,7 +603573,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -605027,7 +605029,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -605135,7 +605137,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -605207,7 +605209,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -605375,7 +605377,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -606831,7 +606833,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -606939,7 +606941,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
@@ -607011,7 +607013,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -607179,7 +607181,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -634642,7 +634644,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.tsx",
@@ -634842,7 +634844,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -635766,7 +635768,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.tsx",
@@ -635966,7 +635968,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -636890,7 +636892,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.tsx",
@@ -637090,7 +637092,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -638017,7 +638019,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.tsx",
@@ -638217,7 +638219,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -639144,7 +639146,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.tsx",
@@ -639344,7 +639346,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -640298,7 +640300,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.tsx",
@@ -640498,7 +640500,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -641421,7 +641423,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.tsx",
@@ -641621,7 +641623,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -642544,7 +642546,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.tsx",
@@ -642744,7 +642746,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -643668,7 +643670,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.tsx",
@@ -643868,7 +643870,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -644810,7 +644812,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.tsx",
@@ -645010,7 +645012,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -645935,7 +645937,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.tsx",
@@ -646135,7 +646137,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -677435,7 +677437,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.tsx",
@@ -677635,7 +677637,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -678557,7 +678559,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.tsx",
@@ -678757,7 +678759,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -679679,7 +679681,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.tsx",
@@ -679879,7 +679881,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -680801,7 +680803,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.tsx",
@@ -681001,7 +681003,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -685370,7 +685372,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
+              "sha256": "042cdfecb331feebaab4170e1ab33067f44275b1333ec3641cac2915f0e12056"
             },
             {
               "path": "apps/web/package.json",
@@ -685458,7 +685460,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -686211,7 +686213,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
+              "sha256": "042cdfecb331feebaab4170e1ab33067f44275b1333ec3641cac2915f0e12056"
             },
             {
               "path": "apps/web/package.json",
@@ -686299,7 +686301,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -687054,7 +687056,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
+              "sha256": "042cdfecb331feebaab4170e1ab33067f44275b1333ec3641cac2915f0e12056"
             },
             {
               "path": "apps/web/package.json",
@@ -687142,7 +687144,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -687895,7 +687897,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
+              "sha256": "042cdfecb331feebaab4170e1ab33067f44275b1333ec3641cac2915f0e12056"
             },
             {
               "path": "apps/web/package.json",
@@ -687983,7 +687985,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -688736,7 +688738,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
+              "sha256": "042cdfecb331feebaab4170e1ab33067f44275b1333ec3641cac2915f0e12056"
             },
             {
               "path": "apps/web/package.json",
@@ -688824,7 +688826,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -689581,7 +689583,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
+              "sha256": "042cdfecb331feebaab4170e1ab33067f44275b1333ec3641cac2915f0e12056"
             },
             {
               "path": "apps/web/package.json",
@@ -689669,7 +689671,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -690426,7 +690428,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
+              "sha256": "042cdfecb331feebaab4170e1ab33067f44275b1333ec3641cac2915f0e12056"
             },
             {
               "path": "apps/web/package.json",
@@ -690514,7 +690516,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -691267,7 +691269,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
+              "sha256": "042cdfecb331feebaab4170e1ab33067f44275b1333ec3641cac2915f0e12056"
             },
             {
               "path": "apps/web/package.json",
@@ -691355,7 +691357,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -692108,7 +692110,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
+              "sha256": "042cdfecb331feebaab4170e1ab33067f44275b1333ec3641cac2915f0e12056"
             },
             {
               "path": "apps/web/package.json",
@@ -692196,7 +692198,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -692950,7 +692952,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
+              "sha256": "042cdfecb331feebaab4170e1ab33067f44275b1333ec3641cac2915f0e12056"
             },
             {
               "path": "apps/web/package.json",
@@ -693038,7 +693040,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -693797,7 +693799,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
+              "sha256": "042cdfecb331feebaab4170e1ab33067f44275b1333ec3641cac2915f0e12056"
             },
             {
               "path": "apps/web/package.json",
@@ -693885,7 +693887,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
@@ -703756,7 +703758,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
@@ -705630,7 +705632,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
+              "sha256": "042cdfecb331feebaab4170e1ab33067f44275b1333ec3641cac2915f0e12056"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -707706,7 +707708,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
+              "sha256": "042cdfecb331feebaab4170e1ab33067f44275b1333ec3641cac2915f0e12056"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -709592,7 +709594,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice.controller.ts",
@@ -709908,11 +709910,11 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
+              "sha256": "042cdfecb331feebaab4170e1ab33067f44275b1333ec3641cac2915f0e12056"
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -710308,15 +710310,15 @@
             },
             {
               "path": "apps/web/e2e/manual-external-refund.spec.ts",
-              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+              "sha256": "14e3abc42a49f2bfeef43d806ad9ae5f635d76626c8a296532964d547f18230d"
             },
             {
               "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
-              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+              "sha256": "fe28ad1663677dc0dcb0656d75b48ad096c81a85687dd2eb587334d63844aa17"
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
-              "sha256": "8196aaddf3378b7ac88f7359c305d59ee129f05553963335f4d69356b351f427"
+              "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -710332,7 +710334,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/RefundPanel.test.tsx",
@@ -710340,7 +710342,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.test.ts",
@@ -725422,7 +725424,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Shared confirmation recovery and its affected journeys have current evidence. Remaining conditional states and protected CRUD feedback require scoped reconciliation. Required GitHub accessibility enforcement and the staging Sentry receipt remain open."
+        "Current staff and customer financial confirmation recovery is verified. Complete remaining scoped CRUD and conditional-state reconciliation. Required GitHub accessibility enforcement and the staging Sentry receipt remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -725574,7 +725576,8 @@
           "release-0.5-ai-admin-command-recovery",
           "release-0.5-onboarding-command-recovery",
           "release-0.5-reconciliation-command-deadline",
-          "release-0.5-shared-confirmation-deadlines"
+          "release-0.5-shared-confirmation-deadlines",
+          "release-0.5-financial-confirmation-recovery"
         ]
       }
     },
@@ -725774,7 +725777,7 @@
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
-              "sha256": "d1c1b9967a0eeb74f7deb33443bb54443a3db841a72efbf67df7adbdf1ed87c3"
+              "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.tsx",
@@ -726038,7 +726041,7 @@
             },
             {
               "path": "apps/web/src/components/RefundPanel.tsx",
-              "sha256": "d201dc8948f7d05402de16172bcf23ac9ea097a8d09ae1bcd9eed3393d962d88"
+              "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
@@ -726182,7 +726185,7 @@
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
             },
             {
               "path": "apps/web/src/components/WalletPaymentReviewSummary.tsx",
@@ -726474,7 +726477,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "131a73161ba8a0fbbecb96311740ff1a2420fde9f31e46c3845c6987da928b29"
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -727438,7 +727441,8 @@
             "Renewed AI administration recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-admin-command-recovery/proof.json",
             "Renewed onboarding recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-command-recovery/proof.json",
             "Renewed staff reconciliation, verification-banner and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-reconciliation-command-deadline/proof.json",
-            "Renewed confirmation dialog and document template budget and browser evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-confirmation-deadlines/proof.json"
+            "Renewed confirmation dialog and document template budget and browser evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-confirmation-deadlines/proof.json",
+            "Renewed financial recovery native browser and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-confirmation-recovery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -801194,6 +801198,131 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-confirmation-deadlines/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-confirmation-deadlines/final-reviewed.patch",
       "release_disposition": "Verified shared confirmation deadlines, existing uncertain-result recovery and the document-template upload allowance. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-financial-confirmation-recovery": {
+      "batch": "release-0.5-financial-confirmation-recovery",
+      "base_commit": "8a75c0039ef8b00a89997162a26f146f1ee48788",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+        },
+        {
+          "path": "apps/api/src/common/cache-control.interceptor.ts",
+          "sha256": "d04d986e3f07a4df60513a3fe0c453d724860731981f03f92b25fc0ce3fc6c0b"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-invoice-payment.controller.ts",
+          "sha256": "e541d12f2dce38aa194c697c4b7690a8e348650b46de2669245c0d971d569d93"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
+          "sha256": "8fa91fa11e9dd8460ffc736f8ad67a0527bb10bc9e1978bffe2ac30b0457eafc"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+          "sha256": "7d0fdc3f45f6d70321b60b190c0c5870698e86b65dea5367a33259b278f28511"
+        },
+        {
+          "path": "apps/web/e2e/approval-reason-forms.spec.ts",
+          "sha256": "0239163c4b7514aa54830768d7fb61ed677002fd44e569158284f7d5c60b15ed"
+        },
+        {
+          "path": "apps/web/e2e/confirmation-fixture.ts",
+          "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+        },
+        {
+          "path": "apps/web/e2e/manual-external-refund.spec.ts",
+          "sha256": "14e3abc42a49f2bfeef43d806ad9ae5f635d76626c8a296532964d547f18230d"
+        },
+        {
+          "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
+          "sha256": "fe28ad1663677dc0dcb0656d75b48ad096c81a85687dd2eb587334d63844aa17"
+        },
+        {
+          "path": "apps/web/e2e/refund-forms.spec.ts",
+          "sha256": "ea9af2724ed6da82ae92ea1c773935f666b3b24349b1c05ac2b64ca9fb6b6e46"
+        },
+        {
+          "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
+          "sha256": "042cdfecb331feebaab4170e1ab33067f44275b1333ec3641cac2915f0e12056"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/ContractRefundQueue.tsx",
+          "sha256": "a4aa762283ce6d9319616b7abafbeed204807bf315798c12f10d03084d1fdfbd"
+        },
+        {
+          "path": "apps/web/src/components/RefundPanel.tsx",
+          "sha256": "c15ea47945e839fc63efa81b2e66869bd8f96e979fc9218413e4d9e22456f9f4"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
+        },
+        {
+          "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
+          "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedContractRead.ts",
+          "sha256": "d158637ca069b7551b3d4920621873ed1a07b10a0cc50c730be822d68ae20200"
+        },
+        {
+          "path": "apps/web/src/hooks/useStaffQueryRead.ts",
+          "sha256": "e21695a1a08c18ea78dcc4a17a19555992e8a94ba3284fea02d3a587bd8ca4e0"
+        },
+        {
+          "path": "apps/web/src/lib/refund-receipt.ts",
+          "sha256": "845f71a47349b03004ee9944ad7b2400ffdf991b7c5eebf16ec38a86b433310c"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+          "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "e569b84d7c3063ece20513d31cd998761cb6d17e953f11020aefe7e435f81a17"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "Wallet invoice payments bound acknowledgement headers and body. The unconfirmed notice stays in the open review and with the retained payment after closing it. A deliberate retry uses the exact reviewed amount, hash and idempotency key. Both languages hold the first reply after one fixture debit and require an exact second request and matching receipt.",
+        "Invoice refund decisions, contract refund obligations and dual approval decisions retire uncertain confirmations and reload saved state without replay. A failed recovery read retains drafts and blocks further decisions. Re-review requires fresh confirmation and still validates the exact receipt. Invoice refund decision list reads are uncached and bounded. Refund creation continues to use its existing within-dialog exact retry and needs a recovery flow after leaving the dialog.",
+        "Passed 112 production browser cases across Chromium and mobile Safari, 12 instrumented Chromium cases and nine changed-coverage groups. The earlier runs exposed a hidden wallet warning and two outdated manual refund fixtures. The final candidate presents the warning inside the confirmation and tests the existing financial acknowledgements in both locales.",
+        "Passed 66 distinct targeted unit cases, reran the 36 cases affected by review fixes, and passed lint, typecheck, formatting and all 100 route budgets. Electricity ordering uses 254,885 bytes under the unchanged 255,000-byte limit. The 31 compiled cold-auth assets and paths match, retaining six accepted cold-auth cases."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-confirmation-recovery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-confirmation-recovery/proof.json",
+      "source_scope_proof_sha256": "4894696be821e42f8162eaea9c496b4e5c4dee3bc8b75f60049467e5495650e4",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-confirmation-recovery/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-confirmation-recovery/reviewed.patch",
+      "release_disposition": "Verified wallet payment and staff refund and approval confirmation recovery. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -801244,12 +801373,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Finish scoped v0.5.0 command feedback and conditional-state reconciliation. Inspect the remaining protected financial and account-recovery paths first using the latest confirmation census. Close demonstrated gaps without replaying uncertain writes. Compare remaining route states with existing coverage. Live Sentry delivery and required GitHub accessibility enforcement remain separate gates."
+    "goal": "Continue v0.5.0 protected command reconciliation. Inspect refund creation recovery after leaving the confirmation and lost-contact commands. Resolve demonstrated gaps, then reconcile remaining loading, empty and error states. Sentry and required GitHub accessibility enforcement remain separate gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 shared confirmation deadlines and protected recovery have current customer and staff browser evidence. Five launch-required criteria remain open, including staging Sentry delivery, required GitHub accessibility enforcement and scoped UI reconciliation. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 wallet payment, refund decision and dual approval recovery has current native browser evidence. Five launch-required criteria remain open, including staging Sentry delivery, GitHub accessibility enforcement and scoped UI reconciliation. The November 9 release sequence remains at risk."
   },
   "capabilities": [
     {

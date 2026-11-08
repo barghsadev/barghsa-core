@@ -2,6 +2,7 @@ import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
 import { useEffect, useRef, useState } from 'react';
 import { Alert, AlertDescription, Button, ListPage, PageLoading, StatusBadge } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { tWorkspace as adminText } from '@barghsa/i18n/workspace-admin';
 import { RefundDecisionControls, type RefundDecisionDraft } from './RefundDecisionControls.js';
 import { RefundFormAlert } from './RefundFormFeedback.js';
@@ -128,6 +129,8 @@ function OwnedContractRefundQueue() {
     return () => controller.abort();
   }, [cursor, reload, readContract]);
   function refresh() {
+    readController.current?.abort();
+    setLoading(true);
     setCursor(null);
     setNext(null);
     setReload((value) => value + 1);
@@ -395,6 +398,12 @@ function OwnedContractRefundQueue() {
           }}
           onDenied={() => {
             if (actionGeneration === generation.current && current.current === action) deny();
+          }}
+          onUnconfirmed={() => {
+            if (actionGeneration !== generation.current || current.current !== action) return;
+            clearAction();
+            setReviewError(confirmationText('unconfirmed', locale));
+            refresh();
           }}
           onValidationError={(fields) =>
             actionGeneration === generation.current &&

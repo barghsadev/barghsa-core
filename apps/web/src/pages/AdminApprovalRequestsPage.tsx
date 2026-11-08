@@ -1,6 +1,7 @@
 import { CommandFeedback } from '../components/CommandFeedback.js';
 import { useStaffQueryRead } from '../hooks/useStaffQueryRead.js';
 import { contractText } from '@barghsa/i18n/contracts';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { tInvoiceCorrections } from '@barghsa/i18n/invoice-corrections';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -106,6 +107,7 @@ function ApprovalWorkspace({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [unconfirmed, setUnconfirmed] = useState(false);
   const [adjustmentDecision, setAdjustmentDecision] = useState(false);
   const [reasons, setReasons] = useState<Record<string, string>>({});
   const [validating, setValidating] = useState<string | null>(null);
@@ -156,6 +158,7 @@ function ApprovalWorkspace({
     setItems([]);
     setReasons({});
     setSaved(false);
+    setUnconfirmed(false);
     returnFocus.current = null;
     clearDecision();
   }
@@ -272,6 +275,7 @@ function ApprovalWorkspace({
     decisionDraft.current = draft;
     returnFocus.current = draft.focus;
     setSaved(false);
+    setUnconfirmed(false);
     setAdjustmentDecision(
       request.actionType === 'manual_adjustment' && Boolean(request.details?.invoiceAdjustment)
     );
@@ -368,6 +372,7 @@ function ApprovalWorkspace({
               : null
           }
         />
+        {unconfirmed && <p role="alert">{confirmationText('unconfirmed', locale)}</p>}
         <ListPage.Content
           loading={loading}
           error={error}
@@ -540,6 +545,13 @@ function ApprovalWorkspace({
           }
           onDenied={() => {
             if (actionGeneration === workGeneration.current) denyAccess();
+          }}
+          onUnconfirmed={() => {
+            if (actionGeneration !== workGeneration.current || accessDenied.current) return;
+            available.current = false;
+            clearDecision();
+            setUnconfirmed(true);
+            void load();
           }}
           summary={
             review ? (

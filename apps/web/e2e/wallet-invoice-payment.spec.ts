@@ -1,4 +1,6 @@
 import { t } from '@barghsa/i18n/app';
+import { confirmationText } from '@barghsa/i18n/confirmation';
+import { tWalletInvoicePayment as walletText } from '@barghsa/i18n/wallet-invoice-payment';
 import { openHistoryFilters, applyHistoryFilters } from './history-filter-reset';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
@@ -338,7 +340,7 @@ for (const locale of ['fa', 'en'] as const)
       await expect(dialog).toContainText(invoiceId);
       if (fa && !darkMode && ['chromium', 'mobile-chrome'].includes(test.info().project.name))
         await page.screenshot({
-          path: `/tmp/barghsa-financial-review-${test.info().project.name}.png`,
+          path: test.info().outputPath('wallet-financial-review-fa.png'),
         });
       await expect(dialog).toContainText('Customer profile');
       await expect(dialog).toContainText(fa ? 'مالیات بر ارزش افزوده' : 'VAT');
@@ -400,6 +402,81 @@ for (const locale of ['fa', 'en'] as const)
       expect(requests[0]!.expectedReviewHash).toBe(financialReview(amount, balance).hash);
       expect(verifications).toBe(1);
     });
+
+for (const locale of ['en', 'fa'] as const)
+  test(`wallet payment retrieves the same receipt after a lost response (${locale})`, async ({
+    page,
+  }) => {
+    const amount = '1000000',
+      balance = '1200000';
+    let paid = '0';
+    await shell(page, locale, false, amount, () => paid);
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const writes: unknown[] = [];
+    let debits = 0;
+    await page.route(`**/api/invoices/${invoiceId}/wallet-payment`, async (route) => {
+      if (route.request().method() === 'GET')
+        return route.fulfill({
+          json: {
+            invoiceId,
+            profileId,
+            remainingAmount: amount,
+            availableBalance: balance,
+            canPay: true,
+            review: financialReview(amount, balance),
+          },
+        });
+      const body = route.request().postDataJSON();
+      writes.push(body);
+      if (writes.length === 1) {
+        debits++;
+        paid = amount;
+        await held;
+        return route.abort().catch(() => {});
+      }
+      expect(body).toEqual(writes[0]);
+      return route.fulfill({
+        json: {
+          invoiceId,
+          profileId,
+          state: 'Paid',
+          amount,
+          walletTransactionId: transactionId,
+          idempotencyKey: body.idempotencyKey,
+          reviewHash: body.expectedReviewHash,
+        },
+      });
+    });
+    await page.goto(`/invoices/${invoiceId}`);
+    const panel = page.locator('#wallet-invoice-payment');
+    const dialog = page.getByRole('dialog');
+    const confirm = dialog.getByRole('button', { name: t('team.confirm', locale), exact: true });
+    await panel.getByRole('button', { name: walletText('pay', locale), exact: true }).click();
+    await approveRiskConfirmation(page, locale, 'financial');
+    await page.clock.install();
+    await confirm.click();
+    await expect.poll(() => writes.length).toBe(1);
+    await page.clock.runFor(15_100);
+    await expect(dialog.getByRole('alert')).toBeVisible();
+    await expect(
+      dialog.getByText(confirmationText('unconfirmed', locale), { exact: true })
+    ).toBeVisible();
+    expect(writes).toHaveLength(1);
+    await expect(panel.getByRole('status')).toHaveCount(0);
+    release();
+    await dialog.getByRole('button', { name: t('team.cancel', locale), exact: true }).click();
+    await panel.getByRole('button', { name: walletText('retry', locale), exact: true }).click();
+    await expect(confirm).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'financial');
+    await confirm.click();
+    await expect(panel.getByRole('status')).toContainText(transactionId);
+    expect(writes).toHaveLength(2);
+    expect(writes[1]).toEqual(writes[0]);
+    expect(debits).toBe(1);
+  });
 
 test('a changed invoice amount needs a new review and a newly captured request', async ({
   page,

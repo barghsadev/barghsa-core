@@ -2,6 +2,7 @@ import { approveRiskConfirmation } from './confirmation-fixture';
 import { productionManifest } from './production-manifest';
 import AxeBuilder from '@axe-core/playwright';
 import { contractText } from '@barghsa/i18n/contracts';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { t } from '@barghsa/i18n/app';
 import { test, expect, type Page } from './coverage-fixture';
@@ -203,7 +204,8 @@ for (const locale of ['en', 'fa'] as const)
         bank = (key: string) => adminText('admin.invoices.externalRefunds.' + key, locale);
       let state = 'Approved',
         previews = 0,
-        transferAttempts = 0;
+        transferAttempts = 0,
+        recoveryUnavailable = false;
       const row = () => ({
         id: refundId,
         invoiceId,
@@ -217,7 +219,11 @@ for (const locale of ['en', 'fa'] as const)
         retry: null,
       });
       await page.route(/\/api\/admin\/external-refunds\?/, (route) =>
-        route.fulfill({ json: { invoice: balance(), refunds: [row()], nextBefore: null } })
+        route.fulfill(
+          recoveryUnavailable
+            ? { status: 503, json: {} }
+            : { json: { invoice: balance(), refunds: [row()], nextBefore: null } }
+        )
       );
       for (const operation of ['cancel', 'record-transfer', 'reconcile'] as const)
         await page.route(
@@ -248,7 +254,10 @@ for (const locale of ['en', 'fa'] as const)
           expectedReviewHash: 'b'.repeat(64),
         });
         transferAttempts++;
-        if (transferAttempts === 1) return route.fulfill({ status: 503, json: {} });
+        if (transferAttempts === 1) {
+          recoveryUnavailable = true;
+          return route.fulfill({ status: 503, json: {} });
+        }
         if (transferAttempts === 2)
           return route.fulfill({
             json: {
@@ -298,8 +307,22 @@ for (const locale of ['en', 'fa'] as const)
       await approveRiskConfirmation(page, locale, 'financial');
       for (let index = 0; index < 2; index++) {
         await confirm.click();
-        await expect(dialog.getByRole('alert')).toBeVisible();
+        await expect(dialog).toHaveCount(0);
+        await expect(
+          panel.getByText(confirmationText('unconfirmed', locale), { exact: true })
+        ).toBeVisible();
         await expect(amount).toHaveValue('۴۰');
+        await expect(reference).toHaveValue('  BANK-123  ');
+        expect(transferAttempts).toBe(index + 1);
+        const record = panel.getByRole('button', { name: bank('record-transfer'), exact: true });
+        if (index === 0) {
+          await expect(record).toBeDisabled();
+          recoveryUnavailable = false;
+          await panel.getByRole('button', { name: shared('refresh'), exact: true }).click();
+        }
+        await record.click();
+        await expect(confirm).toBeDisabled();
+        await approveRiskConfirmation(page, locale, 'financial');
       }
       await confirm.click();
       await expect(dialog).toHaveCount(0);
@@ -332,6 +355,10 @@ for (const locale of ['en', 'fa'] as const)
         previewAttempts = 0,
         commandAttempts = 0,
         state = 'Approved';
+      let releaseReply!: () => void;
+      const heldReply = new Promise<void>((resolve) => {
+        releaseReply = resolve;
+      });
       await page.route('**/api/admin/contracts?*', (route) =>
         route.fulfill({ json: { contracts: [], nextBefore: null } })
       );
@@ -379,30 +406,34 @@ for (const locale of ['en', 'fa'] as const)
           });
         }
       );
-      await page.route(`**/api/admin/external-refunds/${refundId}/record-transfer`, (route) => {
-        expect(route.request().postDataJSON()).toEqual({
-          bankReference: 'BANK-123',
-          expectedReviewHash: 'b'.repeat(64),
-        });
-        commandAttempts++;
-        if (commandAttempts === 1)
-          return route.fulfill({
-            status: 400,
-            json: { error: { code: 'VALIDATION:INPUT:INVALID', fields: ['bankReference'] } },
-          });
-        state = 'Processing';
-        return route.fulfill({
-          json: {
-            id: refundId,
-            invoiceId,
-            amount: '40',
-            destination: 'external_bank',
-            state,
+      await page.route(
+        `**/api/admin/external-refunds/${refundId}/record-transfer`,
+        async (route) => {
+          expect(route.request().postDataJSON()).toEqual({
             bankReference: 'BANK-123',
-            reconciliationStatus: 'Pending',
-          },
-        });
-      });
+            expectedReviewHash: 'b'.repeat(64),
+          });
+          commandAttempts++;
+          if (commandAttempts === 1)
+            return route.fulfill({
+              status: 400,
+              json: { error: { code: 'VALIDATION:INPUT:INVALID', fields: ['bankReference'] } },
+            });
+          state = 'Processing';
+          await heldReply;
+          return route.fulfill({
+            json: {
+              id: refundId,
+              invoiceId,
+              amount: '40',
+              destination: 'external_bank',
+              state,
+              bankReference: 'BANK-123',
+              reconciliationStatus: 'Pending',
+            },
+          });
+        }
+      );
       await page.goto('/admin/contracts');
       const queue = page.locator('#refund-obligations'),
         reference = queue.locator('#bank-return-' + refundId),
@@ -437,15 +468,23 @@ for (const locale of ['en', 'fa'] as const)
       await button.click();
       await expect(confirm).toBeDisabled();
       await approveRiskConfirmation(page, locale, 'financial');
+      await page.clock.install();
       await confirm.click();
+      await expect.poll(() => commandAttempts).toBe(2);
+      await page.clock.runFor(15_100);
       await expect(dialog).toHaveCount(0);
+      await expect(
+        queue.getByText(confirmationText('unconfirmed', locale), { exact: true })
+      ).toBeVisible();
       await expect(
         queue.getByRole('button', { name: word('cancellation.queue.reconcile'), exact: true })
       ).toBeVisible();
+      releaseReply();
+      expect(commandAttempts).toBe(2);
       await expect(page.locator('html')).toHaveClass(dark ? /dark/ : /^(?!.*\bdark\b)/);
       await finishLayout(page, '#refund-obligations', locale);
       if (locale === 'fa' && dark && test.info().project.name === 'mobile-safari')
-        await page.screenshot({ path: '/tmp/barghsa-refunds-fa-dark-mobile.png' });
+        await page.screenshot({ path: test.info().outputPath('refunds-fa-dark-mobile.png') });
     });
   }
 for (const locale of ['en', 'fa'] as const)
