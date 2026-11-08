@@ -21,6 +21,7 @@ export interface FormWizardProps {
   nextDisabled: boolean;
   submitDisabled: boolean;
   backDisabled?: boolean;
+  anchorNotices?: boolean;
   onBack: () => void;
   onSave: () => void;
   onNext: () => void;
@@ -44,6 +45,7 @@ export function FormWizard({
   nextDisabled,
   submitDisabled,
   backDisabled = false,
+  anchorNotices,
   onBack,
   onSave,
   onNext,
@@ -53,7 +55,15 @@ export function FormWizard({
   const numbers = useNumberFormatting(locale);
   return (
     <>
-      <nav aria-label={ariaLabel} className="mb-8">
+      <nav
+        aria-label={ariaLabel}
+        className={
+          anchorNotices
+            ? 'mb-8 max-sm:[&>ol]:grid max-sm:[&>ol]:grid-cols-2 max-sm:[&>ol]:gap-3 max-sm:[&>ol>li]:pb-0 max-sm:[&>ol>li>.absolute]:hidden'
+            : 'mb-8'
+        }
+        data-toast-anchor={anchorNotices || undefined}
+      >
         <ProgressStepper
           label={ariaLabel}
           steps={steps.map((label, index) => ({

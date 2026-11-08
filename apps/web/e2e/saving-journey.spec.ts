@@ -635,6 +635,19 @@ for (const locale of ['en', 'fa'] as const)
     await expect(page.getByText('Saving Street')).toBeVisible();
     await expect(addressSaved).toHaveCount(1);
     await expectNoticeBelowPageHeader(addressSaved);
+    const progress = page
+      .getByRole('navigation', { name: savingCopy('orderTitle', locale), exact: true })
+      .getByRole('list');
+    await expect
+      .poll(async () => {
+        const [steps, notice] = await Promise.all([
+          progress.boundingBox(),
+          addressSaved.boundingBox(),
+        ]);
+        return steps && notice ? notice.y - (steps.y + steps.height) : 0;
+      })
+      .toBeGreaterThanOrEqual(15.5);
+    await expect(addressSaved).toBeInViewport({ ratio: 1 });
     expect(addressWrites).toHaveLength(3);
     expect(addressWrites[2]).toEqual(addressWrites[1]);
     await expect(choice('chooseAddress')).toHaveAttribute('aria-required', 'true');

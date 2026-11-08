@@ -735,6 +735,7 @@ function OwnedSavingsOrderPage() {
     });
   }
 
+  const showWizard = !loading && !!profileId && !!draft && !draftLoading && !draftError;
   return (
     <div
       className="mx-auto w-full max-w-4xl space-y-6 p-4 md:p-8"
@@ -759,7 +760,7 @@ function OwnedSavingsOrderPage() {
           />
         </Suspense>
       )}
-      <header className="space-y-2" data-toast-anchor>
+      <header className="space-y-2" data-toast-anchor={!showWizard || undefined}>
         <Link to="/savings" className="touch-action text-sm text-primary hover:underline">
           {copy('title')}
         </Link>
@@ -809,7 +810,7 @@ function OwnedSavingsOrderPage() {
           </Button>
         </div>
       )}
-      {!loading && profileId && draft && !draftLoading && !draftError && (
+      {showWizard && (
         <ValidatedFormWizard
           form={fields.form}
           errorId={fields.errorId}
@@ -846,6 +847,7 @@ function OwnedSavingsOrderPage() {
           steps={steps.map(copy)}
           step={step}
           ariaLabel={copy('orderTitle')}
+          anchorNotices
           backLabel={copy('back')}
           saveLabel={t('electricity.order.saveDraft', locale)}
           nextLabel={copy('next')}
