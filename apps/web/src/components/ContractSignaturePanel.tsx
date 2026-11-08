@@ -508,6 +508,7 @@ export function ContractSignaturePanel({
             contractBase(staff) + '/' + id + '/' + (request ? 'signature-request' : 'signature'),
           method: 'POST',
           body: { ...body, idempotencyKey: crypto.randomUUID(), expectedReviewHash: review.hash },
+          responseDeadline: true,
           successStatus: 200,
           conflictMessage: word('signatureConflict'),
           forbiddenMessage: word('denied'),
@@ -754,8 +755,8 @@ export function ContractSignaturePanel({
           contractId={id}
           time={time}
           onClose={() => close(captured)}
-          onPendingChange={(pending) => {
-            if (current(captured) && pending) captured.attempted = true;
+          onCommandDispatch={(dispatched) => {
+            if (current(captured)) captured.attempted = dispatched || captured.uncertain;
           }}
           onUnconfirmed={() => {
             if (current(captured)) {

@@ -173,6 +173,7 @@ for (const [locale, theme] of [
     state.heldWrite = undefined;
     state.needsStepUp = true;
     await reasonSubmit.click();
+    await page.clock.install();
     await confirm(page).click();
     await dialog(page).locator('input[type=password]').fill('Contract-password');
     await confirm(page).click();
@@ -187,9 +188,11 @@ for (const [locale, theme] of [
     const receipt = persist(captured);
     expect(receipt).not.toHaveProperty('history');
     expect(receipt.currentVersion).not.toHaveProperty('history');
-    await state.heldWrite!.abort('failed');
+    const heldChanges = state.heldWrite!;
+    await page.clock.fastForward(15_001);
     const retry = page.getByTestId('contract-review-retry');
     await expect(retry).toBeEnabled();
+    await heldChanges.fulfill({ json: receipt }).catch(() => {});
     await expect(reason).toBeDisabled();
     const other = page.getByRole('button', { name: rowName(8), exact: true });
     await expect(other).toBeDisabled();
@@ -412,6 +415,7 @@ for (const [locale, theme] of [
       signedDocumentId: signedDocument,
       requestId: initialView.request!.id,
     });
+    await page.clock.install();
     await confirm(page).click();
     await dialog(page).locator('input[type=password]').fill('Contract-password');
     await confirm(page).click();
@@ -429,9 +433,11 @@ for (const [locale, theme] of [
     expect(receipt.request).not.toHaveProperty('requestedBy');
     expect(receipt.signature).not.toHaveProperty('recordedBy');
     expect(receipt.signature).not.toHaveProperty('uploadedBy');
-    await state.heldWrite!.abort('failed');
+    const heldSignature = state.heldWrite!;
+    await page.clock.fastForward(15_001);
     const retry = page.getByTestId('contract-signature-retry');
     await expect(retry).toBeEnabled();
+    await heldSignature.fulfill({ json: receipt }).catch(() => {});
     await expect(signed(page)).toBeDisabled();
     await expect(acknowledgement(page)).toBeChecked();
     const previews = state.previews.length,

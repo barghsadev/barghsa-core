@@ -28,12 +28,14 @@ function OwnedContractFinancialReviewDialog({
   onSuccess,
   review: capturedReview,
   onPendingChange,
+  onCommandDispatch,
   onDenied,
   onUnconfirmed,
 }: {
   action: TeamAction;
   review?: ContractFinancialReview;
   onPendingChange?: (pending: boolean) => void;
+  onCommandDispatch?: (dispatched: boolean) => void;
   onDenied?: () => void;
   onUnconfirmed?: () => void;
   profileId: string;
@@ -130,6 +132,7 @@ function OwnedContractFinancialReviewDialog({
       risk="financial"
       action={confirmedAction}
       {...(onPendingChange ? { onPendingChange } : {})}
+      {...(onCommandDispatch ? { onCommandDispatch } : {})}
       {...(onDenied ? { onDenied } : {})}
       {...(onUnconfirmed ? { onUnconfirmed } : {})}
       confirmationDisabled={!review || time.status !== 'ready'}

@@ -308,7 +308,7 @@ it('keeps the same captured body/hash/key through unknown and rejected uncertain
   const original = harness.dialog!,
     body = JSON.stringify(original.action.body);
   await act(async () => {
-    original.onPendingChange?.(true);
+    original.onCommandDispatch?.(true);
     original.onUnconfirmed?.();
   });
   expect(host.querySelector('[role=dialog]')).toBeNull();
@@ -358,7 +358,7 @@ it('rejects a changed full receipt and leaves its immutable retry available', as
     props.onSuccess(signingReceipt(saved.view, saved.docs[1]!, review, true))
   ).rejects.toThrow('signature receipt');
   await act(async () => {
-    props.onPendingChange?.(true);
+    props.onCommandDispatch?.(true);
     props.onUnconfirmed?.();
   });
   expect(host.querySelector('[data-testid=contract-signature-retry]')).not.toBeNull();
@@ -449,7 +449,7 @@ for (const locale of ['en', 'fa'] as const)
     const fresh = harness.team!,
       body = JSON.stringify(fresh.action!.body);
     await act(async () => {
-      old.onPendingChange?.(true);
+      old.onCommandDispatch?.(true);
       old.onDenied?.();
       old.onClose();
     });
@@ -469,7 +469,7 @@ it('request-changes keeps an unknown command through version/close/read gates an
   const original = harness.team!,
     body = JSON.stringify(original.action!.body);
   await act(async () => {
-    original.onPendingChange?.(true);
+    original.onCommandDispatch?.(true);
     original.onUnconfirmed?.();
   });
   expect(button(en.close).disabled).toBe(true);

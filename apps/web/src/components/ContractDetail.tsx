@@ -475,6 +475,7 @@ function ContractDetailContent({
             description: `${word(capturedSource.contract.serviceType)} · ${word('version')} ${capturedSource.version.versionNumber.toLocaleString(locale)}`,
             path: `${contractBase(staff)}/${id}/request-changes`,
             method: 'POST',
+            responseDeadline: true,
             successStatus: 200,
             body: {
               expectedVersionId: capturedSource.version.id,
@@ -1082,9 +1083,9 @@ function ContractDetailContent({
             )
               withdraw();
           }}
-          onPendingChange={(pending) => {
-            if (pending && renderedCommand && currentCommand(renderedCommand))
-              renderedCommand.attempted = true;
+          onCommandDispatch={(dispatched) => {
+            if (renderedCommand && currentCommand(renderedCommand))
+              renderedCommand.attempted = dispatched || renderedCommand.uncertain;
           }}
           onUnconfirmed={() => {
             if (renderedCommand && currentCommand(renderedCommand)) {
