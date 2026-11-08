@@ -8,6 +8,7 @@ const messages = {
       'I understand the reviewed amounts, consequences and applicable cancellation/refund rules.',
     toman: 'toman',
     recorded: 'Update recorded',
+    checkStatus: 'Check current status',
     unconfirmed: 'The outcome is unconfirmed. Check the current status before trying again.',
   },
   fa: {
@@ -18,6 +19,7 @@ const messages = {
     acknowledge: 'مبالغ بررسی‌شده، پیامدها و قوانین مربوط به لغو و بازپرداخت را درک می‌کنم.',
     toman: 'تومان',
     recorded: 'به‌روزرسانی ثبت شد',
+    checkStatus: 'بررسی وضعیت فعلی',
     unconfirmed: 'نتیجه هنوز تأیید نشده است. پیش از تلاش دوباره وضعیت فعلی را بررسی کنید.',
   },
 } as const;

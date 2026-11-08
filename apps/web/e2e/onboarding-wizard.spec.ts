@@ -1,8 +1,9 @@
 import { t } from '@barghsa/i18n/app';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import AxeBuilder from '@axe-core/playwright';
 import { skipToMain } from './critical-accessibility';
-import { test, expect, type Page } from './coverage-fixture';
+import { test, expect, type Page, type Route } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
 import { dismissMessages } from './dismiss-messages';
 
@@ -893,6 +894,7 @@ async function combinedFixture(page: Page, locale: 'en' | 'fa') {
     companyDone: false,
     completed: false,
     active: profileId,
+    selected: null as string | null,
     starts: [] as Record<string, unknown>[],
     finishes: [] as Record<string, unknown>[],
     startStatus: 201,
@@ -917,7 +919,7 @@ async function combinedFixture(page: Page, locale: 'en' | 'fa') {
     id: journeyId,
     profiles: [personal(), company()],
     completed: state.completed,
-    selectedProfileId: state.completed ? state.active : null,
+    selectedProfileId: state.selected,
     activeProfileId: state.active,
   });
   await page.route('**/api/onboarding/journeys/active', (r) =>
@@ -948,6 +950,7 @@ async function combinedFixture(page: Page, locale: 'en' | 'fa') {
         },
       });
     state.active = input.selectedProfileId;
+    state.selected = input.selectedProfileId;
     state.completed = true;
     return r.fulfill({ json: journey() });
   });
@@ -994,7 +997,7 @@ async function combinedFixture(page: Page, locale: 'en' | 'fa') {
       json: { activeProfileId: state.active, hasDefault: true, profiles: [personal(), company()] },
     })
   );
-  return state;
+  return Object.assign(state, { receipt: journey });
 }
 for (const locale of ['en', 'fa'] as const) {
   test(`combined setup resumes saved wizards, reviews both profiles and saves an explicit dashboard choice (${locale})`, async ({
@@ -1127,7 +1130,12 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     const state = await combinedFixture(page, locale);
-    state.startStatus = 503;
+    let heldStart: Route | undefined;
+    await page.route('**/api/onboarding/journeys', (route) => {
+      state.starts.push(route.request().postDataJSON());
+      state.started = true;
+      heldStart = route;
+    });
     await page.goto('/onboarding');
     await page
       .getByRole('checkbox', { name: locale === 'fa' ? 'حقیقی' : 'Individual', exact: true })
@@ -1135,10 +1143,14 @@ for (const locale of ['en', 'fa'] as const) {
     await page
       .getByRole('checkbox', { name: locale === 'fa' ? 'حقوقی' : 'Legal Entity', exact: true })
       .check();
+    await page.clock.install();
     await page
       .getByRole('button', { name: locale === 'fa' ? 'ادامه' : 'Continue', exact: true })
       .click();
+    await expect.poll(() => !!heldStart).toBe(true);
+    await page.clock.fastForward(15_001);
     await expect(page.getByRole('alert')).toBeVisible();
+    await heldStart!.fulfill({ status: 503, json: {} }).catch(() => {});
     await page
       .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Retry', exact: true })
       .click();
@@ -1404,6 +1416,85 @@ for (const locale of ['en', 'fa'] as const)
   }
 
 for (const locale of ['fa', 'en'] as const) {
+  test(`an unconfirmed finish reloads the current profile without writing again (${locale})`, async ({
+    page,
+  }) => {
+    const state = await combinedFixture(page, locale);
+    state.personalDone = state.companyDone = true;
+    let heldFinish: Route | undefined;
+    await page.route(`**/api/onboarding/journeys/${journeyId}/finish`, (route) => {
+      const input = route.request().postDataJSON();
+      state.finishes.push(input);
+      state.selected = state.active = input.selectedProfileId;
+      state.completed = true;
+      heldFinish = route;
+    });
+    await page.goto(`/onboarding/complete?journeyId=${journeyId}`);
+    const company = page.getByRole('radio', { name: 'Saved Company', exact: true });
+    const person = page.getByRole('radio', { name: 'Person Owner', exact: true });
+    const done = page.getByRole('button', {
+      name: t('onboarding.journey.done', locale),
+      exact: true,
+    });
+    await company.check();
+    await page.clock.install();
+    await done.click();
+    await expect.poll(() => !!heldFinish).toBe(true);
+    await page.clock.fastForward(15_001);
+    await expect(page.getByRole('alert')).toContainText(confirmationText('unconfirmed', locale));
+    await expect(company).toBeChecked();
+    await expect(person).toBeDisabled();
+    await heldFinish!.fulfill({ json: state.receipt() }).catch(() => {});
+    expect(state.finishes).toEqual([{ selectedProfileId: companyId }]);
+    await expect(page).toHaveURL(/\/onboarding\/complete/);
+
+    // Another tab switches the profile after the stored choice was applied.
+    state.active = profileId;
+    await page
+      .getByRole('button', { name: confirmationText('checkStatus', locale), exact: true })
+      .click();
+    await expect(company).toBeChecked();
+    await expect(person).toBeDisabled();
+    await expect(page.getByRole('alert')).toHaveCount(0);
+    await done.click();
+    await expect(page).toHaveURL(/\/app$/);
+    expect(state.finishes).toHaveLength(1);
+    expect(state.active).toBe(profileId);
+  });
+
+  test(`a stalled profile completion only retries the same profile explicitly (${locale})`, async ({
+    page,
+  }) => {
+    const state = await fixture(page, locale, 'INDIVIDUAL', individual);
+    const receipt = {
+      id: profileId,
+      profileType: 'INDIVIDUAL',
+      status: 'ACTIVE',
+      isDefault: true,
+      firstName: 'Person',
+      lastName: 'Owner',
+    };
+    let heldCompletion: Route | undefined;
+    await page.route(`**/api/onboarding/complete/${profileId}`, (route) => {
+      expect(route.request().method()).toBe('POST');
+      if (++state.completeRequests > 1) return route.fulfill({ json: receipt });
+      heldCompletion = route;
+    });
+    await page.clock.install();
+    await page.goto(`/onboarding/complete?profileId=${profileId}`);
+    await expect.poll(() => !!heldCompletion).toBe(true);
+    await page.clock.fastForward(15_001);
+    await expect(page.getByRole('alert')).toContainText(t('onboarding.complete.error', locale));
+    await expect(page.locator('.animate-confetti-drop')).toHaveCount(0);
+    await heldCompletion!.fulfill({ json: receipt }).catch(() => {});
+    expect(state.completeRequests).toBe(1);
+    await page
+      .getByRole('button', { name: t('onboarding.draft.retry', locale), exact: true })
+      .click();
+    await expect(page.locator('dl[aria-label]')).toContainText('Person Owner');
+    expect(state.completeRequests).toBe(2);
+  });
+
   test(`a stalled completion read can be retried without sending a completion command (${locale})`, async ({
     page,
   }) => {

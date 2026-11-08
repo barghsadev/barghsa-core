@@ -12,6 +12,7 @@ import {
 import { refreshProfileContext } from '../../lib/profile-context.js';
 import { createFileRoute, useRouter, useSearch } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { Button } from '@barghsa/ui';
 
 export const Route = createFileRoute('/onboarding/complete')({
@@ -83,7 +84,7 @@ function Completion({ profileId, journeyId }: { profileId?: string; journeyId?: 
   const [journey, setJourney] = useState<OnboardingJourney | null>(null);
   const [selected, setSelected] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [finishError, setFinishError] = useState(false);
+  const [finishError, setFinishError] = useState<'rejected' | 'unconfirmed' | null>(null);
   const [retry, setRetry] = useState(0);
   const busy = useRef(false);
   const finishRequest = useRef<AbortController | null>(null);
@@ -113,9 +114,7 @@ function Completion({ profileId, journeyId }: { profileId?: string; journeyId?: 
       return response.json();
     };
     const load = async () => {
-      const body = journeyId
-        ? await readWithDeadline(controller.signal, request)
-        : await request(controller.signal);
+      const body = await readWithDeadline(controller.signal, request);
       const completed = profileId ? parseOnboardingProfile(body, profileId) : null;
       const current = journeyId
         ? parseOnboardingJourney(body, journeyId)
@@ -149,21 +148,32 @@ function Completion({ profileId, journeyId }: { profileId?: string; journeyId?: 
 
   async function finish() {
     if (!journey || !selected || busy.current) return;
+    if (journey.completed) {
+      refreshProfileContext();
+      await router.navigate({ to: '/app', replace: true });
+      return;
+    }
     busy.current = true;
     const controller = new AbortController();
     finishRequest.current = controller;
     setSubmitting(true);
-    setFinishError(false);
+    setFinishError(null);
     try {
-      const response = await fetch(`/api/onboarding/journeys/${journey.id}/finish`, {
-        method: 'POST',
-        credentials: 'include',
-        signal: controller.signal,
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ selectedProfileId: selected }),
+      const receipt = await readWithDeadline(controller.signal, async (signal) => {
+        const response = await fetch(`/api/onboarding/journeys/${journey.id}/finish`, {
+          method: 'POST',
+          credentials: 'include',
+          signal,
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({ selectedProfileId: selected }),
+        });
+        if (response.status >= 500) throw new Error('Unable to confirm profile choice');
+        return response.ok ? parseOnboardingJourney(await response.json(), journey.id) : null;
       });
-      if (!response.ok) throw new Error('Unable to select profile');
-      const receipt = parseOnboardingJourney(await response.json(), journey.id);
+      if (!receipt) {
+        setFinishError(finishError === 'unconfirmed' ? finishError : 'rejected');
+        return;
+      }
       if (
         !receipt.completed ||
         receipt.selectedProfileId !== selected ||
@@ -181,7 +191,7 @@ function Completion({ profileId, journeyId }: { profileId?: string; journeyId?: 
       refreshProfileContext();
       await router.navigate({ to: '/app', replace: true });
     } catch {
-      if (!controller.signal.aborted) setFinishError(true);
+      if (!controller.signal.aborted) setFinishError('unconfirmed');
     } finally {
       if (!controller.signal.aborted) {
         busy.current = false;
@@ -252,7 +262,7 @@ function Completion({ profileId, journeyId }: { profileId?: string; journeyId?: 
             {journey ? (
               <>
                 <fieldset
-                  disabled={submitting || journey.completed}
+                  disabled={submitting || journey.completed || finishError === 'unconfirmed'}
                   className="space-y-3 text-start"
                 >
                   <legend className="font-medium mb-3">
@@ -269,7 +279,7 @@ function Completion({ profileId, journeyId }: { profileId?: string; journeyId?: 
                         checked={selected === p.id}
                         onChange={() => {
                           setSelected(p.id);
-                          setFinishError(false);
+                          setFinishError(null);
                         }}
                         className="h-4 w-4 accent-primary"
                       />
@@ -279,7 +289,9 @@ function Completion({ profileId, journeyId }: { profileId?: string; journeyId?: 
                 </fieldset>
                 {finishError && (
                   <p role="alert" className="text-sm text-destructive">
-                    {t('onboarding.journey.finishError', locale)}
+                    {finishError === 'unconfirmed'
+                      ? confirmationText('unconfirmed', locale)
+                      : t('onboarding.journey.finishError', locale)}
                   </p>
                 )}
                 <Button
@@ -293,6 +305,21 @@ function Completion({ profileId, journeyId }: { profileId?: string; journeyId?: 
                     locale
                   )}
                 </Button>
+                {finishError && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setFinishError(null);
+                      if (journeyId) {
+                        setStatus('loading');
+                        setRetry((value) => value + 1);
+                      } else void router.navigate(onboardingDestination(journey));
+                    }}
+                  >
+                    {confirmationText('checkStatus', locale)}
+                  </Button>
+                )}
                 {finishError && (
                   <Button
                     type="button"

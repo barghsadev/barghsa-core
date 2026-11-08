@@ -74,15 +74,17 @@ function OnboardingContent({ accountId }: { accountId: string }) {
     setSubmitting(true);
     setError(false);
     try {
-      const response = await fetch('/api/onboarding/journeys', {
-        method: 'POST',
-        credentials: 'include',
-        signal: controller.signal,
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ requestId: requestId.current, profileTypes: selected }),
+      const current = await readWithDeadline(controller.signal, async (signal) => {
+        const response = await fetch('/api/onboarding/journeys', {
+          method: 'POST',
+          credentials: 'include',
+          signal,
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({ requestId: requestId.current, profileTypes: selected }),
+        });
+        if (!response.ok) throw new Error('Unable to start setup');
+        return parseOnboardingJourney(await response.json());
       });
-      if (!response.ok) throw new Error('Unable to start setup');
-      const current = parseOnboardingJourney(await response.json());
       if (
         current.profiles.length !== selected.length ||
         current.profiles.some((p) => !selected.includes(p.profileType))
