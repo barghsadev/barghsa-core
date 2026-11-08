@@ -288,6 +288,7 @@ function SettingsTimezonePage() {
                               ref={field.ref}
                               onBlur={field.onBlur}
                               aria-label={timezoneText('title', locale)}
+                              aria-required="true"
                               size={10}
                               value={field.value}
                               onChange={(event) => {

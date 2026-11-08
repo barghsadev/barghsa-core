@@ -67,6 +67,7 @@ function AccountField<Values extends FieldValues>({
             <Input
               {...field}
               id={id}
+              aria-required="true"
               type={type === 'email' ? 'text' : type}
               inputMode={type === 'email' ? 'email' : undefined}
               placeholder={placeholder}

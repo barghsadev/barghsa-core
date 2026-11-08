@@ -214,6 +214,11 @@ it('reauthenticates creation with rotated CSRF and requires a fresh intent after
     Response.json({ error: { code: 'AUTHZ:STEP_UP_REQUIRED' } }, { status: 403 })
   );
   await click('connect');
+  const password = host.querySelector('input[type="password"]')!;
+  expect(password.getAttribute('aria-required')).toBe('true');
+  expect(
+    document.getElementById(password.getAttribute('aria-describedby')!)?.textContent
+  ).toBeTruthy();
   await input('owned password', 'password');
   f.fetcher.mockImplementationOnce(async () => {
     document.cookie = 'barghsa_csrf=rotated';

@@ -3,7 +3,9 @@ import type { Page } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { fullNavigation } from './navigation-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { telegramText as copy } from '@barghsa/i18n/telegram';
+import { t } from '@barghsa/i18n/workspace';
 const uuid = '0199f111-1111-7111-8111-111111111111';
 const url = 'https://t.me/barghsa_dev_bot?start=' + 'a'.repeat(43);
 async function setup(page: Page, locale: 'en' | 'fa') {
@@ -93,6 +95,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(link).toHaveAttribute('href', url);
     await expect(link).toHaveAttribute('referrerpolicy', 'no-referrer');
     const code = panel.getByLabel(copy('code', locale), { exact: true });
+    await expect(code).toHaveAttribute('aria-required', 'true');
     await panel.getByRole('button', { name: copy('confirm', locale), exact: true }).click();
     await expect(code).toBeFocused();
     await expect(code).toHaveAttribute('aria-invalid', 'true');
@@ -111,13 +114,20 @@ for (const locale of ['en', 'fa'] as const) {
       true
     );
     await panel.screenshot({
-      path: `test-results/telegram-claimed-${locale}-${info.project.name}.png`,
+      path: info.outputPath(`telegram-claimed-${locale}.png`),
     });
     await panel.getByRole('button', { name: copy('confirm', locale), exact: true }).click();
     await expect(panel.getByRole('status')).toContainText(copy('linked', locale));
     await expect(code).toHaveCount(0);
     await expect(link).toHaveCount(0);
     await panel.getByRole('button', { name: copy('revoke', locale), exact: true }).click();
+    const confirm = page.getByRole('dialog').getByRole('button', {
+      name: t('team.confirm', locale),
+      exact: true,
+    });
+    await expect(confirm).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'destructive');
+    await confirm.click();
     await expect(panel.getByRole('status')).toHaveCount(0);
     expect(f.requests.filter((r) => r.method === 'DELETE')).toHaveLength(1);
   });
@@ -135,12 +145,50 @@ for (const locale of ['en', 'fa'] as const) {
     ).toBeDisabled();
     expect(f.requests.filter((r) => r.method === 'POST')).toHaveLength(1);
     await panel.screenshot({
-      path: `test-results/telegram-uncertain-${locale}-${info.project.name}.png`,
+      path: info.outputPath(`telegram-uncertain-${locale}.png`),
     });
     f.deny();
     await panel.getByRole('button', { name: copy('refresh', locale), exact: true }).click();
     await expect(panel.getByRole('button')).toHaveCount(0);
     await expect(panel.locator('input,a')).toHaveCount(0);
     expect(f.requests.filter((r) => r.method === 'POST')).toHaveLength(1);
+  });
+  test(`private Telegram settings reconcile a stalled link request (${locale})`, async ({
+    page,
+  }) => {
+    await page.clock.install();
+    const f = await setup(page, locale);
+    let stalled = false;
+    await page.route('**/api/telegram/link', async (route) => {
+      if (route.request().method() !== 'POST') return route.fallback();
+      expect(route.request().headers()['x-csrf-token']).toBe('owned-csrf');
+      expect(route.request().postDataJSON()).toEqual({});
+      expect(stalled).toBe(false);
+      stalled = true;
+      f.state.intent = {
+        id: uuid,
+        status: 'pending',
+        telegram_user_id: null,
+        expires_at: '2030-01-01T00:00:00Z',
+      };
+    });
+    await page.goto('/settings/security');
+    const panel = page.getByRole('region', { name: copy('title', locale), exact: true });
+    const connect = panel.getByRole('button', { name: copy('connect', locale), exact: true });
+    const refresh = panel.getByRole('button', { name: copy('refresh', locale), exact: true });
+    await connect.click();
+    await expect.poll(() => stalled).toBe(true);
+    await expect(refresh).toBeDisabled();
+    await page.clock.fastForward(15_001);
+    await expect(panel.getByRole('alert')).toHaveText(copy('requestUnknown', locale), {
+      timeout: 2_000,
+    });
+    await expect(connect).toBeDisabled();
+    await expect(refresh).toBeEnabled();
+    await refresh.click();
+    await expect(panel.getByText(copy('pending', locale), { exact: true })).toBeVisible();
+    await expect(panel.getByRole('link', { name: copy('open', locale), exact: true })).toHaveCount(
+      0
+    );
   });
 }

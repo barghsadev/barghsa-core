@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T07:43:20+00:00",
-  "source_commit": "59664778c686f365e03eebaec32d265a57ba5660",
+  "updated": "2026-11-08T07:51:04+00:00",
+  "source_commit": "cd3cca99bbefb3900688b81c93dece6deca7868c",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -33479,7 +33479,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/username.tsx",
-              "sha256": "249530a5772d5bbabe8f295730410278b710531b065d81a0b73c9d936ddaf192"
+              "sha256": "9ec6bd4c18c86d6101ce57bf33d9cb971515e5882da17ccfc1ea167ee64c09cd"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -35355,7 +35355,7 @@
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
-              "sha256": "5f80180cb122e31c71340f3bb70399a029df625763345c7c63048d6553a5c755"
+              "sha256": "f3e9a003c229307e0907473c6c93fa0f7d8b776e782c9af3be749fb1c0eb4193"
             },
             {
               "path": "apps/web/src/components/AssignmentFallbackEditor.tsx",
@@ -63048,7 +63048,7 @@
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
-              "sha256": "5f80180cb122e31c71340f3bb70399a029df625763345c7c63048d6553a5c755"
+              "sha256": "f3e9a003c229307e0907473c6c93fa0f7d8b776e782c9af3be749fb1c0eb4193"
             },
             {
               "path": "apps/web/src/components/AssignmentFallbackEditor.tsx",
@@ -104452,7 +104452,7 @@
             },
             {
               "path": "apps/web/e2e/telegram-link.spec.ts",
-              "sha256": "494bd31cf4fabbee60a9b6c6f9986f5c808e588424657358bf1bf89478f92a9d"
+              "sha256": "2baf2a6218b86c78a4fd0526a9c1f71bab237f03773e99eaa335acbfad6c56eb"
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
@@ -104476,11 +104476,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "39423d516664b337748743e6e67a0039f3830de092f443216acb549469a02500"
+              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
@@ -460606,7 +460606,7 @@
             },
             {
               "path": "apps/web/e2e/telegram-link.spec.ts",
-              "sha256": "494bd31cf4fabbee60a9b6c6f9986f5c808e588424657358bf1bf89478f92a9d"
+              "sha256": "2baf2a6218b86c78a4fd0526a9c1f71bab237f03773e99eaa335acbfad6c56eb"
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
@@ -460630,11 +460630,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "39423d516664b337748743e6e67a0039f3830de092f443216acb549469a02500"
+              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
@@ -491054,7 +491054,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "39423d516664b337748743e6e67a0039f3830de092f443216acb549469a02500"
+              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
             },
             {
               "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
@@ -491362,7 +491362,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/username.tsx",
-              "sha256": "249530a5772d5bbabe8f295730410278b710531b065d81a0b73c9d936ddaf192"
+              "sha256": "9ec6bd4c18c86d6101ce57bf33d9cb971515e5882da17ccfc1ea167ee64c09cd"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -496726,7 +496726,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/WalletReceiptHistoryDetails.tsx",
@@ -496998,7 +496998,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0919e03d80c78e5d56341d61163bb1ca188e045a2045e68bfbcf7620a2ae9ca8"
+              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -515190,7 +515190,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "abedbd20a4dbf8a390cdab1266d24f5158f3e5e188bf105b6f7080945eda591d"
+              "sha256": "b1064ad3dc644b8748cf42562f88cb5fc4a22b0776f6125519de7ce8998adc31"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -515570,7 +515570,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "abedbd20a4dbf8a390cdab1266d24f5158f3e5e188bf105b6f7080945eda591d"
+              "sha256": "b1064ad3dc644b8748cf42562f88cb5fc4a22b0776f6125519de7ce8998adc31"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516009,7 +516009,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "abedbd20a4dbf8a390cdab1266d24f5158f3e5e188bf105b6f7080945eda591d"
+              "sha256": "b1064ad3dc644b8748cf42562f88cb5fc4a22b0776f6125519de7ce8998adc31"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516496,7 +516496,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "abedbd20a4dbf8a390cdab1266d24f5158f3e5e188bf105b6f7080945eda591d"
+              "sha256": "b1064ad3dc644b8748cf42562f88cb5fc4a22b0776f6125519de7ce8998adc31"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516704,7 +516704,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Public sign-in, registration, recovery and activation now expose required account, password and terms controls. The account settings forms for changing a username or contact and choosing a timezone still have required fields without explicit markers. Reconcile remaining conditional controls."
+        "Username, contact, timezone and Telegram verification and step-up fields now expose their required semantics. Remaining conditional controls still need reconciliation against their active validation schemas."
       ],
       "owner": null,
       "depends_on": [],
@@ -516743,7 +516743,8 @@
           "release-0.5-correction-command-deadlines",
           "release-0.5-comment-security-required",
           "release-0.5-service-response-required",
-          "release-0.5-public-auth-required"
+          "release-0.5-public-auth-required",
+          "release-0.5-account-command-recovery"
         ],
         "current_acceptance": null
       }
@@ -517012,7 +517013,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "abedbd20a4dbf8a390cdab1266d24f5158f3e5e188bf105b6f7080945eda591d"
+              "sha256": "b1064ad3dc644b8748cf42562f88cb5fc4a22b0776f6125519de7ce8998adc31"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -517698,11 +517699,11 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "abedbd20a4dbf8a390cdab1266d24f5158f3e5e188bf105b6f7080945eda591d"
+              "sha256": "b1064ad3dc644b8748cf42562f88cb5fc4a22b0776f6125519de7ce8998adc31"
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0919e03d80c78e5d56341d61163bb1ca188e045a2045e68bfbcf7620a2ae9ca8"
+              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -517935,7 +517936,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "abedbd20a4dbf8a390cdab1266d24f5158f3e5e188bf105b6f7080945eda591d"
+              "sha256": "b1064ad3dc644b8748cf42562f88cb5fc4a22b0776f6125519de7ce8998adc31"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -518451,7 +518452,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "abedbd20a4dbf8a390cdab1266d24f5158f3e5e188bf105b6f7080945eda591d"
+              "sha256": "b1064ad3dc644b8748cf42562f88cb5fc4a22b0776f6125519de7ce8998adc31"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -518993,7 +518994,7 @@
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
-              "sha256": "5f80180cb122e31c71340f3bb70399a029df625763345c7c63048d6553a5c755"
+              "sha256": "f3e9a003c229307e0907473c6c93fa0f7d8b776e782c9af3be749fb1c0eb4193"
             },
             {
               "path": "apps/web/e2e/verification-mode.spec.ts",
@@ -519169,7 +519170,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "abedbd20a4dbf8a390cdab1266d24f5158f3e5e188bf105b6f7080945eda591d"
+              "sha256": "b1064ad3dc644b8748cf42562f88cb5fc4a22b0776f6125519de7ce8998adc31"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -519821,7 +519822,7 @@
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
-              "sha256": "5f80180cb122e31c71340f3bb70399a029df625763345c7c63048d6553a5c755"
+              "sha256": "f3e9a003c229307e0907473c6c93fa0f7d8b776e782c9af3be749fb1c0eb4193"
             },
             {
               "path": "apps/web/e2e/verification-mode.spec.ts",
@@ -519997,7 +519998,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "abedbd20a4dbf8a390cdab1266d24f5158f3e5e188bf105b6f7080945eda591d"
+              "sha256": "b1064ad3dc644b8748cf42562f88cb5fc4a22b0776f6125519de7ce8998adc31"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -520607,7 +520608,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "abedbd20a4dbf8a390cdab1266d24f5158f3e5e188bf105b6f7080945eda591d"
+              "sha256": "b1064ad3dc644b8748cf42562f88cb5fc4a22b0776f6125519de7ce8998adc31"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -521149,7 +521150,7 @@
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
-              "sha256": "5f80180cb122e31c71340f3bb70399a029df625763345c7c63048d6553a5c755"
+              "sha256": "f3e9a003c229307e0907473c6c93fa0f7d8b776e782c9af3be749fb1c0eb4193"
             },
             {
               "path": "apps/web/e2e/verification-mode.spec.ts",
@@ -521325,7 +521326,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "abedbd20a4dbf8a390cdab1266d24f5158f3e5e188bf105b6f7080945eda591d"
+              "sha256": "b1064ad3dc644b8748cf42562f88cb5fc4a22b0776f6125519de7ce8998adc31"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -545060,11 +545061,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "39423d516664b337748743e6e67a0039f3830de092f443216acb549469a02500"
+              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -546925,11 +546926,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "39423d516664b337748743e6e67a0039f3830de092f443216acb549469a02500"
+              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -548791,11 +548792,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "39423d516664b337748743e6e67a0039f3830de092f443216acb549469a02500"
+              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -550626,11 +550627,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "39423d516664b337748743e6e67a0039f3830de092f443216acb549469a02500"
+              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -552487,11 +552488,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "39423d516664b337748743e6e67a0039f3830de092f443216acb549469a02500"
+              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -554357,11 +554358,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "39423d516664b337748743e6e67a0039f3830de092f443216acb549469a02500"
+              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -556200,11 +556201,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "39423d516664b337748743e6e67a0039f3830de092f443216acb549469a02500"
+              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -558007,11 +558008,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "39423d516664b337748743e6e67a0039f3830de092f443216acb549469a02500"
+              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -559814,11 +559815,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "39423d516664b337748743e6e67a0039f3830de092f443216acb549469a02500"
+              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -561622,11 +561623,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "39423d516664b337748743e6e67a0039f3830de092f443216acb549469a02500"
+              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -563429,11 +563430,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "39423d516664b337748743e6e67a0039f3830de092f443216acb549469a02500"
+              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -565206,7 +565207,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -565978,7 +565979,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0919e03d80c78e5d56341d61163bb1ca188e045a2045e68bfbcf7620a2ae9ca8"
+              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -567100,7 +567101,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -567872,7 +567873,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0919e03d80c78e5d56341d61163bb1ca188e045a2045e68bfbcf7620a2ae9ca8"
+              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568675,7 +568676,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Address and full correction commands now distinguish timed-out acknowledgements and preserve safe replay. Remaining command surfaces still need reconciliation against the scoped feedback and safe error rules."
+        "Stalled username, contact and Telegram writes now show their existing unconfirmed outcome and preserve ownership. Shared preference writes still wait indefinitely for a missing acknowledgement. Remaining command surfaces need reconciliation."
       ],
       "owner": null,
       "depends_on": [],
@@ -568717,7 +568718,8 @@
           "release-0.5-electricity-submission-recovery",
           "release-0.5-saving-solar-submission-recovery",
           "release-0.5-correction-template-required",
-          "release-0.5-correction-command-deadlines"
+          "release-0.5-correction-command-deadlines",
+          "release-0.5-account-command-recovery"
         ],
         "current_acceptance": null
       }
@@ -569056,7 +569058,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -569828,7 +569830,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0919e03d80c78e5d56341d61163bb1ca188e045a2045e68bfbcf7620a2ae9ca8"
+              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570950,7 +570952,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -571722,7 +571724,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0919e03d80c78e5d56341d61163bb1ca188e045a2045e68bfbcf7620a2ae9ca8"
+              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -572844,7 +572846,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -573616,7 +573618,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0919e03d80c78e5d56341d61163bb1ca188e045a2045e68bfbcf7620a2ae9ca8"
+              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -574738,7 +574740,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -575510,7 +575512,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0919e03d80c78e5d56341d61163bb1ca188e045a2045e68bfbcf7620a2ae9ca8"
+              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -576632,7 +576634,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -577404,7 +577406,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0919e03d80c78e5d56341d61163bb1ca188e045a2045e68bfbcf7620a2ae9ca8"
+              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -578526,7 +578528,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -579298,7 +579300,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0919e03d80c78e5d56341d61163bb1ca188e045a2045e68bfbcf7620a2ae9ca8"
+              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -580420,7 +580422,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -581192,7 +581194,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0919e03d80c78e5d56341d61163bb1ca188e045a2045e68bfbcf7620a2ae9ca8"
+              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -582314,7 +582316,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -583086,7 +583088,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0919e03d80c78e5d56341d61163bb1ca188e045a2045e68bfbcf7620a2ae9ca8"
+              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -584208,7 +584210,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -584980,7 +584982,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0919e03d80c78e5d56341d61163bb1ca188e045a2045e68bfbcf7620a2ae9ca8"
+              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -586102,7 +586104,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -586874,7 +586876,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0919e03d80c78e5d56341d61163bb1ca188e045a2045e68bfbcf7620a2ae9ca8"
+              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -587996,7 +587998,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -588768,7 +588770,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0919e03d80c78e5d56341d61163bb1ca188e045a2045e68bfbcf7620a2ae9ca8"
+              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589759,7 +589761,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/WalletReceiptHistoryDetails.tsx",
@@ -590031,7 +590033,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0919e03d80c78e5d56341d61163bb1ca188e045a2045e68bfbcf7620a2ae9ca8"
+              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -590629,7 +590631,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -591401,7 +591403,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0919e03d80c78e5d56341d61163bb1ca188e045a2045e68bfbcf7620a2ae9ca8"
+              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592523,7 +592525,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -593295,7 +593297,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0919e03d80c78e5d56341d61163bb1ca188e045a2045e68bfbcf7620a2ae9ca8"
+              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594098,7 +594100,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Electricity address and full correction acknowledgements now offer bounded manual recovery with existing source and replay checks. The previous verified initial-service submissions remain covered. Bespoke list, detail, widget and admin states still need route-level reconciliation."
+        "Stalled username, contact and Telegram writes now enter their existing bounded status-check flow. Shared timezone, notification and marketing writes still lack a response deadline. Reconcile other bespoke list, detail, widget and admin states."
       ],
       "owner": null,
       "depends_on": [],
@@ -594152,7 +594154,8 @@
           "release-0.5-electricity-submission-recovery",
           "release-0.5-saving-solar-submission-recovery",
           "release-0.5-correction-template-required",
-          "release-0.5-correction-command-deadlines"
+          "release-0.5-correction-command-deadlines",
+          "release-0.5-account-command-recovery"
         ],
         "current_acceptance": null
       }
@@ -594547,11 +594550,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "39423d516664b337748743e6e67a0039f3830de092f443216acb549469a02500"
+              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -596350,11 +596353,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "39423d516664b337748743e6e67a0039f3830de092f443216acb549469a02500"
+              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -598153,11 +598156,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "39423d516664b337748743e6e67a0039f3830de092f443216acb549469a02500"
+              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -599956,11 +599959,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "39423d516664b337748743e6e67a0039f3830de092f443216acb549469a02500"
+              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -601759,11 +601762,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "39423d516664b337748743e6e67a0039f3830de092f443216acb549469a02500"
+              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -603562,11 +603565,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "39423d516664b337748743e6e67a0039f3830de092f443216acb549469a02500"
+              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -605365,11 +605368,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "6cddcf86a1a5d7a770ced512251b5ae0ded633b1c98b7fd2606a99b885558672"
+              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "39423d516664b337748743e6e67a0039f3830de092f443216acb549469a02500"
+              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -723758,7 +723761,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Current public auth journeys verify required semantics alongside unchanged consent, password, OTP and ownership rules. Remaining conditional form, command, bespoke state and live policy criteria need closure."
+        "Current account and Telegram settings journeys verify required semantics, linked errors and bounded status recovery. Remaining conditional form, command, bespoke state and live policy criteria need closure."
       ],
       "owner": null,
       "depends_on": [],
@@ -723873,7 +723876,8 @@
           "release-0.5-correction-command-deadlines",
           "release-0.5-comment-security-required",
           "release-0.5-service-response-required",
-          "release-0.5-public-auth-required"
+          "release-0.5-public-auth-required",
+          "release-0.5-account-command-recovery"
         ]
       }
     },
@@ -724433,7 +724437,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "39423d516664b337748743e6e67a0039f3830de092f443216acb549469a02500"
+              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
             },
             {
               "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
@@ -724521,7 +724525,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAccountSettingsEditor.ts",
-              "sha256": "35acc7920a87d35e926f9d238a18757e5c801fd2196d3bf98d6b424f7f3c0d21"
+              "sha256": "4a3928950a238a70523ffafaae0e23d97683919526756ccd352fafbe52ad4f55"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -725097,7 +725101,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/username.tsx",
-              "sha256": "249530a5772d5bbabe8f295730410278b710531b065d81a0b73c9d936ddaf192"
+              "sha256": "9ec6bd4c18c86d6101ce57bf33d9cb971515e5882da17ccfc1ea167ee64c09cd"
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
@@ -725510,6 +725514,10 @@
             {
               "path": "apps/web/src/hooks/useWizardDraftProtection.ts",
               "sha256": "8693d23d55e7c6febf2c9adb4ee82f47728e4c92934837380be18d395bea36bb"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/timezone.tsx",
+              "sha256": "32f73dc2a6fa3c73b9acf99605e0c1b64794bc179c236895632a7a5f56381f68"
             }
           ],
           "checks": [
@@ -725568,7 +725576,8 @@
             "Renewed affected form and correction route performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-correction-command-deadlines/proof.json",
             "Renewed comment and account security performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-comment-security-required/proof.json",
             "Renewed saving address and consultation response performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-response-required/proof.json",
-            "Renewed public auth and affected route performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-public-auth-required/proof.json"
+            "Renewed public auth and affected route performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-public-auth-required/proof.json",
+            "Renewed account settings and Telegram performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-account-command-recovery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -795125,6 +795134,114 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-public-auth-required/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-public-auth-required/reviewed.patch",
       "release_disposition": "Verified required public authentication controls. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-account-command-recovery": {
+      "batch": "release-0.5-account-command-recovery",
+      "base_commit": "cd3cca99bbefb3900688b81c93dece6deca7868c",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "07-ui-ux-design.md#T-07.11.01.03"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/account-settings-forms.spec.ts",
+          "sha256": "265b6abb11194016eaa8cbf31c38713a5fdaa6945a36fba2b8898d5ee1290ee2"
+        },
+        {
+          "path": "apps/web/e2e/catalogue-form-fixture.ts",
+          "sha256": "d628dc1b6830b741901854f7107cee5a094dd9b33b286d20097b66f47629a74a"
+        },
+        {
+          "path": "apps/web/e2e/confirmation-fixture.ts",
+          "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+        },
+        {
+          "path": "apps/web/e2e/telegram-link.spec.ts",
+          "sha256": "2baf2a6218b86c78a4fd0526a9c1f71bab237f03773e99eaa335acbfad6c56eb"
+        },
+        {
+          "path": "apps/web/e2e/timezone-settings.spec.ts",
+          "sha256": "f3e9a003c229307e0907473c6c93fa0f7d8b776e782c9af3be749fb1c0eb4193"
+        },
+        {
+          "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
+          "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+        },
+        {
+          "path": "apps/web/src/components/TelegramLinkPanel.tsx",
+          "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+        },
+        {
+          "path": "apps/web/src/hooks/useAccountSettingsEditor.ts",
+          "sha256": "4a3928950a238a70523ffafaae0e23d97683919526756ccd352fafbe52ad4f55"
+        },
+        {
+          "path": "apps/web/src/hooks/usePreferenceSettingsForm.ts",
+          "sha256": "79500fcb7b5597bd096135d7c053fef5a1d8976696a4f6cb434a0a7368263432"
+        },
+        {
+          "path": "apps/web/src/hooks/useServerMutation.ts",
+          "sha256": "95b8514ef0400d3bda7e1a4748851c5b52c107d31313ec2cc02980af3d18dec9"
+        },
+        {
+          "path": "apps/web/src/lib/account-settings-form-schemas.ts",
+          "sha256": "ee570bd22867a10a3feeac5daf102996d7e779975e607199ab8b37c82d3a6d97"
+        },
+        {
+          "path": "apps/web/src/lib/preference-settings-form-schemas.ts",
+          "sha256": "c5382f0ec6bff9028e1e8efdadbe72d6d8bcd6b807673de5225cf0f7921e6f65"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "apps/web/src/lib/telegram-link.ts",
+          "sha256": "bdf763e1ea26ef4131cc153ce17bc16b2cb24acfdc936e69158903def5acc843"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/security.tsx",
+          "sha256": "6d0e8aad058bff595c8b9606ab17358a52cb29469d0c212921cae1dbe6739ef9"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/timezone.tsx",
+          "sha256": "32f73dc2a6fa3c73b9acf99605e0c1b64794bc179c236895632a7a5f56381f68"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/username.tsx",
+          "sha256": "9ec6bd4c18c86d6101ce57bf33d9cb971515e5882da17ccfc1ea167ee64c09cd"
+        },
+        {
+          "path": "docs/design/accessibility.md",
+          "sha256": "b1064ad3dc644b8748cf42562f88cb5fc4a22b0776f6125519de7ce8998adc31"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
+        }
+      ],
+      "checks": [
+        "Six baseline Chromium cases reproduced four missing required controls and two unbounded account or Telegram commands.",
+        "Required username and contact fields and verification codes, the timezone selection and Telegram code and step-up password now expose their required semantics. Optional timezone search keeps its existing behavior.",
+        "Username, contact and Telegram writes including step-up acknowledgements use the existing 15-second transport deadline. A timeout preserves the existing uncertain-command lock until an owned status read. Tests confirm no resend before recovery, and a fresh read can discover a pending Telegram link without fabricating its URL.",
+        "The existing Telegram unlink test now completes the destructive confirmation phrase and verifies its disabled state first. CSRF, response ownership, private scope and saved receipt assertions remain in effect.",
+        "45 web unit cases, 28 production-browser cases across Chromium and Mobile Safari, 14 instrumented Chromium cases, all eight combined coverage groups, 98 gzip budgets, lint, formatting and web typecheck passed. Six cold-auth results were reused against byte-identical standalone auth assets. A disk write error stopped the initial instrumented build and the isolated rerun passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-account-command-recovery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-account-command-recovery/proof.json",
+      "source_scope_proof_sha256": "d2b67fa5b43015d9e2a818fd05eef898779ab66c3c5a7846a49ea1a4661646d4",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-account-command-recovery/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-account-command-recovery/reviewed.patch",
+      "release_disposition": "Verified account settings required fields and bounded username, contact and Telegram commands. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -795176,7 +795293,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Close the demonstrated username, contact and timezone field markers, then reconcile remaining route and command evidence. Resolve accessibility enforcement and live route reporting before accepting v0.5.0."
+    "goal": "Bound shared timezone, notification and marketing write acknowledgements, then reconcile remaining conditional fields and route evidence. Resolve accessibility enforcement and live route reporting before accepting v0.5.0."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",

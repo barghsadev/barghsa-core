@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useServerDetailQuery } from './useServerQuery.js';
 import { queryKeys } from '../lib/query-keys.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useZodForm } from '@barghsa/ui/form';
 import { t, type Locale } from '@barghsa/i18n/app';
@@ -55,6 +56,7 @@ export function useAccountSettingsEditor(locale: Locale) {
   const owner = useRef<Family | 'read' | null>(null),
     capture = useRef<Capture | null>(null);
   const sending = useRef(false);
+  const commandTransport = useRef<AbortController | null>(null);
   const [user, setUser] = useState<AccountSettingsUser | null>(null);
   const source = useRef(user);
   source.current = user;
@@ -79,6 +81,7 @@ export function useAccountSettingsEditor(locale: Locale) {
   }
   function withdraw() {
     withdrawn.current = true;
+    commandTransport.current?.abort();
     generation.current++;
     owner.current = null;
     capture.current = null;
@@ -271,12 +274,14 @@ export function useAccountSettingsEditor(locale: Locale) {
     alive.current = true;
     return () => {
       alive.current = false;
+      commandTransport.current?.abort();
       generation.current++;
       capture.current = null;
       owner.current = null;
     };
   }, []);
   useEffect(() => {
+    commandTransport.current?.abort();
     withdrawn.current = false;
     capture.current = null;
     owner.current = null;
@@ -321,17 +326,21 @@ export function useAccountSettingsEditor(locale: Locale) {
     capture.current = held;
     sending.current = true;
     setBusy(true);
+    const transport = new AbortController();
+    commandTransport.current = transport;
     try {
       const path =
         command.family === 'username' ? '/api/auth/change-username' : '/api/auth/add-contact';
-      const response = await fetch(path + (command.stage === 'send' ? '/send-otp' : ''), {
-        method: 'POST',
-        credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify(held.command.body),
+      const { response, value } = await readWithDeadline(transport.signal, async (signal) => {
+        const response = await fetch(path + (command.stage === 'send' ? '/send-otp' : ''), {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify(held.command.body),
+          signal,
+        });
+        return { response, value: (await response.json().catch(() => null)) as unknown };
       });
-      if (!permitted(command.actor) || capture.current !== held) return;
-      const value: unknown = await response.json().catch(() => null);
       if (!permitted(command.actor) || capture.current !== held) return;
       if (accountWriteDenied(response.status, value)) {
         withdraw();
@@ -394,6 +403,7 @@ export function useAccountSettingsEditor(locale: Locale) {
         setError(copy('uncertain'));
       }
     } finally {
+      if (commandTransport.current === transport) commandTransport.current = null;
       if (permitted(command.actor) && (capture.current === held || !capture.current)) {
         sending.current = false;
         setBusy(false);

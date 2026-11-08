@@ -206,6 +206,40 @@ async function guards(
   expect({ reads: state.reads, writes: state.writes.length, url: page.url() }).toEqual(before);
 }
 for (const locale of ['en', 'fa'] as const) {
+  test(`account username recovers a stalled challenge without automatic resend (${locale})`, async ({
+    page,
+  }) => {
+    await page.clock.install();
+    const { state } = await setup(page, locale);
+    state.sendMode = 'hold';
+    await page.goto('/settings/username');
+    await page
+      .getByRole('button', { name: t('settings.username.change', locale), exact: true })
+      .click();
+    const owner = form(page, 'username');
+    const destination = page.locator('#new-username');
+    await destination.fill('  NEXT@example.test  ');
+    await submit(owner).click();
+    await expect.poll(() => !!state.held).toBe(true);
+    const original = state.writes[0];
+    expect(original).toMatchObject({
+      path: '/api/auth/change-username/send-otp',
+      body: { newUsername: 'next@example.test' },
+    });
+    await page.clock.fastForward(15_001);
+    await expect(action(page, locale, 'confirm')).toBeEnabled({ timeout: 2_000 });
+    await expect(destination).toHaveValue('  NEXT@example.test  ');
+    await expect(submit(owner)).toBeDisabled();
+    await owner.dispatchEvent('submit');
+    expect(state.writes).toEqual([original]);
+    await action(page, locale, 'confirm').click();
+    await action(page, locale, 'restart').click();
+    state.sendMode = 'success';
+    await submit(owner).click();
+    await expect(page.locator('#previous-otp')).toBeVisible();
+    expect(state.writes).toEqual([original, original]);
+  });
+
   test(`account username forms preserve paired codes, companion drafts and uncertain confirmation (${locale})`, async ({
     page,
   }) => {
@@ -222,6 +256,7 @@ for (const locale of ['en', 'fa'] as const) {
     const owner = form(page, 'username'),
       destination = page.locator('#new-username'),
       companion = page.locator('#new-contact');
+    await expect(destination).toHaveAttribute('aria-required', 'true');
     await destination.fill('  invalid  ');
     await companion.fill(' 09120000003 ');
     await destination.press('Enter');
@@ -238,6 +273,8 @@ for (const locale of ['en', 'fa'] as const) {
     await destination.fill('  NEW@example.test  ');
     await submit(owner).click();
     await expect(page.locator('#previous-otp')).toBeVisible();
+    await expect(page.locator('#previous-otp')).toHaveAttribute('aria-required', 'true');
+    await expect(page.locator('#change-otp')).toHaveAttribute('aria-required', 'true');
     expect(state.writes[0]!.body).toEqual({ newUsername: 'new@example.test' });
     await page.locator('#change-otp').fill('123456');
     await expect(submit(owner)).toBeDisabled();
@@ -308,6 +345,7 @@ for (const locale of ['en', 'fa'] as const) {
     const owner = form(page, 'contact'),
       destination = page.locator('#new-contact'),
       companion = page.locator('#new-username');
+    await expect(destination).toHaveAttribute('aria-required', 'true');
     await companion.fill('  Companion@example.test  ');
     await destination.fill('  invalid  ');
     await destination.press('Enter');
@@ -344,6 +382,7 @@ for (const locale of ['en', 'fa'] as const) {
     state.sendMode = 'success';
     await submit(owner).click();
     await expect(page.locator('#contact-otp')).toBeVisible();
+    await expect(page.locator('#contact-otp')).toHaveAttribute('aria-required', 'true');
     await page.locator('#contact-otp').fill('abcdef');
     await submit(owner).click();
     await linkedError(page.locator('#contact-otp'), copy('otpInvalid', locale));

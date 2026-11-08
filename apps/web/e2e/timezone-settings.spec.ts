@@ -56,7 +56,9 @@ for (const locale of ['en', 'fa'] as const) {
     await main.getByRole('button', { name: fa ? 'تلاش دوباره' : 'Try again' }).click();
     const zones = main.getByRole('listbox');
     await expect(zones).toHaveValue('Asia/Tehran');
+    await expect(zones).toHaveAttribute('aria-required', 'true');
     const search = main.getByRole('searchbox');
+    await expect(search).not.toHaveAttribute('aria-required', 'true');
     await search.fill('Europe/Istanbul');
     await zones.focus();
     await zones.press('ArrowDown');

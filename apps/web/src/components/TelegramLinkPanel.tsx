@@ -13,6 +13,7 @@ import { withCsrf } from '../lib/csrf.js';
 import { sendToast } from '../lib/toast-api.js';
 import { accountErrorCode, accountWriteDenied } from '../lib/account-settings-form.js';
 import { securityStepUpReceipt } from '../lib/security-settings-form.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import {
   telegramCode,
   telegramLinkReceipt,
@@ -51,6 +52,7 @@ function OwnedTelegramLinkPanel({ scope }: { scope: Scope }) {
   const codeInput = useRef<HTMLInputElement>(null),
     passwordInput = useRef<HTMLInputElement>(null),
     sequence = useRef(0);
+  const commandTransport = useRef<AbortController | null>(null);
   const current = useRef(scope);
   current.current = scope;
   const source = scope.isCurrent() && data?.key === scope.key ? data.value : null;
@@ -97,6 +99,7 @@ function OwnedTelegramLinkPanel({ scope }: { scope: Scope }) {
     if (current.current.isCurrent()) void readRef.current(controller.signal);
     return () => {
       controller.abort();
+      commandTransport.current?.abort();
       sequence.current++;
     };
   }, [scope.key, scope.denied]);
@@ -124,6 +127,8 @@ function OwnedTelegramLinkPanel({ scope }: { scope: Scope }) {
     };
     sequence.current++;
     setError(null);
+    const transport = new AbortController();
+    commandTransport.current = transport;
     try {
       if (
         action === 'revoke' &&
@@ -141,15 +146,18 @@ function OwnedTelegramLinkPanel({ scope }: { scope: Scope }) {
           passwordInput.current?.focus();
           return;
         }
-        const proof = await fetch('/api/auth/step-up', {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({ password }),
+        const { proof, body } = await readWithDeadline(transport.signal, async (signal) => {
+          const proof = await fetch('/api/auth/step-up', {
+            method: 'POST',
+            credentials: 'include',
+            headers: withCsrf({ 'Content-Type': 'application/json' }),
+            body: JSON.stringify({ password }),
+            signal,
+          });
+          return { proof, body: (await proof.json().catch(() => null)) as unknown };
         });
-        const body: unknown = await proof.json().catch(() => null);
-        setPassword('');
         if (!scope.owns(family)) return;
+        setPassword('');
         if (accountWriteDenied(proof.status, body)) {
           scope.deny();
           return;
@@ -158,7 +166,7 @@ function OwnedTelegramLinkPanel({ scope }: { scope: Scope }) {
           setError(copy('error'));
           return;
         }
-        const fresh = await read();
+        const fresh = await read(transport.signal);
         if (!scope.owns(family) || !fresh || fresh.profileId !== captured.profile) return;
         setNeedsPassword(null);
         if (action === 'confirm') {
@@ -169,22 +177,25 @@ function OwnedTelegramLinkPanel({ scope }: { scope: Scope }) {
         }
       }
       if (action === 'confirm' && !captured.intent) return;
-      const response = await fetch(
-        '/api/telegram/link' + (action === 'confirm' ? '/confirm' : ''),
-        {
-          method: action === 'revoke' ? 'DELETE' : 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          ...(action === 'revoke'
-            ? {}
-            : {
-                body: JSON.stringify(
-                  action === 'confirm' ? { id: captured.intent!.id, code: captured.code } : {}
-                ),
-              }),
-        }
-      );
-      const body: unknown = await response.json().catch(() => null);
+      const { response, body } = await readWithDeadline(transport.signal, async (signal) => {
+        const response = await fetch(
+          '/api/telegram/link' + (action === 'confirm' ? '/confirm' : ''),
+          {
+            method: action === 'revoke' ? 'DELETE' : 'POST',
+            credentials: 'include',
+            headers: withCsrf({ 'Content-Type': 'application/json' }),
+            signal,
+            ...(action === 'revoke'
+              ? {}
+              : {
+                  body: JSON.stringify(
+                    action === 'confirm' ? { id: captured.intent!.id, code: captured.code } : {}
+                  ),
+                }),
+          }
+        );
+        return { response, body: (await response.json().catch(() => null)) as unknown };
+      });
       if (!scope.owns(family)) return;
       if (response.status === 403 && accountErrorCode(body) === 'AUTHZ:STEP_UP_REQUIRED') {
         setNeedsPassword(action);
@@ -209,7 +220,7 @@ function OwnedTelegramLinkPanel({ scope }: { scope: Scope }) {
       if (action === 'create') {
         const receipt = telegramLinkReceipt(body);
         if (!receipt) throw new Error('Invalid Telegram receipt');
-        const fresh = await read();
+        const fresh = await read(transport.signal);
         if (
           !scope.owns(family) ||
           fresh?.profileId !== captured.profile ||
@@ -219,7 +230,7 @@ function OwnedTelegramLinkPanel({ scope }: { scope: Scope }) {
         setUrl({ id: receipt.id, value: receipt.url });
         setCode('');
       } else {
-        const fresh = await read();
+        const fresh = await read(transport.signal);
         if (!scope.owns(family) || !fresh) throw new Error('Telegram status unavailable');
         if (
           action === 'revoke'
@@ -244,6 +255,7 @@ function OwnedTelegramLinkPanel({ scope }: { scope: Scope }) {
         sendToast('error', message);
       }
     } finally {
+      if (commandTransport.current === transport) commandTransport.current = null;
       if (scope.isCurrent()) scope.release(family);
     }
   }
@@ -319,6 +331,7 @@ function OwnedTelegramLinkPanel({ scope }: { scope: Scope }) {
                 autoComplete="one-time-code"
                 maxLength={6}
                 dir="ltr"
+                aria-required="true"
                 aria-describedby={id + '-pending' + (error ? ' ' + id + '-error' : '')}
                 aria-invalid={error === copy('invalidCode')}
                 disabled={scope.locked || uncertain}
@@ -348,6 +361,7 @@ function OwnedTelegramLinkPanel({ scope }: { scope: Scope }) {
                 autoComplete="current-password"
                 value={password}
                 disabled={scope.locked || uncertain}
+                aria-required="true"
                 aria-describedby={error ? id + '-error' : undefined}
                 onChange={(event) => {
                   if (scope.isCurrent() && !scope.isLocked()) setPassword(event.target.value);
