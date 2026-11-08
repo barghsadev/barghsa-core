@@ -81,6 +81,15 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(queue.locator('a[href="/admin/tickets?status=active"]')).toBeVisible();
       await expect(failures.locator('a[href="/admin/failed-jobs"]')).toBeVisible();
       await expect(verification.getByRole('status')).toBeVisible();
+      for (const widget of [work, verification]) {
+        await expect
+          .poll(() =>
+            widget.evaluate((element) =>
+              element.getAnimations().every((animation) => animation.playState === 'finished')
+            )
+          )
+          .toBe(true);
+      }
       const geometry = (element: Element) => {
         const box = element.getBoundingClientRect();
         const grid = element.parentElement!.getBoundingClientRect();

@@ -150,6 +150,13 @@ function isStepUpRequired(res: Response, data: unknown): boolean {
   return res.status === 403 && readErrorCode(data) === ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code;
 }
 
+const receiptCommandSpinner = (
+  <span
+    aria-hidden="true"
+    className="me-2 inline-block size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+  />
+);
+
 async function parseError(res: Response, fallback: string): Promise<string> {
   try {
     return errorMessage(await res.json(), fallback);
@@ -1008,6 +1015,9 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
     }
   }
 
+  const confirmationWorking = acting || confirmationBusy || stepUpOpen;
+  const rejectionWorking = acting || rejectionBusy;
+
   return (
     <div
       className="max-w-5xl space-y-6"
@@ -1314,18 +1324,11 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                         (isTransactionUuid(invoiceId.trim()) &&
                           (allocationLoading || !!allocationError || !allocation))
                       }
-                      aria-busy={
-                        acting || confirmationBusy || stepUpOpen || allocationLoading || undefined
-                      }
+                      aria-busy={confirmationWorking || allocationLoading || undefined}
                       className="px-4 py-2 bg-green-700 text-white rounded hover:bg-green-800 disabled:opacity-50"
                     >
-                      {(acting || confirmationBusy || stepUpOpen) && (
-                        <span
-                          aria-hidden="true"
-                          className="me-2 inline-block size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
-                        />
-                      )}
-                      {acting || confirmationBusy || stepUpOpen
+                      {confirmationWorking && receiptCommandSpinner}
+                      {confirmationWorking
                         ? t('admin.walletReceipts.saving', locale)
                         : allocation?.isOverpayment
                           ? t('admin.walletReceipts.confirmOverpayment', locale)
@@ -1337,7 +1340,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                     <form
                       onSubmit={handleEmergencyConfirm}
                       noValidate
-                      aria-busy={acting || confirmationBusy || stepUpOpen || undefined}
+                      aria-busy={confirmationWorking || undefined}
                     >
                       <fieldset className="space-y-3 rounded border border-amber-500 p-4">
                         <legend className="px-1 font-medium">
@@ -1397,15 +1400,10 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                             (!!invoiceId.trim() &&
                               (allocationLoading || !!allocationError || !allocation))
                           }
-                          aria-busy={acting || confirmationBusy || stepUpOpen || undefined}
+                          aria-busy={confirmationWorking || undefined}
                           className="rounded bg-amber-900 px-4 py-2 text-white disabled:opacity-50"
                         >
-                          {(acting || confirmationBusy || stepUpOpen) && (
-                            <span
-                              aria-hidden="true"
-                              className="me-2 inline-block size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
-                            />
-                          )}
+                          {confirmationWorking && receiptCommandSpinner}
                           {t('admin.walletReceipts.emergencyConfirm', locale)}
                         </button>
                       </fieldset>
@@ -1468,16 +1466,11 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                         detailLoading ||
                         detailError
                       }
-                      aria-busy={acting || rejectionBusy}
+                      aria-busy={rejectionWorking}
                       className="px-4 py-2 bg-red-700 text-white rounded hover:bg-red-800 disabled:opacity-50"
                     >
-                      {(acting || rejectionBusy) && (
-                        <span
-                          aria-hidden="true"
-                          className="me-2 inline-block size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
-                        />
-                      )}
-                      {acting || rejectionBusy
+                      {rejectionWorking && receiptCommandSpinner}
+                      {rejectionWorking
                         ? t('admin.walletReceipts.saving', locale)
                         : t('admin.walletReceipts.reject', locale)}
                     </button>

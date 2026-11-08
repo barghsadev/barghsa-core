@@ -42,6 +42,7 @@ let host: HTMLDivElement,
   current: unknown,
   history: unknown,
   fail: boolean,
+  failHistory: boolean,
   denied: boolean;
 beforeEach(() => {
   document.documentElement.lang = 'en';
@@ -51,6 +52,7 @@ beforeEach(() => {
   current = publishedBrand;
   history = [publishedBrand, previousBrand];
   fail = false;
+  failHistory = false;
   denied = false;
   capture.action = null;
   vi.mocked(uploadBrandingLogo)
@@ -62,12 +64,12 @@ beforeEach(() => {
   vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
   vi.stubGlobal(
     'fetch',
-    vi.fn(
-      async (url: RequestInfo | URL) =>
-        new Response(JSON.stringify(String(url).endsWith('/configs') ? history : current), {
-          status: denied ? 403 : fail ? 503 : 200,
-        })
-    )
+    vi.fn(async (url: RequestInfo | URL) => {
+      const isHistory = String(url).endsWith('/configs');
+      return new Response(JSON.stringify(isHistory ? history : current), {
+        status: denied ? 403 : fail || (isHistory && failHistory) ? 503 : 200,
+      });
+    })
   );
 });
 afterEach(async () => {
@@ -187,6 +189,16 @@ it('rejects incoherent current/history snapshots and keeps local work', async ()
   expect(save().disabled).toBe(true);
   expect(title()!.value).toBe('Local draft');
   expect(host.textContent).toContain('Could not verify settings history');
+  const fetcher = vi.mocked(fetch);
+  fetcher.mockClear();
+  history = [publishedBrand, previousBrand];
+  await click('Retry history');
+  expect(fetcher.mock.calls.map(([url]) => url).sort()).toEqual([
+    '/api/admin/branding/config',
+    '/api/admin/branding/configs',
+  ]);
+  expect(title()!.value).toBe('Local draft');
+  expect(save().disabled).toBe(false);
 });
 it('clears private previews and drafts on denied reads', async () => {
   await render();
@@ -212,7 +224,16 @@ it('cancel editing returns to the accepted saved version without a mutation', as
 it('previews published defaults without inventing saved history', async () => {
   current = { ...publishedBrand, id: 'default', version: 0, status: 'draft' };
   history = [];
+  failHistory = true;
   await render();
+  expect(host.textContent).toContain('Could not verify settings history');
+  expect(host.textContent).not.toContain('No saved versions yet.');
+  expect(host.querySelector('[data-testid=config-preview]')).toBeNull();
+  const fetcher = vi.mocked(fetch);
+  fetcher.mockClear();
+  failHistory = false;
+  await click('Retry history');
+  expect(fetcher.mock.calls.map(([url]) => url)).toEqual(['/api/admin/branding/configs']);
   expect(host.querySelector('[data-testid=config-preview]')?.textContent).toContain(
     'Published brand'
   );

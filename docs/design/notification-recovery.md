@@ -34,6 +34,8 @@ Consultation intake and replies allow up to 15 seconds for a response, including
 
 Saving, solar and consultation detail pages keep the page heading and return link when a record is unavailable. The API uses the same missing-record response for nonexistent records and records outside the current profile's authority. A temporary read failure offers a fresh read of the selected record. A valid saving order can appear before its invoice, contract or history exists.
 
+Branding settings retry the current configuration and version history separately when either read fails. When two successful reads disagree, retry both together. Show an empty history only after a successful history read. An unconfirmed save or activation still requires fresh reads of both resources before staff can review another write.
+
 Consultation offer preview and decision responses have the same deadline. An unconfirmed decision closes its review and refreshes the saved request. While the same offer remains pending, only the same decision can be reviewed again. Each new review requires fresh confirmation. Open invoice payment only after a receipt confirms the reviewed request, offer and invoice.
 
 In electricity and saving order discussions, an explicit retry after a transport failure announces the connection retry. Keep the failed page cursor, existing comments and unsent draft. HTTP errors and invalid response bodies retain inline recovery.

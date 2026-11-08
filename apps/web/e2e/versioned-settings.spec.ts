@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { brandingText } from '@barghsa/i18n/branding';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { t } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
 import { tVat } from '@barghsa/i18n/vat';
@@ -25,16 +26,23 @@ for (const locale of ['en', 'fa'] as const)
         denied = false;
       const writes: unknown[] = [],
         activations: unknown[] = [];
+      let historyReads = 0;
+      let configReads = 0;
       await page.route('**/api/public/branding/config', (route) =>
         route.fulfill({
           json: { ...history.find((row) => row.status === 'active')?.config, darkMode },
         })
       );
-      await page.route('**/api/admin/branding/configs', (route) =>
-        route.fulfill({ status: denied ? 403 : fail ? 503 : 200, json: history })
-      );
+      await page.route('**/api/admin/branding/configs', (route) => {
+        expect(route.request().method()).toBe('GET');
+        historyReads++;
+        return route.fulfill({ status: denied ? 403 : fail ? 503 : 200, json: history });
+      });
       await page.route('**/api/admin/branding/config', (route) => {
-        if (route.request().method() === 'GET') return route.fulfill({ json: current });
+        if (route.request().method() === 'GET') {
+          configReads++;
+          return route.fulfill({ json: current });
+        }
         const body = route.request().postDataJSON();
         writes.push(body);
         if (writes.length === 1) return route.fulfill({ json: {} });
@@ -69,20 +77,32 @@ for (const locale of ['en', 'fa'] as const)
       await edit.press('Enter');
       await title.fill('Retained draft');
       fail = true;
-      await page.getByRole('button', { name: brand('refresh'), exact: true }).click();
+      const refresh = page.getByRole('button', { name: brand('refresh'), exact: true });
+      await refresh.click();
       await expect(page.getByRole('alert')).toContainText(word('historyError'));
       const save = page.getByRole('button', { name: brand('save'), exact: true });
       await expect(save).toBeDisabled();
       await expect(title).toHaveValue('Retained draft');
+      await expect(refresh).toBeEnabled();
+      const beforeRetry = { configReads, historyReads };
       fail = false;
       await page.getByRole('button', { name: word('retryHistory'), exact: true }).click();
       await expect(save).toBeEnabled();
+      expect(configReads).toBe(beforeRetry.configReads);
+      expect(historyReads).toBe(beforeRetry.historyReads + 1);
+      expect(writes).toEqual([]);
       await save.click();
       const dialog = page.getByRole('dialog'),
         confirm = dialog.getByRole('button', {
           name: appText('team.confirm', locale),
           exact: true,
         });
+      const refreshReview = async () => {
+        await expect(dialog.getByRole('alert')).toHaveText(confirmationText('unconfirmed', locale));
+        await expect(confirm).toBeDisabled();
+        await dialog.getByRole('button', { name: brand('refresh'), exact: true }).click();
+        await expect(dialog).toHaveCount(0);
+      };
       await confirm.click();
       await expect(dialog.getByRole('alert')).toBeVisible();
       await expect(title).toHaveValue('Retained draft');
@@ -97,6 +117,11 @@ for (const locale of ['en', 'fa'] as const)
       expect(
         (await new AxeBuilder({ page }).include('[role=dialog]').analyze()).violations
       ).toEqual([]);
+      expect(writes).toHaveLength(1);
+      await refreshReview();
+      expect(writes).toHaveLength(1);
+      await expect(title).toHaveValue('Retained draft');
+      await save.click();
       await confirm.click();
       await expect(dialog).toHaveCount(0);
       expect(writes[0]).toEqual(writes[1]);
@@ -118,9 +143,13 @@ for (const locale of ['en', 'fa'] as const)
       await expect(preview.getByRole('group', { name: word('draft'), exact: true })).toContainText(
         locale === 'fa' ? previousBrand.config.appTitleFa : previousBrand.config.appTitle
       );
-      await page.getByRole('button', { name: brand('activate'), exact: true }).click();
+      const activate = page.getByRole('button', { name: brand('activate'), exact: true });
+      await activate.click();
       await confirm.click();
-      await expect(dialog.getByRole('alert')).toBeVisible();
+      await expect.poll(() => activations.length).toBe(1);
+      await refreshReview();
+      expect(activations).toHaveLength(1);
+      await activate.click();
       await confirm.click();
       await expect(dialog).toHaveCount(0);
       expect(activations).toEqual(Array(2).fill({ draftId: current.id, expectedVersion: 4 }));

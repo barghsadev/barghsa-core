@@ -199,13 +199,10 @@ export default function AdminBrandingConfig() {
     loadError = currentRead.error;
   const coherent =
     !!activeConfig && !!historyRead.data && coherentBrandHistory(activeConfig, historyRead.data);
-  const coherentRead =
-    !scope.denied &&
-    !currentRead.loading &&
-    !currentRead.error &&
-    !historyRead.loading &&
-    !historyRead.error &&
-    coherent;
+  const readsReady =
+    !scope.denied && !loading && !loadError && !historyRead.loading && !historyRead.error;
+  const historyMismatch = readsReady && !coherent;
+  const coherentRead = readsReady && coherent;
   const ready = coherentRead && requiredRead === null;
   const commandPending = action !== null && action === pendingAction;
   const draftInfo =
@@ -389,16 +386,6 @@ export default function AdminBrandingConfig() {
   };
 
   const heading = <h1 className="text-2xl font-bold text-foreground">{text('title')}</h1>;
-  if (loading && !activeConfig) {
-    return (
-      <>
-        {heading}
-        <div className="mx-auto flex h-64 w-full max-w-md flex-col justify-center">
-          <LoadingSkeleton label={text('loading')} variant="form" />
-        </div>
-      </>
-    );
-  }
 
   const savedConfig = activeConfig ? parseBrandConfig(activeConfig.config) : null;
   const changedConfig =
@@ -559,9 +546,25 @@ export default function AdminBrandingConfig() {
         </div>
       </div>
 
-      {loadError && <p role="alert">{text('loadFailed')}</p>}
-      {activeConfig && (loading || historyRead.loading) && (
-        <LoadingStatus>{text('loading')}</LoadingStatus>
+      {loadError && (
+        <div role="alert">
+          {text('loadFailed')}{' '}
+          <Button
+            type="button"
+            variant="outline"
+            disabled={commandPending || uploading}
+            onClick={currentRead.retry}
+          >
+            {t('admin.jobs.reload', locale)}
+          </Button>
+        </div>
+      )}
+      {loading && !activeConfig ? (
+        <div className="mx-auto flex h-64 w-full max-w-md flex-col justify-center">
+          <LoadingSkeleton label={text('loading')} variant="form" />
+        </div>
+      ) : (
+        (loading || historyRead.loading) && <LoadingStatus>{text('loading')}</LoadingStatus>
       )}
       {timezone.status === 'error' && (
         <div role="alert">
@@ -586,15 +589,20 @@ export default function AdminBrandingConfig() {
       )}
 
       {scope.denied && <p role="alert">{word('denied')}</p>}
-      {!scope.denied && (!coherent || historyRead.error) && !historyRead.loading && (
+      {!scope.denied && (historyRead.error || historyMismatch) && (
         <div role="alert">
           {word('historyError')}{' '}
-          <Button type="button" variant="outline" onClick={refresh}>
+          <Button
+            type="button"
+            variant="outline"
+            disabled={commandPending || uploading}
+            onClick={historyMismatch ? refresh : historyRead.retry}
+          >
             {word('retryHistory')}
           </Button>
         </div>
       )}
-      {!scope.denied && activeConfig && (
+      {!scope.denied && activeConfig && historyRead.data && (
         <VersionedSettingsCard
           title={text('title')}
           active={published}
@@ -1080,7 +1088,7 @@ export default function AdminBrandingConfig() {
           </section>
         </fieldset>
       )}
-      {!scope.denied && activeConfig && (
+      {!scope.denied && activeConfig && historyRead.data && (
         <ConfigPreviewCard
           title={text('preview')}
           current={

@@ -22,7 +22,13 @@ for (const locale of ['en', 'fa'] as const)
     const fa = locale === 'fa';
     await crmShell(page, locale);
     let history: unknown[] = [valid];
-    await page.route('**/api/admin/branding/configs', (route) => route.fulfill({ json: history }));
+    let historyReads = 0;
+    let configReads = 0;
+    await page.route('**/api/admin/branding/configs', (route) => {
+      expect(route.request().method()).toBe('GET');
+      historyReads++;
+      return route.fulfill({ json: history });
+    });
     const draftId = '11111111-1111-4111-8111-111111111112';
     let response: unknown = { ...valid, config: { ...config, numberStyle: ['western'] } };
     let saveResponse = 'invalid';
@@ -33,6 +39,7 @@ for (const locale of ['en', 'fa'] as const)
     });
     await page.route('**/api/admin/branding/config', async (route) => {
       if (route.request().method() === 'GET') {
+        configReads++;
         await initialRead;
         return route.fulfill({ json: response });
       }
@@ -94,6 +101,9 @@ for (const locale of ['en', 'fa'] as const)
       exact: true,
     });
     const refresh = page.getByRole('button', { name: fa ? 'تازه‌سازی' : 'Refresh', exact: true });
+    const configError = main
+      .getByRole('alert')
+      .filter({ hasText: brandingText('loadFailed', locale) });
     for (const malformed of [
       response,
       { ...valid, version: -1 },
@@ -103,11 +113,12 @@ for (const locale of ['en', 'fa'] as const)
     ]) {
       response = malformed;
       await refresh.click();
+      await expect(configError).toBeVisible();
       await expect(
-        page
+        main
           .getByRole('alert')
-          .filter({ hasText: fa ? 'دریافت تنظیمات برند ناموفق' : 'Could not load branding' })
-      ).toBeVisible();
+          .filter({ hasText: settingsText('admin.settings.historyError', locale) })
+      ).toHaveCount(0);
       await expect(
         page.getByRole('button', {
           name: brandingText('save', locale),
@@ -118,13 +129,19 @@ for (const locale of ['en', 'fa'] as const)
     }
     expect(writes).toEqual([]);
     response = valid;
-    await refresh.click();
+    await expect(refresh).toBeEnabled();
+    const beforeRetry = { configReads, historyReads };
+    await configError.getByRole('button').press('Enter');
+    await expect(configError).toHaveCount(0);
     await page
       .getByRole('button', {
         name: settingsText('admin.settings.edit', locale),
         exact: true,
       })
       .click();
+    expect(configReads).toBe(beforeRetry.configReads + 1);
+    expect(historyReads).toBe(beforeRetry.historyReads);
+    expect(writes).toEqual([]);
     const title = page.getByRole('textbox', {
       name: brandingText('appTitle', locale),
       exact: true,
