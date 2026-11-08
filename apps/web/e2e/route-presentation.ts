@@ -1,4 +1,5 @@
 import { expect, type Locator, type Page, type TestInfo } from './coverage-fixture';
+import { scanAdvisoryMain } from './critical-accessibility';
 
 const widths = [320, 375, 390, 414, 768, 1024, 1280, 1920];
 
@@ -199,4 +200,6 @@ export async function checkRoutePresentation(page: Page, info: TestInfo, locale:
       )
       .toEqual([]);
   }
+  if (process.env['BARGHSA_A11Y_ADVISORY'] === '1' && !info.tags.includes('@a11y-critical'))
+    await scanAdvisoryMain(page, info);
 }

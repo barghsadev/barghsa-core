@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T00:04:29+00:00",
-  "source_commit": "c3d84ac1a74386eba8b1211c0f0d1cdb1bf74fba",
+  "updated": "2026-11-08T00:12:25+00:00",
+  "source_commit": "501585d440fd84058a37ec7f75dd388146a6d08c",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -436984,7 +436984,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a26981f6828cac9dfa989972d46438992d9a5abe2e89d302f23346d54c69fc4f"
+              "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -437366,7 +437366,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a26981f6828cac9dfa989972d46438992d9a5abe2e89d302f23346d54c69fc4f"
+              "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -437902,7 +437902,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a26981f6828cac9dfa989972d46438992d9a5abe2e89d302f23346d54c69fc4f"
+              "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -438265,7 +438265,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a26981f6828cac9dfa989972d46438992d9a5abe2e89d302f23346d54c69fc4f"
+              "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -438628,7 +438628,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a26981f6828cac9dfa989972d46438992d9a5abe2e89d302f23346d54c69fc4f"
+              "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -511945,7 +511945,7 @@
             },
             {
               "path": "apps/web/e2e/route-presentation.ts",
-              "sha256": "9a3b05c8c70d6fd9745d0c8810a297568240b71dc38ef3b05ee5b0daf51e91a5"
+              "sha256": "8dabd22073f252b16a56ee02f016f674116680e7d1e529ac3edf817d4f9f119d"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -515026,7 +515026,7 @@
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
-              "sha256": "dbcc7559209283ce3b88ce801ec52704ad1556dc602bfd7b586bbaebc4051acf"
+              "sha256": "26c1eec14dcc0819954be255d1529b895382787d12a0510ebf7114aee5498392"
             },
             {
               "path": "apps/web/e2e/customer-service-history-views.spec.ts",
@@ -515190,7 +515190,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "87fdcd19b1ab2ef96c12707d188b3cb876f58567f26d58c55ba6a5de0ed1297f"
+              "sha256": "839f5fbffbe2550eb85000c18b7b66595368981e3183ef58f68d9ec5536d01c0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -515454,7 +515454,7 @@
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
-              "sha256": "dbcc7559209283ce3b88ce801ec52704ad1556dc602bfd7b586bbaebc4051acf"
+              "sha256": "26c1eec14dcc0819954be255d1529b895382787d12a0510ebf7114aee5498392"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -515570,7 +515570,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "87fdcd19b1ab2ef96c12707d188b3cb876f58567f26d58c55ba6a5de0ed1297f"
+              "sha256": "839f5fbffbe2550eb85000c18b7b66595368981e3183ef58f68d9ec5536d01c0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -515893,7 +515893,7 @@
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
-              "sha256": "dbcc7559209283ce3b88ce801ec52704ad1556dc602bfd7b586bbaebc4051acf"
+              "sha256": "26c1eec14dcc0819954be255d1529b895382787d12a0510ebf7114aee5498392"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -516009,7 +516009,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "87fdcd19b1ab2ef96c12707d188b3cb876f58567f26d58c55ba6a5de0ed1297f"
+              "sha256": "839f5fbffbe2550eb85000c18b7b66595368981e3183ef58f68d9ec5536d01c0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516332,7 +516332,7 @@
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
-              "sha256": "dbcc7559209283ce3b88ce801ec52704ad1556dc602bfd7b586bbaebc4051acf"
+              "sha256": "26c1eec14dcc0819954be255d1529b895382787d12a0510ebf7114aee5498392"
             },
             {
               "path": "apps/web/e2e/customer-service-history-views.spec.ts",
@@ -516496,7 +516496,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "87fdcd19b1ab2ef96c12707d188b3cb876f58567f26d58c55ba6a5de0ed1297f"
+              "sha256": "839f5fbffbe2550eb85000c18b7b66595368981e3183ef58f68d9ec5536d01c0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516997,7 +516997,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "87fdcd19b1ab2ef96c12707d188b3cb876f58567f26d58c55ba6a5de0ed1297f"
+              "sha256": "839f5fbffbe2550eb85000c18b7b66595368981e3183ef58f68d9ec5536d01c0"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -517295,7 +517295,7 @@
             },
             {
               "path": "apps/web/e2e/route-presentation.ts",
-              "sha256": "9a3b05c8c70d6fd9745d0c8810a297568240b71dc38ef3b05ee5b0daf51e91a5"
+              "sha256": "8dabd22073f252b16a56ee02f016f674116680e7d1e529ac3edf817d4f9f119d"
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
@@ -517688,7 +517688,7 @@
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
-              "sha256": "dbcc7559209283ce3b88ce801ec52704ad1556dc602bfd7b586bbaebc4051acf"
+              "sha256": "26c1eec14dcc0819954be255d1529b895382787d12a0510ebf7114aee5498392"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -517804,7 +517804,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "87fdcd19b1ab2ef96c12707d188b3cb876f58567f26d58c55ba6a5de0ed1297f"
+              "sha256": "839f5fbffbe2550eb85000c18b7b66595368981e3183ef58f68d9ec5536d01c0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -518320,7 +518320,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "87fdcd19b1ab2ef96c12707d188b3cb876f58567f26d58c55ba6a5de0ed1297f"
+              "sha256": "839f5fbffbe2550eb85000c18b7b66595368981e3183ef58f68d9ec5536d01c0"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -518634,7 +518634,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a26981f6828cac9dfa989972d46438992d9a5abe2e89d302f23346d54c69fc4f"
+              "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
             },
             {
               "path": ".size-limit.json",
@@ -518706,7 +518706,7 @@
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
-              "sha256": "dbcc7559209283ce3b88ce801ec52704ad1556dc602bfd7b586bbaebc4051acf"
+              "sha256": "26c1eec14dcc0819954be255d1529b895382787d12a0510ebf7114aee5498392"
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
@@ -519038,7 +519038,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "87fdcd19b1ab2ef96c12707d188b3cb876f58567f26d58c55ba6a5de0ed1297f"
+              "sha256": "839f5fbffbe2550eb85000c18b7b66595368981e3183ef58f68d9ec5536d01c0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -519462,7 +519462,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a26981f6828cac9dfa989972d46438992d9a5abe2e89d302f23346d54c69fc4f"
+              "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
             },
             {
               "path": ".size-limit.json",
@@ -519534,7 +519534,7 @@
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
-              "sha256": "dbcc7559209283ce3b88ce801ec52704ad1556dc602bfd7b586bbaebc4051acf"
+              "sha256": "26c1eec14dcc0819954be255d1529b895382787d12a0510ebf7114aee5498392"
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
@@ -519866,7 +519866,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "87fdcd19b1ab2ef96c12707d188b3cb876f58567f26d58c55ba6a5de0ed1297f"
+              "sha256": "839f5fbffbe2550eb85000c18b7b66595368981e3183ef58f68d9ec5536d01c0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -520476,7 +520476,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "87fdcd19b1ab2ef96c12707d188b3cb876f58567f26d58c55ba6a5de0ed1297f"
+              "sha256": "839f5fbffbe2550eb85000c18b7b66595368981e3183ef58f68d9ec5536d01c0"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -520790,7 +520790,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a26981f6828cac9dfa989972d46438992d9a5abe2e89d302f23346d54c69fc4f"
+              "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
             },
             {
               "path": ".size-limit.json",
@@ -520862,7 +520862,7 @@
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
-              "sha256": "dbcc7559209283ce3b88ce801ec52704ad1556dc602bfd7b586bbaebc4051acf"
+              "sha256": "26c1eec14dcc0819954be255d1529b895382787d12a0510ebf7114aee5498392"
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
@@ -521194,7 +521194,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "87fdcd19b1ab2ef96c12707d188b3cb876f58567f26d58c55ba6a5de0ed1297f"
+              "sha256": "839f5fbffbe2550eb85000c18b7b66595368981e3183ef58f68d9ec5536d01c0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -521555,7 +521555,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The fast CI critical accessibility step passed on acd15602 after the login test waited for the loaded form. The workflow credential is verified. Main has no required merge check. The separate owner merge-policy decision and treatment of noncritical assertions remain open."
+        "Fast and full CI now distinguish strict critical Axe checks and non-critical accessibility advisories. The fast sample and manual triage are recorded. GitHub main has no required accessibility check. The owner merge-policy decision remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -521568,7 +521568,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-main-exact-source-coverage",
           "release-0.5-required-input-semantics",
-          "release-0.5-onboarding-deadlines-coverage"
+          "release-0.5-onboarding-deadlines-coverage",
+          "release-0.5-accessibility-advisory"
         ],
         "current_acceptance": null
       }
@@ -715806,7 +715807,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a26981f6828cac9dfa989972d46438992d9a5abe2e89d302f23346d54c69fc4f"
+              "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
             },
             {
               "path": "apps/api/openapi.json",
@@ -719707,7 +719708,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a26981f6828cac9dfa989972d46438992d9a5abe2e89d302f23346d54c69fc4f"
+              "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
             },
             {
               "path": "apps/api/openapi.json",
@@ -723705,7 +723706,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a26981f6828cac9dfa989972d46438992d9a5abe2e89d302f23346d54c69fc4f"
+              "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
             },
             {
               "path": ".size-limit.json",
@@ -723745,7 +723746,7 @@
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
-              "sha256": "dbcc7559209283ce3b88ce801ec52704ad1556dc602bfd7b586bbaebc4051acf"
+              "sha256": "26c1eec14dcc0819954be255d1529b895382787d12a0510ebf7114aee5498392"
             },
             {
               "path": "apps/web/e2e/customer-service-history-views.spec.ts",
@@ -725208,7 +725209,8 @@
             "Status banner dismiss contrast passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-banner-dismiss-contrast/proof.json",
             "Checkout read recovery passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-checkout-read-recovery/proof.json",
             "Paid saving staff address review recovery passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-saving-address-read/proof.json",
-            "Solar and electricity customer review recovery passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-review-deadlines/proof.json"
+            "Solar and electricity customer review recovery passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-review-deadlines/proof.json",
+            "Critical and advisory browser cases pass and prior performance evidence is renewed by exact asset equality. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-accessibility-advisory/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -791630,6 +791632,48 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-review-deadlines/reviewed.patch",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-review-deadlines",
       "release_disposition": "Customer solar and electricity review recovery recorded, with wider route verification still open. Other v0.5.0 criteria remain open."
+    },
+    "release-0.5-accessibility-advisory": {
+      "batch": "release-0.5-accessibility-advisory",
+      "base_commit": "501585d440fd84058a37ec7f75dd388146a6d08c",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.02.04"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
+        },
+        {
+          "path": "apps/web/e2e/critical-accessibility.ts",
+          "sha256": "26c1eec14dcc0819954be255d1529b895382787d12a0510ebf7114aee5498392"
+        },
+        {
+          "path": "apps/web/e2e/route-presentation.ts",
+          "sha256": "8dabd22073f252b16a56ee02f016f674116680e7d1e529ac3edf817d4f9f119d"
+        },
+        {
+          "path": "docs/design/accessibility.md",
+          "sha256": "839f5fbffbe2550eb85000c18b7b66595368981e3183ef58f68d9ec5536d01c0"
+        }
+      ],
+      "checks": [
+        "The fast CI step reports non-critical Axe findings from populated customer media and staff notification triage fixtures. The full CI browser suite enables the same reporting in other populated route presentation checks and skips reporting for tagged critical cases. Existing Axe, layout and business assertions keep their previous outcomes.",
+        "20 critical and four advisory Chromium cases passed. Six non-critical route and direction scans reported no automated violations. The two failed-notification color-contrast advisories were triaged with two direct browser cases. Minimum measured contrast was 11.96:1 on the reported surfaces.",
+        "The same isolated unlabeled-input fixture exited zero with a structured warning in advisory mode and exited one in critical mode. The warning excludes the URL query. No intentional defect fixture is part of the production suite.",
+        "Actionlint, format, lint and web typecheck passed. ShellCheck reports the same pre-existing informational finding in the dependency-audit Node script. The production build is byte-identical to the prior measured build except release metadata, retaining the eight coverage groups, 98 bundle budgets and three cold authentication receipts.",
+        "Main has no required accessibility check. The owner decision on how to enforce it alongside authorized direct pushes remains open."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-accessibility-advisory/proof.json",
+      "source_scope_proof_sha256": "b42736980c361d180bba3b5fe2894099e14c331fdfca90615d7fa7f17c68c136",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-accessibility-advisory/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-accessibility-advisory/reviewed.patch",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-accessibility-advisory",
+      "release_disposition": "Advisory reporting and strict critical behavior are verified. Owner merge policy and wider v0.5.0 acceptance remain open."
     }
   },
   "historical_improvements": [

@@ -15,12 +15,18 @@ these cases against the production web build and fails on a violation. The
 full browser suite already includes them. Making the job a required merge
 check is controlled by the repository rules.
 
-Keep the existing accessibility assertions on other journeys. For a finding,
-record the route, browser, direction, selector, rule and whether the cause is
-in shared UI or in the page. Fix confirmed defects. Where automation cannot
-evaluate the result, record the manual check and its result, for example the
-contrast of text over a gradient. An exception needs a specific rule, scope,
-reason and owner approval.
+Fast CI also scans customer media pages and staff failed-notification triage.
+Full CI adds the same Axe scan to populated route presentation checks outside
+the critical cases.
+Axe violations and items that need manual review appear as workflow warnings
+with the route, browser, direction, rule and targets. The fast job also
+attaches a structured report. Existing journey assertions still fail on
+regressions.
+
+For each finding, record whether the cause is in shared UI or in the page.
+Fix confirmed defects. Where automation cannot evaluate the result, record
+the manual check and its result, for example the contrast of text over a
+gradient. An exception needs a specific rule, scope, reason and owner approval.
 
 Keep readable content opaque during page and list entrance animations. Even
 a brief fade of the whole row can put its text below the contrast floor.

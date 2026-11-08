@@ -131,6 +131,25 @@ jobs:
             --grep @a11y-critical
         env:
           BARGHSA_TEST_PREBUILT: '1'
+      - name: Report non-critical page accessibility advisories
+        if: env.FULL_CI != 'true'
+        run: |
+          node scripts/run-production-browser.mjs \
+            e2e/workspace-media-routes.spec.ts \
+            e2e/failed-notifications.spec.ts \
+            --reporter=list,json
+        env:
+          BARGHSA_TEST_PREBUILT: '1'
+          BARGHSA_A11Y_ADVISORY: '1'
+          PLAYWRIGHT_JSON_OUTPUT_FILE: ${{ runner.temp }}/accessibility-advisories.json
+      - name: Upload non-critical accessibility advisories
+        if: always() && env.FULL_CI != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: accessibility-advisories
+          path: ${{ runner.temp }}/accessibility-advisories.json
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Verify actual cold authentication transfers
         if: env.FULL_CI == 'true'
         run: node scripts/check-auth-transfer.mjs
@@ -160,6 +179,7 @@ jobs:
         run: node scripts/run-production-browser.mjs
         env:
           BARGHSA_BROWSER_COVERAGE: '1'
+          BARGHSA_A11Y_ADVISORY: '1'
       - name: Map browser coverage to workspace source
         if: always() && env.FULL_CI == 'true'
         run: node scripts/collect-browser-coverage.mjs

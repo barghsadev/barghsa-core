@@ -1,15 +1,47 @@
 import AxeBuilder from '@axe-core/playwright';
-import { expect, type Page } from './coverage-fixture';
+import { expect, type Page, type TestInfo } from './coverage-fixture';
+
+async function scanMain(page: Page) {
+  await page.evaluate(() => document.fonts.ready);
+  return new AxeBuilder({ page })
+    .include('main#main-content')
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
+    .analyze();
+}
 
 export async function scanCriticalMain(page: Page) {
   await expect(page.locator('main#main-content')).toBeVisible();
   await expect(page.getByRole('main')).toHaveCount(1);
-  await page.evaluate(() => document.fonts.ready);
-  const result = await new AxeBuilder({ page })
-    .include('main#main-content')
-    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
-    .analyze();
+  const result = await scanMain(page);
   expect(result.violations).toEqual([]);
+}
+
+export async function scanAdvisoryMain(page: Page, info: TestInfo) {
+  const result = await scanMain(page);
+  const route = new URL(page.url()).pathname;
+  const direction = await page.locator('html').getAttribute('dir');
+  const browser = info.project.name;
+  const summarize = (rules: typeof result.violations) =>
+    rules.map(({ id, help, nodes }) => ({ id, help, targets: nodes.map(({ target }) => target) }));
+  const violations = summarize(result.violations);
+  const incomplete = summarize(result.incomplete);
+  await info.attach('a11y-advisory', {
+    body: JSON.stringify({ route, direction, browser, violations, incomplete }),
+    contentType: 'application/json',
+  });
+  for (const [kind, rules] of [
+    ['violation', violations],
+    ['manual review', incomplete],
+  ] as const) {
+    for (const rule of rules) {
+      const message = `${route} (${browser}, ${direction}) ${kind} ${rule.id}: ${rule.help}; targets ${JSON.stringify(rule.targets)}`;
+      const escaped = message
+        .replaceAll('%', '%25')
+        .replaceAll('\r', '%0D')
+        .replaceAll('\n', '%0A');
+      console.warn(`::warning title=Accessibility advisory::${escaped}`);
+    }
+  }
 }
 
 export async function skipToMain(page: Page, locale: string) {
