@@ -1127,7 +1127,9 @@ export default function AdminNotificationsPage({
                         className="block text-sm font-medium text-foreground mb-1"
                       >
                         {t('admin.notifications.eventKey', uiLocale)}{' '}
-                        <span className="text-destructive">*</span>
+                        <span aria-hidden="true" className="text-destructive">
+                          *
+                        </span>
                       </label>
                       {editId ? (
                         <input
@@ -1145,6 +1147,7 @@ export default function AdminNotificationsPage({
                           onChange={(e) => setEventKey(e.target.value)}
                           className="w-full border border-input rounded px-3 py-2"
                           required
+                          aria-required="true"
                           maxLength={100}
                           pattern="\S+"
                         />
@@ -1172,7 +1175,9 @@ export default function AdminNotificationsPage({
                           className="block text-sm font-medium text-foreground mb-1"
                         >
                           {t('admin.notifications.channel', uiLocale)}{' '}
-                          <span className="text-destructive">*</span>
+                          <span aria-hidden="true" className="text-destructive">
+                            *
+                          </span>
                         </label>
                         {editId ? (
                           <input
@@ -1189,6 +1194,7 @@ export default function AdminNotificationsPage({
                             onChange={(e) => setChannel(e.target.value as TemplateChannel)}
                             className="w-full border border-input rounded px-3 py-2"
                             required
+                            aria-required="true"
                           >
                             {CHANNEL_OPTIONS.map((c) => (
                               <option key={c} value={c}>
@@ -1205,7 +1211,9 @@ export default function AdminNotificationsPage({
                           className="block text-sm font-medium text-foreground mb-1"
                         >
                           {t('admin.notifications.locale', uiLocale)}{' '}
-                          <span className="text-destructive">*</span>
+                          <span aria-hidden="true" className="text-destructive">
+                            *
+                          </span>
                         </label>
                         {editId ? (
                           <input
@@ -1222,6 +1230,7 @@ export default function AdminNotificationsPage({
                             onChange={(e) => setLocale(e.target.value as TemplateLocale)}
                             className="w-full border border-input rounded px-3 py-2"
                             required
+                            aria-required="true"
                           >
                             {LOCALE_OPTIONS.map((l) => (
                               <option key={l} value={l}>
@@ -1265,7 +1274,9 @@ export default function AdminNotificationsPage({
                         className="block text-sm font-medium text-foreground mb-1"
                       >
                         {t('admin.notifications.bodyTemplate', uiLocale)}{' '}
-                        <span className="text-destructive">*</span>
+                        <span aria-hidden="true" className="text-destructive">
+                          *
+                        </span>
                       </label>
                       <p id="notification-body-hint" className="text-xs text-muted-foreground mb-1">
                         {t('admin.notifications.bodyHint', uiLocale)}
@@ -1279,13 +1290,18 @@ export default function AdminNotificationsPage({
                               bodyRef.current = element;
                               editorForm.bind('bodyTemplate').ref(element);
                             }}
-                            aria-describedby={`notification-body-hint ${editorForm.errorId('bodyTemplate')}`}
+                            aria-describedby={
+                              editorForm.errors.bodyTemplate
+                                ? `notification-body-hint ${editorForm.errorId('bodyTemplate')}`
+                                : 'notification-body-hint'
+                            }
                             readOnly={viewOnly || testSending}
                             value={bodyTemplate}
                             onChange={(e) => setBodyTemplate(e.target.value)}
                             className="w-full border border-input rounded px-3 py-2 font-mono text-sm"
                             rows={8}
                             required
+                            aria-required={!viewOnly || undefined}
                             dir={locale === 'fa' ? 'rtl' : 'ltr'}
                           />
                         </div>
@@ -1381,12 +1397,20 @@ export default function AdminNotificationsPage({
                       >
                         {t('admin.notifications.variablesLabel', uiLocale)}
                       </label>
-                      <p className="text-xs text-muted-foreground mb-1">
+                      <p
+                        id="notification-variables-hint"
+                        className="text-xs text-muted-foreground mb-1"
+                      >
                         {t('admin.notifications.variablesHintNew', uiLocale)}
                       </p>
                       <textarea
                         id="notification-template-variablesLabel"
                         {...editorForm.bind('variables')}
+                        aria-describedby={
+                          editorForm.errors.variables
+                            ? `notification-variables-hint ${editorForm.errorId('variables')}`
+                            : 'notification-variables-hint'
+                        }
                         readOnly={viewOnly || testSending}
                         value={variablesStr}
                         onChange={(e) => setVariablesStr(e.target.value)}
@@ -1435,6 +1459,7 @@ export default function AdminNotificationsPage({
                             </label>
                             <input
                               id="test-destination"
+                              aria-describedby="test-destination-hint"
                               disabled={testSending}
                               type="text"
                               value={testDestination}
@@ -1449,7 +1474,10 @@ export default function AdminNotificationsPage({
                               className="w-full min-w-0 border border-input rounded px-3 py-2 text-sm"
                               dir="ltr"
                             />
-                            <span className="text-xs text-muted-foreground">
+                            <span
+                              id="test-destination-hint"
+                              className="text-xs text-muted-foreground"
+                            >
                               {t('admin.notifications.testDestinationHint', uiLocale)}
                             </span>
                           </div>

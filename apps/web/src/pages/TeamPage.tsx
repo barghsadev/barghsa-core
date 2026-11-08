@@ -892,6 +892,7 @@ function TeamMembers({
                   autoFocus
                   id="team-username"
                   required
+                  aria-required="true"
                   maxLength={254}
                   value={username}
                   onChange={(event) => setUsername(event.target.value)}
@@ -912,6 +913,7 @@ function TeamMembers({
                 <select
                   {...invitation.bind('role')}
                   id="invite-role"
+                  aria-required="true"
                   tabIndex={0}
                   className="block rounded border border-input bg-background text-foreground p-2"
                   value={role}
@@ -1087,6 +1089,7 @@ function TeamMembers({
                           // eslint-disable-next-line jsx-a11y/no-autofocus -- Focus the agent picker when the modal advances after step-up.
                           autoFocus
                           required
+                          aria-required="true"
                           className="w-full rounded border border-input bg-background text-foreground p-2"
                           value={recipientId}
                           onChange={(event) => setRecipientId(event.target.value)}

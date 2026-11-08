@@ -104,6 +104,7 @@ it('reviews the exact cancellation refund before submitting its hash', async () 
     const reason = [...container.querySelectorAll('textarea')].find((item) =>
       item.closest('label')?.textContent?.includes('Cancellation reason')
     )!;
+    expect(reason.getAttribute('aria-required')).toBe('true');
     await act(async () => {
       Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(
         reason,

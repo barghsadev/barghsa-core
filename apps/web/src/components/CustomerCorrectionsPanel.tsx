@@ -234,6 +234,7 @@ export default function CustomerCorrectionsPanel({ locale }: { locale: Locale })
             id={noteId}
             className="block min-h-24 w-full rounded border bg-transparent p-2"
             required
+            aria-required="true"
             maxLength={2000}
             value={note}
             disabled={Boolean(action)}

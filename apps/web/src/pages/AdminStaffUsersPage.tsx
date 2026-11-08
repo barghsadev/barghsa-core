@@ -964,6 +964,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
                     <Input
                       id={`staff-${field}`}
                       required
+                      aria-required="true"
                       {...createForm.bind(field)}
                       maxLength={field === 'username' ? 255 : 100}
                       value={draft[field]}
@@ -985,8 +986,15 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
                   (value) => createForm.field('roleIds')[1](value),
                   createForm
                 )}
-                <fieldset className="space-y-2">
-                  <legend>{label('activation')}</legend>
+                <fieldset
+                  role="radiogroup"
+                  aria-labelledby="staff-activation-label"
+                  aria-required="true"
+                  aria-invalid={createForm.bind('activationMethod')['aria-invalid']}
+                  aria-describedby={createForm.bind('activationMethod')['aria-describedby']}
+                  className="space-y-2"
+                >
+                  <legend id="staff-activation-label">{label('activation')}</legend>
                   {(['link', 'tempPassword'] as const).map((method) => (
                     <label key={method} className="flex gap-2">
                       <input
@@ -1057,6 +1065,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
                   id="staff-role-reason"
                   {...roleForm.bind('reason')}
                   required
+                  aria-required="true"
                   maxLength={500}
                   value={reason}
                   onChange={(event) => {

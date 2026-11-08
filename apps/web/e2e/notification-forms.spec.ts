@@ -58,10 +58,16 @@ for (const locale of ['en', 'fa'] as const)
         .locator('form')
         .filter({ has: page.locator('#notification-template-eventKey') });
       const body = page.locator('#notification-template-bodyTemplate');
+      await expect(body).toHaveAttribute('aria-required', 'true');
+      await expect(body).toHaveAccessibleDescription(text('bodyHint'));
+      await expect(form.locator('#test-destination')).toHaveAccessibleDescription(
+        text('testDestinationHint')
+      );
       await body.fill('Hello {{unknown}}');
       await form.locator('button[type=submit]').click();
       await expect(body).toBeFocused();
       await expect(body).toHaveAttribute('aria-invalid', 'true');
+      await expect(body).toHaveAccessibleDescription(/\S/);
       expect(writes).toHaveLength(0);
       await body.fill('Local body');
       await form.locator('button[type=submit]').click();

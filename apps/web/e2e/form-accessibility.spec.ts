@@ -3192,10 +3192,20 @@ test('TOS editor preserves unsupported existing formatting when editing another 
   });
   await page.goto('/admin/tos');
   await page.getByRole('button', { name: 'Edit', exact: true }).click();
-  await expect(page.getByRole('textbox', { name: 'English content', exact: true })).toHaveValue(
-    original
-  );
-  await page.getByRole('textbox', { name: 'Persian content', exact: true }).fill('شرایط جدید');
+  const source = page.getByRole('textbox', { name: 'English content', exact: true });
+  const rich = page.getByRole('textbox', { name: 'Persian content', exact: true });
+  await expect(page.locator('#admintospage-field-1')).toHaveAttribute('aria-required', 'true');
+  await expect(source).toHaveAttribute('aria-required', 'true');
+  await expect(rich).toHaveAttribute('aria-required', 'true');
+  await expect(source).toHaveAccessibleDescription(/\S/);
+  await expect(source).toHaveValue(original);
+  await source.fill('');
+  await page.getByRole('button', { name: 'Update Draft', exact: true }).click();
+  await expect(source).toHaveAttribute('aria-invalid', 'true');
+  await expect(source).toHaveAccessibleDescription(/\S/);
+  expect(saved).toBeUndefined();
+  await source.fill(original);
+  await rich.fill('شرایط جدید');
   await page.getByRole('button', { name: 'Update Draft', exact: true }).click();
   await expect.poll(() => saved?.contentEn).toBe(original);
   await expect(page.getByRole('textbox', { name: 'English content', exact: true })).toHaveValue(

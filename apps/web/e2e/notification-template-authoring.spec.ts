@@ -40,6 +40,15 @@ for (const locale of ['en', 'fa'] as const) {
     const editor = page
       .locator('form')
       .filter({ has: page.locator('#notification-template-eventKey') });
+    for (const field of ['eventKey', 'channel', 'locale', 'bodyTemplate']) {
+      const control = editor.locator(`#notification-template-${field}`);
+      await expect(control).toHaveAccessibleName(/\S/);
+      await expect(control).toHaveAttribute('aria-required', 'true');
+    }
+    await expect(editor.locator('#notification-template-subject')).not.toHaveAttribute(
+      'aria-required',
+      'true'
+    );
     await editor.locator('#notification-template-eventKey').fill('auth.refresh_token_reused');
     await editor.locator('#notification-template-channel').selectOption('in_app');
     await editor.locator('#notification-template-locale').selectOption(locale);

@@ -111,6 +111,9 @@ for (const locale of ['en', 'fa'] as const) {
     const form = page.getByRole('form', { name: word('editor'), exact: true });
     const code = page.locator('#gift-code'),
       value = page.locator('#gift-value');
+    for (const id of ['gift-code', 'gift-type', 'gift-value', 'gift-eligibility', 'gift-minimum']) {
+      await expect(form.locator(`#${id}`)).toHaveAttribute('aria-required', 'true');
+    }
     await code.fill('   ');
     await value.fill('-1');
     await form.getByRole('button', { name: word('save'), exact: true }).click();
@@ -130,6 +133,19 @@ for (const locale of ['en', 'fa'] as const) {
     await value.fill('۹۰۰۷۱۹۹۲۵۴۷۴۰۹۹۳');
     await page.locator('#gift-totalLimit').fill('٢');
     await page.locator('#gift-minimum').fill('۰۰');
+    const setEnd = form.getByRole('checkbox', { name: word('setEnd'), exact: true });
+    await setEnd.check();
+    const endTime = form.locator('#gift-end-time');
+    const endDate = form.getByRole('combobox', { name: word('endDate'), exact: true });
+    await expect(endTime).toHaveAttribute('aria-required', 'true');
+    await expect(endDate).toHaveAttribute('aria-required', 'true');
+    await endTime.fill('');
+    await form.getByRole('button', { name: word('save'), exact: true }).click();
+    await expect(endTime).toHaveAccessibleDescription(word('invalidDate'));
+    await expect(endDate).toHaveAccessibleDescription(word('invalidDate'));
+    expect(writes).toHaveLength(0);
+    await setEnd.uncheck();
+    await expect(endTime).toHaveCount(0);
     await form.evaluate((node) => {
       node.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
       node.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
@@ -175,6 +191,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.locator('#gift-type').selectOption('percentage');
     const value = page.locator('#gift-value'),
       cap = page.locator('#gift-cap');
+    await expect(cap).toHaveAttribute('aria-required', 'true');
     await value.fill('1.005');
     await cap.fill('1000');
     await form.getByRole('button', { name: word('save'), exact: true }).click();

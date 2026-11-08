@@ -200,6 +200,7 @@ export function OtpConfigPanel() {
             max={900}
             step={1}
             required
+            aria-required="true"
             value={form.values.ttlSeconds}
             aria-describedby={[form.bind('ttlSeconds')['aria-describedby'], 'otp-lifetime-hint']
               .filter(Boolean)

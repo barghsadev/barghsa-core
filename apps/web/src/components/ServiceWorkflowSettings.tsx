@@ -171,6 +171,7 @@ export function ServiceWorkflowSettings({ disabled = false, onBusyChange }: Cata
             id={id}
             dir="ltr"
             inputMode="numeric"
+            aria-required="true"
             value={value.value}
             aria-invalid={(invalid && invalidField === id) || undefined}
             aria-describedby={invalid && invalidField === id ? 'workflow-error' : undefined}
@@ -183,6 +184,7 @@ export function ServiceWorkflowSettings({ disabled = false, onBusyChange }: Cata
           </Label>
           <select
             id={`${id}-unit`}
+            aria-required="true"
             className={inputClass}
             value={value.unit}
             onChange={(e) => change({ ...value, unit: e.target.value as Duration['unit'] })}
@@ -208,6 +210,7 @@ export function ServiceWorkflowSettings({ disabled = false, onBusyChange }: Cata
         </Label>
         <select
           id={`workflow-${side}`}
+          aria-required="true"
           className={inputClass}
           value={a.kind}
           onChange={(e) => {
@@ -238,6 +241,7 @@ export function ServiceWorkflowSettings({ disabled = false, onBusyChange }: Cata
               }
               onChange={(e) => update({ ...a, id: e.target.value })}
               required
+              aria-required="true"
             >
               <option value="">{text('choose')}</option>
               {options.map((o) => (
@@ -362,6 +366,7 @@ export function ServiceWorkflowSettings({ disabled = false, onBusyChange }: Cata
                   <Label htmlFor="workflow-notification">{text('notification')}</Label>
                   <select
                     id="workflow-notification"
+                    aria-required="true"
                     className={inputClass}
                     value={target.notification}
                     onChange={(e) =>
@@ -410,6 +415,7 @@ export function ServiceWorkflowSettings({ disabled = false, onBusyChange }: Cata
                     <Label htmlFor="workflow-condition">{text('condition')}</Label>
                     <select
                       id="workflow-condition"
+                      aria-required="true"
                       className={inputClass}
                       value={rule.condition}
                       onChange={(e) =>

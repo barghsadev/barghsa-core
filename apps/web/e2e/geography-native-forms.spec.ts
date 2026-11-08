@@ -39,10 +39,14 @@ for (const locale of ['en', 'fa'] as const) {
     const dialog = page.getByRole('dialog');
     const nameFa = dialog.getByLabel(t('nameFa'), { exact: true });
     const nameEn = dialog.getByLabel(t('nameEn'), { exact: true });
+    await expect(nameFa).toHaveAttribute('aria-required', 'true');
+    await expect(nameEn).toHaveAttribute('aria-required', 'true');
     await dialog.getByRole('button', { name: t('create'), exact: true }).click();
     await expect(nameFa).toHaveAttribute('aria-invalid', 'true');
     await expect(nameEn).toHaveAttribute('aria-invalid', 'true');
     await expect(nameFa).toBeFocused();
+    await expect(nameFa).toHaveAccessibleDescription(/\S/);
+    await expect(nameEn).toHaveAccessibleDescription(/\S/);
     expect(writes).toHaveLength(0);
     await nameFa.fill('  تهران  ');
     await nameEn.fill('  Tehran  ');

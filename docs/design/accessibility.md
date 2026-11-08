@@ -84,6 +84,11 @@ sources. The URL field retains its entry instructions when an error appears.
 AI policy editors identify the required fields for the selected rule type.
 Membership selectors require a choice, and priority overrides can be left blank.
 
+VAT and gift-code date and time fields are required when scheduling is enabled.
+Schedule errors are linked to the visible date or time controls. Terms edited
+in Markdown source mode retain the source instructions alongside field errors.
+For escalation routing, a role or team choice makes its reference required.
+
 State either-or requirements before submission. A ticket reply can contain
 text, an attachment, or both, so its text field is not individually required.
 On an uncertain save, keep the original request and a visible recovery

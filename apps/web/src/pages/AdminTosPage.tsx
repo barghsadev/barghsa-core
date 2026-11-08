@@ -771,7 +771,10 @@ export default function AdminTosPage() {
                         htmlFor="admintospage-field-1"
                         className="block text-sm font-medium text-foreground mb-1"
                       >
-                        {text.versionId} <span className="text-destructive">*</span>
+                        {text.versionId}{' '}
+                        <span aria-hidden="true" className="text-destructive">
+                          *
+                        </span>
                       </label>
                       <input
                         {...editor.bind('versionId')}
@@ -783,6 +786,7 @@ export default function AdminTosPage() {
                         placeholder={text.versionExample}
                         maxLength={50}
                         required
+                        aria-required="true"
                         disabled={!!editId || saving}
                       />
                       {editor.errors.versionId && (
@@ -798,7 +802,9 @@ export default function AdminTosPage() {
 
                     <Suspense fallback={<p role="status">{text.editorLoading}</p>}>
                       <div className="space-y-2">
-                        <p className="font-medium">{text.persian} *</p>
+                        <p className="font-medium">
+                          {text.persian} <span aria-hidden="true">*</span>
+                        </p>
                         <TosRichText
                           text={text}
                           key={`${editId ?? 'new'}-${editRevision}-${editorGeneration.current}-fa`}
@@ -822,7 +828,9 @@ export default function AdminTosPage() {
                         )}
                       </div>
                       <div className="space-y-2">
-                        <p className="font-medium">{text.english} *</p>
+                        <p className="font-medium">
+                          {text.english} <span aria-hidden="true">*</span>
+                        </p>
                         <TosRichText
                           text={text}
                           key={`${editId ?? 'new'}-${editRevision}-${editorGeneration.current}-en`}

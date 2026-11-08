@@ -273,6 +273,7 @@ export function GeographyDialog({
                   }}
                   maxLength={100}
                   required
+                  aria-required="true"
                 />
                 <CatalogueFieldFeedback
                   id={native.errorId('nameFa')}
@@ -293,6 +294,7 @@ export function GeographyDialog({
                   }}
                   maxLength={100}
                   required
+                  aria-required="true"
                 />
                 <CatalogueFieldFeedback
                   id={native.errorId('nameEn')}

@@ -239,6 +239,7 @@ export default function AdminVatPage() {
   const applyServerErrors = useActionFieldErrors(draft.form, messages, label('invalid'));
   const invalidFocus = useRef<keyof VatDraft | null>(null);
   const locked = draft.pending || draft.form.formState.isSubmitting;
+  const dateBinding = draft.bind('date');
   useEffect(() => {
     if (!locked && invalidFocus.current) {
       draft.form.setFocus(invalidFocus.current);
@@ -651,6 +652,7 @@ export default function AdminVatPage() {
                       <Label htmlFor="vat-category">{label('category')}</Label>
                       <NativeSelect
                         id="vat-category"
+                        aria-required="true"
                         {...draft.bind('category')}
                         className="w-full"
                         value={category}
@@ -668,6 +670,7 @@ export default function AdminVatPage() {
                       <Label htmlFor="vat-percent">{label('percent')}</Label>
                       <Input
                         id="vat-percent"
+                        aria-required="true"
                         {...draft.bind('percent')}
                         type="text"
                         inputMode="decimal"
@@ -754,7 +757,16 @@ export default function AdminVatPage() {
                       <Label htmlFor="vat-date">{label('date')}</Label>
                       <DatePicker
                         id="vat-date"
-                        {...draft.bind('date')}
+                        onBlur={dateBinding.onBlur}
+                        triggerProps={{
+                          ref: dateBinding.ref,
+                          name: dateBinding.name,
+                          'aria-required': true,
+                          'aria-invalid': invalidDate || dateBinding['aria-invalid'],
+                          'aria-describedby': invalidDate
+                            ? 'vat-zone-date-error'
+                            : dateBinding['aria-describedby'],
+                        }}
                         label={label('date')}
                         placeholder={label('chooseDate')}
                         locale={locale}
@@ -775,6 +787,7 @@ export default function AdminVatPage() {
                         type="time"
                         dir="ltr"
                         required
+                        aria-required="true"
                         value={time}
                         onChange={(event) => {
                           setTime(event.target.value);
@@ -785,7 +798,11 @@ export default function AdminVatPage() {
                     </div>
                   </div>
                 )}
-                {invalidDate && <p role="alert">{label('invalidDate')}</p>}
+                {invalidDate && (
+                  <p id="vat-zone-date-error" role="alert">
+                    {label('invalidDate')}
+                  </p>
+                )}
                 {editor.kind === 'rate' && (
                   <ConfigPreviewCard
                     title={settingsText('admin.settings.comparison', locale)}

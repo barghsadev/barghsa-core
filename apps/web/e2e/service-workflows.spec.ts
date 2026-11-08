@@ -56,17 +56,32 @@ for (const width of [390, 1440])
         const save = section.getByRole('button', { name: text('save'), exact: true });
         await section.getByRole('checkbox', { name: text('enabled'), exact: true }).check();
         const hours = section.locator('#workflow-hours-ticket_urgent');
+        await expect(hours).toHaveAttribute('aria-required', 'true');
         await hours.fill('1e3');
         await save.click();
         await expect(hours).toBeFocused();
+        await expect(hours).toHaveAccessibleDescription(text('invalid'));
         expect(writes).toHaveLength(0);
         await hours.fill('۲');
         await section.locator('#workflow-hours-ticket_urgent-unit').selectOption('days');
         await section.getByRole('checkbox', { name: text('rule'), exact: true }).check();
         await section.locator('#workflow-condition').selectOption('ticket_priority');
         await section.locator('#workflow-from').selectOption('role');
+        await expect(section.locator('#workflow-from-reference')).toHaveAttribute(
+          'aria-required',
+          'true'
+        );
+        await save.click();
+        await expect(section.locator('#workflow-from-reference')).toBeFocused();
+        await expect(section.locator('#workflow-from-reference')).toHaveAccessibleDescription(
+          text('invalid')
+        );
         await section.locator('#workflow-from-reference').selectOption('reviewer');
         await section.locator('#workflow-to').selectOption('team');
+        await expect(section.locator('#workflow-to-reference')).toHaveAttribute(
+          'aria-required',
+          'true'
+        );
         await section.locator('#workflow-to-reference').selectOption(view.teams[0]!.id);
         await section.locator('#workflow-timeout-ticket_urgent').fill('۳');
         await section.locator('#workflow-timeout-ticket_urgent-unit').selectOption('hours');

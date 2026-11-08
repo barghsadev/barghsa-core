@@ -46,6 +46,10 @@ for (const locale of ['en', 'fa'] as const) {
     await form.locator('#staff-lastName').fill('  Retained surname  ');
     await form.getByRole('button', { name: label('create'), exact: true }).click();
     const username = form.locator('#staff-username');
+    for (const id of ['staff-username', 'staff-firstName', 'staff-lastName']) {
+      await expect(form.locator(`#${id}`)).toHaveAttribute('aria-required', 'true');
+    }
+    await expect(form.getByRole('radiogroup')).toHaveAttribute('aria-required', 'true');
     await expect(username).toBeFocused();
     await expect(username).toHaveAttribute('aria-invalid', 'true');
     await expect(
@@ -71,6 +75,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.getByRole('button', { name: label('editRoles'), exact: true }).click();
     await form.getByRole('button', { name: label('saveRoles'), exact: true }).click();
     await expect(form.locator('#staff-role-reason')).toBeFocused();
+    await expect(form.locator('#staff-role-reason')).toHaveAttribute('aria-required', 'true');
     await expect(form.locator('#staff-role-reason')).toHaveAttribute('aria-invalid', 'true');
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await form.screenshot({ path: testInfo.outputPath('staff-role-validation.png') });

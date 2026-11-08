@@ -116,6 +116,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(details).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
       await details.getByRole('button', { name: copy('reject'), exact: true }).click();
       const reason = details.getByLabel(copy('reason'), { exact: true });
+      await expect(reason).toHaveAttribute('aria-required', 'true');
       await reason.fill('Keyboard reviewed reason');
       await reason.press('Tab');
       await page.keyboard.press('Enter');

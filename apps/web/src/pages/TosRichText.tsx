@@ -1,5 +1,5 @@
 import type { WizardFieldBinding } from '../hooks/useWizardForm.js';
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Markdown } from '@tiptap/markdown';
@@ -24,6 +24,7 @@ export default function TosRichText({
   disabled?: boolean;
   binding?: WizardFieldBinding;
 }) {
+  const sourceHelpId = useId();
   // Preserve documents with constructs not represented by the editor schema.
   const [sourceOnly] = useState(() =>
     /<\/?[a-z][^>]*>|!\[|^.*\|.*$|^\s*[-*+] \[[ xX]\]|^\s*\[\^.+\]:/im.test(value)
@@ -104,11 +105,15 @@ export default function TosRichText({
   if (sourceOnly)
     return (
       <div className="space-y-2">
-        <p className="text-sm text-muted-foreground">{text.preserveSource}</p>
+        <p id={sourceHelpId} className="text-sm text-muted-foreground">
+          {text.preserveSource}
+        </p>
         <textarea
           {...binding}
           aria-label={label}
           required
+          aria-required="true"
+          aria-describedby={[sourceHelpId, binding?.['aria-describedby']].filter(Boolean).join(' ')}
           dir={language === 'fa' ? 'rtl' : 'ltr'}
           lang={language}
           value={value}

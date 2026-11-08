@@ -90,7 +90,9 @@ async function chooseOwner(page: Page, locale = 'en') {
   await dialog
     .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
     .click();
-  await dialog.getByLabel(locale === 'fa' ? 'مالک جدید' : 'New owner').selectOption('member');
+  const recipient = dialog.getByLabel(locale === 'fa' ? 'مالک جدید' : 'New owner');
+  await expect(recipient).toHaveAttribute('aria-required', 'true');
+  await recipient.selectOption('member');
   await dialog
     .getByRole('button', { name: locale === 'fa' ? 'ادامه' : 'Continue', exact: true })
     .click();
@@ -739,6 +741,7 @@ for (const locale of ['en', 'fa'] as const) {
     await confirm.click();
     const picker = dialog.getByLabel(fa ? 'مالک جدید' : 'New owner');
     await expect(picker).toBeFocused();
+    await expect(picker).toHaveAttribute('aria-required', 'true');
     await expect(picker).toHaveValue('');
     await expect(picker.getByRole('option')).toHaveText([
       fa ? 'انتخاب مالک جدید' : 'Select the new owner',

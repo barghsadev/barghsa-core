@@ -1,5 +1,6 @@
 import { test, expect } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { teamCatalogue, teamProfiles } from '../src/test/team-catalogue-fixtures';
 test.use({ viewport: { width: 390, height: 844 } });
@@ -86,6 +87,9 @@ for (const locale of ['en', 'fa'] as const)
       const dialog = page.getByRole('dialog');
       const username = dialog.locator('#team-username'),
         message = dialog.locator('#invite-message');
+      await expect(username).toHaveAttribute('aria-required', 'true');
+      await expect(dialog.locator('#invite-role')).toHaveAttribute('aria-required', 'true');
+      await expect(message).not.toHaveAttribute('aria-required', 'true');
       const submit = dialog.getByRole('button', {
         name: fa ? 'ارسال دعوت‌نامه' : 'Send invitation',
         exact: true,
@@ -252,6 +256,8 @@ for (const locale of ['en', 'fa'] as const)
         let dialog = page.getByRole('dialog');
         const confirm = () =>
           dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
+        await expect(confirm()).toBeDisabled();
+        await approveRiskConfirmation(page, locale, 'destructive');
         await confirm().click();
         await dialog.locator('input[type=password]').fill('synthetic-password');
         await confirm().click();
@@ -268,6 +274,8 @@ for (const locale of ['en', 'fa'] as const)
         await (details ? manager : legal).check();
         await editor.getByRole('button', { name: saveName, exact: true }).click();
         dialog = page.getByRole('dialog');
+        await expect(confirm()).toBeDisabled();
+        await approveRiskConfirmation(page, locale, 'destructive');
         await confirm().click();
         await expect(editor.getByRole('button', { name: saveName, exact: true })).toBeDisabled();
         await expect(finance).toBeChecked();

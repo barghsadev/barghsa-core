@@ -47,6 +47,8 @@ for (const locale of ['en', 'fa']) {
     const input = panel.getByRole('spinbutton', { includeHidden: true });
     const save = panel.getByRole('button', { name: saveName, exact: true });
     await expect(input).toHaveValue('300');
+    await expect(input).toHaveAttribute('aria-required', 'true');
+    await expect(input).toHaveAccessibleDescription(/\S/);
     await expect(save).toBeDisabled();
     for (const invalid of ['', '59', '901', '60.5']) {
       await input.fill(invalid);

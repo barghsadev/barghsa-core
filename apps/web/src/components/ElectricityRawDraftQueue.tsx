@@ -440,6 +440,7 @@ function Queue() {
                 value={reason}
                 maxLength={1000}
                 required
+                aria-required="true"
                 aria-invalid={invalid}
                 aria-describedby={invalid ? 'raw-draft-reason-error' : undefined}
                 disabled={busy || !!action}

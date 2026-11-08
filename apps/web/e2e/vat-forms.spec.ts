@@ -152,6 +152,8 @@ for (const locale of ['en', 'fa'] as const)
       await expect(page.locator('html')).toHaveClass(dark ? /dark/ : /^(?!.*dark)/);
       await page.getByRole('button', { name: label('addRate'), exact: true }).click();
       const percent = page.locator('#vat-percent');
+      await expect(percent).toHaveAttribute('aria-required', 'true');
+      await expect(page.locator('#vat-category')).toHaveAttribute('aria-required', 'true');
       await percent.fill('1.234');
       await page.getByRole('button', { name: label('save'), exact: true }).click();
       await expect(percent).toBeFocused();
@@ -160,6 +162,17 @@ for (const locale of ['en', 'fa'] as const)
       expect(writes).toEqual([]);
       const raw = locale === 'fa' ? '۰۷٫۲۵' : ' 7.25 ';
       await percent.fill(raw);
+      const schedule = page.getByRole('checkbox', { name: label('schedule'), exact: true });
+      await schedule.check();
+      const scheduledDate = page.getByRole('combobox', { name: label('date'), exact: true });
+      const scheduledTime = page.locator('#vat-time');
+      await expect(scheduledDate).toHaveAttribute('aria-required', 'true');
+      await expect(scheduledTime).toHaveAttribute('aria-required', 'true');
+      await page.getByRole('button', { name: label('save'), exact: true }).click();
+      await expect(scheduledDate).toBeFocused();
+      await expect(scheduledDate).toHaveAccessibleDescription(label('invalidDate'));
+      expect(writes).toEqual([]);
+      await schedule.uncheck();
       await page.getByRole('button', { name: label('save'), exact: true }).click();
       const dialog = page.getByRole('dialog');
       const confirm = () =>

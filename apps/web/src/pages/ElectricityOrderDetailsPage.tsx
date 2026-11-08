@@ -1072,6 +1072,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                     <textarea
                       className="mt-1 w-full rounded-md border bg-background p-2"
                       required
+                      aria-required="true"
                       maxLength={1000}
                       value={cancelReason}
                       onChange={(event) => setCancelReason(event.target.value)}

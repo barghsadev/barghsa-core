@@ -572,7 +572,7 @@ export default function AdminGiftCodesPage({
                         id="gift-code"
                         label={label('code')}
                         disabled={locked}
-                        inputProps={{ dir: 'ltr', maxLength: 64 }}
+                        inputProps={{ dir: 'ltr', maxLength: 64, 'aria-required': true }}
                       />
                       <FormField
                         control={form.control}
@@ -583,6 +583,7 @@ export default function AdminGiftCodesPage({
                             <FormControl>
                               <select
                                 id="gift-type"
+                                aria-required="true"
                                 name={field.name}
                                 ref={field.ref}
                                 onBlur={field.onBlur}
@@ -616,6 +617,7 @@ export default function AdminGiftCodesPage({
                           inputMode: draft.discountType === 'percentage' ? 'decimal' : 'numeric',
                           maxLength: 19,
                           dir: 'ltr',
+                          'aria-required': true,
                         }}
                       />
                       {draft.discountType === 'percentage' && (
@@ -626,7 +628,12 @@ export default function AdminGiftCodesPage({
                             id="gift-cap"
                             label={label('cap')}
                             disabled={locked}
-                            inputProps={{ inputMode: 'numeric', maxLength: 19, dir: 'ltr' }}
+                            inputProps={{
+                              inputMode: 'numeric',
+                              maxLength: 19,
+                              dir: 'ltr',
+                              'aria-required': true,
+                            }}
                           />
                           <p role="note" className="rounded-md border p-3">
                             {label('percentageWarning')}
@@ -642,6 +649,7 @@ export default function AdminGiftCodesPage({
                             <FormControl>
                               <select
                                 id="gift-eligibility"
+                                aria-required="true"
                                 name={field.name}
                                 ref={field.ref}
                                 onBlur={field.onBlur}
@@ -698,7 +706,12 @@ export default function AdminGiftCodesPage({
                         id="gift-minimum"
                         label={label('minimum')}
                         disabled={locked}
-                        inputProps={{ inputMode: 'numeric', maxLength: 19, dir: 'ltr' }}
+                        inputProps={{
+                          inputMode: 'numeric',
+                          maxLength: 19,
+                          dir: 'ltr',
+                          'aria-required': true,
+                        }}
                       />
                       {group(
                         'categories',
@@ -799,6 +812,13 @@ export default function AdminGiftCodesPage({
                                   locale={locale}
                                   timezone={zone}
                                   value={draft[field].date}
+                                  triggerProps={{
+                                    'aria-required': true,
+                                    'aria-invalid': !!form.formState.errors[field] || undefined,
+                                    'aria-describedby': form.formState.errors[field]
+                                      ? `gift-${field}-message`
+                                      : undefined,
+                                  }}
                                   onChange={(date) =>
                                     updateDraft({
                                       ...draft,
@@ -814,6 +834,13 @@ export default function AdminGiftCodesPage({
                                     id={`gift-${field}-time`}
                                     type="time"
                                     required
+                                    aria-required="true"
+                                    aria-invalid={!!form.formState.errors[field] || undefined}
+                                    aria-describedby={
+                                      form.formState.errors[field]
+                                        ? `gift-${field}-message`
+                                        : undefined
+                                    }
                                     value={draft[field].time}
                                     onChange={(event) =>
                                       updateDraft({

@@ -130,7 +130,9 @@ for (const locale of ['en', 'fa'] as const) {
     await page.locator('summary').filter({ hasText: copy.title }).click();
     const panel = page.getByRole('region', { name: copy.title });
     await panel.getByRole('button', { name: copy.resolve, exact: true }).click();
-    await panel.getByLabel(copy.note, { exact: true }).fill(`  ${note}  `);
+    const outcome = panel.getByLabel(copy.note, { exact: true });
+    await expect(outcome).toHaveAttribute('aria-required', 'true');
+    await outcome.fill(`  ${note}  `);
     await panel.getByRole('button', { name: copy.save }).click();
     const dialog = page.getByRole('dialog');
     const confirm = dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
