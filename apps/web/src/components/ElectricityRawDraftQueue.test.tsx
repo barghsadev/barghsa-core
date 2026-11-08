@@ -128,11 +128,14 @@ it('keeps the captured funded decision when a receipt omits the mandatory wallet
       invoices: [{ id: invoiceId, refundableAmount: '100' }],
     },
   };
+  let readStatus = 200;
   const fetcher = vi.fn(async (input: RequestInfo | URL) =>
     String(input).endsWith('/drafts')
       ? json(queue)
       : String(input).endsWith('/review')
-        ? json(p)
+        ? readStatus === 200
+          ? json(p)
+          : new Response('{}', { status: readStatus })
         : json({
             orderId,
             status: 'rejected',
@@ -147,7 +150,51 @@ it('keeps the captured funded decision when a receipt omits the mandatory wallet
   await approveVisibleConfirmation();
   await act(async () => confirm().click());
   expect(document.body.querySelector('[role=dialog]')).not.toBeNull();
+  expect(confirm().disabled).toBe(true);
+  readStatus = 503;
+  await recheck();
+  expect(confirm().disabled).toBe(true);
+  expect(document.body.querySelector('[role=dialog]')?.textContent).toContain(
+    'Could not load or review the draft'
+  );
+  readStatus = 409;
+  await recheck();
+  expect(document.body.querySelector('[role=dialog]')).toBeNull();
+  expect(container.textContent).toContain('The draft changed');
   expect(fetcher.mock.calls.filter(([u]) => String(u).endsWith('/draft-terminal'))).toHaveLength(1);
+});
+it('finds a pending approval after a lost acknowledgement without creating another approval', async () => {
+  const invoiceId = '86000000-0000-4000-8000-000000000001';
+  const approvalId = '88000000-0000-4000-8000-000000000001';
+  let stored = false;
+  const fetcher = vi.fn(async (input: RequestInfo | URL) => {
+    const path = String(input);
+    if (path.endsWith('/drafts')) return json(queue);
+    if (path.endsWith('/review'))
+      return json({
+        ...preview(),
+        approval: stored ? { id: approvalId, status: 'pending' } : null,
+        data: {
+          ...preview().data,
+          refundAmount: '100',
+          approvalRequired: true,
+          invoices: [{ id: invoiceId, refundableAmount: '100' }],
+        },
+      });
+    expect(path).toMatch(/\/approval$/);
+    stored = true;
+    return new Response('{}', { status: 503 });
+  });
+  vi.stubGlobal('fetch', fetcher);
+  await open();
+  await review();
+  await approveVisibleConfirmation();
+  await act(async () => confirm().click());
+  expect(confirm().disabled).toBe(true);
+  await recheck();
+  expect(document.body.querySelector('[role=dialog]')).toBeNull();
+  expect(container.textContent).toContain('financial approval queue');
+  expect(fetcher.mock.calls.filter(([url]) => String(url).endsWith('/approval'))).toHaveLength(1);
 });
 for (const [status, restoreOnCancel, outcome, copy] of [
   ['consumed', true, 'release', 'The gift-code usage slot will be restored.'],
@@ -253,6 +300,12 @@ async function review() {
 }
 const confirm = () =>
   [...document.body.querySelectorAll('button')].find((b) => b.textContent?.includes('Confirm'))!;
+async function recheck() {
+  const reload = Array.from(
+    document.querySelectorAll<HTMLButtonElement>('[role=dialog] button')
+  ).find((button) => button.textContent === 'Reload')!;
+  await act(async () => reload.click());
+}
 it('projects safe queue metadata and confirms captured reason, identity and exact retry command', async () => {
   let attempts = 0;
   const fetcher = vi.fn(async (input: RequestInfo | URL, _init?: RequestInit) => {
@@ -272,7 +325,10 @@ it('projects safe queue metadata and confirms captured reason, identity and exac
   expect(dialog.textContent).toContain('Reviewed reason');
   await approveVisibleConfirmation();
   await act(async () => confirm().click());
-  expect(confirm()).toBeDefined();
+  expect(confirm().disabled).toBe(true);
+  await recheck();
+  expect(attempts).toBe(1);
+  expect(confirm().disabled).toBe(true);
   await approveVisibleConfirmation();
   await act(async () => confirm().click());
   const mutations = fetcher.mock.calls.filter(([u]) => String(u).endsWith('/draft-terminal'));
@@ -436,7 +492,10 @@ it('keeps the captured adoption open when acknowledgement substitutes its refund
   await approveVisibleConfirmation();
   await act(async () => confirm().click());
   expect(document.body.querySelector('[role=dialog]')).not.toBeNull();
+  expect(confirm().disabled).toBe(true);
   wrong = false;
+  await recheck();
+  expect(commands).toHaveLength(1);
   await approveVisibleConfirmation();
   await act(async () => confirm().click());
   expect(document.body.querySelector('[role=dialog]')).toBeNull();

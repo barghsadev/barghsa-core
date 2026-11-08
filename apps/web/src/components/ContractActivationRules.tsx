@@ -1,5 +1,5 @@
-import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
-import { useEffect, useState } from 'react';
+import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, AlertDescription, Button, PageLoading } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
 import { confirmationText } from '@barghsa/i18n/confirmation';
@@ -10,6 +10,9 @@ import { useLocale } from '../hooks/useLocale.js';
 import type { ContractActivationRule } from '../lib/contracts.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 const fields = ['signatureRequired', 'paymentRequired', 'serviceStartRequired'] as const;
+const services = ['electricity', 'savings', 'solar'] as const;
+const rulesPath = '/api/admin/contract-activation-rules';
+type RuleSet = { rules: ContractActivationRule[]; canEdit: boolean };
 type RuleAction = TeamAction & {
   serviceType: ContractActivationRule['serviceType'];
   body: Pick<ContractActivationRule, (typeof fields)[number]> & {
@@ -17,6 +20,34 @@ type RuleAction = TeamAction & {
     idempotencyKey: string;
   };
 };
+function validRule(value: unknown): value is ContractActivationRule {
+  if (!value || typeof value !== 'object') return false;
+  const rule = value as Partial<ContractActivationRule>;
+  return (
+    services.some((service) => service === rule.serviceType) &&
+    fields.every((field) => typeof rule[field] === 'boolean') &&
+    Number.isSafeInteger(rule.revision) &&
+    Number(rule.revision) >= 1 &&
+    typeof rule.updatedAt === 'string' &&
+    Number.isFinite(Date.parse(rule.updatedAt)) &&
+    (rule.serviceType !== 'solar' || rule.signatureRequired === true) &&
+    (rule.serviceType !== 'electricity' || rule.paymentRequired === true)
+  );
+}
+function validRules(value: unknown): value is RuleSet {
+  if (!value || typeof value !== 'object') return false;
+  const data = value as Partial<RuleSet>;
+  return (
+    typeof data.canEdit === 'boolean' &&
+    Array.isArray(data.rules) &&
+    data.rules.length === services.length &&
+    data.rules.every(validRule) &&
+    new Set(data.rules.map((rule) => rule.serviceType)).size === services.length
+  );
+}
+function sameRule(a: ContractActivationRule, b: ContractActivationRule | undefined) {
+  return b && a.revision === b.revision && fields.every((field) => a[field] === b[field]);
+}
 export function ContractActivationRules() {
   const locale = useLocale(),
     [open, setOpen] = useState(false);
@@ -45,57 +76,81 @@ function RulesEditor() {
   return <OwnedRulesEditor key={JSON.stringify([actor, revision])} />;
 }
 function OwnedRulesEditor() {
-  const actor = useAccountUser();
-  const revision = useProfileContextRevision();
-  const readContract = useOwnedContractRead(
-    actor,
-    revision,
-    undefined,
-    'contract-activation-rules'
-  );
   const locale = useLocale(),
     word = (key: string) => contractText(key, locale);
-  const [data, setData] = useState<{ rules: ContractActivationRule[]; canEdit: boolean } | null>(
-      null
-    ),
-    [drafts, setDrafts] = useState<ContractActivationRule[]>([]),
-    [error, setError] = useState(false),
-    [reload, setReload] = useState(0),
+  const [drafts, setDrafts] = useState<ContractActivationRule[]>([]),
+    [busy, setBusy] = useState(false),
+    [requiredRead, setRequiredRead] = useState<number | null>(null),
+    [unconfirmed, setUnconfirmed] = useState<RuleAction | null>(null),
     [action, setAction] = useState<RuleAction | null>(null);
-  useEffect(() => {
-    const controller = new AbortController();
-    setData(null);
-    setError(false);
-    setAction(null);
+  const previous = useRef<RuleSet | null>(null);
+  const clear = useCallback(() => {
+    previous.current = null;
     setDrafts([]);
-    void readContract<{ rules: ContractActivationRule[]; canEdit: boolean }>(
-      '/api/admin/contract-activation-rules',
-      { signal: controller.signal }
-    )
-      .then((value) => {
-        if (!controller.signal.aborted) {
-          setData(value);
-          setDrafts(value.rules);
-        }
+    setAction(null);
+    setUnconfirmed(null);
+    setRequiredRead(null);
+    setBusy(false);
+  }, []);
+  const scope = useCatalogueScope(clear);
+  const resource = useCatalogueResource(scope, rulesPath, validRules);
+  const { data, loading, error, readAttempt } = resource;
+  const ready = !!data && !loading && !error && !scope.denied && requiredRead === null;
+  useEffect(() => {
+    if (!data || loading || error || busy) return;
+    if (requiredRead !== null && (readAttempt ?? -1) < requiredRead) return;
+    const before = previous.current;
+    if (before === data && requiredRead === null) return;
+    previous.current = data;
+    setDrafts((local) =>
+      data.rules.map((row) => {
+        const prior = before?.rules.find((item) => item.serviceType === row.serviceType);
+        const draft = local.find((item) => item.serviceType === row.serviceType);
+        return data.canEdit && draft && sameRule(row, prior) ? draft : row;
       })
-      .catch(() => {
-        if (!controller.signal.aborted) setError(true);
-      });
-    return () => controller.abort();
-  }, [reload, readContract]);
+    );
+    if (
+      unconfirmed &&
+      (!data.canEdit ||
+        !data.rules.some(
+          (row) =>
+            row.serviceType === unconfirmed.serviceType &&
+            row.revision === unconfirmed.body.expectedRevision &&
+            sameRule(
+              row,
+              before?.rules.find((item) => item.serviceType === row.serviceType)
+            )
+        ))
+    )
+      setUnconfirmed(null);
+    setAction(null);
+    setRequiredRead(null);
+  }, [data, loading, error, busy, readAttempt, requiredRead, unconfirmed]);
+  function refresh() {
+    if (busy || loading) return;
+    if (scope.denied) scope.recover();
+    else resource.retry();
+  }
   function save(row: ContractActivationRule) {
+    if (!ready || !data?.canEdit || action) return;
+    const original =
+      unconfirmed?.serviceType === row.serviceType &&
+      unconfirmed.body.expectedRevision === row.revision &&
+      fields.every((field) => unconfirmed.body[field] === row[field])
+        ? unconfirmed
+        : null;
     setAction({
       serviceType: row.serviceType,
       title: word('saveActivationRules'),
       description: word(row.serviceType) + '. ' + word('activationRulesNotice'),
-      path: '/api/admin/contract-activation-rules/' + row.serviceType,
+      path: rulesPath + '/' + row.serviceType,
       method: 'PUT',
       body: {
         expectedRevision: row.revision,
         signatureRequired: row.signatureRequired,
         paymentRequired: row.paymentRequired,
         serviceStartRequired: row.serviceStartRequired,
-        idempotencyKey: crypto.randomUUID(),
+        idempotencyKey: original?.body.idempotencyKey ?? crypto.randomUUID(),
       },
       conflictMessage: word('activationRulesConflict'),
       forbiddenMessage: word('denied'),
@@ -107,26 +162,33 @@ function OwnedRulesEditor() {
       <Button
         className="self-start"
         variant="ghost"
-        onClick={() => setReload((value) => value + 1)}
+        disabled={busy || loading || action !== null}
+        onClick={refresh}
       >
         {word('refresh')}
       </Button>
-      {error ? (
+      {requiredRead !== null && !action && (
+        <p role="alert">{confirmationText('unconfirmed', locale)}</p>
+      )}
+      {(error || scope.denied) && (
         <Alert variant="destructive">
-          <AlertDescription>{word('error')}</AlertDescription>
+          <AlertDescription>{word(scope.denied ? 'denied' : 'error')}</AlertDescription>
         </Alert>
-      ) : !data ? (
-        <PageLoading label={word('loading')} />
-      ) : (
+      )}
+      {loading && <PageLoading label={word('loading')} />}
+      {data && (
         <>
           {!data.canEdit ? <p>{word('activationRulesReadOnly')}</p> : null}
           <div className="grid gap-4 md:grid-cols-3">
             {drafts.map((row) => {
-              const saved = data.rules.find((item) => item.serviceType === row.serviceType)!;
-              const changed = fields.some((field) => row[field] !== saved[field]);
+              const saved = data.rules.find((item) => item.serviceType === row.serviceType);
+              const changed =
+                saved?.revision === row.revision &&
+                fields.some((field) => row[field] !== saved[field]);
               return (
                 <fieldset
                   key={row.serviceType}
+                  disabled={!ready || action !== null}
                   className="flex flex-col gap-4 rounded-lg border p-4"
                 >
                   <legend className="px-1 font-medium">{word(row.serviceType)}</legend>
@@ -176,18 +238,49 @@ function OwnedRulesEditor() {
       {action ? (
         <TeamActionDialog
           action={action}
-          onClose={() => setAction(null)}
+          onClose={() => {
+            setBusy(false);
+            setAction(null);
+          }}
+          onDenied={scope.deny}
+          onPendingChange={setBusy}
+          onUnconfirmed={() => {
+            setUnconfirmed(action);
+            setRequiredRead(resource.nextReadAttempt());
+          }}
+          confirmationDisabled={!ready || !data?.canEdit}
+          summary={
+            requiredRead !== null && (
+              <div className="space-y-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={busy || loading}
+                  onClick={refresh}
+                >
+                  {word('refresh')}
+                </Button>
+                {error && <p role="alert">{word('error')}</p>}
+              </div>
+            )
+          }
           onSuccess={async (result) => {
-            const rule = result as ContractActivationRule | null;
             if (
-              !rule ||
-              rule.serviceType !== action.serviceType ||
-              rule.revision !== action.body.expectedRevision + 1 ||
-              !fields.every((field) => rule[field] === action.body[field])
+              !data ||
+              !validRule(result) ||
+              result.serviceType !== action.serviceType ||
+              result.revision !== action.body.expectedRevision + 1 ||
+              !fields.every((field) => result[field] === action.body[field])
             )
               throw new Error('Activation rule receipt mismatch');
-            setAction(null);
-            setReload((value) => value + 1);
+            resource.accept({
+              ...data,
+              rules: data.rules.map((row) =>
+                row.serviceType === result.serviceType ? result : row
+              ),
+            });
+            setUnconfirmed(null);
+            resource.retry();
             return confirmationText('recorded', locale);
           }}
         />

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T17:41:46+00:00",
-  "source_commit": "1dba8788b0f0591ba4357090c06316c1b7cbff2d",
+  "updated": "2026-11-08T17:51:40+00:00",
+  "source_commit": "b4b0dfc4c9a98def86d14da641694180ccb822d0",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -163074,7 +163074,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "291c5d655a9d018e74e296a63636c307be4d5e90d9919f6176a5043d78d73d40"
+              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -163110,7 +163110,7 @@
             },
             {
               "path": "apps/web/src/components/ContractActivationRules.tsx",
-              "sha256": "07727ed932df2a42a50de56329b3bfb0d74a8291612199875ee56621c7341f88"
+              "sha256": "910a23a3e818130933611ba14eef9f8d3ff841690968cb927617f4372d4d1148"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -164080,7 +164080,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "291c5d655a9d018e74e296a63636c307be4d5e90d9919f6176a5043d78d73d40"
+              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -164116,7 +164116,7 @@
             },
             {
               "path": "apps/web/src/components/ContractActivationRules.tsx",
-              "sha256": "07727ed932df2a42a50de56329b3bfb0d74a8291612199875ee56621c7341f88"
+              "sha256": "910a23a3e818130933611ba14eef9f8d3ff841690968cb927617f4372d4d1148"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -165089,7 +165089,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "291c5d655a9d018e74e296a63636c307be4d5e90d9919f6176a5043d78d73d40"
+              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -165125,7 +165125,7 @@
             },
             {
               "path": "apps/web/src/components/ContractActivationRules.tsx",
-              "sha256": "07727ed932df2a42a50de56329b3bfb0d74a8291612199875ee56621c7341f88"
+              "sha256": "910a23a3e818130933611ba14eef9f8d3ff841690968cb927617f4372d4d1148"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -166096,7 +166096,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "291c5d655a9d018e74e296a63636c307be4d5e90d9919f6176a5043d78d73d40"
+              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -166132,7 +166132,7 @@
             },
             {
               "path": "apps/web/src/components/ContractActivationRules.tsx",
-              "sha256": "07727ed932df2a42a50de56329b3bfb0d74a8291612199875ee56621c7341f88"
+              "sha256": "910a23a3e818130933611ba14eef9f8d3ff841690968cb927617f4372d4d1148"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -167102,7 +167102,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "291c5d655a9d018e74e296a63636c307be4d5e90d9919f6176a5043d78d73d40"
+              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -167138,7 +167138,7 @@
             },
             {
               "path": "apps/web/src/components/ContractActivationRules.tsx",
-              "sha256": "07727ed932df2a42a50de56329b3bfb0d74a8291612199875ee56621c7341f88"
+              "sha256": "910a23a3e818130933611ba14eef9f8d3ff841690968cb927617f4372d4d1148"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -168108,7 +168108,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "291c5d655a9d018e74e296a63636c307be4d5e90d9919f6176a5043d78d73d40"
+              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -168144,7 +168144,7 @@
             },
             {
               "path": "apps/web/src/components/ContractActivationRules.tsx",
-              "sha256": "07727ed932df2a42a50de56329b3bfb0d74a8291612199875ee56621c7341f88"
+              "sha256": "910a23a3e818130933611ba14eef9f8d3ff841690968cb927617f4372d4d1148"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -169113,7 +169113,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "291c5d655a9d018e74e296a63636c307be4d5e90d9919f6176a5043d78d73d40"
+              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -169149,7 +169149,7 @@
             },
             {
               "path": "apps/web/src/components/ContractActivationRules.tsx",
-              "sha256": "07727ed932df2a42a50de56329b3bfb0d74a8291612199875ee56621c7341f88"
+              "sha256": "910a23a3e818130933611ba14eef9f8d3ff841690968cb927617f4372d4d1148"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -170121,7 +170121,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "291c5d655a9d018e74e296a63636c307be4d5e90d9919f6176a5043d78d73d40"
+              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -170157,7 +170157,7 @@
             },
             {
               "path": "apps/web/src/components/ContractActivationRules.tsx",
-              "sha256": "07727ed932df2a42a50de56329b3bfb0d74a8291612199875ee56621c7341f88"
+              "sha256": "910a23a3e818130933611ba14eef9f8d3ff841690968cb927617f4372d4d1148"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -171127,7 +171127,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "291c5d655a9d018e74e296a63636c307be4d5e90d9919f6176a5043d78d73d40"
+              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -171163,7 +171163,7 @@
             },
             {
               "path": "apps/web/src/components/ContractActivationRules.tsx",
-              "sha256": "07727ed932df2a42a50de56329b3bfb0d74a8291612199875ee56621c7341f88"
+              "sha256": "910a23a3e818130933611ba14eef9f8d3ff841690968cb927617f4372d4d1148"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -172133,7 +172133,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "291c5d655a9d018e74e296a63636c307be4d5e90d9919f6176a5043d78d73d40"
+              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -172169,7 +172169,7 @@
             },
             {
               "path": "apps/web/src/components/ContractActivationRules.tsx",
-              "sha256": "07727ed932df2a42a50de56329b3bfb0d74a8291612199875ee56621c7341f88"
+              "sha256": "910a23a3e818130933611ba14eef9f8d3ff841690968cb927617f4372d4d1148"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -173140,7 +173140,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "291c5d655a9d018e74e296a63636c307be4d5e90d9919f6176a5043d78d73d40"
+              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -173176,7 +173176,7 @@
             },
             {
               "path": "apps/web/src/components/ContractActivationRules.tsx",
-              "sha256": "07727ed932df2a42a50de56329b3bfb0d74a8291612199875ee56621c7341f88"
+              "sha256": "910a23a3e818130933611ba14eef9f8d3ff841690968cb927617f4372d4d1148"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -174146,7 +174146,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "291c5d655a9d018e74e296a63636c307be4d5e90d9919f6176a5043d78d73d40"
+              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -174182,7 +174182,7 @@
             },
             {
               "path": "apps/web/src/components/ContractActivationRules.tsx",
-              "sha256": "07727ed932df2a42a50de56329b3bfb0d74a8291612199875ee56621c7341f88"
+              "sha256": "910a23a3e818130933611ba14eef9f8d3ff841690968cb927617f4372d4d1148"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -175151,7 +175151,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "291c5d655a9d018e74e296a63636c307be4d5e90d9919f6176a5043d78d73d40"
+              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -175187,7 +175187,7 @@
             },
             {
               "path": "apps/web/src/components/ContractActivationRules.tsx",
-              "sha256": "07727ed932df2a42a50de56329b3bfb0d74a8291612199875ee56621c7341f88"
+              "sha256": "910a23a3e818130933611ba14eef9f8d3ff841690968cb927617f4372d4d1148"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -176157,7 +176157,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "291c5d655a9d018e74e296a63636c307be4d5e90d9919f6176a5043d78d73d40"
+              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -176193,7 +176193,7 @@
             },
             {
               "path": "apps/web/src/components/ContractActivationRules.tsx",
-              "sha256": "07727ed932df2a42a50de56329b3bfb0d74a8291612199875ee56621c7341f88"
+              "sha256": "910a23a3e818130933611ba14eef9f8d3ff841690968cb927617f4372d4d1148"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -413084,7 +413084,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "291c5d655a9d018e74e296a63636c307be4d5e90d9919f6176a5043d78d73d40"
+              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
@@ -417077,7 +417077,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "291c5d655a9d018e74e296a63636c307be4d5e90d9919f6176a5043d78d73d40"
+              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
@@ -418377,7 +418377,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "291c5d655a9d018e74e296a63636c307be4d5e90d9919f6176a5043d78d73d40"
+              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
@@ -419677,7 +419677,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "291c5d655a9d018e74e296a63636c307be4d5e90d9919f6176a5043d78d73d40"
+              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
@@ -494079,7 +494079,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-raw-draft-terminal.spec.ts",
-              "sha256": "81cd82e8f5d434c4dfda878a68c46ed2968d5211c3dcdabab568e712969d1f8b"
+              "sha256": "de963c232f92503311c2ceaaa671f7db70dfdab173bc66229ffe8ee7a8a91fff"
             },
             {
               "path": "apps/web/e2e/notification-delivery-search.spec.ts",
@@ -494123,7 +494123,7 @@
             },
             {
               "path": "apps/web/src/components/ContractActivationRules.tsx",
-              "sha256": "07727ed932df2a42a50de56329b3bfb0d74a8291612199875ee56621c7341f88"
+              "sha256": "910a23a3e818130933611ba14eef9f8d3ff841690968cb927617f4372d4d1148"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -494175,11 +494175,11 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -494962,7 +494962,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-raw-draft-terminal.spec.ts",
-              "sha256": "81cd82e8f5d434c4dfda878a68c46ed2968d5211c3dcdabab568e712969d1f8b"
+              "sha256": "de963c232f92503311c2ceaaa671f7db70dfdab173bc66229ffe8ee7a8a91fff"
             },
             {
               "path": "apps/web/e2e/notification-delivery-search.spec.ts",
@@ -495006,7 +495006,7 @@
             },
             {
               "path": "apps/web/src/components/ContractActivationRules.tsx",
-              "sha256": "07727ed932df2a42a50de56329b3bfb0d74a8291612199875ee56621c7341f88"
+              "sha256": "910a23a3e818130933611ba14eef9f8d3ff841690968cb927617f4372d4d1148"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -495058,11 +495058,11 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -495786,7 +495786,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-raw-draft-terminal.spec.ts",
-              "sha256": "81cd82e8f5d434c4dfda878a68c46ed2968d5211c3dcdabab568e712969d1f8b"
+              "sha256": "de963c232f92503311c2ceaaa671f7db70dfdab173bc66229ffe8ee7a8a91fff"
             },
             {
               "path": "apps/web/e2e/notification-delivery-search.spec.ts",
@@ -495830,7 +495830,7 @@
             },
             {
               "path": "apps/web/src/components/ContractActivationRules.tsx",
-              "sha256": "07727ed932df2a42a50de56329b3bfb0d74a8291612199875ee56621c7341f88"
+              "sha256": "910a23a3e818130933611ba14eef9f8d3ff841690968cb927617f4372d4d1148"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -495882,11 +495882,11 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "844fd1add9ff59f4c0045e2d3d5918e55483ca2014b35f33982e634dbcd0aec1"
+              "sha256": "60fe2ef68ef45b5f880036c9c8f7914d1c35999472b9eaf5f90854e769f4a4a0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -511430,7 +511430,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/GeographyRecordTable.tsx",
@@ -512016,7 +512016,7 @@
             },
             {
               "path": "apps/web/src/components/ContractActivationRules.tsx",
-              "sha256": "07727ed932df2a42a50de56329b3bfb0d74a8291612199875ee56621c7341f88"
+              "sha256": "910a23a3e818130933611ba14eef9f8d3ff841690968cb927617f4372d4d1148"
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
@@ -516993,7 +516993,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-raw-draft-terminal.spec.ts",
-              "sha256": "81cd82e8f5d434c4dfda878a68c46ed2968d5211c3dcdabab568e712969d1f8b"
+              "sha256": "de963c232f92503311c2ceaaa671f7db70dfdab173bc66229ffe8ee7a8a91fff"
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
@@ -517465,7 +517465,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/FilePreview.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "844fd1add9ff59f4c0045e2d3d5918e55483ca2014b35f33982e634dbcd0aec1"
+              "sha256": "60fe2ef68ef45b5f880036c9c8f7914d1c35999472b9eaf5f90854e769f4a4a0"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "844fd1add9ff59f4c0045e2d3d5918e55483ca2014b35f33982e634dbcd0aec1"
+              "sha256": "60fe2ef68ef45b5f880036c9c8f7914d1c35999472b9eaf5f90854e769f4a4a0"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -546480,11 +546480,11 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/FormWizard.tsx",
@@ -548346,11 +548346,11 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/FormWizard.tsx",
@@ -550213,11 +550213,11 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/FormWizard.tsx",
@@ -552049,11 +552049,11 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/FormWizard.tsx",
@@ -553911,11 +553911,11 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/FormWizard.tsx",
@@ -555782,11 +555782,11 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/FormWizard.tsx",
@@ -557626,11 +557626,11 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/FormWizard.tsx",
@@ -559434,11 +559434,11 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/FormWizard.tsx",
@@ -561242,11 +561242,11 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/FormWizard.tsx",
@@ -563051,11 +563051,11 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/FormWizard.tsx",
@@ -564859,11 +564859,11 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/FormWizard.tsx",
@@ -566649,7 +566649,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.test.tsx",
@@ -567521,7 +567521,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "844fd1add9ff59f4c0045e2d3d5918e55483ca2014b35f33982e634dbcd0aec1"
+              "sha256": "60fe2ef68ef45b5f880036c9c8f7914d1c35999472b9eaf5f90854e769f4a4a0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568544,7 +568544,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.test.tsx",
@@ -569416,7 +569416,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "844fd1add9ff59f4c0045e2d3d5918e55483ca2014b35f33982e634dbcd0aec1"
+              "sha256": "60fe2ef68ef45b5f880036c9c8f7914d1c35999472b9eaf5f90854e769f4a4a0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570220,7 +570220,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer ownership decisions now verify committed identity and outcome, and unconfirmed results require a fresh read. Member role/removal and invitation-withdrawal confirmations still need recovery before another write. Contract activation rules and raw electricity draft decisions still need deadlines and fresh-read recovery."
+        "Customer ownership, activation rule changes and raw electricity draft decisions now verify replies and recover through a fresh read or review. Member role/removal and invitation-withdrawal confirmations still need a fresh read before another write."
       ],
       "owner": null,
       "depends_on": [],
@@ -570304,7 +570304,8 @@
           "release-0.5-contract-lifecycle-recovery",
           "release-0.5-shared-configuration-recovery",
           "release-0.5-direct-catalogue-recovery",
-          "release-0.5-ownership-decision-receipt"
+          "release-0.5-ownership-decision-receipt",
+          "release-0.5-activation-raw-draft-recovery"
         ],
         "current_acceptance": null
       }
@@ -570543,7 +570544,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.test.tsx",
@@ -571415,7 +571416,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "844fd1add9ff59f4c0045e2d3d5918e55483ca2014b35f33982e634dbcd0aec1"
+              "sha256": "60fe2ef68ef45b5f880036c9c8f7914d1c35999472b9eaf5f90854e769f4a4a0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -572438,7 +572439,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.test.tsx",
@@ -573310,7 +573311,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "844fd1add9ff59f4c0045e2d3d5918e55483ca2014b35f33982e634dbcd0aec1"
+              "sha256": "60fe2ef68ef45b5f880036c9c8f7914d1c35999472b9eaf5f90854e769f4a4a0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -574333,7 +574334,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.test.tsx",
@@ -575205,7 +575206,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "844fd1add9ff59f4c0045e2d3d5918e55483ca2014b35f33982e634dbcd0aec1"
+              "sha256": "60fe2ef68ef45b5f880036c9c8f7914d1c35999472b9eaf5f90854e769f4a4a0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -576228,7 +576229,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.test.tsx",
@@ -577100,7 +577101,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "844fd1add9ff59f4c0045e2d3d5918e55483ca2014b35f33982e634dbcd0aec1"
+              "sha256": "60fe2ef68ef45b5f880036c9c8f7914d1c35999472b9eaf5f90854e769f4a4a0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -578123,7 +578124,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.test.tsx",
@@ -578995,7 +578996,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "844fd1add9ff59f4c0045e2d3d5918e55483ca2014b35f33982e634dbcd0aec1"
+              "sha256": "60fe2ef68ef45b5f880036c9c8f7914d1c35999472b9eaf5f90854e769f4a4a0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -580018,7 +580019,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.test.tsx",
@@ -580890,7 +580891,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "844fd1add9ff59f4c0045e2d3d5918e55483ca2014b35f33982e634dbcd0aec1"
+              "sha256": "60fe2ef68ef45b5f880036c9c8f7914d1c35999472b9eaf5f90854e769f4a4a0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581913,7 +581914,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.test.tsx",
@@ -582785,7 +582786,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "844fd1add9ff59f4c0045e2d3d5918e55483ca2014b35f33982e634dbcd0aec1"
+              "sha256": "60fe2ef68ef45b5f880036c9c8f7914d1c35999472b9eaf5f90854e769f4a4a0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -583808,7 +583809,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.test.tsx",
@@ -584680,7 +584681,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "844fd1add9ff59f4c0045e2d3d5918e55483ca2014b35f33982e634dbcd0aec1"
+              "sha256": "60fe2ef68ef45b5f880036c9c8f7914d1c35999472b9eaf5f90854e769f4a4a0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -585703,7 +585704,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.test.tsx",
@@ -586575,7 +586576,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "844fd1add9ff59f4c0045e2d3d5918e55483ca2014b35f33982e634dbcd0aec1"
+              "sha256": "60fe2ef68ef45b5f880036c9c8f7914d1c35999472b9eaf5f90854e769f4a4a0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -587598,7 +587599,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.test.tsx",
@@ -588470,7 +588471,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "844fd1add9ff59f4c0045e2d3d5918e55483ca2014b35f33982e634dbcd0aec1"
+              "sha256": "60fe2ef68ef45b5f880036c9c8f7914d1c35999472b9eaf5f90854e769f4a4a0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589493,7 +589494,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.test.tsx",
@@ -590365,7 +590366,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "844fd1add9ff59f4c0045e2d3d5918e55483ca2014b35f33982e634dbcd0aec1"
+              "sha256": "60fe2ef68ef45b5f880036c9c8f7914d1c35999472b9eaf5f90854e769f4a4a0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591629,7 +591630,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "844fd1add9ff59f4c0045e2d3d5918e55483ca2014b35f33982e634dbcd0aec1"
+              "sha256": "60fe2ef68ef45b5f880036c9c8f7914d1c35999472b9eaf5f90854e769f4a4a0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592128,7 +592129,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.test.tsx",
@@ -593000,7 +593001,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "844fd1add9ff59f4c0045e2d3d5918e55483ca2014b35f33982e634dbcd0aec1"
+              "sha256": "60fe2ef68ef45b5f880036c9c8f7914d1c35999472b9eaf5f90854e769f4a4a0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594023,7 +594024,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.test.tsx",
@@ -594895,7 +594896,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "844fd1add9ff59f4c0045e2d3d5918e55483ca2014b35f33982e634dbcd0aec1"
+              "sha256": "60fe2ef68ef45b5f880036c9c8f7914d1c35999472b9eaf5f90854e769f4a4a0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595699,7 +595700,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer team and ownership, saving, solar, document, contract, direct catalogue, VAT, branding and shared configuration recovery have current scoped evidence. Finish remaining conditional route, list and dashboard reconciliation."
+        "Customer ownership, saving, solar, document, contract, activation rules, raw electricity drafts, direct catalogue, VAT, branding and shared configuration recovery have current scoped evidence. Finish remaining conditional route, list and dashboard reconciliation."
       ],
       "owner": null,
       "depends_on": [],
@@ -595795,7 +595796,8 @@
           "release-0.5-contract-lifecycle-recovery",
           "release-0.5-shared-configuration-recovery",
           "release-0.5-direct-catalogue-recovery",
-          "release-0.5-ownership-decision-receipt"
+          "release-0.5-ownership-decision-receipt",
+          "release-0.5-activation-raw-draft-recovery"
         ],
         "current_acceptance": null
       }
@@ -596080,11 +596082,11 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/FormWizard.tsx",
@@ -597884,11 +597886,11 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/FormWizard.tsx",
@@ -599688,11 +599690,11 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/FormWizard.tsx",
@@ -601492,11 +601494,11 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/FormWizard.tsx",
@@ -603296,11 +603298,11 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/FormWizard.tsx",
@@ -605100,11 +605102,11 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/FormWizard.tsx",
@@ -606904,11 +606906,11 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "bde832c96f21d8baa41aa4e44f1123afb63deacb3201e69a8db5666d608726f3"
+              "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/FormWizard.tsx",
@@ -634691,7 +634693,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/GeographyRecordTable.tsx",
@@ -635815,7 +635817,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/GeographyRecordTable.tsx",
@@ -636939,7 +636941,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/GeographyRecordTable.tsx",
@@ -638066,7 +638068,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/GeographyRecordTable.tsx",
@@ -639193,7 +639195,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/GeographyRecordTable.tsx",
@@ -640347,7 +640349,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/GeographyRecordTable.tsx",
@@ -641470,7 +641472,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/GeographyRecordTable.tsx",
@@ -642593,7 +642595,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/GeographyRecordTable.tsx",
@@ -643717,7 +643719,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/GeographyRecordTable.tsx",
@@ -644859,7 +644861,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/GeographyRecordTable.tsx",
@@ -645984,7 +645986,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/GeographyRecordTable.tsx",
@@ -677484,7 +677486,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/GeographyRecordTable.tsx",
@@ -678606,7 +678608,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/GeographyRecordTable.tsx",
@@ -679728,7 +679730,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/GeographyRecordTable.tsx",
@@ -680850,7 +680852,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/GeographyRecordTable.tsx",
@@ -710509,7 +710511,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "291c5d655a9d018e74e296a63636c307be4d5e90d9919f6176a5043d78d73d40"
+              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -710545,7 +710547,7 @@
             },
             {
               "path": "apps/web/src/components/ContractActivationRules.tsx",
-              "sha256": "07727ed932df2a42a50de56329b3bfb0d74a8291612199875ee56621c7341f88"
+              "sha256": "910a23a3e818130933611ba14eef9f8d3ff841690968cb927617f4372d4d1148"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -715258,7 +715260,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "291c5d655a9d018e74e296a63636c307be4d5e90d9919f6176a5043d78d73d40"
+              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.test.tsx",
@@ -725439,7 +725441,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer ownership decisions and direct configuration feedback have current evidence. Remaining staff and member confirmation recovery and conditional UI states require reconciliation. Required GitHub accessibility enforcement and the staging Sentry receipt remain open."
+        "Activation rule and raw draft recovery have current evidence. Member confirmation recovery and remaining conditional UI states still require reconciliation. Required GitHub accessibility enforcement and the staging Sentry receipt remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -725600,7 +725602,8 @@
           "release-0.5-contract-lifecycle-recovery",
           "release-0.5-shared-configuration-recovery",
           "release-0.5-direct-catalogue-recovery",
-          "release-0.5-ownership-decision-receipt"
+          "release-0.5-ownership-decision-receipt",
+          "release-0.5-activation-raw-draft-recovery"
         ]
       }
     },
@@ -725768,7 +725771,7 @@
             },
             {
               "path": "apps/web/src/components/ContractActivationRules.tsx",
-              "sha256": "07727ed932df2a42a50de56329b3bfb0d74a8291612199875ee56621c7341f88"
+              "sha256": "910a23a3e818130933611ba14eef9f8d3ff841690968cb927617f4372d4d1148"
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
@@ -725880,7 +725883,7 @@
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "61bd33255fd168c8d706d12897cd533b5d24ff66a4e0c6a28e5c6f86b46f0d14"
+              "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
             },
             {
               "path": "apps/web/src/components/ElectricityRejectionPanel.tsx",
@@ -727501,7 +727504,8 @@
             "Renewed contract lifecycle browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-lifecycle-recovery/proof.json",
             "Renewed shared configuration browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-configuration-recovery/proof.json",
             "Renewed direct configuration browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-direct-catalogue-recovery/proof.json",
-            "Renewed ownership decision browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-decision-receipt/proof.json"
+            "Renewed ownership decision browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-decision-receipt/proof.json",
+            "Renewed activation rule and raw draft browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-activation-raw-draft-recovery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -802271,6 +802275,115 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-decision-receipt/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-decision-receipt/reviewed.patch",
       "release_disposition": "Verified the customer ownership decision receipt and fresh-read recovery. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-activation-raw-draft-recovery": {
+      "batch": "release-0.5-activation-raw-draft-recovery",
+      "base_commit": "b4b0dfc4c9a98def86d14da641694180ccb822d0",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+        },
+        {
+          "path": "apps/api/src/contract/contract-activation.controller.ts",
+          "sha256": "1222b631fa1a74d4fcc85f713c8991fc23cac7b80f99efc8225b8edfd3929430"
+        },
+        {
+          "path": "apps/api/src/contract/contract-activation.service.ts",
+          "sha256": "11ad104fbc5797a62aa5d13b721e48643059428b359d637faad89f3bcec2ec9c"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-raw-draft.service.ts",
+          "sha256": "ca1087a57b4ea71d3e1ebd00820bc8085f773fc0ff5eaa219fb6cf45cd757b5d"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-staff-review.controller.ts",
+          "sha256": "d9c23e957966dbe973998aca5daef38f3eeadc8cc562caec768976b12d58d76e"
+        },
+        {
+          "path": "apps/web/e2e/contract-activation.spec.ts",
+          "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
+        },
+        {
+          "path": "apps/web/e2e/electricity-orphan-financial.spec.ts",
+          "sha256": "ab0669fcf33a2a6b457de1b56e863f0589065696959c8b2ab966a92583df08cc"
+        },
+        {
+          "path": "apps/web/e2e/electricity-raw-draft-terminal.spec.ts",
+          "sha256": "de963c232f92503311c2ceaaa671f7db70dfdab173bc66229ffe8ee7a8a91fff"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/ContractActivationRules.tsx",
+          "sha256": "910a23a3e818130933611ba14eef9f8d3ff841690968cb927617f4372d4d1148"
+        },
+        {
+          "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
+          "sha256": "0a1fc775fe05103e2e357d1f1d5879ed73e5d05eddc360c5427902f7965c34da"
+        },
+        {
+          "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
+          "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+        },
+        {
+          "path": "apps/web/src/hooks/useCatalogueResource.ts",
+          "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+        },
+        {
+          "path": "apps/web/src/hooks/useStaffQueryRead.ts",
+          "sha256": "e21695a1a08c18ea78dcc4a17a19555992e8a94ba3284fea02d3a587bd8ca4e0"
+        },
+        {
+          "path": "apps/web/src/lib/electricity-existing-returns.ts",
+          "sha256": "c12b9922737c4891154e478dd7807a1f0d393342998e7a8f90fcd94cfd7004e8"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "60fe2ef68ef45b5f880036c9c8f7914d1c35999472b9eaf5f90854e769f4a4a0"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "Activation rule changes wait for a bounded acknowledgement. Recovery requires a validated read of all three service rules after uncertainty. An unchanged rule retains the draft and original key for explicit review. A changed revision loads the current rule and retires the previous confirmation.",
+        "Raw electricity draft approvals and terminal decisions use the same acknowledgement deadline. Recovery checks the exact draft, reason, financial preview and approval again. A new confirmation retains the key only for the same reviewed hash, stage and approval. A pending approval or an unavailable draft does not send another write.",
+        "The raw draft tests preserve invoice coverage, the adopted refund identity, both confirmation steps, authorization and CSRF. Two legacy tests previously repeated a confirmation immediately after losing the acknowledgement. Their updated cases verify the fresh-read lock and the original request body.",
+        "Passed 20 native Chromium and mobile Safari cases, four instrumented Chromium cases and 51 targeted unit tests. Typecheck, lint, formatting, all nine coverage groups and all 100 bundle budgets passed. The 31 cold-auth assets match the six previously verified browser checks."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-activation-raw-draft-recovery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-activation-raw-draft-recovery/proof.json",
+      "source_scope_proof_sha256": "d5024a49f502c2a9f80dd45a4c2eeacb33d2330b3146288c9d2e967f5ddc3ef2",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-activation-raw-draft-recovery/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-activation-raw-draft-recovery/reviewed.patch",
+      "release_disposition": "Verified activation-rule and raw electricity draft confirmation recovery. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -802321,12 +802434,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Finish demonstrated activation-rule, raw electricity draft and member confirmation recovery gaps in v0.5.0. Reconcile conditional UI states. Live Sentry delivery and required GitHub accessibility enforcement are still independent gates."
+    "goal": "Close the remaining team role, member removal and invitation withdrawal recovery. Reconcile conditional UI states for v0.5.0. Live Sentry delivery and required GitHub accessibility enforcement remain separate gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 customer ownership decisions now have source-bound browser and real PostgreSQL evidence. Five launch-required criteria remain open, including staging Sentry delivery, GitHub accessibility enforcement and remaining UI reconciliation. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 activation-rule and raw electricity draft confirmation recovery have current native browser evidence. Five launch-required criteria remain open, including staging Sentry delivery, GitHub accessibility enforcement and remaining UI reconciliation. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {

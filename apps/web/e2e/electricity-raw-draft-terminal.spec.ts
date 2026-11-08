@@ -3,6 +3,7 @@ import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { t } from '@barghsa/i18n/app';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 const orderId = '84000000-0000-4000-8000-000000000001',
   profileId = '85000000-0000-4000-8000-000000000001';
 for (const locale of ['en', 'fa'] as const)
@@ -83,6 +84,7 @@ for (const locale of ['en', 'fa'] as const)
         }
         if (path.endsWith('/draft-terminal')) {
           writes.push(route.request().postDataJSON());
+          if (funded && writes.length === 1) return route.fulfill({ status: 503, json: {} });
           return route.fulfill({
             json: {
               orderId,
@@ -160,9 +162,25 @@ for (const locale of ['en', 'fa'] as const)
       }));
       expect(overflow.scrollWidth <= overflow.width, JSON.stringify(overflow)).toBe(true);
       await approveRiskConfirmation(page, locale, 'both');
-      await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
+      const confirm = dialog.getByRole('button', { name: t('team.confirm', locale), exact: true });
+      await confirm.click();
+      if (funded) {
+        await expect(dialog.getByRole('alert')).toHaveText(confirmationText('unconfirmed', locale));
+        await expect(confirm).toBeDisabled();
+        expect(writes).toHaveLength(1);
+        if (locale === 'fa' && test.info().project.name === 'mobile-safari')
+          await page.screenshot({ path: test.info().outputPath('raw-draft-review-fa-mobile.png') });
+        await dialog.getByRole('button', { name: copy('retry'), exact: true }).click();
+        await expect(dialog.getByRole('alert')).toHaveCount(0);
+        await expect(dialog).toContainText('97000000-0000-4000-8000-000000000001');
+        await expect(confirm).toBeDisabled();
+        expect(writes).toHaveLength(1);
+        await approveRiskConfirmation(page, locale, 'both');
+        await confirm.click();
+      }
       await expect(dialog).toHaveCount(0);
-      expect(writes).toHaveLength(1);
+      expect(writes).toHaveLength(funded ? 2 : 1);
+      if (funded) expect(writes[1]).toEqual(writes[0]);
       expect(writes[0]).toMatchObject({
         action: 'reject',
         reason: 'Keyboard reviewed reason',

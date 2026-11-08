@@ -2,6 +2,7 @@ import { test, expect } from './coverage-fixture';
 import { checkChoiceTarget } from './route-presentation';
 import { en, fa } from '../../../packages/i18n/src/contracts';
 import { t } from '../../../packages/i18n/src/app';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 for (const locale of ['en', 'fa'] as const) {
   test(
     locale + ': staff configures optional prerequisites through password verification',
@@ -52,10 +53,12 @@ for (const locale of ['en', 'fa'] as const) {
           updatedAt: '2026-09-21T00:00:00Z',
         },
       ];
+      let readFailure = false;
       await page.route('**/api/admin/contract-activation-rules', (route) =>
-        route.fulfill({ json: { rules, canEdit: true } })
+        route.fulfill(readFailure ? { status: 503, json: {} } : { json: { rules, canEdit: true } })
       );
       let verified = false;
+      let uncertain: 'unchanged' | 'applied' | null = null;
       const attempts: unknown[] = [];
       await page.route('**/api/admin/contract-activation-rules/electricity', (route) => {
         expect(route.request().method()).toBe('PUT');
@@ -63,8 +66,14 @@ for (const locale of ['en', 'fa'] as const) {
         attempts.push(body);
         if (!verified)
           return route.fulfill({ status: 403, json: { error: 'AUTHZ:STEP_UP_REQUIRED' } });
-        rules[0] = { ...rules[0]!, signatureRequired: body.signatureRequired, revision: 3 };
-        return route.fulfill({ json: rules[0] });
+        if (uncertain === 'unchanged') return route.fulfill({ status: 503, json: {} });
+        rules[0] = {
+          ...rules[0]!,
+          signatureRequired: body.signatureRequired,
+          serviceStartRequired: body.serviceStartRequired,
+          revision: rules[0]!.revision + 1,
+        };
+        return route.fulfill({ json: uncertain === 'applied' ? {} : rules[0] });
       });
       await page.route('**/api/auth/step-up', (route) => {
         expect(route.request().postDataJSON()).toEqual({ password: 'Test-password' });
@@ -105,6 +114,40 @@ for (const locale of ['en', 'fa'] as const) {
         group.getByRole('checkbox', { name: words['rule.signatureRequired'], exact: true })
       ).toBeChecked();
       await expect(group.getByRole('button', { name: words.saveActivationRules })).toBeDisabled();
+      const serviceStart = group.getByRole('checkbox', {
+        name: words['rule.serviceStartRequired'],
+        exact: true,
+      });
+      const save = group.getByRole('button', { name: words.saveActivationRules });
+      const confirm = dialog.getByRole('button', { name: t('team.confirm', locale), exact: true });
+      const refresh = dialog.getByRole('button', { name: words.refresh, exact: true });
+      await serviceStart.check();
+      uncertain = 'unchanged';
+      await save.click();
+      await confirm.click();
+      await expect(dialog.getByRole('alert')).toHaveText(confirmationText('unconfirmed', locale));
+      await expect(confirm).toBeDisabled();
+      readFailure = true;
+      await refresh.click();
+      await expect(dialog.getByText(words.error, { exact: true })).toBeVisible();
+      await expect(confirm).toBeDisabled();
+      expect(attempts).toHaveLength(3);
+      readFailure = false;
+      await refresh.click();
+      await expect(dialog).toHaveCount(0);
+      await expect(serviceStart).toBeChecked();
+      expect(attempts).toHaveLength(3);
+      uncertain = 'applied';
+      await save.click();
+      await confirm.click();
+      await expect(dialog.getByRole('alert')).toHaveText(confirmationText('unconfirmed', locale));
+      expect(attempts).toHaveLength(4);
+      expect(attempts[3]).toEqual(attempts[2]);
+      await refresh.click();
+      await expect(dialog).toHaveCount(0);
+      await expect(serviceStart).toBeChecked();
+      await expect(save).toBeDisabled();
+      expect(attempts).toHaveLength(4);
     }
   );
   test(

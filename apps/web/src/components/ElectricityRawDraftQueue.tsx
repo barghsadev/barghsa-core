@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { staffQueryJson, useStaffQueryRead } from '../hooks/useStaffQueryRead.js';
-import { ServerQueryError } from '../lib/server-query-client.js';
+import { readWithDeadline, ServerQueryError } from '../lib/server-query-client.js';
 import { Button, Label, Textarea, TextCell, DateCell } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
@@ -12,6 +12,7 @@ import { OperationalQueueTable } from './OperationalQueueTable.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { withCsrf } from '../lib/csrf.js';
 import { existingDraftReturns } from '../lib/electricity-existing-returns.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 interface Draft {
   id: string;
   profileId: string;
@@ -19,6 +20,24 @@ interface Draft {
   createdAt: string;
   updatedAt: string;
 }
+type DraftReview = { row: Draft; action: 'reject' | 'cancel' };
+type DraftAction = TeamAction & {
+  reviewNumber: number;
+  draft: Draft;
+  reason: string;
+  gift: ReturnType<typeof giftOutcome>;
+  financial: ReturnType<typeof financialOutcome>;
+  stage: 'approval' | 'execute';
+  hash: string;
+  target: 'rejected' | 'cancelled';
+  body: {
+    action: DraftReview['action'];
+    reason: string;
+    expectedReviewHash: string;
+    idempotencyKey: string;
+    approvalRequestId?: string;
+  };
+};
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 function giftOutcome(value: unknown, paid = false) {
   if (value === undefined || value === null) return null;
@@ -161,26 +180,15 @@ function Queue() {
     [loading, setLoading] = useState(false),
     [listFailed, setListFailed] = useState(false),
     [error, setError] = useState('');
-  const [selected, setSelected] = useState<{ row: Draft; action: 'reject' | 'cancel' } | null>(
-      null
-    ),
+  const [selected, setSelected] = useState<DraftReview | null>(null),
     [reason, setReason] = useState(''),
-    [action, setAction] = useState<
-      | (TeamAction & {
-          draft: Draft;
-          reason: string;
-          gift: ReturnType<typeof giftOutcome>;
-          financial: ReturnType<typeof financialOutcome>;
-          stage: 'approval' | 'execute';
-          hash: string;
-          target: 'rejected' | 'cancelled';
-        })
-      | null
-    >(null),
+    [action, setAction] = useState<DraftAction | null>(null),
+    [recovery, setRecovery] = useState<DraftAction | null>(null),
     [busy, setBusy] = useState(false),
     [invalid, setInvalid] = useState(false);
   const live = useRef(true),
-    pending = useRef(false);
+    previewRequest = useRef<AbortController | null>(null),
+    reviewNumber = useRef(0);
   const scope = JSON.stringify([after, revision, locale]);
   const [accepted, setAccepted] = useState<string | null>(null);
   const canUseRows = accepted === scope && !loading && !listFailed;
@@ -188,6 +196,7 @@ function Queue() {
     live.current = true;
     return () => {
       live.current = false;
+      previewRequest.current?.abort();
     };
   }, []);
   useEffect(() => {
@@ -195,7 +204,6 @@ function Queue() {
     const abort = new AbortController();
     setLoading(true);
     setListFailed(false);
-    setError('');
     void read(
       '/api/staff/electricity/orders/drafts' + (after ? '?after=' + encodeURIComponent(after) : ''),
       'list',
@@ -214,11 +222,8 @@ function Queue() {
         if (abort.signal.aborted) return;
         setListFailed(true);
         if (failure instanceof ServerQueryError && [401, 403].includes(failure.status)) {
-          setRows([]);
-          setNext(null);
-          setSelected(null);
-        }
-        setError(copy('failed'));
+          deny();
+        } else setError(copy('failed'));
       })
       .finally(() => {
         if (!abort.signal.aborted) setLoading(false);
@@ -226,32 +231,65 @@ function Queue() {
     return () => abort.abort();
   }, [open, after, revision, locale, read, scope]);
   const reload = () => {
+    setError('');
     setAfter(null);
     setRevision((v) => v + 1);
   };
-  async function review(event: FormEvent) {
+  function deny() {
+    previewRequest.current?.abort();
+    setRows([]);
+    setNext(null);
+    setAccepted(null);
+    setAction(null);
+    setRecovery(null);
+    setSelected(null);
+    setReason('');
+    setError(copy('denied'));
+  }
+  function review(event: FormEvent) {
     event.preventDefault();
-    if (!selected || pending.current || !canUseRows) return;
+    if (!selected || recovery || action || !canUseRows) return;
     const explanation = reason.trim();
     if (!explanation || explanation.length > 1000) {
       setInvalid(true);
       return;
     }
-    const owned = selected;
-    pending.current = true;
+    void reviewDraft(selected, explanation);
+  }
+  async function reviewDraft(owned: DraftReview, explanation: string, captured?: DraftAction) {
+    if (previewRequest.current) return;
+    const controller = new AbortController();
+    previewRequest.current = controller;
     setBusy(true);
     setError('');
     try {
-      const response = await fetch(
-        '/api/staff/electricity/orders/' + owned.row.id + '/draft-terminal/review',
-        {
+      const path = '/api/staff/electricity/orders/' + owned.row.id + '/draft-terminal';
+      const { status, raw } = await readWithDeadline(controller.signal, async (signal) => {
+        const response = await fetch(path + '/review', {
           method: 'POST',
           headers: withCsrf({ 'Content-Type': 'application/json' }),
           body: JSON.stringify({ action: owned.action, reason: explanation }),
-        }
-      );
-      if (!response.ok) throw new Error('Draft review unavailable');
-      const raw: unknown = await response.json();
+          signal,
+        });
+        return {
+          status: response.status,
+          raw: response.ok ? ((await response.json()) as unknown) : null,
+        };
+      });
+      if (!live.current || controller.signal.aborted) return;
+      if (status === 401 || status === 403) {
+        deny();
+        return;
+      }
+      if (captured && (status === 404 || status === 409)) {
+        setAction(null);
+        setRecovery(null);
+        setSelected(null);
+        setReason('');
+        reload();
+        setError(copy('changed'));
+        return;
+      }
       if (
         !raw ||
         typeof raw !== 'object' ||
@@ -298,51 +336,74 @@ function Queue() {
         approval = approvalOutcome(raw),
         stage = financial.required && approval?.status !== 'approved' ? 'approval' : 'execute';
       if (financial.required && approval?.status === 'pending') {
-        if (live.current) setError(copy('awaitingApproval'));
+        setRecovery(null);
+        setAction(null);
+        setError(copy('awaitingApproval'));
         return;
       }
       const gift = giftOutcome(
         'gift' in raw.data ? raw.data.gift : null,
         'paidOrder' in raw.data && raw.data.paidOrder === true
       );
-      if (live.current)
-        setAction({
-          draft: owned.row,
+      const approvalRequestId =
+        financial.required && approval?.status === 'approved' ? approval.id : undefined;
+      const retryKey =
+        captured?.hash === raw.hash &&
+        captured.stage === stage &&
+        captured.body.approvalRequestId === approvalRequestId
+          ? captured.body.idempotencyKey
+          : undefined;
+      setRecovery(null);
+      setAction({
+        reviewNumber: ++reviewNumber.current,
+        draft: owned.row,
+        reason: explanation,
+        gift,
+        financial,
+        stage,
+        hash: raw.hash,
+        target: owned.action === 'reject' ? 'rejected' : 'cancelled',
+        risk: 'both',
+        title: copy(stage === 'approval' ? 'requestApproval' : owned.action),
+        description: copy(stage === 'approval' ? 'approvalSummary' : 'summary'),
+        path: path + (stage === 'approval' ? '/approval' : ''),
+        method: 'POST',
+        successStatus: stage === 'approval' ? 201 : 200,
+        body: {
+          action: owned.action,
           reason: explanation,
-          gift,
-          financial,
-          stage,
-          hash: raw.hash,
-          target: owned.action === 'reject' ? 'rejected' : 'cancelled',
-          risk: 'both',
-          title: copy(stage === 'approval' ? 'requestApproval' : owned.action),
-          description: copy(stage === 'approval' ? 'approvalSummary' : 'summary'),
-          path:
-            '/api/staff/electricity/orders/' +
-            owned.row.id +
-            '/draft-terminal' +
-            (stage === 'approval' ? '/approval' : ''),
-          method: 'POST',
-          successStatus: stage === 'approval' ? 201 : 200,
-          body: {
-            action: owned.action,
-            reason: explanation,
-            expectedReviewHash: raw.hash,
-            idempotencyKey: crypto.randomUUID(),
-            ...(financial.required && approval?.status === 'approved'
-              ? { approvalRequestId: approval.id }
-              : {}),
-          },
-          conflictMessage: copy('changed'),
-          forbiddenMessage: copy('denied'),
-        });
+          expectedReviewHash: raw.hash,
+          idempotencyKey: retryKey ?? crypto.randomUUID(),
+          ...(approvalRequestId ? { approvalRequestId } : {}),
+        },
+        conflictMessage: copy('changed'),
+        forbiddenMessage: copy('denied'),
+      });
     } catch {
-      if (live.current) setError(copy('failed'));
+      if (live.current && !controller.signal.aborted) setError(copy('failed'));
     } finally {
-      pending.current = false;
-      if (live.current) setBusy(false);
+      if (previewRequest.current === controller) {
+        previewRequest.current = null;
+        if (live.current) setBusy(false);
+      }
     }
   }
+  const recoveryButton = recovery && (
+    <Button
+      type="button"
+      variant="outline"
+      disabled={busy}
+      onClick={() =>
+        void reviewDraft(
+          { row: recovery.draft, action: recovery.body.action },
+          recovery.reason,
+          recovery
+        )
+      }
+    >
+      {copy('retry')}
+    </Button>
+  );
   return (
     <details
       className="rounded-md border p-4"
@@ -351,6 +412,7 @@ function Queue() {
         const nextOpen = event.currentTarget.open;
         if (nextOpen === open) return;
         if (nextOpen) setAccepted(null);
+        else previewRequest.current?.abort();
         setOpen(nextOpen);
       }}
     >
@@ -361,9 +423,17 @@ function Queue() {
         <div className="mt-4 space-y-4">
           <p className="text-sm text-muted-foreground">{copy('description')}</p>
           {error ? <p role="alert">{error}</p> : null}
-          <Button variant="outline" disabled={busy || !!action} onClick={reload}>
-            {copy('retry')}
-          </Button>
+          {recovery && !action && (
+            <div className="space-y-2">
+              <p role="alert">{confirmationText('unconfirmed', locale)}</p>
+              {recoveryButton}
+            </div>
+          )}
+          {!recovery && (
+            <Button variant="outline" disabled={busy || !!action} onClick={reload}>
+              {copy('retry')}
+            </Button>
+          )}
           <OperationalQueueTable
             locale={locale}
             rows={rows}
@@ -398,7 +468,7 @@ function Queue() {
                     key={choice}
                     size="sm"
                     variant="outline"
-                    disabled={busy || !!action || !canUseRows}
+                    disabled={busy || !!action || !!recovery || !canUseRows}
                     onClick={() => {
                       setSelected({ row, action: choice });
                       setReason('');
@@ -418,10 +488,11 @@ function Queue() {
           {next ? (
             <Button
               variant="outline"
-              disabled={busy || !!action || !canUseRows}
+              disabled={busy || !!action || !!recovery || !canUseRows}
               onClick={() => {
                 setSelected(null);
                 setReason('');
+                setError('');
                 setAfter(next);
               }}
             >
@@ -443,7 +514,7 @@ function Queue() {
                 aria-required="true"
                 aria-invalid={invalid}
                 aria-describedby={invalid ? 'raw-draft-reason-error' : undefined}
-                disabled={busy || !!action}
+                disabled={busy || !!action || !!recovery}
                 onChange={(event) => {
                   setReason(event.target.value);
                   setInvalid(false);
@@ -454,81 +525,95 @@ function Queue() {
                   {copy('reasonInvalid')}
                 </p>
               ) : null}
-              <Button type="submit" disabled={busy || !!action}>
+              <Button type="submit" disabled={busy || !!action || !!recovery || !canUseRows}>
                 {copy('review')}
               </Button>
             </form>
           ) : null}
           {action ? (
             <TeamActionDialog
+              key={action.reviewNumber}
               action={action}
+              confirmationDisabled={busy || !!recovery}
               summary={
-                <dl className="space-y-2 text-sm">
-                  <div>
-                    <dt>{copy('order')}</dt>
-                    <dd className="break-all" dir="ltr">
-                      {action.draft.id}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>{copy('profile')}</dt>
-                    <dd className="break-all" dir="ltr">
-                      {action.draft.profileId}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>{copy('reason')}</dt>
-                    <dd className="whitespace-pre-wrap break-words">{action.reason}</dd>
-                  </div>
-                  {action.gift ? (
+                <>
+                  <dl className="space-y-2 text-sm">
                     <div>
-                      <dt>{copy('gift')}</dt>
+                      <dt>{copy('order')}</dt>
                       <dd className="break-all" dir="ltr">
-                        {action.gift.id}
+                        {action.draft.id}
                       </dd>
-                      <dd>{copy('gift.' + action.gift.outcome)}</dd>
                     </div>
-                  ) : null}
-                  {action.financial.invoices.length ? (
-                    <>
+                    <div>
+                      <dt>{copy('profile')}</dt>
+                      <dd className="break-all" dir="ltr">
+                        {action.draft.profileId}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>{copy('reason')}</dt>
+                      <dd className="whitespace-pre-wrap break-words">{action.reason}</dd>
+                    </div>
+                    {action.gift ? (
                       <div>
-                        <dt>{copy('walletReturn')}</dt>
-                        <dd>{numbers.money(action.financial.amount)}</dd>
-                      </div>
-                      {action.financial.invoices.map((line) => (
-                        <div key={line.id}>
-                          <dt>{copy('invoice')}</dt>
-                          <dd className="break-all" dir="ltr">
-                            {line.id}
-                          </dd>
-                          <dd>{numbers.money(line.amount)}</dd>
-                        </div>
-                      ))}
-                      {action.financial.existing.map((refund) => (
-                        <div key={refund.id}>
-                          <dt>{copy('existingReturn')}</dt>
-                          <dd className="break-all" dir="ltr">
-                            {refund.id}
-                          </dd>
-                          <dd>{t('invoices.activity.state.' + refund.state, locale)}</dd>
-                          <dd>
-                            {copy(refund.exhausted ? 'manualRetryRequired' : 'retryPreserved')}
-                          </dd>
-                        </div>
-                      ))}
-                      <div>
-                        <dt>{copy('approval')}</dt>
-                        <dd>
-                          {copy(
-                            action.financial.required ? 'approvalRequired' : 'approvalNotRequired'
-                          )}
+                        <dt>{copy('gift')}</dt>
+                        <dd className="break-all" dir="ltr">
+                          {action.gift.id}
                         </dd>
+                        <dd>{copy('gift.' + action.gift.outcome)}</dd>
                       </div>
-                    </>
-                  ) : null}
-                </dl>
+                    ) : null}
+                    {action.financial.invoices.length ? (
+                      <>
+                        <div>
+                          <dt>{copy('walletReturn')}</dt>
+                          <dd>{numbers.money(action.financial.amount)}</dd>
+                        </div>
+                        {action.financial.invoices.map((line) => (
+                          <div key={line.id}>
+                            <dt>{copy('invoice')}</dt>
+                            <dd className="break-all" dir="ltr">
+                              {line.id}
+                            </dd>
+                            <dd>{numbers.money(line.amount)}</dd>
+                          </div>
+                        ))}
+                        {action.financial.existing.map((refund) => (
+                          <div key={refund.id}>
+                            <dt>{copy('existingReturn')}</dt>
+                            <dd className="break-all" dir="ltr">
+                              {refund.id}
+                            </dd>
+                            <dd>{t('invoices.activity.state.' + refund.state, locale)}</dd>
+                            <dd>
+                              {copy(refund.exhausted ? 'manualRetryRequired' : 'retryPreserved')}
+                            </dd>
+                          </div>
+                        ))}
+                        <div>
+                          <dt>{copy('approval')}</dt>
+                          <dd>
+                            {copy(
+                              action.financial.required ? 'approvalRequired' : 'approvalNotRequired'
+                            )}
+                          </dd>
+                        </div>
+                      </>
+                    ) : null}
+                  </dl>
+                  {recovery && (
+                    <div className="space-y-2">
+                      {recoveryButton}
+                      {error && <p role="alert">{error}</p>}
+                    </div>
+                  )}
+                </>
               }
               onClose={() => setAction(null)}
+              onUnconfirmed={() => {
+                setError('');
+                setRecovery(action);
+              }}
               onSuccess={async (result) => {
                 if (!result || typeof result !== 'object') throw new Error('Unbound draft receipt');
                 if (action.stage === 'approval') {
@@ -605,12 +690,7 @@ function Queue() {
                 }
                 return;
               }}
-              onDenied={() => {
-                setRows([]);
-                setAction(null);
-                setSelected(null);
-                setError(copy('denied'));
-              }}
+              onDenied={deny}
             />
           ) : null}
         </div>
@@ -620,5 +700,6 @@ function Queue() {
 }
 export function ElectricityRawDraftQueue() {
   const actor = useAccountUser();
-  return <Queue key={actor ?? 'signed-out'} />;
+  const revision = useProfileContextRevision();
+  return <Queue key={JSON.stringify([actor, revision])} />;
 }
