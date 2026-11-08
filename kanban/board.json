@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T20:43:48+00:00",
-  "source_commit": "da3612aad943af8e202d986cf297f4a5e78dc195",
+  "updated": "2026-11-08T20:52:05+00:00",
+  "source_commit": "63f2977de1cde8468ec986f1380c3b205a50df98",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -598484,7 +598484,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The shared sensitive-action OTP and admin test chat now have bounded, explicit recovery. Match the remaining original route and widget loading, empty, error and stale-state criteria to current implementation and exact test receipts."
+        "Current conditional receipts cover the named document, template, invoice, inbox and chat journeys. Reconcile the remaining original conditional requirements for each route and widget, including loaded-empty states and scoped recovery of independent panels."
       ],
       "owner": null,
       "depends_on": [],
@@ -598594,7 +598594,8 @@
           "release-0.5-record-workspace-read-states",
           "release-0.5-route-theme-layout",
           "release-0.5-sensitive-otp-deadline",
-          "release-0.5-admin-test-chat-deadline"
+          "release-0.5-admin-test-chat-deadline",
+          "release-0.5-carried-route-evidence"
         ],
         "current_acceptance": null
       }
@@ -728241,7 +728242,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Reconcile the carried layout cells and the remaining original route and shared-pattern acceptance. The selected navigation, sensitive-action OTP, and admin chat timeout and mobile composer checks have separate passing receipts."
+        "The 27 prior-only populated routes now have measurements on the current production build, and the shared composer paths were refreshed. Finish the original route and widget conditional acceptance, including exact loading, empty, error, keyboard, forms, filters and stale-context evidence where applicable."
       ],
       "owner": null,
       "depends_on": [],
@@ -728417,7 +728418,8 @@
           "release-0.5-route-theme-layout",
           "release-0.5-navigation-theme-transition",
           "release-0.5-sensitive-otp-deadline",
-          "release-0.5-admin-test-chat-deadline"
+          "release-0.5-admin-test-chat-deadline",
+          "release-0.5-carried-route-evidence"
         ]
       }
     },
@@ -806826,6 +806828,162 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-test-chat-deadline/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-test-chat-deadline/reviewed.patch",
       "release_disposition": "Verified bounded admin test chat and the shared mobile composer. v0.5.0 remains open."
+    },
+    "release-0.5-carried-route-evidence": {
+      "batch": "release-0.5-carried-route-evidence",
+      "base_commit": "63f2977de1cde8468ec986f1380c3b205a50df98",
+      "task_keys": [
+        "release-readiness#R-04.01",
+        "07-ui-ux-design.md#T-07.12.01.08"
+      ],
+      "partial_task_keys": [
+        "release-readiness#R-04.01",
+        "07-ui-ux-design.md#T-07.12.01.08"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/account-recovery-closure.spec.ts",
+          "sha256": "c8492c674d6273b0580c3533ad92c2801829798cec94e1b3514067f47f798618"
+        },
+        {
+          "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
+          "sha256": "cbf5723b460f6c9e5fb0088dfa5195c1f41003f0d05c47ca87e37287734e1f2c"
+        },
+        {
+          "path": "apps/web/e2e/approval-reason-forms.spec.ts",
+          "sha256": "0239163c4b7514aa54830768d7fb61ed677002fd44e569158284f7d5c60b15ed"
+        },
+        {
+          "path": "apps/web/e2e/assistant-chat-forms.spec.ts",
+          "sha256": "f9218d6f8d3cb14148dbfa8c3741d92f7416b45abae232c5e43171061330b765"
+        },
+        {
+          "path": "apps/web/e2e/catalogue-form-fixture.ts",
+          "sha256": "d628dc1b6830b741901854f7107cee5a094dd9b33b286d20097b66f47629a74a"
+        },
+        {
+          "path": "apps/web/e2e/content-forms.spec.ts",
+          "sha256": "c045c5baeb159a8c4141ada1be5950799406f819b2648a9a4359fee2a90cb848"
+        },
+        {
+          "path": "apps/web/e2e/crm-corrections.spec.ts",
+          "sha256": "05c58252f5f88a9d2c8751c56082b550e96f38c3ae25bb87ac265d3b1f0e7874"
+        },
+        {
+          "path": "apps/web/e2e/crm-dashboard.spec.ts",
+          "sha256": "59e01fcd87a53dcff9e379b98054f0f5017f880961173f22674c371757bfa847"
+        },
+        {
+          "path": "apps/web/e2e/crm-list.spec.ts",
+          "sha256": "6e45d20195e3deb2d35d20f79410169bf13eb6b327adc8652b8c75ffd837e11c"
+        },
+        {
+          "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
+          "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+        },
+        {
+          "path": "apps/web/e2e/document-list-recovery.spec.ts",
+          "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+        },
+        {
+          "path": "apps/web/e2e/electricity-increase-queue.spec.ts",
+          "sha256": "176bcb6111323baca03b66e71cd124d23f0147577056e8b18407606b439a7f0e"
+        },
+        {
+          "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
+          "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
+        },
+        {
+          "path": "apps/web/e2e/finance-timestamps.spec.ts",
+          "sha256": "1ef9c97d5f95078588cd44546352831b6ef11a9ae48ca126b573dcad407bda98"
+        },
+        {
+          "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
+          "sha256": "549793a0ac3cbb878a0eda4f745a4efb6f4c4a9ccb5eda00fb4591c9b3b15687"
+        },
+        {
+          "path": "apps/web/e2e/knowledge-policy-tables.spec.ts",
+          "sha256": "9a9b34ef69e18914b484f50a37ea89e3f558d18f6213286d0be27b6617ec16e8"
+        },
+        {
+          "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
+          "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+        },
+        {
+          "path": "apps/web/e2e/notification-template-filters.spec.ts",
+          "sha256": "54de898a1d42dfbda10ab98a2006fb2a679861c3f215fea84c80ad2a6a21962a"
+        },
+        {
+          "path": "apps/web/e2e/number-preference-fixture.ts",
+          "sha256": "16180a2f15a1b885d06544fb50757b57a5c3e4c4ff05a5896e9744c3d71d506a"
+        },
+        {
+          "path": "apps/web/e2e/product-catalogue-tables.spec.ts",
+          "sha256": "d9c4002b6a96f7815de2166eee15f3e68a5752aab2affa0bc59636e43ea54154"
+        },
+        {
+          "path": "apps/web/e2e/route-presentation.ts",
+          "sha256": "3b8b1e8ea1c428bea8034336170811dd33171a51c028ece2fbabe6b2484f259b"
+        },
+        {
+          "path": "apps/web/e2e/service-settings-forms.spec.ts",
+          "sha256": "9a5eb7083b27e67f170d71f25feb9cd944c4abcc25eb826405dff18746141fdc"
+        },
+        {
+          "path": "apps/web/e2e/storage-policy-forms.spec.ts",
+          "sha256": "fbf7236507119aa8be55567e23fbf079ce6f5afb0341463409afa83b70dc7089"
+        },
+        {
+          "path": "apps/web/e2e/team-form-validation.spec.ts",
+          "sha256": "0e0234c39a1cad3c6feb917b4a7fad5f5168d1344cb5d0393c93eeb9baceee03"
+        },
+        {
+          "path": "apps/web/e2e/vat-forms.spec.ts",
+          "sha256": "a68e84a95b211bdf29f53dad018d8e444ab5cc0278423fbc853bdca79619512a"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/AdminAgentTestChat.tsx",
+          "sha256": "8af92204f33e70b7c045618fa92ab5c8a85764abd721348dd9597b359bfb0152"
+        },
+        {
+          "path": "apps/web/src/components/AssistantChatComponents.tsx",
+          "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
+        },
+        {
+          "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
+          "sha256": "146dcb5a57bf0aaff1b44f203257d325a0b0e9aab317f4e050581c1c45a79e14"
+        },
+        {
+          "path": "apps/web/src/components/StepUpAuthGate.tsx",
+          "sha256": "c237ba08fc6fd4f20f62d17a5418cc5bdf0705efd9569524dd28d9e96f5f66fb"
+        },
+        {
+          "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
+          "sha256": "6d4670f5cf80582f90433e50c886fdf341ad273d58aed6ed46abda82d8cf303f"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "6934971e0de9d57aa8b85644cb45668e7618f96bc1d51716d0c04d740a2834d2"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "All 27 routes that previously relied entirely on earlier layout observations have fresh production browser measurements. Each recorded 64 cells covering Chromium and mobile Safari, Persian and English, both themes and all eight viewport widths. The current run also refreshed /ai and /admin/agents after the shared composer change.",
+        "The populated layouts cover all 93 routes using the current 29 route measurements and 64 carried route measurements. The only shared runtime differences are selected navigation color transition behavior, the explicit sensitive OTP modal and the chat composer/retry path. The current run remeasured the visible chat paths. The earlier populated layout helper excludes dialogs from landmark and heading assertions.",
+        "Passed 188 distinct source scenario and browser pairs. The initial failed probes were retained separately and excluded from acceptance. The repairs waited for inbox branding, set the receipt fixture theme through the application preference and measured the upload policy page before its editor opens.",
+        "The named journeys verify their own existing conditional checks, including document and template recovery, invoice detail loading and denial, inbox retry and read ownership, and staff and customer chat recovery. Populated layout observations do not certify every conditional state or the full release."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-carried-route-evidence",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-carried-route-evidence/proof.json",
+      "source_scope_proof_sha256": "44edae46367ad7a03f8489f70d95165444c23dcbd9b42154eff0abbe2efc4526",
+      "release_disposition": "Verified the current populated route layouts and the named conditional cases. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -806876,12 +807034,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Reconcile carried layout cells and the remaining named route and widget conditions against current implementation and exact receipts. GitHub merge enforcement and staging Sentry delivery remain independent gates."
+    "goal": "Reconcile the remaining original route and widget conditional-state acceptance against the source-bound receipts. The 27 carried populated layouts now have current measurements. GitHub merge enforcement and staging Sentry delivery remain independent gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 has the route census and verified shared navigation, OTP, and admin chat repairs. Four launch-required criteria remain open and the November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 has source-bound populated layouts for 93 routes. Four launch-required criteria remain open and the November 9 sequence remains at risk."
   },
   "capabilities": [
     {
