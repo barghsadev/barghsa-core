@@ -27,6 +27,7 @@ import { DocumentStatusBadge } from './DocumentStatusBadge.js';
 import { FilePreview } from './FilePreview.js';
 import {
   documentBase,
+  documentStates,
   isQuarantinedDocument,
   documentUrl,
   type BusinessDocument,
@@ -45,6 +46,7 @@ const transitionState: Record<DocumentAction, BusinessDocument['state']> = {
 const reasonRequiredActions = new Set<DocumentAction>(['reject', 'request-changes', 'quarantine']);
 type Transition = TeamAction & {
   target: { id: string; profileId: string; revision: number; state: BusinessDocument['state'] };
+  body: { expectedRevision: number; idempotencyKey: string; reason?: string };
 };
 
 export function DocumentDetail(props: Parameters<typeof OwnedDocumentDetail>[0]) {
@@ -99,6 +101,8 @@ function OwnedDocumentDetail({
   const [reason, setReason] = useState('');
   const [reasonMissing, setReasonMissing] = useState(false);
   const [action, setAction] = useState<Transition | null>(null);
+  const unconfirmed = useRef<Transition | null>(null);
+  const [needsRead, setNeedsRead] = useState(false);
   const [download, setDownload] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [previewing, setPreviewing] = useState(false);
@@ -123,7 +127,29 @@ function OwnedDocumentDetail({
       signal: controller.signal,
     })
       .then((data) => {
-        if (!controller.signal.aborted) setDocument(data);
+        if (controller.signal.aborted) return;
+        const pending = unconfirmed.current;
+        if (
+          data.id !== id ||
+          typeof data.profileId !== 'string' ||
+          !data.profileId ||
+          (pending && data.profileId !== pending.target.profileId) ||
+          !Number.isSafeInteger(data.revision) ||
+          !documentStates.includes(data.state) ||
+          !Array.isArray(data.history) ||
+          !data.history.every(
+            (event) =>
+              event &&
+              typeof event.id === 'string' &&
+              documentStates.includes(event.state) &&
+              typeof event.createdAt === 'string' &&
+              (event.reason == null || typeof event.reason === 'string')
+          )
+        )
+          throw new Error('Invalid document detail');
+        if (pending?.body.expectedRevision !== data.revision || data.permissions?.write === false)
+          unconfirmed.current = null;
+        setDocument(data);
       })
       .catch(() => {
         if (!controller.signal.aborted) setError(true);
@@ -171,12 +197,19 @@ function OwnedDocumentDetail({
     }
   }
   function choose(next: DocumentAction) {
-    if (!document) return;
+    if (!document || needsRead || action) return;
     if (reasonRequiredActions.has(next) && !reason.trim()) {
       setReasonMissing(true);
       return;
     }
     setReasonMissing(false);
+    const path = `${documentBase(staff)}/${document.id}/${next}`;
+    const note = reason.trim() || undefined;
+    const pending = unconfirmed.current;
+    if (pending?.path === path && pending.body.reason === note) {
+      setAction(pending);
+      return;
+    }
     setAction({
       target: {
         id: document.id,
@@ -189,16 +222,24 @@ function OwnedDocumentDetail({
         : {}),
       title: word(next),
       description: document.originalName,
-      path: `${documentBase(staff)}/${document.id}/${next}`,
+      path,
       method: 'POST',
       body: {
         expectedRevision: document.revision,
         idempotencyKey: crypto.randomUUID(),
-        ...(reason.trim() ? { reason: reason.trim() } : {}),
+        ...(note ? { reason: note } : {}),
       },
       conflictMessage: word('conflict'),
       forbiddenMessage: word('denied'),
     });
+  }
+  function withdraw() {
+    previewController.current?.abort();
+    downloadController.current?.abort();
+    setDocument(null);
+    setPreview(null);
+    setDownload(null);
+    setAction(null);
   }
   const readable =
     document &&
@@ -251,7 +292,20 @@ function OwnedDocumentDetail({
           {word('close')}
         </Button>
       </div>
-      {error ? (
+      {needsRead ? (
+        <Alert variant="destructive">
+          <AlertDescription>{confirmationText('unconfirmed', locale)}</AlertDescription>
+          <Button
+            variant="outline"
+            onClick={() => {
+              setNeedsRead(false);
+              setReload((value) => value + 1);
+            }}
+          >
+            {confirmationText('checkStatus', locale)}
+          </Button>
+        </Alert>
+      ) : error ? (
         <Alert variant="destructive">
           <AlertDescription>{word('denied')}</AlertDescription>
           <Button variant="outline" onClick={() => setReload((value) => value + 1)}>
@@ -449,6 +503,16 @@ function OwnedDocumentDetail({
         <TeamActionDialog
           action={action}
           onClose={() => setAction(null)}
+          onDenied={() => {
+            withdraw();
+            unconfirmed.current = null;
+            setError(true);
+          }}
+          onUnconfirmed={() => {
+            withdraw();
+            unconfirmed.current = action;
+            setNeedsRead(true);
+          }}
           onSuccess={async (result) => {
             const receipt = result as Partial<BusinessDocument> | null;
             const target = action.target;
@@ -461,6 +525,7 @@ function OwnedDocumentDetail({
             )
               throw new Error('Document transition receipt mismatch');
             setAction(null);
+            unconfirmed.current = null;
             setReason('');
             setReload((value) => value + 1);
             onChanged();

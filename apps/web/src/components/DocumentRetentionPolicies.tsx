@@ -14,8 +14,10 @@ import {
   Textarea,
 } from '@barghsa/ui';
 import { documentText } from '@barghsa/i18n/documents';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
+import { DocumentRequestError } from '../lib/documents.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 
 type Policy = {
@@ -27,6 +29,11 @@ type Policy = {
   effectiveDate: string;
 };
 type PoliciesResponse = { canManage: boolean; policies: Policy[] };
+type PolicyChange = TeamAction & {
+  kind: string;
+  previousVersion: string | undefined;
+  body: Pick<Policy, 'retentionYears' | 'legalHold' | 'approvalNote'>;
+};
 const kinds = [
   'contract',
   'invoice',
@@ -37,6 +44,23 @@ const kinds = [
   'solar_request',
   'standalone',
 ] as const;
+
+function validPolicy(value: unknown): value is Policy {
+  if (!value || typeof value !== 'object') return false;
+  const policy = value as Policy;
+  return (
+    typeof policy.id === 'string' &&
+    !!policy.id.trim() &&
+    kinds.some((kind) => kind === policy.businessRecordType) &&
+    Number.isInteger(policy.retentionYears) &&
+    policy.retentionYears >= 1 &&
+    policy.retentionYears <= 100 &&
+    typeof policy.legalHold === 'boolean' &&
+    typeof policy.approvalNote === 'string' &&
+    typeof policy.effectiveDate === 'string' &&
+    Number.isFinite(Date.parse(policy.effectiveDate))
+  );
+}
 
 export function DocumentRetentionPolicies() {
   const actor = useAccountUser();
@@ -58,6 +82,8 @@ function OwnedDocumentRetentionPolicies() {
   const time = useAccountTime();
   const [data, setData] = useState<PoliciesResponse | null>(null);
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [unconfirmed, setUnconfirmed] = useState(false);
   const [reload, setReload] = useState(0);
   const [kind, setKind] = useState<string>('contract');
   const [years, setYears] = useState(10);
@@ -65,33 +91,50 @@ function OwnedDocumentRetentionPolicies() {
   const [note, setNote] = useState('');
   const [attempted, setAttempted] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [action, setAction] = useState<TeamAction | null>(null);
+  const [action, setAction] = useState<PolicyChange | null>(null);
+  const current = data?.policies.find((item) => item.businessRecordType === kind);
+  const version = current?.id;
+  const savedYears = current?.retentionYears;
+  const savedHold = current?.legalHold;
   const validYears = Number.isInteger(years) && years >= 1 && years <= 100;
   const validNote = note.trim().length >= 3;
 
   useEffect(() => {
     const controller = new AbortController();
+    setLoading(true);
     void readDocument<PoliciesResponse>('/api/admin/document-retention/policies', {
       signal: controller.signal,
     })
       .then((response) => {
         if (controller.signal.aborted) return;
+        if (
+          typeof response.canManage !== 'boolean' ||
+          !Array.isArray(response.policies) ||
+          !response.policies.every(validPolicy)
+        )
+          throw new Error('Invalid retention policy list');
         setData(response);
         setError(false);
+        setUnconfirmed(false);
       })
-      .catch(() => {
-        if (!controller.signal.aborted) setError(true);
+      .catch((failure: unknown) => {
+        if (!controller.signal.aborted) {
+          if (failure instanceof DocumentRequestError && [401, 403].includes(failure.status))
+            setData(null);
+          setError(true);
+        }
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
   }, [reload, readDocument]);
   useEffect(() => {
-    const current = data?.policies.find((item) => item.businessRecordType === kind);
-    if (!current) return;
-    setYears(current.retentionYears);
-    setHeld(current.legalHold);
+    setYears(savedYears ?? 10);
+    setHeld(savedHold ?? false);
     setNote('');
     setAttempted(false);
-  }, [data, kind]);
+  }, [kind, version, savedYears, savedHold]);
 
   function select(next: string) {
     setKind(next);
@@ -99,12 +142,16 @@ function OwnedDocumentRetentionPolicies() {
   }
   function submit(event: FormEvent) {
     event.preventDefault();
+    if (!data?.canManage || loading || error || unconfirmed || action) return;
     if (!validYears || !validNote) {
       setAttempted(true);
       return;
     }
     setAttempted(false);
+    setSaved(false);
     setAction({
+      kind,
+      previousVersion: current?.id,
       title: word('savePolicy'),
       description: word('retentionChangeWarning'),
       path: `/api/admin/document-retention/policies/${kind}`,
@@ -113,7 +160,6 @@ function OwnedDocumentRetentionPolicies() {
       forbiddenMessage: word('denied'),
     });
   }
-  const current = data?.policies.find((item) => item.businessRecordType === kind);
   return (
     <details className="rounded-xl border bg-card p-5">
       <summary className="cursor-pointer font-semibold pointer-coarse:min-h-11 pointer-coarse:py-2">
@@ -121,11 +167,18 @@ function OwnedDocumentRetentionPolicies() {
       </summary>
       <div className="mt-4 space-y-4">
         <p className="text-sm text-muted-foreground">{word('retentionDescription')}</p>
-        {error ? (
+        {loading && <p role="status">{word('loading')}</p>}
+        {error || unconfirmed ? (
           <Alert variant="destructive">
-            <AlertDescription>{word('error')}</AlertDescription>
-            <Button variant="outline" onClick={() => setReload((value) => value + 1)}>
-              {word('refresh')}
+            <AlertDescription>
+              {unconfirmed ? confirmationText('unconfirmed', locale) : word('error')}
+            </AlertDescription>
+            <Button
+              variant="outline"
+              disabled={loading}
+              onClick={() => setReload((value) => value + 1)}
+            >
+              {unconfirmed ? confirmationText('checkStatus', locale) : word('refresh')}
             </Button>
           </Alert>
         ) : null}
@@ -135,6 +188,7 @@ function OwnedDocumentRetentionPolicies() {
             id="retention-kind"
             aria-required="true"
             value={kind}
+            disabled={unconfirmed || !!action}
             onChange={(event) => select(event.target.value)}
           >
             {kinds.map((option) => (
@@ -198,7 +252,11 @@ function OwnedDocumentRetentionPolicies() {
                 </p>
               )}
             </Field>
-            <Button type="submit" className="justify-self-start">
+            <Button
+              type="submit"
+              className="justify-self-start"
+              disabled={loading || error || unconfirmed || !!action}
+            >
               {word('savePolicy')}
             </Button>
           </form>
@@ -209,7 +267,25 @@ function OwnedDocumentRetentionPolicies() {
         <TeamActionDialog
           action={action}
           onClose={() => setAction(null)}
-          onSuccess={async () => {
+          onDenied={() => {
+            setAction(null);
+            setData(null);
+            setError(true);
+          }}
+          onUnconfirmed={() => {
+            setAction(null);
+            setUnconfirmed(true);
+          }}
+          onSuccess={async (receipt) => {
+            if (
+              !validPolicy(receipt) ||
+              receipt.id === action.previousVersion ||
+              receipt.businessRecordType !== action.kind ||
+              receipt.retentionYears !== action.body.retentionYears ||
+              receipt.legalHold !== action.body.legalHold ||
+              receipt.approvalNote !== action.body.approvalNote
+            )
+              throw new Error('Retention policy receipt mismatch');
             setSaved(true);
             setReload((value) => value + 1);
           }}

@@ -32,9 +32,19 @@ type Receipt = {
   visible?: boolean;
 };
 type Entry = Partial<Record<FileAccess, Receipt>>;
+type Removal = {
+  key: string;
+  documentId: string;
+  profileId: string;
+  revision: number;
+  state: BusinessDocument['state'];
+  action: TeamAction;
+};
+type RemovalRecovery = { removal: Removal; checked: boolean; failed: boolean };
 const identity = (item: BusinessDocument) =>
   JSON.stringify([
     item.id,
+    item.profileId,
     item.revision,
     item.state,
     item.scanState,
@@ -84,13 +94,9 @@ function OwnedDocumentList({
   const word = (key: string) => documentText(key, locale),
     numbers = useNumberFormatting(locale);
   const rows = items.filter((item) => staff || item.state !== 'Removed');
-  const [removal, setRemoval] = useState<{
-    key: string;
-    documentId: string;
-    profileId: string;
-    revision: number;
-    action: TeamAction;
-  } | null>(null);
+  const [removal, setRemoval] = useState<Removal | null>(null);
+  const [recovery, setRecovery] = useState<RemovalRecovery | null>(null);
+  const [checkingKey, setCheckingKey] = useState<string | null>(null);
   const activeRemoval =
     removal &&
     rows.some((item) => identity(item) === removal.key && item.permissions?.remove === true)
@@ -118,10 +124,55 @@ function OwnedDocumentList({
         controllers.current.delete(operation);
       }
     setRemoval((current) => (current && !valid.has(current.key) ? null : current));
+    setRecovery((current) => (current && !valid.has(current.removal.key) ? null : current));
     setReceipts((previous) =>
       Object.fromEntries(Object.entries(previous).filter(([key]) => valid.has(key)))
     );
   }, [basis]);
+  async function checkRemoval(current: Removal) {
+    const operation = `${current.key}:removal-check`;
+    if (controllers.current.has(operation)) return;
+    const abort = new AbortController();
+    controllers.current.set(operation, abort);
+    setCheckingKey(current.key);
+    const owned = () => alive.current && !abort.signal.aborted && keys.current.has(current.key);
+    try {
+      const data = await readDocument<BusinessDocument>(
+        `${documentBase(staff)}/${encodeURIComponent(current.documentId)}`,
+        { signal: abort.signal }
+      );
+      if (!owned()) return;
+      if (
+        data.id !== current.documentId ||
+        data.profileId !== current.profileId ||
+        !Number.isSafeInteger(data.revision)
+      )
+        throw new Error('Document status mismatch');
+      if (
+        data.revision === current.revision &&
+        data.state === current.state &&
+        data.permissions?.remove === true
+      ) {
+        setRecovery({ removal: current, checked: true, failed: false });
+      } else {
+        onChanged?.(current.documentId);
+      }
+    } catch (error) {
+      if (!owned()) return;
+      if (error instanceof DocumentRequestError && [401, 403].includes(error.status)) {
+        setRecovery(null);
+        setReceipts({});
+        onDenied?.();
+      } else if (error instanceof DocumentRequestError && error.status === 404) {
+        onChanged?.(current.documentId);
+      } else {
+        setRecovery({ removal: current, checked: false, failed: true });
+      }
+    } finally {
+      if (alive.current) setCheckingKey((key) => (key === current.key ? null : key));
+      if (controllers.current.get(operation) === abort) controllers.current.delete(operation);
+    }
+  }
   async function access(item: BusinessDocument, type: FileAccess) {
     const key = identity(item),
       operation = `${key}:${type}`;
@@ -242,20 +293,23 @@ function OwnedDocumentList({
     );
   }
   function files(item: BusinessDocument) {
+    const key = identity(item);
+    const pending = recovery?.removal.key === key ? recovery : null;
     const canRead =
+      !pending &&
       !isQuarantinedDocument(item) &&
       (readable.has(item.state) || (staff && item.state === 'Removed'));
     const canPreview =
+      !pending &&
       !isQuarantinedDocument(item) &&
       readable.has(item.state) &&
       item.permissions?.download !== false &&
       previewMime.has(item.detectedMime ?? '');
     const canDownload = canRead && item.permissions?.download !== false;
     const canRemove = item.permissions?.remove === true && !!onChanged;
-    const canReplace = item.permissions?.replace === true && !!onReplace;
-    if (!canDownload && !canRemove && !canReplace) return null;
-    const key = identity(item),
-      entry = receipts[key] ?? {};
+    const canReplace = !pending && item.permissions?.replace === true && !!onReplace;
+    if (!canDownload && !canRemove && !canReplace && !pending) return null;
+    const entry = receipts[key] ?? {};
     return (
       <div className="flex min-w-0 flex-col gap-2">
         <div className="flex flex-wrap gap-2">
@@ -291,29 +345,52 @@ function OwnedDocumentList({
           {canRemove && (
             <Button
               variant="outline"
+              disabled={!!recovery && !pending?.checked}
               onClick={() =>
-                setRemoval({
-                  key,
-                  documentId: item.id,
-                  profileId: item.profileId,
-                  revision: item.revision,
-                  action: {
-                    risk: 'destructive',
-                    title: word('remove'),
-                    description: item.originalName,
-                    path: `${documentBase(staff)}/${encodeURIComponent(item.id)}/remove`,
-                    method: 'POST',
-                    body: { expectedRevision: item.revision, idempotencyKey: crypto.randomUUID() },
-                    conflictMessage: word('conflict'),
-                    forbiddenMessage: word('denied'),
-                  },
-                })
+                setRemoval(
+                  pending?.removal ?? {
+                    key,
+                    documentId: item.id,
+                    profileId: item.profileId,
+                    revision: item.revision,
+                    state: item.state,
+                    action: {
+                      risk: 'destructive',
+                      title: word('remove'),
+                      description: item.originalName,
+                      path: `${documentBase(staff)}/${encodeURIComponent(item.id)}/remove`,
+                      method: 'POST',
+                      body: {
+                        expectedRevision: item.revision,
+                        idempotencyKey: crypto.randomUUID(),
+                      },
+                      conflictMessage: word('conflict'),
+                      forbiddenMessage: word('denied'),
+                    },
+                  }
+                )
               }
             >
               {word('remove')}
             </Button>
           )}
         </div>
+        {pending && (
+          <div className="space-y-2">
+            <p role="alert" className="max-w-sm text-sm text-destructive">
+              {pending.failed ? word('error') : confirmationText('unconfirmed', locale)}
+            </p>
+            {!pending.checked && (
+              <Button
+                variant="outline"
+                disabled={checkingKey === key}
+                onClick={() => void checkRemoval(pending.removal)}
+              >
+                {confirmationText('checkStatus', locale)}
+              </Button>
+            )}
+          </div>
+        )}
         {(entry.preview?.error || entry.download?.error) && (
           <p role="alert" className="max-w-sm text-sm text-destructive">
             {word(
@@ -440,10 +517,27 @@ function OwnedDocumentList({
           onClose={() => setRemoval(null)}
           onDenied={() => {
             setRemoval(null);
+            setRecovery(null);
             for (const controller of controllers.current.values()) controller.abort();
             controllers.current.clear();
             setReceipts({});
             onDenied?.();
+          }}
+          onUnconfirmed={() => {
+            if (!alive.current || !keys.current.has(activeRemoval.key)) return;
+            for (const [operation, controller] of controllers.current) {
+              if (operation.startsWith(`${activeRemoval.key}:`)) {
+                controller.abort();
+                controllers.current.delete(operation);
+              }
+            }
+            setReceipts((current) =>
+              Object.fromEntries(
+                Object.entries(current).filter(([key]) => key !== activeRemoval.key)
+              )
+            );
+            setRemoval(null);
+            setRecovery({ removal: activeRemoval, checked: false, failed: false });
           }}
           onSuccess={async (value) => {
             if (!alive.current || !keys.current.has(activeRemoval.key)) return;
@@ -462,6 +556,7 @@ function OwnedDocumentList({
                 controllers.current.delete(operation);
               }
             setRemoval(null);
+            setRecovery(null);
             setReceipts({});
             onChanged?.(activeRemoval.documentId);
             return confirmationText('recorded', locale);

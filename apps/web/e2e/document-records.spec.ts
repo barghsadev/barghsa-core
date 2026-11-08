@@ -2,6 +2,7 @@ import { documentUploadPolicy } from '../src/test/document-list-fixtures.js';
 import { test, expect, type Page } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { documentText } from '@barghsa/i18n/documents';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { t as appText } from '@barghsa/i18n/app';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import {
@@ -69,6 +70,139 @@ async function shell(page: Page, locale: 'en' | 'fa', staff: boolean) {
     })
   );
 }
+for (const locale of ['en', 'fa'] as const)
+  test(`document policy and review require matching receipts and a fresh read after uncertainty (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale, true);
+    const word = (key: string) => documentText(key, locale);
+    const policy = {
+      id: '44444444-4444-4444-8444-444444444444',
+      businessRecordType: 'contract',
+      retentionYears: 10,
+      legalHold: false,
+      approvalNote: 'System default',
+      effectiveDate: documentRow.createdAt,
+    };
+    const acceptedPolicy = {
+      ...policy,
+      id: '55555555-5555-4555-8555-555555555555',
+      retentionYears: 12,
+      legalHold: true,
+      approvalNote: 'Reviewed preservation requirement',
+    };
+    let policyWrites = 0,
+      policyReadFails = false,
+      approved = false,
+      badRead = false;
+    const approvals: unknown[] = [];
+    const base = '/api/admin/documents';
+    await page.route('**/api/admin/document-retention/policies', (route) =>
+      policyReadFails
+        ? route.fulfill({ status: 503, json: {} })
+        : route.fulfill({
+            json: { canManage: true, policies: [policyWrites === 2 ? acceptedPolicy : policy] },
+          })
+    );
+    await page.route('**/api/admin/document-retention/policies/contract', (route) => {
+      expect(route.request().postDataJSON()).toEqual({
+        retentionYears: acceptedPolicy.retentionYears,
+        legalHold: acceptedPolicy.legalHold,
+        approvalNote: acceptedPolicy.approvalNote,
+      });
+      policyWrites++;
+      return route.fulfill({
+        json:
+          policyWrites === 1
+            ? { ...acceptedPolicy, businessRecordType: 'invoice' }
+            : acceptedPolicy,
+      });
+    });
+    const reviewed = { ...documentRow, revision: 4, state: 'Approved' };
+    await page.route(
+      (url) => url.pathname === base,
+      (route) =>
+        route.fulfill({
+          json: { documents: [approved ? reviewed : documentRow], nextBefore: null },
+        })
+    );
+    await page.route(`**${base}/${documentRow.id}`, (route) =>
+      route.fulfill({
+        json: {
+          ...(approved ? { ...documentDetail, ...reviewed } : documentDetail),
+          ...(badRead
+            ? { profileId: documentCursor, originalName: 'PRIVATE FOREIGN DOCUMENT' }
+            : {}),
+        },
+      })
+    );
+    await page.route(`**${base}/${documentRow.id}/approve`, (route) => {
+      approvals.push(route.request().postDataJSON());
+      approved = approvals.length === 2;
+      return route.fulfill({
+        json: approved ? reviewed : { ...reviewed, profileId: documentCursor },
+      });
+    });
+    await page.goto('/admin/documents');
+    await page.getByText(word('retentionPolicies'), { exact: true }).click();
+    const panel = page
+      .locator('details')
+      .filter({ has: page.getByText(word('retentionPolicies'), { exact: true }) });
+    const save = panel.getByRole('button', { name: word('savePolicy'), exact: true });
+    const note = panel.getByLabel(word('approvalNote'), { exact: true });
+    const confirm = page.getByRole('dialog').getByRole('button', {
+      name: appText('team.confirm', locale),
+      exact: true,
+    });
+    const check = { name: confirmationText('checkStatus', locale), exact: true };
+    await panel.getByLabel(word('retentionYears'), { exact: true }).fill('12');
+    await panel.getByLabel(word('policyHold'), { exact: true }).check();
+    await note.fill(acceptedPolicy.approvalNote);
+    await save.click();
+    await confirm.click();
+    await expect(panel.getByRole('alert')).toContainText(confirmationText('unconfirmed', locale));
+    await expect(panel.getByText(word('policyUpdated'), { exact: true })).toHaveCount(0);
+    await expect(save).toBeDisabled();
+    policyReadFails = true;
+    await panel.getByRole('button', check).click();
+    await expect(panel.getByRole('button', check)).toBeEnabled();
+    await expect(note).toHaveValue(acceptedPolicy.approvalNote);
+    await expect(save).toBeDisabled();
+    expect(policyWrites).toBe(1);
+    policyReadFails = false;
+    await panel.getByRole('button', check).click();
+    await expect(save).toBeEnabled();
+    await expect(note).toHaveValue(acceptedPolicy.approvalNote);
+    await save.click();
+    await confirm.click();
+    await expect(
+      panel.getByRole('status').filter({ hasText: word('policyUpdated') })
+    ).toBeVisible();
+    expect(policyWrites).toBe(2);
+
+    await page.getByRole('button', { name: documentRow.originalName, exact: true }).click();
+    const detail = page.getByRole('region', { name: word('details'), exact: true });
+    const approve = detail.getByRole('button', { name: word('approve'), exact: true });
+    await approve.click();
+    await confirm.click();
+    await expect(detail.getByRole('alert')).toContainText(confirmationText('unconfirmed', locale));
+    await expect(approve).toHaveCount(0);
+    badRead = true;
+    await detail.getByRole('button', check).click();
+    await expect(detail.getByRole('alert')).toContainText(word('denied'));
+    await expect(detail.getByText('PRIVATE FOREIGN DOCUMENT')).toHaveCount(0);
+    await expect(approve).toHaveCount(0);
+    expect(approvals).toHaveLength(1);
+    badRead = false;
+    await detail.getByRole('button', { name: word('refresh'), exact: true }).click();
+    await approve.click();
+    await confirm.click();
+    await expect(approve).toHaveCount(0);
+    await expect(detail.getByRole('heading', { name: documentRow.originalName })).toBeVisible();
+    expect(approvals).toHaveLength(2);
+    expect(approvals[1]).toEqual(approvals[0]);
+  });
+
 for (const staff of [false, true])
   for (const locale of ['en', 'fa'] as const) {
     test(`${staff ? 'staff' : 'customer'} document metadata and lazy files survive layout changes (${locale})`, async ({
@@ -296,7 +430,9 @@ for (const staff of [false, true])
       };
       let documents = [replace, old, readonly],
         detailReads = 0,
-        putCount = 0;
+        putCount = 0,
+        releaseRemoval = () => {};
+      const heldRemoval = new Promise<void>((resolve) => (releaseRemoval = resolve));
       const removals: unknown[] = [];
       await page.route(
         (url) => url.pathname === base,
@@ -356,7 +492,7 @@ for (const staff of [false, true])
         expect(route.request().postDataJSON()).toEqual({ password: 'test password' });
         return route.fulfill({ json: { verified: true } });
       });
-      await page.route(`**${base}/${old.id}/remove`, (route) => {
+      await page.route(`**${base}/${old.id}/remove`, async (route) => {
         const body = route.request().postDataJSON();
         removals.push(body);
         expect(body).toMatchObject({
@@ -367,6 +503,10 @@ for (const staff of [false, true])
           return route.fulfill({ status: 409, json: { error: 'conflict' } });
         if (removals.length === 2)
           return route.fulfill({ status: 403, json: { requiresStepUp: true } });
+        if (removals.length === 3) {
+          await heldRemoval;
+          return route.abort().catch(() => {});
+        }
         documents = [next, readonly];
         return route.fulfill({ json: { ...old, state: 'Removed', revision: 4 } });
       });
@@ -431,6 +571,31 @@ for (const staff of [false, true])
         .getByRole('button', { name: appText('team.confirm', locale), exact: true })
         .click();
       await dialog.locator('input[type=password]').fill('test password');
+      await page.clock.install();
+      await dialog
+        .getByRole('button', { name: appText('team.confirm', locale), exact: true })
+        .click();
+      try {
+        await expect.poll(() => removals.length).toBe(3);
+        await page.clock.runFor(15_100);
+        await expect(dialog).toHaveCount(0);
+        await expect(oldRow.getByRole('alert')).toContainText(
+          confirmationText('unconfirmed', locale)
+        );
+        await expect(oldRow.getByRole('link')).toHaveCount(0);
+        await expect(
+          oldRow.getByRole('button', { name: word('remove'), exact: true })
+        ).toBeDisabled();
+      } finally {
+        releaseRemoval();
+      }
+      await oldRow
+        .getByRole('button', { name: confirmationText('checkStatus', locale), exact: true })
+        .click();
+      await expect(oldRow.getByRole('button', { name: word('remove'), exact: true })).toBeEnabled();
+      expect(removals).toHaveLength(3);
+      await oldRow.getByRole('button', { name: word('remove'), exact: true }).click();
+      await approveRiskConfirmation(page, locale, 'destructive');
       await dialog
         .getByRole('button', { name: appText('team.confirm', locale), exact: true })
         .click();
@@ -438,10 +603,11 @@ for (const staff of [false, true])
       await expect(
         records.getByRole('button', { name: old.originalName, exact: true })
       ).toHaveCount(0);
-      expect(removals).toHaveLength(3);
+      expect(removals).toHaveLength(4);
       expect(removals[1]).toEqual(removals[0]);
       expect(removals[2]).toEqual(removals[0]);
-      expect(detailReads).toBe(2);
+      expect(removals[3]).toEqual(removals[0]);
+      expect(detailReads).toBe(3);
       await expect(list.getByRole('region', { name: word('details'), exact: true })).toHaveCount(0);
       await expect(records.getByRole('link')).toHaveCount(0);
       expect(
@@ -453,7 +619,7 @@ for (const staff of [false, true])
       );
       await records.scrollIntoViewIfNeeded();
       await page.screenshot({
-        path: `/tmp/barghsa-inline-documents-${staff ? 'staff' : 'customer'}-${locale}-${testInfo.project.name}.png`,
+        path: testInfo.outputPath('inline-document-recovery.png'),
       });
     });
     test(`${staff ? 'staff' : 'customer'} clears private document actions after permission denial (${locale})`, async ({

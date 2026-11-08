@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T16:26:09+00:00",
-  "source_commit": "c011daa1513c75fa553b1ac2ca100d92ba48a066",
+  "updated": "2026-11-08T16:38:03+00:00",
+  "source_commit": "aa3901f9759dd5ca944200bb43bbecad829ae834",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -177131,7 +177131,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -177159,7 +177159,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -177938,7 +177938,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -177966,7 +177966,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -178742,7 +178742,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -178770,7 +178770,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -179545,7 +179545,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -179573,7 +179573,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -180350,7 +180350,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -180378,7 +180378,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -380881,7 +380881,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -381845,7 +381845,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -382808,7 +382808,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -441402,7 +441402,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -441430,7 +441430,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -442274,11 +442274,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
@@ -442314,7 +442314,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -442762,11 +442762,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
@@ -442802,7 +442802,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -443110,7 +443110,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -443126,7 +443126,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -443142,7 +443142,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/upload-fixture.ts",
@@ -443533,11 +443533,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
@@ -443573,7 +443573,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -443967,7 +443967,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -443983,7 +443983,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -443991,7 +443991,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -444408,7 +444408,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -444424,7 +444424,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -444440,7 +444440,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/upload-fixture.ts",
@@ -444829,11 +444829,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
@@ -444869,7 +444869,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -445311,11 +445311,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
@@ -445351,7 +445351,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -445817,11 +445817,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
@@ -445857,7 +445857,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -446323,11 +446323,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
@@ -446363,7 +446363,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -446829,11 +446829,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
@@ -446869,7 +446869,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -447334,11 +447334,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
@@ -447374,7 +447374,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -447682,7 +447682,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -447698,7 +447698,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -447714,7 +447714,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/upload-fixture.ts",
@@ -448081,7 +448081,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -448424,7 +448424,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -448769,7 +448769,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -449139,7 +449139,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -449482,7 +449482,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -494147,7 +494147,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -494159,7 +494159,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -495030,7 +495030,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -495042,7 +495042,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -495854,7 +495854,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -495866,7 +495866,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
+              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -511426,7 +511426,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -512036,7 +512036,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/FileUpload.tsx",
@@ -516941,7 +516941,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
@@ -517445,7 +517445,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -517453,7 +517453,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
+              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -518411,7 +518411,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
+              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -519850,7 +519850,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -522006,7 +522006,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -546448,7 +546448,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -546460,7 +546460,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -548314,7 +548314,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -548326,7 +548326,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -550181,7 +550181,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -550193,7 +550193,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -552017,7 +552017,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -552029,7 +552029,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -553879,7 +553879,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -553891,7 +553891,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -555750,7 +555750,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -555762,7 +555762,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -557594,7 +557594,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -557606,7 +557606,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -559402,7 +559402,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -559414,7 +559414,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -561210,7 +561210,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -561222,7 +561222,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -563019,7 +563019,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -563031,7 +563031,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -564827,7 +564827,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -564839,7 +564839,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -566625,7 +566625,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -566633,7 +566633,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -567521,7 +567521,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
+              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568520,7 +568520,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -568528,7 +568528,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -569416,7 +569416,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
+              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570220,7 +570220,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Refund and lost-contact creation now preserve exact reviewed retries. Existing-case decisions and challenge sends have fresh-read recovery. Reconcile the remaining confirmation call sites against their dispatch paths and feedback requirements."
+        "Retention policy saves, document detail transitions and inline removal now have matched receipts and fresh-read recovery. Reconcile remaining confirmation and CRUD feedback paths, including contract and configuration commands."
       ],
       "owner": null,
       "depends_on": [],
@@ -570298,7 +570298,8 @@
           "release-0.5-reconciliation-command-deadline",
           "release-0.5-shared-confirmation-deadlines",
           "release-0.5-financial-confirmation-recovery",
-          "release-0.5-protected-creation-recovery"
+          "release-0.5-protected-creation-recovery",
+          "release-0.5-document-command-recovery"
         ],
         "current_acceptance": null
       }
@@ -570513,7 +570514,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -570521,7 +570522,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -571409,7 +571410,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
+              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -572408,7 +572409,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -572416,7 +572417,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -573304,7 +573305,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
+              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -574303,7 +574304,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -574311,7 +574312,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -575199,7 +575200,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
+              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -576198,7 +576199,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -576206,7 +576207,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -577094,7 +577095,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
+              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -578093,7 +578094,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -578101,7 +578102,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -578989,7 +578990,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
+              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -579988,7 +579989,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -579996,7 +579997,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -580884,7 +580885,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
+              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581883,7 +581884,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -581891,7 +581892,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -582779,7 +582780,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
+              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -583778,7 +583779,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -583786,7 +583787,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -584674,7 +584675,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
+              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -585673,7 +585674,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -585681,7 +585682,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -586569,7 +586570,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
+              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -587568,7 +587569,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -587576,7 +587577,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -588464,7 +588465,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
+              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589463,7 +589464,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -589471,7 +589472,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -590359,7 +590360,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
+              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591623,7 +591624,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
+              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592098,7 +592099,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -592106,7 +592107,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -592994,7 +592995,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
+              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593993,7 +593994,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -594001,7 +594002,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -594889,7 +594890,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
+              "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595693,7 +595694,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Saving and solar malformed or mismatched detail recovery has current browser evidence. Finish reconciliation of remaining conditional route, list and dashboard states against the populated route census and their scoped evidence."
+        "Saving and solar conditional detail recovery is verified. Document detail and inline removal also have scoped loading, denied and uncertain-command read evidence. Finish remaining conditional route, list and dashboard state reconciliation against the route census."
       ],
       "owner": null,
       "depends_on": [],
@@ -595783,7 +595784,8 @@
           "release-0.5-shared-confirmation-deadlines",
           "release-0.5-financial-confirmation-recovery",
           "release-0.5-protected-creation-recovery",
-          "release-0.5-customer-detail-state-recovery"
+          "release-0.5-customer-detail-state-recovery",
+          "release-0.5-document-command-recovery"
         ],
         "current_acceptance": null
       }
@@ -596036,7 +596038,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -596048,7 +596050,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -597840,7 +597842,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -597852,7 +597854,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -599644,7 +599646,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -599656,7 +599658,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -601448,7 +601450,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -601460,7 +601462,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -603252,7 +603254,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -603264,7 +603266,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -605056,7 +605058,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -605068,7 +605070,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -606860,7 +606862,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -606872,7 +606874,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -647192,7 +647194,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.test.tsx",
@@ -648021,7 +648023,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.test.tsx",
@@ -648858,7 +648860,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.test.tsx",
@@ -649679,7 +649681,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.test.tsx",
@@ -650499,7 +650501,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.test.tsx",
@@ -681912,7 +681914,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -681948,7 +681950,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -681960,11 +681962,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentStatusBadge.tsx",
@@ -682486,7 +682488,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -682522,7 +682524,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -682534,11 +682536,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentStatusBadge.tsx",
@@ -683059,7 +683061,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -683095,7 +683097,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -683107,11 +683109,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentStatusBadge.tsx",
@@ -683634,7 +683636,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -683670,7 +683672,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -683682,11 +683684,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentStatusBadge.tsx",
@@ -684207,7 +684209,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -684243,7 +684245,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -684255,11 +684257,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentStatusBadge.tsx",
@@ -684780,7 +684782,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -684816,7 +684818,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -684828,11 +684830,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentStatusBadge.tsx",
@@ -710777,7 +710779,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -710793,7 +710795,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -718797,7 +718799,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
@@ -719001,7 +719003,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -719013,11 +719015,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -722679,7 +722681,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
@@ -722875,7 +722877,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -722887,11 +722889,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
@@ -725427,7 +725429,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Saving and solar conditional detail recovery has current production-browser evidence. Remaining scoped command feedback and conditional UI states require reconciliation. Required GitHub accessibility enforcement and the staging Sentry receipt remain open."
+        "Document policy, transition and inline removal feedback have current production-browser evidence. Remaining scoped command feedback and conditional UI states require reconciliation. Required GitHub accessibility enforcement and the staging Sentry receipt remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -725582,7 +725584,8 @@
           "release-0.5-shared-confirmation-deadlines",
           "release-0.5-financial-confirmation-recovery",
           "release-0.5-protected-creation-recovery",
-          "release-0.5-customer-detail-state-recovery"
+          "release-0.5-customer-detail-state-recovery",
+          "release-0.5-document-command-recovery"
         ]
       }
     },
@@ -725834,7 +725837,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "bf4f80bee02060416a2265a41a93335dfee059fe3ff1e04b07b41b8e0e13499f"
+              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -725842,11 +725845,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
-              "sha256": "916d60e0a9120f76cbc0148054f5131739c9a930206af4b1e97d67b4ff640457"
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
-              "sha256": "dbafdd8f0478cf57761609f7601bdc9f4243e8566150cd58167e6e47f989f24d"
+              "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
@@ -727465,7 +727468,8 @@
             "Renewed confirmation dialog and document template budget and browser evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-confirmation-deadlines/proof.json",
             "Renewed financial recovery native browser and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-confirmation-recovery/proof.json",
             "Renewed protected creation browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-creation-recovery/proof.json",
-            "Renewed saving and solar detail browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-detail-state-recovery/proof.json"
+            "Renewed saving and solar detail browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-detail-state-recovery/proof.json",
+            "Renewed document command recovery browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-command-recovery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -801565,6 +801569,95 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-detail-state-recovery/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-detail-state-recovery/reviewed.patch",
       "release_disposition": "Verified conditional saving and solar detail recovery for malformed and mismatched responses. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-document-command-recovery": {
+      "batch": "release-0.5-document-command-recovery",
+      "base_commit": "aa3901f9759dd5ca944200bb43bbecad829ae834",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+        },
+        {
+          "path": "apps/api/src/documents/document-retention.controller.ts",
+          "sha256": "5eee3f561abc97452940e2aa506168102fa25438bda2eff5f0002c9028af7808"
+        },
+        {
+          "path": "apps/api/src/documents/document-retention.service.ts",
+          "sha256": "1a88de8e689e3874fe3098416ab3c07297c95002fac4f730659de871c76c6e56"
+        },
+        {
+          "path": "apps/web/e2e/document-records.spec.ts",
+          "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/DocumentDetail.tsx",
+          "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+        },
+        {
+          "path": "apps/web/src/components/DocumentRecords.tsx",
+          "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
+        },
+        {
+          "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
+          "sha256": "627937318ce5e5d7cf8a947fe8c6f7524f49f1d53c052ac083f66c05e01dee49"
+        },
+        {
+          "path": "apps/web/src/components/DocumentsWorkspace.tsx",
+          "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedDocumentRead.ts",
+          "sha256": "2cab6d3dd68e87d3c0a8e10e5ff30bafa86f008517e13ec8f8ce4ffa8883a883"
+        },
+        {
+          "path": "apps/web/src/lib/documents.ts",
+          "sha256": "23769141261230282f3cde5b9be17da1191e279ba4882b39b5f86c75b8bc3d3f"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "49a28f788261365760293c056a5d8328c5c38996cd0167b762ec9f7c54cd8ec0"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "Document retention shows a new policy version only after a receipt matches the reviewed policy type, hold flag, duration and approval note. An invalid receipt locks saving. A failed fresh read retains the draft, and a successful fresh read unlocks a new review without replaying a write.",
+        "Document detail transitions and inline removal use the existing 15-second deadline. Unconfirmed transitions retire obsolete actions and file links. After a matching fresh read, an unchanged document can retry the captured action with its original key. Browser cases reject a wrong-profile response and verify the exact recovered removal and approval bodies.",
+        "Passed 40 native Chromium and mobile Safari cases, 12 instrumented Chromium cases, and 128 targeted unit tests. Web type checking, lint, formatting, all 100 route and interaction budgets and all nine changed-source coverage groups passed. The 31 cold-auth assets matched previously verified bytes.",
+        "The API and retention or destruction safeguards are unchanged. This evidence covers the two document command paths and the retention policy editor, including relevant detail reads and list callers."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-command-recovery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-command-recovery/proof.json",
+      "source_scope_proof_sha256": "0df28cdc66dd687d7f94f1db2e4ca2ae802aaba1881e6fb9687e930c749555a3",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-command-recovery/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-command-recovery/reviewed.patch",
+      "release_disposition": "Verified document retention policy receipts and exact recovery for detail transitions and inline removal. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -801620,7 +801713,7 @@
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 saving and solar detail recovery has current native browser evidence. Five launch-required criteria remain open, including staging Sentry delivery, GitHub accessibility enforcement and remaining UI reconciliation. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 document policy, transition and removal recovery has current native browser evidence. Five launch-required criteria remain open, including staging Sentry delivery, GitHub accessibility enforcement and remaining UI reconciliation. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {
