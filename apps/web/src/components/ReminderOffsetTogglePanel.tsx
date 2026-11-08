@@ -1,11 +1,11 @@
-import { readWithDeadline } from '../lib/server-query-client.js';
-import { toast } from '../lib/toast-api.js';
+import { readWithDeadline, ServerQueryError } from '../lib/server-query-client.js';
+import { sendToast, toast } from '../lib/toast-api.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
-import { LoadingStatus } from '@barghsa/ui';
+import { Button, LoadingStatus } from '@barghsa/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
-import { useProfileContextRevision } from '../lib/profile-context.js';
+import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
 import {
   INVOICE_REMINDER_OFFSETS,
   SERVICE_DUE_PERIOD_TYPES,
@@ -90,7 +90,27 @@ type PendingToggle = {
 };
 
 type SaveResult =
-  { kind: 'ok'; enabled: boolean } | { kind: 'step_up' } | { kind: 'error'; message: string };
+  | { kind: 'ok'; enabled: boolean }
+  | { kind: 'step_up' }
+  | { kind: 'denied' }
+  | { kind: 'error'; message: string }
+  | { kind: 'unconfirmed'; message: string };
+
+function validMatrix(value: unknown, complete: boolean): value is ReminderOffsetToggleDto[] {
+  return (
+    Array.isArray(value) &&
+    (!complete ||
+      value.length === SERVICE_DUE_PERIOD_TYPES.length * INVOICE_REMINDER_OFFSETS.length) &&
+    value.every(
+      (row) =>
+        row &&
+        SERVICE_DUE_PERIOD_TYPES.includes(row.serviceType) &&
+        INVOICE_REMINDER_OFFSETS.includes(row.offset) &&
+        typeof row.enabled === 'boolean'
+    ) &&
+    new Set(value.map((row) => toggleKey(row.serviceType, row.offset))).size === value.length
+  );
+}
 
 function readErrorCode(data: unknown): string | null {
   if (!data || typeof data !== 'object') return null;
@@ -132,38 +152,46 @@ async function saveToggle(
   serviceType: ServiceDuePeriodType,
   offset: InvoiceReminderOffset,
   enabled: boolean,
-  fallback: string
+  fallback: string,
+  owner: AbortSignal
 ): Promise<SaveResult> {
   try {
-    const res = await fetch('/api/admin/config/invoice-reminder-offsets', {
-      method: 'PUT',
-      headers: withCsrf({ 'Content-Type': 'application/json' }),
-      body: JSON.stringify({ serviceType, offset, enabled }),
+    const { res, data } = await readWithDeadline(owner, async (signal) => {
+      const res = await fetch('/api/admin/config/invoice-reminder-offsets', {
+        method: 'PUT',
+        headers: withCsrf({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({ serviceType, offset, enabled }),
+        signal,
+      });
+      const data: unknown = await res.json().catch(() => null);
+      return { res, data };
     });
-    const data: unknown = await res.json().catch(() => null);
     if (isStepUpRequired(res, data)) return { kind: 'step_up' };
-    if (!res.ok) return { kind: 'error', message: errorMessage(data, fallback) };
+    if (res.status === 401 || res.status === 403) return { kind: 'denied' };
+    if (!res.ok)
+      return {
+        kind: res.status >= 500 ? 'unconfirmed' : 'error',
+        message: errorMessage(data, fallback),
+      };
     const matrix = Array.isArray(data) ? (data as ReminderOffsetToggleDto[]) : [];
     const saved = matrix.filter((row) => row?.serviceType === serviceType && row.offset === offset);
     if (saved.length !== 1 || saved[0]?.enabled !== enabled)
-      return { kind: 'error', message: fallback };
+      return { kind: 'unconfirmed', message: fallback };
     return { kind: 'ok', enabled };
   } catch {
-    return { kind: 'error', message: fallback };
+    return { kind: 'unconfirmed', message: fallback };
   }
 }
 
-async function verifyStepUp(password: string): Promise<boolean> {
-  try {
-    const res = await fetch('/api/auth/step-up', {
+async function verifyStepUp(password: string, owner: AbortSignal): Promise<Response> {
+  return readWithDeadline(owner, (signal) =>
+    fetch('/api/auth/step-up', {
       method: 'POST',
       headers: withCsrf({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({ password }),
-    });
-    return res.ok;
-  } catch {
-    return false;
-  }
+      signal,
+    })
+  );
 }
 
 function ariaLabel(
@@ -230,6 +258,7 @@ function OwnedReminderOffsetTogglePanel() {
   const alive = useRef(true);
   const sequence = useRef(0);
   const requests = useRef(new Set<AbortController>());
+  const writes = useRef(new Set<AbortController>());
   useEffect(() => {
     alive.current = true;
     const owned = requests.current;
@@ -239,9 +268,19 @@ function OwnedReminderOffsetTogglePanel() {
       owned.clear();
     };
   }, [client, identity]);
+  useEffect(() => {
+    const owned = writes.current;
+    return () => {
+      for (const controller of owned) controller.abort();
+      owned.clear();
+    };
+  }, []);
   const isRtl = locale === 'fa';
   const [toggles, setToggles] = useState<ReminderOffsetToggleDto[] | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [unconfirmed, setUnconfirmed] = useState(false);
+  const recovery = useRef(false);
   const [pendingKeys, setPendingKeys] = useState<ReadonlySet<string>>(() => new Set());
   const pendingKeysRef = useRef(new Set<string>());
   const awaitingStepUpRef = useRef<PendingToggle[]>([]);
@@ -269,14 +308,64 @@ function OwnedReminderOffsetTogglePanel() {
     markPending(toggleKey(item.serviceType, item.offset), false);
   }
 
+  function ownsWrite(controller: AbortController) {
+    return !controller.signal.aborted && getProfileContextRevision() === profileRevision;
+  }
+
+  const denied = useCallback(() => {
+    for (const controller of writes.current) controller.abort();
+    writes.current.clear();
+    pendingKeysRef.current.clear();
+    awaitingStepUpRef.current = [];
+    stepUpSubmittingRef.current = false;
+    stepUpTriggerRef.current = null;
+    restoreTriggerRef.current = false;
+    recovery.current = false;
+    setPendingKeys(new Set());
+    setStepUpOpen(false);
+    setStepUpSubmitting(false);
+    setStepUpPassword('');
+    setStepUpError(null);
+    setUnconfirmed(false);
+    setToggles(null);
+    setLoadFailed(true);
+    setError(t('admin.invoices.reminders.loadFailed', locale));
+  }, [locale]);
+
   async function persistToggle(item: PendingToggle): Promise<'step_up' | 'done'> {
+    if (recovery.current) {
+      revertToggle(item);
+      return 'done';
+    }
     const fallback = t('admin.invoices.reminders.saveFailed', locale);
+    const controller = new AbortController();
+    writes.current.add(controller);
     try {
-      const result = await saveToggle(item.serviceType, item.offset, item.enabled, fallback);
-      if (result.kind === 'step_up') return 'step_up';
-      if (result.kind === 'error') {
+      const result = await saveToggle(
+        item.serviceType,
+        item.offset,
+        item.enabled,
+        fallback,
+        controller.signal
+      );
+      if (!ownsWrite(controller)) return 'done';
+      if (result.kind === 'denied') {
+        denied();
+        return 'done';
+      }
+      if (result.kind === 'step_up') {
+        if (!recovery.current) return 'step_up';
+        revertToggle(item);
+        return 'done';
+      }
+      if (result.kind === 'error' || result.kind === 'unconfirmed') {
         revertToggle(item);
         setError(result.message);
+        if (result.kind === 'unconfirmed') {
+          recovery.current = true;
+          setUnconfirmed(true);
+          sendToast('warning', confirmationText('unconfirmed', locale));
+        }
         return 'done';
       }
       setToggles((current) =>
@@ -286,14 +375,13 @@ function OwnedReminderOffsetTogglePanel() {
       if (alive.current && latest.current === identity)
         toast.success(confirmationText('recorded', locale));
       return 'done';
-    } catch {
-      revertToggle(item);
-      setError(fallback);
-      return 'done';
+    } finally {
+      writes.current.delete(controller);
     }
   }
 
   const load = useCallback(async () => {
+    if (pendingKeysRef.current.size || stepUpSubmittingRef.current) return;
     for (const pending of requests.current) pending.abort();
     const controller = new AbortController();
     requests.current.add(controller);
@@ -323,21 +411,32 @@ function OwnedReminderOffsetTogglePanel() {
         queryFn: ({ signal: ownerSignal }) =>
           readWithDeadline(ownerSignal, async (signal) => {
             const res = await fetch('/api/admin/config/invoice-reminder-offsets', { signal });
+            if (res.status === 401 || res.status === 403) throw new ServerQueryError(res.status);
             if (!res.ok) {
               throw new Error(
                 await parseError(res, t('admin.invoices.reminders.loadFailed', locale))
               );
             }
-            const data = (await res.json()) as ReminderOffsetToggleDto[];
+            const data: unknown = await res.json();
+            if (!validMatrix(data, recovery.current))
+              throw new Error(t('admin.invoices.reminders.loadFailed', locale));
             if (!current() || signal.aborted) throw new Error('Obsolete reminder read');
             return data;
           }),
       });
       if (!current()) return;
       setToggles(data);
+      recovery.current = false;
+      setUnconfirmed(false);
+      setLoadFailed(false);
       setError(null);
     } catch (err) {
       if (!current()) return;
+      if (err instanceof ServerQueryError) {
+        denied();
+        return;
+      }
+      setLoadFailed(true);
       setError(
         err instanceof Error ? err.message : t('admin.invoices.reminders.loadFailed', locale)
       );
@@ -346,10 +445,10 @@ function OwnedReminderOffsetTogglePanel() {
       requests.current.delete(controller);
       if (current()) setLoading(false);
     }
-  }, [client, identity, reader, actor, profileRevision, locale]);
+  }, [client, identity, reader, actor, profileRevision, locale, denied]);
 
   useEffect(() => {
-    load();
+    if (!recovery.current) void load();
   }, [load]);
 
   useEffect(() => {
@@ -370,7 +469,7 @@ function OwnedReminderOffsetTogglePanel() {
     restoreTriggerRef.current = false;
     stepUpTriggerRef.current = null;
     trigger.focus();
-  }, [stepUpOpen, pendingKeys]);
+  }, [stepUpOpen, pendingKeys, unconfirmed, loading]);
 
   async function handleToggle(
     serviceType: ServiceDuePeriodType,
@@ -378,7 +477,7 @@ function OwnedReminderOffsetTogglePanel() {
     enabled: boolean,
     trigger: HTMLInputElement
   ) {
-    if (!toggles) return;
+    if (!toggles || loading || requests.current.size || loadFailed || recovery.current) return;
     const key = toggleKey(serviceType, offset);
     if (pendingKeysRef.current.has(key)) return;
     const previousEnabled = isEnabled(toggles, serviceType, offset);
@@ -408,19 +507,20 @@ function OwnedReminderOffsetTogglePanel() {
 
   async function submitStepUp(event: FormEvent) {
     event.preventDefault();
-    if (!stepUpPassword.trim() || stepUpSubmittingRef.current) return;
+    if (!stepUpPassword.trim() || stepUpSubmittingRef.current || recovery.current) return;
+    const controller = new AbortController();
+    writes.current.add(controller);
     stepUpSubmittingRef.current = true;
     setStepUpSubmitting(true);
     setStepUpError(null);
     try {
-      let verified = false;
-      try {
-        verified = await verifyStepUp(stepUpPassword);
-      } catch {
-        setStepUpError(t('admin.invoices.reminders.stepUp.failed', locale));
+      const response = await verifyStepUp(stepUpPassword, controller.signal);
+      if (!ownsWrite(controller)) return;
+      if (response.status === 401) {
+        denied();
         return;
       }
-      if (!verified) {
+      if (!response.ok) {
         setStepUpError(t('admin.invoices.reminders.stepUp.failed', locale));
         return;
       }
@@ -429,15 +529,24 @@ function OwnedReminderOffsetTogglePanel() {
       setStepUpOpen(false);
       setStepUpPassword('');
       for (const item of pending) {
+        if (!ownsWrite(controller)) return;
         const outcome = await persistToggle(item);
         if (outcome === 'step_up') {
           revertToggle(item);
           setError(t('admin.invoices.reminders.saveFailed', locale));
         }
       }
+    } catch {
+      if (ownsWrite(controller)) {
+        setStepUpPassword('');
+        setStepUpError(t('admin.invoices.reminders.stepUp.failed', locale));
+      }
     } finally {
-      stepUpSubmittingRef.current = false;
-      setStepUpSubmitting(false);
+      writes.current.delete(controller);
+      if (ownsWrite(controller)) {
+        stepUpSubmittingRef.current = false;
+        setStepUpSubmitting(false);
+      }
     }
   }
 
@@ -474,6 +583,17 @@ function OwnedReminderOffsetTogglePanel() {
         >
           {error}
         </div>
+      )}
+      {unconfirmed && <p role="status">{confirmationText('unconfirmed', locale)}</p>}
+      {(loadFailed || unconfirmed) && (
+        <Button
+          type="button"
+          variant="outline"
+          disabled={loading || pendingKeys.size > 0 || stepUpSubmitting}
+          onClick={() => void load()}
+        >
+          {t('admin.invoices.reminders.reload', locale)}
+        </Button>
       )}
 
       {toggles && (
@@ -517,7 +637,7 @@ function OwnedReminderOffsetTogglePanel() {
                             aria-checked={enabled}
                             aria-busy={busy}
                             checked={enabled}
-                            disabled={busy}
+                            disabled={busy || loading || loadFailed || unconfirmed}
                             onChange={(e) =>
                               handleToggle(serviceType, offset, e.target.checked, e.currentTarget)
                             }
@@ -632,7 +752,7 @@ function OwnedReminderOffsetTogglePanel() {
               <button
                 type="submit"
                 data-testid="reminder-step-up-submit"
-                disabled={stepUpSubmitting || !stepUpPassword.trim()}
+                disabled={stepUpSubmitting || unconfirmed || !stepUpPassword.trim()}
                 className="px-4 py-2 text-sm rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50"
               >
                 {stepUpSubmitting

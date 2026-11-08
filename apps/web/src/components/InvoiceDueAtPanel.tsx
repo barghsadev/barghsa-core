@@ -1,6 +1,9 @@
 import { CommandFeedback } from './CommandFeedback.js';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
-import { useProfileContextRevision } from '../lib/profile-context.js';
+import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
+import { sendToast } from '../lib/toast-api.js';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Button } from '@barghsa/ui';
@@ -111,6 +114,7 @@ function OwnedInvoiceDueAtPanel({
     inFlight = useRef(false),
     live = useRef(false);
   const readAbort = useRef<AbortController | null>(null);
+  const writeAbort = useRef<AbortController | null>(null);
   const invalidFocus = useRef<'dueAt' | 'reason' | null>(null);
   useEffect(() => {
     if (!saving && invalidFocus.current) {
@@ -127,12 +131,14 @@ function OwnedInvoiceDueAtPanel({
     return () => {
       live.current = false;
       readAbort.current?.abort();
+      writeAbort.current?.abort();
       generation.current++;
       loadVersion.current++;
     };
   }, []);
   function clearWork() {
     readAbort.current?.abort();
+    writeAbort.current?.abort();
     invalidFocus.current = null;
     generation.current++;
     loadVersion.current++;
@@ -154,6 +160,7 @@ function OwnedInvoiceDueAtPanel({
   }, [selection]);
   useEffect(() => {
     if (time.status === 'ready' && dueTimezone && dueTimezone !== time.timezone) {
+      writeAbort.current?.abort();
       generation.current++;
       loadVersion.current++;
       inFlight.current = false;
@@ -163,7 +170,13 @@ function OwnedInvoiceDueAtPanel({
       setUnavailable(true);
     }
   }, [time.status, time.timezone, dueTimezone]);
-  const current = (owner: number) => live.current && owner === generation.current;
+  const current = (owner: number) =>
+    live.current && owner === generation.current && getProfileContextRevision() === profileRevision;
+  function unconfirmed(owner: number) {
+    if (!current(owner)) return;
+    setUnavailable(true);
+    setError(confirmationText('unconfirmed', locale));
+  }
   function handleInvoiceIdChange(next: string) {
     if (inFlight.current || pendingAction || (lookup.form.isSubmissionPending() && !loading))
       return;
@@ -267,6 +280,7 @@ function OwnedInvoiceDueAtPanel({
     setSaving(true);
     setSaved(false);
     setError(null);
+    let controller: AbortController | undefined;
     try {
       await draft.form.handleSubmit(
         async (values) => {
@@ -282,13 +296,19 @@ function OwnedInvoiceDueAtPanel({
           };
           const path = `/api/admin/invoices/${command.invoiceId}/due-at`,
             body = { dueAt, reason: command.reason };
-          const response = await fetch(path, {
-            method: 'POST',
-            credentials: 'include',
-            headers: withCsrf({ 'Content-Type': 'application/json' }),
-            body: JSON.stringify(body),
+          controller = new AbortController();
+          writeAbort.current = controller;
+          const { response, data } = await readWithDeadline(controller.signal, async (signal) => {
+            const response = await fetch(path, {
+              method: 'POST',
+              credentials: 'include',
+              headers: withCsrf({ 'Content-Type': 'application/json' }),
+              body: JSON.stringify(body),
+              signal,
+            });
+            const data: unknown = await response.json().catch(() => null);
+            return { response, data };
           });
-          const data: unknown = await response.json().catch(() => null);
           if (!current(owner)) return;
           if (
             response.status === 403 &&
@@ -300,6 +320,7 @@ function OwnedInvoiceDueAtPanel({
               method: 'POST',
               body,
               requiresPassword: true,
+              responseDeadline: true,
               title: t('admin.invoices.stepUp.title', locale),
               description: t('admin.invoices.stepUp.description', locale),
             });
@@ -319,7 +340,9 @@ function OwnedInvoiceDueAtPanel({
               draft.applyServerErrors(fields)
             )
               return;
-            throw new Error('save');
+            if (response.status >= 500) throw new Error('unconfirmed');
+            setError(t('admin.invoices.error.save', locale));
+            return;
           }
           accepted(data, command);
         },
@@ -330,8 +353,14 @@ function OwnedInvoiceDueAtPanel({
         }
       )(event);
     } catch {
-      if (current(owner)) setError(t('admin.invoices.error.save', locale));
+      if (current(owner)) {
+        if (controller) {
+          unconfirmed(owner);
+          sendToast('warning', confirmationText('unconfirmed', locale));
+        } else setError(t('admin.invoices.error.save', locale));
+      }
     } finally {
+      if (writeAbort.current === controller) writeAbort.current = null;
       if (current(owner)) {
         inFlight.current = false;
         setSaving(false);
@@ -345,7 +374,8 @@ function OwnedInvoiceDueAtPanel({
         <TeamActionDialog
           action={pendingAction}
           finalFocus={submitButton}
-          confirmationDisabled={!canEditTime || unavailable}
+          confirmationDisabled={!canEditTime || unavailable || !current(pendingAction.owner)}
+          onUnconfirmed={() => unconfirmed(pendingAction.owner)}
           onClose={() => setPendingAction(null)}
           onSuccess={async (data) => accepted(data, pendingAction)}
           onDenied={() => {

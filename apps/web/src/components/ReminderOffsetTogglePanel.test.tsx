@@ -414,7 +414,7 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
     expect(container.textContent).toContain('Verification failed');
   });
 
-  it('reverts the switch and clears pending when the PUT promise rejects', async () => {
+  it('reverts the switch and requires a fresh read when the PUT promise rejects', async () => {
     fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = String(input);
       if (
@@ -433,8 +433,15 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
     const toggle = await clickToggle('reminder-toggle-electricity--7');
 
     expect(toggle.checked).toBe(true);
-    expect(toggle.disabled).toBe(false);
+    expect(toggle.getAttribute('aria-busy')).toBe('false');
+    expect(toggle.disabled).toBe(true);
     expect(container.textContent).toContain('Failed to save reminder toggle');
+    const reload = [...container.querySelectorAll('button')].find(
+      (button) => button.textContent === 'Reload reminder settings'
+    )!;
+    await act(async () => reload.click());
+    expect(toggle.disabled).toBe(false);
+    expect(fetchMock.mock.calls.filter(([, init]) => init?.method === 'PUT')).toHaveLength(1);
   });
 
   it('keeps the challenge and queued toggle when step-up fetch rejects', async () => {
@@ -515,7 +522,8 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
 
     expect(putCount).toBe(2);
     expect(toggle.checked).toBe(true);
-    expect(toggle.disabled).toBe(false);
+    expect(toggle.getAttribute('aria-busy')).toBe('false');
+    expect(toggle.disabled).toBe(true);
     expect(container.querySelector('[data-testid="reminder-step-up-dialog"]')).toBeNull();
     expect(container.textContent).toContain('Failed to save reminder toggle');
   });

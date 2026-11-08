@@ -5,6 +5,9 @@ import { test, expect } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
 import { t } from '../../../packages/i18n/src/admin-ui';
 import { tDuePeriods } from '../../../packages/i18n/src/invoice-due-periods';
+import { confirmationText } from '@barghsa/i18n/confirmation';
+import { tWorkspace as staffText } from '@barghsa/i18n/workspace-admin';
+import { defaultReminderOffsetToggles } from '@barghsa/shared/finance';
 const invoiceId = '11111111-1111-4111-8111-111111111111';
 const source = {
   invoiceId,
@@ -337,6 +340,123 @@ for (const locale of ['fa', 'en'] as const)
       })
     );
   });
+
+test('invoice deadline keeps the edit locked until the selected invoice is reloaded', async ({
+  page,
+}) => {
+  const locale = 'en';
+  await setup(page, locale, false);
+  const commands: unknown[] = [];
+  let readFailed = false;
+  await page.route(`**/api/admin/invoices/${invoiceId}/due-at`, (route) => {
+    if (route.request().method() === 'GET')
+      return route.fulfill({
+        status: readFailed ? 503 : 200,
+        json: commands.length
+          ? {
+              ...source,
+              dueAt: '2026-09-20T10:00:00.000Z',
+              dueAtOverride: { reason: 'New deadline' },
+            }
+          : source,
+      });
+    commands.push(route.request().postDataJSON());
+  });
+  await page.goto('/admin/invoices');
+  const panel = page.locator('#invoice-deadline-panel');
+  const load = panel.getByRole('button', { name: t('admin.invoices.load', locale), exact: true });
+  const save = panel.getByRole('button', { name: t('admin.invoices.submit', locale), exact: true });
+  const reason = panel.locator('#override-reason');
+  await panel.locator('#invoice-id').fill(invoiceId);
+  await load.click();
+  await panel.locator('#due-at').fill('2026-09-20T13:30');
+  await reason.fill(' New deadline ');
+  await save.click();
+  await expect.poll(() => commands.length).toBe(1);
+  await expect(
+    panel.getByText(confirmationText('unconfirmed', locale), { exact: true })
+  ).toBeVisible({ timeout: 20_000 });
+  await expect(save).toBeDisabled();
+  await expect(reason).toHaveValue(' New deadline ');
+  readFailed = true;
+  await load.click();
+  await expect(
+    panel.getByText(t('admin.invoices.error.load', locale), { exact: true })
+  ).toBeVisible();
+  await expect(save).toBeDisabled();
+  readFailed = false;
+  await load.click();
+  await expect(reason).toBeEnabled();
+  await expect(reason).toHaveValue('New deadline');
+  await expect(panel.getByText(t('admin.invoices.saved', locale), { exact: true })).toHaveCount(0);
+  expect(commands).toEqual([{ dueAt: '2026-09-20T10:00:00.000Z', reason: 'New deadline' }]);
+});
+
+test('reminder recovery waits for overlapping writes and rejects a partial matrix', async ({
+  page,
+}) => {
+  const locale = 'fa';
+  await setup(page, locale, false);
+  await page.clock.install();
+  const commands: { serviceType: string; offset: number; enabled: boolean }[] = [];
+  let readMode: 'initial' | 'partial' | 'complete' = 'initial';
+  let acknowledgeSibling!: () => void;
+  const sibling = new Promise<void>((resolve) => {
+    acknowledgeSibling = resolve;
+  });
+  const initial = defaultReminderOffsetToggles();
+  const matrix = initial.map((row) =>
+    (row.serviceType === 'electricity' && row.offset === -7) ||
+    (row.serviceType === 'manual' && row.offset === 0)
+      ? { ...row, enabled: false }
+      : row
+  );
+  await page.route('**/api/admin/config/invoice-reminder-offsets', async (route) => {
+    if (route.request().method() === 'GET')
+      return route.fulfill({
+        json: readMode === 'initial' ? initial : readMode === 'partial' ? [] : matrix,
+      });
+    commands.push(route.request().postDataJSON());
+    if (commands.length === 2) {
+      await sibling;
+      return route.fulfill({ json: matrix });
+    }
+  });
+  await page.goto('/admin/invoices');
+  const first = page.getByTestId('reminder-toggle-electricity--7');
+  const second = page.getByTestId('reminder-toggle-manual-0');
+  await first.click();
+  await expect.poll(() => commands.length).toBe(1);
+  await page.clock.fastForward(5_000);
+  await second.click();
+  await expect.poll(() => commands.length).toBe(2);
+  await page.clock.fastForward(10_001);
+  const reload = page.getByRole('button', {
+    name: staffText('admin.invoices.reminders.reload', locale),
+    exact: true,
+  });
+  await expect(reload).toBeDisabled();
+  await expect(first).toBeChecked();
+  await expect(second).not.toBeChecked();
+  acknowledgeSibling();
+  await expect(reload).toBeEnabled();
+  await expect(second).not.toBeChecked();
+  readMode = 'partial';
+  await reload.click();
+  await expect(
+    page.getByText(staffText('admin.invoices.reminders.loadFailed', locale), { exact: true })
+  ).toBeVisible();
+  await expect(first).toBeDisabled();
+  readMode = 'complete';
+  await reload.click();
+  await expect(first).toBeEnabled();
+  await expect(first).not.toBeChecked();
+  await expect(second).not.toBeChecked();
+  expect(commands).toEqual([
+    { serviceType: 'electricity', offset: -7, enabled: false },
+    { serviceType: 'manual', offset: 0, enabled: false },
+  ]);
+});
 
 for (const locale of ['fa', 'en'] as const)
   test(`deadline validators fail safely when their module is unavailable (${locale})`, async ({

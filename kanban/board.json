@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T12:53:14+00:00",
-  "source_commit": "ec0fcf4f4a6d366591e16d9df30442519ebb5565",
+  "updated": "2026-11-08T13:05:46+00:00",
+  "source_commit": "55e2d4ea048ac70e12e3f1ec1f4bcc4064cb72c6",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35396,7 +35396,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "a312fd06dda3048080c5e1d93575426509a5eff403ddf1189c28e75ff4694f72"
+              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
             },
             {
               "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
@@ -63108,7 +63108,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "a312fd06dda3048080c5e1d93575426509a5eff403ddf1189c28e75ff4694f72"
+              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
             },
             {
               "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
@@ -125101,11 +125101,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "9faeba115be204d59741f453a84fd590f9d08876f9f6cee628e6fb5cfbf90f2a"
+              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "a312fd06dda3048080c5e1d93575426509a5eff403ddf1189c28e75ff4694f72"
+              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -126093,11 +126093,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "9faeba115be204d59741f453a84fd590f9d08876f9f6cee628e6fb5cfbf90f2a"
+              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "a312fd06dda3048080c5e1d93575426509a5eff403ddf1189c28e75ff4694f72"
+              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -127085,11 +127085,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "9faeba115be204d59741f453a84fd590f9d08876f9f6cee628e6fb5cfbf90f2a"
+              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "a312fd06dda3048080c5e1d93575426509a5eff403ddf1189c28e75ff4694f72"
+              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -128077,11 +128077,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "9faeba115be204d59741f453a84fd590f9d08876f9f6cee628e6fb5cfbf90f2a"
+              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "a312fd06dda3048080c5e1d93575426509a5eff403ddf1189c28e75ff4694f72"
+              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -129069,11 +129069,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "9faeba115be204d59741f453a84fd590f9d08876f9f6cee628e6fb5cfbf90f2a"
+              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "a312fd06dda3048080c5e1d93575426509a5eff403ddf1189c28e75ff4694f72"
+              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -130061,11 +130061,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "9faeba115be204d59741f453a84fd590f9d08876f9f6cee628e6fb5cfbf90f2a"
+              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "a312fd06dda3048080c5e1d93575426509a5eff403ddf1189c28e75ff4694f72"
+              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -131153,11 +131153,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "9faeba115be204d59741f453a84fd590f9d08876f9f6cee628e6fb5cfbf90f2a"
+              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "a312fd06dda3048080c5e1d93575426509a5eff403ddf1189c28e75ff4694f72"
+              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -132257,11 +132257,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "9faeba115be204d59741f453a84fd590f9d08876f9f6cee628e6fb5cfbf90f2a"
+              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "a312fd06dda3048080c5e1d93575426509a5eff403ddf1189c28e75ff4694f72"
+              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -133349,11 +133349,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "9faeba115be204d59741f453a84fd590f9d08876f9f6cee628e6fb5cfbf90f2a"
+              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "a312fd06dda3048080c5e1d93575426509a5eff403ddf1189c28e75ff4694f72"
+              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -134453,11 +134453,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "9faeba115be204d59741f453a84fd590f9d08876f9f6cee628e6fb5cfbf90f2a"
+              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "a312fd06dda3048080c5e1d93575426509a5eff403ddf1189c28e75ff4694f72"
+              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -135433,7 +135433,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "9faeba115be204d59741f453a84fd590f9d08876f9f6cee628e6fb5cfbf90f2a"
+              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -136211,7 +136211,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "9faeba115be204d59741f453a84fd590f9d08876f9f6cee628e6fb5cfbf90f2a"
+              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -136959,7 +136959,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "9faeba115be204d59741f453a84fd590f9d08876f9f6cee628e6fb5cfbf90f2a"
+              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -491059,7 +491059,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "a312fd06dda3048080c5e1d93575426509a5eff403ddf1189c28e75ff4694f72"
+              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
             },
             {
               "path": "apps/web/src/components/SavingInventoryPanel.tsx",
@@ -492822,7 +492822,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceDueAtPanel.tsx",
-              "sha256": "d1ce76458788dc03161bbb3db8666255ae8bd0898102f0adfcfc11d25ffaf104"
+              "sha256": "a5fae862d8cf2f8591416ab45372cf91a98dcdb9cbc323eaef73803065e82868"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
@@ -492910,7 +492910,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "a312fd06dda3048080c5e1d93575426509a5eff403ddf1189c28e75ff4694f72"
+              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
             },
             {
               "path": "apps/web/src/components/ResponseMetadataPanel.tsx",
@@ -493090,7 +493090,7 @@
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
-              "sha256": "e432b150c2cfe453e2fe39cd4e027800d8083471e027cc444e6f0fda0c612ada"
+              "sha256": "cdf9b474fb83a0b423e802a22f3fecc1371682d3f2b91c5c0f0e4da5d6778e40"
             },
             {
               "path": "packages/i18n/src/workspace-admin.ts",
@@ -494231,11 +494231,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "9faeba115be204d59741f453a84fd590f9d08876f9f6cee628e6fb5cfbf90f2a"
+              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "a312fd06dda3048080c5e1d93575426509a5eff403ddf1189c28e75ff4694f72"
+              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -495114,11 +495114,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "9faeba115be204d59741f453a84fd590f9d08876f9f6cee628e6fb5cfbf90f2a"
+              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "a312fd06dda3048080c5e1d93575426509a5eff403ddf1189c28e75ff4694f72"
+              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -495938,11 +495938,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "9faeba115be204d59741f453a84fd590f9d08876f9f6cee628e6fb5cfbf90f2a"
+              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "a312fd06dda3048080c5e1d93575426509a5eff403ddf1189c28e75ff4694f72"
+              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
+              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -497644,7 +497644,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceDueAtPanel.tsx",
-              "sha256": "d1ce76458788dc03161bbb3db8666255ae8bd0898102f0adfcfc11d25ffaf104"
+              "sha256": "a5fae862d8cf2f8591416ab45372cf91a98dcdb9cbc323eaef73803065e82868"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
@@ -497732,7 +497732,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "a312fd06dda3048080c5e1d93575426509a5eff403ddf1189c28e75ff4694f72"
+              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
             },
             {
               "path": "apps/web/src/components/ResponseMetadataPanel.tsx",
@@ -497912,7 +497912,7 @@
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
-              "sha256": "e432b150c2cfe453e2fe39cd4e027800d8083471e027cc444e6f0fda0c612ada"
+              "sha256": "cdf9b474fb83a0b423e802a22f3fecc1371682d3f2b91c5c0f0e4da5d6778e40"
             },
             {
               "path": "packages/i18n/src/workspace-admin.ts",
@@ -511466,7 +511466,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "a312fd06dda3048080c5e1d93575426509a5eff403ddf1189c28e75ff4694f72"
+              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
             },
             {
               "path": "apps/web/src/components/StaffInvoiceReceiptList.tsx",
@@ -512072,7 +512072,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "a312fd06dda3048080c5e1d93575426509a5eff403ddf1189c28e75ff4694f72"
+              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
@@ -515597,7 +515597,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "a312fd06dda3048080c5e1d93575426509a5eff403ddf1189c28e75ff4694f72"
+              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -516036,7 +516036,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "a312fd06dda3048080c5e1d93575426509a5eff403ddf1189c28e75ff4694f72"
+              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
+              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
+              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -519422,7 +519422,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "a312fd06dda3048080c5e1d93575426509a5eff403ddf1189c28e75ff4694f72"
+              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -566656,7 +566656,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceDueAtPanel.tsx",
-              "sha256": "d1ce76458788dc03161bbb3db8666255ae8bd0898102f0adfcfc11d25ffaf104"
+              "sha256": "a5fae862d8cf2f8591416ab45372cf91a98dcdb9cbc323eaef73803065e82868"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -567520,7 +567520,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
+              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568551,7 +568551,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceDueAtPanel.tsx",
-              "sha256": "d1ce76458788dc03161bbb3db8666255ae8bd0898102f0adfcfc11d25ffaf104"
+              "sha256": "a5fae862d8cf2f8591416ab45372cf91a98dcdb9cbc323eaef73803065e82868"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -569415,7 +569415,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
+              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570219,7 +570219,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Staff default due periods, manual invoice issuance and corrections now have bounded recovery and current browser evidence. Single-invoice deadline overrides and reminder offset saves still have direct writes with no acknowledgement deadline. Reconcile the remaining ordinary CRUD and transactional feedback against current route evidence."
+        "Staff invoice deadlines, default periods, manual issuance, corrections and reminder toggles now have bounded recovery and current browser evidence. Delivery-window settings still wait indefinitely for a direct save acknowledgement. Reconcile the remaining ordinary CRUD and transactional feedback against current route evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -570282,7 +570282,8 @@
           "release-0.5-customer-settings-deadline",
           "release-0.5-saving-intake-recovery",
           "release-0.5-notification-template-command-recovery",
-          "release-0.5-staff-invoice-command-recovery"
+          "release-0.5-staff-invoice-command-recovery",
+          "release-0.5-invoice-deadline-reminder-recovery"
         ],
         "current_acceptance": null
       }
@@ -570529,7 +570530,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceDueAtPanel.tsx",
-              "sha256": "d1ce76458788dc03161bbb3db8666255ae8bd0898102f0adfcfc11d25ffaf104"
+              "sha256": "a5fae862d8cf2f8591416ab45372cf91a98dcdb9cbc323eaef73803065e82868"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -571393,7 +571394,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
+              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -572424,7 +572425,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceDueAtPanel.tsx",
-              "sha256": "d1ce76458788dc03161bbb3db8666255ae8bd0898102f0adfcfc11d25ffaf104"
+              "sha256": "a5fae862d8cf2f8591416ab45372cf91a98dcdb9cbc323eaef73803065e82868"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -573288,7 +573289,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
+              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -574319,7 +574320,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceDueAtPanel.tsx",
-              "sha256": "d1ce76458788dc03161bbb3db8666255ae8bd0898102f0adfcfc11d25ffaf104"
+              "sha256": "a5fae862d8cf2f8591416ab45372cf91a98dcdb9cbc323eaef73803065e82868"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -575183,7 +575184,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
+              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -576214,7 +576215,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceDueAtPanel.tsx",
-              "sha256": "d1ce76458788dc03161bbb3db8666255ae8bd0898102f0adfcfc11d25ffaf104"
+              "sha256": "a5fae862d8cf2f8591416ab45372cf91a98dcdb9cbc323eaef73803065e82868"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -577078,7 +577079,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
+              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -578109,7 +578110,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceDueAtPanel.tsx",
-              "sha256": "d1ce76458788dc03161bbb3db8666255ae8bd0898102f0adfcfc11d25ffaf104"
+              "sha256": "a5fae862d8cf2f8591416ab45372cf91a98dcdb9cbc323eaef73803065e82868"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -578973,7 +578974,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
+              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -580004,7 +580005,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceDueAtPanel.tsx",
-              "sha256": "d1ce76458788dc03161bbb3db8666255ae8bd0898102f0adfcfc11d25ffaf104"
+              "sha256": "a5fae862d8cf2f8591416ab45372cf91a98dcdb9cbc323eaef73803065e82868"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -580868,7 +580869,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
+              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581899,7 +581900,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceDueAtPanel.tsx",
-              "sha256": "d1ce76458788dc03161bbb3db8666255ae8bd0898102f0adfcfc11d25ffaf104"
+              "sha256": "a5fae862d8cf2f8591416ab45372cf91a98dcdb9cbc323eaef73803065e82868"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -582763,7 +582764,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
+              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -583794,7 +583795,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceDueAtPanel.tsx",
-              "sha256": "d1ce76458788dc03161bbb3db8666255ae8bd0898102f0adfcfc11d25ffaf104"
+              "sha256": "a5fae862d8cf2f8591416ab45372cf91a98dcdb9cbc323eaef73803065e82868"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -584658,7 +584659,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
+              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -585689,7 +585690,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceDueAtPanel.tsx",
-              "sha256": "d1ce76458788dc03161bbb3db8666255ae8bd0898102f0adfcfc11d25ffaf104"
+              "sha256": "a5fae862d8cf2f8591416ab45372cf91a98dcdb9cbc323eaef73803065e82868"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -586553,7 +586554,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
+              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -587584,7 +587585,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceDueAtPanel.tsx",
-              "sha256": "d1ce76458788dc03161bbb3db8666255ae8bd0898102f0adfcfc11d25ffaf104"
+              "sha256": "a5fae862d8cf2f8591416ab45372cf91a98dcdb9cbc323eaef73803065e82868"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -588448,7 +588449,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
+              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589479,7 +589480,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceDueAtPanel.tsx",
-              "sha256": "d1ce76458788dc03161bbb3db8666255ae8bd0898102f0adfcfc11d25ffaf104"
+              "sha256": "a5fae862d8cf2f8591416ab45372cf91a98dcdb9cbc323eaef73803065e82868"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -590343,7 +590344,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
+              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591607,7 +591608,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
+              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592114,7 +592115,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceDueAtPanel.tsx",
-              "sha256": "d1ce76458788dc03161bbb3db8666255ae8bd0898102f0adfcfc11d25ffaf104"
+              "sha256": "a5fae862d8cf2f8591416ab45372cf91a98dcdb9cbc323eaef73803065e82868"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -592978,7 +592979,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
+              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594009,7 +594010,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceDueAtPanel.tsx",
-              "sha256": "d1ce76458788dc03161bbb3db8666255ae8bd0898102f0adfcfc11d25ffaf104"
+              "sha256": "a5fae862d8cf2f8591416ab45372cf91a98dcdb9cbc323eaef73803065e82868"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -594873,7 +594874,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "59404d62361c3e4d81285cbc3a704de1cc273f42be31a3ce3dcf9382d0ae85e2"
+              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595677,7 +595678,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Saving intake, notification template commands and the staff due-period read after an unknown write have current native evidence. Match the remaining conditional list, detail, dashboard and staff route states to the inventory and current native evidence."
+        "Invoice deadline and reminder reconciliation now preserve drafts or acknowledged sibling cells and require a successful current read. Match the remaining conditional list, detail, dashboard and staff route states to the inventory and current native evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -595752,7 +595753,8 @@
           "release-0.5-customer-settings-deadline",
           "release-0.5-saving-intake-recovery",
           "release-0.5-notification-template-command-recovery",
-          "release-0.5-staff-invoice-command-recovery"
+          "release-0.5-staff-invoice-command-recovery",
+          "release-0.5-invoice-deadline-reminder-recovery"
         ],
         "current_acceptance": null
       }
@@ -702604,7 +702606,7 @@
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
-              "sha256": "e432b150c2cfe453e2fe39cd4e027800d8083471e027cc444e6f0fda0c612ada"
+              "sha256": "cdf9b474fb83a0b423e802a22f3fecc1371682d3f2b91c5c0f0e4da5d6778e40"
             },
             {
               "path": "packages/ui/src/components/ui/scrollable-tabs-list.tsx",
@@ -709266,11 +709268,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "9faeba115be204d59741f453a84fd590f9d08876f9f6cee628e6fb5cfbf90f2a"
+              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "a312fd06dda3048080c5e1d93575426509a5eff403ddf1189c28e75ff4694f72"
+              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -725396,7 +725398,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Staff default due periods, manual invoice issuance and corrections have current recovery evidence. Remaining command feedback and route states, live Sentry delivery and required GitHub accessibility enforcement still gate full adoption."
+        "The staff invoice deadline and reminder settings have current recovery evidence. Remaining command feedback and route states, live Sentry delivery and required GitHub accessibility enforcement still gate full adoption."
       ],
       "owner": null,
       "depends_on": [],
@@ -725535,7 +725537,8 @@
           "release-0.5-customer-settings-deadline",
           "release-0.5-saving-intake-recovery",
           "release-0.5-notification-template-command-recovery",
-          "release-0.5-staff-invoice-command-recovery"
+          "release-0.5-staff-invoice-command-recovery",
+          "release-0.5-invoice-deadline-reminder-recovery"
         ]
       }
     },
@@ -725851,7 +725854,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceDueAtPanel.tsx",
-              "sha256": "d1ce76458788dc03161bbb3db8666255ae8bd0898102f0adfcfc11d25ffaf104"
+              "sha256": "a5fae862d8cf2f8591416ab45372cf91a98dcdb9cbc323eaef73803065e82868"
             },
             {
               "path": "apps/web/src/components/InvoiceFinancialReviewRows.tsx",
@@ -726003,7 +726006,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "a312fd06dda3048080c5e1d93575426509a5eff403ddf1189c28e75ff4694f72"
+              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
@@ -727264,6 +727267,10 @@
             {
               "path": "packages/i18n/src/manual-invoice.ts",
               "sha256": "40885687815e93fde59c14fde54b9deaff0d8d5f681ca736f8f4ed3ab81c89d1"
+            },
+            {
+              "path": "packages/i18n/src/workspace-admin-messages.ts",
+              "sha256": "cdf9b474fb83a0b423e802a22f3fecc1371682d3f2b91c5c0f0e4da5d6778e40"
             }
           ],
           "checks": [
@@ -727347,7 +727354,8 @@
             "Renewed shared customer settings command and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-settings-deadline/proof.json",
             "Renewed saving intake recovery, accessibility and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-intake-recovery/proof.json",
             "Renewed notification template recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-template-command-recovery/proof.json",
-            "Renewed staff invoice recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-invoice-command-recovery/proof.json"
+            "Renewed staff invoice recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-invoice-command-recovery/proof.json",
+            "Renewed invoice deadline and reminder recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-deadline-reminder-recovery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -799760,6 +799768,106 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-invoice-command-recovery/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-invoice-command-recovery/reviewed.patch",
       "release_disposition": "Verified staff invoice setting, issuance and correction recovery with its existing permission, concurrency and receipt safeguards. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-invoice-deadline-reminder-recovery": {
+      "batch": "release-0.5-invoice-deadline-reminder-recovery",
+      "base_commit": "55e2d4ea048ac70e12e3f1ec1f4bcc4064cb72c6",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
+          "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+        },
+        {
+          "path": "apps/web/e2e/deadline-forms.spec.ts",
+          "sha256": "6e4aab438fc45e06553dbc05da62ecb9ef4afb8acbc9656246fec51a856cad27"
+        },
+        {
+          "path": "apps/web/e2e/invoice-deadline.spec.ts",
+          "sha256": "933106dca05ec2348044a36f4b74477fc7ed856bc7188f598b3e6913f0fc4929"
+        },
+        {
+          "path": "apps/web/src/components/DeadlineForms.test.tsx",
+          "sha256": "241fae721cd1ec70ca3f95a945338200113947f0f1de9dd7891c04b75effd5c9"
+        },
+        {
+          "path": "apps/web/src/components/InvoiceDueAtPanel.tsx",
+          "sha256": "a5fae862d8cf2f8591416ab45372cf91a98dcdb9cbc323eaef73803065e82868"
+        },
+        {
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
+          "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
+        },
+        {
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+          "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+        },
+        {
+          "path": "apps/web/src/components/deadline-query.test.tsx",
+          "sha256": "a1b00947492805301288c51114ad55ff8a7b7c90d4ce13cfe312dbc1a25dacff"
+        },
+        {
+          "path": "apps/web/src/components/reminder-query.test.tsx",
+          "sha256": "df31603b4fc0e0ece94c6c332e3a16382cdf427136f53016d1e9f4a47c22bcc2"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedStaffServiceRead.ts",
+          "sha256": "32c1269a80fcff189bcb8953f1ea274ceb5d1c2874eb5b8fcee2df31ccecc64a"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
+        },
+        {
+          "path": "packages/i18n/src/confirmation.ts",
+          "sha256": "4dd854d1d4c048b6d6d80b7bc3648b5cf3eafa4e445a3ef1142f4c5663b5438e"
+        },
+        {
+          "path": "packages/i18n/src/workspace-admin-messages.ts",
+          "sha256": "cdf9b474fb83a0b423e802a22f3fecc1371682d3f2b91c5c0f0e4da5d6778e40"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "Single-invoice deadline overrides bound direct and password-confirmed acknowledgement without changing the captured invoice, timezone, CSRF or receipt matching. A lost reply preserves the draft and locks writes until the current invoice is read successfully. Failed reloads keep the lock. Reconciliation issues no override and does not claim success for the earlier command.",
+        "Reminder writes and password verification use the same deadline. Overlapping acknowledged changes patch their own cells. After an unknown reply, a reload waits for other pending work and only a complete, validated matrix unlocks controls. The native case rejects an incomplete matrix and verifies exactly the two explicit toggle writes. A scope change or denial retires obsolete writes.",
+        "Fifty-five unit cases, 32 production Chromium and Mobile Safari cases, 16 instrumented Chromium cases, all nine changed-coverage groups, all 100 unchanged bundle budgets, formatting, scoped lint and web typecheck passed. Two timeout cases initially saw a different Tehran conversion under the fake browser clock. A fake-clock UTC attempt also changed conversion. Both cases passed with the real 15-second timeout and the same application assets. The 30 original passes include the existing Tehran conversion assertions. Six cold-auth receipts carry forward from byte-identical runtime files."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-deadline-reminder-recovery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-deadline-reminder-recovery/proof.json",
+      "source_scope_proof_sha256": "a096cb8ddf88d98763e6ccbbfc9ac53e3856615138286b934e16b20811c72fb4",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-deadline-reminder-recovery/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-deadline-reminder-recovery/reviewed.patch",
+      "release_disposition": "Verified single-invoice deadline and reminder acknowledgement recovery with existing permission, concurrency and receipt safeguards. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -799810,12 +799918,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Finish the staff invoice deadline and reminders recovery journey by addressing the unbounded single-invoice deadline override and reminder offset writes. Continue matching remaining conditional route states to native evidence. Live Sentry delivery and required GitHub accessibility enforcement remain separate v0.5.0 gates."
+    "goal": "Close the unbounded staff delivery-window save acknowledgement and reconcile remaining notification settings and conditional route states against native evidence. Live Sentry delivery and required GitHub accessibility enforcement remain separate v0.5.0 gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, guarded electricity drafts, solar document completion, ticket acknowledgement, verified attachment and verification-mode recovery, shared customer settings acknowledgement and saving intake recovery, staff notification template and invoice command recovery, and scoped customer electricity, shell, onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, guarded electricity drafts, solar document completion, ticket acknowledgement, verified attachment and verification-mode recovery, shared customer settings acknowledgement and saving intake recovery, staff notification template, invoice command and reminder recovery, and scoped customer electricity, shell, onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {
