@@ -1,17 +1,18 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { commercialFetch } from '../lib/commercial-fetch.js';
 import { withCsrf } from '../lib/csrf.js';
-import { electricityOrderReceipt } from '../lib/form-receipt.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
 
-type Result =
-  | { status: 'confirmed'; receipt: ReturnType<typeof electricityOrderReceipt> }
-  | { status: 'unconfirmed' | 'quote-changed' | 'rejected' | 'obsolete' };
+type Result<Receipt> =
+  | { status: 'confirmed'; receipt: Receipt }
+  | { status: 'unconfirmed' | 'conflict' | 'rejected' | 'obsolete' };
 
-/** An ambiguous submission can only replay the exact reviewed order. */
-export function useElectricityOrderSubmission(
-  mode: 'simple' | 'advanced',
-  profileId: string | null
+/** An ambiguous submission can only replay the exact reviewed request. */
+export function useReviewedSubmission<Receipt>(
+  path: string,
+  profileId: string | null,
+  parseReceipt: (value: unknown) => Receipt,
+  { addIdempotencyKey = false } = {}
 ) {
   const attempt = useRef<AbortController | null>(null);
   const held = useRef<{ profileId: string; body: string } | null>(null);
@@ -27,7 +28,10 @@ export function useElectricityOrderSubmission(
     };
   }, [profileId]);
 
-  async function send(input: object | undefined, isCurrent: () => boolean): Promise<Result> {
+  async function send(
+    input: object | undefined,
+    isCurrent: () => boolean
+  ): Promise<Result<Receipt>> {
     if (!profileId || attempt.current || !isCurrent()) return { status: 'obsolete' };
     const replay = held.current;
     if (replay ? input || replay.profileId !== profileId : !input) return { status: 'obsolete' };
@@ -36,7 +40,9 @@ export function useElectricityOrderSubmission(
       if (prepared.current?.fingerprint !== fingerprint)
         prepared.current = {
           fingerprint,
-          body: JSON.stringify({ ...input, idempotencyKey: crypto.randomUUID() }),
+          body: addIdempotencyKey
+            ? JSON.stringify({ ...input, idempotencyKey: crypto.randomUUID() })
+            : fingerprint,
         };
     }
     const body = replay?.body ?? prepared.current?.body;
@@ -46,7 +52,7 @@ export function useElectricityOrderSubmission(
     const current = () => !controller.signal.aborted && isCurrent();
     try {
       const response = await readWithDeadline(controller.signal, async (signal) => {
-        const response = await commercialFetch(`/api/electricity/orders/${mode}`, {
+        const response = await commercialFetch(path, {
           method: 'POST',
           credentials: 'include',
           headers: withCsrf({ 'Content-Type': 'application/json' }),
@@ -55,17 +61,17 @@ export function useElectricityOrderSubmission(
         });
         return {
           status: response.status,
-          receipt: response.ok ? electricityOrderReceipt(await response.json()) : null,
+          receipt: response.ok ? parseReceipt(await response.json()) : null,
         };
       });
       if (!current()) return { status: 'obsolete' };
-      if (response.receipt) {
+      if (response.receipt !== null) {
         held.current = null;
         setUnconfirmedProfile(null);
         return { status: 'confirmed', receipt: response.receipt };
       }
       if (!replay && [400, 401, 403, 404, 409, 422, 429].includes(response.status))
-        return { status: response.status === 409 ? 'quote-changed' : 'rejected' };
+        return { status: response.status === 409 ? 'conflict' : 'rejected' };
     } catch {
       if (!current()) return { status: 'obsolete' };
     } finally {
@@ -76,5 +82,11 @@ export function useElectricityOrderSubmission(
     return { status: 'unconfirmed' };
   }
 
-  return { send, unconfirmed: profileId !== null && unconfirmedProfile === profileId };
+  return {
+    send,
+    resetPreparation() {
+      if (!held.current && !attempt.current) prepared.current = null;
+    },
+    unconfirmed: profileId !== null && unconfirmedProfile === profileId,
+  };
 }

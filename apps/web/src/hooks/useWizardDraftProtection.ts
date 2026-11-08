@@ -19,6 +19,7 @@ export function useWizardDraftProtection<T extends object>({
   go,
   extraDirty = false,
   saveDisabled = false,
+  unconfirmed = false,
 }: {
   profileId: string | null;
   data: T;
@@ -28,6 +29,7 @@ export function useWizardDraftProtection<T extends object>({
   go: (step: number, expectedStep?: number) => Promise<void>;
   extraDirty?: boolean;
   saveDisabled?: boolean;
+  unconfirmed?: boolean;
 }) {
   const signature = draftSignature(profileId, data, step);
   const latest = useRef(signature);
@@ -67,13 +69,17 @@ export function useWizardDraftProtection<T extends object>({
     shouldBlockFn: ({ current, next }) =>
       !completed.current &&
       (current.pathname !== next.pathname
-        ? (ready && (savedRef.current !== latest.current || extraDirty)) || !!command.current
-        : !!command.current &&
+        ? (ready && (savedRef.current !== latest.current || extraDirty)) ||
+          !!command.current ||
+          unconfirmed
+        : (!!command.current || unconfirmed) &&
           !ownNavigation.current &&
           JSON.stringify(current.search) !== JSON.stringify(next.search)),
     enableBeforeUnload: () =>
       !completed.current &&
-      ((ready && (savedRef.current !== latest.current || extraDirty)) || !!command.current),
+      ((ready && (savedRef.current !== latest.current || extraDirty)) ||
+        !!command.current ||
+        unconfirmed),
     withResolver: true,
   });
   const run = useCallback(
@@ -107,7 +113,7 @@ export function useWizardDraftProtection<T extends object>({
   );
   const save = useCallback(
     async (target = step) => {
-      if (!profileId || saveDisabled) return false;
+      if (!profileId || saveDisabled || unconfirmed) return false;
       let success = false;
       await run(async (current) => {
         setSaveError(false);
@@ -123,7 +129,7 @@ export function useWizardDraftProtection<T extends object>({
       });
       return success;
     },
-    [profileId, saveDisabled, run, saveDraft, data, markSaved, step, move]
+    [profileId, saveDisabled, unconfirmed, run, saveDraft, data, markSaved, step, move]
   );
   return { busy, dirty, saveError, save, markSaved, run, move, completed, blocker };
 }

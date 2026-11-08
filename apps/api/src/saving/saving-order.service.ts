@@ -1122,6 +1122,7 @@ export class SavingOrderService {
       if (previous) {
         if (previous.request_hash !== hash)
           throw new ConflictException('Idempotency key was used for another order');
+        await this.authorize(client, actor, input.profileId, false);
         await client.query(
           'DELETE FROM saving_customer_drafts WHERE user_id=$1 AND profile_id=$2',
           [actor.userId, input.profileId]

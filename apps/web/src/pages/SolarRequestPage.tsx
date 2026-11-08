@@ -1,5 +1,6 @@
 import { toast } from '../lib/toast-api.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
+import { SubmissionRecovery } from '../components/SubmissionRecovery.js';
 import { ConfirmationFields } from '@barghsa/ui';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
@@ -8,7 +9,7 @@ import { readWithDeadline } from '../lib/server-query-client.js';
 import { queryKeys } from '../lib/query-keys.js';
 import { useOwnedManualServerRead } from '../hooks/useServerQuery.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
-import { useProfileContextRevision } from '../lib/profile-context.js';
+import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
 import { StepReviewPage } from '../components/StepReviewPage.js';
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
@@ -19,6 +20,7 @@ import { useWizardForm } from '../hooks/useWizardForm.js';
 import { z } from 'zod';
 import { useWizardStep } from '../hooks/useWizardStep.js';
 import { useWizardDraftProtection } from '../hooks/useWizardDraftProtection.js';
+import { useReviewedSubmission } from '../hooks/useReviewedSubmission.js';
 import { sameFormData, uuidReference } from '../lib/form-receipt.js';
 import { tSolar } from '@barghsa/i18n/solar';
 import { useLocale } from '../hooks/useLocale.js';
@@ -200,6 +202,9 @@ export function SolarRequestPage() {
   const [agreementAccepted, setAgreementAccepted] = fields.field('agreementAccepted');
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(false);
+  const submission = useReviewedSubmission('/api/solar/requests', profileId, (value) =>
+    uuidReference((value as { requestId?: unknown } | null)?.requestId)
+  );
   const [review, setReview] = useState<SolarReview | null>(null);
   const [reviewInput, setReviewInput] = useState<Record<string, unknown> | null>(null);
   const submissionKey = useRef<{ fingerprint: string; key: string } | null>(null);
@@ -294,6 +299,7 @@ export function SolarRequestPage() {
     ready: draftHydrated && !loading && !draftLoading && !draftError,
     saveDraft,
     go: wizard.go,
+    unconfirmed: submission.unconfirmed,
   });
   const fingerprint = JSON.stringify([profileId, currentDraft, agreementAccepted]);
   const propertyValid = (value: SolarDraft) =>
@@ -355,6 +361,7 @@ export function SolarRequestPage() {
       protection.busy ||
       protection.blocker.status === 'blocked' ||
       protection.saveError ||
+      submission.unconfirmed ||
       submitting
     )
       return;
@@ -369,6 +376,7 @@ export function SolarRequestPage() {
     protection.blocker.status,
     protection.saveError,
     protection.save,
+    submission.unconfirmed,
     submitting,
   ]);
 
@@ -503,9 +511,37 @@ export function SolarRequestPage() {
     locale,
     'financial'
   );
+  async function sendRequest(input?: object) {
+    await protection.run(async (current, alive) => {
+      setSubmitting(true);
+      setSubmitError(false);
+      const ownsSubmission = () => current() && getProfileContextRevision() === profileRevision;
+      try {
+        const result = await submission.send(input, ownsSubmission);
+        if (!ownsSubmission()) return;
+        if (result.status === 'confirmed') {
+          protection.completed.current = true;
+          protection.blocker.reset?.();
+          toast.success(copy('history_solar.request.submitted'));
+          await navigate({
+            to: '/solar/requests/$requestId',
+            params: { requestId: result.receipt },
+          }).catch(() => {});
+        } else if (result.status === 'unconfirmed') {
+          toast.error(copy('submissionUnconfirmed'));
+        } else if (result.status === 'rejected' || result.status === 'conflict') {
+          setSubmitError(true);
+          toast.error(copy('submitError'));
+        }
+      } finally {
+        if (alive()) setSubmitting(false);
+      }
+    });
+  }
   async function confirmSubmission() {
-    if (!financialGate.allowed) return;
     if (
+      !financialGate.allowed ||
+      submission.unconfirmed ||
       !review ||
       !reviewInput ||
       reviewFingerprint.current !== fingerprint ||
@@ -514,33 +550,7 @@ export function SolarRequestPage() {
       !gridValid(currentDraft)
     )
       return;
-    await protection.run(async (current, alive) => {
-      setSubmitting(true);
-      setSubmitError(false);
-      try {
-        const response = await fetch('/api/solar/requests', {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({ ...reviewInput, expectedReviewHash: review.hash }),
-        });
-        if (!response.ok) throw new Error('submit');
-        const result = (await response.json()) as { requestId?: unknown };
-        const requestId = uuidReference(result?.requestId);
-        if (!current()) return;
-        protection.completed.current = true;
-        protection.blocker.reset?.();
-        toast.success(copy('history_solar.request.submitted'));
-        await navigate({ to: '/solar/requests/$requestId', params: { requestId } });
-      } catch {
-        if (current()) {
-          protection.completed.current = false;
-          setSubmitError(true);
-        }
-      } finally {
-        if (alive()) setSubmitting(false);
-      }
-    });
+    await sendRequest({ ...reviewInput, expectedReviewHash: review.hash });
   }
 
   const age = buildingCompletionDate
@@ -554,10 +564,15 @@ export function SolarRequestPage() {
         <Suspense fallback={<p role="status">{copy('loading')}</p>}>
           <LeaveDialog
             onSave={saveNow}
+            saveDisabled={submission.unconfirmed}
             working={protection.busy || fields.pending}
             workingLabel={copy('submitting')}
             errorMessage={
-              draftSaveError || protection.saveError ? copy('draftSaveError') : undefined
+              submission.unconfirmed
+                ? copy('submissionUnconfirmed')
+                : draftSaveError || protection.saveError
+                  ? copy('draftSaveError')
+                  : undefined
             }
             onStay={() => protection.blocker.reset?.()}
             onLeave={() => protection.blocker.proceed?.()}
@@ -606,6 +621,19 @@ export function SolarRequestPage() {
             : null
         }
       />
+      {submission.unconfirmed && (
+        <SubmissionRecovery
+          history="/solar/requests"
+          busy={submitting}
+          onRetry={() => void sendRequest()}
+          copy={{
+            unconfirmed: copy('submissionUnconfirmed'),
+            retry: copy('retrySubmission'),
+            busy: copy('submitting'),
+            history: copy('checkRequests'),
+          }}
+        />
+      )}
       {!loading && !loadError && profileId && draftHydrated && !draftError && (
         <ValidatedFormWizard
           form={fields.form}
@@ -620,6 +648,7 @@ export function SolarRequestPage() {
             !profileId ||
             protection.busy ||
             protection.completed.current ||
+            submission.unconfirmed ||
             submitting
           }
           onInvalidStep={(target) => wizard.go(target, step)}
@@ -664,11 +693,15 @@ export function SolarRequestPage() {
           submittingLabel={copy('submitting')}
           saving={protection.busy && !submitting}
           submitting={submitting}
-          saveDisabled={protection.completed.current}
-          backDisabled={protection.completed.current}
-          nextDisabled={!canNext}
+          saveDisabled={protection.completed.current || submission.unconfirmed}
+          backDisabled={protection.completed.current || submission.unconfirmed}
+          nextDisabled={!canNext || submission.unconfirmed}
           submitDisabled={
-            !financialGate.allowed || !review || !agreementAccepted || protection.completed.current
+            !financialGate.allowed ||
+            !review ||
+            !agreementAccepted ||
+            protection.completed.current ||
+            submission.unconfirmed
           }
           onBack={() => {
             void protection.save(step - 1);
@@ -682,7 +715,9 @@ export function SolarRequestPage() {
           {(pending) => (
             <fieldset
               className="space-y-6 min-w-0"
-              disabled={pending || protection.busy || protection.completed.current}
+              disabled={
+                pending || protection.busy || protection.completed.current || submission.unconfirmed
+              }
             >
               {step === 1 && (
                 <>

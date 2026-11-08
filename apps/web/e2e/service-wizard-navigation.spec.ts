@@ -2,6 +2,7 @@ import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 import { t } from '@barghsa/i18n/app';
+import { t as workspaceCopy } from '@barghsa/i18n/workspace';
 import { tSaving } from '@barghsa/i18n/saving';
 import { tSolar } from '@barghsa/i18n/solar';
 import { fullNavigation } from './navigation-fixture';
@@ -579,11 +580,26 @@ for (const mode of ['saving', 'solar'] as const)
       await approveRiskConfirmation(page, locale, 'financial');
       state.invalidOrder = true;
       await submit.click();
-      await expect(page.getByRole('alert')).toContainText(
-        mode === 'saving' ? tSaving('orderError', locale) : tSolar('submitError', locale)
+      const main = page.getByRole('main');
+      const unconfirmed =
+        mode === 'saving'
+          ? workspaceCopy('electricity.order.unconfirmed', locale)
+          : tSolar('submissionUnconfirmed', locale);
+      await expect(main.getByRole('alert').filter({ hasText: unconfirmed })).toHaveText(
+        unconfirmed
       );
+      const retry = main.getByRole('button', {
+        name:
+          mode === 'saving'
+            ? workspaceCopy('electricity.order.retrySubmission', locale)
+            : tSolar('retrySubmission', locale),
+        exact: true,
+      });
+      await expect(retry).toBeFocused();
+      await expect(submit).toBeDisabled();
+      expect(state.orders).toHaveLength(1);
       state.invalidOrder = false;
-      await submit.click();
+      await retry.press('Enter');
       await expect(page).toHaveURL(
         new RegExp(`${mode === 'saving' ? '/savings/orders' : '/solar/requests'}/${receiptId}$`)
       );

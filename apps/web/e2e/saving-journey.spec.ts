@@ -2,6 +2,7 @@ import { tSaving as savingCopy } from '@barghsa/i18n/saving';
 import { contractText as contractCopy } from '@barghsa/i18n/contracts';
 import { tSavingStaffReview as savingReviewCopy } from '@barghsa/i18n/saving-staff-review';
 import { t as appCopy } from '@barghsa/i18n/app';
+import { t as workspaceCopy } from '@barghsa/i18n/workspace';
 import { test, expect, type Page } from './coverage-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { checkRoutePresentation } from './route-presentation';
@@ -52,6 +53,7 @@ for (const locale of ['en', 'fa'] as const)
     test.setTimeout(60_000);
     const drafts: Array<Record<string, unknown>> = [];
     const submissions: Array<Record<string, unknown>> = [];
+    const submissionBodies: Array<string | null> = [];
     const staffActions: Array<{ path: string; body: Record<string, unknown> }> = [];
     const staffReviewHash = 'b'.repeat(64);
     let approved = false;
@@ -246,6 +248,7 @@ for (const locale of ['en', 'fa'] as const)
       route.fulfill({ json: { availableBalance: '500000' } })
     );
     await page.route('**/api/saving/orders', (route) => {
+      submissionBodies.push(route.request().postData());
       submissions.push(route.request().postDataJSON() as Record<string, unknown>);
       if (submissions.length === 1) {
         return route.fulfill({ status: 503, json: { message: 'private-saving-order-diagnostic' } });
@@ -683,14 +686,31 @@ for (const locale of ['en', 'fa'] as const)
     await expect(submit).toBeDisabled();
     await approveRiskConfirmation(page, locale, 'financial');
     await submit.click();
-    const error = savingCopy('orderError', locale);
+    const error = workspaceCopy('electricity.order.unconfirmed', locale);
     await expect(page.getByRole('main').getByRole('alert').filter({ hasText: error })).toHaveText(
       error
     );
     await expect(errorToasts.filter({ hasText: error })).toHaveText(error);
     await expect(page.getByText('private-saving-order-diagnostic')).toHaveCount(0);
-    await expect(submit).toBeEnabled();
-    await submit.click();
+    await expect(submit).toBeDisabled();
+    await expect(checkbox('submitForReview')).toBeDisabled();
+    await expect(
+      page.getByRole('main').getByRole('link', {
+        name: workspaceCopy('electricity.order.checkOrders', locale),
+      })
+    ).toHaveAttribute('href', '/savings/orders');
+    const retrySubmission = page.getByRole('button', {
+      name: workspaceCopy('electricity.order.retrySubmission', locale),
+    });
+    await expect(retrySubmission).toBeFocused();
+    expect(submissions).toHaveLength(1);
+    if (locale === 'fa' && process.env.BARGHSA_SCREENSHOT_DIR) {
+      await retrySubmission.scrollIntoViewIfNeeded();
+      await page.screenshot({
+        path: `${process.env.BARGHSA_SCREENSHOT_DIR}/saving-order-recovery-${info.project.name}.png`,
+      });
+    }
+    await retrySubmission.press('Enter');
     await expect(page).toHaveURL(new RegExp(`/savings/orders/${savingOrderId}$`));
     const detail = page.getByRole('main');
     try {
@@ -731,6 +751,7 @@ for (const locale of ['en', 'fa'] as const)
     expect(drafts).toHaveLength(5);
     expect(submissions).toHaveLength(2);
     expect(submissions[1]).toEqual(submissions[0]);
+    expect(submissionBodies).toEqual([submissionBodies[0], submissionBodies[0]]);
     expect(submissions[0]).toMatchObject({
       idempotencyKey: expect.stringMatching(/^[a-f0-9-]{36}$/),
       profileId,

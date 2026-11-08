@@ -799,6 +799,30 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     preventActiveDuplicates: true,
     existingOrderId: result.savingOrderId,
   });
+  const nextDraft = await request('/api/saving/orders/draft', 'PUT', {
+    profileId: input.profileId,
+    currentStep: 1,
+    data: {
+      planId: input.savingPlanId,
+      hardwareId: '',
+      billIdentifier: '',
+      addressId: '',
+      giftCode: '',
+    },
+  });
+  expect(nextDraft.status, http.logs()).toBe(200);
+  await http.pool.query('UPDATE profiles SET archived=TRUE WHERE id=$1', [input.profileId]);
+  try {
+    const denied = await request('/api/saving/orders', 'POST', submission);
+    expect(denied.status, http.logs()).toBe(404);
+    const retained = await http.pool.query(
+      'SELECT 1 FROM saving_customer_drafts WHERE user_id=$1 AND profile_id=$2',
+      ['saving-order-buyer', input.profileId]
+    );
+    expect(retained.rowCount).toBe(1);
+  } finally {
+    await http.pool.query('UPDATE profiles SET archived=FALSE WHERE id=$1', [input.profileId]);
+  }
   const retry = await request('/api/saving/orders', 'POST', submission);
   expect(retry.status, http.logs()).toBe(201);
   expect(await retry.json()).toEqual(result);

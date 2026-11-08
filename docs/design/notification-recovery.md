@@ -12,7 +12,7 @@ The feedback scope includes account, profile revision, language and the supplied
 
 Map public error codes to localized messages and use a safe fallback for unrecognized errors. Do not display raw response text. Keep a reviewed order and its idempotency key for an explicit retry when the input is unchanged.
 
-Simple and advanced electricity submissions allow up to 15 seconds for a response, including its body. A timeout or invalid acknowledgement freezes the reviewed body and key in the current checkout. Retry sends those exact bytes with the current CSRF token. A rejected retry keeps the outcome unconfirmed. A confirmed receipt opens the saved order. Check order history before starting a new order after leaving an unconfirmed checkout.
+Simple and advanced electricity, saving and solar submissions allow up to 15 seconds for a response, including its body. A timeout or invalid acknowledgement freezes the reviewed body and key in the current checkout. Retry sends those exact bytes with the current CSRF token. A rejected retry keeps the outcome unconfirmed. A confirmed receipt opens the saved order or request. Check history before starting a new submission after leaving an unconfirmed checkout.
 
 For customer invoice and wallet bank receipts, announce submission only after the response confirms the reviewed amount and pending state. A lost or malformed acknowledgement leaves the outcome unconfirmed and asks the customer to check current status. A wallet retry of the same reviewed receipt keeps its original idempotency key and attachment. A failed history or balance refresh does not overturn an acknowledged receipt.
 

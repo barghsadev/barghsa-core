@@ -37,9 +37,9 @@ import {
 } from '@barghsa/ui';
 import { useGeographyOptions, loadGeographyOptions } from '../hooks/useGeographyOptions.js';
 import { useWizardStep } from '../hooks/useWizardStep.js';
-import { confirmedDraftReceipt } from '../lib/form-receipt.js';
-import { useElectricityOrderSubmission } from '../hooks/useElectricityOrderSubmission.js';
-import { ElectricityOrderRecovery } from '../components/ElectricityOrderRecovery.js';
+import { confirmedDraftReceipt, electricityOrderReceipt } from '../lib/form-receipt.js';
+import { useReviewedSubmission } from '../hooks/useReviewedSubmission.js';
+import { SubmissionRecovery } from '../components/SubmissionRecovery.js';
 import { withCsrf } from '../lib/csrf.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -341,7 +341,12 @@ function OwnedSimpleElectricityOrderPage() {
   const [quoteError, setQuoteError] = useState('');
   const [quoting, setQuoting] = useState(false);
   const [quoteVersion, setQuoteVersion] = useState(0);
-  const orderSubmission = useElectricityOrderSubmission('simple', activeProfileId);
+  const orderSubmission = useReviewedSubmission(
+    '/api/electricity/orders/simple',
+    activeProfileId,
+    electricityOrderReceipt,
+    { addIdempotencyKey: true }
+  );
   const orderUnconfirmed = orderSubmission.unconfirmed;
   const wizard = useWizardStep('/electricity/order');
   const { step } = wizard;
@@ -1111,7 +1116,7 @@ function OwnedSimpleElectricityOrderPage() {
         completed.current = true;
         setOrderCreated(result.receipt);
         toast.success(t('electricity.order.success.create', locale));
-      } else if (result.status === 'quote-changed') {
+      } else if (result.status === 'conflict') {
         setQuoteVersion((version) => version + 1);
         toast.error(t('electricity.order.reviewChanged', locale));
       } else if (result.status === 'unconfirmed') {
@@ -1379,7 +1384,7 @@ function OwnedSimpleElectricityOrderPage() {
       <h1 className="mb-2 text-2xl font-bold">{t('electricity.order.title', locale)}</h1>
       <p className="mb-6 text-muted-foreground">{t('electricity.order.description', locale)}</p>
       {orderUnconfirmed && (
-        <ElectricityOrderRecovery busy={submitting} onRetry={() => void sendOrder()} />
+        <SubmissionRecovery busy={submitting} onRetry={() => void sendOrder()} />
       )}
       <Suspense fallback={<p role="status">{t('electricity.order.previewLoading', locale)}</p>}>
         <ValidatedFormWizard

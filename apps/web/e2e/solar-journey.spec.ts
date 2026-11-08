@@ -1,5 +1,6 @@
 import { tSolar as solarCopy } from '@barghsa/i18n/solar';
 import { t as appCopy } from '@barghsa/i18n/app';
+import { t as workspaceCopy } from '@barghsa/i18n/workspace';
 import { tSolar } from '@barghsa/i18n/solar';
 import { t } from '@barghsa/i18n/app';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
@@ -37,6 +38,11 @@ for (const locale of ['en', 'fa'] as const)
     let operatingContext: 'customer' | 'staff' = 'customer';
     let shipment: Record<string, unknown> | null = null;
     const submissions: Array<Record<string, unknown>> = [];
+    const submissionBodies: Array<string | null> = [];
+    let releaseFirstSubmission!: () => void;
+    const firstSubmission = new Promise<void>((resolve) => {
+      releaseFirstSubmission = resolve;
+    });
     const document = {
       id: documentId,
       profileId,
@@ -141,10 +147,17 @@ for (const locale of ['en', 'fa'] as const)
         },
       })
     );
-    await page.route('**/api/solar/requests', (route) => {
+    await page.route('**/api/solar/requests', async (route) => {
       expect(route.request().method()).toBe('POST');
       submissions.push(route.request().postDataJSON() as Record<string, unknown>);
+      submissionBodies.push(route.request().postData());
       draft = null;
+      if (submissions.length === 1) {
+        await firstSubmission;
+        return route.fulfill({ status: 201, json: { requestId } }).catch(() => {});
+      }
+      if (submissions.length === 2)
+        return route.fulfill({ status: 201, json: { requestId: 'malformed-receipt' } });
       return route.fulfill({ status: 201, json: { requestId } });
     });
     await page.route(`**/api/solar/requests/${requestId}`, (route) =>
@@ -513,15 +526,67 @@ for (const locale of ['en', 'fa'] as const)
     const submit = page.getByRole('button', { name: solarCopy('submit', locale), exact: true });
     await expect(submit).toBeDisabled();
     await approveRiskConfirmation(page, locale, 'financial');
+    await page.clock.install();
     await submit.click();
-    await expect(page).toHaveURL(new RegExp(`/solar/requests/${requestId}$`));
+    const main = page.getByRole('main');
+    const retrySubmission = main.getByRole('button', {
+      name: solarCopy('retrySubmission', locale),
+    });
+    const unconfirmed = main.getByRole('alert').filter({
+      hasText: solarCopy('submissionUnconfirmed', locale),
+    });
+    try {
+      await expect.poll(() => submissions.length).toBe(1);
+      await page.clock.fastForward(15_100);
+      await expect(unconfirmed).toBeVisible();
+      await expect(retrySubmission).toBeFocused();
+      await expect(submit).toBeDisabled();
+      await expect(
+        main.getByRole('button', { name: solarCopy('saveDraft', locale) })
+      ).toBeDisabled();
+      if (locale === 'fa' && process.env.BARGHSA_SCREENSHOT_DIR) {
+        await retrySubmission.scrollIntoViewIfNeeded();
+        await page.screenshot({
+          path: `${process.env.BARGHSA_SCREENSHOT_DIR}/solar-request-recovery-${info.project.name}.png`,
+        });
+      }
+      const history = main.getByRole('link', {
+        name: solarCopy('checkRequests', locale),
+      });
+      await expect(history).toHaveAttribute('href', '/solar/requests');
+      await history.click();
+      const leave = page.getByRole('dialog');
+      await expect(
+        leave.getByRole('button', {
+          name: workspaceCopy('electricity.order.unsaved.saveAndLeave', locale),
+        })
+      ).toBeDisabled();
+      await leave
+        .getByRole('button', {
+          name: workspaceCopy('electricity.order.unsaved.stay', locale),
+        })
+        .click();
+    } finally {
+      releaseFirstSubmission();
+    }
+    await expect(unconfirmed).toBeVisible();
     expect(submissions).toHaveLength(1);
+    await retrySubmission.press('Enter');
+    await expect.poll(() => submissions.length).toBe(2);
+    await expect(retrySubmission).toBeEnabled();
+    await expect(unconfirmed).toBeVisible();
+    await expect(submit).toBeDisabled();
+    await retrySubmission.press('Enter');
+    await expect(page).toHaveURL(new RegExp(`/solar/requests/${requestId}$`));
+    expect(submissions).toHaveLength(3);
+    expect(submissionBodies).toEqual(Array(3).fill(submissionBodies[0]));
     expect(submissions[0]).toMatchObject({
       profileId,
       buildingType: 'building_apartment',
       propertyForm: 'villa',
       gridType: 'off_grid',
       agreementAccepted: true,
+      submissionKey: expect.stringMatching(/^[a-f0-9-]{36}$/),
       expectedReviewHash: 'a'.repeat(64),
     });
 

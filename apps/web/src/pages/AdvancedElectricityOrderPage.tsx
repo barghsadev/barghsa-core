@@ -22,9 +22,9 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useFinancialFormatting } from '../hooks/useFinancialFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
 import { useWizardStep } from '../hooks/useWizardStep.js';
-import { confirmedDraftReceipt } from '../lib/form-receipt.js';
-import { useElectricityOrderSubmission } from '../hooks/useElectricityOrderSubmission.js';
-import { ElectricityOrderRecovery } from '../components/ElectricityOrderRecovery.js';
+import { confirmedDraftReceipt, electricityOrderReceipt } from '../lib/form-receipt.js';
+import { useReviewedSubmission } from '../hooks/useReviewedSubmission.js';
+import { SubmissionRecovery } from '../components/SubmissionRecovery.js';
 import { formatJalaliDateTime, parseJalaliDateTime } from '../lib/jalali-date-time.js';
 import {
   ElectricityQuotePreviewError,
@@ -249,7 +249,12 @@ export function AdvancedElectricityOrderPage() {
   const wizard = useWizardStep('/electricity/advanced');
   const { step } = wizard;
   const command = useRef<symbol | null>(null);
-  const orderSubmission = useElectricityOrderSubmission('advanced', profileId);
+  const orderSubmission = useReviewedSubmission(
+    '/api/electricity/orders/advanced',
+    profileId,
+    electricityOrderReceipt,
+    { addIdempotencyKey: true }
+  );
   const orderUnconfirmed = orderSubmission.unconfirmed;
   const generation = useRef(0);
   const completed = useRef(false);
@@ -575,7 +580,7 @@ export function AdvancedElectricityOrderPage() {
           to: '/electricity/orders/$orderId',
           params: { orderId: result.receipt.orderId },
         }).catch(() => {});
-      } else if (result.status === 'quote-changed') {
+      } else if (result.status === 'conflict') {
         setQuoteVersion((version) => version + 1);
         toast.error(t('electricity.order.reviewChanged', locale));
       } else if (result.status === 'unconfirmed') {
@@ -731,7 +736,7 @@ export function AdvancedElectricityOrderPage() {
         </p>
       </header>
       {orderUnconfirmed && (
-        <ElectricityOrderRecovery busy={submitting} onRetry={() => void sendOrder()} />
+        <SubmissionRecovery busy={submitting} onRetry={() => void sendOrder()} />
       )}
       <ValidatedFormWizard
         form={fields.form}

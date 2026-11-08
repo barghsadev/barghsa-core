@@ -199,6 +199,10 @@ const en: Record<string, string> = {
   draftSaved: 'Progress saved.',
   saveDraft: 'Save progress',
   submitError: 'Could not submit the request. Check the form and try again.',
+  submissionUnconfirmed:
+    'The request is unconfirmed. You can retry the same submission. If you leave this page, check your requests before starting a new one.',
+  retrySubmission: 'Retry the same request',
+  checkRequests: 'Check requests',
   profileRequired: 'Select an active profile to submit a construction request.',
   noAddresses: 'Add a site address in profile settings before submitting.',
   addAddress: 'Add another site address',
@@ -576,6 +580,10 @@ const fa: Record<string, string> = {
   draftSaved: 'پیشرفت فرم ذخیره شد.',
   saveDraft: 'ذخیره پیشرفت',
   submitError: 'درخواست ثبت نشد. فرم را بررسی و دوباره تلاش کنید.',
+  submissionUnconfirmed:
+    'ثبت درخواست تأیید نشده است. می‌توانید همان درخواست را دوباره ارسال کنید. اگر از این صفحه خارج می‌شوید، پیش از ثبت درخواست جدید، درخواست‌های خود را بررسی کنید.',
+  retrySubmission: 'ارسال دوباره همان درخواست',
+  checkRequests: 'بررسی درخواست‌ها',
   profileRequired: 'برای ثبت درخواست، یک پروفایل فعال انتخاب کنید.',
   noAddresses: 'پیش از ثبت درخواست، نشانی محل را در تنظیمات پروفایل ثبت کنید.',
   addAddress: 'افزودن نشانی محل جدید',

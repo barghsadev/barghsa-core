@@ -1,6 +1,7 @@
 import { readWithDeadline } from '../lib/server-query-client.js';
 import { toast } from '../lib/toast-api.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
+import { SubmissionRecovery } from '../components/SubmissionRecovery.js';
 import { ConfirmationFields } from '@barghsa/ui';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { useOwnedIntakeRead } from '../hooks/useOwnedIntakeRead.js';
@@ -26,6 +27,7 @@ import { GeographyLoadError } from '../components/GeographyLoadError.js';
 import { t } from '@barghsa/i18n/app';
 import { useWizardStep } from '../hooks/useWizardStep.js';
 import { useWizardDraftProtection } from '../hooks/useWizardDraftProtection.js';
+import { useReviewedSubmission } from '../hooks/useReviewedSubmission.js';
 import { uuidReference } from '../lib/form-receipt.js';
 import { tSaving } from '@barghsa/i18n/saving';
 import { withCsrf } from '../lib/csrf.js';
@@ -266,7 +268,12 @@ function OwnedSavingsOrderPage() {
   const [submitForReview, setSubmitForReview] = fields.field('submitForReview');
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
-  const submissionKey = useRef<{ fingerprint: string; key: string } | null>(null);
+  const submission = useReviewedSubmission(
+    '/api/saving/orders',
+    profileId,
+    (value) => uuidReference((value as { savingOrderId?: unknown } | null)?.savingOrderId),
+    { addIdempotencyKey: true }
+  );
   const hydratedProfile = useRef<string | null>(null);
   const [addressErrors, setAddressErrors] = useState<AddressDraftField[]>([]);
   const actorId = useAccountUser();
@@ -339,6 +346,7 @@ function OwnedSavingsOrderPage() {
     go: wizard.go,
     extraDirty: addressDirty,
     saveDisabled: addressDirty,
+    unconfirmed: submission.unconfirmed,
   });
   const savingDraft = protection.busy;
   const draftSaveError = protection.saveError;
@@ -673,8 +681,38 @@ function OwnedSavingsOrderPage() {
     locale,
     'financial'
   );
+  async function sendOrder(input?: object) {
+    await protection.run(async (current, alive) => {
+      setSubmitting(true);
+      setSubmitError('');
+      const ownsSubmission = () => current() && getProfileContextRevision() === contextRevision;
+      try {
+        const result = await submission.send(input, ownsSubmission);
+        if (!ownsSubmission()) return;
+        if (result.status === 'confirmed') {
+          protection.completed.current = true;
+          protection.blocker.reset?.();
+          toast.success(copy('orderSubmitted'));
+          await navigate({
+            to: '/savings/orders/$orderId',
+            params: { orderId: result.receipt },
+          }).catch(() => {});
+        } else if (result.status === 'unconfirmed') {
+          toast.error(t('electricity.order.unconfirmed', locale));
+        } else if (result.status === 'conflict' || result.status === 'rejected') {
+          if (result.status === 'conflict') {
+            submission.resetPreparation();
+            setQuoteRevision((value) => value + 1);
+          }
+          setSubmitError(copy('orderError'));
+        }
+      } finally {
+        if (alive()) setSubmitting(false);
+      }
+    });
+  }
   async function submit() {
-    if (!financialGate.allowed) return;
+    if (!financialGate.allowed || submission.unconfirmed) return;
     if (
       !profileId ||
       !selectedPlan?.available ||
@@ -690,48 +728,19 @@ function OwnedSavingsOrderPage() {
       !addresses.some((address) => address.id === addressId)
     )
       return;
-    await protection.run(async (current, alive) => {
-      setSubmitting(true);
-      setSubmitError('');
-      const input = {
-        profileId,
-        savingPlanId: planId,
-        hardwareProductId: hardwareId,
-        billIdentifier,
-        installationAddressId: addressId,
-        agreementVersionId: selectedPlan.agreement!.versionId,
-        ...(appliedGiftCode ? { giftCode: appliedGiftCode } : {}),
-        expectedQuoteDigest: quote.reviewDigest,
-        ...(duplicateAcknowledged ? { duplicateAcknowledged: true } : {}),
-        agreementAccepted: true,
-        hardwareConfirmed: true,
-        submitForStaffReview: true,
-      };
-      const fingerprint = JSON.stringify(input);
-      if (submissionKey.current?.fingerprint !== fingerprint)
-        submissionKey.current = { fingerprint, key: crypto.randomUUID() };
-      try {
-        const result = await postJson<{ savingOrderId?: unknown }>('/api/saving/orders', {
-          ...input,
-          idempotencyKey: submissionKey.current.key,
-        });
-        const orderId = uuidReference(result?.savingOrderId);
-        if (!current()) return;
-        protection.completed.current = true;
-        protection.blocker.reset?.();
-        toast.success(copy('orderSubmitted'));
-        await navigate({ to: '/savings/orders/$orderId', params: { orderId } });
-      } catch (error) {
-        if (!current()) return;
-        protection.completed.current = false;
-        if (error instanceof Error && error.message.includes('(409)')) {
-          submissionKey.current = null;
-          setQuoteRevision((value) => value + 1);
-        }
-        setSubmitError(copy('orderError'));
-      } finally {
-        if (alive()) setSubmitting(false);
-      }
+    await sendOrder({
+      profileId,
+      savingPlanId: planId,
+      hardwareProductId: hardwareId,
+      billIdentifier,
+      installationAddressId: addressId,
+      agreementVersionId: selectedPlan.agreement.versionId,
+      ...(appliedGiftCode ? { giftCode: appliedGiftCode } : {}),
+      expectedQuoteDigest: quote.reviewDigest,
+      ...(duplicateAcknowledged ? { duplicateAcknowledged: true } : {}),
+      agreementAccepted: true,
+      hardwareConfirmed: true,
+      submitForStaffReview: true,
     });
   }
 
@@ -747,13 +756,15 @@ function OwnedSavingsOrderPage() {
             onSave={saveNow}
             working={protection.busy || fields.pending}
             workingLabel={copy('loading')}
-            saveDisabled={addressDirty}
+            saveDisabled={addressDirty || submission.unconfirmed}
             errorMessage={
-              addressDirty
-                ? t('electricity.order.unsaved.address', locale)
-                : draftSaveError
-                  ? copy('draftSaveError')
-                  : undefined
+              submission.unconfirmed
+                ? t('electricity.order.unconfirmed', locale)
+                : addressDirty
+                  ? t('electricity.order.unsaved.address', locale)
+                  : draftSaveError
+                    ? copy('draftSaveError')
+                    : undefined
             }
             onStay={() => protection.blocker.reset?.()}
             onLeave={() => protection.blocker.proceed?.()}
@@ -810,6 +821,13 @@ function OwnedSavingsOrderPage() {
           </Button>
         </div>
       )}
+      {submission.unconfirmed && (
+        <SubmissionRecovery
+          history="/savings/orders"
+          busy={submitting}
+          onRetry={() => void sendOrder()}
+        />
+      )}
       {showWizard && (
         <ValidatedFormWizard
           form={fields.form}
@@ -824,6 +842,7 @@ function OwnedSavingsOrderPage() {
             !profileId ||
             protection.busy ||
             protection.completed.current ||
+            submission.unconfirmed ||
             submitting
           }
           onInvalidStep={(target) => wizard.go(target, step)}
@@ -856,9 +875,21 @@ function OwnedSavingsOrderPage() {
           submittingLabel={copy('submitting')}
           saving={savingDraft}
           submitting={submitting}
-          backDisabled={protection.busy || protection.completed.current || addressDirty}
-          saveDisabled={protection.busy || protection.completed.current || addressDirty}
-          nextDisabled={!canNext || protection.busy || protection.completed.current}
+          backDisabled={
+            protection.busy ||
+            protection.completed.current ||
+            addressDirty ||
+            submission.unconfirmed
+          }
+          saveDisabled={
+            protection.busy ||
+            protection.completed.current ||
+            addressDirty ||
+            submission.unconfirmed
+          }
+          nextDisabled={
+            !canNext || protection.busy || protection.completed.current || submission.unconfirmed
+          }
           submitDisabled={
             !financialGate.allowed ||
             !quote ||
@@ -869,6 +900,7 @@ function OwnedSavingsOrderPage() {
             !submitForReview ||
             addressDirty ||
             protection.busy ||
+            submission.unconfirmed ||
             protection.completed.current
           }
           onBack={() => void protection.save(step - 1)}
@@ -885,6 +917,7 @@ function OwnedSavingsOrderPage() {
                     pending ||
                     protection.busy ||
                     protection.completed.current ||
+                    submission.unconfirmed ||
                     !!addressCommand.locked
                   }
                 >
@@ -1268,7 +1301,7 @@ function OwnedSavingsOrderPage() {
                           onClick={() => {
                             setAppliedGiftCode(giftCode.trim());
                             setQuoteRevision((value) => value + 1);
-                            submissionKey.current = null;
+                            submission.resetPreparation();
                           }}
                         >
                           {copy('apply')}
@@ -1449,7 +1482,12 @@ function OwnedSavingsOrderPage() {
                     {copy('draftSaveError')}
                   </p>
                 )}
-                {step === 6 && <ConfirmationFields gate={financialGate} disabled={submitting} />}
+                {step === 6 && (
+                  <ConfirmationFields
+                    gate={financialGate}
+                    disabled={submitting || submission.unconfirmed}
+                  />
+                )}
               </CardContent>
             </Card>
           )}

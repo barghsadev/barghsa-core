@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-08T06:13:56+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-08T06:36:51+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Close the remaining conditional forms, contrast, verified command feedback and route-state evidence. Resolve the owner decisions on the accessibility merge gate and live route reporting, then bind the final v0.5.0 checks.
+Reconcile remaining conditional forms, command feedback and bespoke page states against the existing route evidence. Record the outstanding accessibility enforcement and live route monitoring decisions before final v0.5.0 acceptance.
 
 - `07-ui-ux-design.md#T-07.05.01.05`: Ensure all form inputs have programmatically associated labels (`<label htmlFor>` or `aria-label`). Error messages use `aria-describedby` or `aria-errormessage` to link to the input. Required fields use `aria-required="true"`.
 - `07-ui-ux-design.md#T-07.05.01.08`: Ensure all color combinations pass WCAG AA contrast ratios: normal text ≥ 4.5:1, large text ≥ 3:1, UI components ≥ 3:1. Verify with automated tools. Provide a "high contrast" mode toggle that strengthens all contrast ratios.
