@@ -771,6 +771,7 @@ export function ConsultationDetailPage() {
                         <FormControl>
                           <textarea
                             {...field}
+                            aria-required="true"
                             disabled={
                               sending ||
                               informationForm.formState.isSubmitting ||

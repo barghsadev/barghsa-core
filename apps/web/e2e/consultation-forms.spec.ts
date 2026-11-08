@@ -2,7 +2,7 @@ import { productionManifest } from './production-manifest';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import type { Locator, Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { test, expect } from './coverage-fixture';
+import { checkpointBrowserCoverage, test, expect } from './coverage-fixture';
 import { t } from '@barghsa/i18n/app';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { tConsultation } from '@barghsa/i18n/consultation';
@@ -184,6 +184,7 @@ for (const [locale, theme] of settings) {
     const information = page.locator('#consultation-information');
     const submit = group.getByRole('button', { name: copy('provideInfo'), exact: true });
     const reload = page.getByRole('button', { name: copy('informationReload'), exact: true });
+    await expect(information).toHaveAttribute('aria-required', 'true');
     await information.fill('م'.repeat(2001));
     await submit.click();
     await focusedError(information);
@@ -251,6 +252,7 @@ for (const [locale, theme] of settings) {
     state.detailMode = 'success';
     persist(unpaidRequest, 'under_review', 'Review resumed', 'staff');
     persist(unpaidRequest, 'awaiting_customer_info', 'Information requested', 'staff');
+    await checkpointBrowserCoverage(page);
     await page.goto(`/consultations/${unpaidRequest}`);
     await expect(information).toHaveValue('');
     await information.fill('PRIVATE_NEW_REQUEST_DRAFT');
@@ -268,6 +270,7 @@ for (const [locale, theme] of settings) {
     });
     persist(createdRequest, 'under_review', 'Review started', 'staff');
     persist(createdRequest, 'awaiting_customer_info', 'Information requested', 'staff');
+    await checkpointBrowserCoverage(page);
     await page.goto(`/consultations/${createdRequest}`);
     await expect(information).toHaveValue('');
     await information.fill('PRIVATE_DENIED_REPLY_DRAFT');

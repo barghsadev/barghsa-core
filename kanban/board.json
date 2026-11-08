@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T07:29:11+00:00",
-  "source_commit": "3e8edbe78dc28c2948241ed6a41d92588e46f78e",
+  "updated": "2026-11-08T07:38:08+00:00",
+  "source_commit": "93560a7fecedcde86c50400020e442ef7f6cf280",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -195344,7 +195344,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -197282,7 +197282,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -253238,7 +253238,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
+              "sha256": "0fdbdde2a4b179c2f505a7104db2157a0c801316492c526f9f571a529bd80a44"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -253322,7 +253322,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -254376,7 +254376,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
+              "sha256": "0fdbdde2a4b179c2f505a7104db2157a0c801316492c526f9f571a529bd80a44"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -254460,7 +254460,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -255510,7 +255510,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
+              "sha256": "0fdbdde2a4b179c2f505a7104db2157a0c801316492c526f9f571a529bd80a44"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -255594,7 +255594,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -256643,7 +256643,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
+              "sha256": "0fdbdde2a4b179c2f505a7104db2157a0c801316492c526f9f571a529bd80a44"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -256727,7 +256727,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -257777,7 +257777,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
+              "sha256": "0fdbdde2a4b179c2f505a7104db2157a0c801316492c526f9f571a529bd80a44"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -257861,7 +257861,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -258911,7 +258911,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
+              "sha256": "0fdbdde2a4b179c2f505a7104db2157a0c801316492c526f9f571a529bd80a44"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -258995,7 +258995,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -260050,7 +260050,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
+              "sha256": "0fdbdde2a4b179c2f505a7104db2157a0c801316492c526f9f571a529bd80a44"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -260134,7 +260134,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -261187,7 +261187,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
+              "sha256": "0fdbdde2a4b179c2f505a7104db2157a0c801316492c526f9f571a529bd80a44"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -261271,7 +261271,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -262322,7 +262322,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
+              "sha256": "0fdbdde2a4b179c2f505a7104db2157a0c801316492c526f9f571a529bd80a44"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -262406,7 +262406,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -263460,7 +263460,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
+              "sha256": "0fdbdde2a4b179c2f505a7104db2157a0c801316492c526f9f571a529bd80a44"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -263544,7 +263544,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -264600,7 +264600,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
+              "sha256": "0fdbdde2a4b179c2f505a7104db2157a0c801316492c526f9f571a529bd80a44"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -264684,7 +264684,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -265735,7 +265735,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
+              "sha256": "0fdbdde2a4b179c2f505a7104db2157a0c801316492c526f9f571a529bd80a44"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -265819,7 +265819,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -266869,7 +266869,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
+              "sha256": "0fdbdde2a4b179c2f505a7104db2157a0c801316492c526f9f571a529bd80a44"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -266953,7 +266953,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -268004,7 +268004,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
+              "sha256": "0fdbdde2a4b179c2f505a7104db2157a0c801316492c526f9f571a529bd80a44"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -268088,7 +268088,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -269139,7 +269139,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
+              "sha256": "0fdbdde2a4b179c2f505a7104db2157a0c801316492c526f9f571a529bd80a44"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -269223,7 +269223,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -270275,7 +270275,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
+              "sha256": "0fdbdde2a4b179c2f505a7104db2157a0c801316492c526f9f571a529bd80a44"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -270359,7 +270359,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -370395,7 +370395,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -371677,7 +371677,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -372959,7 +372959,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -374241,7 +374241,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -375524,7 +375524,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -376614,7 +376614,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -377469,7 +377469,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -378320,7 +378320,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -379171,7 +379171,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -380021,7 +380021,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -421490,7 +421490,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -421498,7 +421498,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -491190,7 +491190,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -491254,7 +491254,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -494337,7 +494337,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -495219,7 +495219,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -496042,7 +496042,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -496866,7 +496866,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -508246,7 +508246,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -512249,7 +512249,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -515190,7 +515190,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "c15d024f1b62fb043b3dbb2c6cbc95c08fba4be667f7c8e80cd0101559c63c4c"
+              "sha256": "093d28b13fd4fe1ddb75cdd624b07c0ae50b9347cb0b69d309721c037c9201c6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -515570,7 +515570,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "c15d024f1b62fb043b3dbb2c6cbc95c08fba4be667f7c8e80cd0101559c63c4c"
+              "sha256": "093d28b13fd4fe1ddb75cdd624b07c0ae50b9347cb0b69d309721c037c9201c6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516009,7 +516009,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "c15d024f1b62fb043b3dbb2c6cbc95c08fba4be667f7c8e80cd0101559c63c4c"
+              "sha256": "093d28b13fd4fe1ddb75cdd624b07c0ae50b9347cb0b69d309721c037c9201c6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516496,7 +516496,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "c15d024f1b62fb043b3dbb2c6cbc95c08fba4be667f7c8e80cd0101559c63c4c"
+              "sha256": "093d28b13fd4fe1ddb75cdd624b07c0ae50b9347cb0b69d309721c037c9201c6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516704,7 +516704,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Order comment text and staff electricity visibility, profile closure confirmation and password, and step-up revocation passwords now expose required semantics. Staff saving address changes and their reasons, and customer consultation requested information still lack required markers. Reconcile remaining conditional controls."
+        "Staff saving address changes and customer consultation replies now expose their required inputs. Public sign-in, registration and password-recovery forms still have required username, password, confirmation or terms controls without explicit markers. Reconcile shared and conditional controls before closing."
       ],
       "owner": null,
       "depends_on": [],
@@ -516741,7 +516741,8 @@
           "release-0.5-contract-required-fields",
           "release-0.5-correction-template-required",
           "release-0.5-correction-command-deadlines",
-          "release-0.5-comment-security-required"
+          "release-0.5-comment-security-required",
+          "release-0.5-service-response-required"
         ],
         "current_acceptance": null
       }
@@ -517010,7 +517011,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "c15d024f1b62fb043b3dbb2c6cbc95c08fba4be667f7c8e80cd0101559c63c4c"
+              "sha256": "093d28b13fd4fe1ddb75cdd624b07c0ae50b9347cb0b69d309721c037c9201c6"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -517468,7 +517469,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -517696,7 +517697,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "c15d024f1b62fb043b3dbb2c6cbc95c08fba4be667f7c8e80cd0101559c63c4c"
+              "sha256": "093d28b13fd4fe1ddb75cdd624b07c0ae50b9347cb0b69d309721c037c9201c6"
             },
             {
               "path": "docs/design/notification-recovery.md",
@@ -517933,7 +517934,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "c15d024f1b62fb043b3dbb2c6cbc95c08fba4be667f7c8e80cd0101559c63c4c"
+              "sha256": "093d28b13fd4fe1ddb75cdd624b07c0ae50b9347cb0b69d309721c037c9201c6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -518449,7 +518450,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "c15d024f1b62fb043b3dbb2c6cbc95c08fba4be667f7c8e80cd0101559c63c4c"
+              "sha256": "093d28b13fd4fe1ddb75cdd624b07c0ae50b9347cb0b69d309721c037c9201c6"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -518811,7 +518812,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
+              "sha256": "0fdbdde2a4b179c2f505a7104db2157a0c801316492c526f9f571a529bd80a44"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -519167,7 +519168,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "c15d024f1b62fb043b3dbb2c6cbc95c08fba4be667f7c8e80cd0101559c63c4c"
+              "sha256": "093d28b13fd4fe1ddb75cdd624b07c0ae50b9347cb0b69d309721c037c9201c6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -519639,7 +519640,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
+              "sha256": "0fdbdde2a4b179c2f505a7104db2157a0c801316492c526f9f571a529bd80a44"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -519995,7 +519996,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "c15d024f1b62fb043b3dbb2c6cbc95c08fba4be667f7c8e80cd0101559c63c4c"
+              "sha256": "093d28b13fd4fe1ddb75cdd624b07c0ae50b9347cb0b69d309721c037c9201c6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -520605,7 +520606,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "c15d024f1b62fb043b3dbb2c6cbc95c08fba4be667f7c8e80cd0101559c63c4c"
+              "sha256": "093d28b13fd4fe1ddb75cdd624b07c0ae50b9347cb0b69d309721c037c9201c6"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -520967,7 +520968,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
+              "sha256": "0fdbdde2a4b179c2f505a7104db2157a0c801316492c526f9f571a529bd80a44"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -521323,7 +521324,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "c15d024f1b62fb043b3dbb2c6cbc95c08fba4be667f7c8e80cd0101559c63c4c"
+              "sha256": "093d28b13fd4fe1ddb75cdd624b07c0ae50b9347cb0b69d309721c037c9201c6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -545346,7 +545347,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -547211,7 +547212,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -549077,7 +549078,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -550912,7 +550913,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -552773,7 +552774,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -554643,7 +554644,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -556486,7 +556487,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -558293,7 +558294,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -560100,7 +560101,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -561908,7 +561909,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -563715,7 +563716,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -565528,7 +565529,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -567422,7 +567423,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -569378,7 +569379,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -571272,7 +571273,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -573166,7 +573167,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -575060,7 +575061,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -576954,7 +576955,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -578848,7 +578849,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -580742,7 +580743,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -582636,7 +582637,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -584530,7 +584531,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -586424,7 +586425,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -588318,7 +588319,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -589897,7 +589898,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -590951,7 +590952,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -592845,7 +592846,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -594833,7 +594834,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -596636,7 +596637,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -598439,7 +598440,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -600242,7 +600243,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -602045,7 +602046,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -603848,7 +603849,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -605651,7 +605652,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -633273,7 +633274,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -634397,7 +634398,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -635521,7 +635522,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -636648,7 +636649,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -637775,7 +637776,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -638929,7 +638930,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -640052,7 +640053,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -641175,7 +641176,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -642299,7 +642300,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -643441,7 +643442,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -644566,7 +644567,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -676066,7 +676067,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -677188,7 +677189,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -678310,7 +678311,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -679432,7 +679433,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -683971,7 +683972,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -684812,7 +684813,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -685655,7 +685656,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -686496,7 +686497,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -687337,7 +687338,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -688182,7 +688183,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -689027,7 +689028,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -689868,7 +689869,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -690709,7 +690710,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -691551,7 +691552,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -692398,7 +692399,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -712054,7 +712055,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
+              "sha256": "0fdbdde2a4b179c2f505a7104db2157a0c801316492c526f9f571a529bd80a44"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -712134,7 +712135,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -713030,7 +713031,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "packages/db/drizzle/production/0260_saving_cancellation_financial_closure.sql",
@@ -723756,7 +723757,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Comment and account security journeys now verify required semantics alongside exact receipt and recovery checks. Remaining conditional form, command, bespoke state and live policy criteria need closure."
+        "Current saving address and consultation response journeys verify required semantics, linked errors and existing exact receipt or recovery checks. Remaining conditional form, command, bespoke state and live policy criteria need closure."
       ],
       "owner": null,
       "depends_on": [],
@@ -723869,7 +723870,8 @@
           "release-0.5-contract-required-fields",
           "release-0.5-correction-template-required",
           "release-0.5-correction-command-deadlines",
-          "release-0.5-comment-security-required"
+          "release-0.5-comment-security-required",
+          "release-0.5-service-response-required"
         ]
       }
     },
@@ -724873,7 +724875,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -724937,7 +724939,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+              "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -725562,7 +725564,8 @@
             "Renewed affected contract accessibility and performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-required-fields/proof.json",
             "Renewed correction, template and affected route performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-correction-template-required/proof.json",
             "Renewed affected form and correction route performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-correction-command-deadlines/proof.json",
-            "Renewed comment and account security performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-comment-security-required/proof.json"
+            "Renewed comment and account security performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-comment-security-required/proof.json",
+            "Renewed saving address and consultation response performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-response-required/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -794917,6 +794920,105 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-comment-security-required/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-comment-security-required/reviewed.patch",
       "release_disposition": "Verified required comment and account security controls. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-service-response-required": {
+      "batch": "release-0.5-service-response-required",
+      "base_commit": "93560a7fecedcde86c50400020e442ef7f6cf280",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/consultation-form-fixture.ts",
+          "sha256": "b9a0eb3229f83068a1e60843a0be299e5bdbf742b51812c938bf392537d34c16"
+        },
+        {
+          "path": "apps/web/e2e/consultation-forms.spec.ts",
+          "sha256": "0fdbdde2a4b179c2f505a7104db2157a0c801316492c526f9f571a529bd80a44"
+        },
+        {
+          "path": "apps/web/e2e/saving-change-address-form-fixture.ts",
+          "sha256": "cb6481eeec981a79fc67eca356844782a6dc156f824ea6ccab188970016fa873"
+        },
+        {
+          "path": "apps/web/e2e/saving-change-address-forms.spec.ts",
+          "sha256": "31c8ca9aeb37c69276b3d92f4c412b141c4de3c7e210faecaa25df7e5e3d0219"
+        },
+        {
+          "path": "apps/web/e2e/saving-staff-operation-forms.spec.ts",
+          "sha256": "bbd3bf50df480059e3369d1b6c26a7d37dceb257ba654d68137e66a305076af2"
+        },
+        {
+          "path": "apps/web/e2e/staff-business-list-recovery.spec.ts",
+          "sha256": "9404eb24043b1b1441e4a214526f7ccdea0f556a3a98a4a2499ead8e10d0c3e4"
+        },
+        {
+          "path": "apps/web/e2e/staff-order-list-query.spec.ts",
+          "sha256": "c86de9d24b394b7dd116e717e0324d4d7eeda369eb91c3871f0dd413aac02e42"
+        },
+        {
+          "path": "apps/web/src/components/PasswordField.tsx",
+          "sha256": "2e6ed00ba528a1db9f0bff8a2673ca02ea0eee12aaa1a1d9989497178cec1290"
+        },
+        {
+          "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
+          "sha256": "ff5e37578acdef5fb18e19ad2d074c2bb033382ffe322cdd36b1adc94e0ab6a9"
+        },
+        {
+          "path": "apps/web/src/lib/consultation-form-schemas.ts",
+          "sha256": "743a8594fb9a8b7201334e932eb60da4a5885e4a0662e8f352c140817d694c94"
+        },
+        {
+          "path": "apps/web/src/lib/public-auth-form-schemas.ts",
+          "sha256": "b3fe8380c229701fa4e0ff54ff4dc4b41e8b8404f7d9a1d10e65feb377df9448"
+        },
+        {
+          "path": "apps/web/src/lib/saving-address-amendment-form-schemas.ts",
+          "sha256": "591f451ff156c2df5f54f38ea9298038b1045fc3ec8212cd70a1cf5630a88a5e"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
+          "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+        },
+        {
+          "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
+          "sha256": "f715ca378a839e48eefbb7f18ba670d789a3712503cee601814f022a5e4264b3"
+        },
+        {
+          "path": "apps/web/src/routes/forgot-password.tsx",
+          "sha256": "fa9b1aa221df7b7f2bcadf0ed5fc1e12999c8ba72d72e94ed9ae1052b115e9b4"
+        },
+        {
+          "path": "apps/web/src/routes/login.tsx",
+          "sha256": "fa9718047d50348c2802492dcd62d60964e902bf0a9cefd6c3d508b3cf47ae0f"
+        },
+        {
+          "path": "apps/web/src/routes/register/index.tsx",
+          "sha256": "ce70f790f77c125d38f5da72014bc96636f5b53e261d9dd55cb494c8a2906497"
+        },
+        {
+          "path": "docs/design/accessibility.md",
+          "sha256": "093d28b13fd4fe1ddb75cdd624b07c0ae50b9347cb0b69d309721c037c9201c6"
+        }
+      ],
+      "checks": [
+        "Two baseline Chromium cases reproduced missing required markers on the paid saving replacement address and consultation response.",
+        "The paid saving replacement address and reason and the customer consultation response now expose required semantics. The existing focus, linked errors, field lengths, receipt checks and retry safeguards passed unchanged.",
+        "The first combined coverage run missed its critical web branch floor. Coverage checkpoints preserve the reply and recovery segments before full navigation. Four focused production cases passed. One instrumented case could not write its artifacts because of a disk-space error. The clean two-case instrumented rerun passed on the same runtime build.",
+        "59 web unit cases, 24 production-browser cases across Chromium and Mobile Safari, 22 distinct instrumented Chromium cases including staff queue and fulfillment callers, all eight combined coverage groups, 98 gzip budgets, six cold-auth checks, lint, formatting and web typecheck passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-response-required",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-response-required/proof.json",
+      "source_scope_proof_sha256": "68b3765e9881f238d29cb2205aba8eef3f5bed524dff6c5bfd85cd3d62949543",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-response-required/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-response-required/reviewed.patch",
+      "release_disposition": "Verified required saving address and consultation response controls. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -794968,7 +795070,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Close the demonstrated saving address and consultation information markers, then reconcile remaining route and command evidence. Resolve accessibility enforcement and live route reporting before accepting v0.5.0."
+    "goal": "Close the demonstrated sign-in, registration and recovery field markers, then reconcile remaining route and command evidence. Resolve accessibility enforcement and live route reporting before accepting v0.5.0."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",

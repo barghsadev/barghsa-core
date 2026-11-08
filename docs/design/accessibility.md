@@ -115,7 +115,10 @@ submission offers a manual retry of the same reviewed request and keeps other
 corrections locked while its outcome is uncertain.
 
 Saving hardware changes require a replacement product and a reason. Cancelling
-an upgrade requires its own reason. Solar contract issuance requires a source,
+an upgrade requires its own reason. Staff changes to a paid saving order's
+installation address require a replacement address and a reason. Customers
+responding to a consultation information request must enter their response.
+Solar contract issuance requires a source,
 title, terms, reason and value kind. The selected kind determines which value
 field is required. Invoice lines require a description, quantity, price and VAT
 rate. The taxable checkbox permits either choice.

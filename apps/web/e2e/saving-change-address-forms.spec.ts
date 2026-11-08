@@ -264,6 +264,8 @@ for (const [locale, theme] of [
     const hardwareReason = page.locator('#saving-amend-hardware-reason');
     const note = page.locator('#saving-staff-note');
     await expect(region).toBeVisible();
+    await expect(address).toHaveAttribute('aria-required', 'true');
+    await expect(reason).toHaveAttribute('aria-required', 'true');
     await hardwareReason.fill('  Independent device draft  ');
     await note.fill('  Independent public progress draft  ');
     await preview().click();

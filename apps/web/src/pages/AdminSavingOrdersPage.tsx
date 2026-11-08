@@ -1461,6 +1461,7 @@ function PaidSavingAddressForm({
                 <FormControl>
                   <select
                     {...field}
+                    aria-required="true"
                     disabled={frozen}
                     className="w-full rounded-md border bg-background px-3 py-2 text-sm"
                   >
@@ -1483,7 +1484,7 @@ function PaidSavingAddressForm({
               <FormItem id="saving-amend-reason">
                 <FormLabel>{copy('staffAmendReason')}</FormLabel>
                 <FormControl>
-                  <Input {...field} disabled={frozen} />
+                  <Input {...field} aria-required="true" disabled={frozen} />
                 </FormControl>
                 <FormDescription>{formCopy('staffReasonHelp')}</FormDescription>
                 <FormMessage reserveSpace />
