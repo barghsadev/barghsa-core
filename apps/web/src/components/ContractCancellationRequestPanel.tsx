@@ -254,7 +254,10 @@ function RequestWorkspace({
         <>
           {request ? (
             <>
-              <StatusBadge label={word('cancellationRequest.' + request.status)} />
+              <StatusBadge
+                label={word('cancellationRequest.' + request.status)}
+                className="max-w-full whitespace-normal [overflow-wrap:anywhere]"
+              />
               <p className="whitespace-pre-wrap break-words text-sm">{request.reason}</p>
               <p className="text-sm text-muted-foreground">
                 {word('cancellationRequestPreference')}:{' '}

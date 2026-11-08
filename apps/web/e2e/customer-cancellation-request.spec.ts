@@ -313,6 +313,20 @@ for (const locale of ['en', 'fa'] as const)
       await expect(
         requestPanel.getByText(w['cancellationRequest.Fulfilled'], { exact: true })
       ).toBeVisible();
+      const badge = requestPanel.getByText(w['cancellationRequest.Fulfilled'], { exact: true });
+      expect(
+        await badge.evaluate((element) => {
+          const bounds = element.getBoundingClientRect();
+          const range = document.createRange();
+          range.selectNodeContents(element);
+          return (
+            element.scrollWidth <= element.clientWidth + 1 &&
+            [...range.getClientRects()].every(
+              (rect) => rect.left >= bounds.left - 1 && rect.right <= bounds.right + 1
+            )
+          );
+        })
+      ).toBe(true);
       await expect(
         requestPanel.getByRole('button', { name: w.cancellationRequestSubmit, exact: true })
       ).toHaveCount(0);

@@ -761,27 +761,27 @@ it.each(['en', 'fa'] as const)(
   }
 );
 it('lets staff review and publish the exact draft amendment without changing the effective version', async () => {
+  const changed = vi.fn();
+  let current = detail({
+    state: 'Active',
+    canAccept: false,
+    currentVersionId: VERSION,
+    currentVersion: version(),
+    amendmentSupported: true,
+    pendingAmendment: {
+      versionId: OLD,
+      baseVersionId: VERSION,
+      state: 'Draft',
+      proposedBy: 'legal-reviewer',
+      createdAt: '2026-09-24T00:00:00Z',
+      publishedAt: null,
+    },
+  });
   vi.stubGlobal(
     'fetch',
-    api(
-      detail({
-        state: 'Active',
-        canAccept: false,
-        currentVersionId: VERSION,
-        currentVersion: version(),
-        amendmentSupported: true,
-        pendingAmendment: {
-          versionId: OLD,
-          baseVersionId: VERSION,
-          state: 'Draft',
-          proposedBy: 'legal-reviewer',
-          createdAt: '2026-09-24T00:00:00Z',
-          publishedAt: null,
-        },
-      })
-    )
+    vi.fn((url: string) => api(current)(url))
   );
-  await render(<ContractDetail id={ID} staff onClose={() => {}} onChanged={() => {}} />);
+  await render(<ContractDetail id={ID} staff onClose={() => {}} onChanged={changed} />);
   expect(container.textContent).toContain(en.amendmentDraftNotice);
   expect(container.textContent).not.toContain(en['amendment-publish']);
   await click(en.amendmentReview);
@@ -793,6 +793,19 @@ it('lets staff review and publish the exact draft amendment without changing the
     path: `/api/admin/contracts/${ID}/amendments/publish`,
     body: { expectedVersionId: OLD, idempotencyKey: expect.any(String) },
   });
+  current = {
+    ...current,
+    pendingAmendment: {
+      ...current.pendingAmendment!,
+      state: 'AwaitingCustomerAcceptance',
+      publishedAt: '2026-09-24T01:00:00Z',
+    },
+  };
+  harness.result = current;
+  await click('Confirm action');
+  expect(changed).toHaveBeenCalledOnce();
+  expect(container.textContent).toContain(en.amendmentPublishedNotice);
+  expect(container.textContent).not.toContain(en['amendment-publish']);
 });
 it('abandons a pending contract response when the active profile changes', async () => {
   let resolve!: (value: Response) => void;
@@ -908,22 +921,32 @@ it('requires a changes reason and captures the current staff version for review'
   await click(en.publish);
   expect(harness.action?.path).toBe(`/api/admin/contracts/${ID}/publish`);
   current = { ...current, state: 'AwaitingCustomerAcceptance' };
+  harness.result = current;
   await click('Confirm action');
   expect(changed).toHaveBeenCalledOnce();
   expect(container.textContent).not.toContain(en.publish);
 });
 it('submits drafts and hides mutations for historical and signed contracts', async () => {
+  const changed = vi.fn();
+  let current = detail({ state: 'Draft', currentVersionId: VERSION, currentVersion: version() });
   vi.stubGlobal(
     'fetch',
-    api(detail({ state: 'Draft', currentVersionId: VERSION, currentVersion: version() }))
+    vi.fn((url: string) => api(current)(url))
   );
-  await render(<ContractDetail id={ID} staff onClose={() => {}} onChanged={() => {}} />);
+  await render(<ContractDetail id={ID} staff onClose={() => {}} onChanged={changed} />);
   await click(en.submit);
   expect(harness.action?.body).toMatchObject({ expectedVersionId: VERSION });
   await click('Close confirmation');
   await click('Version 1');
   expect(container.textContent).not.toContain(en.submit);
   expect(container.textContent).not.toContain(en.uploadOriginal);
+  await click('Version 2');
+  await click(en.submit);
+  current = { ...current, state: 'AwaitingStaffReview' };
+  harness.result = current;
+  await click('Confirm action');
+  expect(changed).toHaveBeenCalledOnce();
+  expect(container.textContent).not.toContain(en.submit);
   await render(
     <ContractDetail key="signed" id={ID} staff onClose={() => {}} onChanged={() => {}} />
   );

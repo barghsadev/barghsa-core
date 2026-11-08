@@ -145,6 +145,73 @@ interface ChangeCommand {
   uncertain: boolean;
   rejected: boolean;
 }
+type LifecycleKind = 'accept' | 'submit' | 'publish' | 'amendment-publish';
+type LifecycleCommand = {
+  kind: LifecycleKind;
+  action: TeamAction;
+  source: ContractSigningSource;
+  waiting: boolean;
+  retryReview?: { hash: string; idempotencyKey: string };
+};
+
+function lifecycleEligible(kind: LifecycleKind, { contract, version }: ContractSigningSource) {
+  const current = contract.currentVersionId ?? contract.currentVersion?.id ?? contract.version?.id;
+  if (kind === 'amendment-publish')
+    return (
+      contract.amendmentSupported === true &&
+      contract.pendingAmendment?.state === 'Draft' &&
+      contract.pendingAmendment.versionId === version.id &&
+      contract.pendingAmendment.baseVersionId === current
+    );
+  if (kind === 'accept')
+    return (
+      contract.canAccept === true &&
+      (contract.amendment?.state === 'AwaitingCustomerAcceptance'
+        ? contract.version?.id === version.id && contract.amendment.baseVersionId === current
+        : current === version.id && contract.state === 'AwaitingCustomerAcceptance')
+    );
+  return (
+    current === version.id &&
+    contract.state === (kind === 'submit' ? 'Draft' : 'AwaitingStaffReview')
+  );
+}
+
+function lifecycleReceipt(value: unknown, { kind, source }: LifecycleCommand) {
+  const result = value as Partial<ContractDetailData> | null;
+  const { contract, version } = source;
+  if (
+    !result ||
+    result.id !== contract.id ||
+    result.profileId !== contract.profileId ||
+    result.serviceType !== contract.serviceType
+  )
+    return false;
+  if (kind === 'accept') {
+    const acceptedAt = result.version?.acceptedAt;
+    return (
+      result.version?.id === version.id &&
+      result.canAccept === false &&
+      typeof acceptedAt === 'string' &&
+      Number.isFinite(Date.parse(acceptedAt)) &&
+      (contract.amendment?.state === 'AwaitingCustomerAcceptance'
+        ? result.amendment?.baseVersionId === contract.amendment.baseVersionId &&
+          ['AwaitingSignature', 'Applied'].includes(result.amendment.state)
+        : result.state === 'Accepted')
+    );
+  }
+  if (kind === 'amendment-publish')
+    return (
+      result.state === contract.state &&
+      result.pendingAmendment?.versionId === version.id &&
+      result.pendingAmendment.baseVersionId === contract.pendingAmendment?.baseVersionId &&
+      result.pendingAmendment.state === 'AwaitingCustomerAcceptance'
+    );
+  return (
+    result.currentVersionId === version.id &&
+    result.currentVersion?.id === version.id &&
+    result.state === (kind === 'submit' ? 'AwaitingStaffReview' : 'AwaitingCustomerAcceptance')
+  );
+}
 type VersionPage = { versions: ContractVersion[]; nextBefore: number | null };
 function ContractDetailContent({
   id,
@@ -189,6 +256,9 @@ function ContractDetailContent({
     preparingRef = useRef(false);
   const command = useRef<ChangeCommand | null>(null),
     [uncertain, setUncertain] = useState(false);
+  const lifecycle = useRef<LifecycleCommand | null>(null);
+  const [needsLifecycleRead, setNeedsLifecycleRead] = useState(false);
+  const [checkingLifecycle, setCheckingLifecycle] = useState(false);
   const source = useRef<ContractSigningSource | null>(null);
   source.current = data;
   const alive = useRef(true);
@@ -213,6 +283,7 @@ function ContractDetailContent({
     return (
       !alive.current ||
       !!owner.current ||
+      !!lifecycle.current?.waiting ||
       preparingRef.current ||
       reasonForm.isSubmissionPending() ||
       !!callbacks.current.coordination?.blocked()
@@ -250,6 +321,9 @@ function ContractDetailContent({
     active.current?.abort();
     if (owner.current) shared.release(owner.current);
     command.current = null;
+    lifecycle.current = null;
+    setNeedsLifecycleRead(false);
+    setCheckingLifecycle(false);
     preparingRef.current = false;
     setPreparing(false);
     setAction(null);
@@ -316,6 +390,22 @@ function ContractDetailContent({
             ? contract.currentVersion
             : contract.version;
         if (!version || !version.content) throw new Error('Missing contract snapshot');
+        const pending = lifecycle.current;
+        if (pending?.waiting) {
+          if (contract.id !== id || contract.profileId !== pending.source.contract.profileId)
+            throw new Error('Mismatched contract recovery read');
+          if (
+            version.id === pending.source.version.id &&
+            lifecycleEligible(pending.kind, { contract, version })
+          ) {
+            pending.waiting = false;
+          } else {
+            lifecycle.current = null;
+            callbacks.current.onChanged();
+          }
+          setNeedsLifecycleRead(false);
+          setCheckingLifecycle(false);
+        }
         setData({
           contract: chosen
             ? {
@@ -337,6 +427,7 @@ function ContractDetailContent({
       })
       .catch((failure: unknown) => {
         if (!fresh()) return;
+        setCheckingLifecycle(false);
         if (failure instanceof DocumentRequestError && [401, 403, 404].includes(failure.status))
           withdraw();
         else setError(true);
@@ -376,18 +467,26 @@ function ContractDetailContent({
       if (fresh()) setLoadingMore(false);
     }
   }
-  function choose(
-    command: 'accept' | 'submit' | 'publish' | 'request-changes' | 'amendment-publish'
-  ) {
-    if (!data || blocked() || command === 'request-changes' || !shared.acquire(parentOwner.current))
+  function choose(kind: LifecycleKind) {
+    if (
+      !data ||
+      blocked() ||
+      !lifecycleEligible(kind, data) ||
+      !shared.acquire(parentOwner.current)
+    )
       return;
-    setAction({
-      title: word(command),
+    const previous = lifecycle.current;
+    const same =
+      previous?.kind === kind &&
+      previous.source.contract.profileId === data.contract.profileId &&
+      previous.source.version.id === data.version.id;
+    const action: TeamAction = {
+      title: word(kind),
       description: `${word(data.contract.serviceType)} · ${word('version')} ${data.version.versionNumber.toLocaleString(locale)}`,
       path:
-        command === 'amendment-publish'
+        kind === 'amendment-publish'
           ? `${contractBase(staff)}/${id}/amendments/publish`
-          : `${contractBase(staff)}/${id}/${command}`,
+          : `${contractBase(staff)}/${id}/${kind}`,
       method: 'POST',
       body: {
         expectedVersionId: data.version.id,
@@ -395,7 +494,27 @@ function ContractDetailContent({
       },
       conflictMessage: word('conflict'),
       forbiddenMessage: word('denied'),
-    });
+    };
+    const next = same && kind !== 'accept' ? previous.action : action;
+    lifecycle.current = {
+      kind,
+      action: next,
+      source: data,
+      waiting: false,
+      ...(same && previous.retryReview ? { retryReview: previous.retryReview } : {}),
+    };
+    setAction(next);
+  }
+  function requireLifecycleRead(shown: TeamAction, attempted: TeamAction = shown) {
+    const pending = lifecycle.current;
+    if (!alive.current || pending?.action !== shown || currentAction.current !== shown) return;
+    const body = attempted.body as { expectedReviewHash?: string; idempotencyKey: string };
+    if (body.expectedReviewHash)
+      pending.retryReview = { hash: body.expectedReviewHash, idempotencyKey: body.idempotencyKey };
+    pending.waiting = true;
+    setNeedsLifecycleRead(true);
+    setAction(null);
+    shared.release(parentOwner.current);
   }
   const currentCommand = (captured: ChangeCommand) =>
     alive.current && captured === command.current && captured.generation === epoch.current;
@@ -535,12 +654,17 @@ function ContractDetailContent({
       command.current = null;
       reasonForm.reset({ reason: '' });
       setUncertain(false);
+    } else {
+      const pending = lifecycle.current;
+      if (pending?.action !== shownAction || !lifecycleReceipt(result, pending))
+        throw new Error('Contract lifecycle receipt mismatch');
+      lifecycle.current = null;
     }
     setAction(null);
     shared.release(parentOwner.current);
     setReload((value) => value + 1);
     callbacks.current.onChanged();
-    return captured ? confirmationText('recorded', locale) : undefined;
+    return confirmationText('recorded', locale);
   }
   function blockSibling(event: SyntheticEvent) {
     if (blocked()) {
@@ -569,6 +693,7 @@ function ContractDetailContent({
           ? 'amendmentAcceptForSignatureNotice'
           : 'amendmentAcceptNotice';
   const nextAction = data ? customerContractNextAction(data.contract, signatureStatus) : null;
+  const commandLocked = locked || preparing || needsLifecycleRead;
   return (
     <section
       className="flex flex-col gap-5 rounded-xl border bg-card p-5"
@@ -580,7 +705,7 @@ function ContractDetailContent({
         </h2>
         <Button
           variant="ghost"
-          disabled={locked || preparing}
+          disabled={commandLocked}
           onClick={() => {
             if (!blocked()) onClose();
           }}
@@ -588,6 +713,23 @@ function ContractDetailContent({
           {word('close')}
         </Button>
       </div>
+      {needsLifecycleRead && (
+        <Alert variant="destructive">
+          <AlertDescription>{confirmationText('unconfirmed', locale)}</AlertDescription>
+          <Button
+            variant="outline"
+            disabled={checkingLifecycle}
+            onClick={() => {
+              if (!lifecycle.current?.waiting || owner.current) return;
+              setCheckingLifecycle(true);
+              setData(null);
+              setReload((value) => value + 1);
+            }}
+          >
+            {confirmationText('checkStatus', locale)}
+          </Button>
+        </Alert>
+      )}
       {error ? (
         <Alert variant="destructive">
           <AlertDescription>{word('error')}</AlertDescription>
@@ -849,6 +991,7 @@ function ContractDetailContent({
                 <input
                   type="checkbox"
                   aria-required="true"
+                  disabled={commandLocked}
                   checked={acknowledged}
                   onChange={(event) => setAcknowledged(event.target.checked)}
                   className="mt-1 size-4"
@@ -857,7 +1000,7 @@ function ContractDetailContent({
               </label>
               <Button
                 className="self-start"
-                disabled={!acknowledged || locked || preparing}
+                disabled={!acknowledged || commandLocked}
                 onClick={() => choose('accept')}
               >
                 {word('accept')}
@@ -867,7 +1010,7 @@ function ContractDetailContent({
           {staff && isCurrent && data.contract.state === 'Draft' ? (
             <Button
               className="self-start"
-              disabled={locked || preparing}
+              disabled={commandLocked}
               onClick={() => choose('submit')}
             >
               {word('submit')}
@@ -910,7 +1053,7 @@ function ContractDetailContent({
                 </form>
               </Form>
               <div className="flex flex-wrap gap-2">
-                <Button disabled={locked || preparing} onClick={() => choose('publish')}>
+                <Button disabled={commandLocked} onClick={() => choose('publish')}>
                   {word('publish')}
                 </Button>
               </div>
@@ -922,7 +1065,7 @@ function ContractDetailContent({
           data.contract.amendmentSupported ? (
             <Button
               className="self-start"
-              disabled={locked || preparing}
+              disabled={commandLocked}
               onClick={() => choose('amendment-publish')}
             >
               {word('amendment-publish')}
@@ -1069,7 +1212,12 @@ function ContractDetailContent({
           profileId={data.contract.profileId}
           contractId={id}
           time={time}
+          {...(lifecycle.current?.retryReview
+            ? { retryReview: lifecycle.current.retryReview }
+            : {})}
           onClose={() => closeAction(action, renderedCommand)}
+          onDenied={withdraw}
+          onUnconfirmed={(attempted) => requireLifecycleRead(action, attempted)}
           onSuccess={(result) => completed(result, action, renderedCommand)}
         />
       ) : action ? (
@@ -1092,7 +1240,7 @@ function ContractDetailContent({
               renderedCommand.uncertain = true;
               setUncertain(true);
               setAction(null);
-            }
+            } else requireLifecycleRead(action);
           }}
           onClose={() => closeAction(action, renderedCommand)}
           onSuccess={(result) => completed(result, action, renderedCommand)}

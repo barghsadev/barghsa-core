@@ -1,5 +1,6 @@
 import { contractReview } from './contract-review-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { documentUploadPolicy } from '../src/test/document-list-fixtures.js';
 import { test, expect } from './upload-fixture';
 import { en, fa } from '../../../packages/i18n/src/contracts';
@@ -128,7 +129,8 @@ for (const locale of ['en', 'fa'] as const)
         expect(params.get('profileId')).toBe(PROFILE);
         return route.fulfill({ json: { documents: uploaded ? [document] : [], nextBefore: null } });
       });
-      const financialReview = contractReview('acceptance');
+      const originalReview = contractReview('acceptance');
+      let financialReview = originalReview;
       await page.route(`**${base}/${ID}/acceptance-review?*`, (route) =>
         route.fulfill({ json: financialReview })
       );
@@ -136,12 +138,33 @@ for (const locale of ['en', 'fa'] as const)
         route.fulfill({ json: { timezone: 'Asia/Tehran' } })
       );
       const attempts: unknown[] = [];
-      await page.route(`**${base}/${ID}/${staff ? 'publish' : 'accept'}`, (route) => {
+      let releaseReply = () => {};
+      const heldReply = new Promise<void>((resolve) => (releaseReply = resolve));
+      const recordedBeforeReply = staff && locale === 'en';
+      const lostReply = locale === 'en';
+      function record() {
+        state = staff ? 'AwaitingCustomerAcceptance' : 'Accepted';
+        if (!staff) version.acceptedAt = '2026-09-21T01:00:00Z';
+      }
+      await page.route(`**${base}/${ID}/${staff ? 'publish' : 'accept'}`, async (route) => {
         attempts.push(route.request().postDataJSON());
         if (!verified)
           return route.fulfill({ status: 403, json: { error: 'AUTHZ:STEP_UP_REQUIRED' } });
-        state = staff ? 'AwaitingCustomerAcceptance' : 'Accepted';
-        if (!staff) version.acceptedAt = '2026-09-21T01:00:00Z';
+        if (attempts.length === 2) {
+          if (recordedBeforeReply) record();
+          if (lostReply) {
+            await heldReply;
+            return route.abort().catch(() => {});
+          }
+          return route.fulfill({
+            json: {
+              ...dto(),
+              id: 'foreign-contract',
+              ...(!staff ? { financialReview } : {}),
+            },
+          });
+        }
+        record();
         return route.fulfill({ json: { ...dto(), ...(!staff ? { financialReview } : {}) } });
       });
       await page.route('**/api/auth/step-up', (route) => {
@@ -213,15 +236,62 @@ for (const locale of ['en', 'fa'] as const)
           exact: true,
         })
         .fill('Test-password');
+      if (lostReply) await page.clock.install();
       await dialog.getByRole('button', { name: confirm, exact: true }).click();
-      await expect(dialog).toHaveCount(0);
+      try {
+        await expect.poll(() => attempts.length).toBe(2);
+        if (lostReply) await page.clock.runFor(15_100);
+        await expect(dialog).toHaveCount(0);
+        await expect(
+          detail.getByText(confirmationText('unconfirmed', locale), { exact: true })
+        ).toBeVisible();
+      } finally {
+        releaseReply();
+      }
       expect(attempts).toHaveLength(2);
       expect(attempts[0]).toEqual(attempts[1]);
-      if (!staff) expect(attempts[1]).toMatchObject({ expectedReviewHash: financialReview.hash });
+      if (!staff) expect(attempts[1]).toMatchObject({ expectedReviewHash: originalReview.hash });
       expect(attempts[1]).toMatchObject({
         expectedVersionId: VERSION,
         idempotencyKey: expect.any(String),
       });
+      const action = detail.getByRole('button', {
+        name: staff ? words.publish : words.accept,
+        exact: true,
+      });
+      await expect(action).toBeDisabled();
+      const check = detail.getByRole('button', {
+        name: confirmationText('checkStatus', locale),
+        exact: true,
+      });
+      await check.click();
+      await expect(check).toHaveCount(0);
+      expect(attempts).toHaveLength(2);
+      if (!recordedBeforeReply) {
+        if (!staff) {
+          await detail.getByRole('checkbox', { name: words.acceptAcknowledgement }).check();
+          if (locale === 'fa')
+            financialReview = {
+              ...originalReview,
+              hash: 'd'.repeat(64),
+              data: {
+                ...originalReview.data,
+                activation: { ...originalReview.data.activation, ruleRevision: 2 },
+              },
+            };
+        }
+        await action.click();
+        if (!staff) await approveRiskConfirmation(page, locale, 'financial');
+        await dialog.getByRole('button', { name: confirm, exact: true }).click();
+        await expect(dialog).toHaveCount(0);
+        expect(attempts).toHaveLength(3);
+        if (!staff && locale === 'fa') {
+          expect(attempts[2]).toMatchObject({ expectedReviewHash: financialReview.hash });
+          expect((attempts[2] as { idempotencyKey: string }).idempotencyKey).not.toBe(
+            (attempts[1] as { idempotencyKey: string }).idempotencyKey
+          );
+        } else expect(attempts[2]).toEqual(attempts[1]);
+      }
       await expect(
         detail
           .getByText(staff ? words.AwaitingCustomerAcceptance : words.Accepted, { exact: true })

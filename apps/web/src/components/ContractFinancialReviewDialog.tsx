@@ -31,13 +31,15 @@ function OwnedContractFinancialReviewDialog({
   onCommandDispatch,
   onDenied,
   onUnconfirmed,
+  retryReview,
 }: {
   action: TeamAction;
   review?: ContractFinancialReview;
   onPendingChange?: (pending: boolean) => void;
   onCommandDispatch?: (dispatched: boolean) => void;
   onDenied?: () => void;
-  onUnconfirmed?: () => void;
+  onUnconfirmed?: (command?: TeamAction) => void;
+  retryReview?: { hash: string; idempotencyKey: string };
   profileId: string;
   contractId: string;
   time: ReturnType<typeof useAccountTime>;
@@ -123,9 +125,12 @@ function OwnedContractFinancialReviewDialog({
       body: {
         ...(action.body as Record<string, unknown>),
         ...(review ? { expectedReviewHash: review.hash } : {}),
+        ...(retryReview && review?.hash === retryReview.hash
+          ? { idempotencyKey: retryReview.idempotencyKey }
+          : {}),
       },
     }),
-    [action, review]
+    [action, review, retryReview]
   );
   return (
     <TeamActionDialog
@@ -134,7 +139,7 @@ function OwnedContractFinancialReviewDialog({
       {...(onPendingChange ? { onPendingChange } : {})}
       {...(onCommandDispatch ? { onCommandDispatch } : {})}
       {...(onDenied ? { onDenied } : {})}
-      {...(onUnconfirmed ? { onUnconfirmed } : {})}
+      {...(onUnconfirmed ? { onUnconfirmed: () => onUnconfirmed(confirmedAction) } : {})}
       confirmationDisabled={!review || time.status !== 'ready'}
       summary={
         <>
