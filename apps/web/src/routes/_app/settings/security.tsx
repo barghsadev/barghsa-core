@@ -191,7 +191,7 @@ function SettingsSecurityPage() {
           >
             {time.notice}
           </div>
-          <Suspense fallback={null}>
+          <Suspense fallback={<LoadingStatus>{text('loadingTelegram')}</LoadingStatus>}>
             <TelegramLinkPanel scope={scope} />
           </Suspense>
           {confirmed && (

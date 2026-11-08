@@ -438,6 +438,14 @@ test('the initial radio selection submits from the required profile dialog', asy
   const locale = (await page.locator('html').getAttribute('lang')) === 'en' ? 'en' : 'fa';
   const saved = page.getByText(t('dashboard.profile.default.saved', locale), { exact: true });
   await expect(saved).toHaveCount(0);
+  const choices = dialog.getByRole('radio');
+  await expect(choices).toHaveCount(2);
+  await expect(choices.first()).toBeChecked();
+  await choices.first().focus();
+  await page.keyboard.press('ArrowDown');
+  await expect(choices.last()).toBeChecked();
+  await page.keyboard.press('ArrowUp');
+  await expect(choices.first()).toBeChecked();
   expect(commandLoads).toBe(0);
   const switched = page.waitForRequest(
     '**/api/profiles/switch/99111111-1111-4111-8111-111111111111'

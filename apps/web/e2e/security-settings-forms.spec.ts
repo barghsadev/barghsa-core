@@ -6,8 +6,10 @@ import { setupCatalogueForms } from './catalogue-form-fixture';
 import { fullNavigation } from './navigation-fixture';
 import { cookieResponse } from './cookie-response';
 import { t } from '@barghsa/i18n/app';
+import { telegramText } from '@barghsa/i18n/telegram';
 import { trustedDeviceText } from '@barghsa/i18n/trusted-devices';
 import { securitySettingsText as copy } from '@barghsa/i18n/security-settings-forms';
+import { productionManifest } from './production-manifest';
 type Locale = 'en' | 'fa';
 const session = (sessionId: string, isCurrentSession = false) => ({
   sessionId,
@@ -212,6 +214,11 @@ for (const locale of ['en', 'fa'] as const) {
       }
       return route.fallback();
     });
+    const file = (await productionManifest())['src/components/TelegramLinkPanel.tsx']!.file;
+    let moduleRequest: Route | undefined;
+    await page.route(`**/${file}`, (route) => {
+      moduleRequest = route;
+    });
     await page.goto('/settings/security');
     const sessions = page.getByRole('region', {
       name: t('settings.security.sessionsTitle', locale),
@@ -230,7 +237,17 @@ for (const locale of ['en', 'fa'] as const) {
       exact: true,
     });
     await expect.poll(() => reads).toBe(1);
+    await expect.poll(() => !!moduleRequest).toBe(true);
+    const panelLoading = page
+      .getByRole('status')
+      .filter({ hasText: copy('loadingTelegram', locale) });
+    const telegram = page.getByRole('region', { name: telegramText('title', locale), exact: true });
+    await expect(panelLoading).toBeVisible();
+    await expect(telegram).toHaveCount(0);
     await expect(companion).toBeVisible();
+    await moduleRequest!.continue();
+    await expect(telegram).toBeVisible();
+    await expect(panelLoading).toHaveCount(0);
     await expect(pending.getByText(copy('loading', locale), { exact: true })).toBeVisible();
     await expect(retry).toBeDisabled();
     await page.clock.fastForward(15_200);

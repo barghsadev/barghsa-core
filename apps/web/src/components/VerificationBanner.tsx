@@ -65,7 +65,8 @@ function OwnedVerificationBanner({
   const pathname = useLocation({ select: (location) => location.pathname });
 
   const locale = useLocale();
-  const isRtl = locale === 'fa';
+  const dir = locale === 'fa' ? 'rtl' : 'ltr';
+  const copy = (key: string) => t(`verification.banner.${key}`, locale);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -126,31 +127,23 @@ function OwnedVerificationBanner({
       <section
         data-testid="verification-notice"
         role={status.isVerified ? 'status' : 'alert'}
-        dir={isRtl ? 'rtl' : 'ltr'}
+        dir={dir}
         className="border-b border-border bg-muted px-4 py-3 text-sm text-foreground"
       >
         <div className="mx-auto flex max-w-7xl items-start justify-between gap-4">
           <div className="min-w-0 space-y-2">
             <p className="font-medium">{noticeContent.title}</p>
             <p className="whitespace-pre-line break-words">{noticeContent.body}</p>
-            <div className="flex flex-wrap gap-4 text-xs">
-              <Link to="/settings/profile" className="underline underline-offset-2">
-                {t('settings.profile.title', locale)}
-              </Link>
-              {!status.isVerified && (
-                <Link to="/tickets" className="underline underline-offset-2">
-                  {t('verification.banner.support', locale)}
-                </Link>
-              )}
-              <Link to="/notifications" className="underline underline-offset-2">
-                {t('notifications.viewAll', locale)}
-              </Link>
-            </div>
+            <VerificationLinks
+              locale={locale}
+              compact
+              support={status.isVerified ? null : copy('support')}
+            />
           </div>
           <button
             type="button"
             onClick={() => setDismissed(noticeKey)}
-            aria-label={t('verification.banner.dismiss', locale)}
+            aria-label={copy('dismiss')}
             className="shrink-0 rounded p-1 focus-visible:outline-2 focus-visible:outline-ring"
           >
             ✕
@@ -190,62 +183,80 @@ function OwnedVerificationBanner({
     }
   }
 
-  if (verification === 'verified') {
-    return (
-      <div
-        className="bg-success-soft border-success/20 border px-4 py-3 text-sm text-success"
-        role="alert"
-        dir={isRtl ? 'rtl' : 'ltr'}
-      >
-        <div className="mx-auto flex max-w-7xl items-center justify-between">
-          <span>{t('verification.banner.verified', locale)}</span>
-        </div>
-      </div>
-    );
-  }
-
+  const verified = verification === 'verified';
   return (
     <div
-      className="bg-warning-soft border-warning/20 border-b px-4 py-3 text-sm text-warning"
+      className={
+        verified
+          ? 'bg-success-soft border-success/20 border px-4 py-3 text-sm text-success'
+          : 'bg-warning-soft border-warning/20 border-b px-4 py-3 text-sm text-warning'
+      }
       role="alert"
-      dir={isRtl ? 'rtl' : 'ltr'}
+      dir={dir}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between">
-        <div className="flex flex-col gap-1">
-          <span>{t('verification.banner.title', locale)}</span>
-          {!status.canAutoVerify && (
-            <span className="text-xs">{t('verification.banner.manualHelp', locale)}</span>
-          )}
-          <Link to="/tickets" className="text-xs underline underline-offset-2">
-            {t('verification.banner.support', locale)}
-          </Link>
-          {verification === 'error' && (
-            <span className="text-xs text-destructive">
-              {t('verification.banner.error', locale)}
-            </span>
-          )}
-        </div>
-        <div className="flex items-center gap-3">
-          {status.canAutoVerify && (
-            <button
-              onClick={handleAutoVerify}
-              disabled={verification === 'working'}
-              className="min-h-11 rounded bg-foreground px-3 py-1 text-xs font-medium text-background hover:underline disabled:opacity-50"
-            >
-              {verification === 'working'
-                ? t('verification.banner.verifying', locale)
-                : t('verification.banner.verify', locale)}
-            </button>
-          )}
-          <button
-            onClick={() => setDismissed(bannerKey)}
-            className="text-warning hover:underline"
-            aria-label={t('verification.banner.dismiss', locale)}
-          >
-            ✕
-          </button>
-        </div>
+        {verified ? (
+          <span>{copy('verified')}</span>
+        ) : (
+          <>
+            <div className="flex flex-col gap-1">
+              <span>{copy('title')}</span>
+              {!status.canAutoVerify && <span className="text-xs">{copy('manualHelp')}</span>}
+              <Link to="/tickets" className="text-xs underline underline-offset-2">
+                {copy('support')}
+              </Link>
+              {verification === 'error' && (
+                <span className="text-xs text-destructive">{copy('error')}</span>
+              )}
+            </div>
+            <div className="flex items-center gap-3">
+              {status.canAutoVerify && (
+                <button
+                  onClick={handleAutoVerify}
+                  disabled={verification === 'working'}
+                  className="min-h-11 rounded bg-foreground px-3 py-1 text-xs font-medium text-background hover:underline disabled:opacity-50"
+                >
+                  {copy(verification === 'working' ? 'verifying' : 'verify')}
+                </button>
+              )}
+              <button
+                onClick={() => setDismissed(bannerKey)}
+                className="text-warning hover:underline"
+                aria-label={copy('dismiss')}
+              >
+                ✕
+              </button>
+            </div>
+          </>
+        )}
       </div>
+    </div>
+  );
+}
+
+function VerificationLinks({
+  locale,
+  support,
+  compact = false,
+}: {
+  locale: 'en' | 'fa';
+  support: string | null;
+  compact?: boolean;
+}) {
+  const linkClass = compact ? 'underline underline-offset-2' : 'underline';
+  return (
+    <div className={compact ? 'flex flex-wrap gap-4 text-xs' : 'flex flex-wrap gap-4'}>
+      <Link to="/settings/profile" className={linkClass}>
+        {t('settings.profile.title', locale)}
+      </Link>
+      {support && (
+        <Link to="/tickets" className={linkClass}>
+          {support}
+        </Link>
+      )}
+      <Link to="/notifications" className={linkClass}>
+        {t('notifications.viewAll', locale)}
+      </Link>
     </div>
   );
 }
@@ -281,19 +292,7 @@ function VerificationWaiting({
             : workflowFeedback('submissionUnknown', locale)
         }
         expectedResponse={workflowFeedback('responseUnknown', locale)}
-        help={
-          <div className="flex flex-wrap gap-4">
-            <Link to="/settings/profile" className="underline">
-              {t('settings.profile.title', locale)}
-            </Link>
-            <Link to="/tickets" className="underline">
-              {feedbackText('support', locale)}
-            </Link>
-            <Link to="/notifications" className="underline">
-              {t('notifications.viewAll', locale)}
-            </Link>
-          </div>
-        }
+        help={<VerificationLinks locale={locale} support={feedbackText('support', locale)} />}
       />
       <button
         type="button"

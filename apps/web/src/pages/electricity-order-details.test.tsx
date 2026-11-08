@@ -7,7 +7,10 @@ import { ElectricityOrderDetailsPage } from './ElectricityOrderDetailsPage.js';
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
 import { t } from '@barghsa/i18n/app';
 
-async function exerciseCancellation(outcome: 'confirmed' | 'retry' | 'already-cancelled') {
+async function exerciseCancellation(
+  outcome: 'confirmed' | 'retry' | 'already-cancelled' | 'step-up required'
+) {
+  const uncertain = outcome === 'retry' || outcome === 'already-cancelled';
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   const orderId = '11111111-1111-7111-8111-111111111111';
@@ -126,9 +129,9 @@ async function exerciseCancellation(outcome: 'confirmed' | 'retry' | 'already-ca
       return new Promise<Response>(() => {});
     if (url.endsWith('/cancel')) {
       cancellationWrites.push(_init);
+      if (outcome === 'step-up required') return new Response(null, { status: 403 });
       const response = Response.json(cancellationReceipt);
-      if (outcome !== 'confirmed' && cancellationWrites.length === 1)
-        response.json = () => firstReceipt;
+      if (uncertain && cancellationWrites.length === 1) response.json = () => firstReceipt;
       return response;
     }
     if (url === `/api/electricity/orders/${orderId}` && cancellationWrites.length === 1) {
@@ -213,7 +216,7 @@ async function exerciseCancellation(outcome: 'confirmed' | 'retry' | 'already-ca
       (button) => button.closest('[role="dialog"]') && button.textContent === 'Cancel order'
     );
     await approveVisibleConfirmation();
-    if (outcome !== 'confirmed') vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    if (uncertain) vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
     await act(async () => confirm!.click());
     const mutation = fetchMock.mock.calls.find(([url]) => url.endsWith('/cancel'));
     expect(mutation).toBeDefined();
@@ -222,7 +225,17 @@ async function exerciseCancellation(outcome: 'confirmed' | 'retry' | 'already-ca
       expectedVersionId: versionId,
       reason: 'No longer needed',
     });
-    if (outcome !== 'confirmed') {
+    if (outcome === 'step-up required') {
+      expect(cancellationWrites).toHaveLength(1);
+      expect(statusChecks).toBe(0);
+      expect(document.body.querySelector('[role="dialog"]')).toBeNull();
+      const alert = [...container.querySelectorAll('[role="alert"]')].find((item) =>
+        item.textContent?.includes(t('electricity.order.detail.cancelStepUp', 'en'))
+      );
+      expect(alert?.querySelector('a')?.getAttribute('href')).toBe('/settings/security');
+      expect(reason.value).toBe('No longer needed');
+    }
+    if (uncertain) {
       await act(async () => vi.advanceTimersByTimeAsync(15_001));
       vi.useRealTimers();
       expect(mutation![1]?.signal?.aborted).toBe(true);
@@ -264,7 +277,7 @@ async function exerciseCancellation(outcome: 'confirmed' | 'retry' | 'already-ca
   }
 }
 
-it.each(['confirmed', 'retry', 'already-cancelled'] as const)(
+it.each(['confirmed', 'retry', 'already-cancelled', 'step-up required'] as const)(
   'reviews the exact cancellation refund and handles its %s outcome',
   exerciseCancellation
 );
@@ -299,7 +312,23 @@ vi.mock('../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ money: String, irrDigits: String }),
 }));
 
-it('loads an order confirmation with its invoice and contract references', async () => {
+it.each([
+  { giftCode: 'ENERGY', requiredGreenKwh: '5', title: { en: 'Thermal' }, label: 'Thermal' },
+  { giftCode: null, requiredGreenKwh: '0', title: undefined, label: 'thermal' },
+])('shows stored pricing and order references for gift code $giftCode', async (pricing) => {
+  const { giftCode, requiredGreenKwh, title, label } = pricing;
+  const hasGreen = requiredGreenKwh !== '0';
+  const thermalQuantity = hasGreen ? '5' : '10';
+  const thermalSubtotal = hasGreen ? '1250000' : '2500000';
+  const thermalVat = hasGreen ? '50000' : '100000';
+  const greenLine = {
+    productId: '99999999-9999-7999-8999-999999999999',
+    systemKey: 'green',
+    title: { en: 'Green' },
+    quantityKwh: '5',
+    unitPriceIrR: '250000',
+    lineTotalIrR: '1250000',
+  };
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   const request = vi.fn(
@@ -345,27 +374,45 @@ it('loads an order confirmation with its invoice and contract references', async
                 totalIrR: '2500000',
                 paidIrR: '0',
                 refundedIrR: '0',
+                giftCode,
+                giftDiscountIrR: '100000',
+                greenRuleApplied: hasGreen,
                 pricingSnapshot: {
+                  requiredGreenKwh,
+                  subtotalIrR: '2500000',
+                  vatIrR: '100000',
                   lines: [
                     null,
                     {
                       productId: '88888888-8888-7888-8888-888888888888',
-                      subtotalIrR: '2500000',
+                      subtotalIrR: thermalSubtotal,
                       discountIrR: '100000',
-                      netIrR: '2400000',
-                      vatIrR: '100000',
+                      netIrR: hasGreen ? '1150000' : '2400000',
+                      vatIrR: thermalVat,
                     },
+                    ...(hasGreen
+                      ? [
+                          {
+                            productId: greenLine.productId,
+                            subtotalIrR: greenLine.lineTotalIrR,
+                            discountIrR: '0',
+                            netIrR: greenLine.lineTotalIrR,
+                            vatIrR: '50000',
+                          },
+                        ]
+                      : []),
                   ],
                 },
                 lines: [
                   {
                     productId: '88888888-8888-7888-8888-888888888888',
                     systemKey: 'thermal',
-                    title: { en: 'Thermal' },
-                    quantityKwh: '10',
+                    title,
+                    quantityKwh: thermalQuantity,
                     unitPriceIrR: '250000',
-                    lineTotalIrR: '2500000',
+                    lineTotalIrR: thermalSubtotal,
                   },
+                  ...(hasGreen ? [greenLine] : []),
                 ],
                 timeline: [
                   {
@@ -402,9 +449,24 @@ it('loads an order confirmation with its invoice and contract references', async
     );
     expect(container.textContent).toContain('2500000');
     const thermal = [...container.querySelectorAll('div')].find(
-      (node) => node.firstElementChild?.textContent === 'Thermal · 10 kWh'
+      (node) => node.firstElementChild?.textContent === `${label} · ${thermalQuantity} kWh`
     );
-    expect(thermal?.textContent).toContain('VAT: 100000');
+    expect(thermal?.textContent).toContain(`VAT: ${thermalVat}`);
+    const summaries = [...container.querySelectorAll('p')].map((item) => item.textContent);
+    const gift = t('electricity.order.detail.giftDiscount', 'en');
+    expect(summaries).toContain(`${gift}${giftCode ? ` (${giftCode})` : ''}: 100000`);
+    expect(summaries).toContain(`${t('electricity.order.detail.subtotal', 'en')}: 2500000`);
+    expect(summaries).toContain('VAT: 100000');
+    const greenKwh = t('electricity.order.detail.greenKwh', 'en');
+    const greenRule = t('electricity.order.detail.greenRule', 'en');
+    if (!hasGreen) {
+      expect(summaries).not.toContain(greenRule);
+      expect(summaries.some((summary) => summary?.startsWith(greenKwh))).toBe(false);
+    } else {
+      expect(summaries).toContain(greenRule);
+      expect(summaries).toContain(`${greenKwh}: ${requiredGreenKwh} kWh`);
+      expect(container.textContent).toContain(`Green · ${requiredGreenKwh} kWh`);
+    }
     expect(container.textContent).toContain('Awaiting staff review');
     expect(container.textContent).toContain('Current status');
     expect(container.textContent).toContain('Who acts next');
@@ -448,6 +510,8 @@ it.each([
     status: 'cancelled',
     paidIrR: '600000',
     refundedIrR: '200000',
+    refundStatus: 'pending',
+    refundReason: 'Cancelled after payment',
     financiallyClosed: false,
     expected: 'Refund remaining400000',
     settlement: 'Financial settlement remains open until the refund completes.',
@@ -456,6 +520,8 @@ it.each([
     status: 'rejected',
     paidIrR: '600000',
     refundedIrR: '600000',
+    refundStatus: 'completed',
+    refundReason: 'Rejected after review',
     financiallyClosed: true,
     expected: 'Financial settlement completed.',
     settlement: 'Financial settlement completed.',
@@ -470,7 +536,16 @@ it.each([
   },
 ])(
   'shows the correct financial outcome for a $status order with $paidIrR paid',
-  async ({ status, paidIrR, refundedIrR, financiallyClosed, expected, settlement }) => {
+  async ({
+    status,
+    paidIrR,
+    refundedIrR,
+    refundStatus,
+    refundReason,
+    financiallyClosed,
+    expected,
+    settlement,
+  }) => {
     document.documentElement.lang = 'en';
     vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
     vi.stubGlobal(
@@ -495,6 +570,8 @@ it.each([
               totalIrR: '2500000',
               paidIrR,
               refundedIrR,
+              refundStatus,
+              refundReason,
               financiallyClosed,
             }),
             { headers: { 'Content-Type': 'application/json' } }
@@ -514,6 +591,11 @@ it.each([
       );
       expect(container.textContent).toContain(expected);
       expect(container.textContent).toContain(settlement);
+      if (refundStatus) {
+        const refund = t('electricity.order.detail.refund', 'en');
+        const refundState = t(`electricity.order.refund.${refundStatus}`, 'en');
+        expect(container.textContent).toContain(`${refund}: ${refundState} · ${refundReason}`);
+      }
       expect(container.textContent).not.toContain('Amount remaining');
       if (refundedIrR === paidIrR) expect(container.textContent).not.toContain('Refund remaining');
     } finally {

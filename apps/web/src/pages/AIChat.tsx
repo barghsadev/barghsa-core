@@ -8,6 +8,7 @@ import { useAccountUser } from '../hooks/useAccountUser.js';
 import { readAssistantAvailability, type AssistantAvailability } from '../lib/assistant-chat.js';
 import { useEffect, useId, useState } from 'react';
 import { t } from '@barghsa/i18n/app';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { useLocale } from '../hooks/useLocale.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import KnowledgeAssistantPanel from '../components/KnowledgeAssistantPanel.js';
@@ -96,7 +97,7 @@ function OwnedAIChat() {
     >
       {(status === 'loading' ||
         (status === 'ready' && availability?.revision !== profileRevision)) && (
-        <LoadingStatus>{t('assistant.page.loading', locale)}</LoadingStatus>
+        <LoadingStatus>{loadingText('loadingGuide', locale)}</LoadingStatus>
       )}
       {status === 'unavailable' && (
         <section className="rounded-2xl border bg-card p-6">

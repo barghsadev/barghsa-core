@@ -1,7 +1,7 @@
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { productionManifest } from './production-manifest';
 import AxeBuilder from '@axe-core/playwright';
-import type { Locator, Page } from '@playwright/test';
+import type { Locator, Page, Route } from '@playwright/test';
 import { t } from '@barghsa/i18n/app';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { checkpointBrowserCoverage, test, expect } from './coverage-fixture';
@@ -354,8 +354,24 @@ for (const [locale, theme] of [
         advanced
       );
       state.quoteMode = 'held';
+      const file = (await productionManifest())['src/pages/ElectricityOrderRevisionForm.tsx']!.file;
+      let moduleRequest: Route | undefined;
+      await page.route(`**/${file}`, (route) => {
+        moduleRequest = route;
+      });
       await page.goto(`/electricity/orders/${correctionOrder}`);
       const form = page.getByTestId('electricity-revision-form');
+      const loading = page
+        .getByRole('status')
+        .filter({ hasText: copy('electricity.correctionForm.loadingRevision') });
+      await expect.poll(() => !!moduleRequest).toBe(true);
+      await expect(page.getByTestId('electricity-address-correction-form')).toBeVisible();
+      await expect(loading).toBeVisible();
+      await expect(form).toHaveCount(0);
+      expect(state.revisionWrites).toEqual([]);
+      await moduleRequest!.continue();
+      await expect(form).toBeVisible();
+      await expect(loading).toHaveCount(0);
       const preview = form.getByRole('button', {
         name: copy('electricity.order.revision.preview'),
         exact: true,

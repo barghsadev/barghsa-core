@@ -6,6 +6,7 @@ import { readAssistantAvailability, type AssistantAvailability } from '../lib/as
 import { lazy, Suspense, useEffect, useId, useRef, useState } from 'react';
 import { BookOpenText } from 'lucide-react';
 import { t, type Locale } from '@barghsa/i18n/workspace';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 
 const KnowledgeAssistantPanel = lazy(() => import('./KnowledgeAssistantPanel.js'));
@@ -52,15 +53,11 @@ function OwnedKnowledgeAssistantLauncher({ locale, pathname }: LauncherProps) {
               credentials: 'include',
               signal,
             });
-            return {
-              status: response.status,
-              value: response.status === 200 ? ((await response.json()) as unknown) : null,
-            };
+            return response.status === 200
+              ? readAssistantAvailability(await response.json())
+              : null;
           }),
       })
-      .then(async (response) =>
-        response.status === 200 ? readAssistantAvailability(response.value) : null
-      )
       .then((value) => {
         if (!controller.signal.aborted) setAvailability(value ? { ...value, revision } : null);
       })
@@ -96,7 +93,16 @@ function OwnedKnowledgeAssistantLauncher({ locale, pathname }: LauncherProps) {
         {t('assistant.open', locale)}
       </button>
       {opened && (
-        <Suspense fallback={null}>
+        <Suspense
+          fallback={
+            <p
+              role="status"
+              className="fixed bottom-[calc(var(--mobile-navigation-height,0px)+5rem)] end-5 z-40 rounded-md border bg-card px-3 py-2 text-sm text-card-foreground"
+            >
+              {loadingText('loadingGuide', locale)}
+            </p>
+          }
+        >
           <KnowledgeAssistantPanel
             locale={locale}
             pathname={pathname ?? '/ai'}

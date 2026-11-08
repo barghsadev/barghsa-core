@@ -1324,7 +1324,13 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                     ) : null}
                   </form>
                 </Form>
-                <Suspense fallback={null}>
+                <Suspense
+                  fallback={
+                    <LoadingStatus>
+                      {t('electricity.correctionForm.loadingRevision', locale)}
+                    </LoadingStatus>
+                  }
+                >
                   <ElectricityOrderRevisionForm
                     key={JSON.stringify([scopeKey, detail.profileId, detail.versionId])}
                     order={detail}

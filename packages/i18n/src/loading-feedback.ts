@@ -2,6 +2,7 @@ const messages = {
   en: {
     loading: 'Loading page',
     loadingAdmin: 'Loading admin dashboard',
+    loadingGuide: 'Preparing your guide…',
     readError: 'Could not load this information. Try again.',
     recordUnavailable: 'Record unavailable.',
     connectionRetry: 'Connection interrupted. Retrying the request…',
@@ -9,6 +10,7 @@ const messages = {
   fa: {
     loading: 'در حال بارگذاری صفحه',
     loadingAdmin: 'در حال بارگذاری پنل مدیریت',
+    loadingGuide: 'در حال آماده‌سازی راهنما…',
     readError: 'بارگذاری اطلاعات ناموفق بود. دوباره تلاش کنید.',
     recordUnavailable: 'این مورد در دسترس نیست.',
     connectionRetry: 'ارتباط قطع شد. درخواست دوباره ارسال می‌شود…',

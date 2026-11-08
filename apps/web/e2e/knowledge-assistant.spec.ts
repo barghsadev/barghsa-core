@@ -1,6 +1,9 @@
 import { fullNavigation } from './navigation-fixture';
 import { fulfillDashboard } from './dashboard-fixture';
+import { productionManifest } from './production-manifest';
 import { test, expect } from './coverage-fixture';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
+import type { Route } from '@playwright/test';
 
 for (const locale of ['fa', 'en'] as const) {
   test(`customer asks a sourced knowledge question (${locale})`, async ({ page, baseURL }) => {
@@ -81,6 +84,11 @@ for (const locale of ['fa', 'en'] as const) {
         },
       });
     });
+    const file = (await productionManifest())['src/components/KnowledgeAssistantPanel.tsx']!.file;
+    let moduleRequest: Route | undefined;
+    await page.route(`**/${file}`, (route) => {
+      moduleRequest = route;
+    });
     await page.goto('/app');
     await page
       .getByRole('button', {
@@ -88,7 +96,16 @@ for (const locale of ['fa', 'en'] as const) {
       })
       .click();
     const dialog = page.getByRole('dialog');
+    const loading = page
+      .getByRole('status')
+      .filter({ hasText: loadingText('loadingGuide', locale) });
+    await expect.poll(() => !!moduleRequest).toBe(true);
+    await expect(loading).toBeVisible();
+    await expect(dialog).toHaveCount(0);
+    expect(sent).toEqual([]);
+    await moduleRequest!.continue();
     await expect(dialog).toBeVisible();
+    await expect(loading).toHaveCount(0);
     await expect(dialog).toHaveAttribute('data-side', locale === 'fa' ? 'left' : 'right');
     await expect(dialog).toContainText(
       locale === 'fa' ? 'در اختیار مدل قرار نمی‌گیرد' : 'is not sent to the model'

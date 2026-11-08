@@ -82,6 +82,7 @@ export const fa: I18nDictionary = {
     'اگر فیلدی نیاز به اصلاح داشته باشد، سایر داده‌های شما حفظ می‌شود.',
   'electricity.correctionForm.quantitiesHelp': 'برای حداقل یک محصول مقدار مثبت وارد کنید.',
   'electricity.correctionForm.loading': 'در حال بررسی اصلاح…',
+  'electricity.correctionForm.loadingRevision': 'در حال بارگذاری فرم اصلاح سفارش…',
   'electricity.staffReasonForm.invalid': 'دلیل باید بین ۱ تا ۱٬۰۰۰ نویسه باشد.',
   'electricity.staffReasonForm.help':
     'برای درخواست اصلاح یا رد سفارش، دلیل لازم است. تأیید سفارش از این دلیل استفاده نمی‌کند.',
@@ -141,7 +142,6 @@ export const fa: I18nDictionary = {
   'assistant.public.invalid': 'پرسشی با حداکثر ۱۰۰۰ نویسه بنویسید.',
   'assistant.public.quota': '{count} پرسش باقی مانده',
   'assistant.public.cooldown': 'ارسال دوباره پس از {seconds} ثانیه',
-  'assistant.page.loading': 'در حال آماده‌سازی راهنما…',
   'assistant.page.unavailable': 'برای پروفایل فعال شما هنوز راهنمایی فعال نشده است.',
   'assistant.page.error': 'وضعیت راهنما دریافت نشد. دوباره تلاش کنید.',
   'assistant.title': 'راهنمای دانش برقسا',
@@ -1061,6 +1061,7 @@ export const en: I18nDictionary = {
   'electricity.correctionForm.quantitiesHelp':
     'Enter a positive quantity for at least one product.',
   'electricity.correctionForm.loading': 'Checking correction…',
+  'electricity.correctionForm.loadingRevision': 'Loading the order revision form…',
   'electricity.staffReasonForm.invalid': 'Enter a reason of 1 to 1,000 characters.',
   'electricity.staffReasonForm.help':
     'A reason is required to request changes or reject the order. Approval does not use this reason.',
@@ -1118,7 +1119,6 @@ export const en: I18nDictionary = {
   'assistant.public.invalid': 'Enter a question of up to 1000 characters.',
   'assistant.public.quota': '{count} questions remaining',
   'assistant.public.cooldown': 'Send again in {seconds} seconds',
-  'assistant.page.loading': 'Preparing your guide…',
   'assistant.page.unavailable': 'No guide is assigned to your active profile yet.',
   'assistant.page.error': 'The guide could not be loaded. Please try again.',
   'assistant.title': 'Barghsa knowledge guide',

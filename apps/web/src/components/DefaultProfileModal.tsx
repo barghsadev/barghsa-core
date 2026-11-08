@@ -15,8 +15,6 @@ import {
   DialogFooter,
 } from '@barghsa/ui';
 import { Button } from '@barghsa/ui';
-import { RadioGroup, RadioGroupItem } from '@barghsa/ui';
-import { Label } from '@barghsa/ui';
 
 interface ProfilesResponse {
   profiles: SwitcherProfile[];
@@ -141,26 +139,28 @@ function OwnedDefaultProfileModal({
         </DialogHeader>
 
         <div className="py-2">
-          <RadioGroup
-            value={resolvedSelected}
-            onValueChange={(value: string) => setSelectedId(value)}
+          <div
+            role="radiogroup"
             aria-label={t('dashboard.profile.default.title', locale)}
+            className="grid w-full gap-2"
           >
             {profiles.map((profile) => (
-              <div
+              <label
                 key={profile.id}
-                className="flex items-center gap-3 rounded-lg border border-border p-3 has-[:checked]:border-primary has-[:checked]:bg-primary/5"
+                className="flex cursor-pointer items-center gap-3 rounded-lg border border-border p-3 text-sm font-medium has-[:checked]:border-primary has-[:checked]:bg-primary/5"
               >
-                <RadioGroupItem value={profile.id} id={`profile-${profile.id}`} />
-                <Label
-                  htmlFor={`profile-${profile.id}`}
-                  className="cursor-pointer text-sm font-medium"
-                >
-                  {formatProfileName(profile)}
-                </Label>
-              </div>
+                <input
+                  type="radio"
+                  name="default-profile"
+                  value={profile.id}
+                  checked={resolvedSelected === profile.id}
+                  onChange={() => setSelectedId(profile.id)}
+                  className="size-4 shrink-0 accent-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                />
+                {formatProfileName(profile)}
+              </label>
             ))}
-          </RadioGroup>
+          </div>
         </div>
 
         {error && (

@@ -25,6 +25,7 @@ const en = {
   denied: 'Account access has changed. Reload this page to continue.',
   refresh: 'Refresh sessions',
   loading: 'Loading…',
+  loadingTelegram: 'Loading Telegram settings…',
 } as const;
 const fa: Record<keyof typeof en, string> = {
   unrecognizedDevice: 'دستگاه ناشناس',
@@ -53,6 +54,7 @@ const fa: Record<keyof typeof en, string> = {
   denied: 'دسترسی حساب تغییر کرده است. برای ادامه صفحه را دوباره بارگذاری کنید.',
   refresh: 'تازه‌سازی نشست‌ها',
   loading: 'در حال بارگذاری…',
+  loadingTelegram: 'در حال بارگذاری تنظیمات تلگرام…',
 };
 export const securitySettingsDictionaries = { en, fa };
 export function securitySettingsText(key: string, locale: Locale): string {
