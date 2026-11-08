@@ -185,6 +185,35 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await expect(page.locator('#password')).toHaveValue('');
   });
+  test(`a stalled password reset retires the response without replaying the reset (${locale})`, async ({
+    page,
+  }) => {
+    await page.clock.install();
+    const state = await setup(page, locale);
+    await page.goto('/forgot-password');
+    await page.locator('#username').fill(' Recovery@Example.test ');
+    await submit(page);
+    await code(page, locale);
+    await passwords(page);
+    state.mode = 'holdReset';
+    await submit(page);
+    await expect.poll(() => !!state.held).toBe(true);
+    await expect(page.locator('#new-password')).toBeDisabled();
+
+    await page.clock.fastForward(15_001);
+    await expect(page.getByRole('alert')).toHaveText(copy('uncertain', locale));
+    await expect(page.getByRole('button', { name: copy('restart', locale) })).toBeEnabled();
+    await submit(page);
+    await state
+      .held!.fulfill({
+        json: { message: 'Your password has been reset. Please log in with your new password.' },
+      })
+      .catch(() => {});
+    await expect(page.getByRole('alert')).toHaveText(copy('uncertain', locale));
+    await expect(page).toHaveURL(/\/forgot-password$/);
+    expect(state.writes.filter(({ path }) => path.endsWith('/reset-password'))).toHaveLength(1);
+  });
+
   test(`unknown recovery results never replay a consumed capability and explicit restart retires old forms (${locale})`, async ({
     page,
   }, info) => {

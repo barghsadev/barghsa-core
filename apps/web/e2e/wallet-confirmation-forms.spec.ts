@@ -1,4 +1,4 @@
-import { confirmationText } from '@barghsa/i18n/confirmation';
+import { confirmFinancialReview } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { tWalletReceipts as text } from '@barghsa/i18n/wallet-receipts';
@@ -244,7 +244,7 @@ for (const emergency of [false, true]) {
           node.click();
           node.click();
         });
-        await approveWalletDecision(page, locale);
+        await confirmFinancialReview(page, locale);
         await expect.poll(() => writes.length).toBe(1);
         await expect(field).toBeDisabled();
         await expect(rejection).toBeDisabled();
@@ -287,7 +287,7 @@ for (const emergency of [false, true]) {
         }
         mode = 'mixed';
         await button.click();
-        await approveWalletDecision(page, locale);
+        await confirmFinancialReview(page, locale);
         await expect(region.getByRole('alert')).toHaveText(
           text('admin.walletReceipts.error.save', locale)
         );
@@ -296,13 +296,13 @@ for (const emergency of [false, true]) {
         await expect(page.getByText('private-confirmation-diagnostic')).toHaveCount(0);
         mode = 'service';
         await button.click();
-        await approveWalletDecision(page, locale);
+        await confirmFinancialReview(page, locale);
         await expect.poll(() => writes.length).toBe(4);
         await expect(button).toBeEnabled();
         await expect(field).toHaveValue(raw);
         mode = 'success';
         await button.click();
-        await approveWalletDecision(page, locale);
+        await confirmFinancialReview(page, locale);
         await expect.poll(() => writes.length).toBe(5);
         await expect(field).toHaveCount(0);
         await expect(region).toContainText(
@@ -356,7 +356,7 @@ for (const emergency of [false, true]) {
         .fill(emergency ? 'Private emergency draft' : invoiceId);
       await expect(button).toBeEnabled();
       await button.click();
-      await approveWalletDecision(page, 'en');
+      await confirmFinancialReview(page, 'en');
       await expect(page.locator('#apply-invoice-id')).toHaveCount(0);
       await expect(page.locator('#receipt-emergency-reason')).toHaveCount(0);
       await expect(page.locator('#reject-reason')).toHaveCount(0);
@@ -364,18 +364,4 @@ for (const emergency of [false, true]) {
       expect(writes).toBe(1);
     });
   }
-}
-
-async function approveWalletDecision(page: Page, locale: 'en' | 'fa') {
-  const dialog = page.getByRole('dialog');
-  const confirm = dialog.getByRole('button', {
-    name: confirmationText('confirm', locale),
-    exact: true,
-  });
-  await expect(confirm).toBeDisabled();
-  await dialog
-    .getByRole('checkbox', { name: confirmationText('acknowledge', locale), exact: true })
-    .check();
-  await expect(confirm).toBeEnabled();
-  await confirm.click();
 }

@@ -1,7 +1,7 @@
 import { fulfillDashboard } from './dashboard-fixture';
 import { loginFormText } from '@barghsa/i18n/login-forms';
 import { mockPublicAuthCsrf } from './public-auth-fixture';
-import type { Page } from '@playwright/test';
+import type { Page, Route } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
 import { mockOppositeNumerals } from './number-preference-fixture';
 import AxeBuilder from '@axe-core/playwright';
@@ -16,10 +16,13 @@ const sessionAcknowledgement = {
 };
 const freshChallengeId = '11111111-2222-4333-8444-555555555556';
 async function mockApp(page: Page, hasProfile = true) {
+  let signedIn = false;
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await mockPublicAuthCsrf(page);
   await page.route('**/api/auth/user', (route) =>
-    route.fulfill({ json: { isStaff: false, userId: 'user', requiresTosAcceptance: false } })
+    signedIn
+      ? route.fulfill({ json: { isStaff: false, userId: 'user', requiresTosAcceptance: false } })
+      : route.fulfill({ status: 401, json: {} })
   );
   await page.route('**/api/profiles', (route) =>
     route.fulfill({
@@ -35,6 +38,9 @@ async function mockApp(page: Page, hasProfile = true) {
   await page.route('**/api/dashboard{,/**}', (route) =>
     fulfillDashboard(route, { json: { profile: { name: 'Profile' } } })
   );
+  return () => {
+    signedIn = true;
+  };
 }
 async function openLogin(page: Page, locale: 'fa' | 'en', darkMode = false) {
   await page.addInitScript((lang) => localStorage.setItem('barghsa-locale', lang), locale);
@@ -69,6 +75,36 @@ async function openLogin(page: Page, locale: 'fa' | 'en', darkMode = false) {
 }
 
 for (const locale of ['en', 'fa'] as const) {
+  test(`sign-in releases a stalled CSRF bootstrap without sending credentials (${locale})`, async ({
+    page,
+  }) => {
+    await page.clock.install();
+    await mockApp(page);
+    let held: Route | undefined;
+    let sends = 0;
+    await page.route('**/api/auth/csrf', (route) => {
+      held = route;
+    });
+    await page.route('**/api/auth/login', (route) => {
+      sends++;
+      return route.fulfill({ json: sessionAcknowledgement });
+    });
+    await openLogin(page, locale);
+    const submit = page.locator('button[type="submit"]');
+    await submit.click();
+    await expect.poll(() => !!held).toBe(true);
+    await expect(submit).toBeDisabled();
+    await page.clock.fastForward(15_001);
+    const alert = page.getByRole('alert').filter({ hasText: loginFormText('uncertain', locale) });
+    await expect(alert).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: loginFormText('restart', locale) })
+    ).toBeEnabled();
+    await held!.fulfill({ json: { csrfToken: 'c'.repeat(64) } }).catch(() => {});
+    await expect(alert).toBeVisible();
+    expect(sends).toBe(0);
+  });
+
   for (const darkMode of [false, true]) {
     test(`forced password change validates policy, protects the pending request and returns to login (${locale}, dark=${darkMode})`, async ({
       page,
@@ -275,10 +311,11 @@ for (const locale of ['en', 'fa'] as const) {
     expect(attempts).toBe(2);
   });
   test(`login accepts a complete session acknowledgement (${locale})`, async ({ page }) => {
-    await mockApp(page);
-    await page.route('**/api/auth/login', (route) =>
-      route.fulfill({ json: sessionAcknowledgement })
-    );
+    const signIn = await mockApp(page);
+    await page.route('**/api/auth/login', (route) => {
+      signIn();
+      return route.fulfill({ json: sessionAcknowledgement });
+    });
     await openLogin(page, locale);
     await page.locator('button[type="submit"]').click();
     await expect(page).toHaveURL(/\/app$/);
@@ -292,10 +329,11 @@ for (const locale of ['en', 'fa'] as const) {
     );
   });
   test(`login sends an account without profiles to onboarding (${locale})`, async ({ page }) => {
-    await mockApp(page, false);
-    await page.route('**/api/auth/login', (route) =>
-      route.fulfill({ json: sessionAcknowledgement })
-    );
+    const signIn = await mockApp(page, false);
+    await page.route('**/api/auth/login', (route) => {
+      signIn();
+      return route.fulfill({ json: sessionAcknowledgement });
+    });
     await openLogin(page, locale);
     await page.locator('button[type="submit"]').click();
     await expect(page).toHaveURL(/\/onboarding$/);
@@ -325,7 +363,7 @@ for (const locale of ['en', 'fa'] as const) {
   test(`OTP rejects an empty session acknowledgement and requires fresh login (${locale})`, async ({
     page,
   }) => {
-    await mockApp(page);
+    const signIn = await mockApp(page);
     let starts = 0;
     await page.route('**/api/auth/login', (route) =>
       route.fulfill({
@@ -335,6 +373,7 @@ for (const locale of ['en', 'fa'] as const) {
     const attempts: unknown[] = [];
     await page.route('**/api/auth/login/verify', (route) => {
       attempts.push(route.request().postDataJSON());
+      if (attempts.length > 1) signIn();
       return route.fulfill({ json: attempts.length === 1 ? null : sessionAcknowledgement });
     });
     await openLogin(page, locale);

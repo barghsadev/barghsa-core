@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 import { bankReceiptReview } from '../src/test/bank-receipt-review-fixture';
+import { confirmFinancialReview } from './confirmation-fixture';
 
 const receiptId = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
 const profileId = '11111111-1111-7111-8111-111111111111';
@@ -86,6 +87,7 @@ for (const locale of ['en', 'fa'] as const) {
       ).violations
     ).toEqual([]);
     await confirm.click();
+    await confirmFinancialReview(page, locale);
     await expect(confirm).toBeDisabled();
     await expect(page.getByRole('alert')).toContainText(locale === 'en' ? 'changed' : 'تغییر');
     await page
@@ -97,6 +99,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.locator('input[name="invoiceId"]').fill(invoiceId);
     await expect(confirm).toBeEnabled();
     await confirm.click();
+    await confirmFinancialReview(page, locale);
     await expect(confirm).toHaveCount(0);
     expect(bodies).toEqual([
       { invoiceId, expectedReviewHash: 'a'.repeat(64) },

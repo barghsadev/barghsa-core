@@ -7,6 +7,7 @@ export async function publicAuthFetch(path: string, init: RequestInit): Promise<
     throw new Error('Invalid public authentication request');
   }
   for (let attempt = 0; attempt < 2; attempt++) {
+    init.signal?.throwIfAborted();
     const headers = new Headers(init.headers);
     const bootstrap = await fetch('/api/auth/csrf', {
       credentials: 'same-origin',
@@ -20,6 +21,7 @@ export async function publicAuthFetch(path: string, init: RequestInit): Promise<
       throw new Error('Invalid CSRF acknowledgement');
     }
     headers.set('X-CSRF-Token', body.csrfToken);
+    init.signal?.throwIfAborted();
     const response = await fetch(path, { ...init, headers, credentials: 'same-origin' });
     // Another tab can replace the anonymous cookie during bootstrap. Only the
     // CSRF guard's rejection proves auth code did not run and permits a retry.

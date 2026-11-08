@@ -3,6 +3,7 @@ import { test, expect } from './coverage-fixture';
 import { bankReceiptReview } from '../src/test/bank-receipt-review-fixture';
 import { tWalletReceipts as text } from '@barghsa/i18n/wallet-receipts';
 import { crmShell } from './crm-shell-fixture';
+import { confirmFinancialReview } from './confirmation-fixture';
 
 const first = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
 const second = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb';
@@ -94,6 +95,7 @@ for (const locale of ['en', 'fa'] as const) {
       ).violations
     ).toEqual([]);
     await action.click();
+    await confirmFinancialReview(page, locale);
     await expect.poll(() => actions.length).toBe(1);
     await expect(
       page

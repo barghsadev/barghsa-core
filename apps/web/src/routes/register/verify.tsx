@@ -9,7 +9,7 @@ import { OtpInput, type OtpInputHandle } from '../../components/OtpInput.js';
 import { useLocale } from '../../hooks/useLocale.js';
 import { useNumberFormatting } from '../../hooks/useNumberFormatting.js';
 import { useRegistrationNativeForm } from '../../hooks/useRegistrationNativeForm.js';
-import { publicAuthFetch } from '../../lib/public-auth-fetch.js';
+import { publicAuthResponse } from '../../lib/public-auth-response.js';
 import { authErrorCode, rateLimitMessage, retryAfterSeconds } from '../../lib/auth-errors.js';
 import { hasSessionAcknowledgement, hasResendAcknowledgement } from '../../lib/auth-responses.js';
 import { registrationChallenge, emptyRegistration } from '../../lib/registration-form.js';
@@ -86,13 +86,12 @@ function OtpVerifyPage() {
         }
       };
       try {
-        const response = await publicAuthFetch('/api/auth/register/verify', {
+        const { response, body } = await publicAuthResponse('/api/auth/register/verify', {
           signal: capture.controller.signal,
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
           body: JSON.stringify({ challengeId, otp: values.otp }),
         });
-        const body = await response.json().catch(() => null);
         if (!capture.current()) return;
         if (response.status !== 200) {
           if (![400, 401, 403, 404, 409, 422, 429].includes(response.status)) {
@@ -161,13 +160,12 @@ function OtpVerifyPage() {
           }
         };
         try {
-          const response = await publicAuthFetch('/api/auth/register/resend', {
+          const { response, body } = await publicAuthResponse('/api/auth/register/resend', {
             signal: capture.controller.signal,
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
             body: JSON.stringify({ challengeId }),
           });
-          const body = await response.json().catch(() => null);
           if (!capture.current()) return;
           if (response.status !== 200) {
             if (![400, 401, 403, 404, 409, 422, 429].includes(response.status)) {

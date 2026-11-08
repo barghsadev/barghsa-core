@@ -1,7 +1,11 @@
 import { afterEach, expect, it, vi } from 'vitest';
 import { publicAuthFetch } from './public-auth-fetch.js';
+import { publicAuthResponse } from './public-auth-response.js';
 
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+  vi.useRealTimers();
+  vi.unstubAllGlobals();
+});
 const token = 'a'.repeat(64);
 const init = {
   method: 'POST',
@@ -83,3 +87,36 @@ it('does not retry an aborted bootstrap or send credentials to an external endpo
   await expect(publicAuthFetch('https://attacker.example/api/auth/login', init)).rejects.toThrow();
   expect(fetch).toHaveBeenCalledTimes(1);
 });
+
+it.each(['bootstrap', 'receipt'] as const)(
+  'bounds a stalled %s body and never sends another command',
+  async (stage) => {
+    vi.useFakeTimers();
+    let finishBody!: (value: unknown) => void;
+    const body = new Promise<unknown>((resolve) => {
+      finishBody = resolve;
+    });
+    const stalled = json(null);
+    const read = vi.spyOn(stalled, 'json').mockReturnValue(body);
+    const fetch = vi.fn();
+    if (stage === 'receipt') fetch.mockResolvedValueOnce(json({ csrfToken: token }));
+    fetch.mockResolvedValueOnce(stalled);
+    vi.stubGlobal('fetch', fetch);
+
+    const request = publicAuthResponse('/api/auth/login', {
+      ...init,
+      signal: new AbortController().signal,
+    });
+    const rejection = expect(request).rejects.toMatchObject({ name: 'TimeoutError' });
+    await vi.advanceTimersByTimeAsync(0);
+    expect(read).toHaveBeenCalledOnce();
+    const sent = stage === 'bootstrap' ? 1 : 2;
+    expect(fetch).toHaveBeenCalledTimes(sent);
+    await vi.advanceTimersByTimeAsync(15_001);
+    await rejection;
+    expect(fetch.mock.calls[0]![1].signal.aborted).toBe(true);
+    finishBody(stage === 'bootstrap' ? { csrfToken: token } : { ok: true });
+    await vi.advanceTimersByTimeAsync(0);
+    expect(fetch).toHaveBeenCalledTimes(sent);
+  }
+);

@@ -3,6 +3,7 @@ import { test, expect, type Page, type Route } from './coverage-fixture';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { tWalletReceipts as walletText } from '@barghsa/i18n/wallet-receipts';
 import { bankReceiptReview } from '../src/test/bank-receipt-review-fixture';
+import { confirmFinancialReview } from './confirmation-fixture';
 import {
   receiptId,
   paymentInvoiceId,
@@ -147,6 +148,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.getByRole('button', { name: w('review.refresh'), exact: true }).click();
     await expect(confirm).toBeEnabled();
     await confirm.click();
+    await confirmFinancialReview(page, locale);
     await expect(confirm).toHaveCount(0);
     expect(bodies).toEqual([{ invoiceId: paymentInvoiceId, expectedReviewHash: 'a'.repeat(64) }]);
   });

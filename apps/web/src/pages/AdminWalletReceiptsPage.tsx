@@ -1017,6 +1017,11 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
 
   const confirmationWorking = acting || confirmationBusy || stepUpOpen;
   const rejectionWorking = acting || rejectionBusy;
+  const controlsLocked = confirmationWorking || rejectionBusy;
+  const decisionBlocked = controlsLocked || loading || !!queueError || detailLoading || detailError;
+  const invoiceTarget = invoiceId.trim();
+  const usesInvoice = isTransactionUuid(invoiceTarget);
+  const allocationUnavailable = allocationLoading || !!allocationError || !allocation;
 
   return (
     <div
@@ -1230,7 +1235,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                     onSubmit={handleConfirm}
                     noValidate
                     className="space-y-4"
-                    aria-busy={acting || confirmationBusy || stepUpOpen || undefined}
+                    aria-busy={confirmationWorking || undefined}
                   >
                     <div>
                       <label
@@ -1243,7 +1248,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                         id="apply-invoice-id"
                         {...confirmation.invoice.bind('invoiceId')}
                         readOnly={Boolean(selected.dualApproval)}
-                        disabled={acting || stepUpOpen || rejectionBusy || confirmationBusy}
+                        disabled={controlsLocked}
                         type="text"
                         dir="ltr"
                         inputMode="text"
@@ -1291,13 +1296,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                     )}
                     <button
                       type="button"
-                      disabled={
-                        acting ||
-                        stepUpOpen ||
-                        allocationLoading ||
-                        confirmationBusy ||
-                        rejectionBusy
-                      }
+                      disabled={controlsLocked || allocationLoading}
                       onClick={() => setReviewRevision((v) => v + 1)}
                       className="rounded border px-3 py-2"
                     >
@@ -1309,20 +1308,10 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                       type="submit"
                       data-testid="wallet-receipt-confirm"
                       disabled={
-                        acting ||
-                        rejectionBusy ||
-                        confirmationBusy ||
-                        loading ||
-                        !!queueError ||
-                        detailLoading ||
-                        detailError ||
-                        stepUpOpen ||
+                        decisionBlocked ||
                         (!reviewReady &&
-                          (!invoiceId.trim() ||
-                            isTransactionUuid(invoiceId.trim()) ||
-                            Boolean(selected.dualApproval))) ||
-                        (isTransactionUuid(invoiceId.trim()) &&
-                          (allocationLoading || !!allocationError || !allocation))
+                          (!invoiceTarget || usesInvoice || Boolean(selected.dualApproval))) ||
+                        (usesInvoice && allocationUnavailable)
                       }
                       aria-busy={confirmationWorking || allocationLoading || undefined}
                       className="px-4 py-2 bg-green-700 text-white rounded hover:bg-green-800 disabled:opacity-50"
@@ -1365,7 +1354,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                           maxLength={APPROVAL_REVIEW_REASON_MAX_LENGTH}
                           value={emergencyReason}
                           onChange={(event) => setEmergencyReason(event.target.value)}
-                          disabled={acting || stepUpOpen || rejectionBusy || confirmationBusy}
+                          disabled={controlsLocked}
                           className="w-full rounded border border-input px-3 py-2"
                         />
                         <p
@@ -1388,17 +1377,9 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                           ref={emergencyButtonRef}
                           data-testid="wallet-receipt-emergency-confirm"
                           disabled={
-                            acting ||
-                            rejectionBusy ||
-                            confirmationBusy ||
-                            loading ||
-                            !!queueError ||
-                            detailLoading ||
-                            detailError ||
+                            decisionBlocked ||
                             !reviewReady ||
-                            stepUpOpen ||
-                            (!!invoiceId.trim() &&
-                              (allocationLoading || !!allocationError || !allocation))
+                            (!!invoiceTarget && allocationUnavailable)
                           }
                           aria-busy={confirmationWorking || undefined}
                           className="rounded bg-amber-900 px-4 py-2 text-white disabled:opacity-50"
@@ -1434,7 +1415,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                         maxLength={BANK_RECEIPT_REJECT_REASON_MAX_LENGTH}
                         rows={3}
                         value={reason}
-                        disabled={acting || stepUpOpen || rejectionBusy || confirmationBusy}
+                        disabled={controlsLocked}
                         onChange={(e) => setReason(e.target.value)}
                         className="w-full border border-input rounded px-3 py-2"
                       />
@@ -1455,17 +1436,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                       ref={rejectButtonRef}
                       type="submit"
                       data-testid="wallet-receipt-reject"
-                      disabled={
-                        acting ||
-                        rejectionBusy ||
-                        confirmationBusy ||
-                        stepUpOpen ||
-                        loading ||
-                        !!queueError ||
-                        allocationLoading ||
-                        detailLoading ||
-                        detailError
-                      }
+                      disabled={decisionBlocked || allocationLoading}
                       aria-busy={rejectionWorking}
                       className="px-4 py-2 bg-red-700 text-white rounded hover:bg-red-800 disabled:opacity-50"
                     >

@@ -181,3 +181,5 @@ Contract history keeps its last verified rows while a refresh starts at the firs
 Public support distinguishes a failed guide availability check from confirmed unavailability. Checking again only reloads availability. New-contact verification allows up to 15 seconds for the CSRF bootstrap and confirmation receipt. If the outcome is uncertain, the form clears the code and keeps the case and challenge IDs visible. Contact support to check the saved outcome before using another code.
 
 After an invoice receipt is saved, a failed history read leaves the submission confirmation visible. The retry reads the invoice and shows progress while the request is in flight. If access is denied, the page withdraws the invoice details and receipt history.
+
+Sign-in, registration and password recovery allow up to 15 seconds for the CSRF bootstrap and complete response. An uncertain response opens the form’s existing recovery action. A late bootstrap cannot send a command, and a late response cannot finish the retired attempt. The CSRF guard still permits one retry when it explicitly rejects a raced anonymous token.

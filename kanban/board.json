@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T22:07:43+00:00",
-  "source_commit": "3924a61181949b6371da4c3a9e1fd5700313faec",
+  "updated": "2026-11-08T22:26:43+00:00",
+  "source_commit": "7d0014c136ad6349443607ccd78a927cf5cfabc1",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -14529,11 +14529,11 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -15145,11 +15145,11 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -15887,11 +15887,11 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -16494,11 +16494,11 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -17115,11 +17115,11 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -17737,11 +17737,11 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -18358,11 +18358,11 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -18983,11 +18983,11 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -19639,7 +19639,7 @@
             },
             {
               "path": "apps/web/e2e/login-recovery.spec.ts",
-              "sha256": "39c8277065cbcad8d4893bab941bb6927ccd878e6e0767400c0c998870bd8df4"
+              "sha256": "47d08d53a2d191841b72c3209acc8facc555db753271880768ac7522c0240851"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -19655,11 +19655,11 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "packages/db/drizzle/production/0082_restore_foundation_constraints.sql",
@@ -20461,7 +20461,7 @@
             },
             {
               "path": "apps/web/e2e/login-recovery.spec.ts",
-              "sha256": "39c8277065cbcad8d4893bab941bb6927ccd878e6e0767400c0c998870bd8df4"
+              "sha256": "47d08d53a2d191841b72c3209acc8facc555db753271880768ac7522c0240851"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -20489,7 +20489,7 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "packages/db/drizzle/production/0082_restore_foundation_constraints.sql",
@@ -21350,7 +21350,7 @@
             },
             {
               "path": "apps/web/e2e/login-recovery.spec.ts",
-              "sha256": "39c8277065cbcad8d4893bab941bb6927ccd878e6e0767400c0c998870bd8df4"
+              "sha256": "47d08d53a2d191841b72c3209acc8facc555db753271880768ac7522c0240851"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -21358,7 +21358,7 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "packages/db/drizzle/production/0082_restore_foundation_constraints.sql",
@@ -22130,7 +22130,7 @@
             },
             {
               "path": "apps/web/e2e/login-recovery.spec.ts",
-              "sha256": "39c8277065cbcad8d4893bab941bb6927ccd878e6e0767400c0c998870bd8df4"
+              "sha256": "47d08d53a2d191841b72c3209acc8facc555db753271880768ac7522c0240851"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -22142,7 +22142,7 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "packages/db/drizzle/production/0082_restore_foundation_constraints.sql",
@@ -24286,7 +24286,7 @@
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
-              "sha256": "cece3bed7555b22872e56067d09d344af66a7b1d1fcb7766c0f8de46c35721c3"
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
@@ -26724,7 +26724,7 @@
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
-              "sha256": "cece3bed7555b22872e56067d09d344af66a7b1d1fcb7766c0f8de46c35721c3"
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
@@ -27400,7 +27400,7 @@
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
-              "sha256": "cece3bed7555b22872e56067d09d344af66a7b1d1fcb7766c0f8de46c35721c3"
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
@@ -28577,7 +28577,7 @@
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
-              "sha256": "cece3bed7555b22872e56067d09d344af66a7b1d1fcb7766c0f8de46c35721c3"
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
@@ -29174,7 +29174,7 @@
             },
             {
               "path": "apps/web/e2e/login-recovery.spec.ts",
-              "sha256": "39c8277065cbcad8d4893bab941bb6927ccd878e6e0767400c0c998870bd8df4"
+              "sha256": "47d08d53a2d191841b72c3209acc8facc555db753271880768ac7522c0240851"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -35500,7 +35500,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/ChartsPage.tsx",
@@ -63196,7 +63196,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/ChartsPage.tsx",
@@ -141084,7 +141084,7 @@
             },
             {
               "path": "apps/web/e2e/receipt-emergency.spec.ts",
-              "sha256": "4f7d0b8938e8e0169871c13615931b54ee4390163d1a86e8e70ad4570c6813a8"
+              "sha256": "b541c61bd6653d420cac8845a73cbfeaba9391c30234ddfb610a67588aab4011"
             },
             {
               "path": "apps/web/src/hooks/useReceiptForm.ts",
@@ -141108,7 +141108,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
@@ -290291,7 +290291,7 @@
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
-              "sha256": "cece3bed7555b22872e56067d09d344af66a7b1d1fcb7766c0f8de46c35721c3"
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
@@ -297834,7 +297834,7 @@
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
-              "sha256": "cece3bed7555b22872e56067d09d344af66a7b1d1fcb7766c0f8de46c35721c3"
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
@@ -318373,7 +318373,7 @@
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
-              "sha256": "cece3bed7555b22872e56067d09d344af66a7b1d1fcb7766c0f8de46c35721c3"
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
@@ -349002,7 +349002,7 @@
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
-              "sha256": "cece3bed7555b22872e56067d09d344af66a7b1d1fcb7766c0f8de46c35721c3"
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
@@ -491283,7 +491283,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -493130,7 +493130,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "c8426ccd6801e35c725485da6e82379dc5ece632017be9cd44fb4cff103a2e4d"
+              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
             },
             {
               "path": "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
@@ -494063,7 +494063,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/conversation-identity.spec.ts",
@@ -494415,7 +494415,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -494946,7 +494946,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/conversation-identity.spec.ts",
@@ -495298,7 +495298,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -495770,7 +495770,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/conversation-identity.spec.ts",
@@ -496122,7 +496122,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -496647,7 +496647,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-forms.spec.ts",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
+              "sha256": "cee8afbd3fdf8e2c4c0a3250cafba0a521d0acaa1a65aa6b103b41d2adec3998"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -497952,7 +497952,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "c8426ccd6801e35c725485da6e82379dc5ece632017be9cd44fb4cff103a2e4d"
+              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
             },
             {
               "path": "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
@@ -511346,7 +511346,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/crm-list.spec.ts",
@@ -512376,7 +512376,7 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
@@ -515221,7 +515221,7 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/onboarding.tsx",
@@ -515605,7 +515605,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -516044,7 +516044,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -516527,7 +516527,7 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/onboarding.tsx",
@@ -516869,7 +516869,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/consultation-form-fixture.ts",
@@ -517105,7 +517105,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
+              "sha256": "4a679226f1e0783a6a9ce67cf61a770aa898bd9d27ba4c946db4a78e490f2a2b"
             },
             {
               "path": "apps/web/e2e/policy-catalogue-recovery.spec.ts",
@@ -518081,7 +518081,7 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
@@ -518093,7 +518093,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
+              "sha256": "cee8afbd3fdf8e2c4c0a3250cafba0a521d0acaa1a65aa6b103b41d2adec3998"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
+              "sha256": "cee8afbd3fdf8e2c4c0a3250cafba0a521d0acaa1a65aa6b103b41d2adec3998"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -519431,7 +519431,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -520645,7 +520645,7 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/onboarding.tsx",
@@ -520657,11 +520657,11 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -521473,7 +521473,7 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/onboarding.tsx",
@@ -521485,11 +521485,11 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -522801,7 +522801,7 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/onboarding.tsx",
@@ -522813,11 +522813,11 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -523443,7 +523443,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -524351,7 +524351,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -525259,7 +525259,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -526167,7 +526167,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -527075,7 +527075,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -527983,7 +527983,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -528891,7 +528891,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -529799,7 +529799,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -530707,7 +530707,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -531615,7 +531615,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -532523,7 +532523,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -533431,7 +533431,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -534339,7 +534339,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -535247,7 +535247,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -536155,7 +536155,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -537063,7 +537063,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -537971,7 +537971,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -538879,7 +538879,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -539787,7 +539787,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -540695,7 +540695,7 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -546330,7 +546330,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -546358,7 +546358,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "c8426ccd6801e35c725485da6e82379dc5ece632017be9cd44fb4cff103a2e4d"
+              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
             },
             {
               "path": "apps/web/package.json",
@@ -546874,7 +546874,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -548196,7 +548196,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -548224,7 +548224,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "c8426ccd6801e35c725485da6e82379dc5ece632017be9cd44fb4cff103a2e4d"
+              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
             },
             {
               "path": "apps/web/package.json",
@@ -548740,7 +548740,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -550063,7 +550063,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -550091,7 +550091,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "c8426ccd6801e35c725485da6e82379dc5ece632017be9cd44fb4cff103a2e4d"
+              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
             },
             {
               "path": "apps/web/package.json",
@@ -550607,7 +550607,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -551899,7 +551899,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -551927,7 +551927,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "c8426ccd6801e35c725485da6e82379dc5ece632017be9cd44fb4cff103a2e4d"
+              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
             },
             {
               "path": "apps/web/package.json",
@@ -552443,7 +552443,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -553761,7 +553761,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -553789,7 +553789,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "c8426ccd6801e35c725485da6e82379dc5ece632017be9cd44fb4cff103a2e4d"
+              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
             },
             {
               "path": "apps/web/package.json",
@@ -554305,7 +554305,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -555632,7 +555632,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -555660,7 +555660,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "c8426ccd6801e35c725485da6e82379dc5ece632017be9cd44fb4cff103a2e4d"
+              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
             },
             {
               "path": "apps/web/package.json",
@@ -556176,7 +556176,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -557476,7 +557476,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -557504,7 +557504,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "c8426ccd6801e35c725485da6e82379dc5ece632017be9cd44fb4cff103a2e4d"
+              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
             },
             {
               "path": "apps/web/package.json",
@@ -558020,7 +558020,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -559284,7 +559284,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -559312,7 +559312,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "c8426ccd6801e35c725485da6e82379dc5ece632017be9cd44fb4cff103a2e4d"
+              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
             },
             {
               "path": "apps/web/package.json",
@@ -559828,7 +559828,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -561092,7 +561092,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -561120,7 +561120,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "c8426ccd6801e35c725485da6e82379dc5ece632017be9cd44fb4cff103a2e4d"
+              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
             },
             {
               "path": "apps/web/package.json",
@@ -561636,7 +561636,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -562901,7 +562901,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -562929,7 +562929,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "c8426ccd6801e35c725485da6e82379dc5ece632017be9cd44fb4cff103a2e4d"
+              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
             },
             {
               "path": "apps/web/package.json",
@@ -563445,7 +563445,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -564709,7 +564709,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -564737,7 +564737,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "c8426ccd6801e35c725485da6e82379dc5ece632017be9cd44fb4cff103a2e4d"
+              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
             },
             {
               "path": "apps/web/package.json",
@@ -565253,7 +565253,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -567523,7 +567523,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
+              "sha256": "cee8afbd3fdf8e2c4c0a3250cafba0a521d0acaa1a65aa6b103b41d2adec3998"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -569418,7 +569418,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
+              "sha256": "cee8afbd3fdf8e2c4c0a3250cafba0a521d0acaa1a65aa6b103b41d2adec3998"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570394,7 +570394,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -572442,7 +572442,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -572994,7 +572994,7 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/onboarding.tsx",
@@ -573022,11 +573022,11 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -573070,7 +573070,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
+              "sha256": "cee8afbd3fdf8e2c4c0a3250cafba0a521d0acaa1a65aa6b103b41d2adec3998"
             },
             {
               "path": "scripts/check-changed-coverage.py",
@@ -574200,7 +574200,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
+              "sha256": "cee8afbd3fdf8e2c4c0a3250cafba0a521d0acaa1a65aa6b103b41d2adec3998"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -576095,7 +576095,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
+              "sha256": "cee8afbd3fdf8e2c4c0a3250cafba0a521d0acaa1a65aa6b103b41d2adec3998"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577990,7 +577990,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
+              "sha256": "cee8afbd3fdf8e2c4c0a3250cafba0a521d0acaa1a65aa6b103b41d2adec3998"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -579885,7 +579885,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
+              "sha256": "cee8afbd3fdf8e2c4c0a3250cafba0a521d0acaa1a65aa6b103b41d2adec3998"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581780,7 +581780,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
+              "sha256": "cee8afbd3fdf8e2c4c0a3250cafba0a521d0acaa1a65aa6b103b41d2adec3998"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -583675,7 +583675,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
+              "sha256": "cee8afbd3fdf8e2c4c0a3250cafba0a521d0acaa1a65aa6b103b41d2adec3998"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -585570,7 +585570,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
+              "sha256": "cee8afbd3fdf8e2c4c0a3250cafba0a521d0acaa1a65aa6b103b41d2adec3998"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -587465,7 +587465,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
+              "sha256": "cee8afbd3fdf8e2c4c0a3250cafba0a521d0acaa1a65aa6b103b41d2adec3998"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589360,7 +589360,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
+              "sha256": "cee8afbd3fdf8e2c4c0a3250cafba0a521d0acaa1a65aa6b103b41d2adec3998"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591255,7 +591255,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
+              "sha256": "cee8afbd3fdf8e2c4c0a3250cafba0a521d0acaa1a65aa6b103b41d2adec3998"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593150,7 +593150,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
+              "sha256": "cee8afbd3fdf8e2c4c0a3250cafba0a521d0acaa1a65aa6b103b41d2adec3998"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594014,7 +594014,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-forms.spec.ts",
@@ -594414,7 +594414,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
+              "sha256": "cee8afbd3fdf8e2c4c0a3250cafba0a521d0acaa1a65aa6b103b41d2adec3998"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595785,7 +595785,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
+              "sha256": "cee8afbd3fdf8e2c4c0a3250cafba0a521d0acaa1a65aa6b103b41d2adec3998"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -597680,7 +597680,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "fca934ff1924cae93e707760990b8faa23758271dc86fe3464e21d4c1f487a9d"
+              "sha256": "cee8afbd3fdf8e2c4c0a3250cafba0a521d0acaa1a65aa6b103b41d2adec3998"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -598484,7 +598484,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "All 91 conditional route entries are linked to a named case or matching direct source evidence, including fresh geography checks. Confirm the applicable loading, empty, error, stale context and interaction criteria against those scoped receipts, and validate any affected shared dependencies before accepting the requirement."
+        "Public auth command timeouts and the named support, staff and service detail layouts have source-bound evidence. Review the remaining applicable conditional and interaction criteria against the route index and explicit case receipts before accepting all routes and widgets."
       ],
       "owner": null,
       "depends_on": [],
@@ -598602,7 +598602,8 @@
           "release-0.5-auth-terminal-recovery",
           "release-0.5-public-support-recovery",
           "release-0.5-invoice-post-receipt",
-          "release-0.5-original-route-reconciliation"
+          "release-0.5-original-route-reconciliation",
+          "release-0.5-public-auth-deadline"
         ],
         "current_acceptance": null
       }
@@ -598735,7 +598736,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -598763,7 +598764,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "c8426ccd6801e35c725485da6e82379dc5ece632017be9cd44fb4cff103a2e4d"
+              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
             },
             {
               "path": "apps/web/package.json",
@@ -599279,7 +599280,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -600539,7 +600540,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -600567,7 +600568,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "c8426ccd6801e35c725485da6e82379dc5ece632017be9cd44fb4cff103a2e4d"
+              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
             },
             {
               "path": "apps/web/package.json",
@@ -601083,7 +601084,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -602343,7 +602344,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -602371,7 +602372,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "c8426ccd6801e35c725485da6e82379dc5ece632017be9cd44fb4cff103a2e4d"
+              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
             },
             {
               "path": "apps/web/package.json",
@@ -602887,7 +602888,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -604147,7 +604148,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -604175,7 +604176,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "c8426ccd6801e35c725485da6e82379dc5ece632017be9cd44fb4cff103a2e4d"
+              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
             },
             {
               "path": "apps/web/package.json",
@@ -604691,7 +604692,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -605951,7 +605952,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -605979,7 +605980,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "c8426ccd6801e35c725485da6e82379dc5ece632017be9cd44fb4cff103a2e4d"
+              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
             },
             {
               "path": "apps/web/package.json",
@@ -606495,7 +606496,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -607755,7 +607756,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -607783,7 +607784,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "c8426ccd6801e35c725485da6e82379dc5ece632017be9cd44fb4cff103a2e4d"
+              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
             },
             {
               "path": "apps/web/package.json",
@@ -608299,7 +608300,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -609559,7 +609560,7 @@
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
-              "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -609587,7 +609588,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "c8426ccd6801e35c725485da6e82379dc5ece632017be9cd44fb4cff103a2e4d"
+              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
             },
             {
               "path": "apps/web/package.json",
@@ -610103,7 +610104,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -611553,7 +611554,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
+              "sha256": "4a679226f1e0783a6a9ce67cf61a770aa898bd9d27ba4c946db4a78e490f2a2b"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -611721,11 +611722,11 @@
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.test.ts",
-              "sha256": "48cb7ce3867e25d66d062191ed1d95dc3015c88f2e2a2674ae9ab1b178cfeab7"
+              "sha256": "8bd6aa8b6777998d7c40dc26ec85c42d55c7a50c0bb2c13219fe8c6c247da89b"
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
-              "sha256": "cece3bed7555b22872e56067d09d344af66a7b1d1fcb7766c0f8de46c35721c3"
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
             },
             {
               "path": "apps/web/src/lib/public-tos-history.test.ts",
@@ -611765,15 +611766,15 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
@@ -612380,7 +612381,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
+              "sha256": "4a679226f1e0783a6a9ce67cf61a770aa898bd9d27ba4c946db4a78e490f2a2b"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -612548,11 +612549,11 @@
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.test.ts",
-              "sha256": "48cb7ce3867e25d66d062191ed1d95dc3015c88f2e2a2674ae9ab1b178cfeab7"
+              "sha256": "8bd6aa8b6777998d7c40dc26ec85c42d55c7a50c0bb2c13219fe8c6c247da89b"
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
-              "sha256": "cece3bed7555b22872e56067d09d344af66a7b1d1fcb7766c0f8de46c35721c3"
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
             },
             {
               "path": "apps/web/src/lib/public-tos-history.test.ts",
@@ -612592,15 +612593,15 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
@@ -613207,7 +613208,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
+              "sha256": "4a679226f1e0783a6a9ce67cf61a770aa898bd9d27ba4c946db4a78e490f2a2b"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -613375,11 +613376,11 @@
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.test.ts",
-              "sha256": "48cb7ce3867e25d66d062191ed1d95dc3015c88f2e2a2674ae9ab1b178cfeab7"
+              "sha256": "8bd6aa8b6777998d7c40dc26ec85c42d55c7a50c0bb2c13219fe8c6c247da89b"
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
-              "sha256": "cece3bed7555b22872e56067d09d344af66a7b1d1fcb7766c0f8de46c35721c3"
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
             },
             {
               "path": "apps/web/src/lib/public-tos-history.test.ts",
@@ -613419,15 +613420,15 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
@@ -614034,7 +614035,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
+              "sha256": "4a679226f1e0783a6a9ce67cf61a770aa898bd9d27ba4c946db4a78e490f2a2b"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -614202,11 +614203,11 @@
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.test.ts",
-              "sha256": "48cb7ce3867e25d66d062191ed1d95dc3015c88f2e2a2674ae9ab1b178cfeab7"
+              "sha256": "8bd6aa8b6777998d7c40dc26ec85c42d55c7a50c0bb2c13219fe8c6c247da89b"
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
-              "sha256": "cece3bed7555b22872e56067d09d344af66a7b1d1fcb7766c0f8de46c35721c3"
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
             },
             {
               "path": "apps/web/src/lib/public-tos-history.test.ts",
@@ -614246,15 +614247,15 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
@@ -614861,7 +614862,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
+              "sha256": "4a679226f1e0783a6a9ce67cf61a770aa898bd9d27ba4c946db4a78e490f2a2b"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -615029,11 +615030,11 @@
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.test.ts",
-              "sha256": "48cb7ce3867e25d66d062191ed1d95dc3015c88f2e2a2674ae9ab1b178cfeab7"
+              "sha256": "8bd6aa8b6777998d7c40dc26ec85c42d55c7a50c0bb2c13219fe8c6c247da89b"
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
-              "sha256": "cece3bed7555b22872e56067d09d344af66a7b1d1fcb7766c0f8de46c35721c3"
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
             },
             {
               "path": "apps/web/src/lib/public-tos-history.test.ts",
@@ -615073,15 +615074,15 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
@@ -627670,7 +627671,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
+              "sha256": "4a679226f1e0783a6a9ce67cf61a770aa898bd9d27ba4c946db4a78e490f2a2b"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -627838,11 +627839,11 @@
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.test.ts",
-              "sha256": "48cb7ce3867e25d66d062191ed1d95dc3015c88f2e2a2674ae9ab1b178cfeab7"
+              "sha256": "8bd6aa8b6777998d7c40dc26ec85c42d55c7a50c0bb2c13219fe8c6c247da89b"
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
-              "sha256": "cece3bed7555b22872e56067d09d344af66a7b1d1fcb7766c0f8de46c35721c3"
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
             },
             {
               "path": "apps/web/src/lib/public-tos-history.test.ts",
@@ -627882,15 +627883,15 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
@@ -628497,7 +628498,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
+              "sha256": "4a679226f1e0783a6a9ce67cf61a770aa898bd9d27ba4c946db4a78e490f2a2b"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -628665,11 +628666,11 @@
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.test.ts",
-              "sha256": "48cb7ce3867e25d66d062191ed1d95dc3015c88f2e2a2674ae9ab1b178cfeab7"
+              "sha256": "8bd6aa8b6777998d7c40dc26ec85c42d55c7a50c0bb2c13219fe8c6c247da89b"
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
-              "sha256": "cece3bed7555b22872e56067d09d344af66a7b1d1fcb7766c0f8de46c35721c3"
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
             },
             {
               "path": "apps/web/src/lib/public-tos-history.test.ts",
@@ -628709,15 +628710,15 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
@@ -629324,7 +629325,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
+              "sha256": "4a679226f1e0783a6a9ce67cf61a770aa898bd9d27ba4c946db4a78e490f2a2b"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -629492,11 +629493,11 @@
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.test.ts",
-              "sha256": "48cb7ce3867e25d66d062191ed1d95dc3015c88f2e2a2674ae9ab1b178cfeab7"
+              "sha256": "8bd6aa8b6777998d7c40dc26ec85c42d55c7a50c0bb2c13219fe8c6c247da89b"
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
-              "sha256": "cece3bed7555b22872e56067d09d344af66a7b1d1fcb7766c0f8de46c35721c3"
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
             },
             {
               "path": "apps/web/src/lib/public-tos-history.test.ts",
@@ -629536,15 +629537,15 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
@@ -630151,7 +630152,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
+              "sha256": "4a679226f1e0783a6a9ce67cf61a770aa898bd9d27ba4c946db4a78e490f2a2b"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -630319,11 +630320,11 @@
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.test.ts",
-              "sha256": "48cb7ce3867e25d66d062191ed1d95dc3015c88f2e2a2674ae9ab1b178cfeab7"
+              "sha256": "8bd6aa8b6777998d7c40dc26ec85c42d55c7a50c0bb2c13219fe8c6c247da89b"
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
-              "sha256": "cece3bed7555b22872e56067d09d344af66a7b1d1fcb7766c0f8de46c35721c3"
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
             },
             {
               "path": "apps/web/src/lib/public-tos-history.test.ts",
@@ -630363,15 +630364,15 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
@@ -630978,7 +630979,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
+              "sha256": "4a679226f1e0783a6a9ce67cf61a770aa898bd9d27ba4c946db4a78e490f2a2b"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -631146,11 +631147,11 @@
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.test.ts",
-              "sha256": "48cb7ce3867e25d66d062191ed1d95dc3015c88f2e2a2674ae9ab1b178cfeab7"
+              "sha256": "8bd6aa8b6777998d7c40dc26ec85c42d55c7a50c0bb2c13219fe8c6c247da89b"
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
-              "sha256": "cece3bed7555b22872e56067d09d344af66a7b1d1fcb7766c0f8de46c35721c3"
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
             },
             {
               "path": "apps/web/src/lib/public-tos-history.test.ts",
@@ -631190,15 +631191,15 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
@@ -631805,7 +631806,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
+              "sha256": "4a679226f1e0783a6a9ce67cf61a770aa898bd9d27ba4c946db4a78e490f2a2b"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -631973,11 +631974,11 @@
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.test.ts",
-              "sha256": "48cb7ce3867e25d66d062191ed1d95dc3015c88f2e2a2674ae9ab1b178cfeab7"
+              "sha256": "8bd6aa8b6777998d7c40dc26ec85c42d55c7a50c0bb2c13219fe8c6c247da89b"
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
-              "sha256": "cece3bed7555b22872e56067d09d344af66a7b1d1fcb7766c0f8de46c35721c3"
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
             },
             {
               "path": "apps/web/src/lib/public-tos-history.test.ts",
@@ -632017,15 +632018,15 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
@@ -632632,7 +632633,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
+              "sha256": "4a679226f1e0783a6a9ce67cf61a770aa898bd9d27ba4c946db4a78e490f2a2b"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -632800,11 +632801,11 @@
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.test.ts",
-              "sha256": "48cb7ce3867e25d66d062191ed1d95dc3015c88f2e2a2674ae9ab1b178cfeab7"
+              "sha256": "8bd6aa8b6777998d7c40dc26ec85c42d55c7a50c0bb2c13219fe8c6c247da89b"
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
-              "sha256": "cece3bed7555b22872e56067d09d344af66a7b1d1fcb7766c0f8de46c35721c3"
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
             },
             {
               "path": "apps/web/src/lib/public-tos-history.test.ts",
@@ -632844,15 +632845,15 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
@@ -633459,7 +633460,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
+              "sha256": "4a679226f1e0783a6a9ce67cf61a770aa898bd9d27ba4c946db4a78e490f2a2b"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -633627,11 +633628,11 @@
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.test.ts",
-              "sha256": "48cb7ce3867e25d66d062191ed1d95dc3015c88f2e2a2674ae9ab1b178cfeab7"
+              "sha256": "8bd6aa8b6777998d7c40dc26ec85c42d55c7a50c0bb2c13219fe8c6c247da89b"
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
-              "sha256": "cece3bed7555b22872e56067d09d344af66a7b1d1fcb7766c0f8de46c35721c3"
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
             },
             {
               "path": "apps/web/src/lib/public-tos-history.test.ts",
@@ -633671,15 +633672,15 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
@@ -634286,7 +634287,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
+              "sha256": "4a679226f1e0783a6a9ce67cf61a770aa898bd9d27ba4c946db4a78e490f2a2b"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -634454,11 +634455,11 @@
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.test.ts",
-              "sha256": "48cb7ce3867e25d66d062191ed1d95dc3015c88f2e2a2674ae9ab1b178cfeab7"
+              "sha256": "8bd6aa8b6777998d7c40dc26ec85c42d55c7a50c0bb2c13219fe8c6c247da89b"
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
-              "sha256": "cece3bed7555b22872e56067d09d344af66a7b1d1fcb7766c0f8de46c35721c3"
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
             },
             {
               "path": "apps/web/src/lib/public-tos-history.test.ts",
@@ -634498,15 +634499,15 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
@@ -635113,7 +635114,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
+              "sha256": "4a679226f1e0783a6a9ce67cf61a770aa898bd9d27ba4c946db4a78e490f2a2b"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -635281,11 +635282,11 @@
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.test.ts",
-              "sha256": "48cb7ce3867e25d66d062191ed1d95dc3015c88f2e2a2674ae9ab1b178cfeab7"
+              "sha256": "8bd6aa8b6777998d7c40dc26ec85c42d55c7a50c0bb2c13219fe8c6c247da89b"
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
-              "sha256": "cece3bed7555b22872e56067d09d344af66a7b1d1fcb7766c0f8de46c35721c3"
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
             },
             {
               "path": "apps/web/src/lib/public-tos-history.test.ts",
@@ -635325,15 +635326,15 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
@@ -635940,7 +635941,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
+              "sha256": "4a679226f1e0783a6a9ce67cf61a770aa898bd9d27ba4c946db4a78e490f2a2b"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -636108,11 +636109,11 @@
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.test.ts",
-              "sha256": "48cb7ce3867e25d66d062191ed1d95dc3015c88f2e2a2674ae9ab1b178cfeab7"
+              "sha256": "8bd6aa8b6777998d7c40dc26ec85c42d55c7a50c0bb2c13219fe8c6c247da89b"
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
-              "sha256": "cece3bed7555b22872e56067d09d344af66a7b1d1fcb7766c0f8de46c35721c3"
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
             },
             {
               "path": "apps/web/src/lib/public-tos-history.test.ts",
@@ -636152,15 +636153,15 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
@@ -636767,7 +636768,7 @@
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
-              "sha256": "08f0fd19fa77bc229a2083ade01557f977fb3cc831c5b364af1fac74c21d5e0a"
+              "sha256": "4a679226f1e0783a6a9ce67cf61a770aa898bd9d27ba4c946db4a78e490f2a2b"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -636935,11 +636936,11 @@
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.test.ts",
-              "sha256": "48cb7ce3867e25d66d062191ed1d95dc3015c88f2e2a2674ae9ab1b178cfeab7"
+              "sha256": "8bd6aa8b6777998d7c40dc26ec85c42d55c7a50c0bb2c13219fe8c6c247da89b"
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
-              "sha256": "cece3bed7555b22872e56067d09d344af66a7b1d1fcb7766c0f8de46c35721c3"
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
             },
             {
               "path": "apps/web/src/lib/public-tos-history.test.ts",
@@ -636979,15 +636980,15 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
@@ -637774,7 +637775,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -638898,7 +638899,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -640022,7 +640023,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -641149,7 +641150,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -642276,7 +642277,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -643430,7 +643431,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -644553,7 +644554,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -645676,7 +645677,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -646800,7 +646801,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -647942,7 +647943,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -649067,7 +649068,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -649903,7 +649904,7 @@
             },
             {
               "path": "apps/web/e2e/bank-receipt-review.spec.ts",
-              "sha256": "911f89adc6a821e46e33d623ee62154dae172d73a1e14f452b3f38eec80333b6"
+              "sha256": "fb498ea3e4d6eec8b0c5f68cf1c6c00b5b3a5bc882329cd87408479cfee8b301"
             },
             {
               "path": "apps/web/e2e/contracts.spec.ts",
@@ -650732,7 +650733,7 @@
             },
             {
               "path": "apps/web/e2e/bank-receipt-review.spec.ts",
-              "sha256": "911f89adc6a821e46e33d623ee62154dae172d73a1e14f452b3f38eec80333b6"
+              "sha256": "fb498ea3e4d6eec8b0c5f68cf1c6c00b5b3a5bc882329cd87408479cfee8b301"
             },
             {
               "path": "apps/web/e2e/contracts.spec.ts",
@@ -651569,7 +651570,7 @@
             },
             {
               "path": "apps/web/e2e/bank-receipt-review.spec.ts",
-              "sha256": "911f89adc6a821e46e33d623ee62154dae172d73a1e14f452b3f38eec80333b6"
+              "sha256": "fb498ea3e4d6eec8b0c5f68cf1c6c00b5b3a5bc882329cd87408479cfee8b301"
             },
             {
               "path": "apps/web/e2e/contracts.spec.ts",
@@ -652390,7 +652391,7 @@
             },
             {
               "path": "apps/web/e2e/bank-receipt-review.spec.ts",
-              "sha256": "911f89adc6a821e46e33d623ee62154dae172d73a1e14f452b3f38eec80333b6"
+              "sha256": "fb498ea3e4d6eec8b0c5f68cf1c6c00b5b3a5bc882329cd87408479cfee8b301"
             },
             {
               "path": "apps/web/e2e/contracts.spec.ts",
@@ -653210,7 +653211,7 @@
             },
             {
               "path": "apps/web/e2e/bank-receipt-review.spec.ts",
-              "sha256": "911f89adc6a821e46e33d623ee62154dae172d73a1e14f452b3f38eec80333b6"
+              "sha256": "fb498ea3e4d6eec8b0c5f68cf1c6c00b5b3a5bc882329cd87408479cfee8b301"
             },
             {
               "path": "apps/web/e2e/contracts.spec.ts",
@@ -680569,7 +680570,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -681691,7 +681692,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -682813,7 +682814,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -683935,7 +683936,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -706531,7 +706532,7 @@
             },
             {
               "path": "apps/web/e2e/receipt-emergency.spec.ts",
-              "sha256": "4f7d0b8938e8e0169871c13615931b54ee4390163d1a86e8e70ad4570c6813a8"
+              "sha256": "b541c61bd6653d420cac8845a73cbfeaba9391c30234ddfb610a67588aab4011"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -706587,7 +706588,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/test/bank-receipt-review-fixture.ts",
@@ -712627,7 +712628,7 @@
             },
             {
               "path": "apps/web/e2e/receipt-emergency.spec.ts",
-              "sha256": "4f7d0b8938e8e0169871c13615931b54ee4390163d1a86e8e70ad4570c6813a8"
+              "sha256": "b541c61bd6653d420cac8845a73cbfeaba9391c30234ddfb610a67588aab4011"
             },
             {
               "path": "apps/web/src/lib/bank-receipt-confirmation.ts",
@@ -712639,7 +712640,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
@@ -728249,7 +728250,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "All 91 conditional route entries are linked to a named case or matching direct source evidence, including fresh geography checks. Confirm the applicable loading, empty, error, stale context and interaction criteria against those scoped receipts, and validate any affected shared dependencies before accepting the requirement."
+        "Public auth command timeouts and the named support, staff and service detail layouts have source-bound evidence. Review the remaining applicable conditional and interaction criteria against the route index and explicit case receipts before accepting all routes and widgets."
       ],
       "owner": null,
       "depends_on": [],
@@ -728433,7 +728434,8 @@
           "release-0.5-auth-terminal-recovery",
           "release-0.5-public-support-recovery",
           "release-0.5-invoice-post-receipt",
-          "release-0.5-original-route-reconciliation"
+          "release-0.5-original-route-reconciliation",
+          "release-0.5-public-auth-deadline"
         ]
       }
     },
@@ -729161,7 +729163,7 @@
             },
             {
               "path": "apps/web/src/hooks/usePasswordRecoveryForm.ts",
-              "sha256": "edfed14d1000696648a08b37de0fc0d1622dd3c03e26919b690de434d00a23a2"
+              "sha256": "e95aa4249c21f42e28668f524f6f9b8d5f5b6ac860a16858d5d1e7e529a42135"
             },
             {
               "path": "apps/web/src/hooks/usePreferenceSettingsForm.ts",
@@ -729485,7 +729487,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "59f0f038506ce5798458670b16292e74e13186168f856907bc459380f2c2b5cd"
+              "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -729673,7 +729675,7 @@
             },
             {
               "path": "apps/web/src/routes/login.tsx",
-              "sha256": "81c0125f3991ee245a15e08d708ed0187cc42cd079b9a65c95494405063db028"
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
             },
             {
               "path": "apps/web/src/routes/onboarding.tsx",
@@ -729697,11 +729699,11 @@
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
-              "sha256": "0f24782b069d062b3254a0cab8fbd17ba3c2604049c6d7119c6c3dbd84fd418d"
+              "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
             },
             {
               "path": "apps/web/src/routes/register/verify.tsx",
-              "sha256": "4a92fd6e3608462e4764707d33a4751ccbdc0051855bf22f92e93968d08168d2"
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
             },
             {
               "path": "apps/web/src/routes/support.tsx",
@@ -730362,7 +730364,8 @@
             "Final scoped branding and wallet presentation build passed all 101 existing budgets. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-pane-read-states/proof.json",
             "Final activation recovery passed all 101 budgets and six cold-auth transfer checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-auth-terminal-recovery/proof.json",
             "Public support recovery passed all 101 route and interaction budgets. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-public-support-recovery/proof.json",
-            "Invoice receipt history recovery passed all 101 route and interaction budgets. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-post-receipt/proof.json"
+            "Invoice receipt history recovery passed all 101 route and interaction budgets. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-post-receipt/proof.json",
+            "Public auth deadlines passed all 101 budgets and six cold-auth checks; staff wallet receipts measured 499.98 KB. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-public-auth-deadline/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -807644,6 +807647,151 @@
       "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-original-route-reconciliation/proof.json",
       "source_scope_proof_sha256": "97ed30c5a7e5bd1f9a277bd455604b06791a8440365140ffe09c0e2a152be5ea",
       "release_disposition": "Verified the geography conditional cases and reconciled the current route inventory. v0.5.0 remains open."
+    },
+    "release-0.5-public-auth-deadline": {
+      "batch": "release-0.5-public-auth-deadline",
+      "base_commit": "7d0014c136ad6349443607ccd78a927cf5cfabc1",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/bank-receipt-review.spec.ts",
+          "sha256": "fb498ea3e4d6eec8b0c5f68cf1c6c00b5b3a5bc882329cd87408479cfee8b301"
+        },
+        {
+          "path": "apps/web/e2e/confirmation-fixture.ts",
+          "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
+        },
+        {
+          "path": "apps/web/e2e/login-recovery.spec.ts",
+          "sha256": "47d08d53a2d191841b72c3209acc8facc555db753271880768ac7522c0240851"
+        },
+        {
+          "path": "apps/web/e2e/password-recovery-forms.spec.ts",
+          "sha256": "4a679226f1e0783a6a9ce67cf61a770aa898bd9d27ba4c946db4a78e490f2a2b"
+        },
+        {
+          "path": "apps/web/e2e/payment-review-recovery.spec.ts",
+          "sha256": "8130b46ecad2e76176b097d129560aa23817c28ac6c44bef521652af1c462346"
+        },
+        {
+          "path": "apps/web/e2e/receipt-emergency.spec.ts",
+          "sha256": "b541c61bd6653d420cac8845a73cbfeaba9391c30234ddfb610a67588aab4011"
+        },
+        {
+          "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
+          "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
+        },
+        {
+          "path": "apps/web/src/hooks/usePasswordRecoveryForm.ts",
+          "sha256": "e95aa4249c21f42e28668f524f6f9b8d5f5b6ac860a16858d5d1e7e529a42135"
+        },
+        {
+          "path": "apps/web/src/lib/public-auth-fetch.test.ts",
+          "sha256": "8bd6aa8b6777998d7c40dc26ec85c42d55c7a50c0bb2c13219fe8c6c247da89b"
+        },
+        {
+          "path": "apps/web/src/lib/public-auth-fetch.ts",
+          "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
+        },
+        {
+          "path": "apps/web/src/lib/public-auth-response.ts",
+          "sha256": "341644cf1c40ed83f2f761ad697e4e04f5a2abfbaedcffb31fc4ea69c59a0efd"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+          "sha256": "2e66d3949597ce7d64362e89729b792b5c41823e184b3a315b69a6abcdff7b6c"
+        },
+        {
+          "path": "apps/web/src/routes/login.tsx",
+          "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
+        },
+        {
+          "path": "apps/web/src/routes/register/index.tsx",
+          "sha256": "4fe0545fb1603f51e0f2898b05d7d3b1a3d09d1d42e1af807ab7d9f4575f5197"
+        },
+        {
+          "path": "apps/web/src/routes/register/verify.tsx",
+          "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "cee8afbd3fdf8e2c4c0a3250cafba0a521d0acaa1a65aa6b103b41d2adec3998"
+        },
+        {
+          "path": "apps/web/e2e/account-recovery-closure.spec.ts",
+          "sha256": "b9d03cbf46eb9c265143ad7fdab5c22ae0e4c8255832026bc4af75bd88da9a89"
+        },
+        {
+          "path": "apps/web/e2e/auth-entry-session.spec.ts",
+          "sha256": "7f27a9100aba250ee163ed1ccc0288648e106062d0f6df16379ec9db9102f13f"
+        },
+        {
+          "path": "apps/web/e2e/branding-validation.spec.ts",
+          "sha256": "6412fc4dae0fa19441c24cfb5dfe75c35e9a2feb0d8d0f17fef2aeeb37d7b879"
+        },
+        {
+          "path": "apps/web/e2e/customer-service-detail-recovery.spec.ts",
+          "sha256": "9cc7ed09c007ea965609598ab1d08a7b960afe085ea41ccaaf0410804f8ec956"
+        },
+        {
+          "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+          "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
+        },
+        {
+          "path": "apps/web/e2e/preauth-csrf.spec.ts",
+          "sha256": "f2249e4299776a94a78c8354f9562b390a0a49de8142c4913baa69c5a4405dec"
+        },
+        {
+          "path": "apps/web/e2e/registration-recovery.spec.ts",
+          "sha256": "307b0bc4f8c529e464cedc7a32c29db79c26b10f9ddbc06c20b0c581a727637a"
+        },
+        {
+          "path": "apps/web/e2e/route-presentation.ts",
+          "sha256": "3b8b1e8ea1c428bea8034336170811dd33171a51c028ece2fbabe6b2484f259b"
+        },
+        {
+          "path": "apps/web/e2e/staff-activation.spec.ts",
+          "sha256": "c881726e765dcd47a816de22f2fec68d6da9fc0a529f3b0554a683cef63e9dcd"
+        },
+        {
+          "path": "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
+          "sha256": "cecc460ec6ee4b1da2c79322d4ebe689aa0e2c3032dc02fd77d59e127992fd80"
+        },
+        {
+          "path": "apps/web/e2e/staff-knowledge.spec.ts",
+          "sha256": "2d9a01de2de6fc0cb5c56668effa9467b852880528b057ee8324e9cf8030f153"
+        },
+        {
+          "path": "apps/web/e2e/staff-wallet-receipt-views.spec.ts",
+          "sha256": "c10945b2b6738a900749faa3e2b5720191549bdfc9db5795b7cfc547c8683d1e"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        }
+      ],
+      "checks": [
+        "Sign-in, registration and password recovery bound CSRF bootstrap, command and complete acknowledgement to 15 seconds. The original unknown-result recovery owns the UI after timeout. Late bootstrap responses cannot send credentials, and late acknowledgements cannot complete a retired attempt. The sole retry remains the server's explicit raced-CSRF rejection.",
+        "Native Chromium and Mobile Safari confirmed sign-in bootstrap timeout, stalled password reset, exact forced-password and OTP receipts, stale CSRF recovery and receipt safeguards. Eight initial login cases used a pre-authenticated fixture and failed before submitting. The corrected fixture starts anonymous and changes only after a successful command. One Safari navigation timed out and passed in isolation.",
+        "All 12 legacy wallet failures stopped at the mandatory review dialog. The updated fixtures explicitly acknowledge it and retain their exact request, focus and step-up assertions. All failing cases passed in scoped follow-up. Twenty repaired native cases passed, including current standard and emergency confirmation coverage.",
+        "Wallet control predicates reuse the same inputs and preserve the original truth conditions. The budget was initially 500.06 KB. The final route measured 499.98 KB against 500 KB. All 101 budgets passed. The 32 auth assets remained identical between the two builds apart from release metadata, so the six passing cold-auth checks carry forward.",
+        "Sixty additional Chromium and Mobile Safari layout and interaction cases renewed the changed routes. Two fixed-theme fixtures were supplemented with system-theme cases. Ten affected routes have both engines, languages and themes at eight widths across those scoped builds. Current phase's emitted app comparison isolates the wallet control consolidation.",
+        "Sixty-three auth units, 71 wallet units and ten instrumented Chromium cases passed. The final source coverage gate measured 7/7 changed noncritical lines and 486/528 critical lines with 612/720 critical branches. Build, typecheck, lint and formatting passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-public-auth-deadline",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-public-auth-deadline/proof.json",
+      "source_scope_proof_sha256": "df3eb21729f38e7970d7ce4cd908d22ab995e2283db49697a9bdecd786d7f786",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-public-auth-deadline/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-public-auth-deadline/renewed-bindings.json",
+      "release_disposition": "Verified public auth deadlines and affected layout evidence. v0.5.0 remains open."
     }
   },
   "historical_improvements": [
@@ -807694,12 +807842,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Resolve the specific conditional criteria against the linked per-route evidence. Start with candidates whose receipts do not explicitly cover their route's original criteria. GitHub merge enforcement and staging Sentry delivery remain independent gates."
+    "goal": "Bind the remaining applicable conditional and interaction criteria to explicit route cases, starting with route families whose evidence is only a direct source match. GitHub merge enforcement and staging Sentry delivery remain independent gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 has populated layouts for 93 routes and current evidence for the named support, guide and finance recovery cases. Four required criteria remain open and the November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 has populated layouts for 93 routes and additional conditional evidence for public auth and changed views. Four required criteria remain open and the November 9 sequence remains at risk."
   },
   "capabilities": [
     {

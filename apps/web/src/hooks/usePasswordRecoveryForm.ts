@@ -3,7 +3,7 @@ import { useZodForm } from '@barghsa/ui/form';
 import { t, type Locale } from '@barghsa/i18n/auth';
 import { passwordRecoveryText } from '@barghsa/i18n/password-recovery-forms';
 import { useSettingsFormFeedback } from './useSettingsFormFeedback.js';
-import { publicAuthFetch } from '../lib/public-auth-fetch.js';
+import { publicAuthResponse } from '../lib/public-auth-response.js';
 import { authResponseRecord } from '../lib/auth-responses.js';
 import { authErrorCode, rateLimitMessage, retryAfterSeconds } from '../lib/auth-errors.js';
 import {
@@ -201,13 +201,13 @@ export function usePasswordRecoveryForm(
         try {
           const controller = new AbortController();
           abort.current = controller;
-          const response = await publicAuthFetch('/api/auth/' + path, {
+          const { response, body: receipt } = await publicAuthResponse('/api/auth/' + path, {
             signal: controller.signal,
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
             body: JSON.stringify(payload),
           });
-          const body = authResponseRecord(await response.json().catch(() => null));
+          const body = authResponseRecord(receipt);
           if (!current(capture)) return;
           if (response.status !== 200) {
             if (![400, 401, 403, 404, 409, 422, 429].includes(response.status)) {

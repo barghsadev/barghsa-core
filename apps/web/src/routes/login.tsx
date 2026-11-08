@@ -10,7 +10,7 @@ import { OtpInput, type OtpInputHandle } from '../components/OtpInput.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useLoginNativeForm } from '../hooks/useLoginNativeForm.js';
-import { publicAuthFetch } from '../lib/public-auth-fetch.js';
+import { publicAuthResponse } from '../lib/public-auth-response.js';
 import { authErrorCode, rateLimitMessage, retryAfterSeconds } from '../lib/auth-errors.js';
 import {
   hasSessionAcknowledgement,
@@ -127,13 +127,12 @@ function LoginPage() {
             ? 'force-change-password'
             : 'login/verify';
       try {
-        const response = await publicAuthFetch('/api/auth/' + endpoint, {
+        const { response, body } = await publicAuthResponse('/api/auth/' + endpoint, {
           signal: capture.controller.signal,
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
           body: JSON.stringify(payload),
         });
-        const body = await response.json().catch(() => null);
         if (!capture.current()) return;
         if (response.status !== 200) {
           if (![400, 401, 403, 404, 409, 422, 429].includes(response.status)) {
@@ -251,13 +250,12 @@ function LoginPage() {
           }
         };
         try {
-          const response = await publicAuthFetch('/api/auth/login/resend', {
+          const { response, body } = await publicAuthResponse('/api/auth/login/resend', {
             signal: capture.controller.signal,
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
             body: JSON.stringify({ challengeId: challenge.id }),
           });
-          const body = await response.json().catch(() => null);
           if (!capture.current()) return;
           if (response.status !== 200) {
             if (![400, 401, 403, 404, 409, 422, 429].includes(response.status)) {
