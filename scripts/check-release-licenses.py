@@ -36,6 +36,20 @@ APP_MIT_NOTICES = {
     'pkg:npm/png-js@2.0.0': 'bdb26a2ec815931ed6a38f3416362566204ee85ecdef96702b636402da4c75c3',
     'pkg:npm/streamsearch@1.1.0': '7c28463b739e2e73a49bf127d0bda427f8c55f0b37365a044c3c3f254716118b',
 }
+POSTGRES_GO_LICENSES = {
+    'pkg:golang/github.com/tianon/gosu@v0.0.0-20261025094355-29b939aa5bd4': 'Apache-2.0',
+    'pkg:golang/github.com/moby/sys/user@v0.4.1': 'Apache-2.0',
+    'pkg:golang/golang.org/x/sys@v0.1.0': 'BSD-3-Clause',
+    'pkg:golang/stdlib@v1.27.3': 'BSD-3-Clause',
+}
+POSTGRES_GO_NOTICES = {
+    'gosu.LICENSE': 'cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30',
+    'moby-sys-user.LICENSE': 'cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30',
+    'x-sys.LICENSE': '2d36597f7117c38b006835ae7f537487207d8ec407aa9d9980794b2030cbc067',
+    'x-sys.PATENTS': '96f408bfae65bf137fc2525d3ecb030271c50c1e90799f87abf8846d8dd505cc',
+    'go-stdlib.LICENSE': '911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad',
+    'go-stdlib.PATENTS': '96f408bfae65bf137fc2525d3ecb030271c50c1e90799f87abf8846d8dd505cc',
+}
 
 
 def digest(data):
@@ -73,7 +87,8 @@ def read_sbom(directory, index, scope, commit):
     return image_id, bom
 
 
-def image_components(bom, verified_mit=()):
+def image_components(bom, verified_licenses=None):
+    verified_licenses = verified_licenses or {}
     components = bom['components']
     package_refs = {entry['bom-ref'] for entry in components if entry.get('purl')}
     dependencies = {entry['ref']: entry['dependsOn'] for entry in bom['dependencies']}
@@ -97,7 +112,9 @@ def image_components(bom, verified_mit=()):
             value = entry_license.get('expression') or license_data.get('id') or license_data.get('name')
             require(isinstance(value, str) and bool(value.strip()), f'Invalid license entry for {identity}')
             licenses.append(value)
-        yield identity, tuple(sorted(set(licenses))) or (('MIT',) if identity in verified_mit else ())
+        if not licenses and identity in verified_licenses:
+            licenses.append(verified_licenses[identity])
+        yield identity, tuple(sorted(set(licenses)))
 
 
 def archive_files(container, path):
@@ -119,7 +136,7 @@ def verify_app_notices(image_id, components):
             require(digest(sharp['LICENSE.txt']) == 'b40930bbcf80744c86c46a12bc9da056641d722716c378f5659b9e555ef833e1'
                     and digest(sharp['THIRD-PARTY-NOTICES.txt']) == '6f0d5086e3bcbee12bcdacf5878b31d1104002aeecaeb241d3fff466108082fe',
                     'Incorrect libvips notices')
-        verified = set()
+        verified = {}
         for entry in components:
             identity = entry.get('purl')
             if identity not in APP_MIT_NOTICES or entry.get('licenses'):
@@ -132,8 +149,19 @@ def verify_app_notices(image_id, components):
             contents = list(archive_files(container, str(notice)).values())
             require(len(contents) == 1 and digest(contents[0]) == APP_MIT_NOTICES[identity],
                     f'Incorrect MIT notice for {identity}')
-            verified.add(identity)
+            verified[identity] = 'MIT'
         return verified
+    finally:
+        docker('rm', '-v', container)
+
+
+def verify_postgres_notices(image_id):
+    container = docker('create', image_id).decode().strip()
+    try:
+        notices = archive_files(container, '/usr/local/share/licenses/gosu')
+        require({name: digest(data) for name, data in notices.items()} == POSTGRES_GO_NOTICES,
+                'Missing or incorrect PostgreSQL Go notices')
+        return POSTGRES_GO_LICENSES
     finally:
         docker('rm', '-v', container)
 
@@ -202,8 +230,12 @@ def audit(directory, commit, approvals):
     for index, scope in enumerate(IMAGE_SCOPES, 1):
         image_id, bom = read_sbom(directory, index, scope, commit)
         scopes[scope] = image_id
-        verified_mit = verify_app_notices(image_id, bom['components']) if scope == 'app' else ()
-        for identity, licenses in image_components(bom, verified_mit):
+        verified_licenses = None
+        if scope == 'app':
+            verified_licenses = verify_app_notices(image_id, bom['components'])
+        elif scope == 'postgres':
+            verified_licenses = verify_postgres_notices(image_id)
+        for identity, licenses in image_components(bom, verified_licenses):
             items.setdefault((scope, identity, licenses), set()).add(scope)
     container = docker('create', scopes['web']).decode().strip()
     try:

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T15:02:08+00:00",
+  "updated": "2026-11-09T15:07:28+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -11248,7 +11248,8 @@
           "release-0.6-web-fixture-typecheck-and-license-readback",
           "release-0.6-font-source-provenance",
           "release-0.6-shipped-component-license-gate",
-          "release-0.6-database-client-pool-metrics"
+          "release-0.6-database-client-pool-metrics",
+          "release-0.6-postgres-go-license-notices"
         ],
         "current_acceptance": null,
         "exact_license_report": {
@@ -11259,6 +11260,12 @@
           "package_scope_entries": 594,
           "review_required": 174,
           "distinct_package_urls": 146
+        },
+        "package_review_packet": {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
+          "sha256": "4913c104fd5fc6993f1c94d98aa9fecf58e6ec197e0a4302e8d286ed314250bf",
+          "source_run": 42638068584,
+          "status": "prepared"
         }
       },
       "blocker": "The strict gate is implemented. The exact shipped component exceptions still require owner or legal approval and proof of the applicable conditions before release acceptance."
@@ -24225,7 +24232,8 @@
           "release-0.6-immutable-location-and-signature-feed",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-web-fixture-typecheck-and-license-readback",
-          "release-0.6-font-source-provenance"
+          "release-0.6-font-source-provenance",
+          "release-0.6-postgres-go-license-notices"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -24381,7 +24389,7 @@
             },
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "bb434ce9ab9d15ff25bc4f61405267a6c1e376642fb64989d860ef532f036820"
+              "sha256": "eb74a21e6b05fa668d22614113ccd55653664f98572bbd14ea7d740e955c3773"
             }
           ],
           "checks": [
@@ -472768,7 +472776,8 @@
           "release-0.6-alpine-clamav-candidate",
           "release-0.6-postgres-image-candidate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-runtime-sbom-provenance"
+          "release-0.6-runtime-sbom-provenance",
+          "release-0.6-postgres-go-license-notices"
         ],
         "current_acceptance": {
           "kind": "pinned_trivy_and_exact_image_inventory",
@@ -472796,7 +472805,7 @@
             },
             {
               "path": "packages/db/scripts/backup/Dockerfile",
-              "sha256": "09bc84f3342da18716a7331f065079f91c74f49d6664d4426188b9948ad04b57"
+              "sha256": "0c5fae6c77ef31a6ab5e191e16d9e0b78acc6b7bc3cd7430ed1178b1f41486cf"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -473009,7 +473018,8 @@
         "batches": [
           "release-0.6-font-source-provenance",
           "release-0.6-shipped-component-license-gate",
-          "release-0.6-database-client-pool-metrics"
+          "release-0.6-database-client-pool-metrics",
+          "release-0.6-postgres-go-license-notices"
         ],
         "current_acceptance": null,
         "exact_license_report": {
@@ -473020,6 +473030,12 @@
           "package_scope_entries": 594,
           "review_required": 174,
           "distinct_package_urls": 146
+        },
+        "package_review_packet": {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
+          "sha256": "4913c104fd5fc6993f1c94d98aa9fecf58e6ec197e0a4302e8d286ed314250bf",
+          "source_run": 42638068584,
+          "status": "prepared"
         }
       },
       "blocker": "The strict gate is implemented. The exact shipped component exceptions still require owner or legal approval and proof of the applicable conditions before release acceptance."
@@ -473092,7 +473108,8 @@
           "release-0.6-postgres-image-candidate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-private-api-monitoring"
+          "release-0.6-private-api-monitoring",
+          "release-0.6-postgres-go-license-notices"
         ],
         "current_acceptance": null,
         "current_dependency_checkpoint": {
@@ -473147,6 +473164,12 @@
           "test_job": 129203199164,
           "affected_test_files": 419,
           "affected_tests": 5501
+        },
+        "package_review_packet": {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
+          "sha256": "4913c104fd5fc6993f1c94d98aa9fecf58e6ec197e0a4302e8d286ed314250bf",
+          "source_run": 42638068584,
+          "status": "prepared"
         }
       }
     },
@@ -473281,7 +473304,8 @@
           "release-0.6-alpine-clamav-candidate",
           "release-0.6-postgres-image-candidate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-runtime-sbom-provenance"
+          "release-0.6-runtime-sbom-provenance",
+          "release-0.6-postgres-go-license-notices"
         ],
         "current_acceptance": {
           "kind": "actual_hosted_image_blocking_evidence",
@@ -473301,7 +473325,7 @@
             },
             {
               "path": "packages/db/scripts/backup/Dockerfile",
-              "sha256": "09bc84f3342da18716a7331f065079f91c74f49d6664d4426188b9948ad04b57"
+              "sha256": "0c5fae6c77ef31a6ab5e191e16d9e0b78acc6b7bc3cd7430ed1178b1f41486cf"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -737736,8 +737760,15 @@
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-remove-runtime-package-managers",
-          "release-0.6-alpine-clamav-candidate"
-        ]
+          "release-0.6-alpine-clamav-candidate",
+          "release-0.6-postgres-go-license-notices"
+        ],
+        "package_review_packet": {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
+          "sha256": "4913c104fd5fc6993f1c94d98aa9fecf58e6ec197e0a4302e8d286ed314250bf",
+          "source_run": 42638068584,
+          "status": "prepared"
+        }
       }
     },
     {
@@ -825031,6 +825062,45 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "solar-replay-lock-order-proof.json",
       "source_scope_proof_sha256": "e614d76d9405409a132e46dd48d2d1768332d6655ad844f0f632505c7252ec8e"
+    },
+    "release-0.6-postgres-go-license-notices": {
+      "batch": "release-0.6-postgres-go-license-notices",
+      "base_commit": "187e28657137ef9d1575a0c5c7174d8948ed3892",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "02-auth-users-admin.md#T-02.02.02",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.07.02.08",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "packages/db/scripts/backup/Dockerfile",
+          "sha256": "0c5fae6c77ef31a6ab5e191e16d9e0b78acc6b7bc3cd7430ed1178b1f41486cf"
+        },
+        {
+          "path": "scripts/check-release-licenses.py",
+          "sha256": "271754dea01f1e5751d57f59160292723e14b994dea8523f0de172e976b499ea"
+        },
+        {
+          "path": "scripts/test_check_release_licenses.py",
+          "sha256": "c62ed1211f014688924eed42489f3de057baf03358eb2389fe5533930d257c50"
+        },
+        {
+          "path": "docs/security/release-license-review.md",
+          "sha256": "eb74a21e6b05fa668d22614113ccd55653664f98572bbd14ea7d740e955c3773"
+        }
+      ],
+      "checks": [
+        "The pinned Go build produced the same gosu bytes and exact toolchain and module versions. All six original license and patent notices matched their source hashes in an isolated PostgreSQL 16.15 proof image, readable by the postgres user. The existing database entrypoint and backup runtime binaries are unchanged.",
+        "Seven focused policy tests passed. Missing or altered notices and different versions remain blocked. Applying the verified fallback to the previously bound PostgreSQL SBOM changes exactly four missing entries to already-allowed Apache-2.0 or BSD-3-Clause. Exact full-image build and inventory readback remain required.",
+        "Prepared a package-specific owner or legal review packet from the authenticated report for CI run 42638068584. It retains all 174 original review rows, their image scopes, exact package URLs and the check required for each. There are no new owner approvals."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "postgres-go-notices-proof.json",
+      "source_scope_proof_sha256": "f8c12032ba8cced3c01214ef3cc9a63754343cd211679d0f986643a91d800b45"
     }
   },
   "historical_improvements": [

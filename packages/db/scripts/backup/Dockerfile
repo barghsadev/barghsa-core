@@ -2,7 +2,15 @@
 FROM golang:1.27.3-bookworm@sha256:dc0963f32053e4bc451d24d87e3892d42d01021b61f093e98eb95c0352bb84b0 AS gosu-build
 ENV GOTOOLCHAIN=local CGO_ENABLED=0 GOBIN=/out
 RUN go install -trimpath -ldflags="-d -w" github.com/tianon/gosu@29b939aa5bd4dc588af765b8248f6e39150d2565 \
-    && go version -m /out/gosu
+    && go version -m /out/gosu \
+    && modules="$(go env GOMODCACHE)" \
+    && mkdir -p /out/licenses \
+    && cp "$modules/github.com/tianon/gosu@v0.0.0-20261025094355-29b939aa5bd4/LICENSE" /out/licenses/gosu.LICENSE \
+    && cp "$modules/github.com/moby/sys/user@v0.4.1/LICENSE" /out/licenses/moby-sys-user.LICENSE \
+    && cp "$modules/golang.org/x/sys@v0.1.0/LICENSE" /out/licenses/x-sys.LICENSE \
+    && cp "$modules/golang.org/x/sys@v0.1.0/PATENTS" /out/licenses/x-sys.PATENTS \
+    && cp /usr/local/go/LICENSE /out/licenses/go-stdlib.LICENSE \
+    && cp /usr/local/go/PATENTS /out/licenses/go-stdlib.PATENTS
 
 FROM postgis/postgis:16-3.6-alpine@sha256:d5955943c6e633219d80bd1d7fd986a097fdd44f3979c53d4839d62647bba478 AS build
 # Compile pgvector for this PostgreSQL/Alpine ABI. Keep toolchains out of the runtime.
@@ -24,6 +32,7 @@ RUN apk upgrade --no-cache && apk add --no-cache ca-certificates python3 gnupg
 COPY --from=build /out/ /
 COPY --from=build /opt/backup-venv /opt/backup-venv
 COPY --from=gosu-build /out/gosu /usr/local/bin/gosu
+COPY --from=gosu-build /out/licenses/ /usr/local/share/licenses/gosu/
 COPY packages/db/scripts/backup/ /opt/backup/
 ENV PATH="/opt/backup-venv/bin:${PATH}"
 RUN python3 -c 'import boto3; assert boto3.__version__ == "1.43.93"' \

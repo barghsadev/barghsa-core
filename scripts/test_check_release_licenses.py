@@ -92,6 +92,29 @@ class LicenseCheckTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Missing SBOM package URL'):
             list(licenses.image_components(bom | {'dependencies': []}))
 
+    def test_postgres_go_license_fallback_requires_exact_notices_and_versions(self):
+        files = {'gosu.LICENSE': b'license', 'go-stdlib.PATENTS': b'patents'}
+        expected = {name: licenses.digest(data) for name, data in files.items()}
+        gosu = 'pkg:golang/github.com/tianon/gosu@v0.0.0-20261025094355-29b939aa5bd4'
+        unknown = 'pkg:golang/github.com/tianon/gosu@1.99.0'
+        bom = {'components': [
+            {'bom-ref': 'gosu', 'type': 'library', 'purl': gosu},
+            {'bom-ref': 'unknown', 'type': 'library', 'purl': unknown},
+        ], 'dependencies': []}
+        with patch.object(licenses, 'POSTGRES_GO_NOTICES', expected), \
+             patch.object(licenses, 'docker', return_value=b'container') as docker, \
+             patch.object(licenses, 'archive_files', return_value=files) as archive:
+            verified = licenses.verify_postgres_notices('image')
+            self.assertEqual(list(licenses.image_components(bom, verified)), [
+                (gosu, ('Apache-2.0',)), (unknown, ())
+            ])
+            archive.assert_called_once_with('container', '/usr/local/share/licenses/gosu')
+            for invalid in ({'gosu.LICENSE': files['gosu.LICENSE']}, files | {'gosu.LICENSE': b'other'}):
+                archive.return_value = invalid
+                with self.assertRaisesRegex(ValueError, 'Missing or incorrect PostgreSQL Go notices'):
+                    licenses.verify_postgres_notices('image')
+                docker.assert_called_with('rm', '-v', 'container')
+
     def test_strict_run_rejects_pending_licenses_and_preserves_the_report(self):
         with tempfile.TemporaryDirectory() as directory:
             report = Path(directory) / 'result.json'
