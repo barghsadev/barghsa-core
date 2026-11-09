@@ -12,8 +12,15 @@ RUN pnpm --filter @barghsa/worker deploy --prod /out/worker
 
 FROM node:24-bookworm-slim AS runtime
 WORKDIR /app
-RUN apt-get update && apt-get install -y --no-install-recommends poppler-utils \
-  && rm -rf /var/lib/apt/lists/*
+# The slim image has Node's CA bundle but no system bundle for APT.
+RUN node -e 'process.stdout.write(require("node:tls").rootCertificates.join("\n") + "\n")' > /tmp/apt-root-cas.pem \
+  && sed -i \
+    -e 's|http://deb.debian.org/debian-security|https://security.debian.org/debian-security|' \
+    -e 's|http://deb.debian.org/debian|https://ftp.debian.org/debian|' \
+    /etc/apt/sources.list.d/debian.sources \
+  && apt-get -o Acquire::https::CaInfo=/tmp/apt-root-cas.pem -o APT::Update::Error-Mode=any -o Acquire::Retries=2 -o Acquire::https::Timeout=20 update \
+  && apt-get -o Acquire::https::CaInfo=/tmp/apt-root-cas.pem -o Acquire::Retries=2 -o Acquire::https::Timeout=20 install -y --no-install-recommends poppler-utils \
+  && rm -rf /var/lib/apt/lists/* /tmp/apt-root-cas.pem
 COPY --from=build /out/api ./
 COPY package.json ./root-package.json
 COPY --from=build /out/worker ./worker/

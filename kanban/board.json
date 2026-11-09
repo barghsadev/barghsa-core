@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T10:57:05+00:00",
-  "source_commit": "fd4c7fde099868258c8724b93014252d82ceb814",
+  "updated": "2026-11-09T11:03:07+00:00",
+  "source_commit": "f3d7b141ffe79735783051ade2cdbf26a2a2b795",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -104210,7 +104210,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
           "release-0.5-conditional-native-choices",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-staging-image-package-source"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -104218,7 +104219,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "3e86e0a4e8dd3200ec7ab6441d126b34cc97a57748d5dd0d9de59270474be712"
+              "sha256": "97efa77ecd5503f1eb3507c54f2a4b9167949829e306440252ded401477d34ed"
             },
             {
               "path": "apps/api/openapi.json",
@@ -460636,7 +460637,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
           "release-0.5-conditional-native-choices",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-staging-image-package-source"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -460644,7 +460646,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "3e86e0a4e8dd3200ec7ab6441d126b34cc97a57748d5dd0d9de59270474be712"
+              "sha256": "97efa77ecd5503f1eb3507c54f2a4b9167949829e306440252ded401477d34ed"
             },
             {
               "path": "apps/api/openapi.json",
@@ -709222,7 +709224,8 @@
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-staging-image-package-source"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -709230,7 +709233,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "3e86e0a4e8dd3200ec7ab6441d126b34cc97a57748d5dd0d9de59270474be712"
+              "sha256": "97efa77ecd5503f1eb3507c54f2a4b9167949829e306440252ded401477d34ed"
             },
             {
               "path": "apps/api/openapi.json",
@@ -709908,7 +709911,8 @@
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-staging-image-package-source"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -709916,7 +709920,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "3e86e0a4e8dd3200ec7ab6441d126b34cc97a57748d5dd0d9de59270474be712"
+              "sha256": "97efa77ecd5503f1eb3507c54f2a4b9167949829e306440252ded401477d34ed"
             },
             {
               "path": "apps/api/openapi.json",
@@ -818359,6 +818363,31 @@
         "Prettier and actionlint passed for the changed workflow. The unchanged SC2016 diagnostic for the literal Node.js audit program was reproduced on the baseline."
       ],
       "source_renewals": "Workflow trigger extension only. Existing main/PR check evidence remains valid; exact candidate job and subsequent direct push still need actual GitHub receipts."
+    },
+    "release-0.5-staging-image-package-source": {
+      "batch": "release-0.5-staging-image-package-source",
+      "base_commit": "f3d7b141ffe79735783051ade2cdbf26a2a2b795",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "07-ui-ux-design.md#T-07.30.02.15",
+        "07-ui-ux-design.md#T-07.30.02.17"
+      ],
+      "source_evidence": [
+        {
+          "path": "Dockerfile.base",
+          "sha256": "97efa77ecd5503f1eb3507c54f2a4b9167949829e306440252ded401477d34ed"
+        }
+      ],
+      "checks": [
+        "The workstation Docker engine was unresponsive and logged disk-full errors. The staging Linux amd64 Docker engine and BuildKit responded.",
+        "The default Debian APT endpoint timed out from staging. A real BuildKit probe on the staging engine fetched Debian archive, updates and security indices over HTTPS, verified their standard archive signatures, installed poppler-utils and executed pdftoppm 22.12.0.",
+        "The reviewed Dockerfile difference only changes how the existing signed Debian system dependency is retrieved. The API and worker builds, packaging, process user, runtime command and health check are unchanged."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-check-activation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-check-activation/staging-debian-mirror-trusted-probe.log",
+      "source_scope_proof_sha256": "ecb126371172b22b149108fc719251e3edbdfcb7b71702185994cfe0d7809a4a",
+      "source_renewals": "Package source and transport change only. Related live and product evidence is retained; no release deployment is claimed by the package probe."
     }
   },
   "historical_improvements": [
