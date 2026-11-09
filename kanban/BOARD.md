@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T15:53:48+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T15:57:39+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 912 | Accepted with unchanged source bindings. |
-| verify | 424 | Existing work may be complete; inspect evidence before building. |
+| done | 915 | Accepted with unchanged source bindings. |
+| verify | 421 | Existing work may be complete; inspect evidence before building. |
 | partial | 26 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -39,11 +39,11 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify current workspace and package test discovery, coverage floors and Turbo test entry points. Keep the final full release gate separate from source and runner configuration.
+Verify the existing production Docker recipes and image-bound SBOM evidence. Preserve the final deployment-image and package approval boundaries.
 
-- `01-platform-infrastructure.md#T-01.04.01`: Create root `vitest.workspace.ts` that includes all packages and apps
-- `01-platform-infrastructure.md#T-01.04.02`: Configure per-package Vitest with coverage thresholds
-- `01-platform-infrastructure.md#T-01.04.05`: Wire `test` and `test:coverage` tasks in `turbo.json`
+- `01-platform-infrastructure.md#T-03.01.01`: Create `Dockerfile.web` with multi-stage build
+- `01-platform-infrastructure.md#T-03.01.02`: Create shared `Dockerfile.base` for API and worker (same build, different CMD)
+- `06-security-testing-observability.md#T-06.07.02.07`: Generate SBOM (Software Bill of Materials) for each production build
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -967,11 +967,11 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-01.03.03` | verify | Earlier acceptance_verified | Implement route-level code splitting and lazy loading for heavy modules |
 | `01-platform-infrastructure.md#T-01.03.04` | verify | Earlier acceptance_verified | Implement bundle budget checking in CI |
 | `01-platform-infrastructure.md#T-01.03.05` | verify | Earlier acceptance_verified | Configure hashed filenames and CDN-ready public asset output |
-| `01-platform-infrastructure.md#T-01.04.01` | verify | Earlier acceptance_verified | Create root `vitest.workspace.ts` that includes all packages and apps |
-| `01-platform-infrastructure.md#T-01.04.02` | verify | Earlier acceptance_verified | Configure per-package Vitest with coverage thresholds |
+| `01-platform-infrastructure.md#T-01.04.01` | done | Earlier acceptance_verified | Create root `vitest.workspace.ts` that includes all packages and apps |
+| `01-platform-infrastructure.md#T-01.04.02` | done | Earlier acceptance_verified | Configure per-package Vitest with coverage thresholds |
 | `01-platform-infrastructure.md#T-01.04.03` | done | Earlier partial | Configure backend integration test setup with real PostgreSQL |
 | `01-platform-infrastructure.md#T-01.04.04` | partial | Earlier partial | Configure Playwright for E2E testing |
-| `01-platform-infrastructure.md#T-01.04.05` | verify | Earlier acceptance_verified | Wire `test` and `test:coverage` tasks in `turbo.json` |
+| `01-platform-infrastructure.md#T-01.04.05` | done | Earlier acceptance_verified | Wire `test` and `test:coverage` tasks in `turbo.json` |
 | `01-platform-infrastructure.md#T-01.04.06` | partial | Earlier partial | Configure flaky-test quarantine process |
 | `01-platform-infrastructure.md#T-01.05.01` | verify | Earlier acceptance_verified | Implement global NestJS `HttpExceptionFilter` and `CorrelationIdMiddleware` |
 | `01-platform-infrastructure.md#T-02.01.01` | verify | Earlier acceptance_verified | Initialize `packages/db` with Drizzle ORM, `pg`, `pg-pool`, and drizzle-kit |

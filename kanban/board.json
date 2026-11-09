@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T15:53:48+00:00",
+  "updated": "2026-11-09T15:57:39+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -4792,12 +4792,10 @@
         "story": "01-platform-infrastructure.md#spec-ad6901869722"
       },
       "requirement": "- **T-01.04.01:** Create root `vitest.workspace.ts` that includes all packages and apps\n  - **Notes:** Use `@vitest/workspace` with glob `packages/*`, `apps/*`. Each package gets its own `vitest.config.ts` or shares a base config. Set `test.globals: false` (explicit imports). Set `test.typecheck.enabled: false` by default (separate typecheck step).\n  - **Dependencies:** S-01.01, S-01.02\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -4847,8 +4845,61 @@
           "packages/db/vitest.config.ts",
           "packages/db/src/test/globalSetup.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-workspace-test-and-coverage-configuration"
+        ],
+        "current_acceptance": {
+          "kind": "workspace-runner-and-full-release-coverage-configuration",
+          "base_commit": "46212a04aa3cfe7412a6b8a7e2dc51833b09a219",
+          "source_evidence": [
+            {
+              "path": "vitest.config.ts",
+              "sha256": "25274bef7df785431bbf7f3ab348a604399716e280813dd70aa786ffc17c7f30"
+            },
+            {
+              "path": "packages/tsconfig/vitest.base.config.ts",
+              "sha256": "cacf7cba1dc965375f314e932ca0bbdc4f3884def06980f3d191b19f0bc58f99"
+            },
+            {
+              "path": "packages/tsconfig/vitest.base.config.test.ts",
+              "sha256": "ac6041e0aadb0dfa3097287cbbe4ccf094d065ba2f71a3560a06beecaeb3e25d"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "turbo.json",
+              "sha256": "d81d554260edd9a3e22854a220fd0e6dd95b2c7db7035de015e37a58c8279741"
+            },
+            {
+              "path": "package.json",
+              "sha256": "0d38ca16dff0d91baf910710ab6f0e82f44fb03b09a2d42796e34de9cfd6b5ee"
+            },
+            {
+              "path": "scripts/check-changed-coverage.py",
+              "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+            },
+            {
+              "path": "scripts/test_check_changed_coverage.py",
+              "sha256": "642e118a0a4846d29cb8c80e00634740b2d61daf9d5eca0ce328d911eb3b9e18"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
+            },
+            {
+              "path": "docs/flaky-test-quarantine.md",
+              "sha256": "ceef0e9465e8df5a55a5316a56b68c3dd8f085bd4e9615853542cb4f24e7b15e"
+            }
+          ],
+          "checks": [
+            "Retained the working Vitest 4 projects configuration in the root vitest.config.ts. Vitest's supported projects field replaces the older workspace representation. The actual installed runner discovered 1,262 files across eight testable projects, and all three selected shared base configuration tests passed. Explicit imports and separate typechecking remain the shared defaults.",
+            "The exact Turbo dry graph finds eight executable test tasks and eight executable coverage tasks. Coverage enables --coverage and the API, web and worker retain upstream build dependencies. The per-package package-wide floors remain in place. Separate changed-code gates enforce 80 percent lines and 75 percent branches, and modified critical files enforce 90 and 85 percent. All 11 changed-coverage policy cases passed.",
+            "Manual release CI now selects the full test and coverage path without a repository variable change. The actual shell selector read the previous released commit from the canonical board, preserved the existing PR base and push-before paths, and selected the expected v0.5.0 SHA for the manual v0.6.0 candidate. Ordinary direct-main and PR development stays scoped to affected tests by default.",
+            "Workflow syntax passed. This batch verifies configuration and scoped policy controls. Running the full suite on the accepted release candidate remains a separate milestone gate."
+          ]
+        }
       }
     },
     {
@@ -4862,12 +4913,10 @@
         "story": "01-platform-infrastructure.md#spec-ad6901869722"
       },
       "requirement": "- **T-01.04.02:** Configure per-package Vitest with coverage thresholds\n  - **Notes:** Minimum thresholds: 80% line / 75% branch for changed code. Auth, authorization, payments, wallet, refunds, pricing, contracts, and state-machine domain packages: 90% line / 85% branch. Exceptions require tech lead approval. Coverage checks in `vitest.config.ts` via `coverage.thresholds`.\n  - **Dependencies:** T-01.04.01\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -4902,8 +4951,61 @@
         "changed_paths": [
           ".github/workflows/ci.yml"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-workspace-test-and-coverage-configuration"
+        ],
+        "current_acceptance": {
+          "kind": "workspace-runner-and-full-release-coverage-configuration",
+          "base_commit": "46212a04aa3cfe7412a6b8a7e2dc51833b09a219",
+          "source_evidence": [
+            {
+              "path": "vitest.config.ts",
+              "sha256": "25274bef7df785431bbf7f3ab348a604399716e280813dd70aa786ffc17c7f30"
+            },
+            {
+              "path": "packages/tsconfig/vitest.base.config.ts",
+              "sha256": "cacf7cba1dc965375f314e932ca0bbdc4f3884def06980f3d191b19f0bc58f99"
+            },
+            {
+              "path": "packages/tsconfig/vitest.base.config.test.ts",
+              "sha256": "ac6041e0aadb0dfa3097287cbbe4ccf094d065ba2f71a3560a06beecaeb3e25d"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "turbo.json",
+              "sha256": "d81d554260edd9a3e22854a220fd0e6dd95b2c7db7035de015e37a58c8279741"
+            },
+            {
+              "path": "package.json",
+              "sha256": "0d38ca16dff0d91baf910710ab6f0e82f44fb03b09a2d42796e34de9cfd6b5ee"
+            },
+            {
+              "path": "scripts/check-changed-coverage.py",
+              "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+            },
+            {
+              "path": "scripts/test_check_changed_coverage.py",
+              "sha256": "642e118a0a4846d29cb8c80e00634740b2d61daf9d5eca0ce328d911eb3b9e18"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
+            },
+            {
+              "path": "docs/flaky-test-quarantine.md",
+              "sha256": "ceef0e9465e8df5a55a5316a56b68c3dd8f085bd4e9615853542cb4f24e7b15e"
+            }
+          ],
+          "checks": [
+            "Retained the working Vitest 4 projects configuration in the root vitest.config.ts. Vitest's supported projects field replaces the older workspace representation. The actual installed runner discovered 1,262 files across eight testable projects, and all three selected shared base configuration tests passed. Explicit imports and separate typechecking remain the shared defaults.",
+            "The exact Turbo dry graph finds eight executable test tasks and eight executable coverage tasks. Coverage enables --coverage and the API, web and worker retain upstream build dependencies. The per-package package-wide floors remain in place. Separate changed-code gates enforce 80 percent lines and 75 percent branches, and modified critical files enforce 90 and 85 percent. All 11 changed-coverage policy cases passed.",
+            "Manual release CI now selects the full test and coverage path without a repository variable change. The actual shell selector read the previous released commit from the canonical board, preserved the existing PR base and push-before paths, and selected the expected v0.5.0 SHA for the manual v0.6.0 candidate. Ordinary direct-main and PR development stays scoped to affected tests by default.",
+            "Workflow syntax passed. This batch verifies configuration and scoped policy controls. Running the full suite on the accepted release candidate remains a separate milestone gate."
+          ]
+        }
       }
     },
     {
@@ -5130,12 +5232,10 @@
         "story": "01-platform-infrastructure.md#spec-ad6901869722"
       },
       "requirement": "- **T-01.04.05:** Wire `test` and `test:coverage` tasks in `turbo.json`\n  - **Notes:** `test` depends on `^build` (upstream packages must compile first). `test:coverage` passes `--coverage` flag. CI runs `turbo test` with `--filter` for affected packages on PR, full suite on main.\n  - **Dependencies:** T-01.04.01, T-01.01.02\n  - **Complexity:** S",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -5220,8 +5320,61 @@
           "packages/db/package.json",
           "packages/i18n/package.json"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-workspace-test-and-coverage-configuration"
+        ],
+        "current_acceptance": {
+          "kind": "workspace-runner-and-full-release-coverage-configuration",
+          "base_commit": "46212a04aa3cfe7412a6b8a7e2dc51833b09a219",
+          "source_evidence": [
+            {
+              "path": "vitest.config.ts",
+              "sha256": "25274bef7df785431bbf7f3ab348a604399716e280813dd70aa786ffc17c7f30"
+            },
+            {
+              "path": "packages/tsconfig/vitest.base.config.ts",
+              "sha256": "cacf7cba1dc965375f314e932ca0bbdc4f3884def06980f3d191b19f0bc58f99"
+            },
+            {
+              "path": "packages/tsconfig/vitest.base.config.test.ts",
+              "sha256": "ac6041e0aadb0dfa3097287cbbe4ccf094d065ba2f71a3560a06beecaeb3e25d"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "turbo.json",
+              "sha256": "d81d554260edd9a3e22854a220fd0e6dd95b2c7db7035de015e37a58c8279741"
+            },
+            {
+              "path": "package.json",
+              "sha256": "0d38ca16dff0d91baf910710ab6f0e82f44fb03b09a2d42796e34de9cfd6b5ee"
+            },
+            {
+              "path": "scripts/check-changed-coverage.py",
+              "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+            },
+            {
+              "path": "scripts/test_check_changed_coverage.py",
+              "sha256": "642e118a0a4846d29cb8c80e00634740b2d61daf9d5eca0ce328d911eb3b9e18"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
+            },
+            {
+              "path": "docs/flaky-test-quarantine.md",
+              "sha256": "ceef0e9465e8df5a55a5316a56b68c3dd8f085bd4e9615853542cb4f24e7b15e"
+            }
+          ],
+          "checks": [
+            "Retained the working Vitest 4 projects configuration in the root vitest.config.ts. Vitest's supported projects field replaces the older workspace representation. The actual installed runner discovered 1,262 files across eight testable projects, and all three selected shared base configuration tests passed. Explicit imports and separate typechecking remain the shared defaults.",
+            "The exact Turbo dry graph finds eight executable test tasks and eight executable coverage tasks. Coverage enables --coverage and the API, web and worker retain upstream build dependencies. The per-package package-wide floors remain in place. Separate changed-code gates enforce 80 percent lines and 75 percent branches, and modified critical files enforce 90 and 85 percent. All 11 changed-coverage policy cases passed.",
+            "Manual release CI now selects the full test and coverage path without a repository variable change. The actual shell selector read the previous released commit from the canonical board, preserved the existing PR base and push-before paths, and selected the expected v0.5.0 SHA for the manual v0.6.0 candidate. Ordinary direct-main and PR development stays scoped to affected tests by default.",
+            "Workflow syntax passed. This batch verifies configuration and scoped policy controls. Running the full suite on the accepted release candidate remains a separate milestone gate."
+          ]
+        }
       }
     },
     {
@@ -438767,7 +438920,8 @@
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "current_acceptance": {
           "status": "done",
@@ -438775,7 +438929,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -439160,7 +439314,8 @@
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "current_acceptance": {
           "status": "done",
@@ -439168,7 +439323,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -439706,7 +439861,8 @@
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "current_acceptance": {
           "status": "done",
@@ -439714,7 +439870,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -440079,7 +440235,8 @@
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "current_acceptance": {
           "status": "done",
@@ -440087,7 +440244,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -440452,7 +440609,8 @@
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "current_acceptance": {
           "status": "done",
@@ -440460,7 +440618,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -469802,7 +469960,8 @@
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
-          "release-0.6-proxy-security-headers"
+          "release-0.6-proxy-security-headers",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -469810,7 +469969,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             },
             {
               "path": "Dockerfile.web",
@@ -470031,7 +470190,8 @@
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
-          "release-0.6-proxy-security-headers"
+          "release-0.6-proxy-security-headers",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -470039,7 +470199,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             },
             {
               "path": "Dockerfile.web",
@@ -470267,7 +470427,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-browser-response-policy",
-          "release-0.6-proxy-security-headers"
+          "release-0.6-proxy-security-headers",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "current_acceptance": {
           "kind": "production-csp-cross-origin-browser-and-first-party-control",
@@ -470295,7 +470456,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             }
           ],
           "checks": [
@@ -471408,7 +471569,8 @@
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -471416,7 +471578,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -472718,7 +472880,8 @@
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-runtime-sbom-provenance",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -472730,7 +472893,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             },
             {
               "path": ".gitignore",
@@ -472797,7 +472960,8 @@
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -472809,7 +472973,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             },
             {
               "path": ".gitignore",
@@ -472929,7 +473093,8 @@
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -472937,7 +473102,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -473032,7 +473197,8 @@
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -473040,7 +473206,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -473098,7 +473264,8 @@
           "release-0.6-postgres-go-license-notices",
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
-          "release-0.6-packaged-production-seed"
+          "release-0.6-packaged-production-seed",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "current_acceptance": {
           "kind": "pinned_trivy_and_exact_image_inventory",
@@ -473106,7 +473273,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             },
             {
               "path": "Dockerfile.base",
@@ -473172,7 +473339,8 @@
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -473184,7 +473352,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             },
             {
               "path": ".gitignore",
@@ -473291,7 +473459,8 @@
         "batches": [
           "release-0.6-shipped-component-license-gate",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "current_acceptance": {
           "kind": "current-supply-chain-triage-policy",
@@ -473303,7 +473472,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -473669,7 +473838,8 @@
           "release-0.6-postgres-go-license-notices",
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
-          "release-0.6-packaged-production-seed"
+          "release-0.6-packaged-production-seed",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "current_acceptance": {
           "kind": "actual_hosted_image_blocking_evidence",
@@ -473693,7 +473863,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -475738,7 +475908,8 @@
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -475746,7 +475917,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -475799,7 +475970,8 @@
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-runtime-sbom-provenance",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -475807,7 +475979,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -476426,7 +476598,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The full browser workflow now builds the catalogue before clean-checkout Playwright discovery. Run and verify the required full unit, real PostgreSQL, browser, accessibility and combined coverage gates on the final release candidate."
+        "Manually dispatched CI now enables all release checks and uses the last released commit for changed coverage. Run and verify the full unit, real PostgreSQL, browser, accessibility and combined coverage gates on the exact release candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -476436,7 +476608,8 @@
         "batches": [
           "release-0.6-runtime-sbom-provenance",
           "release-0.6-private-api-monitoring",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -524124,7 +524297,8 @@
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -524132,7 +524306,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             },
             {
               "path": ".size-limit.json",
@@ -524964,7 +525138,8 @@
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -524972,7 +525147,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             },
             {
               "path": ".size-limit.json",
@@ -526313,7 +526488,8 @@
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -526321,7 +526497,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             },
             {
               "path": ".size-limit.json",
@@ -527115,7 +527291,8 @@
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "current_acceptance": {
           "kind": "active_github_required_check",
@@ -527130,7 +527307,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -726557,7 +726734,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             },
             {
               "path": "apps/api/openapi.json",
@@ -730431,7 +730608,8 @@
           "release-0.6-native-integration-acceptance",
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
-          "release-0.6-packaged-production-seed"
+          "release-0.6-packaged-production-seed",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -730484,7 +730662,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             },
             {
               "path": "apps/api/openapi.json",
@@ -734225,7 +734403,8 @@
           "release-0.6-native-integration-acceptance",
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
-          "release-0.6-packaged-production-seed"
+          "release-0.6-packaged-production-seed",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -735964,7 +736143,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
             },
             {
               "path": ".size-limit.json",
@@ -738037,7 +738216,8 @@
           "release-0.6-private-api-monitoring",
           "release-0.6-solar-replay-lock-order",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ]
       }
     },
@@ -738157,7 +738337,8 @@
           "release-0.6-staging-postgres-monitoring-readback",
           "release-0.6-native-integration-acceptance",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-workspace-test-and-coverage-configuration"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -826037,6 +826218,94 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "proxy-security-headers-proof.json",
       "source_scope_proof_sha256": "f4daa93b1d2196f94a6a697b311a7e11964e1204430c05660f403445a0a84388"
+    },
+    "release-0.6-workspace-test-and-coverage-configuration": {
+      "batch": "release-0.6-workspace-test-and-coverage-configuration",
+      "base_commit": "46212a04aa3cfe7412a6b8a7e2dc51833b09a219",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.01",
+        "01-platform-infrastructure.md#T-01.04.02",
+        "01-platform-infrastructure.md#T-01.04.05",
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "release-readiness#R-05.02",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.03.03",
+        "06-security-testing-observability.md#T-06.04.02.04",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.01",
+        "06-security-testing-observability.md#T-06.07.02.02",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.07.02.05",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "06-security-testing-observability.md#T-06.11.02.03",
+        "06-security-testing-observability.md#T-06.11.02.04",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "vitest.config.ts",
+          "sha256": "25274bef7df785431bbf7f3ab348a604399716e280813dd70aa786ffc17c7f30"
+        },
+        {
+          "path": "packages/tsconfig/vitest.base.config.ts",
+          "sha256": "cacf7cba1dc965375f314e932ca0bbdc4f3884def06980f3d191b19f0bc58f99"
+        },
+        {
+          "path": "packages/tsconfig/vitest.base.config.test.ts",
+          "sha256": "ac6041e0aadb0dfa3097287cbbe4ccf094d065ba2f71a3560a06beecaeb3e25d"
+        },
+        {
+          "path": "apps/api/vitest.config.ts",
+          "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+        },
+        {
+          "path": "turbo.json",
+          "sha256": "d81d554260edd9a3e22854a220fd0e6dd95b2c7db7035de015e37a58c8279741"
+        },
+        {
+          "path": "package.json",
+          "sha256": "0d38ca16dff0d91baf910710ab6f0e82f44fb03b09a2d42796e34de9cfd6b5ee"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/test_check_changed_coverage.py",
+          "sha256": "642e118a0a4846d29cb8c80e00634740b2d61daf9d5eca0ce328d911eb3b9e18"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
+        },
+        {
+          "path": "docs/flaky-test-quarantine.md",
+          "sha256": "ceef0e9465e8df5a55a5316a56b68c3dd8f085bd4e9615853542cb4f24e7b15e"
+        }
+      ],
+      "checks": [
+        "Retained the working Vitest 4 projects configuration in the root vitest.config.ts. Vitest's supported projects field replaces the older workspace representation. The actual installed runner discovered 1,262 files across eight testable projects, and all three selected shared base configuration tests passed. Explicit imports and separate typechecking remain the shared defaults.",
+        "The exact Turbo dry graph finds eight executable test tasks and eight executable coverage tasks. Coverage enables --coverage and the API, web and worker retain upstream build dependencies. The per-package package-wide floors remain in place. Separate changed-code gates enforce 80 percent lines and 75 percent branches, and modified critical files enforce 90 and 85 percent. All 11 changed-coverage policy cases passed.",
+        "Manual release CI now selects the full test and coverage path without a repository variable change. The actual shell selector read the previous released commit from the canonical board, preserved the existing PR base and push-before paths, and selected the expected v0.5.0 SHA for the manual v0.6.0 candidate. Ordinary direct-main and PR development stays scoped to affected tests by default.",
+        "Workflow syntax passed. This batch verifies configuration and scoped policy controls. Running the full suite on the accepted release candidate remains a separate milestone gate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "workspace-test-mode-proof.json",
+      "source_scope_proof_sha256": "f32fd51a6746a78c45ffd8f7a23467fd3e41b977628c3e4f549b5a230c62d204"
     }
   },
   "historical_improvements": [
@@ -826076,19 +826345,19 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-workspace-test-and-coverage-configuration",
+    "id": "release-0.6-production-image-recipes-and-distribution",
     "release": "0.6.0",
     "task_keys": [
-      "01-platform-infrastructure.md#T-01.04.01",
-      "01-platform-infrastructure.md#T-01.04.02",
-      "01-platform-infrastructure.md#T-01.04.05",
+      "01-platform-infrastructure.md#T-03.01.01",
+      "01-platform-infrastructure.md#T-03.01.02",
+      "06-security-testing-observability.md#T-06.07.02.07",
       "release-readiness#R-05.02"
     ],
-    "goal": "Verify current workspace and package test discovery, coverage floors and Turbo test entry points. Keep the final full release gate separate from source and runner configuration."
+    "goal": "Verify the existing production Docker recipes and image-bound SBOM evidence. Preserve the final deployment-image and package approval boundaries."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",
-    "next_update_after": "v0.6.0 hosted browser and test configuration verification, package license disposition and production-equivalent environment availability",
+    "next_update_after": "v0.6.0 hosted browser, image distribution verification, package license disposition and production-equivalent environment availability",
     "method": "v0.5.0 staging and Telegram receipts are confirmed. v0.6.0 owner policy is recorded. Local and disposable staging rehearsals do not satisfy the production-equivalent TLS, provider, off-server recovery, load or schedule gates; production access/provisioning timing is external."
   },
   "capabilities": [

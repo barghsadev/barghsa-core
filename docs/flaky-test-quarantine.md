@@ -27,7 +27,7 @@ A quarantined **critical** test covers a P0/P1 business flow. Ordinary CI blocks
 Every CI run produces a flaky-test report:
 
 - The total number of known flaky tests (active quarantine records) is reported as a CI annotation.
-- The report appears in the CI run summary. Active valid quarantines remain visible in ordinary CI. A manually dispatched CI release check uses the stricter promotion mode.
+- The report appears in the CI run summary. Active valid quarantines remain visible in ordinary CI. A manually dispatched CI release check runs the full suite, measures changed-code coverage from the last released commit in the board, and uses the stricter promotion mode.
 - The nightly browser workflow runs Firefox, WebKit and both mobile projects, reports observed outcomes and checks the quarantine registry. Other scheduled quality gates remain tracked in T-05.05.01.
 
 ### 4. Quarantine Lifecycle

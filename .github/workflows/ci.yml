@@ -10,8 +10,8 @@ on:
 env:
   NODE_VERSION: '24'
   PNPM_VERSION: '10.11.1'
-  # Temporary fast mode for direct main pushes and PRs. Restore full checks with CI_FULL_CHECKS=true.
-  FULL_CI: ${{ vars.CI_FULL_CHECKS == 'true' || (github.event_name == 'pull_request' && vars.CI_FULL_PR_CHECKS == 'true') }}
+  # Manual release checks always run the full suite. Ordinary pushes and PRs can use affected tests.
+  FULL_CI: ${{ github.event_name == 'workflow_dispatch' || vars.CI_FULL_CHECKS == 'true' || (github.event_name == 'pull_request' && vars.CI_FULL_PR_CHECKS == 'true') }}
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -357,7 +357,7 @@ jobs:
           TEST_RESULT: ${{ needs.test.result }}
           INTEGRITY_RESULT: ${{ needs.integrity.result }}
         run: |
-          echo "Fast mode runs critical accessibility, affected tests and integrity checks. Restore the full browser suite and coverage with CI_FULL_CHECKS=true." >> "$GITHUB_STEP_SUMMARY"
+          echo "Fast mode runs critical accessibility, affected tests and integrity checks. Dispatch CI for a full release check or set CI_FULL_CHECKS=true for pushes." >> "$GITHUB_STEP_SUMMARY"
           test "$TEST_RESULT" = success
           test "$INTEGRITY_RESULT" = success
       - uses: actions/checkout@v4
@@ -397,7 +397,19 @@ jobs:
         if: env.FULL_CI == 'true'
         env:
           COVERAGE_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
-        run: python3 scripts/check-changed-coverage.py --base "$COVERAGE_BASE" --report "$RUNNER_TEMP/changed-coverage.json"
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then
+            COVERAGE_BASE=$(python3 - <<'PY'
+          import json
+
+          with open('kanban/board.json') as ledger:
+              releases = json.load(ledger)['releases']
+          previous = next(release for release in reversed(releases) if release['status'] == 'released')
+          print(previous['published_commit'])
+          PY
+            )
+          fi
+          python3 scripts/check-changed-coverage.py --base "$COVERAGE_BASE" --report "$RUNNER_TEMP/changed-coverage.json"
       - name: Upload changed coverage results
         if: always() && env.FULL_CI == 'true'
         uses: actions/upload-artifact@v4
