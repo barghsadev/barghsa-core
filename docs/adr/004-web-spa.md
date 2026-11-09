@@ -18,7 +18,9 @@ Canonical task IDs stay unchanged. Queue and traceability text are regenerated f
 
 ## Authentication and customer entry bundles
 
-The web build emits the application in `dist/` and a smaller authentication entry in `dist/auth/`. Both use the same React application and TanStack route definitions. Customer layout, electricity ordering, savings and wallet code are eager in the application entry; heavy routes remain split. Login, registration, password recovery and activation use the authentication entry. This preserves the existing 150 KB authentication and 250 KB electricity budgets without loading purchase code on the login page.
+The web build emits the application in `dist/` and a smaller authentication entry in `dist/auth/`. Both use the same React application and TanStack route definitions. Customer layout and electricity ordering are eager in the application entry. The current build splits savings and wallet routes alongside heavier service routes. Login, registration, password recovery and activation use the authentication entry.
+
+For v0.6.0, the Node 24 production build measures 290.67 KB gzip for the dashboard and 246.71 KB for electricity ordering. An isolated build with savings, savings ordering and wallet made eager measured 429.12 KB and 401.32 KB respectively. The limits remain 300 KB and 250 KB. The browser test holds the split scripts and checks localized loading, stable shell geometry and reduced motion. Acceptance of eager savings and wallet routes remains open in `T-01.03.03`.
 
 The production server and Vite preview select the entry by path. Crossing between entries performs a document navigation, preserving the current language and one-time success feedback through short-lived session storage. Unavailable browser storage never blocks sign-in or navigation. React rendering stays client-side; NestJS authority is unchanged.
 

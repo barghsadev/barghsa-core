@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T16:30:50+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T16:36:45+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 925 | Accepted with unchanged source bindings. |
-| verify | 411 | Existing work may be complete; inspect evidence before building. |
-| partial | 26 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 929 | Accepted with unchanged source bindings. |
+| verify | 406 | Existing work may be complete; inspect evidence before building. |
+| partial | 27 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 3 | Named owner or external prerequisite. |
@@ -39,13 +39,11 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify existing Vite and NestJS builds, lazy route boundaries, asset hashes and mandatory bundle budgets against current build evidence.
+Verify bounded request parsing, explicit proxy-hop trust and edge rate controls from existing fixtures and the current staging ingress. Keep production TLS and rollout gates separate.
 
-- `01-platform-infrastructure.md#T-01.03.01`: Configure Vite SPA build pipeline in `apps/web`
-- `01-platform-infrastructure.md#T-01.03.02`: Configure NestJS build pipeline in `apps/api`
-- `01-platform-infrastructure.md#T-01.03.03`: Implement route-level code splitting and lazy loading for heavy modules
-- `01-platform-infrastructure.md#T-01.03.04`: Implement bundle budget checking in CI
-- `01-platform-infrastructure.md#T-01.03.05`: Configure hashed filenames and CDN-ready public asset output
+- `06-security-testing-observability.md#T-06.07.03.02`: Disable `insecureHTTPParser`; set explicit request/body/header/time limits at proxy and application level
+- `06-security-testing-observability.md#T-06.07.03.04`: Ensure proxy trust configured to exact hop topology (not `trust proxy` globally)
+- `01-platform-infrastructure.md#T-04.04.03`: Configure edge rate limiting for auth, upload, and AI endpoints
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -964,11 +962,11 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-01.02.02` | done | Earlier acceptance_verified | Configure per-package tsconfig with project references in each of: `packages/db`, `packages/shared`, `packages/i18n`, `packages/ui`, `apps/web`, `apps/api` |
 | `01-platform-infrastructure.md#T-01.02.03` | done | Earlier acceptance_verified | Create root-level `tsconfig.json` that references all sub-projects with `files: []` so IDE picks up project references |
 | `01-platform-infrastructure.md#T-01.02.04` | done | Earlier acceptance_verified | Wire `turbo.json` `typecheck` task and CI step to run `turbo typecheck` |
-| `01-platform-infrastructure.md#T-01.03.01` | verify | Earlier acceptance_verified | Configure Vite SPA build pipeline in `apps/web` |
-| `01-platform-infrastructure.md#T-01.03.02` | verify | Earlier acceptance_verified | Configure NestJS build pipeline in `apps/api` |
-| `01-platform-infrastructure.md#T-01.03.03` | verify | Earlier acceptance_verified | Implement route-level code splitting and lazy loading for heavy modules |
-| `01-platform-infrastructure.md#T-01.03.04` | verify | Earlier acceptance_verified | Implement bundle budget checking in CI |
-| `01-platform-infrastructure.md#T-01.03.05` | verify | Earlier acceptance_verified | Configure hashed filenames and CDN-ready public asset output |
+| `01-platform-infrastructure.md#T-01.03.01` | done | Earlier acceptance_verified | Configure Vite SPA build pipeline in `apps/web` |
+| `01-platform-infrastructure.md#T-01.03.02` | done | Earlier acceptance_verified | Configure NestJS build pipeline in `apps/api` |
+| `01-platform-infrastructure.md#T-01.03.03` | partial | Earlier acceptance_verified | Implement route-level code splitting and lazy loading for heavy modules |
+| `01-platform-infrastructure.md#T-01.03.04` | done | Earlier acceptance_verified | Implement bundle budget checking in CI |
+| `01-platform-infrastructure.md#T-01.03.05` | done | Earlier acceptance_verified | Configure hashed filenames and CDN-ready public asset output |
 | `01-platform-infrastructure.md#T-01.04.01` | done | Earlier acceptance_verified | Create root `vitest.workspace.ts` that includes all packages and apps |
 | `01-platform-infrastructure.md#T-01.04.02` | done | Earlier acceptance_verified | Configure per-package Vitest with coverage thresholds |
 | `01-platform-infrastructure.md#T-01.04.03` | done | Earlier partial | Configure backend integration test setup with real PostgreSQL |

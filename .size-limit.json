@@ -283,7 +283,7 @@
       "chunk:CustomerProfileWorkspace",
       "src/components/BottomTabBar.tsx"
     ],
-    "limitKB": 255
+    "limitKB": 250
   },
   {
     "name": "Wallet",

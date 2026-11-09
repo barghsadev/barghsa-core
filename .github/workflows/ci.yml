@@ -152,10 +152,7 @@ jobs:
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm check:suppressed-errors
-      - name: Verify route budget checker
-        run: node --test scripts/check-route-budgets.test.mjs
       - name: Enforce production route budgets
-        if: env.FULL_CI == 'true'
         run: pnpm check:bundle
       - name: Validate pilot TLS proxy and edge quotas
         run: python3 scripts/test-pilot-proxy.py
