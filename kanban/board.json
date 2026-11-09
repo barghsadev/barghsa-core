@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T23:35:41+00:00",
-  "source_commit": "76078aa9cac598593b213692553765253d58bce2",
+  "updated": "2026-11-09T23:38:41+00:00",
+  "source_commit": "b754d5ac6395212649ac323f1a776f2545c6cade",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -17184,7 +17184,8 @@
         ],
         "batches": [
           "release-0.6-incident-response-and-runbooks",
-          "release-0.6-incident-runbook-criteria"
+          "release-0.6-incident-runbook-criteria",
+          "release-0.6-security-incident-and-review-prerequisites"
         ],
         "current_acceptance": {
           "kind": "source-bound-operations-documentation",
@@ -17192,7 +17193,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/incident-response.md",
-              "sha256": "0fa45e27ac71f56e1a2729845ae52efec1f4e6e30760efff11be1ea584724ca1"
+              "sha256": "8fa9107314b529741fadebcfc701c4323ae7fd0d34cb05617cdfe4b9fc62d0a1"
             },
             {
               "path": "docs/runbooks/payment-wallet-mismatch.md",
@@ -17237,7 +17238,8 @@
           ],
           "checks": [
             "All ten required incident runbooks exist and are indexed. Reviewed documented severity, symptoms and impact, responsible operator, numbered recovery steps, existing protected commands or authorized UI paths, verification, escalation and post-incident evidence. Verified cross-links and exact route or command references without changing live systems.",
-            "Reviewed current additions for read-only storage recovery, verified-contact OTP and blameless review. Existing incident documentation criteria and source links still pass."
+            "Reviewed current additions for read-only storage recovery, verified-contact OTP and blameless review. Existing incident documentation criteria and source links still pass.",
+            "The general incident guide gained a link to the dedicated security runbook. Its existing operational procedure and evidence scope were retained."
           ]
         }
       }
@@ -17396,7 +17398,8 @@
         ],
         "batches": [
           "release-0.6-incident-response-and-runbooks",
-          "release-0.6-incident-runbook-criteria"
+          "release-0.6-incident-runbook-criteria",
+          "release-0.6-security-incident-and-review-prerequisites"
         ],
         "current_acceptance": {
           "kind": "source-bound-operations-documentation",
@@ -17404,7 +17407,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/incident-response.md",
-              "sha256": "0fa45e27ac71f56e1a2729845ae52efec1f4e6e30760efff11be1ea584724ca1"
+              "sha256": "8fa9107314b529741fadebcfc701c4323ae7fd0d34cb05617cdfe4b9fc62d0a1"
             },
             {
               "path": "docs/operations/service-objectives.md",
@@ -17453,7 +17456,8 @@
           ],
           "checks": [
             "Reviewed the documented P0–P3 response times, primary and secondary rotation, private channel and P0 phone response, protected evidence and credential revocation, Persian and English customer drafts, and five-working-day post-incident follow-up. Alert priorities are distinct from confirmed incident severities. The active on-call rota, destination and dead-man readback are separate deployment requirements.",
-            "Reviewed current additions for read-only storage recovery, verified-contact OTP and blameless review. Existing incident documentation criteria and source links still pass."
+            "Reviewed current additions for read-only storage recovery, verified-contact OTP and blameless review. Existing incident documentation criteria and source links still pass.",
+            "The general incident guide gained a link to the dedicated security runbook. Its existing operational procedure and evidence scope were retained."
           ]
         }
       }
@@ -481870,20 +481874,39 @@
         "story": "06-security-testing-observability.md#spec-821e9747085a"
       },
       "requirement": "| T-06.08.02.02 | Schedule pre-launch independent penetration test; budget and vendor selection | M |",
-      "status": "verify",
+      "status": "blocked",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Obtain the owner-designated independent reviewer and a scheduled candidate review window, or the approved budget and vendor selector. Record the actual engagement scope and schedule."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-security-incident-and-review-prerequisites"
+        ],
+        "current_acceptance": {
+          "kind": "verified-partial-security-operations-prerequisites",
+          "base_commit": "b754d5ac6395212649ac323f1a776f2545c6cade",
+          "source_evidence": [
+            {
+              "path": "docs/security/security-verification.md",
+              "sha256": "16433e8f8b6050e62bbeee5e142d777846bda0459c89ca0ae9140b833a452473"
+            },
+            {
+              "path": "docs/threat-model.md",
+              "sha256": "09686e4478da069317f6773dd4cc5fc4fd97087b24603dfabe53164dd8c8bcb5"
+            }
+          ],
+          "checks": [
+            "The reviewed penetration-test scope and source-grounded threat model are available for reviewer selection and scheduling. A search of the repository found no independent reviewer assignment, approved budget, or scheduled review window."
+          ]
+        }
+      },
+      "blocker": "Independent penetration testing requires an owner-designated reviewer and review window or a budget and vendor selection authority. Requested the missing input on 2026-11-09 at 23:36 UTC."
     },
     {
       "key": "06-security-testing-observability.md#T-06.08.02.03",
@@ -481991,20 +482014,45 @@
         "story": "06-security-testing-observability.md#spec-fbd1f5b19912"
       },
       "requirement": "| T-06.08.03.01 | Create incident response runbook (`docs/runbooks/security-incident.md`): detection, containment, eradication, recovery, post-mortem | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "changed_paths": [
+          "docs/runbooks/security-incident.md",
+          "docs/operations/incident-response.md"
+        ],
+        "batches": [
+          "release-0.6-security-incident-and-review-prerequisites"
+        ],
+        "current_acceptance": {
+          "kind": "reviewed-security-incident-runbook",
+          "base_commit": "b754d5ac6395212649ac323f1a776f2545c6cade",
+          "source_evidence": [
+            {
+              "path": "docs/operations/incident-response.md",
+              "sha256": "8fa9107314b529741fadebcfc701c4323ae7fd0d34cb05617cdfe4b9fc62d0a1"
+            },
+            {
+              "path": "docs/runbooks/bad-deployment.md",
+              "sha256": "6fc4859717556e5ec7e8e6fc079c683c13dcf163e52342e068306d407fc9e2db"
+            },
+            {
+              "path": "docs/runbooks/security-incident.md",
+              "sha256": "4ff995871d6ceed7a425bd5188f1bd618b61a1c264aa4a8955f8b4a635f62118"
+            }
+          ],
+          "checks": [
+            "The linked security incident runbook covers detection and scope, containment, eradication, verified recovery and post-incident review. Existing operations severity and ownership procedures remain the authority.",
+            "The documentation review validated 22 relative links and all six response sections."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.08.03.02",
@@ -482017,20 +482065,43 @@
         "story": "06-security-testing-observability.md#spec-fbd1f5b19912"
       },
       "requirement": "| T-06.08.03.02 | Create key/token revocation procedure: API keys, provider secrets, session mass-revocation, certificate rotation | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "changed_paths": [
+          "docs/runbooks/security-incident.md"
+        ],
+        "batches": [
+          "release-0.6-security-incident-and-review-prerequisites"
+        ],
+        "current_acceptance": {
+          "kind": "reviewed-security-incident-runbook",
+          "base_commit": "b754d5ac6395212649ac323f1a776f2545c6cade",
+          "source_evidence": [
+            {
+              "path": "docs/runbooks/credential-compromise.md",
+              "sha256": "7ec48a447595fd62046804e970a0272ce6510fcf29796b6253a987a63f096056"
+            },
+            {
+              "path": "docs/runbooks/security-incident.md",
+              "sha256": "4ff995871d6ceed7a425bd5188f1bd618b61a1c264aa4a8955f8b4a635f62118"
+            },
+            {
+              "path": "docs/security/session-lifetime.md",
+              "sha256": "85efc197eccc06fc801bf1b9991389241a4ff376f98fbba0006b16a8e8b5e738"
+            }
+          ],
+          "checks": [
+            "The procedure distinguishes application and deployment API keys, provider and callback secrets, account-scoped and mass session/refresh revocation, and TLS certificate replacement and retirement. Each class has an authority boundary and an old/new verification step."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.08.03.03",
@@ -482043,20 +482114,35 @@
         "story": "06-security-testing-observability.md#spec-fbd1f5b19912"
       },
       "requirement": "| T-06.08.03.03 | Create customer communication templates: breach notification, service disruption, credential rotation | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "changed_paths": [
+          "docs/runbooks/security-incident.md"
+        ],
+        "batches": [
+          "release-0.6-security-incident-and-review-prerequisites"
+        ],
+        "current_acceptance": {
+          "kind": "reviewed-security-incident-runbook",
+          "base_commit": "b754d5ac6395212649ac323f1a776f2545c6cade",
+          "source_evidence": [
+            {
+              "path": "docs/runbooks/security-incident.md",
+              "sha256": "4ff995871d6ceed7a425bd5188f1bd618b61a1c264aa4a8955f8b4a635f62118"
+            }
+          ],
+          "checks": [
+            "Three reviewed Persian and English customer drafts cover a confirmed breach, service disruption and credential rotation. The runbook specifies verified facts, affected recipients and incident-owner approval before publication."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.08.03.04",
@@ -482069,20 +482155,47 @@
         "story": "06-security-testing-observability.md#spec-fbd1f5b19912"
       },
       "requirement": "| T-06.08.03.04 | Set up security event channel separate from ordinary error queues (e.g. dedicated Slack/alert channel) | S |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Verify the selected private security-event destination, actual current staging firing and resolution, and authorized recipient delivery with the release SHA. The existing request for an authorized staging operations email recipient remains pending."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-security-incident-and-review-prerequisites"
+        ],
+        "current_acceptance": {
+          "kind": "verified-partial-security-operations-prerequisites",
+          "base_commit": "b754d5ac6395212649ac323f1a776f2545c6cade",
+          "source_evidence": [
+            {
+              "path": "apps/worker/src/operations/alerts.ts",
+              "sha256": "3c9bc00603fa7f1487e11c24b884fda89449e63f4224ccdddb2af590af4990cb"
+            },
+            {
+              "path": "deploy/monitoring/notification-alerts.yml",
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+            },
+            {
+              "path": "deploy/monitoring/staging-alertmanager.yml",
+              "sha256": "baa720bcbbe818811a58183bb3d096d863e92dbd347f00bb25263b16dc40b0dd"
+            },
+            {
+              "path": "docs/operations/notification-monitoring.md",
+              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
+            }
+          ],
+          "checks": [
+            "Current source directs signature, stale-timestamp, replay and conflicting-payment alerts into the protected operations alert receiver independently of ordinary route error reporting. Existing isolated Prometheus/Alertmanager and receiver tests verified those routes."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.08.03.05",
@@ -482095,20 +482208,44 @@
         "story": "06-security-testing-observability.md#spec-fbd1f5b19912"
       },
       "requirement": "| T-06.08.03.05 | Define post-incident review process: timeline, root cause, corrective actions, documentation update | S |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "changed_paths": [
+          "docs/runbooks/security-incident.md",
+          "docs/operations/incident-response.md"
+        ],
+        "batches": [
+          "release-0.6-security-incident-and-review-prerequisites"
+        ],
+        "current_acceptance": {
+          "kind": "reviewed-security-incident-runbook",
+          "base_commit": "b754d5ac6395212649ac323f1a776f2545c6cade",
+          "source_evidence": [
+            {
+              "path": "docs/operations/incident-response.md",
+              "sha256": "8fa9107314b529741fadebcfc701c4323ae7fd0d34cb05617cdfe4b9fc62d0a1"
+            },
+            {
+              "path": "docs/runbooks/security-incident.md",
+              "sha256": "4ff995871d6ceed7a425bd5188f1bd618b61a1c264aa4a8955f8b4a635f62118"
+            },
+            {
+              "path": "docs/threat-model.md",
+              "sha256": "09686e4478da069317f6773dd4cc5fc4fd97087b24603dfabe53164dd8c8bcb5"
+            }
+          ],
+          "checks": [
+            "The post-incident process requires a UTC timeline, confirmed impact, root cause and contributing controls, corrective action owners and dates, closure evidence and a review of affected runbooks, threat model and tests within the established five-working-day review window."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.09.01.01",
@@ -488946,7 +489083,8 @@
           "docs/runbooks/payment-wallet-mismatch.md"
         ],
         "batches": [
-          "release-0.6-incident-runbook-criteria"
+          "release-0.6-incident-runbook-criteria",
+          "release-0.6-security-incident-and-review-prerequisites"
         ],
         "current_acceptance": {
           "kind": "source-bound-incident-runbook-review",
@@ -488958,12 +489096,13 @@
             },
             {
               "path": "docs/operations/incident-response.md",
-              "sha256": "0fa45e27ac71f56e1a2729845ae52efec1f4e6e30760efff11be1ea584724ca1"
+              "sha256": "8fa9107314b529741fadebcfc701c4323ae7fd0d34cb05617cdfe4b9fc62d0a1"
             }
           ],
           "checks": [
             "Reviewed detection, affected-payment containment, provider inquiry, audited correction and independent invoice and ledger readback.",
-            "Checked documentation and existing source-linked recovery paths. No incident was induced or live recovery certified."
+            "Checked documentation and existing source-linked recovery paths. No incident was induced or live recovery certified.",
+            "The general incident guide gained a link to the dedicated security runbook. Its existing operational procedure and evidence scope were retained."
           ]
         }
       }
@@ -488991,7 +489130,8 @@
           "docs/runbooks/refund-backlog.md"
         ],
         "batches": [
-          "release-0.6-incident-runbook-criteria"
+          "release-0.6-incident-runbook-criteria",
+          "release-0.6-security-incident-and-review-prerequisites"
         ],
         "current_acceptance": {
           "kind": "source-bound-incident-runbook-review",
@@ -489003,12 +489143,13 @@
             },
             {
               "path": "docs/operations/incident-response.md",
-              "sha256": "0fa45e27ac71f56e1a2729845ae52efec1f4e6e30760efff11be1ea584724ca1"
+              "sha256": "8fa9107314b529741fadebcfc701c4323ae7fd0d34cb05617cdfe4b9fc62d0a1"
             }
           ],
           "checks": [
             "Reviewed identification of overdue obligations, external outcome reconciliation, current authority, one authorized same-identity retry and proof of full settlement.",
-            "Checked documentation and existing source-linked recovery paths. No incident was induced or live recovery certified."
+            "Checked documentation and existing source-linked recovery paths. No incident was induced or live recovery certified.",
+            "The general incident guide gained a link to the dedicated security runbook. Its existing operational procedure and evidence scope were retained."
           ]
         }
       }
@@ -489037,7 +489178,8 @@
           "docs/runbooks/database-restore.md"
         ],
         "batches": [
-          "release-0.6-incident-runbook-criteria"
+          "release-0.6-incident-runbook-criteria",
+          "release-0.6-security-incident-and-review-prerequisites"
         ],
         "current_acceptance": {
           "kind": "source-bound-incident-runbook-review",
@@ -489053,12 +489195,13 @@
             },
             {
               "path": "docs/operations/incident-response.md",
-              "sha256": "0fa45e27ac71f56e1a2729845ae52efec1f4e6e30760efff11be1ea584724ca1"
+              "sha256": "8fa9107314b529741fadebcfc701c4323ae7fd0d34cb05617cdfe4b9fc62d0a1"
             }
           ],
           "checks": [
             "Reviewed single-writer fencing and promotion, TLS reconnect, isolated PITR, fingerprint and committed-record readback, measured recovery objectives and escalation.",
-            "Checked documentation and existing source-linked recovery paths. No incident was induced or live recovery certified."
+            "Checked documentation and existing source-linked recovery paths. No incident was induced or live recovery certified.",
+            "The general incident guide gained a link to the dedicated security runbook. Its existing operational procedure and evidence scope were retained."
           ]
         }
       }
@@ -489086,7 +489229,8 @@
           "docs/runbooks/storage-outage.md"
         ],
         "batches": [
-          "release-0.6-incident-runbook-criteria"
+          "release-0.6-incident-runbook-criteria",
+          "release-0.6-security-incident-and-review-prerequisites"
         ],
         "current_acceptance": {
           "kind": "source-bound-incident-runbook-review",
@@ -489098,12 +489242,13 @@
             },
             {
               "path": "docs/operations/incident-response.md",
-              "sha256": "0fa45e27ac71f56e1a2729845ae52efec1f4e6e30760efff11be1ea584724ca1"
+              "sha256": "8fa9107314b529741fadebcfc701c4323ae7fd0d34cb05617cdfe4b9fc62d0a1"
             }
           ],
           "checks": [
             "Reviewed scoped read-only fallback, approved region change preserving versions and holds, version-aware checksum recovery and authorized browser revalidation.",
-            "Checked documentation and existing source-linked recovery paths. No incident was induced or live recovery certified."
+            "Checked documentation and existing source-linked recovery paths. No incident was induced or live recovery certified.",
+            "The general incident guide gained a link to the dedicated security runbook. Its existing operational procedure and evidence scope were retained."
           ]
         }
       }
@@ -489131,7 +489276,8 @@
           "docs/runbooks/notification-outage.md"
         ],
         "batches": [
-          "release-0.6-incident-runbook-criteria"
+          "release-0.6-incident-runbook-criteria",
+          "release-0.6-security-incident-and-review-prerequisites"
         ],
         "current_acceptance": {
           "kind": "source-bound-incident-runbook-review",
@@ -489143,12 +489289,13 @@
             },
             {
               "path": "docs/operations/incident-response.md",
-              "sha256": "0fa45e27ac71f56e1a2729845ae52efec1f4e6e30760efff11be1ea584724ca1"
+              "sha256": "8fa9107314b529741fadebcfc701c4323ae7fd0d34cb05617cdfe4b9fc62d0a1"
             }
           ],
           "checks": [
             "Reviewed tested provider replacement, controlled native OTP verification, private in-app business updates, uncertain send reconciliation and actual channel receipts.",
-            "Checked documentation and existing source-linked recovery paths. No incident was induced or live recovery certified."
+            "Checked documentation and existing source-linked recovery paths. No incident was induced or live recovery certified.",
+            "The general incident guide gained a link to the dedicated security runbook. Its existing operational procedure and evidence scope were retained."
           ]
         }
       }
@@ -489176,7 +489323,8 @@
           "docs/runbooks/credential-compromise.md"
         ],
         "batches": [
-          "release-0.6-incident-runbook-criteria"
+          "release-0.6-incident-runbook-criteria",
+          "release-0.6-security-incident-and-review-prerequisites"
         ],
         "current_acceptance": {
           "kind": "source-bound-incident-runbook-review",
@@ -489188,12 +489336,13 @@
             },
             {
               "path": "docs/operations/incident-response.md",
-              "sha256": "0fa45e27ac71f56e1a2729845ae52efec1f4e6e30760efff11be1ea584724ca1"
+              "sha256": "8fa9107314b529741fadebcfc701c4323ae7fd0d34cb05617cdfe4b9fc62d0a1"
             }
           ],
           "checks": [
             "Reviewed scoped credential revocation, protected rotation, affected-customer communication approval, sanitized audit preservation and negative verification.",
-            "Checked documentation and existing source-linked recovery paths. No incident was induced or live recovery certified."
+            "Checked documentation and existing source-linked recovery paths. No incident was induced or live recovery certified.",
+            "The general incident guide gained a link to the dedicated security runbook. Its existing operational procedure and evidence scope were retained."
           ]
         }
       }
@@ -489222,7 +489371,8 @@
         ],
         "batches": [
           "release-0.6-staging-image-rollback",
-          "release-0.6-incident-runbook-criteria"
+          "release-0.6-incident-runbook-criteria",
+          "release-0.6-security-incident-and-review-prerequisites"
         ],
         "current_acceptance": {
           "kind": "source-bound-incident-runbook-review",
@@ -489234,12 +489384,13 @@
             },
             {
               "path": "docs/operations/incident-response.md",
-              "sha256": "0fa45e27ac71f56e1a2729845ae52efec1f4e6e30760efff11be1ea584724ca1"
+              "sha256": "8fa9107314b529741fadebcfc701c4323ae7fd0d34cb05617cdfe4b9fc62d0a1"
             }
           ],
           "checks": [
             "Reviewed image and compatible migration recovery, smoke and reconciliation checks, incident reporting and blameless follow-up.",
-            "Checked documentation and existing source-linked recovery paths. No incident was induced or live recovery certified."
+            "Checked documentation and existing source-linked recovery paths. No incident was induced or live recovery certified.",
+            "The general incident guide gained a link to the dedicated security runbook. Its existing operational procedure and evidence scope were retained."
           ]
         }
       }
@@ -846607,6 +846758,89 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/threat-model",
       "source_scope_proof": "threat-model-review.json",
       "source_scope_proof_sha256": "e919139a18dc37b5c526ee0bb2163833a750bf682a6da081a8deec62b37b32a6"
+    },
+    "release-0.6-security-incident-and-review-prerequisites": {
+      "batch": "release-0.6-security-incident-and-review-prerequisites",
+      "base_commit": "b754d5ac6395212649ac323f1a776f2545c6cade",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-07.04.01",
+        "01-platform-infrastructure.md#T-07.04.04",
+        "06-security-testing-observability.md#T-06.08.02.02",
+        "06-security-testing-observability.md#T-06.08.03.01",
+        "06-security-testing-observability.md#T-06.08.03.02",
+        "06-security-testing-observability.md#T-06.08.03.03",
+        "06-security-testing-observability.md#T-06.08.03.04",
+        "06-security-testing-observability.md#T-06.08.03.05",
+        "06-security-testing-observability.md#T-06.17.01.01",
+        "06-security-testing-observability.md#T-06.17.01.02",
+        "06-security-testing-observability.md#T-06.17.01.03",
+        "06-security-testing-observability.md#T-06.17.01.04",
+        "06-security-testing-observability.md#T-06.17.01.05",
+        "06-security-testing-observability.md#T-06.17.01.06",
+        "06-security-testing-observability.md#T-06.17.01.07"
+      ],
+      "changed_paths": [
+        "docs/runbooks/security-incident.md",
+        "docs/operations/incident-response.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/operations/alerts.ts",
+          "sha256": "3c9bc00603fa7f1487e11c24b884fda89449e63f4224ccdddb2af590af4990cb"
+        },
+        {
+          "path": "deploy/monitoring/notification-alerts.yml",
+          "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+        },
+        {
+          "path": "deploy/monitoring/staging-alertmanager.yml",
+          "sha256": "baa720bcbbe818811a58183bb3d096d863e92dbd347f00bb25263b16dc40b0dd"
+        },
+        {
+          "path": "docs/operations/incident-response.md",
+          "sha256": "8fa9107314b529741fadebcfc701c4323ae7fd0d34cb05617cdfe4b9fc62d0a1"
+        },
+        {
+          "path": "docs/operations/notification-monitoring.md",
+          "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
+        },
+        {
+          "path": "docs/runbooks/bad-deployment.md",
+          "sha256": "6fc4859717556e5ec7e8e6fc079c683c13dcf163e52342e068306d407fc9e2db"
+        },
+        {
+          "path": "docs/runbooks/credential-compromise.md",
+          "sha256": "7ec48a447595fd62046804e970a0272ce6510fcf29796b6253a987a63f096056"
+        },
+        {
+          "path": "docs/runbooks/security-incident.md",
+          "sha256": "4ff995871d6ceed7a425bd5188f1bd618b61a1c264aa4a8955f8b4a635f62118"
+        },
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "16433e8f8b6050e62bbeee5e142d777846bda0459c89ca0ae9140b833a452473"
+        },
+        {
+          "path": "docs/security/session-lifetime.md",
+          "sha256": "85efc197eccc06fc801bf1b9991389241a4ff376f98fbba0006b16a8e8b5e738"
+        },
+        {
+          "path": "docs/threat-model.md",
+          "sha256": "09686e4478da069317f6773dd4cc5fc4fd97087b24603dfabe53164dd8c8bcb5"
+        }
+      ],
+      "checks": [
+        "The linked security incident runbook covers detection and scope, containment, eradication, verified recovery and post-incident review. Existing operations severity and ownership procedures remain the authority.",
+        "The documentation review validated 22 relative links and all six response sections.",
+        "The procedure distinguishes application and deployment API keys, provider and callback secrets, account-scoped and mass session/refresh revocation, and TLS certificate replacement and retirement. Each class has an authority boundary and an old/new verification step.",
+        "Three reviewed Persian and English customer drafts cover a confirmed breach, service disruption and credential rotation. The runbook specifies verified facts, affected recipients and incident-owner approval before publication.",
+        "Current source directs signature, stale-timestamp, replay and conflicting-payment alerts into the protected operations alert receiver independently of ordinary route error reporting. Existing isolated Prometheus/Alertmanager and receiver tests verified those routes.",
+        "The post-incident process requires a UTC timeline, confirmed impact, root cause and contributing controls, corrective action owners and dates, closure evidence and a review of affected runbooks, threat model and tests within the established five-working-day review window.",
+        "The reviewed penetration-test scope and source-grounded threat model are available for reviewer selection and scheduling. A search of the repository found no independent reviewer assignment, approved budget, or scheduled review window."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/security-incident-runbook",
+      "source_scope_proof": "security-incident-review.json",
+      "source_scope_proof_sha256": "76cc705e3587b1f0c660a4d32ad4d2c469392d30c5025c41ed1802e58bf5ff38"
     }
   },
   "historical_improvements": [

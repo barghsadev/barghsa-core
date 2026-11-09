@@ -27,7 +27,7 @@ An alert priority selects the first response. The operator who confirms impact a
 - Finance and payments. [Payment or wallet mismatch](../runbooks/payment-wallet-mismatch.md). [Refund backlog](../runbooks/refund-backlog.md).
 - Data and storage. [PostgreSQL failover](../runbooks/database-failover.md). [PostgreSQL restore](../runbooks/database-restore.md). [Object storage outage](../runbooks/storage-outage.md).
 - Platform and providers. [Bad deployment and rollback](../runbooks/bad-deployment.md). [Redis loss](../runbooks/redis-loss.md). [Notification outage](../runbooks/notification-outage.md). [AI provider outage](../runbooks/ai-provider-outage.md).
-- Security. [Credential compromise](../runbooks/credential-compromise.md).
+- Security. [Security incident runbook](../runbooks/security-incident.md). [Credential compromise](../runbooks/credential-compromise.md).
 
 ## Security incidents
 

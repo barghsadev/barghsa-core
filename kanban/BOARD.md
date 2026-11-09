@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T23:35:41+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T23:38:41+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,12 +10,12 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1068 | Accepted with unchanged source bindings. |
-| verify | 259 | Existing work may be complete; inspect evidence before building. |
-| partial | 35 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 1072 | Accepted with unchanged source bindings. |
+| verify | 253 | Existing work may be complete; inspect evidence before building. |
+| partial | 36 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
-| blocked | 3 | Named owner or external prerequisite. |
+| blocked | 4 | Named owner or external prerequisite. |
 | superseded | 3 | Explicit approved scope disposition. |
 
 The earlier audit accepted 219 tasks, found 54 partial claims and deferred 49. Changed source bindings require renewal. All original 1,355 tasks are retained. No evidence means unknown, not unbuilt.
@@ -1241,15 +1241,15 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.08.01.05` | done | Recorded batch work | Define review cadence: quarterly full review + review on material flow changes |
 | `06-security-testing-observability.md#T-06.08.01.06` | done | Recorded batch work | Create PR checklist item: threat model update required when trust boundary, sensitive data, provider, permission, or financial flow changes |
 | `06-security-testing-observability.md#T-06.08.02.01` | done | Recorded batch work | Define pen test scope: auth, session, MFA, CSRF, CSP, BOLA/IDOR, rate limits, SSRF, file upload, webhooks, wallet/payment, AI tools |
-| `06-security-testing-observability.md#T-06.08.02.02` | verify | Inventory needed | Schedule pre-launch independent penetration test; budget and vendor selection |
+| `06-security-testing-observability.md#T-06.08.02.02` | blocked | Recorded batch work | Schedule pre-launch independent penetration test; budget and vendor selection |
 | `06-security-testing-observability.md#T-06.08.02.03` | done | Recorded batch work | Define criteria: critical/high with credible production path → fix before release; accepted risk requires owner+expiry |
 | `06-security-testing-observability.md#T-06.08.02.04` | verify | Inventory needed | Implement automated authenticated DAST in staging (e.g. OWASP ZAP API scan) |
 | `06-security-testing-observability.md#T-06.08.02.05` | verify | Inventory needed | Write custom security E2E suite for targeted API test cases CSRF, CORS, session rotation, rate limits, BOLA, SSRF, open redirect |
-| `06-security-testing-observability.md#T-06.08.03.01` | verify | Inventory needed | Create incident response runbook (`docs/runbooks/security-incident.md`): detection, containment, eradication, recovery, post-mortem |
-| `06-security-testing-observability.md#T-06.08.03.02` | verify | Inventory needed | Create key/token revocation procedure: API keys, provider secrets, session mass-revocation, certificate rotation |
-| `06-security-testing-observability.md#T-06.08.03.03` | verify | Inventory needed | Create customer communication templates: breach notification, service disruption, credential rotation |
-| `06-security-testing-observability.md#T-06.08.03.04` | verify | Inventory needed | Set up security event channel separate from ordinary error queues (e.g. dedicated Slack/alert channel) |
-| `06-security-testing-observability.md#T-06.08.03.05` | verify | Inventory needed | Define post-incident review process: timeline, root cause, corrective actions, documentation update |
+| `06-security-testing-observability.md#T-06.08.03.01` | done | Recorded batch work | Create incident response runbook (`docs/runbooks/security-incident.md`): detection, containment, eradication, recovery, post-mortem |
+| `06-security-testing-observability.md#T-06.08.03.02` | done | Recorded batch work | Create key/token revocation procedure: API keys, provider secrets, session mass-revocation, certificate rotation |
+| `06-security-testing-observability.md#T-06.08.03.03` | done | Recorded batch work | Create customer communication templates: breach notification, service disruption, credential rotation |
+| `06-security-testing-observability.md#T-06.08.03.04` | partial | Recorded batch work | Set up security event channel separate from ordinary error queues (e.g. dedicated Slack/alert channel) |
+| `06-security-testing-observability.md#T-06.08.03.05` | done | Recorded batch work | Define post-incident review process: timeline, root cause, corrective actions, documentation update |
 | `06-security-testing-observability.md#T-06.09.01.01` | done | Recorded batch work | Configure Vitest across all packages with shared config, coverage thresholds, and reporter |
 | `06-security-testing-observability.md#T-06.09.01.02` | verify | Inventory needed | Implement test utilities: controllable clock, fixed UUIDs, deterministic random, fake provider factories |
 | `06-security-testing-observability.md#T-06.09.01.03` | verify | Inventory needed | Implement table-driven test helper for financial examples (inputs → expected outputs) |
