@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T15:43:55+00:00",
+  "updated": "2026-11-09T15:47:55+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -8945,12 +8945,10 @@
         "story": "01-platform-infrastructure.md#spec-fa9c8259e872"
       },
       "requirement": "- **T-03.03.04:** Add readiness check that excludes non-critical dependencies\n  - **Notes:** Only PostgreSQL is critical for ready status. If Redis is down, return ready with a warning header (`X-Health-Warning: redis-unavailable`). If object storage is down, return ready but mark degraded. AI provider, notification provider, and bill-data provider outages do NOT make the API non-ready — they show a per-degraded-capability maintenance mode.\n  - **Dependencies:** T-03.03.01\n  - **Complexity:** S\n  - **UI/UX:** N/A\n\n---",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "An isolated dependency rehearsal verified optional Redis/storage/AI availability does not block readiness; PostgreSQL outage returned 503, liveness stayed 200, and readiness recovered when PostgreSQL resumed. Full provider-specific maintenance journey and final deployed readiness remain open."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -8987,9 +8985,56 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-runtime-sbom-provenance"
+          "release-0.6-runtime-sbom-provenance",
+          "release-0.6-runtime-readiness-and-staging-smoke"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "source-bound-readiness-and-capability-degradation",
+          "base_commit": "e47415d3a5a049b612fc443d868e0f1824d5a6d9",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/health/storage-health-http.integration.test.ts",
+              "sha256": "df72d92ba7ac46a4016af1896f7428998b265664e48013716c41e7590b1b701a"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "a45f415770196e8fd7129da867e018ba6fa2d881325da0b32567501ea41cff8e"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
+              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+            },
+            {
+              "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
+              "sha256": "7e14c353b7a05d0896d37c28d7beeb7871712ab268f74e254d2c59e4e9acbc70"
+            },
+            {
+              "path": "apps/api/src/health/health.controller.ts",
+              "sha256": "e9f6a4494b73b18d25972007845fddb97dd99f80028058a6462111e7156f0b60"
+            },
+            {
+              "path": "apps/api/src/health/health.service.ts",
+              "sha256": "cafbb49eda3715d91702c4529d756f154d0f8c485278ddfdbfc8409ce281ea36"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
+              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+            },
+            {
+              "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
+              "sha256": "58e24e4be4ee977610a057a2ec46d331958bd1a96dac4cad4757991d92addb3f"
+            },
+            {
+              "path": "packages/db/src/index.ts",
+              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+            }
+          ],
+          "checks": [
+            "Six focused real-PostgreSQL and provider-adapter cases passed on migration 0282. Storage denial and stalled bucket access degrade without failing HTTP readiness, then recover. Unconfigured bill data permits manual entry. AI failures stay on the AI capability, while SMS and email failures preserve their circuit and recovery protections.",
+            "The source of global readiness, Redis, object storage, and the DB health entry point matches the deployed v0.5.0 baseline. Only PostgreSQL governs HTTP readiness. The prior exact runtime verification observed optional Redis and storage warnings, a PostgreSQL outage returning 503 while liveness stayed available, and recovery after PostgreSQL resumed. Both actual staging HTTPS health bodies report ok.",
+            "The staging queue and rollback tests passed all 14 cases. Both shell scripts passed syntax checks. Final v0.6.0 release smoke, migration ordering and exact live metadata remain tracked by the separate staging deployment task."
+          ]
+        }
       }
     },
     {
@@ -476389,7 +476434,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-runtime-sbom-provenance"
+          "release-0.6-runtime-sbom-provenance",
+          "release-0.6-runtime-readiness-and-staging-smoke"
         ],
         "current_acceptance": null
       }
@@ -738129,7 +738175,8 @@
           "release-0.6-shipped-component-license-gate",
           "release-0.6-database-client-pool-metrics",
           "release-0.6-staging-postgres-monitoring-readback",
-          "release-0.6-packaged-production-seed"
+          "release-0.6-packaged-production-seed",
+          "release-0.6-runtime-readiness-and-staging-smoke"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -825825,6 +825872,81 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "packaged-production-seed-proof.json",
       "source_scope_proof_sha256": "5e40738fd79c42baed54a2fdd638c4d9c4217eb441ba138e1f7c12ae9984e550"
+    },
+    "release-0.6-runtime-readiness-and-staging-smoke": {
+      "batch": "release-0.6-runtime-readiness-and-staging-smoke",
+      "base_commit": "e47415d3a5a049b612fc443d868e0f1824d5a6d9",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-03.03.04",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "release-readiness#R-05.03"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/health/storage-health-http.integration.test.ts",
+          "sha256": "df72d92ba7ac46a4016af1896f7428998b265664e48013716c41e7590b1b701a"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+          "sha256": "a45f415770196e8fd7129da867e018ba6fa2d881325da0b32567501ea41cff8e"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
+          "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
+          "sha256": "7e14c353b7a05d0896d37c28d7beeb7871712ab268f74e254d2c59e4e9acbc70"
+        },
+        {
+          "path": "apps/api/src/health/health.controller.ts",
+          "sha256": "e9f6a4494b73b18d25972007845fddb97dd99f80028058a6462111e7156f0b60"
+        },
+        {
+          "path": "apps/api/src/health/health.service.ts",
+          "sha256": "cafbb49eda3715d91702c4529d756f154d0f8c485278ddfdbfc8409ce281ea36"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
+          "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
+          "sha256": "58e24e4be4ee977610a057a2ec46d331958bd1a96dac4cad4757991d92addb3f"
+        },
+        {
+          "path": "packages/db/src/index.ts",
+          "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "53b897128e806f6a85cb96c7504bd3c5c2f924e5d1b367b696f51c5ace204a42"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "455e8d0db9459b028d2b4ce83d7bb43ea0f90f535546c2d501edf72758be34a2"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "d667a127c0616c5512862554cde5ba5d99402cb7c9a42bc8691f8b6ea9e9500e"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "f36c07cd9b5a9e74db21cd05bfedf3cda3437f5c4e2f28e938d30c0be65e9f90"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "44d1660092eef8a522f16b654905d7f36827061d4d950ce7203fe4e586059ce4"
+        }
+      ],
+      "checks": [
+        "Six focused real-PostgreSQL and provider-adapter cases passed on migration 0282. Storage denial and stalled bucket access degrade without failing HTTP readiness, then recover. Unconfigured bill data permits manual entry. AI failures stay on the AI capability, while SMS and email failures preserve their circuit and recovery protections.",
+        "The source of global readiness, Redis, object storage, and the DB health entry point matches the deployed v0.5.0 baseline. Only PostgreSQL governs HTTP readiness. The prior exact runtime verification observed optional Redis and storage warnings, a PostgreSQL outage returning 503 while liveness stayed available, and recovery after PostgreSQL resumed. Both actual staging HTTPS health bodies report ok.",
+        "The staging queue and rollback tests passed all 14 cases. Both shell scripts passed syntax checks. Final v0.6.0 release smoke, migration ordering and exact live metadata remain tracked by the separate staging deployment task."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "runtime-readiness-capability-proof.json",
+      "source_scope_proof_sha256": "e89f46d587f8cf7f7763c69d4ebe468ca4dfd5a0e0e27cb86a3ca055abc2631c"
     }
   },
   "historical_improvements": [
@@ -825864,18 +825986,20 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-runtime-readiness-and-staging-smoke",
+    "id": "release-0.6-proxy-security-headers",
     "release": "0.6.0",
     "task_keys": [
-      "01-platform-infrastructure.md#T-03.03.04",
-      "06-security-testing-observability.md#T-06.12.03.02",
-      "release-readiness#R-05.03"
+      "01-platform-infrastructure.md#T-04.04.02",
+      "06-security-testing-observability.md#T-06.02.03.02",
+      "06-security-testing-observability.md#T-06.02.03.03",
+      "06-security-testing-observability.md#T-06.02.03.04",
+      "06-security-testing-observability.md#T-06.02.03.05"
     ],
-    "goal": "Verify actual readiness dependencies and migration-before-traffic checks in the packaged staging smoke path. Retain the external topology prerequisites."
+    "goal": "Verify current reverse-proxy and application security headers against their source and effective TLS/CSP modes. Keep the report-only observation and final staging release gates intact."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",
-    "next_update_after": "v0.6.0 hosted browser and staging smoke verification, package license disposition and production-equivalent environment availability",
+    "next_update_after": "v0.6.0 hosted browser and proxy verification, package license disposition and production-equivalent environment availability",
     "method": "v0.5.0 staging and Telegram receipts are confirmed. v0.6.0 owner policy is recorded. Local and disposable staging rehearsals do not satisfy the production-equivalent TLS, provider, off-server recovery, load or schedule gates; production access/provisioning timing is external."
   },
   "capabilities": [

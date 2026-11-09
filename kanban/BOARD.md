@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T15:43:55+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T15:47:55+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 910 | Accepted with unchanged source bindings. |
+| done | 911 | Accepted with unchanged source bindings. |
 | verify | 424 | Existing work may be complete; inspect evidence before building. |
-| partial | 28 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 27 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 3 | Named owner or external prerequisite. |
@@ -39,11 +39,13 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify actual readiness dependencies and migration-before-traffic checks in the packaged staging smoke path. Retain the external topology prerequisites.
+Verify current reverse-proxy and application security headers against their source and effective TLS/CSP modes. Keep the report-only observation and final staging release gates intact.
 
-- `01-platform-infrastructure.md#T-03.03.04`: Add readiness check that excludes non-critical dependencies
-- `06-security-testing-observability.md#T-06.12.03.02`: Build staging smoke deployment: readiness/liveness verification, migration rehearsal
-- `release-readiness#R-05.03`: Prove production deployment, backup and recovery prerequisites
+- `01-platform-infrastructure.md#T-04.04.02`: Configure security headers in reverse proxy
+- `06-security-testing-observability.md#T-06.02.03.02`: Implement `Strict-Transport-Security` header configurable by env; enable HSTS only in production with verified TLS
+- `06-security-testing-observability.md#T-06.02.03.03`: Ensure `frame-ancestors 'none'` in CSP prevents clickjacking
+- `06-security-testing-observability.md#T-06.02.03.04`: Write integration tests: verify all security headers present and correct on responses
+- `06-security-testing-observability.md#T-06.02.03.05`: Add CI check that fails if required security headers are missing or misconfigured
 
 ## v0.2.0: Complete customer journeys
 
@@ -1003,7 +1005,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-03.03.01` | done | Earlier acceptance_verified | Implement liveness and readiness controllers in NestJS API |
 | `01-platform-infrastructure.md#T-03.03.02` | verify | Earlier acceptance_verified | Implement graceful `SIGTERM` handler for NestJS API and worker |
 | `01-platform-infrastructure.md#T-03.03.03` | verify | Earlier acceptance_verified | Implement graceful shutdown for web frontend server |
-| `01-platform-infrastructure.md#T-03.03.04` | partial | Earlier partial | Add readiness check that excludes non-critical dependencies |
+| `01-platform-infrastructure.md#T-03.03.04` | done | Earlier partial | Add readiness check that excludes non-critical dependencies |
 | `01-platform-infrastructure.md#T-04.01.01` | partial | Earlier partial | Configure PostgreSQL connection pooling strategy |
 | `01-platform-infrastructure.md#T-04.01.02` | partial | Earlier partial | Configure automated backups with WAL archiving and PITR |
 | `01-platform-infrastructure.md#T-04.01.03` | partial | Earlier partial | Document and automate restore procedure |
