@@ -69333,7 +69333,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-private-api-monitoring"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -70161,7 +70162,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "20df085cb3cf05693b68db8f84593537f3599bfbceb1637714a1d3bd84cf645f"
+              "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -71635,7 +71636,14 @@
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
             }
-          ]
+          ],
+          "private_monitoring_source_renewal": {
+            "batch": "release-0.6-private-api-monitoring",
+            "paths": [
+              "deploy/monitoring/staging-prometheus.yml"
+            ],
+            "base_commit": "133576f31ba18e34a02b1892866a3210e3cad037"
+          }
         },
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -74333,7 +74341,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-rehearsal",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.6-private-api-monitoring"
         ],
         "current_acceptance": {
           "status": "done",
@@ -74389,7 +74398,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "20df085cb3cf05693b68db8f84593537f3599bfbceb1637714a1d3bd84cf645f"
+              "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -74505,7 +74514,14 @@
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
             }
-          ]
+          ],
+          "private_monitoring_source_renewal": {
+            "batch": "release-0.6-private-api-monitoring",
+            "paths": [
+              "deploy/monitoring/staging-prometheus.yml"
+            ],
+            "base_commit": "133576f31ba18e34a02b1892866a3210e3cad037"
+          }
         },
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -87436,7 +87452,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-action-contrast",
           "release-0.5-conditional-heading-acceptance",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-private-api-monitoring"
         ],
         "current_acceptance": {
           "status": "done",
@@ -87684,7 +87701,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "20df085cb3cf05693b68db8f84593537f3599bfbceb1637714a1d3bd84cf645f"
+              "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -87861,7 +87878,14 @@
               "base_commit": "270eedb3bbf6fd2df6679e4a7a49b821290ecfe2",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-heading-acceptance/proof.json"
             }
-          ]
+          ],
+          "private_monitoring_source_renewal": {
+            "batch": "release-0.6-private-api-monitoring",
+            "paths": [
+              "deploy/monitoring/staging-prometheus.yml"
+            ],
+            "base_commit": "133576f31ba18e34a02b1892866a3210e3cad037"
+          }
         },
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -437295,7 +437319,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-protected-staff-browser-closure",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.6-private-api-monitoring"
         ],
         "current_acceptance": {
           "status": "done",
@@ -437507,7 +437532,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "20df085cb3cf05693b68db8f84593537f3599bfbceb1637714a1d3bd84cf645f"
+              "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -437756,7 +437781,14 @@
               "base_commit": "054e9d662b3f017f4ba07154000ef26ad167ae29",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-census-closure/route-census-proof.json"
             }
-          ]
+          ],
+          "private_monitoring_source_renewal": {
+            "batch": "release-0.6-private-api-monitoring",
+            "paths": [
+              "deploy/monitoring/staging-prometheus.yml"
+            ],
+            "base_commit": "133576f31ba18e34a02b1892866a3210e3cad037"
+          }
         },
         "live_credit_observation": {
           "receipt": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/live-credit-observation.json",
@@ -468740,7 +468772,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-browser-origin-security",
-          "release-0.6-remove-unapproved-session-location-data"
+          "release-0.6-remove-unapproved-session-location-data",
+          "release-0.6-private-api-monitoring"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -468748,7 +468781,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "fd7b1dd2ad9c021bca198fa65f7bd5251c9626b89acd48bba4f6bd2e5f6c5533"
+              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -468811,7 +468844,14 @@
             "Per-session token persisted with the session; missing, stale, or unmatched headers cannot extend or mutate it, including after a lock wait. Anonymous challenges use their independent store.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
             "The exact compiled API and source-bound session HTTP suite passed 17 cases on isolated PostgreSQL 16, including the owner-approved null location even for a public IP and legacy country metadata. Existing authentication, CSRF, expiry, step-up, revoke-all and forced-change assertions passed."
-          ]
+          ],
+          "private_monitoring_source_renewal": {
+            "batch": "release-0.6-private-api-monitoring",
+            "paths": [
+              "apps/api/src/app.factory.ts"
+            ],
+            "base_commit": "133576f31ba18e34a02b1892866a3210e3cad037"
+          }
         }
       }
     },
@@ -468837,7 +468877,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-browser-origin-security",
-          "release-0.6-remove-unapproved-session-location-data"
+          "release-0.6-remove-unapproved-session-location-data",
+          "release-0.6-private-api-monitoring"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -468845,7 +468886,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "fd7b1dd2ad9c021bca198fa65f7bd5251c9626b89acd48bba4f6bd2e5f6c5533"
+              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -468908,7 +468949,14 @@
             "Global unsafe-session guard and public challenge checks exercised through real HTTP, with independent owner-approved signed/native exceptions preserved.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
             "The exact compiled API and source-bound session HTTP suite passed 17 cases on isolated PostgreSQL 16, including the owner-approved null location even for a public IP and legacy country metadata. Existing authentication, CSRF, expiry, step-up, revoke-all and forced-change assertions passed."
-          ]
+          ],
+          "private_monitoring_source_renewal": {
+            "batch": "release-0.6-private-api-monitoring",
+            "paths": [
+              "apps/api/src/app.factory.ts"
+            ],
+            "base_commit": "133576f31ba18e34a02b1892866a3210e3cad037"
+          }
         }
       }
     },
@@ -468934,7 +468982,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-browser-origin-security",
-          "release-0.6-remove-unapproved-session-location-data"
+          "release-0.6-remove-unapproved-session-location-data",
+          "release-0.6-private-api-monitoring"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -468942,7 +468991,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "fd7b1dd2ad9c021bca198fa65f7bd5251c9626b89acd48bba4f6bd2e5f6c5533"
+              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -468989,7 +469038,14 @@
             "Exact APP_PUBLIC_URL origin; Referer fallback only when Origin is absent. A foreign browser cannot consume a valid challenge, and the trusted browser can use it once.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
             "The exact compiled API and source-bound session HTTP suite passed 17 cases on isolated PostgreSQL 16, including the owner-approved null location even for a public IP and legacy country metadata. Existing authentication, CSRF, expiry, step-up, revoke-all and forced-change assertions passed."
-          ]
+          ],
+          "private_monitoring_source_renewal": {
+            "batch": "release-0.6-private-api-monitoring",
+            "paths": [
+              "apps/api/src/app.factory.ts"
+            ],
+            "base_commit": "133576f31ba18e34a02b1892866a3210e3cad037"
+          }
         }
       }
     },
@@ -469114,7 +469170,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-browser-origin-security",
-          "release-0.6-remove-unapproved-session-location-data"
+          "release-0.6-remove-unapproved-session-location-data",
+          "release-0.6-private-api-monitoring"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -469122,7 +469179,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "fd7b1dd2ad9c021bca198fa65f7bd5251c9626b89acd48bba4f6bd2e5f6c5533"
+              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -469177,7 +469234,14 @@
             "Guard failures yield a stable safe error and correlation ID; warning telemetry omits submitted tokens, request credentials and foreign header values.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
             "The exact compiled API and source-bound session HTTP suite passed 17 cases on isolated PostgreSQL 16, including the owner-approved null location even for a public IP and legacy country metadata. Existing authentication, CSRF, expiry, step-up, revoke-all and forced-change assertions passed."
-          ]
+          ],
+          "private_monitoring_source_renewal": {
+            "batch": "release-0.6-private-api-monitoring",
+            "paths": [
+              "apps/api/src/app.factory.ts"
+            ],
+            "base_commit": "133576f31ba18e34a02b1892866a3210e3cad037"
+          }
         }
       }
     },
@@ -469203,7 +469267,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-browser-origin-security",
-          "release-0.6-remove-unapproved-session-location-data"
+          "release-0.6-remove-unapproved-session-location-data",
+          "release-0.6-private-api-monitoring"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -469211,7 +469276,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "fd7b1dd2ad9c021bca198fa65f7bd5251c9626b89acd48bba4f6bd2e5f6c5533"
+              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -469274,7 +469339,14 @@
             "Migrated HTTP proves valid, missing, expired, rotated and foreign proof, rejected cross-site authentication, and revalidation after concurrent session mutation.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
             "The exact compiled API and source-bound session HTTP suite passed 17 cases on isolated PostgreSQL 16, including the owner-approved null location even for a public IP and legacy country metadata. Existing authentication, CSRF, expiry, step-up, revoke-all and forced-change assertions passed."
-          ]
+          ],
+          "private_monitoring_source_renewal": {
+            "batch": "release-0.6-private-api-monitoring",
+            "paths": [
+              "apps/api/src/app.factory.ts"
+            ],
+            "base_commit": "133576f31ba18e34a02b1892866a3210e3cad037"
+          }
         }
       }
     },
@@ -469459,7 +469531,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-browser-origin-security",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-private-api-monitoring"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -469467,7 +469540,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "fd7b1dd2ad9c021bca198fa65f7bd5251c9626b89acd48bba4f6bd2e5f6c5533"
+              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
             },
             {
               "path": "apps/api/src/csp-report/csp-report-http.integration.test.ts",
@@ -469490,7 +469563,14 @@
             "Bounded native-report endpoint configured in the web header and staging ingress. Migrated HTTP proves provenance, sanitized correlation logs, limits and safe native cookie handling; independent live endpoint status readback was 204 and 403.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
-          ]
+          ],
+          "private_monitoring_source_renewal": {
+            "batch": "release-0.6-private-api-monitoring",
+            "paths": [
+              "apps/api/src/app.factory.ts"
+            ],
+            "base_commit": "133576f31ba18e34a02b1892866a3210e3cad037"
+          }
         }
       }
     },
@@ -469867,7 +469947,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-browser-origin-security"
+          "release-0.6-browser-origin-security",
+          "release-0.6-private-api-monitoring"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -469875,7 +469956,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "fd7b1dd2ad9c021bca198fa65f7bd5251c9626b89acd48bba4f6bd2e5f6c5533"
+              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -469897,7 +469978,14 @@
           "checks": [
             "Production HTTPS app origin is matched exactly from APP_PUBLIC_URL, never incoming host or wildcard.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
-          ]
+          ],
+          "private_monitoring_source_renewal": {
+            "batch": "release-0.6-private-api-monitoring",
+            "paths": [
+              "apps/api/src/app.factory.ts"
+            ],
+            "base_commit": "133576f31ba18e34a02b1892866a3210e3cad037"
+          }
         }
       }
     },
@@ -469922,7 +470010,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-browser-origin-security"
+          "release-0.6-browser-origin-security",
+          "release-0.6-private-api-monitoring"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -469930,7 +470019,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "fd7b1dd2ad9c021bca198fa65f7bd5251c9626b89acd48bba4f6bd2e5f6c5533"
+              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -469952,7 +470041,14 @@
           "checks": [
             "Only the exact configured origin receives credentialed CORS; wildcard, suffix spoofing, foreign schemes, opaque origin and invalid configuration do not.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
-          ]
+          ],
+          "private_monitoring_source_renewal": {
+            "batch": "release-0.6-private-api-monitoring",
+            "paths": [
+              "apps/api/src/app.factory.ts"
+            ],
+            "base_commit": "133576f31ba18e34a02b1892866a3210e3cad037"
+          }
         }
       }
     },
@@ -469977,7 +470073,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-browser-origin-security"
+          "release-0.6-browser-origin-security",
+          "release-0.6-private-api-monitoring"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -469985,7 +470082,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "fd7b1dd2ad9c021bca198fa65f7bd5251c9626b89acd48bba4f6bd2e5f6c5533"
+              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -470007,7 +470104,14 @@
           "checks": [
             "Allowlist contains the six required read/write methods and the actual API JSON, CSRF, idempotency and draft headers. Response access includes the caller's retry timing.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
-          ]
+          ],
+          "private_monitoring_source_renewal": {
+            "batch": "release-0.6-private-api-monitoring",
+            "paths": [
+              "apps/api/src/app.factory.ts"
+            ],
+            "base_commit": "133576f31ba18e34a02b1892866a3210e3cad037"
+          }
         }
       }
     },
@@ -470032,7 +470136,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-browser-origin-security"
+          "release-0.6-browser-origin-security",
+          "release-0.6-private-api-monitoring"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -470040,7 +470145,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "fd7b1dd2ad9c021bca198fa65f7bd5251c9626b89acd48bba4f6bd2e5f6c5533"
+              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -470062,7 +470167,14 @@
           "checks": [
             "Real HTTP preflight verifies 3600 seconds and the origin variance.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
-          ]
+          ],
+          "private_monitoring_source_renewal": {
+            "batch": "release-0.6-private-api-monitoring",
+            "paths": [
+              "apps/api/src/app.factory.ts"
+            ],
+            "base_commit": "133576f31ba18e34a02b1892866a3210e3cad037"
+          }
         }
       }
     },
@@ -470087,7 +470199,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-browser-origin-security"
+          "release-0.6-browser-origin-security",
+          "release-0.6-private-api-monitoring"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -470095,7 +470208,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "fd7b1dd2ad9c021bca198fa65f7bd5251c9626b89acd48bba4f6bd2e5f6c5533"
+              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -470117,7 +470230,14 @@
           "checks": [
             "Real Express/Nest HTTP coverage proves trusted and untrusted origins, credentialed preflight and guarded browser authentication.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
-          ]
+          ],
+          "private_monitoring_source_renewal": {
+            "batch": "release-0.6-private-api-monitoring",
+            "paths": [
+              "apps/api/src/app.factory.ts"
+            ],
+            "base_commit": "133576f31ba18e34a02b1892866a3210e3cad037"
+          }
         }
       }
     },
@@ -472755,19 +472875,30 @@
         "story": "06-security-testing-observability.md#spec-78eef3232c99"
       },
       "requirement": "| T-06.07.02.07 | Generate SBOM (Software Bill of Materials) for each production build | M |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "The hosted production recipes emitted four independently verified CycloneDX SBOMs on 133576f3. Bind the retained SBOMs and scan receipts to the exact images prepared for deployment, including registry digests at production promotion."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-private-api-monitoring"
+        ],
+        "current_acceptance": null,
+        "exact_hosted_checkpoint": {
+          "commit": "133576f31ba18e34a02b1892866a3210e3cad037",
+          "workflow_run": 42629838223,
+          "image_job": 129203199635,
+          "image_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/combined-runtime-hosted-42629838223/verified-images-and-sboms.json",
+          "test_job": 129203199164,
+          "affected_test_files": 419,
+          "affected_tests": 5501
+        }
       }
     },
     {
@@ -472785,7 +472916,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "All four images built from 5a6ec316 passed exact hosted Trivy with zero high/critical findings. The hosted application integrity job also passed; broader tests found regressions fixed in this batch. Verify the final source and actual staged image selection, including a current signature feed."
+        "The final combined preflight on 133576f3 passed all four immutable scans with zero high or critical findings. Verify the accepted release source and actual staged image selection, including a current signature feed."
       ],
       "owner": null,
       "depends_on": [],
@@ -472800,7 +472931,8 @@
           "release-0.6-alpine-clamav-candidate",
           "release-0.6-postgres-image-candidate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-private-api-monitoring"
         ],
         "current_acceptance": null,
         "current_dependency_checkpoint": {
@@ -472846,6 +472978,15 @@
           "limitations": [
             "Hosted CI remains independent and no staging release has been accepted or deployed by this maintenance batch."
           ]
+        },
+        "exact_hosted_checkpoint": {
+          "commit": "133576f31ba18e34a02b1892866a3210e3cad037",
+          "workflow_run": 42629838223,
+          "image_job": 129203199635,
+          "image_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/combined-runtime-hosted-42629838223/verified-images-and-sboms.json",
+          "test_job": 129203199164,
+          "affected_test_files": 419,
+          "affected_tests": 5501
         }
       }
     },
@@ -475733,7 +475874,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The container scan gate emits and verifies exact CycloneDX SBOMs. Final hosted image artifacts and required full unit, PostgreSQL, browser, accessibility and combined coverage runs on the release candidate remain required."
+        "The hosted preflight at 133576f3 passed 5,501 affected tests in 419 files and all four image scans with SBOMs. Run and verify the required full unit, PostgreSQL, browser, accessibility and combined coverage gates on the final release candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -475741,9 +475882,19 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-runtime-sbom-provenance"
+          "release-0.6-runtime-sbom-provenance",
+          "release-0.6-private-api-monitoring"
         ],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "exact_hosted_checkpoint": {
+          "commit": "133576f31ba18e34a02b1892866a3210e3cad037",
+          "workflow_run": 42629838223,
+          "image_job": 129203199635,
+          "image_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/combined-runtime-hosted-42629838223/verified-images-and-sboms.json",
+          "test_job": 129203199164,
+          "affected_test_files": 419,
+          "affected_tests": 5501
+        }
       }
     },
     {
@@ -476516,19 +476667,61 @@
         "story": "06-security-testing-observability.md#spec-ec4f15075ffa"
       },
       "requirement": "| T-06.14.01.01 | Implement Prometheus metrics endpoint in API and worker processes | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-private-api-monitoring"
+        ],
+        "current_acceptance": {
+          "kind": "verified-private-monitoring",
+          "base_commit": "133576f31ba18e34a02b1892866a3210e3cad037",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/metrics/metrics.controller.ts",
+              "sha256": "c2b33dda5b151adea21984a1d82e5269ec058d553073319ff0fc18d02e9f934d"
+            },
+            {
+              "path": "apps/api/src/metrics/metrics.service.ts",
+              "sha256": "4b886fd914e41afc8234c5a9bc9b1e8dfb48467d12f13eab98bd7119068581fb"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+            },
+            {
+              "path": "apps/worker/src/notifications/worker-metrics.ts",
+              "sha256": "1ae8add0c877f60a61ce5a28cf5e801170ef768eaa1370f58b8a28643698c93e"
+            },
+            {
+              "path": "deploy/monitoring/staging-compose.yml",
+              "sha256": "4b790180d0edb115fbd353c9722f6a29d0f006a3dbaceb23fb35fad22564c3f8"
+            },
+            {
+              "path": "deploy/staging/compose.yml",
+              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+            },
+            {
+              "path": "deploy/staging/nginx.conf",
+              "sha256": "20e7e8fae329e1a336b428174540596ac8ee7cad88001583259ea96ab0b117f1"
+            },
+            {
+              "path": "deploy/monitoring/staging-prometheus.yml",
+              "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+            }
+          ],
+          "checks": [
+            "Private staging API and worker both returned Prometheus samples. An isolated Prometheus loaded the new scrape stanzas and collected healthy pg_metrics_collection_success, pg_cache_hit_ratio and notifications_queue_depth. Public ingress returned 404 JSON for /api/metrics and the HTML app shell for /metrics.",
+            "Promtool validated the exact candidate configuration and both unchanged rule files. The new configuration still needs live operator readback after rollout. No live notification or alert delivery is claimed."
+          ],
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/private-api-monitoring-proof.json"
+        }
       }
     },
     {
@@ -476542,19 +476735,53 @@
         "story": "06-security-testing-observability.md#spec-ec4f15075ffa"
       },
       "requirement": "| T-06.14.01.02 | Instrument RED metrics: request rate, error count (by status/route), latency (p50/p95/p99) | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-private-api-monitoring"
+        ],
+        "current_acceptance": {
+          "kind": "verified-private-monitoring",
+          "base_commit": "133576f31ba18e34a02b1892866a3210e3cad037",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/app.factory.ts",
+              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
+            },
+            {
+              "path": "apps/api/src/metrics/http-request-metrics.ts",
+              "sha256": "b241f4da9e5018dbe75ba00c2090cd7adc5d9967786409b9e9e85ef44e9dba50"
+            },
+            {
+              "path": "apps/api/src/metrics/http-request-metrics.integration.test.ts",
+              "sha256": "d5d9a8477d85e7deb354e552c15fb63b43428c3d7ed39fb6817059adea65f2a6"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "b11b691680a16cfd244d5430449a7c91c918a09f5f3e5b5c09ed31299d80359c"
+            },
+            {
+              "path": "apps/api/scripts/http-test-server.cjs",
+              "sha256": "4766868846c6ee2b43307d4434ba305b48a802c9d82d68209fcf52c7e5902f80"
+            },
+            {
+              "path": "docs/operations/postgresql-monitoring.md",
+              "sha256": "27e67fac54c7cd6aef7fab066db42cd51351349b2b71db3f2f85d9abf1acc09a"
+            }
+          ],
+          "checks": [
+            "A real production-compiled Nest/Express process and disposable PostgreSQL database verified successful, malformed, unauthorized and unknown-route responses, count and histogram buckets, collapsed profile IDs and unmatched paths, absence of private input, and probe exclusions.",
+            "Four adjacent native suites passed 19 cases before the final label-only normalization. The previously failing RED test then passed unchanged on the final code. API typecheck, SWC build, changed-file ESLint, formatting and three-file Semgrep pass."
+          ],
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/private-api-monitoring-proof.json"
+        }
       }
     },
     {
@@ -736666,7 +736893,7 @@
             },
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "fd7b1dd2ad9c021bca198fa65f7bd5251c9626b89acd48bba4f6bd2e5f6c5533"
+              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
             },
             {
               "path": "apps/api/src/app.module.ts",
@@ -737030,7 +737257,14 @@
               "base_commit": "270eedb3bbf6fd2df6679e4a7a49b821290ecfe2",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-heading-acceptance/proof.json"
             }
-          ]
+          ],
+          "private_monitoring_source_renewal": {
+            "batch": "release-0.6-private-api-monitoring",
+            "paths": [
+              "apps/api/src/app.factory.ts"
+            ],
+            "base_commit": "133576f31ba18e34a02b1892866a3210e3cad037"
+          }
         },
         "batches": [
           "release-0.5-critical-accessibility-renewal",
@@ -737112,7 +737346,8 @@
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-browser-font-notices",
           "release-0.6-runtime-image-scan-gate",
-          "release-0.6-combined-runtime-image-candidate"
+          "release-0.6-combined-runtime-image-candidate",
+          "release-0.6-private-api-monitoring"
         ]
       }
     },
@@ -824218,6 +824453,65 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-test-fixtures-semgrep.json",
       "source_scope_proof_sha256": "69f397c7a5eb3d40253947c48887a983676c9e4603e2183e0e36269d187b6df8"
+    },
+    "release-0.6-private-api-monitoring": {
+      "batch": "release-0.6-private-api-monitoring",
+      "base_commit": "133576f31ba18e34a02b1892866a3210e3cad037",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.14.01.01",
+        "06-security-testing-observability.md#T-06.14.01.02",
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "06-security-testing-observability.md#T-06.07.02.08",
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "06-security-testing-observability.md#T-06.02.01.01",
+        "06-security-testing-observability.md#T-06.02.01.02",
+        "06-security-testing-observability.md#T-06.02.01.03",
+        "06-security-testing-observability.md#T-06.02.01.06",
+        "06-security-testing-observability.md#T-06.02.01.07",
+        "06-security-testing-observability.md#T-06.02.02.03",
+        "06-security-testing-observability.md#T-06.02.04.01",
+        "06-security-testing-observability.md#T-06.02.04.02",
+        "06-security-testing-observability.md#T-06.02.04.03",
+        "06-security-testing-observability.md#T-06.02.04.04",
+        "06-security-testing-observability.md#T-06.02.04.05",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/app.factory.ts",
+          "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
+        },
+        {
+          "path": "apps/api/src/metrics/http-request-metrics.ts",
+          "sha256": "b241f4da9e5018dbe75ba00c2090cd7adc5d9967786409b9e9e85ef44e9dba50"
+        },
+        {
+          "path": "apps/api/src/metrics/http-request-metrics.integration.test.ts",
+          "sha256": "d5d9a8477d85e7deb354e552c15fb63b43428c3d7ed39fb6817059adea65f2a6"
+        },
+        {
+          "path": "deploy/monitoring/staging-prometheus.yml",
+          "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+        },
+        {
+          "path": "docs/operations/postgresql-monitoring.md",
+          "sha256": "27e67fac54c7cd6aef7fab066db42cd51351349b2b71db3f2f85d9abf1acc09a"
+        }
+      ],
+      "checks": [
+        "Private staging API and worker both returned Prometheus samples. An isolated Prometheus loaded the new scrape stanzas and collected healthy pg_metrics_collection_success, pg_cache_hit_ratio and notifications_queue_depth. Public ingress returned 404 JSON for /api/metrics and the HTML app shell for /metrics.",
+        "Promtool validated the exact candidate configuration and both unchanged rule files. The new configuration still needs live operator readback after rollout. No live notification or alert delivery is claimed.",
+        "A real production-compiled Nest/Express process and disposable PostgreSQL database verified successful, malformed, unauthorized and unknown-route responses, count and histogram buckets, collapsed profile IDs and unmatched paths, absence of private input, and probe exclusions.",
+        "Four adjacent native suites passed 19 cases before the final label-only normalization. The previously failing RED test then passed unchanged on the final code. API typecheck, SWC build, changed-file ESLint, formatting and three-file Semgrep pass.",
+        "Exact prior main preflight 42629838223 completed successfully. Independently verified the four CycloneDX artifacts and exact image IDs. The full launch rehearsal remains open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "private-api-monitoring-proof.json",
+      "source_scope_proof_sha256": "a5ae57d68164cdb74be1b5c75d05413b082b0cc1c6147fdcbf058cdac53ed9c6"
     }
   },
   "historical_improvements": [

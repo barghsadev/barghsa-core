@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 903 | Accepted with unchanged source bindings. |
-| verify | 431 | Existing work may be complete; inspect evidence before building. |
-| partial | 29 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 905 | Accepted with unchanged source bindings. |
+| verify | 428 | Existing work may be complete; inspect evidence before building. |
+| partial | 30 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 2 | Named owner or external prerequisite. |
@@ -1226,7 +1226,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.07.02.04` | done | Recorded batch work | Configure secret scanning on every PR (e.g. gitLeaks, truffleHog) |
 | `06-security-testing-observability.md#T-06.07.02.05` | verify | Inventory needed | Define triage policy: critical/high with credible production path → block release |
 | `06-security-testing-observability.md#T-06.07.02.06` | verify | Inventory needed | Set up license compliance check (e.g. license-checker) for dependency licenses |
-| `06-security-testing-observability.md#T-06.07.02.07` | verify | Inventory needed | Generate SBOM (Software Bill of Materials) for each production build |
+| `06-security-testing-observability.md#T-06.07.02.07` | partial | Recorded batch work | Generate SBOM (Software Bill of Materials) for each production build |
 | `06-security-testing-observability.md#T-06.07.02.08` | partial | Recorded batch work | Create CI gate config: SCA/SAST/secret/container scans on every PR, full scan on main |
 | `06-security-testing-observability.md#T-06.07.03.01` | verify | Inventory needed | Harden Dockerfile: non-root user, read-only rootfs where practical, no inspector, `NODE_OPTIONS=--no-deprecation` |
 | `06-security-testing-observability.md#T-06.07.03.02` | verify | Inventory needed | Disable `insecureHTTPParser`; set explicit request/body/header/time limits at proxy and application level |
@@ -1364,8 +1364,8 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.13.02.05` | verify | Inventory needed | Configure Loki log shipping agent (Promtail / Grafana Alloy) |
 | `06-security-testing-observability.md#T-06.13.02.06` | verify | Inventory needed | Ensure secrets, PII, payment details, and tokens are redacted from all log output |
 | `06-security-testing-observability.md#T-06.13.02.07` | verify | Inventory needed | Write integration test: log format compliance, redaction, correlation ID presence |
-| `06-security-testing-observability.md#T-06.14.01.01` | verify | Inventory needed | Implement Prometheus metrics endpoint in API and worker processes |
-| `06-security-testing-observability.md#T-06.14.01.02` | verify | Inventory needed | Instrument RED metrics: request rate, error count (by status/route), latency (p50/p95/p99) |
+| `06-security-testing-observability.md#T-06.14.01.01` | done | Recorded batch work | Implement Prometheus metrics endpoint in API and worker processes |
+| `06-security-testing-observability.md#T-06.14.01.02` | done | Recorded batch work | Instrument RED metrics: request rate, error count (by status/route), latency (p50/p95/p99) |
 | `06-security-testing-observability.md#T-06.14.01.03` | verify | Inventory needed | Instrument database metrics: pool size, active/idle/waiting connections, query duration, slow queries |
 | `06-security-testing-observability.md#T-06.14.01.04` | verify | Inventory needed | Instrument queue metrics: queue depth, oldest-unprocessed age, processing time, failure rate, dead-letter count |
 | `06-security-testing-observability.md#T-06.14.01.05` | verify | Inventory needed | Instrument external provider metrics: call latency, success/error count, circuit-breaker state |

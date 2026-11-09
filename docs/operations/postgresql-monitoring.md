@@ -2,6 +2,12 @@
 
 The API collects PostgreSQL 16 and 17 database, connection, checkpoint, WAL, query and scan statistics. `/metrics` exposes Prometheus samples. Database collection failures set `pg_metrics_collection_success` to zero and remove stale samples. Optional views have `pg_metrics_view_available` labels; unavailable replication lag is not reported as zero.
 
+The staging Prometheus configuration scrapes the API on `barghsa-staging-api-1:4000` and the worker on `barghsa-staging-worker-1:9090` over the private network. After loading it, verify both targets are `up` on the loopback Prometheus endpoint. Check `pg_metrics_collection_success` separately to distinguish a reachable endpoint from successful database statistics collection.
+
+To compare database behavior with API traffic, use `barghsa_http_request_duration_seconds_count` for completed responses and `barghsa_http_request_duration_seconds_bucket` for latency. Apply `rate(...[5m])` to the count and filter `status=~"[45].."` for errors by route and status. Estimate p50, p95 and p99 by using `histogram_quantile` with `0.50`, `0.95` or `0.99` over `sum by (le, route) (rate(barghsa_http_request_duration_seconds_bucket[5m]))`. Scope dashboard queries to the intended environment and database.
+
+The API labels requests with the registered route template, HTTP method and response status. Early rejections and unknown routes use `unmatched`. The histogram excludes the health probes and only counts responses the API finished writing. Monitor ingress separately for client disconnects and proxy errors.
+
 ## OpenTelemetry export
 
 Set these values in the API's external runtime environment file to enable OTLP/HTTP JSON export to your collector:
