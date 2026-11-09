@@ -133,7 +133,7 @@
 **T-02.02.02 — Session revocation**
 
 - Description: Users can view and revoke their own active sessions/devices from Settings → Security. Staff can revoke any user's sessions. Password reset, staff disablement, ownership transfer, and suspected compromise revoke applicable sessions immediately.
-- Technical notes: Session list shows device name, IP location (approximate), last active time, created time. Revoke is immediate (server removes session from active store). API: GET `/api/auth/sessions`, DELETE `/api/auth/sessions/:id`. Revoke all by POST `/api/auth/sessions/revoke-all` (requires password confirmation or OTP).
+- Technical notes: Session list shows device name, approximate country when approved offline data is available (otherwise location unavailable), last active time, created time. Revoke is immediate (server removes session from active store). API: GET `/api/auth/sessions`, DELETE `/api/auth/sessions/:id`. Revoke all by POST `/api/auth/sessions/revoke-all` (requires password confirmation or OTP).
 - UI/UX: Card/list view of active sessions with Revoke button per session and "Revoke all other sessions" action. Confirm dialog before revoke.
 - Dependencies: T-02.02.01
 - Complexity: M

@@ -21,7 +21,6 @@ import { SessionAuthGuard } from './session.guard.js';
 import type { AuthenticatedRequest } from './session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { RequiresStepUp, StepUpGuard } from './step-up.guard.js';
-import { sessionLocation } from './session-location.js';
 import { setCsrfCookie, setRefreshCookie, setSessionCookie } from './cookie.helper.js';
 
 // ─── Zod schemas ──────────────────────────────────────────────────────
@@ -127,7 +126,7 @@ export class SessionController {
     return sessions.map((s: Record<string, unknown>) => ({
       sessionId: s.session_id,
       deviceInfo: s.device_info ?? null,
-      location: sessionLocation(s.device_info),
+      location: null,
       createdAt: s.created_at,
       updatedAt: s.updated_at,
       expiresAt: s.expires_at,

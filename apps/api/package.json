@@ -31,7 +31,6 @@
     "cfb": "1.2.2",
     "cookie": "0.7.2",
     "file-type": "21.3.4",
-    "geoip-country": "5.0.202609050122",
     "ioredis": "^5.11.1",
     "nodemailer": "10.0.12",
     "pdfjs-dist": "6.3.289",

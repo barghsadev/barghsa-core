@@ -18,7 +18,8 @@ The v0.5 staging image and the built web shells identified the following concret
 | --------------------------------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------ |
 | `vazirmatn` and `@fontsource-variable/inter`                          | OFL / OFL-1.1                             | Persian and English fonts in the browser; Vazirmatn also renders contract PDFs |
 | `@img/sharp-libvips-linux-x64` and `@img/sharp-libvips-linuxmusl-x64` | LGPL-3.0-or-later                         | Native image processing in the API image                                       |
-| `geoip-country`                                                       | MaxMind GeoLite2 License                  | Approximate sign-in location data                                              |
 | `nodemailer`, `tslib`, `isexe` 3.x and `argparse`                     | MIT-0, 0BSD, BlueOak-1.0.0 and Python-2.0 | Email and packaged runtime support                                             |
 
 Prefer package-specific review and approval over widening the license allowlist globally. The dependency inventory also includes packages used only during builds and platform-specific copies. Check the exact Linux images and built frontend before deciding which exceptions apply.
+
+The [package review](release-license-review.md) records the exact versions, notices and open decisions. The owner approved removing GeoLite2; the session list uses its [unavailable fallback](session-location.md).

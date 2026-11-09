@@ -87,6 +87,7 @@ it('authenticates parsed cookies and rejects unsafe requests before extending or
   await pool.query('UPDATE sessions SET device_info=$1::jsonb WHERE session_id=$2', [
     JSON.stringify({
       ip: '8.8.8.8',
+      location: { countryCode: 'US' },
       userAgent: 'Fixture browser',
       fingerprint,
       secret: 'private-field',
@@ -111,7 +112,7 @@ it('authenticates parsed cookies and rejects unsafe requests before extending or
   expect(
     JSON.parse(display).find((row: { sessionId: string }) => row.sessionId === auth.sessionId)
       .location
-  ).toEqual({ countryCode: 'US' });
+  ).toBeNull();
   await pool.query('DELETE FROM sessions WHERE session_id=ANY($1::text[])', [inactive]);
   expect(display).not.toContain(fingerprint);
   expect(display).not.toContain('private-field');
