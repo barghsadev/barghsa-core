@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T16:43:00+00:00",
+  "updated": "2026-11-09T16:45:39+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -10962,12 +10962,10 @@
         "story": "01-platform-infrastructure.md#spec-0b7751905d67"
       },
       "requirement": "- **T-04.04.01:** Create NGINX/Caddy configuration for pilot (single-node) topology\n  - **Notes:** Single upstream for web (127.0.0.1:3000) and API (127.0.0.1:4000). Use Caddy for automatic TLS if managed certs are desired, or NGINX with cert files. Configure: `location /api/` → API upstream, `location /` → web upstream. Set `proxy_buffering off` for AI/SSE streaming. Enable gzip/brotli for static assets. Apply `client_max_body_size 10m`.\n  - **Dependencies:** S-03.01, E-05 topology\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -11026,8 +11024,38 @@
           "scripts/check-pilot-proxy.mjs",
           "scripts/proxy-fixture.mjs"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-pilot-proxy-and-cache-policy"
+        ],
+        "current_acceptance": {
+          "kind": "native-proxy-and-authorized-cache-boundaries",
+          "base_commit": "0635fe8d6ecaf6b376714dc1b7e0cbdd3fb88971",
+          "source_evidence": [
+            {
+              "path": "deploy/pilot/nginx.conf",
+              "sha256": "f63afa980950f6ff6936737ae4080fb5dd1af90db79e57539acc58782102d14a"
+            },
+            {
+              "path": "deploy/pilot/README.md",
+              "sha256": "73893e4222d64ffd5d02f153de197429bfee548d9e2375fa64fa846870c6cc24"
+            },
+            {
+              "path": "scripts/test-pilot-proxy.py",
+              "sha256": "40ed7d4f9fb89d400c209f0781926967ecdab7bd923c6d1353722d3bac9e4af6"
+            },
+            {
+              "path": "scripts/check-pilot-proxy.mjs",
+              "sha256": "3d1d3d7004acbcae9f2013b11540545919f0377bd4c90826399115c97bbcbc58"
+            },
+            {
+              "path": "scripts/proxy-fixture.mjs",
+              "sha256": "44b10444a8c51c2afd401002712ab72abf537e259934c128679c9e22b86795dd"
+            }
+          ],
+          "checks": [
+            "The selected NGINX pilot configuration routed localhost API and web upstreams under TLS 1.2 and 1.3. The exact isolated fixture passed redirect, forwarded-header overwrite, general body rejection, the larger bounded template upload, gzip, unbuffered SSE and WebSocket upgrade. Actual production TLS and HSTS remain separate launch checks."
+          ]
+        }
       }
     },
     {
@@ -11274,12 +11302,10 @@
         "story": "01-platform-infrastructure.md#spec-0b7751905d67"
       },
       "requirement": "- **T-04.04.04:** Configure static asset caching and CDN readiness\n  - **Notes:** Assets under `/assets/` (hashed filenames) get `Cache-Control: public, immutable, max-age=31536000`. Other static files: `max-age=86400`. For CDN: add `Vary: Accept-Encoding` if not default. Authenticated API responses (`/api/*`) set `Cache-Control: private, no-cache, no-store, must-revalidate` at application level.\n  - **Dependencies:** T-04.04.01\n  - **Complexity:** S\n  - **UI/UX:** N/A",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -11346,8 +11372,46 @@
           "scripts/check-pilot-proxy.mjs",
           "scripts/proxy-fixture.mjs"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-pilot-proxy-and-cache-policy"
+        ],
+        "current_acceptance": {
+          "kind": "native-proxy-and-authorized-cache-boundaries",
+          "base_commit": "0635fe8d6ecaf6b376714dc1b7e0cbdd3fb88971",
+          "source_evidence": [
+            {
+              "path": "deploy/pilot/nginx.conf",
+              "sha256": "f63afa980950f6ff6936737ae4080fb5dd1af90db79e57539acc58782102d14a"
+            },
+            {
+              "path": "deploy/pilot/README.md",
+              "sha256": "73893e4222d64ffd5d02f153de197429bfee548d9e2375fa64fa846870c6cc24"
+            },
+            {
+              "path": "scripts/check-pilot-proxy.mjs",
+              "sha256": "3d1d3d7004acbcae9f2013b11540545919f0377bd4c90826399115c97bbcbc58"
+            },
+            {
+              "path": "apps/web/server.js",
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
+            },
+            {
+              "path": "apps/web/test/server.spec.ts",
+              "sha256": "c16ed8e5146559d0d81f7bd68271ff9da2f4c57113ff908b92d44befa8ac68ed"
+            },
+            {
+              "path": "apps/api/src/common/cache-control.interceptor.ts",
+              "sha256": "d04d986e3f07a4df60513a3fe0c453d724860731981f03f92b25fc0ce3fc6c0b"
+            },
+            {
+              "path": "apps/api/src/app.factory.ts",
+              "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
+            }
+          ],
+          "checks": [
+            "The actual compiled app and auth asset responses have one-year immutable caching for hashes and private no-store HTML. The unchanged NGINX fixture verified seven static, private and error cache policies and gzip. Live staging success and authentication-denial API responses both sent the exact private, no-cache, no-store, must-revalidate directive. There is no separate external CDN deployment claim."
+          ]
+        }
       }
     },
     {
@@ -11361,12 +11425,10 @@
         "story": "01-platform-infrastructure.md#spec-0b7751905d67"
       },
       "requirement": "- **T-04.04.05:** Implement ETag support for safe metadata endpoints\n  - **Notes:** Add NestJS interceptor or middleware that computes ETags (SHA-256 of response body) for safe read-only metadata endpoints: product lists, province/city data, static reference data. Return `304 Not Modified` when `If-None-Match` matches. Never apply ETag to authenticated profile-scoped, financial, or rapidly changing data. Document that ETags are for bandwidth reduction on safe data, not for cache correctness of stateful resources.\n  - **Dependencies:** T-04.04.04\n  - **Complexity:** S\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -11422,8 +11484,46 @@
         "changed_paths": [
           "apps/api/src/app.factory.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-pilot-proxy-and-cache-policy"
+        ],
+        "current_acceptance": {
+          "kind": "native-proxy-and-authorized-cache-boundaries",
+          "base_commit": "0635fe8d6ecaf6b376714dc1b7e0cbdd3fb88971",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/common/etag.interceptor.ts",
+              "sha256": "edcfdd733ffd568303fda09245f1924eb3b7c5badcfe0468b5c2311ae985960b"
+            },
+            {
+              "path": "apps/api/src/common/etag.interceptor.spec.ts",
+              "sha256": "84af0ce50ac0ddf3717d0bcaace39ebb2debc50aadd98ed4b1801e9e7839cfd4"
+            },
+            {
+              "path": "apps/api/src/geography/geography.controller.ts",
+              "sha256": "77b076cb7967f5e51366daa6174835cb9396212fea15d57f1ca6014d07129ff8"
+            },
+            {
+              "path": "apps/api/src/geography/geography-etag-http.integration.test.ts",
+              "sha256": "c37c8cc8d67423b1114f8186f502ed640d341396c65d22ffbabfc5953f3b6afb"
+            },
+            {
+              "path": "apps/api/src/app.factory.ts",
+              "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
+            },
+            {
+              "path": "apps/api/src/orders/products.controller.ts",
+              "sha256": "74c6319588b6d071de1eab3fdd650f2cdc138e61c27ec2a67b46a5776eadac87"
+            },
+            {
+              "path": "deploy/pilot/README.md",
+              "sha256": "73893e4222d64ffd5d02f153de197429bfee548d9e2375fa64fa846870c6cc24"
+            }
+          ],
+          "checks": [
+            "All 11 unit and six migrated PostgreSQL HTTP cases passed. Exact SHA-256 tags produce empty 304s for authorized geography reference data, change with new data and cannot bypass session revocation. Profile and wallet GET/HEAD keep full authorized status and privacy without validators. The live catalogue serves current prices and availability and remains outside ETag negotiation, as documented."
+          ]
+        }
       }
     },
     {
@@ -739483,7 +739583,8 @@
           "release-0.6-container-runtime-hardening",
           "release-0.6-monorepo-build-and-typecheck",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-proxy-trust-and-request-limits"
+          "release-0.6-proxy-trust-and-request-limits",
+          "release-0.6-pilot-proxy-and-cache-policy"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -828403,6 +828504,82 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "proxy-request-limits-proof.json",
       "source_scope_proof_sha256": "a0557bec1e4447c99f078f8888d1b3959221d5eb5b8296586f1e9ebe872e1679"
+    },
+    "release-0.6-pilot-proxy-and-cache-policy": {
+      "batch": "release-0.6-pilot-proxy-and-cache-policy",
+      "base_commit": "0635fe8d6ecaf6b376714dc1b7e0cbdd3fb88971",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.04.01",
+        "01-platform-infrastructure.md#T-04.04.04",
+        "01-platform-infrastructure.md#T-04.04.05",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/app.factory.ts",
+          "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
+        },
+        {
+          "path": "apps/api/src/common/cache-control.interceptor.ts",
+          "sha256": "d04d986e3f07a4df60513a3fe0c453d724860731981f03f92b25fc0ce3fc6c0b"
+        },
+        {
+          "path": "apps/api/src/common/etag.interceptor.spec.ts",
+          "sha256": "84af0ce50ac0ddf3717d0bcaace39ebb2debc50aadd98ed4b1801e9e7839cfd4"
+        },
+        {
+          "path": "apps/api/src/common/etag.interceptor.ts",
+          "sha256": "edcfdd733ffd568303fda09245f1924eb3b7c5badcfe0468b5c2311ae985960b"
+        },
+        {
+          "path": "apps/api/src/geography/geography-etag-http.integration.test.ts",
+          "sha256": "c37c8cc8d67423b1114f8186f502ed640d341396c65d22ffbabfc5953f3b6afb"
+        },
+        {
+          "path": "apps/api/src/geography/geography.controller.ts",
+          "sha256": "77b076cb7967f5e51366daa6174835cb9396212fea15d57f1ca6014d07129ff8"
+        },
+        {
+          "path": "apps/api/src/orders/products.controller.ts",
+          "sha256": "74c6319588b6d071de1eab3fdd650f2cdc138e61c27ec2a67b46a5776eadac87"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
+        },
+        {
+          "path": "apps/web/test/server.spec.ts",
+          "sha256": "c16ed8e5146559d0d81f7bd68271ff9da2f4c57113ff908b92d44befa8ac68ed"
+        },
+        {
+          "path": "deploy/pilot/README.md",
+          "sha256": "73893e4222d64ffd5d02f153de197429bfee548d9e2375fa64fa846870c6cc24"
+        },
+        {
+          "path": "deploy/pilot/nginx.conf",
+          "sha256": "f63afa980950f6ff6936737ae4080fb5dd1af90db79e57539acc58782102d14a"
+        },
+        {
+          "path": "scripts/check-pilot-proxy.mjs",
+          "sha256": "3d1d3d7004acbcae9f2013b11540545919f0377bd4c90826399115c97bbcbc58"
+        },
+        {
+          "path": "scripts/proxy-fixture.mjs",
+          "sha256": "44b10444a8c51c2afd401002712ab72abf537e259934c128679c9e22b86795dd"
+        },
+        {
+          "path": "scripts/test-pilot-proxy.py",
+          "sha256": "40ed7d4f9fb89d400c209f0781926967ecdab7bd923c6d1353722d3bac9e4af6"
+        }
+      ],
+      "checks": [
+        "The selected NGINX pilot configuration routed localhost API and web upstreams under TLS 1.2 and 1.3. The exact isolated fixture passed redirect, forwarded-header overwrite, general body rejection, the larger bounded template upload, gzip, unbuffered SSE and WebSocket upgrade. Actual production TLS and HSTS remain separate launch checks.",
+        "The actual compiled app and auth asset responses have one-year immutable caching for hashes and private no-store HTML. The unchanged NGINX fixture verified seven static, private and error cache policies and gzip. Live staging success and authentication-denial API responses both sent the exact private, no-cache, no-store, must-revalidate directive. There is no separate external CDN deployment claim.",
+        "All 11 unit and six migrated PostgreSQL HTTP cases passed. Exact SHA-256 tags produce empty 304s for authorized geography reference data, change with new data and cannot bypass session revocation. Profile and wallet GET/HEAD keep full authorized status and privacy without validators. The live catalogue serves current prices and availability and remains outside ETag negotiation, as documented."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "pilot-proxy-cache-and-etag-proof.json",
+      "source_scope_proof_sha256": "5f849057a063b2ea302ec1a15cb0adf43216c09866059f3a7ad502c7c7694130"
     }
   },
   "historical_improvements": [
@@ -828442,15 +828619,15 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-pilot-proxy-and-cache-policy",
+    "id": "release-0.6-nightly-browser-shard-capacity",
     "release": "0.6.0",
     "task_keys": [
-      "01-platform-infrastructure.md#T-04.04.01",
-      "01-platform-infrastructure.md#T-04.04.04",
-      "01-platform-infrastructure.md#T-04.04.05",
+      "01-platform-infrastructure.md#T-01.04.04",
+      "01-platform-infrastructure.md#T-01.04.06",
+      "01-platform-infrastructure.md#T-05.05.01",
       "release-readiness#R-05.02"
     ],
-    "goal": "Reconcile pilot routing, public asset cache policy and safe ETag behavior with current NGINX, compiled output and native HTTP evidence."
+    "goal": "Diagnose the full hosted browser job timeout and partition the same browser cases to complete within the scheduled job limit. Retain all assertions and require actual scheduled results."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",

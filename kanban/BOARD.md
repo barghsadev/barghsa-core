@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T16:43:00+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T16:45:39+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 932 | Accepted with unchanged source bindings. |
-| verify | 403 | Existing work may be complete; inspect evidence before building. |
+| done | 935 | Accepted with unchanged source bindings. |
+| verify | 400 | Existing work may be complete; inspect evidence before building. |
 | partial | 27 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -39,11 +39,11 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Reconcile pilot routing, public asset cache policy and safe ETag behavior with current NGINX, compiled output and native HTTP evidence.
+Diagnose the full hosted browser job timeout and partition the same browser cases to complete within the scheduled job limit. Retain all assertions and require actual scheduled results.
 
-- `01-platform-infrastructure.md#T-04.04.01`: Create NGINX/Caddy configuration for pilot (single-node) topology
-- `01-platform-infrastructure.md#T-04.04.04`: Configure static asset caching and CDN readiness
-- `01-platform-infrastructure.md#T-04.04.05`: Implement ETag support for safe metadata endpoints
+- `01-platform-infrastructure.md#T-01.04.04`: Configure Playwright for E2E testing
+- `01-platform-infrastructure.md#T-01.04.06`: Configure flaky-test quarantine process
+- `01-platform-infrastructure.md#T-05.05.01`: Create nightly CI schedule
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -1021,11 +1021,11 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-04.03.03` | partial | Earlier partial | Configure bucket versioning and lifecycle policies |
 | `01-platform-infrastructure.md#T-04.03.04` | verify | Earlier acceptance_verified | Create admin configuration UI for storage |
 | `01-platform-infrastructure.md#T-04.03.05` | partial | Earlier partial | Enforce immutability for signed contracts and critical records |
-| `01-platform-infrastructure.md#T-04.04.01` | verify | Earlier acceptance_verified | Create NGINX/Caddy configuration for pilot (single-node) topology |
+| `01-platform-infrastructure.md#T-04.04.01` | done | Earlier acceptance_verified | Create NGINX/Caddy configuration for pilot (single-node) topology |
 | `01-platform-infrastructure.md#T-04.04.02` | partial | Earlier partial | Configure security headers in reverse proxy |
 | `01-platform-infrastructure.md#T-04.04.03` | done | Earlier acceptance_verified | Configure edge rate limiting for auth, upload, and AI endpoints |
-| `01-platform-infrastructure.md#T-04.04.04` | verify | Earlier acceptance_verified | Configure static asset caching and CDN readiness |
-| `01-platform-infrastructure.md#T-04.04.05` | verify | Earlier acceptance_verified | Implement ETag support for safe metadata endpoints |
+| `01-platform-infrastructure.md#T-04.04.04` | done | Earlier acceptance_verified | Configure static asset caching and CDN readiness |
+| `01-platform-infrastructure.md#T-04.04.05` | done | Earlier acceptance_verified | Implement ETag support for safe metadata endpoints |
 | `01-platform-infrastructure.md#T-05.01.01` | verify | Earlier deferred | Create Ansible playbook or deploy script for pilot topology |
 | `01-platform-infrastructure.md#T-05.01.02` | verify | Earlier deferred | Create `docker-compose.prod.yml` for pilot single-VM deployment |
 | `01-platform-infrastructure.md#T-05.01.03` | verify | Earlier deferred | Document explicitly that single-server deployment has lower availability |
