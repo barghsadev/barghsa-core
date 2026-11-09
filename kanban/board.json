@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T18:36:20+00:00",
+  "updated": "2026-11-09T18:44:35+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -8343,12 +8343,10 @@
         "story": "01-platform-infrastructure.md#spec-0e51f9dffa1e"
       },
       "requirement": "- **T-02.04.01:** Create seed script `packages/db/src/seed/index.ts`\n  - **Notes:** Import Drizzle instance and schema. Use upsert logic for default products. Log which entities were created vs skipped. Support `--force` flag to re-seed non-immutable data. Running `pnpm db:seed` calls this via a package.json script.\n  - **Dependencies:** T-02.01.02, T-02.02.02\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -8383,8 +8381,34 @@
           "packages/db/src/seed/seed.test.ts",
           "package.json"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-native-seed-and-bootstrap-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "current-seed-source-and-native-postgresql",
+          "base_commit": "530f28407576b45d0249e65586ca5fd347997028",
+          "source_evidence": [
+            {
+              "path": "packages/db/src/seed/index.ts",
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
+            },
+            {
+              "path": "packages/db/src/seed/seed.test.ts",
+              "sha256": "93616d53c7fe0394ffe6deb99c7451416ff26581e508f9575b0f4d524fdda276"
+            },
+            {
+              "path": "packages/db/package.json",
+              "sha256": "f50a797717d37728081e84710f49e96cf22681e314a28da2239296ede40efe88"
+            },
+            {
+              "path": "package.json",
+              "sha256": "0d38ca16dff0d91baf910710ab6f0e82f44fb03b09a2d42796e34de9cfd6b5ee"
+            }
+          ],
+          "checks": [
+            "The workspace db:seed entry point uses the current seed runner and reports created/skipped entities. The actual CLI ran twice while retaining product identity and state. Concurrent insertion counts, rollback and force-mode preservation of business fields and customized templates passed."
+          ]
+        }
       }
     },
     {
@@ -8398,12 +8422,10 @@
         "story": "01-platform-infrastructure.md#spec-0e51f9dffa1e"
       },
       "requirement": "- **T-02.04.02:** Create four default electricity products in seed\n  - **Notes:** `systemType` values: `thermal`, `green`, `free_market`, `energy_saving`. Titles stored in Persian as above. English translations in i18n dictionaries. Each has `price: null`, `isActive: false`, `minKwh: 0`, `maxKwh: 0` (zero = no limit). Use `INSERT ... ON CONFLICT (system_type) DO NOTHING` for idempotency.\n  - **Dependencies:** T-02.04.01\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -8447,8 +8469,38 @@
           "packages/db/src/schema/products.ts",
           "packages/db/src/schema/electricity-product-limits.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-native-seed-and-bootstrap-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "current-seed-source-and-native-postgresql",
+          "base_commit": "530f28407576b45d0249e65586ca5fd347997028",
+          "source_evidence": [
+            {
+              "path": "packages/db/src/seed/index.ts",
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
+            },
+            {
+              "path": "packages/db/src/seed/seed.test.ts",
+              "sha256": "93616d53c7fe0394ffe6deb99c7451416ff26581e508f9575b0f4d524fdda276"
+            },
+            {
+              "path": "packages/db/src/schema/products.ts",
+              "sha256": "6edf4df08143e478b1e3f51c4f382bff3028edc59cd50cc7cfd7c232f26995de"
+            },
+            {
+              "path": "packages/db/src/schema/electricity-product-limits.ts",
+              "sha256": "3b1baa315a8601299c50b4e0b7bf8c984a67164bbd197419b1fc3098bdad262b"
+            },
+            {
+              "path": "packages/db/drizzle/production/0134_system_product_identity.sql",
+              "sha256": "bd55444e60446f9a9a0210820594a329f0023b97c22de04710efcaa747275aa2"
+            }
+          ],
+          "checks": [
+            "Native seed verification found exactly thermal, green, free_market and energy_saving in the approved catalogue representation, with bilingual names, inactive status, null prices and zero min/max limits. Re-execution kept all four identities and inserted no duplicate."
+          ]
+        }
       }
     },
     {
@@ -8462,11 +8514,11 @@
         "story": "01-platform-infrastructure.md#spec-0e51f9dffa1e"
       },
       "requirement": "- **T-02.04.03:** Create admin bootstrap mechanism\n  - **Notes:** If `ADMIN_BOOTSTRAP_SECRET` is set and `ADMIN_BOOTSTRAP_KEY` exists, create an admin user with the provided email/phone, a temporary password (hashed with Argon2id). The temporary password is valid for one login; the first login forces password change and MFA enrollment. Bootstrap runs once and does not re-run if admin already exists.\n  - **Dependencies:** T-02.04.01\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
+        "Reconcile the literal one-attempt temporary login and distinct MFA enrollment wording with the current retryable password-change flow and required staff OTP at the first session. Native bootstrap and previously accepted forced-change safeguards are verified."
       ],
       "owner": null,
       "depends_on": [],
@@ -8505,7 +8557,9 @@
         "changed_paths": [
           "apps/api/src/auth/auth.service.ts"
         ],
-        "batches": [],
+        "batches": [
+          "release-0.6-native-seed-and-bootstrap-acceptance"
+        ],
         "current_acceptance": null
       }
     },
@@ -8575,7 +8629,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "d8b4ee8aeaf1e8ac91447c6a67d3fdb61dac04b7d14417a79e74cc30ce5d7e7e"
+              "sha256": "6ad207d44ba36e69cf015fa7f0c07276435d00f612b2724e3b578b7f2a6db2fc"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -8626,12 +8680,10 @@
         "story": "01-platform-infrastructure.md#spec-0e51f9dffa1e"
       },
       "requirement": "- **T-02.04.05:** Add seed verification test\n  - **Notes:** Integration test that runs seed against a clean database, verifies 4 default products exist with correct systemType and null price, verifies re-running seed does not create duplicates, verifies admin user is created when bootstrap env vars are provided.\n  - **Dependencies:** T-02.04.02, T-02.04.03\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -8665,8 +8717,34 @@
         "changed_paths": [
           "packages/db/src/seed/seed.test.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-native-seed-and-bootstrap-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "current-seed-source-and-native-postgresql",
+          "base_commit": "530f28407576b45d0249e65586ca5fd347997028",
+          "source_evidence": [
+            {
+              "path": "packages/db/src/seed/index.ts",
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
+            },
+            {
+              "path": "packages/db/src/seed/seed.test.ts",
+              "sha256": "93616d53c7fe0394ffe6deb99c7451416ff26581e508f9575b0f4d524fdda276"
+            },
+            {
+              "path": "packages/db/src/seed/admin-bootstrap.integration.test.ts",
+              "sha256": "546f42596c2767a18df8ae03295330f47117f9d97f16aeb9bfdb5bfd9dfca43c"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/_journal.json",
+              "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+            }
+          ],
+          "checks": [
+            "The existing real PostgreSQL tests verify all four default electricity products, repeat seed and CLI runs, administrator bootstrap and absence of automatic bootstrap with incomplete input. Four dedicated administrator cases also check credential hashing, concurrent creation, audit rollback and recovery."
+          ]
+        }
       }
     },
     {
@@ -8680,12 +8758,10 @@
         "story": "01-platform-infrastructure.md#spec-0e51f9dffa1e"
       },
       "requirement": "- **T-02.04.06:** Configure database constraint to prevent deletion of system electricity products and creation of additional electricity-product types\n  - **Notes:** Add a check constraint or trigger on the products table: for rows where `product_type = 'electricity'` and `system_type IS NOT NULL`, prevent `DELETE` and prevent `INSERT` of additional `product_type = 'electricity'` rows beyond the four defaults. Admins can activate/deactivate and set prices but cannot change `system_type`.\n  - **Dependencies:** T-02.04.02\n  - **Complexity:** M\n  - **UI/UX:** N/A\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -8725,8 +8801,34 @@
           "apps/api/src/catalogue/catalogue-products.service.ts",
           "apps/api/src/catalogue/catalogue-products-http.integration.test.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-native-seed-and-bootstrap-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "current-seed-source-and-native-postgresql",
+          "base_commit": "530f28407576b45d0249e65586ca5fd347997028",
+          "source_evidence": [
+            {
+              "path": "packages/db/src/schema/products.ts",
+              "sha256": "6edf4df08143e478b1e3f51c4f382bff3028edc59cd50cc7cfd7c232f26995de"
+            },
+            {
+              "path": "packages/db/drizzle/production/0134_system_product_identity.sql",
+              "sha256": "bd55444e60446f9a9a0210820594a329f0023b97c22de04710efcaa747275aa2"
+            },
+            {
+              "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+              "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+            },
+            {
+              "path": "packages/db/src/seed/seed.test.ts",
+              "sha256": "93616d53c7fe0394ffe6deb99c7451416ff26581e508f9575b0f4d524fdda276"
+            }
+          ],
+          "checks": [
+            "Real PostgreSQL refused deletion, re-keying, a fifth electricity identity, null or unknown electricity keys, and product-type bypasses. A valid price/status update and a non-electricity product remain supported."
+          ]
+        }
       }
     },
     {
@@ -740100,7 +740202,8 @@
           "release-0.6-nightly-critical-browser-journeys",
           "release-0.6-runtime-node-options",
           "release-0.6-database-pool-deadlines-and-log-privacy",
-          "release-0.6-database-migration-baseline-and-upgrade"
+          "release-0.6-database-migration-baseline-and-upgrade",
+          "release-0.6-native-seed-and-bootstrap-acceptance"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -830081,6 +830184,87 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-migration-acceptance",
       "source_scope_proof": "release-0.6-database-migration-baseline-and-upgrade.json",
       "source_scope_proof_sha256": "5aa5dfff603efb48630bd8ea6035b21070fb20e810e0c54490a454c232cca702"
+    },
+    "release-0.6-native-seed-and-bootstrap-acceptance": {
+      "batch": "release-0.6-native-seed-and-bootstrap-acceptance",
+      "base_commit": "530f28407576b45d0249e65586ca5fd347997028",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.04.01",
+        "01-platform-infrastructure.md#T-02.04.02",
+        "01-platform-infrastructure.md#T-02.04.05",
+        "01-platform-infrastructure.md#T-02.04.06",
+        "01-platform-infrastructure.md#T-02.04.03",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+        },
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+        },
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "6ad207d44ba36e69cf015fa7f0c07276435d00f612b2724e3b578b7f2a6db2fc"
+        },
+        {
+          "path": "package.json",
+          "sha256": "0d38ca16dff0d91baf910710ab6f0e82f44fb03b09a2d42796e34de9cfd6b5ee"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/db/drizzle/production/0134_system_product_identity.sql",
+          "sha256": "bd55444e60446f9a9a0210820594a329f0023b97c22de04710efcaa747275aa2"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+        },
+        {
+          "path": "packages/db/package.json",
+          "sha256": "f50a797717d37728081e84710f49e96cf22681e314a28da2239296ede40efe88"
+        },
+        {
+          "path": "packages/db/src/schema/electricity-product-limits.ts",
+          "sha256": "3b1baa315a8601299c50b4e0b7bf8c984a67164bbd197419b1fc3098bdad262b"
+        },
+        {
+          "path": "packages/db/src/schema/products.ts",
+          "sha256": "6edf4df08143e478b1e3f51c4f382bff3028edc59cd50cc7cfd7c232f26995de"
+        },
+        {
+          "path": "packages/db/src/seed/admin-bootstrap.integration.test.ts",
+          "sha256": "546f42596c2767a18df8ae03295330f47117f9d97f16aeb9bfdb5bfd9dfca43c"
+        },
+        {
+          "path": "packages/db/src/seed/index.ts",
+          "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
+        },
+        {
+          "path": "packages/db/src/seed/seed.test.ts",
+          "sha256": "93616d53c7fe0394ffe6deb99c7451416ff26581e508f9575b0f4d524fdda276"
+        },
+        {
+          "path": "scripts/run-packaged-seed.cjs",
+          "sha256": "8b06c60f19dc368056ca612c6e8202bd523e6d5a22122572d40363cf0079d226"
+        }
+      ],
+      "checks": [
+        "The workspace db:seed entry point uses the current seed runner and reports created/skipped entities. The actual CLI ran twice while retaining product identity and state. Concurrent insertion counts, rollback and force-mode preservation of business fields and customized templates passed.",
+        "Native seed verification found exactly thermal, green, free_market and energy_saving in the approved catalogue representation, with bilingual names, inactive status, null prices and zero min/max limits. Re-execution kept all four identities and inserted no duplicate.",
+        "The existing real PostgreSQL tests verify all four default electricity products, repeat seed and CLI runs, administrator bootstrap and absence of automatic bootstrap with incomplete input. Four dedicated administrator cases also check credential hashing, concurrent creation, audit rollback and recovery.",
+        "Real PostgreSQL refused deletion, re-keying, a fifth electricity identity, null or unknown electricity keys, and product-type bypasses. A valid price/status update and a non-electricity product remain supported.",
+        "Current native bootstrap and source-matched packaged bootstrap evidence show one audited administrator, Argon2id, rollback on audit failure and a safe retry. The prior accepted forced-change journey requires a fresh password and staff OTP before a session. The runbook records that the temporary credential can rotate the outstanding token until the password changes.",
+        "Fifteen explicitly selected product and seed cases passed on native Linux. Four bootstrap cases and the separate force-preservation case passed in a scoped run where a different suite hook timed out. Only the identified passing cases are claimed. The product run verified disposable PostgreSQL and network removal."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-seed-acceptance",
+      "source_scope_proof": "release-0.6-native-seed-and-bootstrap-acceptance.json",
+      "source_scope_proof_sha256": "1077469174f184ce489e373f47cd8428a7fb52739a5123ad393fc4ec5d69ec88"
     }
   },
   "historical_improvements": [

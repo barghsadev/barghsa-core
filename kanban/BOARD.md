@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T18:36:20+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T18:44:35+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 944 | Accepted with unchanged source bindings. |
-| verify | 391 | Existing work may be complete; inspect evidence before building. |
-| partial | 27 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 948 | Accepted with unchanged source bindings. |
+| verify | 386 | Existing work may be complete; inspect evidence before building. |
+| partial | 28 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 3 | Named owner or external prerequisite. |
@@ -986,12 +986,12 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-02.03.02` | partial | Earlier partial | Create migration runner script for production deployments |
 | `01-platform-infrastructure.md#T-02.03.03` | done | Earlier acceptance_verified | Create migration validation test (clean + upgrade path) |
 | `01-platform-infrastructure.md#T-02.03.04` | done | Earlier acceptance_verified | Implement expand/migrate/contract documentation and PR checklist |
-| `01-platform-infrastructure.md#T-02.04.01` | verify | Earlier acceptance_verified | Create seed script `packages/db/src/seed/index.ts` |
-| `01-platform-infrastructure.md#T-02.04.02` | verify | Earlier acceptance_verified | Create four default electricity products in seed |
-| `01-platform-infrastructure.md#T-02.04.03` | verify | Earlier acceptance_verified | Create admin bootstrap mechanism |
+| `01-platform-infrastructure.md#T-02.04.01` | done | Earlier acceptance_verified | Create seed script `packages/db/src/seed/index.ts` |
+| `01-platform-infrastructure.md#T-02.04.02` | done | Earlier acceptance_verified | Create four default electricity products in seed |
+| `01-platform-infrastructure.md#T-02.04.03` | partial | Earlier acceptance_verified | Create admin bootstrap mechanism |
 | `01-platform-infrastructure.md#T-02.04.04` | done | Earlier partial | Wire `pnpm db:seed` script in `packages/db/package.json` |
-| `01-platform-infrastructure.md#T-02.04.05` | verify | Earlier acceptance_verified | Add seed verification test |
-| `01-platform-infrastructure.md#T-02.04.06` | verify | Earlier acceptance_verified | Configure database constraint to prevent deletion of system electricity products and creation of additional electricity-product types |
+| `01-platform-infrastructure.md#T-02.04.05` | done | Earlier acceptance_verified | Add seed verification test |
+| `01-platform-infrastructure.md#T-02.04.06` | done | Earlier acceptance_verified | Configure database constraint to prevent deletion of system electricity products and creation of additional electricity-product types |
 | `01-platform-infrastructure.md#T-03.01.01` | partial | Earlier partial | Create `Dockerfile.web` with multi-stage build |
 | `01-platform-infrastructure.md#T-03.01.02` | partial | Earlier partial | Create shared `Dockerfile.base` for API and worker (same build, different CMD) |
 | `01-platform-infrastructure.md#T-03.01.03` | done | Earlier acceptance_verified | Create `.dockerignore` |

@@ -39,6 +39,8 @@ docker compose --env-file /protected/rehearsal-compose.env \
 
 Retain the migration and seed results, verify one audited administrator bootstrap, then retire the bootstrap credentials. Ordinary deployments use the migration service. A retry during initial setup preserves an administrator who was already created.
 
+The administrator starts with a five-minute password-change flow. Repeating the temporary sign-in rotates the outstanding change token. Changing the password clears that token and invalidates the temporary password. A fresh sign-in with the new password and staff OTP establishes the session.
+
 Keep `BARGHSA_WEB_CSP_MODE=report-only` during the required reporting window. Follow the [browser CSP policy](../../docs/security/content-security-policy.md). Switch to `enforce` only after checking sanitized reports and exercising the real customer and staff routes. Return to `report-only` to roll back policy enforcement without disabling collection.
 
 Record the positive TLS connection and a rejected wrong hostname or untrusted CA, network denial from an unauthorized host, failed-migration startup behavior, successful migration and seed receipts, and healthy app and worker readback. Repeat the [backup and restore rehearsal](../../docs/operations/backup/postgresql-restore-runbook.md) with authenticated off-server storage and an independent fingerprint. The Compose file and disposable staging tests do not establish those operational results.
