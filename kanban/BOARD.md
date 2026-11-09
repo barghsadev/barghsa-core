@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T00:32:26+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T00:37:42+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Replace unclassified 503 response text in invoice reminder settings and the wallet receipt queue with existing safe localized read-error copy. Verify local retry and denial, then reconcile other named route criteria. GitHub merge enforcement and staging Sentry delivery remain independent.
+Reconcile applicable loading, empty, denied and stale states and route-specific layout/interaction criteria with named receipts. Prioritize customer launch service routes and remaining admin child data owners. GitHub required-check enforcement and staging Sentry delivery remain independent gates.
 
 - `07-ui-ux-design.md#T-07.05.01.08`: Ensure all color combinations pass WCAG AA contrast ratios: normal text ≥ 4.5:1, large text ≥ 3:1, UI components ≥ 3:1. Verify with automated tools. Provide a "high contrast" mode toggle that strengthens all contrast ratios.
 - `07-ui-ux-design.md#T-07.05.02.04`: Add CI gate: a11y violations on critical pages block PR merge. Non-critical pages warn but do not block. Violations must be triaged with reason or exemption.

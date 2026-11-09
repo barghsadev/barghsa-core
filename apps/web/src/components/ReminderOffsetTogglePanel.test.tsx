@@ -86,6 +86,28 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
     ).toBe(true);
   });
 
+  it.each([
+    ['server response', Response.json({ message: 'private-reminder-diagnostic' }, { status: 503 })],
+    ['invalid JSON', new Response('private-reminder-diagnostic')],
+    ['malformed matrix', Response.json([{ serviceType: 'electricity', offset: -7 }])],
+  ])('offers a safe local retry after a failed reminder read (%s)', async (_failure, response) => {
+    fetchMock.mockResolvedValueOnce(response);
+    await renderPanel();
+
+    expect(container.querySelector('[role="alert"]')?.textContent).toBe(
+      'Failed to load reminder settings'
+    );
+    expect(container.querySelector('[role="switch"]')).toBeNull();
+    const reload = [...container.querySelectorAll('button')].find(
+      (button) => button.textContent === 'Reload reminder settings'
+    )!;
+    await act(async () => reload.click());
+
+    expect(container.querySelector('[role="alert"]')).toBeNull();
+    expect(container.querySelectorAll('[role="switch"]')).toHaveLength(24);
+    expect(fetchMock.mock.calls.map(([, init]) => init?.method ?? 'GET')).toEqual(['GET', 'GET']);
+  });
+
   it('PUTs the flipped toggle and updates the switch from the response', async () => {
     await renderPanel();
 

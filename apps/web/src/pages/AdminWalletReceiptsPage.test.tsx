@@ -1204,13 +1204,16 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       container.querySelector<HTMLButtonElement>('[data-testid="wallet-receipt-confirm"]')?.disabled
     ).toBe(false);
   });
-  it.each(['invalid-json', 'network', 'non-error'] as const)(
-    'shows receipt queue failure %s without granting decision controls',
+  it.each(['server message', 'invalid-json', 'network', 'non-error'] as const)(
+    'shows a safe local retry for receipt queue failure %s without granting decision controls',
     async (kind) => {
+      let failQueue = true;
       vi.mocked(fetch).mockImplementation(async (input, init) => {
-        if (String(input).endsWith('/bank-receipt-top-ups')) {
+        if (failQueue && String(input).endsWith('/bank-receipt-top-ups')) {
           if (kind === 'network') throw new Error('Queue unavailable');
           if (kind === 'non-error') throw 'offline';
+          if (kind === 'server message')
+            return Response.json({ message: 'private-receipt-diagnostic' }, { status: 503 });
           return new Response('not json', { status: 503 });
         }
         return defaultFetch(input, init);
@@ -1219,8 +1222,20 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>)
       );
       await flush();
-      expect(container.querySelector('[role=alert]')?.textContent).toBeTruthy();
+      expect(container.querySelector('[role=alert]')?.textContent).toContain(
+        'Failed to load receipts'
+      );
+      expect(container.textContent).not.toMatch(/private-receipt-diagnostic|Queue unavailable/);
       expect(container.querySelector('[data-testid="wallet-receipt-confirm"]')).toBeNull();
+      const retry = [...container.querySelectorAll('button')].find(
+        (button) => button.textContent === 'Retry receipt queue'
+      )!;
+      failQueue = false;
+      await act(async () => retry.click());
+      await flush();
+      expect(container.querySelector('[role=alert]')).toBeNull();
+      expect(container.textContent).toContain('TRK-aaaa');
+      expect(vi.mocked(fetch).mock.calls.some(([, init]) => init?.method === 'POST')).toBe(false);
     }
   );
   it.each(['network', 'denied', 'expired-again'] as const)(

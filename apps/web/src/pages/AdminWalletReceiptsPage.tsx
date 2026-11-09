@@ -44,7 +44,7 @@ import { isTransactionUuid } from '../lib/bank-receipt-confirmation.js';
 import { useConfirm, FinancialReviewSummary } from '@barghsa/ui';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useAccountUser } from '../hooks/useAccountUser.js';
-import { useStaffQueryRead } from '../hooks/useStaffQueryRead.js';
+import { staffQueryJson, useStaffQueryRead } from '../hooks/useStaffQueryRead.js';
 import { useCommandFeedback } from '../hooks/useCommandFeedback.js';
 import { serverListParams } from '../lib/query-keys.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
@@ -135,18 +135,6 @@ function readErrorCode(data: unknown): string | null {
   return null;
 }
 
-function errorMessage(data: unknown, fallback: string): string {
-  if (!data || typeof data !== 'object') return fallback;
-  const rec = data as { message?: unknown; error?: unknown };
-  if (typeof rec.message === 'string' && rec.message) return rec.message;
-  if (rec.error && typeof rec.error === 'object') {
-    const nested = rec.error as { message?: unknown };
-    if (typeof nested.message === 'string' && nested.message) return nested.message;
-  }
-  if (typeof rec.error === 'string' && rec.error) return rec.error;
-  return fallback;
-}
-
 function isStepUpRequired(res: Response, data: unknown): boolean {
   return res.status === 403 && readErrorCode(data) === ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code;
 }
@@ -157,14 +145,6 @@ const receiptCommandSpinner = (
     className="me-2 inline-block size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
   />
 );
-
-async function parseError(res: Response, fallback: string): Promise<string> {
-  try {
-    return errorMessage(await res.json(), fallback);
-  } catch {
-    return fallback;
-  }
-}
 
 async function verifyStepUp(password: string, signal: AbortSignal): Promise<boolean> {
   const res = await fetch('/api/auth/step-up', {
@@ -401,9 +381,8 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
         controller.signal,
         async (res) => {
           if ([401, 403].includes(res.status)) return null;
-          if (!res.ok) throw new Error(await parseError(res, copy('error.load')));
           return {
-            data: (await res.json()) as {
+            data: (await staffQueryJson(res)) as {
               items?: BankReceiptReviewDto[];
               nextCursor?: FinanceCursor | null;
             },
@@ -417,7 +396,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
         return;
       }
       const { data } = packet;
-      if (!Array.isArray(data.items)) throw new Error(copy('error.load'));
+      if (!Array.isArray(data.items)) throw new Error('Invalid receipt queue');
       if (controller.signal.aborted || accessOwner !== accessGeneration.current) return;
       const next = data.items;
       setNextCursor(data.nextCursor ?? null);
@@ -434,9 +413,9 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
         setDetailLoading(true);
         setDetailRevision((v) => v + 1);
       }
-    } catch (err) {
+    } catch {
       if (!controller.signal.aborted && accessOwner === accessGeneration.current)
-        setQueueError(err instanceof Error ? err.message : copy('error.load'));
+        setQueueError(copy('error.load'));
     } finally {
       if (!controller.signal.aborted && accessOwner === accessGeneration.current) setLoading(false);
     }

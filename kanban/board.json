@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T00:32:26+00:00",
-  "source_commit": "df839dc67c0fe1bc2a76ab6a8dac33f2a0df4a8a",
+  "updated": "2026-11-09T00:37:42+00:00",
+  "source_commit": "70fc7ba73ca8664aeaf37da1e56312bd53622f30",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35396,7 +35396,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
@@ -35500,7 +35500,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/ChartsPage.tsx",
@@ -63108,7 +63108,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
@@ -63196,7 +63196,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/ChartsPage.tsx",
@@ -125101,11 +125101,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
+              "sha256": "523f6e0f316e777a2c3a7a14c6b0d3f96058424c8c3687f961b5be890f57bb34"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -126093,11 +126093,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
+              "sha256": "523f6e0f316e777a2c3a7a14c6b0d3f96058424c8c3687f961b5be890f57bb34"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -127085,11 +127085,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
+              "sha256": "523f6e0f316e777a2c3a7a14c6b0d3f96058424c8c3687f961b5be890f57bb34"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -128077,11 +128077,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
+              "sha256": "523f6e0f316e777a2c3a7a14c6b0d3f96058424c8c3687f961b5be890f57bb34"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -129069,11 +129069,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
+              "sha256": "523f6e0f316e777a2c3a7a14c6b0d3f96058424c8c3687f961b5be890f57bb34"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -130061,11 +130061,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
+              "sha256": "523f6e0f316e777a2c3a7a14c6b0d3f96058424c8c3687f961b5be890f57bb34"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -131153,11 +131153,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
+              "sha256": "523f6e0f316e777a2c3a7a14c6b0d3f96058424c8c3687f961b5be890f57bb34"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -132257,11 +132257,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
+              "sha256": "523f6e0f316e777a2c3a7a14c6b0d3f96058424c8c3687f961b5be890f57bb34"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -133349,11 +133349,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
+              "sha256": "523f6e0f316e777a2c3a7a14c6b0d3f96058424c8c3687f961b5be890f57bb34"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -134453,11 +134453,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
+              "sha256": "523f6e0f316e777a2c3a7a14c6b0d3f96058424c8c3687f961b5be890f57bb34"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -135433,7 +135433,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
+              "sha256": "523f6e0f316e777a2c3a7a14c6b0d3f96058424c8c3687f961b5be890f57bb34"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -136211,7 +136211,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
+              "sha256": "523f6e0f316e777a2c3a7a14c6b0d3f96058424c8c3687f961b5be890f57bb34"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -136959,7 +136959,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
+              "sha256": "523f6e0f316e777a2c3a7a14c6b0d3f96058424c8c3687f961b5be890f57bb34"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -141104,11 +141104,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
@@ -491059,7 +491059,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/SavingInventoryPanel.tsx",
@@ -491283,7 +491283,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -492910,7 +492910,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/ResponseMetadataPanel.tsx",
@@ -494231,11 +494231,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
+              "sha256": "523f6e0f316e777a2c3a7a14c6b0d3f96058424c8c3687f961b5be890f57bb34"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -494415,7 +494415,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -495114,11 +495114,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
+              "sha256": "523f6e0f316e777a2c3a7a14c6b0d3f96058424c8c3687f961b5be890f57bb34"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -495298,7 +495298,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -495938,11 +495938,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
+              "sha256": "523f6e0f316e777a2c3a7a14c6b0d3f96058424c8c3687f961b5be890f57bb34"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -496122,7 +496122,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -497732,7 +497732,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/ResponseMetadataPanel.tsx",
@@ -511466,7 +511466,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/StaffInvoiceReceiptList.tsx",
@@ -512072,7 +512072,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
@@ -515597,7 +515597,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -515605,7 +515605,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -516036,7 +516036,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -516044,7 +516044,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -519423,7 +519423,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -519431,7 +519431,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -546872,11 +546872,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -548738,11 +548738,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -550605,11 +550605,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -552441,11 +552441,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -554303,11 +554303,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -556174,11 +556174,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -558018,11 +558018,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -559826,11 +559826,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -561634,11 +561634,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -563443,11 +563443,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -565251,11 +565251,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -567073,7 +567073,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -568968,7 +568968,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -571364,11 +571364,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
+              "sha256": "523f6e0f316e777a2c3a7a14c6b0d3f96058424c8c3687f961b5be890f57bb34"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
@@ -572440,11 +572440,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -573750,7 +573750,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -575645,7 +575645,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -577540,7 +577540,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -579435,7 +579435,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -581330,7 +581330,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -583225,7 +583225,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -585120,7 +585120,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -587015,7 +587015,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -588910,7 +588910,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -590805,7 +590805,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -592700,7 +592700,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -595335,7 +595335,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -597230,7 +597230,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -598486,7 +598486,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Controlled first-read 503 receipts cover all 48 admin data routes. Invoice reminder settings and the wallet receipt queue render the supplied 503 message and need safe localized read-error copy. Reconcile the other applicable loading, empty, denied and stale states with named route and layout receipts."
+        "Controlled first-read 503 receipts cover all 48 admin data routes. Both previously observed raw error surfaces now use localized feedback, with pending, retry and denial verified in two languages and two browsers. Reconcile remaining applicable loading, empty, denied and stale states and route-specific interaction/layout requirements with named evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -598616,7 +598616,8 @@
           "release-0.5-financial-detail-denial",
           "release-0.5-staff-ledger-permission-withdrawal",
           "release-0.5-document-template-read-boundary",
-          "release-0.5-admin-first-read-probe"
+          "release-0.5-admin-first-read-probe",
+          "release-0.5-safe-admin-read-errors"
         ],
         "current_acceptance": null
       }
@@ -599290,11 +599291,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -601094,11 +601095,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -602898,11 +602899,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -604702,11 +604703,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -606506,11 +606507,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -608310,11 +608311,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -610114,11 +610115,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -637789,7 +637790,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -638913,7 +638914,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -640037,7 +640038,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -641164,7 +641165,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -642291,7 +642292,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -643445,7 +643446,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -644568,7 +644569,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -645691,7 +645692,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -646815,7 +646816,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -647957,7 +647958,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -649082,7 +649083,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -680584,7 +680585,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -681706,7 +681707,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -682828,7 +682829,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -683950,7 +683951,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -706602,7 +706603,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/test/bank-receipt-review-fixture.ts",
@@ -712134,11 +712135,11 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
-              "sha256": "3d04f72b392e3b1e063f7183d89bb4207227792b54922b68ef59f4966ca2dbd1"
+              "sha256": "523f6e0f316e777a2c3a7a14c6b0d3f96058424c8c3687f961b5be890f57bb34"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -712650,11 +712651,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "cecd2257d449d5a5261876391c77f47050f586978742542794678c318634482d"
+              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
@@ -728264,7 +728265,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Controlled first-read 503 receipts cover all 48 admin data routes. Invoice reminder settings and the wallet receipt queue render the supplied 503 message and need safe localized read-error copy. Reconcile the other applicable loading, empty, denied and stale states with named route and layout receipts."
+        "Controlled first-read 503 receipts cover all 48 admin data routes. Both previously observed raw error surfaces now use localized feedback, with pending, retry and denial verified in two languages and two browsers. Reconcile remaining applicable loading, empty, denied and stale states and route-specific interaction/layout requirements with named evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -728460,7 +728461,8 @@
           "release-0.5-financial-detail-denial",
           "release-0.5-staff-ledger-permission-withdrawal",
           "release-0.5-document-template-read-boundary",
-          "release-0.5-admin-first-read-probe"
+          "release-0.5-admin-first-read-probe",
+          "release-0.5-safe-admin-read-errors"
         ]
       }
     },
@@ -728928,7 +728930,7 @@
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-              "sha256": "df6d524ae9e1a5adb7e6fd9dbf14328f068bf513d8c8d6a15e37c496d9f8dde0"
+              "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
@@ -729512,7 +729514,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -730398,7 +730400,8 @@
             "All 101 route and interaction transfer budgets pass on the dashboard conflict build. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-profile-conflict/proof.json",
             "All 101 transfer budgets pass on the unavailable financial detail build. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-detail-denial/proof.json",
             "All 101 transfer budgets pass on the staff ledger permission withdrawal build. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-ledger-permission-withdrawal/proof.json",
-            "All 101 transfer budgets pass on the document template read-boundary build. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-template-read-boundary/proof.json"
+            "All 101 transfer budgets pass on the document template read-boundary build. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-template-read-boundary/proof.json",
+            "All 101 transfer budgets and affected native invoice deadline and wallet receipt accessibility cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-safe-admin-read-errors/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -808988,6 +808991,49 @@
       "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-first-read-probe/proof.json",
       "source_scope_proof_sha256": "b38d48cae1c9081b54fec3f3474c656f001634d44777e7d8b6c380509c955889",
       "release_disposition": "Recorded first-read HTTP 503 evidence for every admin data route and identified two message-handling gaps. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-safe-admin-read-errors": {
+      "batch": "release-0.5-safe-admin-read-errors",
+      "base_commit": "70fc7ba73ca8664aeaf37da1e56312bd53622f30",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
+          "sha256": "523f6e0f316e777a2c3a7a14c6b0d3f96058424c8c3687f961b5be890f57bb34"
+        },
+        {
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+          "sha256": "4234455e02969d86c4ba1cf1cd3521b3b77a0a0e249ab70a2dc71519493aceb4"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
+          "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+          "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+        }
+      ],
+      "checks": [
+        "Baseline regressions reproduced disclosure of both HTTP 503 response messages, malformed reminder JSON parser details, and a wallet queue network exception. Final reads use existing localized feedback with explicit local retry and permission denial.",
+        "All 97 focused unit tests passed, including reminder toggle recovery and receipt queue, review, confirmation and rejection safeguards. The changed-source gate passed: reminder 3 of 3 changed lines and 4 of 4 changed branches, critical wallet page 454 of 491 lines and 501 of 578 branches.",
+        "All 32 production-build Chromium and Mobile Safari cases passed. Sixteen targeted cases exercised pending, 503, recovery or denial in Persian and English; sixteen existing cases rechecked invoice deadline step-up and wallet receipt review and responsive accessibility across locales and themes.",
+        "Web typechecking, changed-file lint and formatting, and all 101 route and interaction transfer budgets passed. The production diff changes only failed read feedback and retains financial writes, permission handling, request ownership and retry controls."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-safe-admin-read-errors",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-safe-admin-read-errors/proof.json",
+      "source_scope_proof_sha256": "ac4da7b2fd974f2d81ebf76634f683fbf1d372a86cff5ffe93a29cd791da23a6",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-safe-admin-read-errors/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-safe-admin-read-errors/renewed-bindings.json",
+      "release_disposition": "Closed both observed admin first-read message leaks. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [
@@ -809038,7 +809084,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Replace unclassified 503 response text in invoice reminder settings and the wallet receipt queue with existing safe localized read-error copy. Verify local retry and denial, then reconcile other named route criteria. GitHub merge enforcement and staging Sentry delivery remain independent."
+    "goal": "Reconcile applicable loading, empty, denied and stale states and route-specific layout/interaction criteria with named receipts. Prioritize customer launch service routes and remaining admin child data owners. GitHub required-check enforcement and staging Sentry delivery remain independent gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",

@@ -140,14 +140,6 @@ function isStepUpRequired(res: Response, data: unknown): boolean {
   return res.status === 403 && readErrorCode(data) === ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code;
 }
 
-async function parseError(res: Response, fallback: string): Promise<string> {
-  try {
-    return errorMessage(await res.json(), fallback);
-  } catch {
-    return fallback;
-  }
-}
-
 async function saveToggle(
   serviceType: ServiceDuePeriodType,
   offset: InvoiceReminderOffset,
@@ -412,14 +404,9 @@ function OwnedReminderOffsetTogglePanel() {
           readWithDeadline(ownerSignal, async (signal) => {
             const res = await fetch('/api/admin/config/invoice-reminder-offsets', { signal });
             if (res.status === 401 || res.status === 403) throw new ServerQueryError(res.status);
-            if (!res.ok) {
-              throw new Error(
-                await parseError(res, t('admin.invoices.reminders.loadFailed', locale))
-              );
-            }
+            if (!res.ok) throw new Error('Reminder settings read failed');
             const data: unknown = await res.json();
-            if (!validMatrix(data, recovery.current))
-              throw new Error(t('admin.invoices.reminders.loadFailed', locale));
+            if (!validMatrix(data, recovery.current)) throw new Error('Invalid reminder settings');
             if (!current() || signal.aborted) throw new Error('Obsolete reminder read');
             return data;
           }),
@@ -437,9 +424,7 @@ function OwnedReminderOffsetTogglePanel() {
         return;
       }
       setLoadFailed(true);
-      setError(
-        err instanceof Error ? err.message : t('admin.invoices.reminders.loadFailed', locale)
-      );
+      setError(t('admin.invoices.reminders.loadFailed', locale));
     } finally {
       controller.signal.removeEventListener('abort', cancel);
       requests.current.delete(controller);
