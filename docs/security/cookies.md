@@ -33,3 +33,9 @@ The browser retries only once after the exact CSRF-guard rejection, which proves
 New anonymous sessions are limited to 60 per IP per minute by the authoritative PostgreSQL limiter. Existing live bootstrap sessions are reused. Issuance deletes at most 1,000 expired rows using the expiry index; expired rows cannot authorize requests even while awaiting cleanup. No additional secret, process-local session cache or provider is needed. Deploy migration `0123_preauth_sessions` before this API version. Rollback to earlier code would restore its previous JSON-only public-auth behavior and is not a security-equivalent rollback.
 
 Design reference: [OWASP synchronizer tokens and login CSRF](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html). Refresh-token validation, signed payment callbacks and CSP telemetry retain their separately assigned reviews.
+
+## Browser origin boundary
+
+The API derives its sole trusted browser origin from `APP_PUBLIC_URL`; it never trusts the incoming host or a wildcard. Production requires HTTPS. An unsafe request with a session, pre-login challenge, or refresh cookie must match that origin when it supplies `Origin`, or the origin of `Referer` when `Origin` is absent. An explicit opaque, malformed, or foreign origin is rejected. If neither header is available, the applicable server-validated CSRF token remains mandatory. Signed machine requests and native CSP reports keep their independent checks.
+
+Credentialed CORS permits only the configured exact origin, the API's six supported read/write methods, and the headers needed by JSON, CSRF, payment idempotency, and draft revisions. Approved preflights are cached for one hour. CORS cannot replace authentication or a CSRF token.

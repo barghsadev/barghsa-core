@@ -9,6 +9,7 @@ import { HttpExceptionFilter } from './common/http-exception.filter.js';
 import { EtagInterceptor } from './common/etag.interceptor.js';
 import { Reflector } from '@nestjs/core';
 import { sanitizeBodyParserErrors } from './common/body-parser-errors.js';
+import { browserCorsOptions } from './common/browser-origin.js';
 
 export async function createApplication() {
   const proxies = trustedProxyIps();
@@ -21,6 +22,7 @@ export async function createApplication() {
     .getInstance()
     .set('etag', false)
     .set('trust proxy', proxies.length ? proxies : false);
+  app.enableCors(browserCorsOptions());
 
   // A 10 MiB text file may expand sixfold when escaped inside JSON. Restrict
   // the larger parser to version uploads; retain the default limit elsewhere.

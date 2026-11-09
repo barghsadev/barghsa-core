@@ -14,6 +14,7 @@ import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import type { AuthenticatedRequest } from './session.guard.js';
 import { SESSION_COOKIE_NAME } from './cookie.helper.js';
 import { requireRouteOperatingContext } from './operating-context.js';
+import { acceptsBrowserOrigin } from '../common/browser-origin.js';
 
 /**
  * CSRF protection guard (T-02.02.03).
@@ -74,6 +75,7 @@ export class CsrfGuard implements CanActivate {
     const handler = context.getHandler();
     const publicAuth = Reflect.getMetadata('preauthCsrf', handler);
     if (publicAuth) {
+      if (!acceptsBrowserOrigin(request.headers)) this.reject(method, 'untrusted browser origin');
       if (!/^application\/json(?:\s*;|$)/i.test(request.headers['content-type'] ?? '')) {
         this.reject(method, 'public auth requires JSON');
       }
@@ -103,6 +105,9 @@ export class CsrfGuard implements CanActivate {
       }
       return true;
     }
+
+    if (!publicAuth && !acceptsBrowserOrigin(request.headers))
+      this.reject(method, 'untrusted browser origin');
 
     // ── Validate the CSRF token header ──────────────────────────
     const headerToken = request.headers[this.CSRF_HEADER];

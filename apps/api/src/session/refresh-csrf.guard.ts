@@ -11,6 +11,7 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { REFRESH_COOKIE_NAME } from './cookie.helper.js';
 import { SessionService } from './session.service.js';
+import { acceptsBrowserOrigin } from '../common/browser-origin.js';
 
 /** Require the CSRF token bound to the presented refresh credential. */
 @Injectable()
@@ -25,6 +26,7 @@ export class RefreshCsrfGuard implements CanActivate {
     const csrfToken = request.headers['x-csrf-token'];
     if (typeof refreshToken !== 'string' || !refreshToken) return true; // controller returns 401
     if (
+      !acceptsBrowserOrigin(request.headers) ||
       typeof csrfToken !== 'string' ||
       !csrfToken ||
       !(await this.sessions.validateRefreshCsrf(refreshToken, csrfToken))

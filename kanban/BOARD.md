@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 875 | Accepted with unchanged source bindings. |
-| verify | 470 | Existing work may be complete; inspect evidence before building. |
+| done | 887 | Accepted with unchanged source bindings. |
+| verify | 458 | Existing work may be complete; inspect evidence before building. |
 | partial | 19 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -39,15 +39,19 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify the exact browser origin boundary, credentialed CORS and CSRF through the affected native HTTP journeys. Continue independent production-readiness checks while the required environment access is pending.
+Close browser response policy and proxy header gaps with current web and edge evidence. Preserve Report-Only until violation review and keep HSTS gated on verified production TLS.
 
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
-- `06-security-testing-observability.md#T-06.02.01.03`: Implement Origin validation against allowlist (configurable via admin settings or env)
-- `06-security-testing-observability.md#T-06.02.04.01`: Implement CORS middleware with exact origin allowlist (env config, not wildcard)
-- `06-security-testing-observability.md#T-06.02.04.02`: Ensure credentialed CORS (credentials: include) never accepts wildcard origin
-- `06-security-testing-observability.md#T-06.02.04.03`: Restrict allowed methods to required subset; restrict allowed headers
-- `06-security-testing-observability.md#T-06.02.04.04`: Cache preflight response (e.g. `Access-Control-Max-Age: 3600`)
-- `06-security-testing-observability.md#T-06.02.04.05`: Write CORS integration tests: valid origin, invalid origin, credentialed request, preflight
+- `01-platform-infrastructure.md#T-04.04.02`: Configure security headers in reverse proxy
+- `06-security-testing-observability.md#T-06.02.02.02`: Implement CSP middleware in web process; support Report-Only mode toggle via config
+- `06-security-testing-observability.md#T-06.02.02.04`: Ensure nonce generation and propagation for inline scripts/styles across the served HTML shell and client
+- `06-security-testing-observability.md#T-06.02.02.05`: Add CI test that verifies CSP headers in production build
+- `06-security-testing-observability.md#T-06.02.02.06`: Roll out: 1 week Report-Only monitoring → analyze violations → switch to Enforce
+- `06-security-testing-observability.md#T-06.02.03.01`: Implement security headers middleware: `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`
+- `06-security-testing-observability.md#T-06.02.03.02`: Implement `Strict-Transport-Security` header configurable by env; enable HSTS only in production with verified TLS
+- `06-security-testing-observability.md#T-06.02.03.03`: Ensure `frame-ancestors 'none'` in CSP prevents clickjacking
+- `06-security-testing-observability.md#T-06.02.03.04`: Write integration tests: verify all security headers present and correct on responses
+- `06-security-testing-observability.md#T-06.02.03.05`: Add CI check that fails if required security headers are missing or misconfigured
 
 ## v0.2.0: Complete customer journeys
 
@@ -954,7 +958,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | Qualified task | State | Build evidence | Required work |
 | --- | --- | --- | --- |
 | `release-readiness#R-05.01` | done | Recorded batch work | Resolve the six recorded owner decisions |
-| `release-readiness#R-05.02` | in_progress | Inventory needed | Renew security and operational task acceptance |
+| `release-readiness#R-05.02` | in_progress | Recorded batch work | Renew security and operational task acceptance |
 | `release-readiness#R-05.03` | blocked | Recorded batch work | Prove production deployment, backup and recovery prerequisites |
 | `01-platform-infrastructure.md#T-01.01.01` | done | Earlier acceptance_verified | Create `pnpm-workspace.yaml` with `packages: ['apps/*', 'packages/*']` and verify `pnpm install` resolves correctly |
 | `01-platform-infrastructure.md#T-01.01.02` | verify | Earlier acceptance_verified | Create root `turbo.json` pipeline definition |
@@ -1120,17 +1124,17 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.01.04.08` | verify | Inventory needed | Ensure tokens, refresh tokens, OTPs, passwords, national IDs never in localStorage, URLs, analytics, or client logs |
 | `06-security-testing-observability.md#T-06.01.04.09` | verify | Inventory needed | Write concurrency tests: session fixation prevention, refresh token reuse, simultaneous session mutations |
 | `06-security-testing-observability.md#T-06.01.04.10` | verify | Inventory needed | Security review: verify no cookie leakage, no fixation vectors, proper SameSite/Path/Domain/HostOnly |
-| `06-security-testing-observability.md#T-06.02.01.01` | verify | Inventory needed | Implement CSRF token service: generate per-session token, store in session store, validate custom header |
-| `06-security-testing-observability.md#T-06.02.01.02` | verify | Inventory needed | Implement NestJS CSRF guard/ interceptor for state-changing routes |
-| `06-security-testing-observability.md#T-06.02.01.03` | verify | Inventory needed | Implement Origin validation against allowlist (configurable via admin settings or env) |
-| `06-security-testing-observability.md#T-06.02.01.04` | verify | Inventory needed | Implement centralized SameSite cookie policy (security-owned): evaluate cross-origin needs, set appropriate policy per route/topology, document in security policy, supersedes all per-module SameSite decisions |
+| `06-security-testing-observability.md#T-06.02.01.01` | done | Recorded batch work | Implement CSRF token service: generate per-session token, store in session store, validate custom header |
+| `06-security-testing-observability.md#T-06.02.01.02` | done | Recorded batch work | Implement NestJS CSRF guard/ interceptor for state-changing routes |
+| `06-security-testing-observability.md#T-06.02.01.03` | done | Recorded batch work | Implement Origin validation against allowlist (configurable via admin settings or env) |
+| `06-security-testing-observability.md#T-06.02.01.04` | done | Recorded batch work | Implement centralized SameSite cookie policy (security-owned): evaluate cross-origin needs, set appropriate policy per route/topology, document in security policy, supersedes all per-module SameSite decisions |
 | `06-security-testing-observability.md#T-06.02.01.05` | verify | Inventory needed | Rotate CSRF token on session rotation (login, MFA, password change, privilege change) |
-| `06-security-testing-observability.md#T-06.02.01.06` | verify | Inventory needed | Ensure CSRF failures return safe error + correlation ID; log as security event |
-| `06-security-testing-observability.md#T-06.02.01.07` | verify | Inventory needed | Write integration tests: valid CSRF token, missing token, expired token, rotated token, origin mismatch, same-site bypass |
+| `06-security-testing-observability.md#T-06.02.01.06` | done | Recorded batch work | Ensure CSRF failures return safe error + correlation ID; log as security event |
+| `06-security-testing-observability.md#T-06.02.01.07` | done | Recorded batch work | Write integration tests: valid CSRF token, missing token, expired token, rotated token, origin mismatch, same-site bypass |
 | `06-security-testing-observability.md#T-06.02.01.08` | verify | Inventory needed | DAST security test: automated CSRF injection attempts |
 | `06-security-testing-observability.md#T-06.02.02.01` | verify | Inventory needed | Design CSP directive set for web app (nonce-based scripts, hashed styles where needed) |
 | `06-security-testing-observability.md#T-06.02.02.02` | verify | Inventory needed | Implement CSP middleware in web process; support Report-Only mode toggle via config |
-| `06-security-testing-observability.md#T-06.02.02.03` | verify | Inventory needed | Configure CSP reporting endpoint (e.g. `csp-reports` route or external `report-uri`) |
+| `06-security-testing-observability.md#T-06.02.02.03` | done | Recorded batch work | Configure CSP reporting endpoint (e.g. `csp-reports` route or external `report-uri`) |
 | `06-security-testing-observability.md#T-06.02.02.04` | verify | Inventory needed | Ensure nonce generation and propagation for inline scripts/styles across the served HTML shell and client |
 | `06-security-testing-observability.md#T-06.02.02.05` | verify | Inventory needed | Add CI test that verifies CSP headers in production build |
 | `06-security-testing-observability.md#T-06.02.02.06` | verify | Inventory needed | Roll out: 1 week Report-Only monitoring → analyze violations → switch to Enforce |
@@ -1140,11 +1144,11 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.02.03.03` | verify | Inventory needed | Ensure `frame-ancestors 'none'` in CSP prevents clickjacking |
 | `06-security-testing-observability.md#T-06.02.03.04` | verify | Inventory needed | Write integration tests: verify all security headers present and correct on responses |
 | `06-security-testing-observability.md#T-06.02.03.05` | verify | Inventory needed | Add CI check that fails if required security headers are missing or misconfigured |
-| `06-security-testing-observability.md#T-06.02.04.01` | verify | Inventory needed | Implement CORS middleware with exact origin allowlist (env config, not wildcard) |
-| `06-security-testing-observability.md#T-06.02.04.02` | verify | Inventory needed | Ensure credentialed CORS (credentials: include) never accepts wildcard origin |
-| `06-security-testing-observability.md#T-06.02.04.03` | verify | Inventory needed | Restrict allowed methods to required subset; restrict allowed headers |
-| `06-security-testing-observability.md#T-06.02.04.04` | verify | Inventory needed | Cache preflight response (e.g. `Access-Control-Max-Age: 3600`) |
-| `06-security-testing-observability.md#T-06.02.04.05` | verify | Inventory needed | Write CORS integration tests: valid origin, invalid origin, credentialed request, preflight |
+| `06-security-testing-observability.md#T-06.02.04.01` | done | Recorded batch work | Implement CORS middleware with exact origin allowlist (env config, not wildcard) |
+| `06-security-testing-observability.md#T-06.02.04.02` | done | Recorded batch work | Ensure credentialed CORS (credentials: include) never accepts wildcard origin |
+| `06-security-testing-observability.md#T-06.02.04.03` | done | Recorded batch work | Restrict allowed methods to required subset; restrict allowed headers |
+| `06-security-testing-observability.md#T-06.02.04.04` | done | Recorded batch work | Cache preflight response (e.g. `Access-Control-Max-Age: 3600`) |
+| `06-security-testing-observability.md#T-06.02.04.05` | done | Recorded batch work | Write CORS integration tests: valid origin, invalid origin, credentialed request, preflight |
 | `06-security-testing-observability.md#T-06.03.01.01` | verify | Inventory needed | Design authorization policy engine: roles, capabilities/permissions, resource types, scopes (profile, system) |
 | `06-security-testing-observability.md#T-06.03.01.02` | verify | Inventory needed | Implement `AuthorizationService` with deny-by-default policy resolution |
 | `06-security-testing-observability.md#T-06.03.01.03` | verify | Inventory needed | Implement NestJS guard/decorator for endpoint-level permission checks |

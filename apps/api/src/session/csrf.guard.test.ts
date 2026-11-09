@@ -18,6 +18,8 @@ function createMockContext(options: {
   skipCsrf?: boolean;
   requireJson?: boolean;
   contentType?: string | undefined;
+  origin?: string;
+  referer?: string;
 }) {
   const { method = 'POST', session, csrfHeader, skipCsrf = false } = options;
 
@@ -35,6 +37,8 @@ function createMockContext(options: {
         headers: {
           'x-csrf-token': csrfHeader,
           'content-type': options.contentType,
+          origin: options.origin,
+          referer: options.referer,
           ...(session ? {} : {}),
         },
         ...(session ? { session } : {}),
@@ -51,7 +55,69 @@ describe('CsrfGuard', () => {
     guard = new CsrfGuard({ consume: vi.fn().mockResolvedValue(true) } as any);
   });
 
-  afterEach(() => vi.restoreAllMocks());
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllEnvs();
+  });
+
+  it('uses exact Origin or Referer without weakening the session token check', () => {
+    vi.stubEnv('APP_PUBLIC_URL', 'https://app.example.test');
+    const session = { sessionId: 'sid-1', csrfToken: 'token', userId: 'user-1', isAdmin: false };
+    const csrfHeader = session.csrfToken;
+    expect(
+      guard.canActivate(
+        createMockContext({ session, csrfHeader, referer: 'https://app.example.test/settings' })
+      )
+    ).toBe(true);
+    expect(() =>
+      guard.canActivate(createMockContext({ session, origin: 'https://app.example.test' }))
+    ).toThrow(ForbiddenException);
+    expect(() =>
+      guard.canActivate(
+        createMockContext({
+          session,
+          csrfHeader,
+          referer: 'https://app.example.test.evil.test/settings',
+        })
+      )
+    ).toThrow(ForbiddenException);
+    expect(() =>
+      guard.canActivate(
+        createMockContext({
+          session,
+          csrfHeader,
+          origin: 'null',
+          referer: 'https://app.example.test/',
+        })
+      )
+    ).toThrow(ForbiddenException);
+  });
+
+  it('rejects a foreign public auth submission before consuming its pre-login proof', () => {
+    vi.stubEnv('APP_PUBLIC_URL', 'https://app.example.test');
+    const consume = vi.fn().mockResolvedValue(true);
+    guard = new CsrfGuard({ consume } as any);
+    expect(() =>
+      guard.canActivate(
+        createMockContext({
+          skipCsrf: true,
+          requireJson: true,
+          contentType: 'application/json',
+          csrfHeader: 'fixture',
+          origin: 'https://app.example.test.evil.test',
+        })
+      )
+    ).toThrow(ForbiddenException);
+    expect(consume).not.toHaveBeenCalled();
+    expect(
+      guard.canActivate(
+        createMockContext({
+          skipCsrf: true,
+          origin: 'https://provider.example.test',
+        })
+      )
+    ).toBe(true); // Signed machine routes still use their own authentication.
+  });
 
   it.each(['missing', 'mismatch', 'public form'])(
     'logs %s rejection with correlation and no credentials',

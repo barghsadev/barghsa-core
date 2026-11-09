@@ -10232,8 +10232,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Native same-origin CSP reports carry session cookies without X-CSRF-Token. Authenticated requests currently return403. A narrow telemetry exception was asked once September13 and remains pending. No token exemption implemented.",
-        "Deployment and enforcement after violation resolution remain external."
+        "Collect and review sanitized CSP reports for the required rollout window, resolve violations, and prove enforcement and verified TLS at the production-equivalent ingress.",
+        "Live v0.5 HTTPS web responses had the required Permissions-Policy but the API proxy omitted it. Verify one consistent value on normal and error responses in the next browser security batch."
       ],
       "owner": null,
       "depends_on": [],
@@ -10331,7 +10331,9 @@
           "scripts/check-pilot-proxy.mjs",
           "scripts/proxy-fixture.mjs"
         ],
-        "batches": [],
+        "batches": [
+          "release-0.6-browser-origin-security"
+        ],
         "current_acceptance": null
       }
     },
@@ -20176,7 +20178,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-review-preview-deadlines",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.6-browser-origin-security"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -20196,7 +20199,7 @@
             },
             {
               "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
-              "sha256": "e596516adfde0884eb620dd38cadcdd71a42d2e061d92e7327e51e5b6b3f9eba"
+              "sha256": "80249bdfbadeb9de44d02e25e8bbad64440f42799636c333c294c4aae170f18d"
             },
             {
               "path": "apps/api/src/session/session.service.ts",
@@ -20325,6 +20328,10 @@
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
               "sha256": "a1b00947492805301288c51114ad55ff8a7b7c90d4ce13cfe312dbc1a25dacff"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
             }
           ],
           "checks": [
@@ -20369,7 +20376,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-candidate-acceptance: 92 affected units, 70 native correction, authority, solar and saving cases, 24 public authentication and terms cases, and 97 unchanged bundle limits. Ownership, monetary commands and confirmation assertions remain covered.",
-            "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed."
+            "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
+            "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/login-session-acceptance",
           "limitations": [
@@ -20970,7 +20978,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-review-preview-deadlines",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.6-browser-origin-security"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -21014,7 +21023,7 @@
             },
             {
               "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
-              "sha256": "e596516adfde0884eb620dd38cadcdd71a42d2e061d92e7327e51e5b6b3f9eba"
+              "sha256": "80249bdfbadeb9de44d02e25e8bbad64440f42799636c333c294c4aae170f18d"
             },
             {
               "path": "apps/api/src/session/session.service.ts",
@@ -21167,6 +21176,10 @@
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
               "sha256": "a1b00947492805301288c51114ad55ff8a7b7c90d4ce13cfe312dbc1a25dacff"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
             }
           ],
           "checks": [
@@ -21213,7 +21226,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-candidate-acceptance: 92 affected units, 70 native correction, authority, solar and saving cases, 24 public authentication and terms cases, and 97 unchanged bundle limits. Ownership, monetary commands and confirmation assertions remain covered.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
-            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain."
+            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
+            "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/login-session-acceptance",
           "limitations": [
@@ -21855,7 +21869,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-review-preview-deadlines",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.6-browser-origin-security"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -21907,7 +21922,7 @@
             },
             {
               "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
-              "sha256": "e596516adfde0884eb620dd38cadcdd71a42d2e061d92e7327e51e5b6b3f9eba"
+              "sha256": "80249bdfbadeb9de44d02e25e8bbad64440f42799636c333c294c4aae170f18d"
             },
             {
               "path": "apps/api/src/session/session.service.ts",
@@ -22020,6 +22035,10 @@
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
               "sha256": "a1b00947492805301288c51114ad55ff8a7b7c90d4ce13cfe312dbc1a25dacff"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
             }
           ],
           "checks": [
@@ -22062,7 +22081,8 @@
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
-            "Bindings renewed by release-0.5-candidate-acceptance: 92 affected units, 70 native correction, authority, solar and saving cases, 24 public authentication and terms cases, and 97 unchanged bundle limits. Ownership, monetary commands and confirmation assertions remain covered."
+            "Bindings renewed by release-0.5-candidate-acceptance: 92 affected units, 70 native correction, authority, solar and saving cases, 24 public authentication and terms cases, and 97 unchanged bundle limits. Ownership, monetary commands and confirmation assertions remain covered.",
+            "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/login-session-acceptance",
           "limitations": [
@@ -22639,7 +22659,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-review-preview-deadlines",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.6-browser-origin-security"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -22679,7 +22700,7 @@
             },
             {
               "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
-              "sha256": "e596516adfde0884eb620dd38cadcdd71a42d2e061d92e7327e51e5b6b3f9eba"
+              "sha256": "80249bdfbadeb9de44d02e25e8bbad64440f42799636c333c294c4aae170f18d"
             },
             {
               "path": "apps/api/src/session/session-cap.integration.test.ts",
@@ -22812,6 +22833,10 @@
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
               "sha256": "a1b00947492805301288c51114ad55ff8a7b7c90d4ce13cfe312dbc1a25dacff"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
             }
           ],
           "checks": [
@@ -22855,7 +22880,8 @@
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
-            "Bindings renewed by release-0.5-candidate-acceptance: 92 affected units, 70 native correction, authority, solar and saving cases, 24 public authentication and terms cases, and 97 unchanged bundle limits. Ownership, monetary commands and confirmation assertions remain covered."
+            "Bindings renewed by release-0.5-candidate-acceptance: 92 affected units, 70 native correction, authority, solar and saving cases, 24 public authentication and terms cases, and 97 unchanged bundle limits. Ownership, monetary commands and confirmation assertions remain covered.",
+            "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/login-session-acceptance",
           "limitations": [
@@ -23396,7 +23422,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-native-staff-touch-and-electricity-recovery",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-browser-origin-security"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -23416,11 +23443,11 @@
             },
             {
               "path": "apps/api/src/session/csrf.guard.ts",
-              "sha256": "d795e525a70bc39ad9b83f8c373ab7acb45e747279dd9ba87681406afd107fe9"
+              "sha256": "31569dad48816ef435efd1074cf2657da2eee90f090bd8d1fb800c5d6204bca6"
             },
             {
               "path": "apps/api/src/session/refresh-csrf.guard.ts",
-              "sha256": "0040c8444bcb857a50cbf8325dcf8e52bff99d10c2411ad9fe44959fdd21672a"
+              "sha256": "e405da8c1dfb62414245f0c539cbd36df562112b1596afeb5880adf0ff3b7807"
             },
             {
               "path": "apps/api/src/session/session-cap.integration.test.ts",
@@ -23464,7 +23491,7 @@
             },
             {
               "path": "docs/security/cookies.md",
-              "sha256": "522019da24e475020d1ea87b0af09a9aad50d2ee5a7306906eb2562150c0d446"
+              "sha256": "f0d516fc6d1504f76d3d624f482658ec4d876e1022fb8bede5c1f652ad16a013"
             },
             {
               "path": "packages/shared/src/password-hash.ts",
@@ -23545,6 +23572,10 @@
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
               "sha256": "a1b00947492805301288c51114ad55ff8a7b7c90d4ce13cfe312dbc1a25dacff"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
             }
           ],
           "checks": [
@@ -23578,7 +23609,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
-            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain."
+            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
+            "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/login-session-acceptance",
           "limitations": [
@@ -24039,7 +24071,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-native-staff-touch-and-electricity-recovery",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-browser-origin-security"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -24059,7 +24092,7 @@
             },
             {
               "path": "apps/api/src/session/csrf.guard.ts",
-              "sha256": "d795e525a70bc39ad9b83f8c373ab7acb45e747279dd9ba87681406afd107fe9"
+              "sha256": "31569dad48816ef435efd1074cf2657da2eee90f090bd8d1fb800c5d6204bca6"
             },
             {
               "path": "apps/api/src/session/geoip-country.d.ts",
@@ -24067,7 +24100,7 @@
             },
             {
               "path": "apps/api/src/session/refresh-csrf.guard.ts",
-              "sha256": "0040c8444bcb857a50cbf8325dcf8e52bff99d10c2411ad9fe44959fdd21672a"
+              "sha256": "e405da8c1dfb62414245f0c539cbd36df562112b1596afeb5880adf0ff3b7807"
             },
             {
               "path": "apps/api/src/session/self-revocation.integration.test.ts",
@@ -24200,6 +24233,10 @@
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
               "sha256": "a1b00947492805301288c51114ad55ff8a7b7c90d4ce13cfe312dbc1a25dacff"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
             }
           ],
           "checks": [
@@ -24233,7 +24270,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
-            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain."
+            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
+            "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/login-session-acceptance",
           "limitations": [
@@ -25651,7 +25689,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
           "release-0.5-native-staff-touch-and-electricity-recovery",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-browser-origin-security"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -25787,19 +25826,19 @@
             },
             {
               "path": "apps/api/src/session/csrf.guard.test.ts",
-              "sha256": "ede917f1d3dbd762cfd44c012889630b82a38592f1f14d6e8e83339abeee2b01"
+              "sha256": "284d0156c91689a216e20499c341f5edb9d1e55724c8c5638e83dcd14f16c434"
             },
             {
               "path": "apps/api/src/session/csrf.guard.ts",
-              "sha256": "d795e525a70bc39ad9b83f8c373ab7acb45e747279dd9ba87681406afd107fe9"
+              "sha256": "31569dad48816ef435efd1074cf2657da2eee90f090bd8d1fb800c5d6204bca6"
             },
             {
               "path": "apps/api/src/session/refresh-csrf.guard.test.ts",
-              "sha256": "f330c388c4e5ed471a736e96426091bf8f73933d221a43da31f81a5764807248"
+              "sha256": "83a88e47225833a2e17b679b22f6cd7587b74b0ff6a4d84da7e5fdb0028d0ea5"
             },
             {
               "path": "apps/api/src/session/refresh-csrf.guard.ts",
-              "sha256": "0040c8444bcb857a50cbf8325dcf8e52bff99d10c2411ad9fe44959fdd21672a"
+              "sha256": "e405da8c1dfb62414245f0c539cbd36df562112b1596afeb5880adf0ff3b7807"
             },
             {
               "path": "apps/api/src/session/self-revocation.integration.test.ts",
@@ -26252,6 +26291,10 @@
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
               "sha256": "a1b00947492805301288c51114ad55ff8a7b7c90d4ce13cfe312dbc1a25dacff"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
             }
           ],
           "checks": [
@@ -26330,7 +26373,8 @@
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json"
+            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
+            "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/step-up-action-audit",
           "limitations": [
@@ -27241,7 +27285,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-candidate-acceptance",
           "release-0.5-final-gates",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-browser-origin-security"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -27261,7 +27306,7 @@
             },
             {
               "path": "apps/api/src/session/csrf.guard.ts",
-              "sha256": "d795e525a70bc39ad9b83f8c373ab7acb45e747279dd9ba87681406afd107fe9"
+              "sha256": "31569dad48816ef435efd1074cf2657da2eee90f090bd8d1fb800c5d6204bca6"
             },
             {
               "path": "apps/api/src/session/preauth-csrf.controller.ts",
@@ -27374,6 +27419,10 @@
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
               "sha256": "a1b00947492805301288c51114ad55ff8a7b7c90d4ce13cfe312dbc1a25dacff"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
             }
           ],
           "checks": [
@@ -27406,7 +27455,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-candidate-acceptance: 92 affected units, 70 native correction, authority, solar and saving cases, 24 public authentication and terms cases, and 97 unchanged bundle limits. Ownership, monetary commands and confirmation assertions remain covered.",
-            "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed."
+            "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
+            "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/login-session-acceptance",
           "limitations": [
@@ -27901,7 +27951,8 @@
           "release-0.5-candidate-acceptance",
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-browser-origin-security"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -27933,7 +27984,7 @@
             },
             {
               "path": "apps/api/src/session/csrf.guard.ts",
-              "sha256": "d795e525a70bc39ad9b83f8c373ab7acb45e747279dd9ba87681406afd107fe9"
+              "sha256": "31569dad48816ef435efd1074cf2657da2eee90f090bd8d1fb800c5d6204bca6"
             },
             {
               "path": "apps/api/src/session/preauth-csrf.controller.ts",
@@ -28198,6 +28249,10 @@
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
               "sha256": "a1b00947492805301288c51114ad55ff8a7b7c90d4ce13cfe312dbc1a25dacff"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
             }
           ],
           "checks": [
@@ -28297,7 +28352,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-candidate-acceptance: 92 affected units, 70 native correction, authority, solar and saving cases, 24 public authentication and terms cases, and 97 unchanged bundle limits. Ownership, monetary commands and confirmation assertions remain covered.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
-            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain."
+            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
+            "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/login-session-acceptance",
           "limitations": [
@@ -29687,7 +29743,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-review-preview-deadlines",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.6-browser-origin-security"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -29727,7 +29784,7 @@
             },
             {
               "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
-              "sha256": "e596516adfde0884eb620dd38cadcdd71a42d2e061d92e7327e51e5b6b3f9eba"
+              "sha256": "80249bdfbadeb9de44d02e25e8bbad64440f42799636c333c294c4aae170f18d"
             },
             {
               "path": "apps/api/src/session/session.service.ts",
@@ -29900,6 +29957,10 @@
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
               "sha256": "a1b00947492805301288c51114ad55ff8a7b7c90d4ce13cfe312dbc1a25dacff"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
             }
           ],
           "checks": [
@@ -29946,7 +30007,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-candidate-acceptance: 92 affected units, 70 native correction, authority, solar and saving cases, 24 public authentication and terms cases, and 97 unchanged bundle limits. Ownership, monetary commands and confirmation assertions remain covered.",
-            "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed."
+            "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
+            "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/login-session-acceptance",
           "limitations": [
@@ -106019,7 +106081,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.6-browser-origin-security"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -106127,11 +106190,11 @@
             },
             {
               "path": "apps/api/src/session/csrf.guard.test.ts",
-              "sha256": "ede917f1d3dbd762cfd44c012889630b82a38592f1f14d6e8e83339abeee2b01"
+              "sha256": "284d0156c91689a216e20499c341f5edb9d1e55724c8c5638e83dcd14f16c434"
             },
             {
               "path": "apps/api/src/session/csrf.guard.ts",
-              "sha256": "d795e525a70bc39ad9b83f8c373ab7acb45e747279dd9ba87681406afd107fe9"
+              "sha256": "31569dad48816ef435efd1074cf2657da2eee90f090bd8d1fb800c5d6204bca6"
             },
             {
               "path": "apps/api/src/session/operating-context-http.integration.test.ts",
@@ -106344,6 +106407,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
             }
           ],
           "checks": [
@@ -106377,7 +106444,8 @@
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json"
+            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
+            "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
           "limitations": [
@@ -106735,7 +106803,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.6-browser-origin-security"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -106843,11 +106912,11 @@
             },
             {
               "path": "apps/api/src/session/csrf.guard.test.ts",
-              "sha256": "ede917f1d3dbd762cfd44c012889630b82a38592f1f14d6e8e83339abeee2b01"
+              "sha256": "284d0156c91689a216e20499c341f5edb9d1e55724c8c5638e83dcd14f16c434"
             },
             {
               "path": "apps/api/src/session/csrf.guard.ts",
-              "sha256": "d795e525a70bc39ad9b83f8c373ab7acb45e747279dd9ba87681406afd107fe9"
+              "sha256": "31569dad48816ef435efd1074cf2657da2eee90f090bd8d1fb800c5d6204bca6"
             },
             {
               "path": "apps/api/src/session/operating-context-http.integration.test.ts",
@@ -107060,6 +107129,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
             }
           ],
           "checks": [
@@ -107093,7 +107166,8 @@
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json"
+            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
+            "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
           "limitations": [
@@ -109279,7 +109353,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.6-browser-origin-security"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -109387,11 +109462,11 @@
             },
             {
               "path": "apps/api/src/session/csrf.guard.test.ts",
-              "sha256": "ede917f1d3dbd762cfd44c012889630b82a38592f1f14d6e8e83339abeee2b01"
+              "sha256": "284d0156c91689a216e20499c341f5edb9d1e55724c8c5638e83dcd14f16c434"
             },
             {
               "path": "apps/api/src/session/csrf.guard.ts",
-              "sha256": "d795e525a70bc39ad9b83f8c373ab7acb45e747279dd9ba87681406afd107fe9"
+              "sha256": "31569dad48816ef435efd1074cf2657da2eee90f090bd8d1fb800c5d6204bca6"
             },
             {
               "path": "apps/api/src/session/operating-context-http.integration.test.ts",
@@ -109604,6 +109679,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
             }
           ],
           "checks": [
@@ -109637,7 +109716,8 @@
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json"
+            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
+            "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
           "limitations": [
@@ -140945,7 +141025,8 @@
         "batches": [
           "release-0.3-wallet-ledger-topups",
           "release-0.3-provider-csrf-disposition",
-          "release-0.5-route-fallback-and-announcement"
+          "release-0.5-route-fallback-and-announcement",
+          "release-0.6-browser-origin-security"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-provider-callbacks",
@@ -140953,11 +141034,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/session/csrf.guard.test.ts",
-              "sha256": "ede917f1d3dbd762cfd44c012889630b82a38592f1f14d6e8e83339abeee2b01"
+              "sha256": "284d0156c91689a216e20499c341f5edb9d1e55724c8c5638e83dcd14f16c434"
             },
             {
               "path": "apps/api/src/session/csrf.guard.ts",
-              "sha256": "d795e525a70bc39ad9b83f8c373ab7acb45e747279dd9ba87681406afd107fe9"
+              "sha256": "31569dad48816ef435efd1074cf2657da2eee90f090bd8d1fb800c5d6204bca6"
             },
             {
               "path": "apps/api/src/wallet/chargeback-detection.controller.test.ts",
@@ -141034,6 +141115,10 @@
             {
               "path": "packages/shared/src/finance/wallet-chargeback.ts",
               "sha256": "93ecf76298df81953aae7cd2a5a0c91312d620e08e139c881b7453ac7cc96753"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
             }
           ],
           "checks": [
@@ -141042,7 +141127,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.3-closure/callback-disposition-current.json",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-closure/verified-api-cases.json",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.3-closure/provider-source-binding.json",
-            "Bindings renewed by release-0.5-route-fallback-and-announcement: verified route landmarks, terminal notice, timeout without retries, preserved authority/financial actions and equivalent shell CSS. Affected browser/unit and original budgets passed."
+            "Bindings renewed by release-0.5-route-fallback-and-announcement: verified route landmarks, terminal notice, timeout without retries, preserved authority/financial actions and equivalent shell CSS. Affected browser/unit and original budgets passed.",
+            "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
           ],
           "criterion_result": "Raw-body HMAC, timestamp window, event identity, merchant/amount/order binding and exact idempotent wallet credit; read-only GET and current-session CSRF-protected browser confirmation; audit rollback and crash/concurrent recovery verified.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.3-closure",
@@ -145586,7 +145672,8 @@
         "batches": [
           "release-0.3-wallet-payments-reversals",
           "release-0.3-provider-csrf-disposition",
-          "release-0.5-route-fallback-and-announcement"
+          "release-0.5-route-fallback-and-announcement",
+          "release-0.6-browser-origin-security"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-provider-callbacks",
@@ -145594,11 +145681,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/session/csrf.guard.test.ts",
-              "sha256": "ede917f1d3dbd762cfd44c012889630b82a38592f1f14d6e8e83339abeee2b01"
+              "sha256": "284d0156c91689a216e20499c341f5edb9d1e55724c8c5638e83dcd14f16c434"
             },
             {
               "path": "apps/api/src/session/csrf.guard.ts",
-              "sha256": "d795e525a70bc39ad9b83f8c373ab7acb45e747279dd9ba87681406afd107fe9"
+              "sha256": "31569dad48816ef435efd1074cf2657da2eee90f090bd8d1fb800c5d6204bca6"
             },
             {
               "path": "apps/api/src/wallet/chargeback-detection.controller.test.ts",
@@ -145675,6 +145762,10 @@
             {
               "path": "packages/shared/src/finance/wallet-chargeback.ts",
               "sha256": "93ecf76298df81953aae7cd2a5a0c91312d620e08e139c881b7453ac7cc96753"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
             }
           ],
           "checks": [
@@ -145683,7 +145774,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.3-closure/callback-disposition-current.json",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-closure/verified-api-cases.json",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.3-closure/provider-source-binding.json",
-            "Bindings renewed by release-0.5-route-fallback-and-announcement: verified route landmarks, terminal notice, timeout without retries, preserved authority/financial actions and equivalent shell CSS. Affected browser/unit and original budgets passed."
+            "Bindings renewed by release-0.5-route-fallback-and-announcement: verified route landmarks, terminal notice, timeout without retries, preserved authority/financial actions and equivalent shell CSS. Affected browser/unit and original budgets passed.",
+            "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
           ],
           "criterion_result": "Raw-body HMAC/replay/event/merchant checks and original-top-up mapping verified; one immutable linked reversal under locks, exact duplicate/concurrent recovery, unmatched and insufficient-funds visibility retained.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.3-closure",
@@ -467990,19 +468082,88 @@
         "story": "06-security-testing-observability.md#spec-b5054edd43c6"
       },
       "requirement": "| T-06.02.01.01 | Implement CSRF token service: generate per-session token, store in session store, validate custom header | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-browser-origin-security"
+        ],
+        "current_acceptance": {
+          "kind": "targeted_browser_boundary_and_migrated_http",
+          "reviewed_sha": "08104d08695870a3049873c1082aa02f71121aa1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/app.factory.ts",
+              "sha256": "fd7b1dd2ad9c021bca198fa65f7bd5251c9626b89acd48bba4f6bd2e5f6c5533"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.test.ts",
+              "sha256": "a329736f3127d035481cbe372c5c8c8a9819218c8c66a99732096c04e893d93c"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
+            },
+            {
+              "path": "apps/api/src/session/csrf.guard.test.ts",
+              "sha256": "284d0156c91689a216e20499c341f5edb9d1e55724c8c5638e83dcd14f16c434"
+            },
+            {
+              "path": "apps/api/src/session/csrf.guard.ts",
+              "sha256": "31569dad48816ef435efd1074cf2657da2eee90f090bd8d1fb800c5d6204bca6"
+            },
+            {
+              "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
+              "sha256": "80249bdfbadeb9de44d02e25e8bbad64440f42799636c333c294c4aae170f18d"
+            },
+            {
+              "path": "apps/api/src/session/preauth-csrf.service.test.ts",
+              "sha256": "16501df36e009094eaf2804dc171db5d92220e7c94bdce97171c1df18617b779"
+            },
+            {
+              "path": "apps/api/src/session/preauth-csrf.service.ts",
+              "sha256": "1dc595906412d0f67cc576bce7560e9b463fb615a402f87c3eea9a01bc0c7db9"
+            },
+            {
+              "path": "apps/api/src/session/refresh-csrf.guard.test.ts",
+              "sha256": "83a88e47225833a2e17b679b22f6cd7587b74b0ff6a4d84da7e5fdb0028d0ea5"
+            },
+            {
+              "path": "apps/api/src/session/refresh-csrf.guard.ts",
+              "sha256": "e405da8c1dfb62414245f0c539cbd36df562112b1596afeb5880adf0ff3b7807"
+            },
+            {
+              "path": "apps/api/src/session/session-csrf-race-http.integration.test.ts",
+              "sha256": "d6b757d79648f55f20f9176bf2b33b9f0146d4051e471ba9c30a0935c6f5c8d4"
+            },
+            {
+              "path": "apps/api/src/session/session-http.integration.test.ts",
+              "sha256": "174fe1a99c55c798864a2c32d4a9cae69a4d98367c14ff9bd140081021d3f6bc"
+            },
+            {
+              "path": "apps/api/src/session/session.guard.ts",
+              "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+            },
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+            },
+            {
+              "path": "docs/security/cookies.md",
+              "sha256": "f0d516fc6d1504f76d3d624f482658ec4d876e1022fb8bede5c1f652ad16a013"
+            }
+          ],
+          "checks": [
+            "Per-session token persisted with the session; missing, stale, or unmatched headers cannot extend or mutate it, including after a lock wait. Anonymous challenges use their independent store.",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
+          ]
+        }
       }
     },
     {
@@ -468016,19 +468177,88 @@
         "story": "06-security-testing-observability.md#spec-b5054edd43c6"
       },
       "requirement": "| T-06.02.01.02 | Implement NestJS CSRF guard/ interceptor for state-changing routes | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-browser-origin-security"
+        ],
+        "current_acceptance": {
+          "kind": "targeted_browser_boundary_and_migrated_http",
+          "reviewed_sha": "08104d08695870a3049873c1082aa02f71121aa1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/app.factory.ts",
+              "sha256": "fd7b1dd2ad9c021bca198fa65f7bd5251c9626b89acd48bba4f6bd2e5f6c5533"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.test.ts",
+              "sha256": "a329736f3127d035481cbe372c5c8c8a9819218c8c66a99732096c04e893d93c"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
+            },
+            {
+              "path": "apps/api/src/session/csrf.guard.test.ts",
+              "sha256": "284d0156c91689a216e20499c341f5edb9d1e55724c8c5638e83dcd14f16c434"
+            },
+            {
+              "path": "apps/api/src/session/csrf.guard.ts",
+              "sha256": "31569dad48816ef435efd1074cf2657da2eee90f090bd8d1fb800c5d6204bca6"
+            },
+            {
+              "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
+              "sha256": "80249bdfbadeb9de44d02e25e8bbad64440f42799636c333c294c4aae170f18d"
+            },
+            {
+              "path": "apps/api/src/session/preauth-csrf.service.test.ts",
+              "sha256": "16501df36e009094eaf2804dc171db5d92220e7c94bdce97171c1df18617b779"
+            },
+            {
+              "path": "apps/api/src/session/preauth-csrf.service.ts",
+              "sha256": "1dc595906412d0f67cc576bce7560e9b463fb615a402f87c3eea9a01bc0c7db9"
+            },
+            {
+              "path": "apps/api/src/session/refresh-csrf.guard.test.ts",
+              "sha256": "83a88e47225833a2e17b679b22f6cd7587b74b0ff6a4d84da7e5fdb0028d0ea5"
+            },
+            {
+              "path": "apps/api/src/session/refresh-csrf.guard.ts",
+              "sha256": "e405da8c1dfb62414245f0c539cbd36df562112b1596afeb5880adf0ff3b7807"
+            },
+            {
+              "path": "apps/api/src/session/session-csrf-race-http.integration.test.ts",
+              "sha256": "d6b757d79648f55f20f9176bf2b33b9f0146d4051e471ba9c30a0935c6f5c8d4"
+            },
+            {
+              "path": "apps/api/src/session/session-http.integration.test.ts",
+              "sha256": "174fe1a99c55c798864a2c32d4a9cae69a4d98367c14ff9bd140081021d3f6bc"
+            },
+            {
+              "path": "apps/api/src/session/session.guard.ts",
+              "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+            },
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+            },
+            {
+              "path": "docs/security/cookies.md",
+              "sha256": "f0d516fc6d1504f76d3d624f482658ec4d876e1022fb8bede5c1f652ad16a013"
+            }
+          ],
+          "checks": [
+            "Global unsafe-session guard and public challenge checks exercised through real HTTP, with independent owner-approved signed/native exceptions preserved.",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
+          ]
+        }
       }
     },
     {
@@ -468042,19 +468272,72 @@
         "story": "06-security-testing-observability.md#spec-b5054edd43c6"
       },
       "requirement": "| T-06.02.01.03 | Implement Origin validation against allowlist (configurable via admin settings or env) | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-browser-origin-security"
+        ],
+        "current_acceptance": {
+          "kind": "targeted_browser_boundary_and_migrated_http",
+          "reviewed_sha": "08104d08695870a3049873c1082aa02f71121aa1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/app.factory.ts",
+              "sha256": "fd7b1dd2ad9c021bca198fa65f7bd5251c9626b89acd48bba4f6bd2e5f6c5533"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.test.ts",
+              "sha256": "a329736f3127d035481cbe372c5c8c8a9819218c8c66a99732096c04e893d93c"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
+            },
+            {
+              "path": "apps/api/src/session/csrf.guard.test.ts",
+              "sha256": "284d0156c91689a216e20499c341f5edb9d1e55724c8c5638e83dcd14f16c434"
+            },
+            {
+              "path": "apps/api/src/session/csrf.guard.ts",
+              "sha256": "31569dad48816ef435efd1074cf2657da2eee90f090bd8d1fb800c5d6204bca6"
+            },
+            {
+              "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
+              "sha256": "80249bdfbadeb9de44d02e25e8bbad64440f42799636c333c294c4aae170f18d"
+            },
+            {
+              "path": "apps/api/src/session/refresh-csrf.guard.test.ts",
+              "sha256": "83a88e47225833a2e17b679b22f6cd7587b74b0ff6a4d84da7e5fdb0028d0ea5"
+            },
+            {
+              "path": "apps/api/src/session/refresh-csrf.guard.ts",
+              "sha256": "e405da8c1dfb62414245f0c539cbd36df562112b1596afeb5880adf0ff3b7807"
+            },
+            {
+              "path": "apps/api/src/session/session-csrf-race-http.integration.test.ts",
+              "sha256": "d6b757d79648f55f20f9176bf2b33b9f0146d4051e471ba9c30a0935c6f5c8d4"
+            },
+            {
+              "path": "apps/api/src/session/session-http.integration.test.ts",
+              "sha256": "174fe1a99c55c798864a2c32d4a9cae69a4d98367c14ff9bd140081021d3f6bc"
+            },
+            {
+              "path": "docs/security/cookies.md",
+              "sha256": "f0d516fc6d1504f76d3d624f482658ec4d876e1022fb8bede5c1f652ad16a013"
+            }
+          ],
+          "checks": [
+            "Exact APP_PUBLIC_URL origin; Referer fallback only when Origin is absent. A foreign browser cannot consume a valid challenge, and the trusted browser can use it once.",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
+          ]
+        }
       }
     },
     {
@@ -468068,19 +468351,64 @@
         "story": "06-security-testing-observability.md#spec-b5054edd43c6"
       },
       "requirement": "| T-06.02.01.04 | Implement centralized SameSite cookie policy (security-owned): evaluate cross-origin needs, set appropriate policy per route/topology, document in security policy, supersedes all per-module SameSite decisions | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-browser-origin-security"
+        ],
+        "current_acceptance": {
+          "kind": "targeted_browser_boundary_and_migrated_http",
+          "reviewed_sha": "08104d08695870a3049873c1082aa02f71121aa1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/session/cookie.helper.test.ts",
+              "sha256": "83571994ebfe3a715dc65284ca051687156f25095a77284ecd6c9c983bff69f3"
+            },
+            {
+              "path": "apps/api/src/session/cookie.helper.ts",
+              "sha256": "1e1a3b2092c2200f29d531468b8c15d5920b2da42aeaaf5c1d159c9937c32192"
+            },
+            {
+              "path": "apps/api/src/session/csrf.guard.test.ts",
+              "sha256": "284d0156c91689a216e20499c341f5edb9d1e55724c8c5638e83dcd14f16c434"
+            },
+            {
+              "path": "apps/api/src/session/csrf.guard.ts",
+              "sha256": "31569dad48816ef435efd1074cf2657da2eee90f090bd8d1fb800c5d6204bca6"
+            },
+            {
+              "path": "apps/api/src/session/refresh-csrf.guard.test.ts",
+              "sha256": "83a88e47225833a2e17b679b22f6cd7587b74b0ff6a4d84da7e5fdb0028d0ea5"
+            },
+            {
+              "path": "apps/api/src/session/refresh-csrf.guard.ts",
+              "sha256": "e405da8c1dfb62414245f0c539cbd36df562112b1596afeb5880adf0ff3b7807"
+            },
+            {
+              "path": "apps/api/src/session/session-csrf-race-http.integration.test.ts",
+              "sha256": "d6b757d79648f55f20f9176bf2b33b9f0146d4051e471ba9c30a0935c6f5c8d4"
+            },
+            {
+              "path": "apps/api/src/session/session-http.integration.test.ts",
+              "sha256": "174fe1a99c55c798864a2c32d4a9cae69a4d98367c14ff9bd140081021d3f6bc"
+            },
+            {
+              "path": "docs/security/cookies.md",
+              "sha256": "f0d516fc6d1504f76d3d624f482658ec4d876e1022fb8bede5c1f652ad16a013"
+            }
+          ],
+          "checks": [
+            "Central security-owned cookie topology and helper cover Lax session/refresh, Strict CSRF/challenge, Secure in production and narrow cookie paths; no per-module widening.",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
+          ]
+        }
       }
     },
     {
@@ -468120,19 +468448,80 @@
         "story": "06-security-testing-observability.md#spec-b5054edd43c6"
       },
       "requirement": "| T-06.02.01.06 | Ensure CSRF failures return safe error + correlation ID; log as security event | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-browser-origin-security"
+        ],
+        "current_acceptance": {
+          "kind": "targeted_browser_boundary_and_migrated_http",
+          "reviewed_sha": "08104d08695870a3049873c1082aa02f71121aa1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/app.factory.ts",
+              "sha256": "fd7b1dd2ad9c021bca198fa65f7bd5251c9626b89acd48bba4f6bd2e5f6c5533"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.test.ts",
+              "sha256": "a329736f3127d035481cbe372c5c8c8a9819218c8c66a99732096c04e893d93c"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
+            },
+            {
+              "path": "apps/api/src/common/correlation-id.middleware.ts",
+              "sha256": "b127659fda54ecb4543d5dbbbfbcb873538f912ce5e0cf4d93ee4043ac36903e"
+            },
+            {
+              "path": "apps/api/src/common/http-exception.filter.ts",
+              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+            },
+            {
+              "path": "apps/api/src/session/csrf.guard.test.ts",
+              "sha256": "284d0156c91689a216e20499c341f5edb9d1e55724c8c5638e83dcd14f16c434"
+            },
+            {
+              "path": "apps/api/src/session/csrf.guard.ts",
+              "sha256": "31569dad48816ef435efd1074cf2657da2eee90f090bd8d1fb800c5d6204bca6"
+            },
+            {
+              "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
+              "sha256": "80249bdfbadeb9de44d02e25e8bbad64440f42799636c333c294c4aae170f18d"
+            },
+            {
+              "path": "apps/api/src/session/refresh-csrf.guard.test.ts",
+              "sha256": "83a88e47225833a2e17b679b22f6cd7587b74b0ff6a4d84da7e5fdb0028d0ea5"
+            },
+            {
+              "path": "apps/api/src/session/refresh-csrf.guard.ts",
+              "sha256": "e405da8c1dfb62414245f0c539cbd36df562112b1596afeb5880adf0ff3b7807"
+            },
+            {
+              "path": "apps/api/src/session/session-csrf-race-http.integration.test.ts",
+              "sha256": "d6b757d79648f55f20f9176bf2b33b9f0146d4051e471ba9c30a0935c6f5c8d4"
+            },
+            {
+              "path": "apps/api/src/session/session-http.integration.test.ts",
+              "sha256": "174fe1a99c55c798864a2c32d4a9cae69a4d98367c14ff9bd140081021d3f6bc"
+            },
+            {
+              "path": "docs/security/cookies.md",
+              "sha256": "f0d516fc6d1504f76d3d624f482658ec4d876e1022fb8bede5c1f652ad16a013"
+            }
+          ],
+          "checks": [
+            "Guard failures yield a stable safe error and correlation ID; warning telemetry omits submitted tokens, request credentials and foreign header values.",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
+          ]
+        }
       }
     },
     {
@@ -468146,19 +468535,88 @@
         "story": "06-security-testing-observability.md#spec-b5054edd43c6"
       },
       "requirement": "| T-06.02.01.07 | Write integration tests: valid CSRF token, missing token, expired token, rotated token, origin mismatch, same-site bypass | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-browser-origin-security"
+        ],
+        "current_acceptance": {
+          "kind": "targeted_browser_boundary_and_migrated_http",
+          "reviewed_sha": "08104d08695870a3049873c1082aa02f71121aa1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/app.factory.ts",
+              "sha256": "fd7b1dd2ad9c021bca198fa65f7bd5251c9626b89acd48bba4f6bd2e5f6c5533"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.test.ts",
+              "sha256": "a329736f3127d035481cbe372c5c8c8a9819218c8c66a99732096c04e893d93c"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
+            },
+            {
+              "path": "apps/api/src/session/csrf.guard.test.ts",
+              "sha256": "284d0156c91689a216e20499c341f5edb9d1e55724c8c5638e83dcd14f16c434"
+            },
+            {
+              "path": "apps/api/src/session/csrf.guard.ts",
+              "sha256": "31569dad48816ef435efd1074cf2657da2eee90f090bd8d1fb800c5d6204bca6"
+            },
+            {
+              "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
+              "sha256": "80249bdfbadeb9de44d02e25e8bbad64440f42799636c333c294c4aae170f18d"
+            },
+            {
+              "path": "apps/api/src/session/preauth-csrf.service.test.ts",
+              "sha256": "16501df36e009094eaf2804dc171db5d92220e7c94bdce97171c1df18617b779"
+            },
+            {
+              "path": "apps/api/src/session/preauth-csrf.service.ts",
+              "sha256": "1dc595906412d0f67cc576bce7560e9b463fb615a402f87c3eea9a01bc0c7db9"
+            },
+            {
+              "path": "apps/api/src/session/refresh-csrf.guard.test.ts",
+              "sha256": "83a88e47225833a2e17b679b22f6cd7587b74b0ff6a4d84da7e5fdb0028d0ea5"
+            },
+            {
+              "path": "apps/api/src/session/refresh-csrf.guard.ts",
+              "sha256": "e405da8c1dfb62414245f0c539cbd36df562112b1596afeb5880adf0ff3b7807"
+            },
+            {
+              "path": "apps/api/src/session/session-csrf-race-http.integration.test.ts",
+              "sha256": "d6b757d79648f55f20f9176bf2b33b9f0146d4051e471ba9c30a0935c6f5c8d4"
+            },
+            {
+              "path": "apps/api/src/session/session-http.integration.test.ts",
+              "sha256": "174fe1a99c55c798864a2c32d4a9cae69a4d98367c14ff9bd140081021d3f6bc"
+            },
+            {
+              "path": "apps/api/src/session/session.guard.ts",
+              "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+            },
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+            },
+            {
+              "path": "docs/security/cookies.md",
+              "sha256": "f0d516fc6d1504f76d3d624f482658ec4d876e1022fb8bede5c1f652ad16a013"
+            }
+          ],
+          "checks": [
+            "Migrated HTTP proves valid, missing, expired, rotated and foreign proof, rejected cross-site authentication, and revalidation after concurrent session mutation.",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
+          ]
+        }
       }
     },
     {
@@ -468250,19 +468708,48 @@
         "story": "06-security-testing-observability.md#spec-6a02d6e61674"
       },
       "requirement": "| T-06.02.02.03 | Configure CSP reporting endpoint (e.g. `csp-reports` route or external `report-uri`) | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-browser-origin-security"
+        ],
+        "current_acceptance": {
+          "kind": "targeted_browser_boundary_and_migrated_http",
+          "reviewed_sha": "08104d08695870a3049873c1082aa02f71121aa1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/app.factory.ts",
+              "sha256": "fd7b1dd2ad9c021bca198fa65f7bd5251c9626b89acd48bba4f6bd2e5f6c5533"
+            },
+            {
+              "path": "apps/api/src/csp-report/csp-report-http.integration.test.ts",
+              "sha256": "80231637e0ac487ad229a0b3ec426d7d5f12c35100a460fb2ac44fa533632493"
+            },
+            {
+              "path": "apps/api/src/csp-report/csp-report.controller.ts",
+              "sha256": "38bd053845e6b43dd2211d56c20dc5516a65905e3c2292a166b65f41c104944f"
+            },
+            {
+              "path": "apps/web/server.js",
+              "sha256": "8f2f2eb0a4a158fe322c1fd4c6f119044d0b0aa61ea71aacc052ba1ba348caab"
+            },
+            {
+              "path": "deploy/staging/nginx-api-proxy.conf",
+              "sha256": "ffc79d8f52d6dd3628d7b0feee4aca07a172f3f33547ff02abe9238244dd5f09"
+            }
+          ],
+          "checks": [
+            "Bounded native-report endpoint configured in the web header and staging ingress. Migrated HTTP proves provenance, sanitized correlation logs, limits and safe native cookie handling; independent live endpoint status readback was 204 and 403.",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
+          ]
+        }
       }
     },
     {
@@ -468510,19 +468997,48 @@
         "story": "06-security-testing-observability.md#spec-6a3a4759c913"
       },
       "requirement": "| T-06.02.04.01 | Implement CORS middleware with exact origin allowlist (env config, not wildcard) | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-browser-origin-security"
+        ],
+        "current_acceptance": {
+          "kind": "targeted_browser_boundary_and_migrated_http",
+          "reviewed_sha": "08104d08695870a3049873c1082aa02f71121aa1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/app.factory.ts",
+              "sha256": "fd7b1dd2ad9c021bca198fa65f7bd5251c9626b89acd48bba4f6bd2e5f6c5533"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.test.ts",
+              "sha256": "a329736f3127d035481cbe372c5c8c8a9819218c8c66a99732096c04e893d93c"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
+            },
+            {
+              "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
+              "sha256": "80249bdfbadeb9de44d02e25e8bbad64440f42799636c333c294c4aae170f18d"
+            },
+            {
+              "path": "docs/security/cookies.md",
+              "sha256": "f0d516fc6d1504f76d3d624f482658ec4d876e1022fb8bede5c1f652ad16a013"
+            }
+          ],
+          "checks": [
+            "Production HTTPS app origin is matched exactly from APP_PUBLIC_URL, never incoming host or wildcard.",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
+          ]
+        }
       }
     },
     {
@@ -468536,19 +469052,48 @@
         "story": "06-security-testing-observability.md#spec-6a3a4759c913"
       },
       "requirement": "| T-06.02.04.02 | Ensure credentialed CORS (credentials: include) never accepts wildcard origin | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-browser-origin-security"
+        ],
+        "current_acceptance": {
+          "kind": "targeted_browser_boundary_and_migrated_http",
+          "reviewed_sha": "08104d08695870a3049873c1082aa02f71121aa1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/app.factory.ts",
+              "sha256": "fd7b1dd2ad9c021bca198fa65f7bd5251c9626b89acd48bba4f6bd2e5f6c5533"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.test.ts",
+              "sha256": "a329736f3127d035481cbe372c5c8c8a9819218c8c66a99732096c04e893d93c"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
+            },
+            {
+              "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
+              "sha256": "80249bdfbadeb9de44d02e25e8bbad64440f42799636c333c294c4aae170f18d"
+            },
+            {
+              "path": "docs/security/cookies.md",
+              "sha256": "f0d516fc6d1504f76d3d624f482658ec4d876e1022fb8bede5c1f652ad16a013"
+            }
+          ],
+          "checks": [
+            "Only the exact configured origin receives credentialed CORS; wildcard, suffix spoofing, foreign schemes, opaque origin and invalid configuration do not.",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
+          ]
+        }
       }
     },
     {
@@ -468562,19 +469107,48 @@
         "story": "06-security-testing-observability.md#spec-6a3a4759c913"
       },
       "requirement": "| T-06.02.04.03 | Restrict allowed methods to required subset; restrict allowed headers | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-browser-origin-security"
+        ],
+        "current_acceptance": {
+          "kind": "targeted_browser_boundary_and_migrated_http",
+          "reviewed_sha": "08104d08695870a3049873c1082aa02f71121aa1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/app.factory.ts",
+              "sha256": "fd7b1dd2ad9c021bca198fa65f7bd5251c9626b89acd48bba4f6bd2e5f6c5533"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.test.ts",
+              "sha256": "a329736f3127d035481cbe372c5c8c8a9819218c8c66a99732096c04e893d93c"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
+            },
+            {
+              "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
+              "sha256": "80249bdfbadeb9de44d02e25e8bbad64440f42799636c333c294c4aae170f18d"
+            },
+            {
+              "path": "docs/security/cookies.md",
+              "sha256": "f0d516fc6d1504f76d3d624f482658ec4d876e1022fb8bede5c1f652ad16a013"
+            }
+          ],
+          "checks": [
+            "Allowlist contains the six required read/write methods and the actual API JSON, CSRF, idempotency and draft headers. Response access includes the caller's retry timing.",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
+          ]
+        }
       }
     },
     {
@@ -468588,19 +469162,48 @@
         "story": "06-security-testing-observability.md#spec-6a3a4759c913"
       },
       "requirement": "| T-06.02.04.04 | Cache preflight response (e.g. `Access-Control-Max-Age: 3600`) | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-browser-origin-security"
+        ],
+        "current_acceptance": {
+          "kind": "targeted_browser_boundary_and_migrated_http",
+          "reviewed_sha": "08104d08695870a3049873c1082aa02f71121aa1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/app.factory.ts",
+              "sha256": "fd7b1dd2ad9c021bca198fa65f7bd5251c9626b89acd48bba4f6bd2e5f6c5533"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.test.ts",
+              "sha256": "a329736f3127d035481cbe372c5c8c8a9819218c8c66a99732096c04e893d93c"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
+            },
+            {
+              "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
+              "sha256": "80249bdfbadeb9de44d02e25e8bbad64440f42799636c333c294c4aae170f18d"
+            },
+            {
+              "path": "docs/security/cookies.md",
+              "sha256": "f0d516fc6d1504f76d3d624f482658ec4d876e1022fb8bede5c1f652ad16a013"
+            }
+          ],
+          "checks": [
+            "Real HTTP preflight verifies 3600 seconds and the origin variance.",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
+          ]
+        }
       }
     },
     {
@@ -468614,19 +469217,48 @@
         "story": "06-security-testing-observability.md#spec-6a3a4759c913"
       },
       "requirement": "| T-06.02.04.05 | Write CORS integration tests: valid origin, invalid origin, credentialed request, preflight | S |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-browser-origin-security"
+        ],
+        "current_acceptance": {
+          "kind": "targeted_browser_boundary_and_migrated_http",
+          "reviewed_sha": "08104d08695870a3049873c1082aa02f71121aa1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/app.factory.ts",
+              "sha256": "fd7b1dd2ad9c021bca198fa65f7bd5251c9626b89acd48bba4f6bd2e5f6c5533"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.test.ts",
+              "sha256": "a329736f3127d035481cbe372c5c8c8a9819218c8c66a99732096c04e893d93c"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
+            },
+            {
+              "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
+              "sha256": "80249bdfbadeb9de44d02e25e8bbad64440f42799636c333c294c4aae170f18d"
+            },
+            {
+              "path": "docs/security/cookies.md",
+              "sha256": "f0d516fc6d1504f76d3d624f482658ec4d876e1022fb8bede5c1f652ad16a013"
+            }
+          ],
+          "checks": [
+            "Real Express/Nest HTTP coverage proves trusted and untrusted origins, credentialed preflight and guarded browser authentication.",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
+          ]
+        }
       }
     },
     {
@@ -733988,7 +734620,7 @@
             },
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "d8c9b3dd8908d62c7ab19f4351c01cddc3eae647fdd51b76087701caaa51bf7d"
+              "sha256": "fd7b1dd2ad9c021bca198fa65f7bd5251c9626b89acd48bba4f6bd2e5f6c5533"
             },
             {
               "path": "apps/api/src/app.module.ts",
@@ -734157,6 +734789,10 @@
             {
               "path": "apps/web/src/lib/contract-detail-records.ts",
               "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.ts",
+              "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
             }
           ],
           "checks": [
@@ -734320,7 +734956,8 @@
             "Document file-link and template cases and 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-page-read-reconciliation/proof.json",
             "Solar receipt image recovery, affected native journeys and all 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-library-read-reconciliation/proof.json",
             "Reminder step-up keyboard and 44px control checks, affected route cases and all 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-original-ui-closure/proof.json",
-            "Wallet verification UI and unchanged read/confirmation paths rechecked on current source. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-verification-controls/proof.json"
+            "Wallet verification UI and unchanged read/confirmation paths rechecked on current source. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-verification-controls/proof.json",
+            "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -734419,7 +735056,8 @@
           "release-0.5-library-read-reconciliation",
           "release-0.5-original-ui-closure",
           "release-0.5-wallet-verification-controls",
-          "release-0.5-direct-push-preflight"
+          "release-0.5-direct-push-preflight",
+          "release-0.6-browser-origin-security"
         ]
       }
     },
@@ -734523,7 +735161,9 @@
       "depends_on": [],
       "evidence": {
         "current_acceptance": null,
-        "batches": []
+        "batches": [
+          "release-0.6-browser-origin-security"
+        ]
       }
     },
     {
@@ -819668,6 +820308,166 @@
       "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/hybrid-compose-static-receipt.json",
       "source_scope_proof_sha256": "3cb8e41caf5a02388f480c519b16ac03a9106f31a3772fd7bdbb257e9e85ebcb",
       "release_disposition": "Standalone rehearsal manifest verified statically. No host, database, pooler, firewall, off-server storage or providers certified."
+    },
+    "release-0.6-browser-origin-security": {
+      "batch": "release-0.6-browser-origin-security",
+      "base_commit": "08104d08695870a3049873c1082aa02f71121aa1",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.04.02",
+        "02-auth-users-admin.md#T-02.01.01",
+        "02-auth-users-admin.md#T-02.01.02",
+        "02-auth-users-admin.md#T-02.01.03",
+        "02-auth-users-admin.md#T-02.01.04",
+        "02-auth-users-admin.md#T-02.02.01",
+        "02-auth-users-admin.md#T-02.02.02",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-02.03.01",
+        "02-auth-users-admin.md#T-02.03.02",
+        "02-auth-users-admin.md#T-02.04.01",
+        "02-auth-users-admin.md#T-09.12.01",
+        "02-auth-users-admin.md#T-09.12.02",
+        "02-auth-users-admin.md#T-09.12.05",
+        "04-invoices-wallet-contracts.md#T-04.2.02.02",
+        "04-invoices-wallet-contracts.md#T-04.2.04.02",
+        "06-security-testing-observability.md#T-06.02.01.01",
+        "06-security-testing-observability.md#T-06.02.01.02",
+        "06-security-testing-observability.md#T-06.02.01.03",
+        "06-security-testing-observability.md#T-06.02.01.04",
+        "06-security-testing-observability.md#T-06.02.01.06",
+        "06-security-testing-observability.md#T-06.02.01.07",
+        "06-security-testing-observability.md#T-06.02.02.03",
+        "06-security-testing-observability.md#T-06.02.04.01",
+        "06-security-testing-observability.md#T-06.02.04.02",
+        "06-security-testing-observability.md#T-06.02.04.03",
+        "06-security-testing-observability.md#T-06.02.04.04",
+        "06-security-testing-observability.md#T-06.02.04.05",
+        "release-readiness#R-04.02",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/upload-policy-http.integration.test.ts",
+          "sha256": "d332a9256a0e0315e7afd101bc33934b88500c2b9ea206ab80a3eb35a8c33838"
+        },
+        {
+          "path": "apps/api/src/admin/vat-config-http.integration.test.ts",
+          "sha256": "a87233c1797ac5399db228cf8881541227df482435ce198d0f7aab464fb280dc"
+        },
+        {
+          "path": "apps/api/src/app.factory.ts",
+          "sha256": "fd7b1dd2ad9c021bca198fa65f7bd5251c9626b89acd48bba4f6bd2e5f6c5533"
+        },
+        {
+          "path": "apps/api/src/catalogue/catalogue-products-http.integration.test.ts",
+          "sha256": "74d00489ed954606d57d49f32c7665b45516e7bdf462c24e586b0edc9e8b02fb"
+        },
+        {
+          "path": "apps/api/src/common/browser-origin.test.ts",
+          "sha256": "a329736f3127d035481cbe372c5c8c8a9819218c8c66a99732096c04e893d93c"
+        },
+        {
+          "path": "apps/api/src/common/browser-origin.ts",
+          "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
+        },
+        {
+          "path": "apps/api/src/csp-report/csp-report-http.integration.test.ts",
+          "sha256": "80231637e0ac487ad229a0b3ec426d7d5f12c35100a460fb2ac44fa533632493"
+        },
+        {
+          "path": "apps/api/src/csp-report/csp-report.controller.ts",
+          "sha256": "38bd053845e6b43dd2211d56c20dc5516a65905e3c2292a166b65f41c104944f"
+        },
+        {
+          "path": "apps/api/src/session/cookie.helper.test.ts",
+          "sha256": "83571994ebfe3a715dc65284ca051687156f25095a77284ecd6c9c983bff69f3"
+        },
+        {
+          "path": "apps/api/src/session/cookie.helper.ts",
+          "sha256": "1e1a3b2092c2200f29d531468b8c15d5920b2da42aeaaf5c1d159c9937c32192"
+        },
+        {
+          "path": "apps/api/src/session/csrf.guard.test.ts",
+          "sha256": "284d0156c91689a216e20499c341f5edb9d1e55724c8c5638e83dcd14f16c434"
+        },
+        {
+          "path": "apps/api/src/session/csrf.guard.ts",
+          "sha256": "31569dad48816ef435efd1074cf2657da2eee90f090bd8d1fb800c5d6204bca6"
+        },
+        {
+          "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
+          "sha256": "80249bdfbadeb9de44d02e25e8bbad64440f42799636c333c294c4aae170f18d"
+        },
+        {
+          "path": "apps/api/src/session/preauth-csrf.service.test.ts",
+          "sha256": "16501df36e009094eaf2804dc171db5d92220e7c94bdce97171c1df18617b779"
+        },
+        {
+          "path": "apps/api/src/session/preauth-csrf.service.ts",
+          "sha256": "1dc595906412d0f67cc576bce7560e9b463fb615a402f87c3eea9a01bc0c7db9"
+        },
+        {
+          "path": "apps/api/src/session/refresh-csrf.guard.test.ts",
+          "sha256": "83a88e47225833a2e17b679b22f6cd7587b74b0ff6a4d84da7e5fdb0028d0ea5"
+        },
+        {
+          "path": "apps/api/src/session/refresh-csrf.guard.ts",
+          "sha256": "e405da8c1dfb62414245f0c539cbd36df562112b1596afeb5880adf0ff3b7807"
+        },
+        {
+          "path": "apps/api/src/session/session-csrf-race-http.integration.test.ts",
+          "sha256": "d6b757d79648f55f20f9176bf2b33b9f0146d4051e471ba9c30a0935c6f5c8d4"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "174fe1a99c55c798864a2c32d4a9cae69a4d98367c14ff9bd140081021d3f6bc"
+        },
+        {
+          "path": "apps/api/src/session/session.guard.ts",
+          "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+        },
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.controller.test.ts",
+          "sha256": "7a6e4636fde29146a97e95a068102a1cca7fecbe7b0e20586a09011dd1492d95"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.controller.test.ts",
+          "sha256": "ba912491867d307e113f9525614249daaac6531e22d500fccec10a735071bbfb"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-http.integration.test.ts",
+          "sha256": "75cfaae2a6308de878f20ff3c1b474e5dbb65b5b20115807c35e6e3e83a853b8"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-callback-verifier.test.ts",
+          "sha256": "405dfe53be4e1d1d149c320fa5991ebaa2da4dd5513868949ec39c9602dc5155"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "8f2f2eb0a4a158fe322c1fd4c6f119044d0b0aa61ea71aacc052ba1ba348caab"
+        },
+        {
+          "path": "deploy/staging/nginx-api-proxy.conf",
+          "sha256": "ffc79d8f52d6dd3628d7b0feee4aca07a172f3f33547ff02abe9238244dd5f09"
+        },
+        {
+          "path": "docs/security/cookies.md",
+          "sha256": "f0d516fc6d1504f76d3d624f482658ec4d876e1022fb8bede5c1f652ad16a013"
+        }
+      ],
+      "checks": [
+        "59 focused tests passed against final source: exact CORS adapter, session and refresh CSRF, signed callback/chargeback controllers and payment callback verifier. Nine centralized cookie and anonymous-token tests also passed. API typecheck and scoped formatting passed.",
+        "Original 51 native HTTP cases returned 44 passes and seven SSH test deadlines. The unchanged seven were rerun next to a fresh isolated PostgreSQL16 template and all passed. The final exact app additionally passed its foreign-origin case and four targeted staff/payment caller tests; the repeated new case counts once.",
+        "Final source delta from the 44 passing HTTP cases only exposes Retry-After to the already trusted origin. The exact adapter test and repeated migrated API cross-origin case cover this header policy without changing any guard, database or route behavior.",
+        "Live v0.5 staging accepted a bounded same-origin CSP report and refused a foreign one; native HTTP verifies bounded sanitized correlation logs, forbidden origins/media and safe independent cookie-bearing telemetry. No deployed CSP enforcement or production TLS certified."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
+      "source_scope_proof_sha256": "5adc12d339414a1661b662728826cc9d64c25ce4bc3c8cbfda42f82a0432cf1b",
+      "release_disposition": "Browser-origin criteria accepted; production environment and CSP enforcement remain separate gates."
     }
   },
   "historical_improvements": [
@@ -819707,22 +820507,26 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-browser-origin-security",
+    "id": "release-0.6-browser-response-policy",
     "release": "0.6.0",
     "task_keys": [
       "release-readiness#R-05.02",
-      "06-security-testing-observability.md#T-06.02.01.03",
-      "06-security-testing-observability.md#T-06.02.04.01",
-      "06-security-testing-observability.md#T-06.02.04.02",
-      "06-security-testing-observability.md#T-06.02.04.03",
-      "06-security-testing-observability.md#T-06.02.04.04",
-      "06-security-testing-observability.md#T-06.02.04.05"
+      "01-platform-infrastructure.md#T-04.04.02",
+      "06-security-testing-observability.md#T-06.02.02.02",
+      "06-security-testing-observability.md#T-06.02.02.04",
+      "06-security-testing-observability.md#T-06.02.02.05",
+      "06-security-testing-observability.md#T-06.02.02.06",
+      "06-security-testing-observability.md#T-06.02.03.01",
+      "06-security-testing-observability.md#T-06.02.03.02",
+      "06-security-testing-observability.md#T-06.02.03.03",
+      "06-security-testing-observability.md#T-06.02.03.04",
+      "06-security-testing-observability.md#T-06.02.03.05"
     ],
-    "goal": "Verify the exact browser origin boundary, credentialed CORS and CSRF through the affected native HTTP journeys. Continue independent production-readiness checks while the required environment access is pending."
+    "goal": "Close browser response policy and proxy header gaps with current web and edge evidence. Preserve Report-Only until violation review and keep HSTS gated on verified production TLS."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",
-    "next_update_after": "v0.6.0 timestamp and recovery checks plus production-equivalent environment availability",
+    "next_update_after": "v0.6.0 browser policy and production-equivalent environment availability",
     "method": "v0.5.0 staging and Telegram receipts are confirmed. v0.6.0 owner policy is recorded. Local and disposable staging rehearsals do not satisfy the production-equivalent TLS, provider, off-server recovery, load or schedule gates; production access/provisioning timing is external."
   },
   "capabilities": [

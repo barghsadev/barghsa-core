@@ -104,6 +104,41 @@ it('rejects missing cookies and cross-browser tokens without consuming valid cha
   expect((await post('login', first.cookie, first.token)).status).toBe(403);
 });
 
+it('rejects foreign browser origins without spending a valid pre-login challenge', async () => {
+  const origin = 'https://app.example.test';
+  const auth = await bootstrap();
+  const url = `${http.base}/api/auth/login`;
+  const preflight = await fetch(url, {
+    method: 'OPTIONS',
+    headers: {
+      Origin: origin,
+      'Access-Control-Request-Method': 'POST',
+      'Access-Control-Request-Headers': 'content-type,x-csrf-token',
+    },
+  });
+  expect(preflight.status).toBe(204);
+  expect(preflight.headers.get('access-control-allow-origin')).toBe(origin);
+  expect(preflight.headers.get('access-control-allow-credentials')).toBe('true');
+
+  const submit = (source: string) =>
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        Origin: source,
+        Cookie: auth.cookie,
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': auth.token,
+      },
+      body: '{}',
+    });
+  const denied = await submit(`${origin}.evil.test`);
+  expect(denied.status).toBe(403);
+  expect(denied.headers.get('access-control-allow-origin')).toBeNull();
+  expect(await denied.json()).toMatchObject({ error: { code: 'AUTHZ:CSRF_TOKEN_INVALID' } });
+  expect((await submit(origin)).status).toBe(401); // The intact challenge reaches authentication.
+  expect((await submit(origin)).status).toBe(403); // The challenge is still single-use.
+});
+
 it('rejects expired tokens and cleans expired rows when issuing a replacement', async () => {
   const old = await bootstrap();
   await http.pool.query(
