@@ -929,6 +929,7 @@ export const fa: Record<string, string> = {
   'admin.roles.title': 'نقش‌ها و دسترسی‌ها',
   'admin.roles.forbidden': 'اجازه مشاهده نقش‌ها و دسترسی‌ها را ندارید.',
   'admin.roles.empty': 'هنوز نقشی ثبت نشده است.',
+  'admin.roles.loading': 'در حال بارگذاری نقش‌ها…',
   'admin.roles.subtitle':
     'نقش‌های کاربری کارکنان و مجموعه دسترسی‌های هر نقش. نقش‌های از پیش‌تعریف‌شده فقط‌خواندنی هستند.',
   'admin.roles.role': 'نقش',
@@ -1911,6 +1912,7 @@ export const en: Record<string, string> = {
   'admin.roles.title': 'Roles & Permissions',
   'admin.roles.forbidden': 'You do not have permission to view roles and permissions.',
   'admin.roles.empty': 'No roles yet.',
+  'admin.roles.loading': 'Loading roles…',
   'admin.roles.subtitle':
     'Staff roles and the permission set of each role. Predefined roles are read-only.',
   'admin.roles.role': 'Role',

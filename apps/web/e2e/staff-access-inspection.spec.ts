@@ -1,4 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
+import type { Route } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { t } from '@barghsa/i18n/admin-ui';
@@ -38,6 +39,7 @@ for (const locale of ['en', 'fa'] as const)
       );
       let allowed = true,
         mode = 'valid';
+      let initialPermissions: Route | undefined;
       const reads: string[] = [];
       await page.route('**/api/admin/staff-access', (route) =>
         route.fulfill({ json: { ...staffAccess, canEditRoles: allowed } })
@@ -50,6 +52,10 @@ for (const locale of ['en', 'fa'] as const)
       );
       await page.route('**/api/admin/users/*/effective-permissions', (route) => {
         reads.push(route.request().url());
+        if (!initialPermissions) {
+          initialPermissions = route;
+          return;
+        }
         return route.fulfill(
           mode === 'failed'
             ? { status: 503, json: {} }
@@ -67,6 +73,13 @@ for (const locale of ['en', 'fa'] as const)
       const trigger = page.getByRole('button', { name: text('effective.inspect'), exact: true });
       await trigger.click();
       const dialog = page.getByRole('dialog');
+      await expect(dialog.getByRole('status')).toHaveText(
+        locale === 'fa' ? 'در حال بارگذاری دسترسی‌های مؤثر…' : 'Loading effective permissions…'
+      );
+      await expect.poll(() => !!initialPermissions).toBe(true);
+      await initialPermissions!.fulfill({
+        json: { ...effectivePermissions, userId: staffUser.userId },
+      });
       await expect(dialog).toContainText('Finance Alice');
       await expect(dialog).toContainText('finance:read');
       expect(reads[0]).toContain(`/api/admin/users/${staffUser.userId}/effective-permissions`);

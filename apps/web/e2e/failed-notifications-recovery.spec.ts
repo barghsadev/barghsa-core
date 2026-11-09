@@ -3,6 +3,7 @@ import { approveRiskConfirmation } from './confirmation-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
+import type { Route } from '@playwright/test';
 
 test.use({ viewport: { width: 390, height: 844 } });
 const row = {
@@ -39,9 +40,14 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/admin/failed-notifications/access', (route) =>
       route.fulfill({ json: { canView: true, canRetry: false } })
     );
-    await page.route('**/api/admin/failed-notifications?*', (route) =>
-      route.fulfill({ json: [row] })
-    );
+    let initialQueue: Route | undefined;
+    await page.route('**/api/admin/failed-notifications?*', (route) => {
+      if (!initialQueue) {
+        initialQueue = route;
+        return;
+      }
+      return route.fulfill({ json: [row] });
+    });
     const entries = Array.from({ length: 26 }, (_, index) => ({
       id: `40000000-0000-4000-8000-${String(index + 1).padStart(12, '0')}`,
       notificationId: row.outboxId,
@@ -55,10 +61,15 @@ for (const locale of ['en', 'fa'] as const) {
       createdAt: row.createdAt,
     }));
     let mode: 'unavailable' | 'wrong-record' | 'valid' | 'empty' | 'denied' = 'unavailable';
+    let initialHistory: Route | undefined;
     const queries: URLSearchParams[] = [];
     await page.route('**/api/admin/notifications/delivery-logs?*', (route) => {
       const query = new URL(route.request().url()).searchParams;
       queries.push(query);
+      if (!initialHistory) {
+        initialHistory = route;
+        return;
+      }
       if (mode === 'unavailable') return route.fulfill({ status: 503, json: {} });
       if (mode === 'denied') return route.fulfill({ status: 403, json: {} });
       return route.fulfill({
@@ -73,6 +84,13 @@ for (const locale of ['en', 'fa'] as const) {
       });
     });
     await page.goto(fa ? '/admin/notifications' : '/admin/failed-notifications');
+    await expect(
+      page.getByRole('status').filter({
+        hasText: fa ? 'در حال بارگذاری اعلان‌های ناموفق…' : 'Loading failed notifications…',
+      })
+    ).toBeVisible();
+    await expect.poll(() => !!initialQueue).toBe(true);
+    await initialQueue!.fulfill({ json: [row] });
     await page
       .locator('summary:visible')
       .filter({ hasText: fa ? 'جزئیات پوشانده‌شده' : 'Masked details' })
@@ -84,6 +102,11 @@ for (const locale of ['en', 'fa'] as const) {
     await history.click();
     const dialog = page.getByRole('dialog');
     const error = dialog.getByRole('alert');
+    await expect(dialog.getByRole('status')).toHaveText(
+      fa ? 'در حال بارگذاری تاریخچه ارسال…' : 'Loading delivery history…'
+    );
+    await expect.poll(() => !!initialHistory).toBe(true);
+    await initialHistory!.fulfill({ status: 503, json: {} });
     await expect(error).toBeVisible();
     mode = 'wrong-record';
     await error.getByRole('button').click();

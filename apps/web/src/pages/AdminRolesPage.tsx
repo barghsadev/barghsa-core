@@ -321,7 +321,7 @@ export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding
               error={isError}
               empty={roles?.length === 0}
               retainContent={roles !== null && roles.length > 0}
-              loadingView={<LoadingStatus>{t('common.loading', locale)}</LoadingStatus>}
+              loadingView={<LoadingStatus>{t('admin.roles.loading', locale)}</LoadingStatus>}
               errorView={
                 <div role="alert" className="space-y-2">
                   <p>{t('admin.roles.load.failed', locale)}</p>

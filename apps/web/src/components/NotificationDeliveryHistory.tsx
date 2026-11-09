@@ -295,11 +295,9 @@ export function NotificationDeliveryHistory({
         )}
         {time.notice}
         <p className="text-sm">{label('attemptHelp')}</p>
-        {loading && rows.length > 0 && (
-          <LoadingStatus>{t('admin.notifications.loading', locale)}</LoadingStatus>
-        )}
+        {loading && rows.length > 0 && <LoadingStatus>{label('loading')}</LoadingStatus>}
         {loading && rows.length === 0 ? (
-          <LoadingStatus>{t('admin.notifications.loading', locale)}</LoadingStatus>
+          <LoadingStatus>{label('loading')}</LoadingStatus>
         ) : error ? (
           <div role="alert">
             <p>{label('loadFailed')}</p>

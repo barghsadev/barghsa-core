@@ -104,7 +104,7 @@ export function StaffEffectivePermissions({
         {paused ? (
           <p role="status">{text('paused')}</p>
         ) : loading ? (
-          <LoadingStatus>{t('common.loading', locale)}</LoadingStatus>
+          <LoadingStatus>{text('loading')}</LoadingStatus>
         ) : null}
         {error && (
           <div role="alert" className="space-y-2">

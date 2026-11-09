@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T01:44:26+00:00",
-  "source_commit": "a079d7cde5b80037a6eba8c232762d5d1d8cf6f2",
+  "updated": "2026-11-09T01:50:07+00:00",
+  "source_commit": "f8b7e8658d55ce4cfdb12807c123238eb96784d0",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35364,7 +35364,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DefaultProfileModal.tsx",
@@ -48647,7 +48647,7 @@
             },
             {
               "path": "packages/i18n/src/admin-ui-messages.ts",
-              "sha256": "59fa5644efb09da3f8315c471160fb615ddba59eb5b89e39979b0dbd798c20cf"
+              "sha256": "c5b8cbae07a56d2b1bf1970b8ec7a979b2389490c7c4cd03da9ce57fe75d1937"
             },
             {
               "path": "packages/i18n/src/electricity-increase-decision-forms.test.ts",
@@ -63076,7 +63076,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DefaultProfileModal.tsx",
@@ -67058,7 +67058,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
@@ -72387,7 +72387,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-              "sha256": "92a25ab80e153c8b6bb709a12dc82cfa043c6b6a1deff2960a577f7574157fbc"
+              "sha256": "2305b69a26f2288e517360434dbdc8ecab2ceb581ff2690bdcfa3a5ac6bee719"
             },
             {
               "path": "apps/web/e2e/notification-delivery-search.spec.ts",
@@ -73587,7 +73587,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -96473,7 +96473,7 @@
             },
             {
               "path": "packages/i18n/src/admin-ui-messages.ts",
-              "sha256": "59fa5644efb09da3f8315c471160fb615ddba59eb5b89e39979b0dbd798c20cf"
+              "sha256": "c5b8cbae07a56d2b1bf1970b8ec7a979b2389490c7c4cd03da9ce57fe75d1937"
             },
             {
               "path": "packages/i18n/src/admin-ui.ts",
@@ -97832,7 +97832,7 @@
             },
             {
               "path": "apps/web/e2e/failed-notifications-recovery.spec.ts",
-              "sha256": "1f4bd5dd6b38e3a5117b34082088adc151bf902a66726862c0f632a1a590f1d0"
+              "sha256": "5c140414bb1d2a2f6af7c46da5a4a52f5ce884741234b94b7ce4a33b7d86b63d"
             },
             {
               "path": "apps/web/e2e/failed-notifications.spec.ts",
@@ -97848,7 +97848,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/OperationalQueueTable.tsx",
@@ -98230,7 +98230,7 @@
             },
             {
               "path": "apps/web/e2e/failed-notifications-recovery.spec.ts",
-              "sha256": "1f4bd5dd6b38e3a5117b34082088adc151bf902a66726862c0f632a1a590f1d0"
+              "sha256": "5c140414bb1d2a2f6af7c46da5a4a52f5ce884741234b94b7ce4a33b7d86b63d"
             },
             {
               "path": "apps/web/e2e/failed-notifications.spec.ts",
@@ -98246,7 +98246,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/OperationalQueueTable.tsx",
@@ -100090,7 +100090,7 @@
             },
             {
               "path": "apps/web/e2e/policy-catalogue-recovery.spec.ts",
-              "sha256": "f0cbd7351a4ce42ab77f0b24f0fa11d123110200a1aaf43aee9a9cbe22531904"
+              "sha256": "e0d0115849ae9b2a7f0adf5dabbc71decc6ee9c72ae94fb9fe298bb051930752"
             },
             {
               "path": "apps/web/e2e/template-catalogue-query.spec.ts",
@@ -100934,7 +100934,7 @@
             },
             {
               "path": "apps/web/e2e/policy-catalogue-recovery.spec.ts",
-              "sha256": "f0cbd7351a4ce42ab77f0b24f0fa11d123110200a1aaf43aee9a9cbe22531904"
+              "sha256": "e0d0115849ae9b2a7f0adf5dabbc71decc6ee9c72ae94fb9fe298bb051930752"
             },
             {
               "path": "apps/web/e2e/template-catalogue-query.spec.ts",
@@ -105668,7 +105668,7 @@
             },
             {
               "path": "apps/web/e2e/policy-catalogue-recovery.spec.ts",
-              "sha256": "f0cbd7351a4ce42ab77f0b24f0fa11d123110200a1aaf43aee9a9cbe22531904"
+              "sha256": "e0d0115849ae9b2a7f0adf5dabbc71decc6ee9c72ae94fb9fe298bb051930752"
             },
             {
               "path": "apps/web/e2e/product-catalogue-tables.spec.ts",
@@ -106384,7 +106384,7 @@
             },
             {
               "path": "apps/web/e2e/policy-catalogue-recovery.spec.ts",
-              "sha256": "f0cbd7351a4ce42ab77f0b24f0fa11d123110200a1aaf43aee9a9cbe22531904"
+              "sha256": "e0d0115849ae9b2a7f0adf5dabbc71decc6ee9c72ae94fb9fe298bb051930752"
             },
             {
               "path": "apps/web/e2e/product-catalogue-tables.spec.ts",
@@ -108036,7 +108036,7 @@
             },
             {
               "path": "apps/web/e2e/policy-catalogue-recovery.spec.ts",
-              "sha256": "f0cbd7351a4ce42ab77f0b24f0fa11d123110200a1aaf43aee9a9cbe22531904"
+              "sha256": "e0d0115849ae9b2a7f0adf5dabbc71decc6ee9c72ae94fb9fe298bb051930752"
             },
             {
               "path": "apps/web/e2e/template-catalogue-query.spec.ts",
@@ -108928,7 +108928,7 @@
             },
             {
               "path": "apps/web/e2e/policy-catalogue-recovery.spec.ts",
-              "sha256": "f0cbd7351a4ce42ab77f0b24f0fa11d123110200a1aaf43aee9a9cbe22531904"
+              "sha256": "e0d0115849ae9b2a7f0adf5dabbc71decc6ee9c72ae94fb9fe298bb051930752"
             },
             {
               "path": "apps/web/e2e/product-catalogue-tables.spec.ts",
@@ -109369,7 +109369,7 @@
             },
             {
               "path": "packages/i18n/src/admin-ui-messages.ts",
-              "sha256": "59fa5644efb09da3f8315c471160fb615ddba59eb5b89e39979b0dbd798c20cf"
+              "sha256": "c5b8cbae07a56d2b1bf1970b8ec7a979b2389490c7c4cd03da9ce57fe75d1937"
             }
           ],
           "checks": [
@@ -116888,7 +116888,7 @@
             },
             {
               "path": "packages/i18n/src/admin-ui-messages.ts",
-              "sha256": "59fa5644efb09da3f8315c471160fb615ddba59eb5b89e39979b0dbd798c20cf"
+              "sha256": "c5b8cbae07a56d2b1bf1970b8ec7a979b2389490c7c4cd03da9ce57fe75d1937"
             },
             {
               "path": "packages/i18n/src/manual-invoice.ts",
@@ -154294,7 +154294,7 @@
             },
             {
               "path": "packages/i18n/src/admin-ui-messages.ts",
-              "sha256": "59fa5644efb09da3f8315c471160fb615ddba59eb5b89e39979b0dbd798c20cf"
+              "sha256": "c5b8cbae07a56d2b1bf1970b8ec7a979b2389490c7c4cd03da9ce57fe75d1937"
             },
             {
               "path": "packages/shared/src/finance/refund-decision-review.ts",
@@ -154866,7 +154866,7 @@
             },
             {
               "path": "packages/i18n/src/admin-ui-messages.ts",
-              "sha256": "59fa5644efb09da3f8315c471160fb615ddba59eb5b89e39979b0dbd798c20cf"
+              "sha256": "c5b8cbae07a56d2b1bf1970b8ec7a979b2389490c7c4cd03da9ce57fe75d1937"
             },
             {
               "path": "packages/shared/src/finance/refund-decision-review.ts",
@@ -159558,7 +159558,7 @@
             },
             {
               "path": "packages/i18n/src/admin-ui-messages.ts",
-              "sha256": "59fa5644efb09da3f8315c471160fb615ddba59eb5b89e39979b0dbd798c20cf"
+              "sha256": "c5b8cbae07a56d2b1bf1970b8ec7a979b2389490c7c4cd03da9ce57fe75d1937"
             },
             {
               "path": "packages/shared/src/finance/refund-decision-review.ts",
@@ -181477,7 +181477,7 @@
             },
             {
               "path": "packages/i18n/src/admin-ui-messages.ts",
-              "sha256": "59fa5644efb09da3f8315c471160fb615ddba59eb5b89e39979b0dbd798c20cf"
+              "sha256": "c5b8cbae07a56d2b1bf1970b8ec7a979b2389490c7c4cd03da9ce57fe75d1937"
             },
             {
               "path": "packages/i18n/src/electricity-increase-decision-forms.test.ts",
@@ -182721,7 +182721,7 @@
             },
             {
               "path": "packages/i18n/src/admin-ui-messages.ts",
-              "sha256": "59fa5644efb09da3f8315c471160fb615ddba59eb5b89e39979b0dbd798c20cf"
+              "sha256": "c5b8cbae07a56d2b1bf1970b8ec7a979b2389490c7c4cd03da9ce57fe75d1937"
             },
             {
               "path": "packages/i18n/src/admin-ui.ts",
@@ -184158,7 +184158,7 @@
             },
             {
               "path": "packages/i18n/src/admin-ui-messages.ts",
-              "sha256": "59fa5644efb09da3f8315c471160fb615ddba59eb5b89e39979b0dbd798c20cf"
+              "sha256": "c5b8cbae07a56d2b1bf1970b8ec7a979b2389490c7c4cd03da9ce57fe75d1937"
             },
             {
               "path": "packages/i18n/src/electricity-increase-decision-forms.test.ts",
@@ -185291,7 +185291,7 @@
             },
             {
               "path": "packages/i18n/src/admin-ui-messages.ts",
-              "sha256": "59fa5644efb09da3f8315c471160fb615ddba59eb5b89e39979b0dbd798c20cf"
+              "sha256": "c5b8cbae07a56d2b1bf1970b8ec7a979b2389490c7c4cd03da9ce57fe75d1937"
             },
             {
               "path": "packages/i18n/src/electricity-increase-decision-forms.test.ts",
@@ -187195,7 +187195,7 @@
             },
             {
               "path": "packages/i18n/src/admin-ui-messages.ts",
-              "sha256": "59fa5644efb09da3f8315c471160fb615ddba59eb5b89e39979b0dbd798c20cf"
+              "sha256": "c5b8cbae07a56d2b1bf1970b8ec7a979b2389490c7c4cd03da9ce57fe75d1937"
             },
             {
               "path": "packages/i18n/src/electricity-increase-decision-forms.test.ts",
@@ -337723,7 +337723,7 @@
             },
             {
               "path": "packages/i18n/src/admin-ui-messages.ts",
-              "sha256": "59fa5644efb09da3f8315c471160fb615ddba59eb5b89e39979b0dbd798c20cf"
+              "sha256": "c5b8cbae07a56d2b1bf1970b8ec7a979b2389490c7c4cd03da9ce57fe75d1937"
             },
             {
               "path": "packages/i18n/src/electricity-increase-decision-forms.test.ts",
@@ -339628,7 +339628,7 @@
             },
             {
               "path": "packages/i18n/src/admin-ui-messages.ts",
-              "sha256": "59fa5644efb09da3f8315c471160fb615ddba59eb5b89e39979b0dbd798c20cf"
+              "sha256": "c5b8cbae07a56d2b1bf1970b8ec7a979b2389490c7c4cd03da9ce57fe75d1937"
             },
             {
               "path": "packages/i18n/src/electricity-increase-decision-forms.test.ts",
@@ -341534,7 +341534,7 @@
             },
             {
               "path": "packages/i18n/src/admin-ui-messages.ts",
-              "sha256": "59fa5644efb09da3f8315c471160fb615ddba59eb5b89e39979b0dbd798c20cf"
+              "sha256": "c5b8cbae07a56d2b1bf1970b8ec7a979b2389490c7c4cd03da9ce57fe75d1937"
             },
             {
               "path": "packages/i18n/src/electricity-increase-decision-forms.test.ts",
@@ -342667,7 +342667,7 @@
             },
             {
               "path": "packages/i18n/src/admin-ui-messages.ts",
-              "sha256": "59fa5644efb09da3f8315c471160fb615ddba59eb5b89e39979b0dbd798c20cf"
+              "sha256": "c5b8cbae07a56d2b1bf1970b8ec7a979b2389490c7c4cd03da9ce57fe75d1937"
             },
             {
               "path": "packages/i18n/src/electricity-increase-decision-forms.test.ts",
@@ -343802,7 +343802,7 @@
             },
             {
               "path": "packages/i18n/src/admin-ui-messages.ts",
-              "sha256": "59fa5644efb09da3f8315c471160fb615ddba59eb5b89e39979b0dbd798c20cf"
+              "sha256": "c5b8cbae07a56d2b1bf1970b8ec7a979b2389490c7c4cd03da9ce57fe75d1937"
             },
             {
               "path": "packages/i18n/src/electricity-increase-decision-forms.test.ts",
@@ -344936,7 +344936,7 @@
             },
             {
               "path": "packages/i18n/src/admin-ui-messages.ts",
-              "sha256": "59fa5644efb09da3f8315c471160fb615ddba59eb5b89e39979b0dbd798c20cf"
+              "sha256": "c5b8cbae07a56d2b1bf1970b8ec7a979b2389490c7c4cd03da9ce57fe75d1937"
             },
             {
               "path": "packages/i18n/src/electricity-increase-decision-forms.test.ts",
@@ -346061,7 +346061,7 @@
             },
             {
               "path": "packages/i18n/src/admin-ui-messages.ts",
-              "sha256": "59fa5644efb09da3f8315c471160fb615ddba59eb5b89e39979b0dbd798c20cf"
+              "sha256": "c5b8cbae07a56d2b1bf1970b8ec7a979b2389490c7c4cd03da9ce57fe75d1937"
             },
             {
               "path": "packages/i18n/src/electricity-increase-decision-forms.test.ts",
@@ -491215,7 +491215,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -491251,7 +491251,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-              "sha256": "92a25ab80e153c8b6bb709a12dc82cfa043c6b6a1deff2960a577f7574157fbc"
+              "sha256": "2305b69a26f2288e517360434dbdc8ecab2ceb581ff2690bdcfa3a5ac6bee719"
             },
             {
               "path": "apps/web/src/components/OnboardingDraftList.tsx",
@@ -491331,7 +491331,7 @@
             },
             {
               "path": "apps/web/src/components/StaffEffectivePermissions.tsx",
-              "sha256": "343649c092b8dde161145e45d482802771627ec45a9771208974c40cf83df016"
+              "sha256": "2ca087c168432ca640ee913a14576c8072c49a5e0527f9253421d7ae3eff84a4"
             },
             {
               "path": "apps/web/src/components/StaffPermissionHistory.tsx",
@@ -491471,7 +491471,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -492990,7 +492990,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DefaultProfileModal.tsx",
@@ -493094,7 +493094,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-              "sha256": "92a25ab80e153c8b6bb709a12dc82cfa043c6b6a1deff2960a577f7574157fbc"
+              "sha256": "2305b69a26f2288e517360434dbdc8ecab2ceb581ff2690bdcfa3a5ac6bee719"
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
@@ -493166,7 +493166,7 @@
             },
             {
               "path": "apps/web/src/components/StaffEffectivePermissions.tsx",
-              "sha256": "343649c092b8dde161145e45d482802771627ec45a9771208974c40cf83df016"
+              "sha256": "2ca087c168432ca640ee913a14576c8072c49a5e0527f9253421d7ae3eff84a4"
             },
             {
               "path": "apps/web/src/components/StaffInvoiceReceiptList.tsx",
@@ -493310,7 +493310,7 @@
             },
             {
               "path": "packages/i18n/src/admin-ui-messages.ts",
-              "sha256": "59fa5644efb09da3f8315c471160fb615ddba59eb5b89e39979b0dbd798c20cf"
+              "sha256": "c5b8cbae07a56d2b1bf1970b8ec7a979b2389490c7c4cd03da9ce57fe75d1937"
             },
             {
               "path": "packages/i18n/src/admin-ui.ts",
@@ -493330,7 +493330,7 @@
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
-              "sha256": "dfbec1d94ee1876d86b05e187154fee6879bedcaadd15f4e2d60db521fc5f620"
+              "sha256": "be986c81d062d034cc4a3367c36594520bf189b0e3fa163d68cfe477c402a503"
             },
             {
               "path": "packages/i18n/src/workspace-admin.ts",
@@ -494455,7 +494455,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-              "sha256": "92a25ab80e153c8b6bb709a12dc82cfa043c6b6a1deff2960a577f7574157fbc"
+              "sha256": "2305b69a26f2288e517360434dbdc8ecab2ceb581ff2690bdcfa3a5ac6bee719"
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.test.tsx",
@@ -494627,7 +494627,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -495346,7 +495346,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-              "sha256": "92a25ab80e153c8b6bb709a12dc82cfa043c6b6a1deff2960a577f7574157fbc"
+              "sha256": "2305b69a26f2288e517360434dbdc8ecab2ceb581ff2690bdcfa3a5ac6bee719"
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.test.tsx",
@@ -495518,7 +495518,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -496178,7 +496178,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-              "sha256": "92a25ab80e153c8b6bb709a12dc82cfa043c6b6a1deff2960a577f7574157fbc"
+              "sha256": "2305b69a26f2288e517360434dbdc8ecab2ceb581ff2690bdcfa3a5ac6bee719"
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.test.tsx",
@@ -496350,7 +496350,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -497844,7 +497844,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DefaultProfileModal.tsx",
@@ -497948,7 +497948,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-              "sha256": "92a25ab80e153c8b6bb709a12dc82cfa043c6b6a1deff2960a577f7574157fbc"
+              "sha256": "2305b69a26f2288e517360434dbdc8ecab2ceb581ff2690bdcfa3a5ac6bee719"
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
@@ -498020,7 +498020,7 @@
             },
             {
               "path": "apps/web/src/components/StaffEffectivePermissions.tsx",
-              "sha256": "343649c092b8dde161145e45d482802771627ec45a9771208974c40cf83df016"
+              "sha256": "2ca087c168432ca640ee913a14576c8072c49a5e0527f9253421d7ae3eff84a4"
             },
             {
               "path": "apps/web/src/components/StaffInvoiceReceiptList.tsx",
@@ -498164,7 +498164,7 @@
             },
             {
               "path": "packages/i18n/src/admin-ui-messages.ts",
-              "sha256": "59fa5644efb09da3f8315c471160fb615ddba59eb5b89e39979b0dbd798c20cf"
+              "sha256": "c5b8cbae07a56d2b1bf1970b8ec7a979b2389490c7c4cd03da9ce57fe75d1937"
             },
             {
               "path": "packages/i18n/src/admin-ui.ts",
@@ -498184,7 +498184,7 @@
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
-              "sha256": "dfbec1d94ee1876d86b05e187154fee6879bedcaadd15f4e2d60db521fc5f620"
+              "sha256": "be986c81d062d034cc4a3367c36594520bf189b0e3fa163d68cfe477c402a503"
             },
             {
               "path": "packages/i18n/src/workspace-admin.ts",
@@ -511642,7 +511642,7 @@
             },
             {
               "path": "apps/web/e2e/failed-notifications-recovery.spec.ts",
-              "sha256": "1f4bd5dd6b38e3a5117b34082088adc151bf902a66726862c0f632a1a590f1d0"
+              "sha256": "5c140414bb1d2a2f6af7c46da5a4a52f5ce884741234b94b7ce4a33b7d86b63d"
             },
             {
               "path": "apps/web/e2e/finance-list-query.spec.ts",
@@ -511698,7 +511698,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -511734,7 +511734,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-              "sha256": "92a25ab80e153c8b6bb709a12dc82cfa043c6b6a1deff2960a577f7574157fbc"
+              "sha256": "2305b69a26f2288e517360434dbdc8ecab2ceb581ff2690bdcfa3a5ac6bee719"
             },
             {
               "path": "apps/web/src/components/OperationalQueueTable.tsx",
@@ -511862,7 +511862,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -512532,7 +512532,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -517393,7 +517393,7 @@
             },
             {
               "path": "apps/web/e2e/policy-catalogue-recovery.spec.ts",
-              "sha256": "f0cbd7351a4ce42ab77f0b24f0fa11d123110200a1aaf43aee9a9cbe22531904"
+              "sha256": "e0d0115849ae9b2a7f0adf5dabbc71decc6ee9c72ae94fb9fe298bb051930752"
             },
             {
               "path": "apps/web/e2e/preference-settings-forms.spec.ts",
@@ -517721,7 +517721,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -518197,7 +518197,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -546748,7 +546748,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -548618,7 +548618,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -550489,7 +550489,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -552329,7 +552329,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -554195,7 +554195,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -556070,7 +556070,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -557918,7 +557918,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -559730,7 +559730,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -561542,7 +561542,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -563355,7 +563355,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -565167,7 +565167,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -566969,7 +566969,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -568872,7 +568872,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -570968,7 +570968,7 @@
             },
             {
               "path": "apps/web/e2e/failed-notifications-recovery.spec.ts",
-              "sha256": "1f4bd5dd6b38e3a5117b34082088adc151bf902a66726862c0f632a1a590f1d0"
+              "sha256": "5c140414bb1d2a2f6af7c46da5a4a52f5ce884741234b94b7ce4a33b7d86b63d"
             },
             {
               "path": "apps/web/e2e/failed-notifications.spec.ts",
@@ -571500,7 +571500,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeadlineForms.test.tsx",
@@ -571644,7 +571644,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-              "sha256": "92a25ab80e153c8b6bb709a12dc82cfa043c6b6a1deff2960a577f7574157fbc"
+              "sha256": "2305b69a26f2288e517360434dbdc8ecab2ceb581ff2690bdcfa3a5ac6bee719"
             },
             {
               "path": "apps/web/src/components/NotificationDropdown.tsx",
@@ -571808,7 +571808,7 @@
             },
             {
               "path": "apps/web/src/components/StaffEffectivePermissions.tsx",
-              "sha256": "343649c092b8dde161145e45d482802771627ec45a9771208974c40cf83df016"
+              "sha256": "2ca087c168432ca640ee913a14576c8072c49a5e0527f9253421d7ae3eff84a4"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -572744,7 +572744,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -573670,7 +573670,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -575573,7 +575573,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -577476,7 +577476,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -579379,7 +579379,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -581282,7 +581282,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -583185,7 +583185,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -585088,7 +585088,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -586991,7 +586991,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -588894,7 +588894,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -590797,7 +590797,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -592700,7 +592700,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -595343,7 +595343,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -597246,7 +597246,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -598962,7 +598962,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Account settings, contract and document states, 48 staff first-read loading and error cases, and staff audit and delivery-history denial have indexed evidence. Replace the Roles loading key and Failed Notifications template loading copy. Match the applicable empty and remaining child states to each original route criterion before full acceptance."
+        "All 48 staff first-read loading and error cases are indexed. The Roles and Failed Notifications loading copy and related permission and delivery-history messages have current browser evidence. Match remaining applicable staff empty and child states to their original route criteria, and finish any uncovered conditions before full acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -599101,7 +599101,8 @@
           "release-0.5-document-detail-authority",
           "release-0.5-contract-snapshot-states",
           "release-0.5-account-child-read-recovery",
-          "release-0.5-staff-child-pending"
+          "release-0.5-staff-child-pending",
+          "release-0.5-staff-loading-labels"
         ],
         "current_acceptance": null
       }
@@ -599347,7 +599348,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -601155,7 +601156,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -602963,7 +602964,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -604771,7 +604772,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -606579,7 +606580,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -608387,7 +608388,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -610195,7 +610196,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -638010,7 +638011,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -638258,7 +638259,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -639142,7 +639143,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -639390,7 +639391,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -640274,7 +640275,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -640522,7 +640523,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -641409,7 +641410,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -641657,7 +641658,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -642544,7 +642545,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -642792,7 +642793,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -643706,7 +643707,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -643954,7 +643955,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -644837,7 +644838,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -645085,7 +645086,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -645968,7 +645969,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -646216,7 +646217,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -647100,7 +647101,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -647348,7 +647349,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -648250,7 +648251,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -648498,7 +648499,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -649383,7 +649384,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -649631,7 +649632,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -680913,7 +680914,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -681161,7 +681162,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -682043,7 +682044,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -682291,7 +682292,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -683173,7 +683174,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -683421,7 +683422,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -684303,7 +684304,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -684551,7 +684552,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -705431,7 +705432,7 @@
           "source_evidence": [
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -705443,7 +705444,7 @@
             },
             {
               "path": "apps/web/src/components/StaffEffectivePermissions.tsx",
-              "sha256": "343649c092b8dde161145e45d482802771627ec45a9771208974c40cf83df016"
+              "sha256": "2ca087c168432ca640ee913a14576c8072c49a5e0527f9253421d7ae3eff84a4"
             },
             {
               "path": "apps/web/src/lib/staff-permissions.ts",
@@ -705455,7 +705456,7 @@
             },
             {
               "path": "apps/web/e2e/staff-access-inspection.spec.ts",
-              "sha256": "d3a4d019483aed716d24cbb8a685a3a05ed76c5b038406686df2c1ef2180c555"
+              "sha256": "7f664c66248826dec4a938d8a69cbf80d7b0a11ad6ecb0225822890caf41c3d4"
             }
           ],
           "checks": [
@@ -706149,7 +706150,7 @@
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
-              "sha256": "dfbec1d94ee1876d86b05e187154fee6879bedcaadd15f4e2d60db521fc5f620"
+              "sha256": "be986c81d062d034cc4a3367c36594520bf189b0e3fa163d68cfe477c402a503"
             },
             {
               "path": "packages/ui/src/components/ui/scrollable-tabs-list.tsx",
@@ -716956,7 +716957,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
@@ -722587,7 +722588,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-              "sha256": "92a25ab80e153c8b6bb709a12dc82cfa043c6b6a1deff2960a577f7574157fbc"
+              "sha256": "2305b69a26f2288e517360434dbdc8ecab2ceb581ff2690bdcfa3a5ac6bee719"
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
@@ -726465,7 +726466,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-              "sha256": "92a25ab80e153c8b6bb709a12dc82cfa043c6b6a1deff2960a577f7574157fbc"
+              "sha256": "2305b69a26f2288e517360434dbdc8ecab2ceb581ff2690bdcfa3a5ac6bee719"
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
@@ -728961,7 +728962,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Account settings, contract and document states, 48 staff first-read loading and error cases, and staff audit and delivery-history denial have indexed evidence. Replace the Roles loading key and Failed Notifications template loading copy. Match the applicable empty and remaining child states to each original route criterion before full acceptance."
+        "All 48 staff first-read loading and error cases are indexed. The Roles and Failed Notifications loading copy and related permission and delivery-history messages have current browser evidence. Match remaining applicable staff empty and child states to their original route criteria, and finish any uncovered conditions before full acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -729166,7 +729167,8 @@
           "release-0.5-document-detail-authority",
           "release-0.5-contract-snapshot-states",
           "release-0.5-account-child-read-recovery",
-          "release-0.5-staff-child-pending"
+          "release-0.5-staff-child-pending",
+          "release-0.5-staff-loading-labels"
         ]
       }
     },
@@ -729398,7 +729400,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
             },
             {
               "path": "apps/web/src/components/DefaultProfileModal.tsx",
@@ -729530,7 +729532,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-              "sha256": "92a25ab80e153c8b6bb709a12dc82cfa043c6b6a1deff2960a577f7574157fbc"
+              "sha256": "2305b69a26f2288e517360434dbdc8ecab2ceb581ff2690bdcfa3a5ac6bee719"
             },
             {
               "path": "apps/web/src/components/NotificationDropdown.tsx",
@@ -729706,7 +729708,7 @@
             },
             {
               "path": "apps/web/src/components/StaffEffectivePermissions.tsx",
-              "sha256": "343649c092b8dde161145e45d482802771627ec45a9771208974c40cf83df016"
+              "sha256": "2ca087c168432ca640ee913a14576c8072c49a5e0527f9253421d7ae3eff84a4"
             },
             {
               "path": "apps/web/src/components/StaffPermissionHistory.tsx",
@@ -730166,7 +730168,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
-              "sha256": "63d4678baefab8040ca099724eca0a2dc47559e68b4d21f9273c4f03e80dd8da"
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -730898,7 +730900,7 @@
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
-              "sha256": "dfbec1d94ee1876d86b05e187154fee6879bedcaadd15f4e2d60db521fc5f620"
+              "sha256": "be986c81d062d034cc4a3367c36594520bf189b0e3fa163d68cfe477c402a503"
             },
             {
               "path": "apps/api/src/crm/verification-case.controller.ts",
@@ -731120,7 +731122,8 @@
             "All 101 final transfer budgets and affected document/solar browser checks passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-detail-authority/proof.json",
             "All 101 transfer budgets and affected contract journeys passed against the reviewed final runtime. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-snapshot-states/proof.json",
             "All 101 transfer budgets and affected profile/security journeys passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-account-child-read-recovery/proof.json",
-            "All 101 transfer budgets and affected staff directory and delivery history journeys passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-child-pending/proof.json"
+            "All 101 transfer budgets and affected staff directory and delivery history journeys passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-child-pending/proof.json",
+            "All 101 transfer budgets and the affected roles and notification browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-loading-labels/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -810230,6 +810233,69 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-child-pending/reviewed-final.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-child-pending/renewed-bindings.json",
       "release_disposition": "Closed staff history permission-withdrawal gaps. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-staff-loading-labels": {
+      "batch": "release-0.5-staff-loading-labels",
+      "base_commit": "f8b7e8658d55ce4cfdb12807c123238eb96784d0",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/failed-notifications-recovery.spec.ts",
+          "sha256": "5c140414bb1d2a2f6af7c46da5a4a52f5ce884741234b94b7ce4a33b7d86b63d"
+        },
+        {
+          "path": "apps/web/e2e/policy-catalogue-recovery.spec.ts",
+          "sha256": "e0d0115849ae9b2a7f0adf5dabbc71decc6ee9c72ae94fb9fe298bb051930752"
+        },
+        {
+          "path": "apps/web/e2e/staff-access-inspection.spec.ts",
+          "sha256": "7f664c66248826dec4a938d8a69cbf80d7b0a11ad6ecb0225822890caf41c3d4"
+        },
+        {
+          "path": "apps/web/src/components/DeadLetterPanel.tsx",
+          "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+        },
+        {
+          "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
+          "sha256": "2305b69a26f2288e517360434dbdc8ecab2ceb581ff2690bdcfa3a5ac6bee719"
+        },
+        {
+          "path": "apps/web/src/components/StaffEffectivePermissions.tsx",
+          "sha256": "2ca087c168432ca640ee913a14576c8072c49a5e0527f9253421d7ae3eff84a4"
+        },
+        {
+          "path": "apps/web/src/pages/AdminRolesPage.tsx",
+          "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
+        },
+        {
+          "path": "packages/i18n/src/admin-ui-messages.ts",
+          "sha256": "c5b8cbae07a56d2b1bf1970b8ec7a979b2389490c7c4cd03da9ce57fe75d1937"
+        },
+        {
+          "path": "packages/i18n/src/workspace-admin-messages.ts",
+          "sha256": "be986c81d062d034cc4a3367c36594520bf189b0e3fa163d68cfe477c402a503"
+        }
+      ],
+      "checks": [
+        "Eight held-read baseline cases reproduced unresolved loading keys on Roles and effective permissions and the wrong failed-notification pending label in both languages.",
+        "The Roles catalogue, staff effective permissions, failed-notification queue and delivery history now announce their own pending state in Persian and English. The selected production runs exercise both failed-notification entry points and retain previous recovery, access withdrawal, keyboard, empty-state and pagination assertions.",
+        "Forty-eight production browser cases across Chromium and mobile Safari and twenty-four instrumented Chromium cases passed. Four hundred forty-five web tests, including the full admin boundary matrix, and six dictionary tests passed. The unit retry moved its output to RAM after a filesystem write failed.",
+        "All changed-source coverage groups, web and i18n typechecks, lint, formatting and 101 bundle budgets passed. Staff wallet receipts measured 499.85 KB against the unchanged 500 KB limit."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-loading-labels",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-loading-labels/proof.json",
+      "source_scope_proof_sha256": "7a926f28b3c3bcbe2d27a6465d1f78919d540271b0817d40f9dd82392d27893a",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-loading-labels/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-loading-labels/renewed-bindings.json",
+      "release_disposition": "Resolved staff loading copy from the first-read inventory. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [
@@ -810280,7 +810346,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Fix the two staff loading labels demonstrated in the held-read inventory and reconcile applicable staff empty and child cases with existing route evidence. GitHub required checks and staging Sentry remain separate external gates."
+    "goal": "Reconcile valid empty responses and remaining child states across the staff route inventory using named cases and API shapes. Fix only demonstrated gaps. GitHub required checks and staging Sentry remain independent."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",

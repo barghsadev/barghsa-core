@@ -450,7 +450,7 @@ export default function DeadLetterPanel({
           retainContent={queue.data !== null && rows.length > 0}
           empty={queue.ready && !rows.length}
           emptyView={<p>{label('empty')}</p>}
-          loadingView={<LoadingStatus>{t('admin.notifications.loading', uiLocale)}</LoadingStatus>}
+          loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
           errorView={
             <div role="alert">
               <p>{label('loadFailed')}</p>

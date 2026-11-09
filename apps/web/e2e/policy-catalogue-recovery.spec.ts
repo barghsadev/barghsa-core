@@ -1,4 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
+import type { Route } from '@playwright/test';
 import { test, expect, type Page } from './coverage-fixture';
 import { t } from '@barghsa/i18n/admin-ui';
 import { t as appT } from '@barghsa/i18n/app';
@@ -67,20 +68,30 @@ for (const locale of ['en', 'fa'] as const) {
     let fail = false,
       deny = false,
       lookups = 0;
-    await page.route('**/api/admin/roles', (route) =>
-      route.fulfill(
+    let initialRoles: Route | undefined;
+    await page.route('**/api/admin/roles', (route) => {
+      if (!initialRoles) {
+        initialRoles = route;
+        return;
+      }
+      return route.fulfill(
         deny
           ? { status: 403, json: {} }
           : fail
             ? { status: 503, json: {} }
             : { json: [catalogueRole] }
-      )
-    );
+      );
+    });
     await page.route('**/api/admin/users/*/effective-permissions', (route) => {
       lookups++;
       return route.fulfill({ json: effectivePermissions });
     });
     await page.goto('/admin/roles');
+    await expect(page.getByRole('main').getByRole('status')).toHaveText(
+      locale === 'fa' ? 'در حال بارگذاری نقش‌ها…' : 'Loading roles…'
+    );
+    await expect.poll(() => !!initialRoles).toBe(true);
+    await initialRoles!.fulfill({ json: [catalogueRole] });
     await expect(page.locator('tbody')).toContainText('finance:read');
     await page.locator('#staffUserId').fill('staff-one');
     await page.getByRole('button', { name: r('effective.lookup'), exact: true }).click();
