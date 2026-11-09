@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T03:23:42+00:00",
-  "source_commit": "d6363227bda5e6ad2bf5fd2e7363bf17fcc031ed",
+  "updated": "2026-11-09T03:30:41+00:00",
+  "source_commit": "8bf00eba522e8c9f224f9556d84f3d55c585433c",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -598962,7 +598962,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "All ten customer collections have named first-failure and recovery receipts on both native engines. Four more customer read owners cover electricity/saving catalogues, consultation products and wallet transactions, including unavailable or authorized empty results. The staff inventory covers 48 primary pending/error routes and 40 authorized empty or unset routes. Both staff routes with changed direct empty-state sources have new notification and provider receipts. Reconcile original route interactions and independent conditional reads still outside the scoped receipts before full acceptance."
+        "The canonical route inventory now links primary read, detail, dashboard, entry or static evidence for every path. The 13 routes with changed direct sources have newer scoped receipts. Complete the remaining independent list and detail states by checking each child's applicable loading, retry and empty or unavailable behavior against the named receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -599113,7 +599113,8 @@
           "release-0.5-notification-settings-session",
           "release-0.5-staff-configuration-adoption",
           "release-0.5-saving-detail-denied-read",
-          "release-0.5-customer-collection-first-retry"
+          "release-0.5-customer-collection-first-retry",
+          "release-0.5-launch-entry-acceptance"
         ],
         "current_acceptance": null
       }
@@ -728977,7 +728978,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "All ten customer collections have named first-failure and recovery receipts on both native engines. Four more customer read owners cover electricity/saving catalogues, consultation products and wallet transactions, including unavailable or authorized empty results. The staff inventory covers 48 primary pending/error routes and 40 authorized empty or unset routes. Both staff routes with changed direct empty-state sources have new notification and provider receipts. Reconcile original route interactions and independent conditional reads still outside the scoped receipts before full acceptance."
+        "All 98 canonical paths have per-route receipt links, including 93 populated layout observations, and the current build passed 86 launch-entry, public account and guide cases. Close the original per-route control acceptance by reconciling keyboard, forms, filters and stale-context conditions against the named cases. Carry only evidence within its recorded scope."
       ],
       "owner": null,
       "depends_on": [],
@@ -729194,7 +729195,8 @@
           "release-0.5-notification-settings-session",
           "release-0.5-staff-configuration-adoption",
           "release-0.5-saving-detail-denied-read",
-          "release-0.5-customer-collection-first-retry"
+          "release-0.5-customer-collection-first-retry",
+          "release-0.5-launch-entry-acceptance"
         ]
       }
     },
@@ -811189,6 +811191,90 @@
       "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-collection-first-retry/proof.json",
       "source_scope_proof_sha256": "42d0d0cd166cfac6a14e800c7ae49737d919637f66e9ec1d87404d0080a1e469",
       "release_disposition": "Verified customer first-read and recovery coverage and renewed affected staff empty observations. Four v0.5.0 items remain."
+    },
+    "release-0.5-launch-entry-acceptance": {
+      "batch": "release-0.5-launch-entry-acceptance",
+      "base_commit": "8bf00eba522e8c9f224f9556d84f3d55c585433c",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/account-recovery-closure.spec.ts",
+          "sha256": "946a8074a85458bf96f0a23f376e798820e620d84f868c2e0dcaafc0ce54db34"
+        },
+        {
+          "path": "apps/web/e2e/consultation-forms.spec.ts",
+          "sha256": "0fdbdde2a4b179c2f505a7104db2157a0c801316492c526f9f571a529bd80a44"
+        },
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "07949862684b86d6ff241d5f71e59e6c71a5cc1ddc70655b0d508beb53865dac"
+        },
+        {
+          "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+          "sha256": "2f06db528a0ec04fc054b8bcdecaab50c59f97264a08c909d1c398b9918076a6"
+        },
+        {
+          "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
+          "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
+        },
+        {
+          "path": "apps/web/e2e/knowledge-assistant.spec.ts",
+          "sha256": "2598c5826067b2ccaceb34e8f93298948998176aaba4e7b2f1a575105fbd8251"
+        },
+        {
+          "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+          "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+        },
+        {
+          "path": "apps/web/e2e/password-recovery-forms.spec.ts",
+          "sha256": "4a679226f1e0783a6a9ce67cf61a770aa898bd9d27ba4c946db4a78e490f2a2b"
+        },
+        {
+          "path": "apps/web/e2e/preauth-csrf.spec.ts",
+          "sha256": "f2249e4299776a94a78c8354f9562b390a0a49de8142c4913baa69c5a4405dec"
+        },
+        {
+          "path": "apps/web/e2e/public-terms-history.spec.ts",
+          "sha256": "45c707bb0213a3e18748419fc33e03b726e1287dae9e1cac731c93499763cd05"
+        },
+        {
+          "path": "apps/web/e2e/registration-consent.spec.ts",
+          "sha256": "2934a2addcd38447c6d5d69d4eab18bf2d4e86e431d720bf8e7a3edad9410587"
+        },
+        {
+          "path": "apps/web/e2e/registration-recovery.spec.ts",
+          "sha256": "307b0bc4f8c529e464cedc7a32c29db79c26b10f9ddbc06c20b0c581a727637a"
+        },
+        {
+          "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
+          "sha256": "96fdc141bbb128ee18c2591c3a314f46a7a8a61ec60b6c74adf4e1902b2f9496"
+        },
+        {
+          "path": "apps/web/e2e/staff-activation.spec.ts",
+          "sha256": "c881726e765dcd47a816de22f2fec68d6da9fc0a529f3b0554a683cef63e9dcd"
+        },
+        {
+          "path": "apps/web/src/routeTree.gen.ts",
+          "sha256": "c1524622f37c4dc26c3fc7f5746d3a9a2d962c8397db0ab77e61efa0422be658"
+        }
+      ],
+      "checks": [
+        "Forty-two current native cases covered held or failed onboarding setup, completion retry, simple/advanced electricity prerequisites, saving plan and address recovery, solar review, consultation captured submission, and public terms/history. Both Chromium and mobile Safari passed.",
+        "Twenty-eight public-entry cases verified activation, sign-in CSRF, password reset, registration consent and verification, and independent support availability and recovery. Sixteen more cases covered saved individual/legal profile resume and full-page guide availability, held answers and checked SSE recovery.",
+        "The per-route inventory has evidence pointers for all 98 canonical paths, including prior 93 populated layout measurements, five redirects and two static media views. All 13 routes with changed direct sources have newer scoped receipts matching those sources. The report preserves the limits of prior read, control and layout observations.",
+        "Eighty-six distinct current browser cases passed with no application or fixture edits. The verified prebuilt product and auth outputs match current source, with only an unrelated saving-history test fixture and board metadata differing from the build snapshot."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-launch-entry-acceptance",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-launch-entry-acceptance/proof.json",
+      "source_scope_proof_sha256": "b802578bd3326b6b03e6c8f43564a745c754a5359e1695d96fd1a67dda4b309c",
+      "release_disposition": "Verified launch and public entry conditions and recorded canonical route evidence. Full original control and independent child acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -811239,7 +811325,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Reconcile remaining route-specific interactions using the named customer and staff receipts. Preserve the independently verified dashboard, detail and catalogue scenarios. GitHub required-check enforcement and staging Sentry remain independent."
+    "goal": "Use the canonical evidence inventory to reconcile original controls and independently loaded children. Find any exact missing cases before adding more tests. GitHub required-check enforcement and staging Sentry remain independent."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
