@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T16:19:51+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T16:22:30+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -39,10 +39,12 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Record exact Alpine package metadata and the file-free dependency groups in the prepared owner review. Preserve the strict license gate and pending owner decisions.
+Verify the production Docker context, non-root and read-only runtime, disabled inspector and HTTP parser safeguards. Reuse source-bound Docker and staged behavior where applicable.
 
-- `06-security-testing-observability.md#T-06.07.02.06`: Set up license compliance check (e.g. license-checker) for dependency licenses
-- `01-platform-infrastructure.md#T-05.03.04`: Configure security scans in PR gate
+- `01-platform-infrastructure.md#T-03.01.03`: Create `.dockerignore`
+- `01-platform-infrastructure.md#T-03.01.05`: Implement security hardening in Docker images
+- `06-security-testing-observability.md#T-06.07.03.01`: Harden Dockerfile: non-root user, read-only rootfs where practical, no inspector, `NODE_OPTIONS=--no-deprecation`
+- `06-security-testing-observability.md#T-06.07.03.06`: Write container smoke test: non-root user, inspector not available, no unsafe parser
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
 
 ## v0.2.0: Complete customer journeys

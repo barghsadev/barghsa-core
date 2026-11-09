@@ -41,7 +41,9 @@ On 2026-11-09 the owner approved removing the bundled data and using the existin
 
 ## Acceptance evidence
 
+The `e47415d3` scan reproduced the same 170 review entries. The accompanying `release-license-review-candidate-e47415d3-apk-evidence.json` packet matches all 161 Alpine entries to installed package metadata by exact package digest, version and architecture. It records the original license expression, upstream URL, and Alpine packaging origin and commit for 159 entries. Six entries have zero installed bytes and zero packaged files. These are the generated `.postgis-rundeps` and `.postgresql-rundeps` records and the upstream `ncurses-libs`, `gnupg`, `pyc` and `python3-pyc` records. Their dependencies are inventoried separately. Review their disposition with the package list. [Exact CI inventory and image receipts](https://github.com/barghsadev/barghsa-core/actions/runs/42647680762).
+
 - Record an owner or legal reviewer, approved package names, exact versions, platforms, conditions, and the GeoLite2 decision.
-- For Alpine packages, confirm the original versioned packaging metadata and license terms. Trivy can report several license tokens without the original expression's operators. Record the applicable notice, source and replacement conditions for each exact package and image scope.
+- Use the original Alpine license expressions in the packet to review the terms. Trivy can report several license tokens without the original expression's operators. Record the applicable notice, source and replacement conditions for each exact package and image scope.
 - Build the final web and native images and verify the notices actually accompany the approved assets and packages. Include corresponding-source and distribution evidence where the reviewer requires it.
 - Enforce the existing allowlist plus only the recorded package-specific dispositions. Unknown versions, architectures, license expressions and missing required notices stay open until reviewed.

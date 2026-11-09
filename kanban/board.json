@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T16:19:51+00:00",
+  "updated": "2026-11-09T16:22:30+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -11557,8 +11557,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Review the exact shipped exceptions, including the verified font copies, LGPL native libvips packages, other runtime libraries and OS or tool packages. Confirm source distribution, replacement conditions and notices as applicable. Record approvals by exact package URL, license and inventory scope.",
-        "Run the implemented strict license check on the immutable release candidate with approved policy entries. Verify the image identities and final distribution. Ordinary direct-main reports show blockers without implying release acceptance."
+        "Owner or legal reviewer must record package-specific dispositions for the exact 170 rows. The packet provides the original 159 Alpine expressions and source revisions, distinguishes six zero-byte records and retains verified browser and runtime notices. Verify corresponding source, replacement rights and required distribution notices before approving applicable packages.",
+        "Run the strict license check on the immutable candidate with only recorded approvals. Match image identities and verify the conditions in the final distribution."
       ],
       "owner": null,
       "depends_on": [],
@@ -11599,7 +11599,8 @@
           "release-0.6-shipped-component-license-gate",
           "release-0.6-database-client-pool-metrics",
           "release-0.6-postgres-go-license-notices",
-          "release-0.6-staging-postgres-monitoring-readback"
+          "release-0.6-staging-postgres-monitoring-readback",
+          "release-0.6-package-metadata-review"
         ],
         "current_acceptance": null,
         "exact_license_report": {
@@ -24596,7 +24597,8 @@
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-web-fixture-typecheck-and-license-readback",
           "release-0.6-font-source-provenance",
-          "release-0.6-postgres-go-license-notices"
+          "release-0.6-postgres-go-license-notices",
+          "release-0.6-package-metadata-review"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -24752,7 +24754,7 @@
             },
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "eb74a21e6b05fa668d22614113ccd55653664f98572bbd14ea7d740e955c3773"
+              "sha256": "6f565665d3a2a97f879174e74e413c2b58f4ba5ad07bdb6b2a6410f2aecf6baf"
             }
           ],
           "checks": [
@@ -473600,8 +473602,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Review the exact shipped exceptions, including the verified font copies, LGPL native libvips packages, other runtime libraries and OS or tool packages. Confirm source distribution, replacement conditions and notices as applicable. Record approvals by exact package URL, license and inventory scope.",
-        "Run the implemented strict license check on the immutable release candidate with approved policy entries. Verify the image identities and final distribution. Ordinary direct-main reports show blockers without implying release acceptance."
+        "Owner or legal reviewer must record package-specific dispositions for the exact 170 rows. The packet provides the original 159 Alpine expressions and source revisions, distinguishes six zero-byte records and retains verified browser and runtime notices. Verify corresponding source, replacement rights and required distribution notices before approving applicable packages.",
+        "Run the strict license check on the immutable candidate with only recorded approvals. Match image identities and verify the conditions in the final distribution."
       ],
       "owner": null,
       "depends_on": [],
@@ -473613,7 +473615,8 @@
           "release-0.6-shipped-component-license-gate",
           "release-0.6-database-client-pool-metrics",
           "release-0.6-postgres-go-license-notices",
-          "release-0.6-staging-postgres-monitoring-readback"
+          "release-0.6-staging-postgres-monitoring-readback",
+          "release-0.6-package-metadata-review"
         ],
         "current_acceptance": null,
         "exact_license_report": {
@@ -738734,7 +738737,8 @@
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-production-image-recipes-and-distribution",
-          "release-0.6-security-header-ci-and-nonce-evidence"
+          "release-0.6-security-header-ci-and-nonce-evidence",
+          "release-0.6-package-metadata-review"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -827005,6 +827009,54 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "csp-style-and-header-proof.json",
       "source_scope_proof_sha256": "02ed83e3c9b3c0a93cb26f5ceaa7fe6c8941be6c97330c9402fc4ed9ed7681bf"
+    },
+    "release-0.6-package-metadata-review": {
+      "batch": "release-0.6-package-metadata-review",
+      "base_commit": "fe6650025f795f758deb9d9556c48e71f4054d0b",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "02-auth-users-admin.md#T-02.02.02",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/security/release-license-review.md",
+          "sha256": "6f565665d3a2a97f879174e74e413c2b58f4ba5ad07bdb6b2a6410f2aecf6baf"
+        },
+        {
+          "path": "scripts/check-release-licenses.py",
+          "sha256": "271754dea01f1e5751d57f59160292723e14b994dea8523f0de172e976b499ea"
+        },
+        {
+          "path": "deploy/licenses/release-approvals.json",
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        },
+        {
+          "path": "Dockerfile.base",
+          "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
+        },
+        {
+          "path": "Dockerfile.web",
+          "sha256": "d2381ff9c3ec67588ac9cb330639710d4c8d2e953670e77460962b8d67301c84"
+        },
+        {
+          "path": "deploy/clamav/Dockerfile",
+          "sha256": "bff95b69fc3b17e1431334e7947f38a885647f49d18d65b1fe5f9945e4e145f5"
+        },
+        {
+          "path": "packages/db/scripts/backup/Dockerfile",
+          "sha256": "0c5fae6c77ef31a6ab5e191e16d9e0b78acc6b7bc3cd7430ed1178b1f41486cf"
+        }
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "release-license-review-candidate-e47415d3-apk-evidence.json",
+      "source_scope_proof_sha256": "a3721be0f06944dbbf61eeae356c31dcb6c59b6473a0d0c0329c166234cbd764",
+      "checks": [
+        "Verified 161 APK package digests against installed metadata and the exact e47415d3 CI image inventory. The attached packet records 159 original expressions, upstream URLs and Alpine packaging origins and commits, including OR and AND operators absent from flattened reports.",
+        "Identified six entries with no file bytes or packaged file entries. Two are generated PostgreSQL dependency groups and four are Alpine metapackages. Each remains visible in the exact review inventory and the dependencies remain fully scanned.",
+        "The package approval ledger and strict checker are unchanged. No package exception was approved and no distribution was published."
+      ]
     }
   },
   "historical_improvements": [
@@ -827044,14 +827096,16 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-package-metadata-review",
+    "id": "release-0.6-container-runtime-hardening",
     "release": "0.6.0",
     "task_keys": [
-      "06-security-testing-observability.md#T-06.07.02.06",
-      "01-platform-infrastructure.md#T-05.03.04",
+      "01-platform-infrastructure.md#T-03.01.03",
+      "01-platform-infrastructure.md#T-03.01.05",
+      "06-security-testing-observability.md#T-06.07.03.01",
+      "06-security-testing-observability.md#T-06.07.03.06",
       "release-readiness#R-05.02"
     ],
-    "goal": "Record exact Alpine package metadata and the file-free dependency groups in the prepared owner review. Preserve the strict license gate and pending owner decisions."
+    "goal": "Verify the production Docker context, non-root and read-only runtime, disabled inspector and HTTP parser safeguards. Reuse source-bound Docker and staged behavior where applicable."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",
