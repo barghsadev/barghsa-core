@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T23:16:53+00:00",
-  "source_commit": "bf9340cf638bda4437bcc7443517afaae9d2516e",
+  "updated": "2026-11-09T23:23:55+00:00",
+  "source_commit": "e8670535078881dd6c191f5b4792aafdae478cf6",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -428475,7 +428475,8 @@
           "release-0.6-solar-replay-lock-order",
           "release-0.6-document-http-fixture-isolation",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-profile-isolation-and-read-only-audit-tests"
         ],
         "current_acceptance": {
           "kind": "accepted-all-core-business-audit-event-families-and-append-only-history",
@@ -428591,7 +428592,7 @@
             },
             {
               "path": "apps/api/src/admin/config-audit-http.integration.test.ts",
-              "sha256": "056c04e5fc6ca5b86b26e7e3a9ca3497255c0f491d9a3ffdc8bc71134d8aec71"
+              "sha256": "a09fe38426423192be9ed2d775c13ff9bd4e75d9ee6f18d887b808f0249b8f34"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -429425,7 +429426,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch."
+            "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch.",
+            "The six-case compiled audit HTTP suite passed after adding one read-only route regression. Existing audit assertions and all runtime code match the previous accepted source. Final API typecheck and emitted-test equivalence passed."
           ],
           "criterion_result": "Four customer submission event families now include entity/id/from/to/reason while retaining legacy metadata, mandatory actor, database timestamp, customer context and correlation. Real API/idempotent replay evidence passed. Complete audit acceptance remains partial for remaining event families and general immutability guard/fixture integration. Electricity staff decision audit also records the actual locked from/to state and entity, with one confirmed event on concurrent replay. Remaining audit families and integrated general immutability stay partial. General UPDATE/DELETE/TRUNCATE protection is now installed as0249 and accepted with existing history, current context errors, migration replay, business/audit rollback and822 fixture plus80 core-service API outcomes. Overall task remains partial solely for remaining event-family metadata. Price proposal/finalization/cancellation, consultation fee/paid closure/recovery and request actions, plus document state events now have actual entity/ID/from/to/reason metadata with current real HTTP evidence. Remaining families are listed explicitly; full task stays partial. Gift redemption and release now require attributable actors and mandatory same-transaction audits tied to each persisted ledger identity/state; missing actors, audit failure and replay boundaries pass with unchanged discount/restoration policy. Other listed event families remain open. Manual contract authoring/review/acceptance/signature/cancellation audits now carry exact entity and state metadata, including amendment/parent distinctions, requests, second-approval identity and refund transitions. 173 distinct related outcomes pass on current sources; automatic contract and listed other domain event families remain open. Automatic contract activation/completion now record actual locked previous/new states, explicit system actor and entity metadata while retaining documented affected-user association and immutable old history. Fresh/upgrade/replay/rollback and actual compiled-worker execution pass with79 distinct related outcomes; remaining service-specific families stay partial. Manual electricity cancellation, address/full-quote revision and quantity-increase request/approval/signature/rejection now record entity/ID and actual locked previous/new state/reason, retaining parent contract transitions and exact financial reviews.53 distinct related outcomes pass; automatic increase and other listed families remain open. Automatic electricity increase activation/expiry and associated unpaid invoice cancellation now carry actual old/new status, system actor, reason and exact entity/profile identity while preserving affected-user links and immutable prior history. Upgrade/replay/rollback/failure/retry plus all7 financial increase scenarios pass with14 distinct related outcomes; remaining other-domain families stay partial. Manual saving order review/change/address/hardware/upgrade and stage completion/start/reset now record actual entity/state/reason and attributable context/IP, including required one-to-one event audits and precise customer revision resets. Five stage update acknowledgements reject skipped writes.38 final-source outcomes preserve all438 original expect calls and verify six rollback probes; automatic SQL inventory/upgrade and other domain families remain open. Automatic saving inventory row events now use exact OLD/NEW status/hardware and event timestamps with explicit system identity; legacy swapped/released stock actions retain observed states and real entity associations. Hardware-upgrade applied/cancelled/expired events include request and invoice transitions.16 final related outcomes and7 rollback probes pass with462 preexisting API expects preserved. Solar/postal and automatic consultation audit families remain open. Paid consultation settlement now records consultation entity/id, actual locked offer_pending→offer_accepted state, acceptance/payment actor, profile and reason alongside existing invoice/acceptedBy provenance.11 payment/workflow outcomes preserve135 original payment-test expects; both payment/acceptance orders verify mandatory-audit rollback/retry and duplicate/unmatched/unaccepted no-op boundaries. Only solar progress/final/postal audit families remain open. Solar progress/final/postal/shipment/tracking and versioned guidance audit families now record actual entity/key and prior/new state with actor/reason and existing timestamp/correlation provenance. Postal records use their actual locked UUID; progress/tracking aggregates use their actual request key.27 solar and4 model cases pass, with11 audit-failure rollback/retries plus a skipped guidance write probe.362 original expectations retained. Historical state bindings renewed through exact-hash lookup and324 valid-pair comparisons. All explicitly remaining audit families are accepted; this task does not certify broader service journey, schema, identity, operational or release gates.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/common-business-acceptance",
@@ -483085,20 +483087,98 @@
         "story": "06-security-testing-observability.md#spec-7665a6370b00"
       },
       "requirement": "| T-06.10.02.05 | Write profile-scoped data isolation tests: customer A cannot access customer B's data | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-profile-isolation-and-read-only-audit-tests"
+        ],
+        "current_acceptance": {
+          "kind": "verified-source-bound-postgresql-and-http-invariants",
+          "base_commit": "e8670535078881dd6c191f5b4792aafdae478cf6",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/consultation/consultation-assignment.integration.test.ts",
+              "sha256": "07900710aaec54c70b9e42f6f9f35563477542679b63fc0940a3001550c52830"
+            },
+            {
+              "path": "apps/api/src/consultation/consultation-request.service.ts",
+              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
+              "sha256": "399868fc1b64b8316edab40b14fddeedb67e6bf7543cac72047ded1090f25fab"
+            },
+            {
+              "path": "apps/api/src/documents/document-http.integration.test.ts",
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "47bc00446b06d70cded63f1ef7acef1b60f0d1923a004d53620df37b43bbda26"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-raw-draft.integration.test.ts",
+              "sha256": "fa4f924fbe13a4f18cca6596c4a285676a76e70c791592e56874e0f48ea3e988"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
+              "sha256": "ff9f5c1a0e8e53e9e0a23e0066feb6b82b7b7864e1d43ef34ca3efb26cd15207"
+            },
+            {
+              "path": "apps/api/src/profiles/onboarding-draft-list-http.integration.test.ts",
+              "sha256": "d02a748322bcb52bb3be5369b8070a331d6495c892245b270ec2293a05d99226"
+            },
+            {
+              "path": "apps/api/src/saving/saving-comments.controller.ts",
+              "sha256": "ee24baa7781544772ea9f1cc90b1d708141fd56a7f6c36d55d5d2e7f974e411d"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.controller.ts",
+              "sha256": "5a98d104cb95c3c8c0fc03654950cdc53815daa02b1335adf4919205210262a0"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+            },
+            {
+              "path": "apps/api/src/solar/solar-progress.integration.test.ts",
+              "sha256": "7c309ce0f2060c75dd54e8fc4dddcefd84178a9d233e62cb92d98f0c8f310d87"
+            },
+            {
+              "path": "apps/api/src/solar/solar-progress.service.ts",
+              "sha256": "fdc2fd327a7dad27453f5a9d0183ec5eb979a04d8e2eff90c9cf92badf6f52fd"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "b11b691680a16cfd244d5430449a7c91c918a09f5f3e5b5c09ed31299d80359c"
+            },
+            {
+              "path": "apps/api/src/wallet/customer-wallet-access-http.integration.test.ts",
+              "sha256": "b5afbb591c976f80e9a158c499901b0685aa5cb55b3fb16126c7d0b802fceed4"
+            },
+            {
+              "path": "apps/api/src/wallet/customer-wallet-access.ts",
+              "sha256": "896b620ceed66ca78e32091287cd4ec8f4df38bcdce574d4c3628f4cd8ee4518"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Source-matching hosted PostgreSQL tests exercise existing foreign resources. They reject access to another customer electricity draft, saving order comments, solar progress and consultation profile submission.",
+            "Hosted wallet, invoice, document, contract and onboarding tests deny access to a second customer wallet or invoice, private downloads and previews, contract cancellation requests and foreign draft cursors. Permission and ownership guards remain in their normal HTTP entry points."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.10.02.06",
@@ -483111,20 +483191,86 @@
         "story": "06-security-testing-observability.md#spec-7665a6370b00"
       },
       "requirement": "| T-06.10.02.06 | Write audit log tests: every state transition recorded, append-only, no edit/delete via API | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "changed_paths": [
+          "apps/api/src/admin/config-audit-http.integration.test.ts"
+        ],
+        "batches": [
+          "release-0.6-profile-isolation-and-read-only-audit-tests"
+        ],
+        "current_acceptance": {
+          "kind": "verified-source-bound-postgresql-and-http-invariants",
+          "base_commit": "e8670535078881dd6c191f5b4792aafdae478cf6",
+          "source_evidence": [
+            {
+              "path": "apps/api/openapi.json",
+              "sha256": "7a3e21d4cae45fe651cf639c1a53543cd55e29d49688302fbe82e3c437f8170d"
+            },
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+            },
+            {
+              "path": "apps/api/src/admin/config-audit-http.integration.test.ts",
+              "sha256": "a09fe38426423192be9ed2d775c13ff9bd4e75d9ee6f18d887b808f0249b8f34"
+            },
+            {
+              "path": "apps/api/src/admin/config-audit.controller.ts",
+              "sha256": "b5c2af193be60f8c4991ce08ba1a2dd850e335aebbd270667963f8b441283a4c"
+            },
+            {
+              "path": "apps/api/src/consultation/consultation-workflow.integration.test.ts",
+              "sha256": "ca4a99a78d0a8a57dd435e21f42b06cff8eb81080ba06952aa4dcf5a21314929"
+            },
+            {
+              "path": "apps/api/src/contract/contract-review-http.integration.test.ts",
+              "sha256": "743fed37c805090a2876d6ec9181f147a60ccb4360935b436dd7a34b9286a79a"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "a45f415770196e8fd7129da867e018ba6fa2d881325da0b32567501ea41cff8e"
+            },
+            {
+              "path": "apps/api/src/test/core-audit.ts",
+              "sha256": "0fabe29fa33f7f3f6a03165a9efa88afae7c2084afd302d605ed35bdc1f34c94"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "b11b691680a16cfd244d5430449a7c91c918a09f5f3e5b5c09ed31299d80359c"
+            },
+            {
+              "path": "apps/api/src/test/solar-audit.ts",
+              "sha256": "b18cd34156300ab3987b9d9315dc14445f6ab4992fc3158deea63be341f3fa8f"
+            },
+            {
+              "path": "packages/db/drizzle/production/0249_audit_log_immutability.sql",
+              "sha256": "698a3ae55e55edb7f5b7ed1cbada39ad71c8867a799ca80a2ef463bd5597ad13"
+            },
+            {
+              "path": "packages/db/src/audit-log-immutability.migrated.test.ts",
+              "sha256": "59a78ede329576b622f72fb772880268fae0838f686bd6425d5c2a92573c663c"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "The previously accepted core transition matrix in T-03.90.03 covers order submission and transitions, contract decisions, price and fee changes, gift redemption, document decisions and postal confirmation. Current source-matching hosted suites exercise before/after state, actor/context, timestamp, reason and correlation ID with transactional rollback assertions.",
+            "All ten isolated migrated PostgreSQL audit cases passed on the current production journal. They reject UPDATE, DELETE and TRUNCATE, preserve attribution and history, and roll back a new business/audit write together.",
+            "All six isolated compiled HTTP cases passed, including the new authenticated admin regression. POST, PUT, PATCH and DELETE return 404 for both audit collections and record-shaped URLs, and the original audit row is unchanged. Both audit routes remain GET-only in OpenAPI.",
+            "Final API typecheck and formatting pass. The only post-run test source delta was a non-null assertion for the seeded administrator headers. The emitted JavaScript is identical."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.10.02.07",
@@ -721754,7 +721900,8 @@
           "release-0.5-protected-staff-browser-closure",
           "release-0.5-route-census-closure",
           "release-0.5-essential-control-contrast",
-          "release-0.5-conditional-heading-acceptance"
+          "release-0.5-conditional-heading-acceptance",
+          "release-0.6-profile-isolation-and-read-only-audit-tests"
         ],
         "current_acceptance": {
           "kind": "verified-admin-settings-adoption",
@@ -721762,7 +721909,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/config-audit-http.integration.test.ts",
-              "sha256": "056c04e5fc6ca5b86b26e7e3a9ca3497255c0f491d9a3ffdc8bc71134d8aec71"
+              "sha256": "a09fe38426423192be9ed2d775c13ff9bd4e75d9ee6f18d887b808f0249b8f34"
             },
             {
               "path": "apps/api/src/admin/config-audit.controller.ts",
@@ -721813,7 +721960,8 @@
             "Bindings renewed by release-0.5-staff-lists-and-receipts: scoped query and confirmed receipt behavior with the original assertions, write payloads, CSRF and budgets. Current targeted unit and native results are recorded.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-protected-staff-browser-closure: one validated OTP toast and bounded geography dialog. 32 distinct native cases and 61 related unit tests passed, retaining current staff confirmation, authority, focus and exact response assertions.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "The six-case compiled audit HTTP suite passed after adding one read-only route regression. Existing audit assertions and all runtime code match the previous accepted source. Final API typecheck and emitted-test equivalence passed."
           ],
           "criterion_result": "Expandable config timeline with allowlisted old/new values, actor, localized time and version. Native scope permission/session rechecks, private no-store and bound microsecond cursors pass. Twelve browser recovery/denial/isolation journeys and eight component cases pass.",
           "limitations": [
@@ -736026,7 +736174,7 @@
             },
             {
               "path": "apps/api/src/admin/config-audit-http.integration.test.ts",
-              "sha256": "056c04e5fc6ca5b86b26e7e3a9ca3497255c0f491d9a3ffdc8bc71134d8aec71"
+              "sha256": "a09fe38426423192be9ed2d775c13ff9bd4e75d9ee6f18d887b808f0249b8f34"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -736651,7 +736799,8 @@
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
-            "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch."
+            "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch.",
+            "The six-case compiled audit HTTP suite passed after adding one read-only route regression. Existing audit assertions and all runtime code match the previous accepted source. Final API typecheck and emitted-test equivalence passed."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/staff-order-detail-authority",
@@ -738219,7 +738368,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-profile-isolation-and-read-only-audit-tests"
         ]
       }
     },
@@ -845675,6 +845825,145 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/transaction-fixture-reconciliation",
       "source_scope_proof": "mandatory-concurrency-matrix.json",
       "source_scope_proof_sha256": "181ee9c7ff5695c85b4dcbb0675cfd5fc69c079b1f9e79f4c66bda129cef7778"
+    },
+    "release-0.6-profile-isolation-and-read-only-audit-tests": {
+      "batch": "release-0.6-profile-isolation-and-read-only-audit-tests",
+      "base_commit": "e8670535078881dd6c191f5b4792aafdae478cf6",
+      "task_keys": [
+        "03-core-business.md#T-03.90.03",
+        "06-security-testing-observability.md#T-06.10.02.05",
+        "06-security-testing-observability.md#T-06.10.02.06",
+        "07-ui-ux-design.md#T-07.30.01.05",
+        "release-readiness#R-02.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/admin/config-audit-http.integration.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "7a3e21d4cae45fe651cf639c1a53543cd55e29d49688302fbe82e3c437f8170d"
+        },
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+        },
+        {
+          "path": "apps/api/src/admin/config-audit-http.integration.test.ts",
+          "sha256": "a09fe38426423192be9ed2d775c13ff9bd4e75d9ee6f18d887b808f0249b8f34"
+        },
+        {
+          "path": "apps/api/src/admin/config-audit.controller.ts",
+          "sha256": "b5c2af193be60f8c4991ce08ba1a2dd850e335aebbd270667963f8b441283a4c"
+        },
+        {
+          "path": "apps/api/src/consultation/consultation-assignment.integration.test.ts",
+          "sha256": "07900710aaec54c70b9e42f6f9f35563477542679b63fc0940a3001550c52830"
+        },
+        {
+          "path": "apps/api/src/consultation/consultation-request.service.ts",
+          "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+        },
+        {
+          "path": "apps/api/src/consultation/consultation-workflow.integration.test.ts",
+          "sha256": "ca4a99a78d0a8a57dd435e21f42b06cff8eb81080ba06952aa4dcf5a21314929"
+        },
+        {
+          "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
+          "sha256": "399868fc1b64b8316edab40b14fddeedb67e6bf7543cac72047ded1090f25fab"
+        },
+        {
+          "path": "apps/api/src/contract/contract-review-http.integration.test.ts",
+          "sha256": "743fed37c805090a2876d6ec9181f147a60ccb4360935b436dd7a34b9286a79a"
+        },
+        {
+          "path": "apps/api/src/documents/document-http.integration.test.ts",
+          "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+          "sha256": "a45f415770196e8fd7129da867e018ba6fa2d881325da0b32567501ea41cff8e"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-order.service.ts",
+          "sha256": "47bc00446b06d70cded63f1ef7acef1b60f0d1923a004d53620df37b43bbda26"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-raw-draft.integration.test.ts",
+          "sha256": "fa4f924fbe13a4f18cca6596c4a285676a76e70c791592e56874e0f48ea3e988"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
+          "sha256": "ff9f5c1a0e8e53e9e0a23e0066feb6b82b7b7864e1d43ef34ca3efb26cd15207"
+        },
+        {
+          "path": "apps/api/src/profiles/onboarding-draft-list-http.integration.test.ts",
+          "sha256": "d02a748322bcb52bb3be5369b8070a331d6495c892245b270ec2293a05d99226"
+        },
+        {
+          "path": "apps/api/src/saving/saving-comments.controller.ts",
+          "sha256": "ee24baa7781544772ea9f1cc90b1d708141fd56a7f6c36d55d5d2e7f974e411d"
+        },
+        {
+          "path": "apps/api/src/saving/saving-order.controller.ts",
+          "sha256": "5a98d104cb95c3c8c0fc03654950cdc53815daa02b1335adf4919205210262a0"
+        },
+        {
+          "path": "apps/api/src/saving/saving-order.integration.test.ts",
+          "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+        },
+        {
+          "path": "apps/api/src/solar/solar-progress.integration.test.ts",
+          "sha256": "7c309ce0f2060c75dd54e8fc4dddcefd84178a9d233e62cb92d98f0c8f310d87"
+        },
+        {
+          "path": "apps/api/src/solar/solar-progress.service.ts",
+          "sha256": "fdc2fd327a7dad27453f5a9d0183ec5eb979a04d8e2eff90c9cf92badf6f52fd"
+        },
+        {
+          "path": "apps/api/src/test/core-audit.ts",
+          "sha256": "0fabe29fa33f7f3f6a03165a9efa88afae7c2084afd302d605ed35bdc1f34c94"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "b11b691680a16cfd244d5430449a7c91c918a09f5f3e5b5c09ed31299d80359c"
+        },
+        {
+          "path": "apps/api/src/test/solar-audit.ts",
+          "sha256": "b18cd34156300ab3987b9d9315dc14445f6ab4992fc3158deea63be341f3fa8f"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-access-http.integration.test.ts",
+          "sha256": "b5afbb591c976f80e9a158c499901b0685aa5cb55b3fb16126c7d0b802fceed4"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-access.ts",
+          "sha256": "896b620ceed66ca78e32091287cd4ec8f4df38bcdce574d4c3628f4cd8ee4518"
+        },
+        {
+          "path": "packages/db/drizzle/production/0249_audit_log_immutability.sql",
+          "sha256": "698a3ae55e55edb7f5b7ed1cbada39ad71c8867a799ca80a2ef463bd5597ad13"
+        },
+        {
+          "path": "packages/db/src/audit-log-immutability.migrated.test.ts",
+          "sha256": "59a78ede329576b622f72fb772880268fae0838f686bd6425d5c2a92573c663c"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "Source-matching hosted PostgreSQL tests exercise existing foreign resources. They reject access to another customer electricity draft, saving order comments, solar progress and consultation profile submission.",
+        "Hosted wallet, invoice, document, contract and onboarding tests deny access to a second customer wallet or invoice, private downloads and previews, contract cancellation requests and foreign draft cursors. Permission and ownership guards remain in their normal HTTP entry points.",
+        "The previously accepted core transition matrix in T-03.90.03 covers order submission and transitions, contract decisions, price and fee changes, gift redemption, document decisions and postal confirmation. Current source-matching hosted suites exercise before/after state, actor/context, timestamp, reason and correlation ID with transactional rollback assertions.",
+        "All ten isolated migrated PostgreSQL audit cases passed on the current production journal. They reject UPDATE, DELETE and TRUNCATE, preserve attribution and history, and roll back a new business/audit write together.",
+        "All six isolated compiled HTTP cases passed, including the new authenticated admin regression. POST, PUT, PATCH and DELETE return 404 for both audit collections and record-shaped URLs, and the original audit row is unchanged. Both audit routes remain GET-only in OpenAPI.",
+        "Final API typecheck and formatting pass. The only post-run test source delta was a non-null assertion for the seeded administrator headers. The emitted JavaScript is identical."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/audit-immutability",
+      "source_scope_proof": "audit-isolation-source-proof.json",
+      "source_scope_proof_sha256": "2661aac58384820595d3e0c4ed927846c9d76f9e176f2424a79bfde188796d0b"
     }
   },
   "historical_improvements": [

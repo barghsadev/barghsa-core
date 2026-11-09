@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T23:16:53+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T23:23:55+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1056 | Accepted with unchanged source bindings. |
-| verify | 271 | Existing work may be complete; inspect evidence before building. |
+| done | 1058 | Accepted with unchanged source bindings. |
+| verify | 269 | Existing work may be complete; inspect evidence before building. |
 | partial | 35 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1281,8 +1281,8 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.10.02.02` | verify | Inventory needed | Write constraint tests: unique indexes, foreign keys, NOT NULL, CHECK constraints, exclusion constraints |
 | `06-security-testing-observability.md#T-06.10.02.03` | done | Recorded batch work | Write transaction tests: atomic wallet debit + invoice settlement, atomic order+contract+invoice creation |
 | `06-security-testing-observability.md#T-06.10.02.04` | done | Recorded batch work | Write locking tests: row-level lock for wallet mutations, optimistic version for concurrent state changes |
-| `06-security-testing-observability.md#T-06.10.02.05` | verify | Inventory needed | Write profile-scoped data isolation tests: customer A cannot access customer B's data |
-| `06-security-testing-observability.md#T-06.10.02.06` | verify | Inventory needed | Write audit log tests: every state transition recorded, append-only, no edit/delete via API |
+| `06-security-testing-observability.md#T-06.10.02.05` | done | Recorded batch work | Write profile-scoped data isolation tests: customer A cannot access customer B's data |
+| `06-security-testing-observability.md#T-06.10.02.06` | done | Recorded batch work | Write audit log tests: every state transition recorded, append-only, no edit/delete via API |
 | `06-security-testing-observability.md#T-06.10.02.07` | done | Recorded batch work | Write outbox tests: transactional outbox write + commit, worker read + idempotent processing + dead letter |
 | `06-security-testing-observability.md#T-06.10.02.08` | done | Recorded batch work | Write idempotency tests: duplicate request returns original result, same idempotency key different payload rejected |
 | `06-security-testing-observability.md#T-06.10.02.09` | done | Recorded batch work | Mandatory concurrency tests: simultaneous wallet payments, duplicate provider callbacks, duplicate bank confirmation, concurrent refund workers, repeated order submission, ownership/role changes during requests, competing state transitions |

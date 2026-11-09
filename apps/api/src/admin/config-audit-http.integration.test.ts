@@ -50,6 +50,29 @@ async function audit(event: string, metadata: unknown, at = '2026-09-30T12:00:00
   );
   return id;
 }
+
+it('exposes no audit mutation route even to an authenticated administrator', async () => {
+  const id = await audit('config_change', { key: 'example.setting', newValue: 'original' });
+  const row = () => http.pool.query('SELECT * FROM audit_log WHERE id=$1', [id]);
+  const before = (await row()).rows;
+  expect(before).toHaveLength(1);
+
+  for (const path of ['/api/admin/config/audit', '/api/admin/staff/audit']) {
+    for (const target of [path, `${path}/${id}`]) {
+      for (const method of ['POST', 'PATCH', 'PUT', 'DELETE']) {
+        const response = await fetch(`${http.base}${target}`, {
+          method,
+          headers: headers.admin!,
+          body: JSON.stringify({ id, metadata: { newValue: 'changed' } }),
+        });
+        expect(response.status, `${method} ${target}`).toBe(404);
+      }
+    }
+  }
+
+  expect((await row()).rows).toEqual(before);
+});
+
 it('isolates scopes and exposes only approved field changes, not credentials or raw metadata', async () => {
   await http.pool.query(
     "INSERT INTO audit_log(id,user_id,event,metadata) VALUES($1,'admin','config_change','malformed legacy metadata')",
