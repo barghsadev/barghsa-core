@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T15:07:28+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T15:15:36+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -39,11 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify the exact combined runtime build. Close package license decisions and required deployment, provider and recovery evidence before release.
+Verify the existing PostgreSQL fixture isolation, provider adapter boundaries and five mandatory financial and order concurrency cases. Continue source-bound verification while external release gates remain open.
 
-- `06-security-testing-observability.md#T-06.07.02.08`: Create CI gate config: SCA/SAST/secret/container scans on every PR, full scan on main
-- `01-platform-infrastructure.md#T-05.03.04`: Configure security scans in PR gate
-- `release-readiness#R-05.03`: Prove production deployment, backup and recovery prerequisites
+- `01-platform-infrastructure.md#T-01.04.03`: Configure backend integration test setup with real PostgreSQL
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
 
 ## v0.2.0: Complete customer journeys

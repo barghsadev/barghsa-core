@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T15:07:28+00:00",
+  "updated": "2026-11-09T15:15:36+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -9192,8 +9192,15 @@
           "apps/api/src/metrics/metrics.service.ts",
           "packages/db/src/metrics.integration.test.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-staging-postgres-monitoring-readback"
+        ],
+        "current_acceptance": null,
+        "verified_staging_postgres_monitoring": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/staging-postgres-monitoring-readback-proof.json",
+          "sha256": "7cb43555b0aacebd0bbf421190ceabdd6f18a3be0e356ba810cc3e7d4d2a1691",
+          "observed_at": "2026-11-09T15:15:36+00:00"
+        }
       }
     },
     {
@@ -11249,7 +11256,8 @@
           "release-0.6-font-source-provenance",
           "release-0.6-shipped-component-license-gate",
           "release-0.6-database-client-pool-metrics",
-          "release-0.6-postgres-go-license-notices"
+          "release-0.6-postgres-go-license-notices",
+          "release-0.6-staging-postgres-monitoring-readback"
         ],
         "current_acceptance": null,
         "exact_license_report": {
@@ -11266,6 +11274,17 @@
           "sha256": "4913c104fd5fc6993f1c94d98aa9fecf58e6ec197e0a4302e8d286ed314250bf",
           "source_run": 42638068584,
           "status": "prepared"
+        },
+        "latest_hosted_runtime_inventory": {
+          "run": 42641642526,
+          "commit": "f0dfc74e270f570d07defc835b4657ad1681bc57",
+          "report": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/license-hosted-42641642526/release-licenses.json",
+          "sha256": "9fc8dfa35ae0ea6990b609c5db07f913804274455877c2ceacd315526c971b77",
+          "package_scope_entries": 594,
+          "review_required": 170,
+          "distinct_package_urls": 142,
+          "review_packet": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-f0dfc74e.json",
+          "review_packet_sha256": "87857541506c8cff4add939e0f1e9ffa9897d77c91b08e4552dca7b90c47f696"
         }
       },
       "blocker": "The strict gate is implemented. The exact shipped component exceptions still require owner or legal approval and proof of the applicable conditions before release acceptance."
@@ -473019,7 +473038,8 @@
           "release-0.6-font-source-provenance",
           "release-0.6-shipped-component-license-gate",
           "release-0.6-database-client-pool-metrics",
-          "release-0.6-postgres-go-license-notices"
+          "release-0.6-postgres-go-license-notices",
+          "release-0.6-staging-postgres-monitoring-readback"
         ],
         "current_acceptance": null,
         "exact_license_report": {
@@ -473036,6 +473056,17 @@
           "sha256": "4913c104fd5fc6993f1c94d98aa9fecf58e6ec197e0a4302e8d286ed314250bf",
           "source_run": 42638068584,
           "status": "prepared"
+        },
+        "latest_hosted_runtime_inventory": {
+          "run": 42641642526,
+          "commit": "f0dfc74e270f570d07defc835b4657ad1681bc57",
+          "report": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/license-hosted-42641642526/release-licenses.json",
+          "sha256": "9fc8dfa35ae0ea6990b609c5db07f913804274455877c2ceacd315526c971b77",
+          "package_scope_entries": 594,
+          "review_required": 170,
+          "distinct_package_urls": 142,
+          "review_packet": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-f0dfc74e.json",
+          "review_packet_sha256": "87857541506c8cff4add939e0f1e9ffa9897d77c91b08e4552dca7b90c47f696"
         }
       },
       "blocker": "The strict gate is implemented. The exact shipped component exceptions still require owner or legal approval and proof of the applicable conditions before release acceptance."
@@ -473055,7 +473086,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The hosted production recipes emitted four independently verified CycloneDX SBOMs on 133576f3. Bind the retained SBOMs and scan receipts to the exact images prepared for deployment, including registry digests at production promotion."
+        "The exact f0dfc74e preflight produced four image-ID-bound CycloneDX SBOMs. Bind retained SBOMs and scan receipts to the exact images prepared for deployment, including registry digests at production promotion."
       ],
       "owner": null,
       "depends_on": [],
@@ -473063,7 +473094,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-private-api-monitoring"
+          "release-0.6-private-api-monitoring",
+          "release-0.6-staging-postgres-monitoring-readback"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -473074,6 +473106,17 @@
           "test_job": 129203199164,
           "affected_test_files": 419,
           "affected_tests": 5501
+        },
+        "latest_hosted_runtime_inventory": {
+          "run": 42641642526,
+          "commit": "f0dfc74e270f570d07defc835b4657ad1681bc57",
+          "report": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/license-hosted-42641642526/release-licenses.json",
+          "sha256": "9fc8dfa35ae0ea6990b609c5db07f913804274455877c2ceacd315526c971b77",
+          "package_scope_entries": 594,
+          "review_required": 170,
+          "distinct_package_urls": 142,
+          "review_packet": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-f0dfc74e.json",
+          "review_packet_sha256": "87857541506c8cff4add939e0f1e9ffa9897d77c91b08e4552dca7b90c47f696"
         }
       }
     },
@@ -473092,7 +473135,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The final combined preflight on 133576f3 passed all four immutable scans with zero high or critical findings. Verify the accepted release source and actual staged image selection, including a current signature feed."
+        "The exact f0dfc74e preflight passed all four runtime image scans with no high or critical findings. Verify the accepted release source and actual staged image selection, including a current scanner signature feed."
       ],
       "owner": null,
       "depends_on": [],
@@ -473109,7 +473152,8 @@
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-private-api-monitoring",
-          "release-0.6-postgres-go-license-notices"
+          "release-0.6-postgres-go-license-notices",
+          "release-0.6-staging-postgres-monitoring-readback"
         ],
         "current_acceptance": null,
         "current_dependency_checkpoint": {
@@ -473170,6 +473214,17 @@
           "sha256": "4913c104fd5fc6993f1c94d98aa9fecf58e6ec197e0a4302e8d286ed314250bf",
           "source_run": 42638068584,
           "status": "prepared"
+        },
+        "latest_hosted_runtime_inventory": {
+          "run": 42641642526,
+          "commit": "f0dfc74e270f570d07defc835b4657ad1681bc57",
+          "report": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/license-hosted-42641642526/release-licenses.json",
+          "sha256": "9fc8dfa35ae0ea6990b609c5db07f913804274455877c2ceacd315526c971b77",
+          "package_scope_entries": 594,
+          "review_required": 170,
+          "distinct_package_urls": 142,
+          "review_packet": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-f0dfc74e.json",
+          "review_packet_sha256": "87857541506c8cff4add939e0f1e9ffa9897d77c91b08e4552dca7b90c47f696"
         }
       }
     },
@@ -737761,13 +737816,25 @@
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-remove-runtime-package-managers",
           "release-0.6-alpine-clamav-candidate",
-          "release-0.6-postgres-go-license-notices"
+          "release-0.6-postgres-go-license-notices",
+          "release-0.6-staging-postgres-monitoring-readback"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
           "sha256": "4913c104fd5fc6993f1c94d98aa9fecf58e6ec197e0a4302e8d286ed314250bf",
           "source_run": 42638068584,
           "status": "prepared"
+        },
+        "latest_hosted_runtime_inventory": {
+          "run": 42641642526,
+          "commit": "f0dfc74e270f570d07defc835b4657ad1681bc57",
+          "report": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/license-hosted-42641642526/release-licenses.json",
+          "sha256": "9fc8dfa35ae0ea6990b609c5db07f913804274455877c2ceacd315526c971b77",
+          "package_scope_entries": 594,
+          "review_required": 170,
+          "distinct_package_urls": 142,
+          "review_packet": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-f0dfc74e.json",
+          "review_packet_sha256": "87857541506c8cff4add939e0f1e9ffa9897d77c91b08e4552dca7b90c47f696"
         }
       }
     },
@@ -737789,11 +737856,11 @@
       "remaining": [
         "Verify topology, TLS/hostname checks, firewall, secrets, encrypted off-server backups and storage retention.",
         "Execute migration/seed ordering, backup/PITR and restore/rollback rehearsals; measure actual service RPO/RTO.",
-        "Install required monitoring, alerts and quality schedules and prove first execution/delivery. Local scripts alone are not proof.",
+        "Verify production-equivalent monitoring, alert delivery and quality schedules. Staging private API and worker scrapes and PostgreSQL query timings are verified.",
         "Provision approved Persian/English profile.verification_status SMS.ir templates or activate direct text, test owned verified destination and record actual provider acceptance/delivery reports before production. Both 11 October direct-line probes rejected with HTTP400/status123; owner deferred this evidence from v0.3.0 staging only.",
         "Provide an authorized ClamAV signature feed and verify that the chosen staging scanner loads current vendor data, including clean and infected scan receipts. The direct stage feed returned HTTP 403 and a cooldown.",
         "Staging CSP report-only review found five cross-origin image reports and the live public branding response references the same barghsa.com favicon origin. Publish the preserved PNG as a sealed staging asset with authorized staff step-up, verify the byte-identical response and complete the full week of reviewed reports before enforcing CSP.",
-        "Provision pg_stat_statements in the monitored staging and production-equivalent databases through the DBA workflow and verify the intended collector role can see current query timing samples. Staging currently preloads the library without installing the extension in the app database."
+        "Enable and verify pg_stat_statements and intended collector permissions in the production-equivalent database. Staging exposes ten positive query timings through its private metrics."
       ],
       "owner": null,
       "depends_on": [],
@@ -737806,7 +737873,8 @@
           "release-0.6-postgres-image-candidate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-shipped-component-license-gate",
-          "release-0.6-database-client-pool-metrics"
+          "release-0.6-database-client-pool-metrics",
+          "release-0.6-staging-postgres-monitoring-readback"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -737817,6 +737885,11 @@
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/staging-csp-image-origin-aggregate.json",
           "published_asset": "external",
           "preserved_png_sha256": "c07a9231b098af0214279477ce0abbfa9bf29a8188885025dbeb415e24a24fda"
+        },
+        "verified_staging_postgres_monitoring": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/staging-postgres-monitoring-readback-proof.json",
+          "sha256": "7cb43555b0aacebd0bbf421190ceabdd6f18a3be0e356ba810cc3e7d4d2a1691",
+          "observed_at": "2026-11-09T15:15:36+00:00"
         }
       },
       "blocker": "Production-equivalent host, separate TLS PostgreSQL/pooler, off-server backup storage and payment sandbox protected configuration are not available in the known workspace. The public domain serves legacy WordPress; the accessible app host is disposable staging. Owner access/provisioning direction and SMS.ir live verification status requested together on 2026-11-09. Isolated recovery tests and staging monitoring checks can continue."
@@ -825101,6 +825174,45 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "postgres-go-notices-proof.json",
       "source_scope_proof_sha256": "f8c12032ba8cced3c01214ef3cc9a63754343cd211679d0f986643a91d800b45"
+    },
+    "release-0.6-staging-postgres-monitoring-readback": {
+      "batch": "release-0.6-staging-postgres-monitoring-readback",
+      "base_commit": "f0dfc74e270f570d07defc835b4657ad1681bc57",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.01.04",
+        "01-platform-infrastructure.md#T-05.03.04",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "06-security-testing-observability.md#T-06.07.02.08",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/monitoring/staging-prometheus.yml",
+          "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+        },
+        {
+          "path": "docs/operations/postgresql-monitoring.md",
+          "sha256": "86d7f4c87d7059d1853811276de6fdcbb947c2f23072872aa121bb7d29c4afd4"
+        },
+        {
+          "path": "deploy/staging/postgres.conf",
+          "sha256": "14af834dbb17d91f80f47198d06a42c5d5e0dec6a4169627df6540b6733a4502"
+        },
+        {
+          "path": "scripts/check-release-licenses.py",
+          "sha256": "271754dea01f1e5751d57f59160292723e14b994dea8523f0de172e976b499ea"
+        }
+      ],
+      "checks": [
+        "Staging PostgreSQL 16.15 loaded pg_stat_statements 1.10 in the app database under bounded locks. Existing role grants and the running database process were preserved. The private API scrape returned ten positive timing samples with query IDs only. Public ingress did not serve metrics.",
+        "The live monitoring stack now scrapes both the staging API and worker successfully over its private network. The accepted Prometheus image, worker and notification rules, Alertmanager and operations receiver were retained. This change applied only the validated API scrape configuration. The deployed application remains healthy v0.5.0. No alert test or v0.6.0 release was dispatched.",
+        "Authenticated exact preflight 42641642526 binds four runtime image IDs to SBOM and Trivy report hashes. All four Go packages have allowed verified notices, with no high or critical vulnerabilities across the four images. The updated review packet contains 170 remaining package/scope entries requiring disposition. The exact production-distribution review is still open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "staging-postgres-monitoring-readback-proof.json",
+      "source_scope_proof_sha256": "7cb43555b0aacebd0bbf421190ceabdd6f18a3be0e356ba810cc3e7d4d2a1691"
     }
   },
   "historical_improvements": [
@@ -825140,19 +825252,17 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-finish-image-and-operational-gates",
+    "id": "release-0.6-native-integration-acceptance",
     "release": "0.6.0",
     "task_keys": [
-      "06-security-testing-observability.md#T-06.07.02.08",
-      "01-platform-infrastructure.md#T-05.03.04",
-      "release-readiness#R-05.03",
+      "01-platform-infrastructure.md#T-01.04.03",
       "release-readiness#R-05.02"
     ],
-    "goal": "Verify the exact combined runtime build. Close package license decisions and required deployment, provider and recovery evidence before release."
+    "goal": "Verify the existing PostgreSQL fixture isolation, provider adapter boundaries and five mandatory financial and order concurrency cases. Continue source-bound verification while external release gates remain open."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",
-    "next_update_after": "v0.6.0 runtime-image checks, package license disposition and production-equivalent environment availability",
+    "next_update_after": "v0.6.0 native integration verification, package license disposition and production-equivalent environment availability",
     "method": "v0.5.0 staging and Telegram receipts are confirmed. v0.6.0 owner policy is recorded. Local and disposable staging rehearsals do not satisfy the production-equivalent TLS, provider, off-server recovery, load or schedule gates; production access/provisioning timing is external."
   },
   "capabilities": [
