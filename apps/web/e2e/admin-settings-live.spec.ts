@@ -2,9 +2,12 @@ import { brandingText } from '@barghsa/i18n/branding';
 import { aiModelFormText } from '@barghsa/i18n/ai-model-forms';
 import { providerText, smsProviderText } from '@barghsa/i18n/providers';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
-import type { APIRequestContext, Route } from '@playwright/test';
+import { tWorkspace } from '@barghsa/i18n/workspace-admin';
+import type { APIRequestContext, APIResponse, Page, Route } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { fork, type ChildProcess } from 'node:child_process';
+import { once } from 'node:events';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 let child: ChildProcess;
@@ -16,8 +19,24 @@ let http: {
   customerSession: string;
   customerCsrf: string;
   jobs: Record<string, { first: string; second: string; dead: string }>;
+  readyAgentEditorModels: Record<string, { id: string; title: string }>;
+  staffReviewActors: Record<string, { username: string; session: string; csrf: string }>;
 };
 let restoreNumberPreference: (() => Promise<void>) | null = null;
+
+async function confirmDestructiveAction(page: Page, locale: 'en' | 'fa') {
+  const dialog = page.getByRole('dialog');
+  const confirm = dialog.getByRole('button', {
+    name: locale === 'fa' ? 'تأیید' : 'Confirm',
+    exact: true,
+  });
+  await expect(confirm).toBeDisabled();
+  await approveRiskConfirmation(page, locale, 'destructive');
+  await expect(confirm).toBeEnabled();
+  await confirm.click();
+  await expect(dialog).toHaveCount(0);
+}
+
 async function publishNumericPreference(
   request: APIRequestContext,
   numberStyle: 'locale' | 'persian' | 'western',
@@ -51,9 +70,14 @@ async function publishNumericPreference(
 }
 
 const pendingApiResponses = new Set<Promise<void>>();
-async function forwardLiveRequest(route: Route, options: Parameters<Route['fetch']>[0]) {
+async function forwardLiveRequest(
+  route: Route,
+  options: Parameters<Route['fetch']>[0],
+  onResponse?: (response: APIResponse) => void
+) {
   const pending = (async () => {
     const response = await route.fetch(options);
+    onResponse?.(response);
     await route.fulfill({ response });
   })();
   pendingApiResponses.add(pending);
@@ -65,6 +89,14 @@ async function forwardLiveRequest(route: Route, options: Parameters<Route['fetch
 }
 async function settleLiveRequests() {
   while (pendingApiResponses.size) await Promise.all([...pendingApiResponses]);
+}
+async function readFixtureOtp(challengeId: string, username: string): Promise<string> {
+  const received = once(child, 'message', { signal: AbortSignal.timeout(5000) });
+  child.send({ challengeId, username });
+  const [reply] = await received;
+  if (reply?.challengeId !== challengeId || !/^\d{6}$/.test(reply.code))
+    throw new Error('The verified-contact fixture did not receive an OTP');
+  return reply.code;
 }
 
 test.afterEach(async ({ page }) => {
@@ -215,11 +247,7 @@ for (const locale of ['en', 'fa'])
     ).toBeVisible();
     await page.screenshot({ path: `/tmp/barghsa-staff-teams-${locale}.png`, fullPage: true });
     await page.getByRole('button', { name: fa ? 'حذف تیم' : 'Delete team', exact: true }).click();
-    await page
-      .getByRole('dialog')
-      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
-      .click();
-    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     expect(
       await (
         await page.request.get(`${http.base}/api/admin/staff-teams`, { headers: apiHeaders })
@@ -273,25 +301,38 @@ for (const locale of ['en', 'fa'])
   test(`staff creation, role changes and disabling persist through the migrated API (${locale})`, async ({
     page,
   }) => {
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
+    const actor = { ...http.staffReviewActors[locale]! };
     await page.route('**/api/**', async (route) => {
       const request = route.request(),
         url = new URL(request.url());
-      await forwardLiveRequest(route, {
-        url: `${http.base}${url.pathname}${url.search}`,
-        headers: {
-          ...request.headers(),
-          host: new URL(http.base).host,
-          origin: 'https://app.example.test',
-          cookie: `barghsa_session=${http.session}`,
-          'x-csrf-token': http.csrf,
+      await forwardLiveRequest(
+        route,
+        {
+          url: `${http.base}${url.pathname}${url.search}`,
+          headers: {
+            ...request.headers(),
+            host: new URL(http.base).host,
+            origin: 'https://app.example.test',
+            cookie: `barghsa_session=${actor.session}`,
+            'x-csrf-token': actor.csrf,
+          },
         },
-      });
+        (response) => {
+          if (url.pathname !== '/api/auth/step-up/otp/verify' || !response.ok()) return;
+          const cookies = Object.fromEntries(
+            response
+              .headersArray()
+              .filter((header) => header.name.toLowerCase() === 'set-cookie')
+              .map((header) => header.value.split(';', 1)[0]!.split('=', 2))
+              .filter(([, value]) => value)
+          );
+          if (!cookies.barghsa_session || !cookies.barghsa_csrf)
+            throw new Error('Verified step-up did not rotate the fixture session');
+          actor.session = cookies.barghsa_session;
+          actor.csrf = cookies.barghsa_csrf;
+        }
+      );
     });
     const fa = locale === 'fa',
       username = `new-staff-${locale}@example.test`;
@@ -326,7 +367,7 @@ for (const locale of ['en', 'fa'])
       .getByRole('button', { name: fa ? 'بستن نتیجه' : 'Dismiss result', exact: true })
       .click();
     await expect(page.locator('#staff-created-password')).toHaveCount(0);
-    const row = page.getByRole('row').filter({ hasText: username });
+    const row = page.getByRole('row').or(page.getByRole('listitem')).filter({ hasText: username });
     await expect(row).toContainText(fa ? 'بدون نقش' : 'No roles');
     await row
       .getByRole('button', { name: fa ? 'ویرایش نقش‌ها' : 'Edit roles', exact: true })
@@ -337,11 +378,25 @@ for (const locale of ['en', 'fa'])
     await page
       .getByRole('button', { name: fa ? 'ذخیره نقش‌ها' : 'Save roles', exact: true })
       .click();
-    await page
-      .getByRole('dialog')
-      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
-      .click();
-    await expect(page.getByRole('dialog')).toHaveCount(0);
+    const language = fa ? 'fa' : 'en';
+    const stepUp = (key: string) => tWorkspace(`admin.stepUp.${key}`, language);
+    const dialog = page.getByRole('dialog');
+    const send = dialog.getByRole('button', { name: stepUp('send'), exact: true });
+    await expect(send).toBeDisabled();
+    await approveRiskConfirmation(page, language, 'destructive');
+    await expect(send).toBeEnabled();
+    const sent = page.waitForResponse('**/api/auth/step-up/otp/send');
+    await send.click();
+    const challenge = await sent;
+    expect(challenge.status()).toBe(200);
+    const { challengeId } = await challenge.json();
+    await dialog
+      .getByLabel(stepUp('code'), { exact: true })
+      .fill(await readFixtureOtp(challengeId, actor.username));
+    const verified = page.waitForResponse('**/api/auth/step-up/otp/verify');
+    await dialog.getByRole('button', { name: stepUp('verify'), exact: true }).click();
+    expect((await verified).status()).toBe(200);
+    await expect(dialog).toHaveCount(0);
     await expect(row).toContainText(fa ? 'مالی' : 'Finance');
     await row
       .getByRole('button', { name: fa ? 'تاریخچه مجوزها' : 'Permission history', exact: true })
@@ -351,7 +406,7 @@ for (const locale of ['en', 'fa'])
       exact: true,
     });
     await expect(history).toContainText('Assign finance duties');
-    await expect(history).toContainText('admin-ui@example.test');
+    await expect(history).toContainText(actor.username);
     await expect(history).toContainText(fa ? 'نقش‌های افزوده: مالی' : 'Roles added: Finance');
     await history
       .getByRole('button', { name: fa ? 'بستن تاریخچه' : 'Close history', exact: true })
@@ -359,17 +414,13 @@ for (const locale of ['en', 'fa'])
     await row
       .getByRole('button', { name: fa ? 'غیرفعال‌سازی حساب' : 'Disable account', exact: true })
       .click();
-    await page
-      .getByRole('dialog')
-      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
-      .click();
-    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     await settleLiveRequests();
     await page.reload();
     await expect(row).toContainText(fa ? 'غیرفعال' : 'Disabled');
     await expect(page.locator('#staff-created-password')).toHaveCount(0);
     const response = await page.request.get(`${http.base}/api/admin/staff`, {
-      headers: { cookie: `barghsa_session=${http.session}` },
+      headers: { cookie: `barghsa_session=${actor.session}` },
     });
     const result = await response.json();
     expect(
@@ -381,12 +432,7 @@ for (const locale of ['en', 'fa'])
   test(`expired staff activation can be reissued through the real API (${locale})`, async ({
     page,
   }) => {
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     await page.route('**/api/**', async (route) => {
       const request = route.request(),
         url = new URL(request.url());
@@ -404,7 +450,7 @@ for (const locale of ['en', 'fa'])
     const fa = locale === 'fa',
       username = `pending-${locale}@example.test`;
     await page.goto('/admin/users');
-    const row = page.getByRole('row').filter({ hasText: username });
+    const row = page.getByRole('row').or(page.getByRole('listitem')).filter({ hasText: username });
     await expect(row).toContainText(fa ? 'در انتظار فعال‌سازی' : 'Awaiting activation');
     await row
       .getByRole('button', {
@@ -580,8 +626,11 @@ for (const locale of ['en', 'fa'])
       await row.getByRole('button', { name: `${label} ${event}`, exact: true }).click();
       const dialog = page.getByRole('dialog');
       await expect(dialog).toContainText(event);
-      await dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true }).click();
-      await expect(dialog).toHaveCount(0);
+      if (action === 'dismiss') await confirmDestructiveAction(page, fa ? 'fa' : 'en');
+      else {
+        await dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true }).click();
+        await expect(dialog).toHaveCount(0);
+      }
       await expect(row).toHaveCount(0);
       const response = await page.request.get(
         `${http.base}/api/admin/failed-notifications?status=${status}`,
@@ -670,8 +719,7 @@ for (const locale of ['en', 'fa'])
       .click();
     const dialog = page.getByRole('dialog');
     await expect(dialog).toContainText(fa ? 'ممکن است فایل‌های بیشتری' : 'may allow more files');
-    await dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true }).click();
-    await expect(dialog).toHaveCount(0);
+    await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     await expect(row).toContainText(fa ? 'پیش‌فرض استقرار' : 'Deployment defaults');
     const response = await page.request.get(
       `${http.base}/api/admin/upload-policies?category=${category}`,
@@ -727,7 +775,9 @@ for (const locale of ['en', 'fa'])
       .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
       .click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
-    await expect(page.getByRole('status')).toContainText(fa ? 'ذخیره نشده' : 'not been saved');
+    await expect(page.getByRole('main').getByRole('status')).toContainText(
+      fa ? 'ذخیره نشده' : 'not been saved'
+    );
     await page
       .getByRole('button', { name: fa ? 'ذخیره و فعال‌سازی' : 'Save and activate', exact: true })
       .click();
@@ -739,7 +789,9 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByLabel(fa ? 'کلید محرمانه' : 'Secret key', { exact: true })).toHaveValue(
       ''
     );
-    await expect(page.getByRole('status')).toContainText(fa ? 'ذخیره و فعال' : 'saved and active');
+    await expect(page.getByRole('main').getByRole('status')).toContainText(
+      fa ? 'ذخیره و فعال' : 'saved and active'
+    );
     await settleLiveRequests();
     await page.reload();
     await expect(page.getByLabel(fa ? 'کلید دسترسی' : 'Access key', { exact: true })).toHaveValue(
@@ -1198,19 +1250,14 @@ for (const locale of ['en', 'fa'])
     ).toBe(true);
     await page.screenshot({ path: `/tmp/ai-models-mobile-${locale}.png`, fullPage: true });
     await card.getByRole('button', { name: fa ? 'حذف' : 'Delete', exact: true }).click();
-    await confirm();
+    await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     await expect(card).toHaveCount(0);
   });
 
 for (const locale of ['en', 'fa'])
   test(`knowledge-base UI persists through the migrated API (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     await page.route('**/api/**', async (route) => {
       const request = route.request(),
         url = new URL(request.url());
@@ -1284,7 +1331,7 @@ for (const locale of ['en', 'fa'])
         exact: true,
       })
       .click();
-    await confirm();
+    await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     expect(
       (
         await (
@@ -1333,7 +1380,7 @@ for (const locale of ['en', 'fa'])
         exact: true,
       })
       .click();
-    await confirm();
+    await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     expect(
       (
         await (
@@ -1344,7 +1391,7 @@ for (const locale of ['en', 'fa'])
     await page
       .getByRole('button', { name: `${fa ? 'حذف' : 'Delete'} ${groupName}`, exact: true })
       .click();
-    await confirm();
+    await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     await expect(page.getByRole('heading', { name: groupName, exact: true })).toHaveCount(0);
     await page
       .getByRole('button', { name: fa ? 'پایگاه‌های دانش' : 'Knowledge bases', exact: true })
@@ -1352,7 +1399,7 @@ for (const locale of ['en', 'fa'])
     await page
       .getByRole('button', { name: `${fa ? 'حذف' : 'Delete'} ${renamed}`, exact: true })
       .click();
-    await confirm();
+    await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     expect(
       (
         await page.request.get(`${http.base}/api/admin/knowledge-bases/${kb.id}`, { headers })
@@ -1363,12 +1410,7 @@ for (const locale of ['en', 'fa'])
 for (const locale of ['en', 'fa'])
   test(`AI policy UI persists through the migrated API (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     await page.route('**/api/**', async (route) => {
       const request = route.request(),
         url = new URL(request.url());
@@ -1420,7 +1462,7 @@ for (const locale of ['en', 'fa'])
       .fill('1200');
     await page.getByLabel(fa ? 'فعال' : 'Enabled', { exact: true }).uncheck();
     await page.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true }).click();
-    await confirm();
+    await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     await settleLiveRequests();
     await page.reload();
     await expect(page.getByRole('heading', { name: renamed, exact: true })).toBeVisible();
@@ -1471,7 +1513,7 @@ for (const locale of ['en', 'fa'])
         exact: true,
       })
       .click();
-    await confirm();
+    await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     expect(
       (
         await (
@@ -1482,13 +1524,13 @@ for (const locale of ['en', 'fa'])
     await page
       .getByRole('button', { name: `${fa ? 'حذف' : 'Delete'} ${groupName}`, exact: true })
       .click();
-    await confirm();
+    await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     await expect(page.getByRole('heading', { name: groupName, exact: true })).toHaveCount(0);
     await page.getByRole('button', { name: fa ? 'سیاست‌ها' : 'Policies', exact: true }).click();
     await page
       .getByRole('button', { name: `${fa ? 'حذف' : 'Delete'} ${renamed}`, exact: true })
       .click();
-    await confirm();
+    await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     expect(
       (await page.request.get(`${http.base}/api/admin/policies/${kb.id}`, { headers })).status()
     ).toBe(404);
@@ -1497,12 +1539,7 @@ for (const locale of ['en', 'fa'])
 for (const locale of ['en', 'fa'])
   test(`agent slot UI persists through the migrated API (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     const headers = {
       cookie: `barghsa_session=${http.session}`,
       'x-csrf-token': http.csrf,
@@ -1521,10 +1558,17 @@ for (const locale of ['en', 'fa'])
     const model = await modelResponse.json();
     const agentResponse = await page.request.post(`${http.base}/api/admin/agents`, {
       headers,
-      data: { title: `Slot support ${locale}`, modelId: model.id, kbIds: [], policyIds: [] },
+      data: {
+        title: `Slot support ${locale}`,
+        modelId: model.id,
+        kbIds: [],
+        policyIds: [],
+        enabled: false,
+      },
     });
     expect(agentResponse.status()).toBe(201);
     const agent = await agentResponse.json();
+    expect(agent.enabled).toBe(false);
     await page.route('**/api/**', async (route) => {
       const request = route.request(),
         url = new URL(request.url());
@@ -1591,7 +1635,7 @@ for (const locale of ['en', 'fa'])
         exact: true,
       })
       .click();
-    await confirm();
+    await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     expect(
       (
         (await (
@@ -1608,12 +1652,7 @@ for (const locale of ['en', 'fa'])
     page,
   }) => {
     const fa = locale === 'fa';
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     const headers = {
       cookie: `barghsa_session=${http.session}`,
       'x-csrf-token': http.csrf,
@@ -1624,12 +1663,7 @@ for (const locale of ['en', 'fa'])
       expect(response.status()).toBe(201);
       return (await response.json()) as { id: string; title: string };
     };
-    const model = await create('ai-models', {
-      title: `Editor model ${locale}`,
-      providerType: 'openai_compatible',
-      baseUrl: 'https://example.test',
-      modelName: 'test',
-    });
+    const model = http.readyAgentEditorModels[locale]!;
     const kb = await create('knowledge-bases', {
       title: `Editor knowledge ${locale}`,
       description: '',
@@ -1699,7 +1733,7 @@ for (const locale of ['en', 'fa'])
     );
     await page.screenshot({ path: `/tmp/ai-agents-${locale}.png`, fullPage: true });
     await page.getByRole('button', { name: fa ? 'ذخیره عامل' : 'Save agent', exact: true }).click();
-    await confirm();
+    await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     expect(await detail()).toMatchObject({
       title: renamed,
       enabled: false,
@@ -1711,7 +1745,7 @@ for (const locale of ['en', 'fa'])
     await page
       .getByRole('button', { name: `${fa ? 'حذف' : 'Delete'} ${renamed}`, exact: true })
       .click();
-    await confirm();
+    await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     expect(
       (await page.request.get(`${http.base}/api/admin/agents/${agent.id}`, { headers })).status()
     ).toBe(404);
@@ -1849,7 +1883,7 @@ for (const locale of ['en', 'fa'])
     await page
       .getByRole('button', { name: `${fa ? 'حذف' : 'Delete'} Empty ${locale}`, exact: true })
       .click();
-    await confirm();
+    await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     await expect(page.getByRole('heading', { name: `Empty ${locale}`, exact: true })).toHaveCount(
       0
     );
@@ -1940,7 +1974,7 @@ for (const locale of ['en', 'fa'])
     await page
       .getByRole('button', { name: fa ? 'پایان دادن به نرخ' : 'End rate', exact: true })
       .click();
-    await confirm();
+    await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     expect(await resolve()).toMatchObject({ rateBasisPoints: 0 });
     const categoryName = fa ? 'طرح صرفه‌جویی' : 'Consultation';
     await page
@@ -1952,7 +1986,7 @@ for (const locale of ['en', 'fa'])
     await page
       .getByRole('button', { name: fa ? 'پایان دادن به نرخ' : 'End rate', exact: true })
       .click();
-    await confirm();
+    await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     await page.getByRole('button', { name: fa ? 'افزودن نرخ' : 'Add rate', exact: true }).click();
     await page.getByLabel(fa ? 'دسته' : 'Category', { exact: true }).selectOption(category);
     await page.getByLabel(fa ? 'نرخ (درصد)' : 'Rate (%)', { exact: true }).fill('8');
@@ -2106,7 +2140,7 @@ for (const locale of ['en', 'fa'])
     await page
       .getByRole('button', { name: `${fa ? 'غیرفعال‌سازی' : 'Deactivate'} ${code}`, exact: true })
       .click();
-    await confirm();
+    await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     const filters = page.getByRole('form', { name: fa ? 'فیلتر کدها' : 'Gift-code filters' });
     await filters.getByLabel(fa ? 'جست‌وجوی کد' : 'Search code', { exact: true }).fill(code);
     await filters.getByLabel(fa ? 'وضعیت' : 'Status', { exact: true }).selectOption('inactive');
@@ -2338,7 +2372,7 @@ for (const locale of ['en', 'fa'])
           .getByRole('listitem')
       ).toHaveCount(2);
       await page.getByRole('button', { name: fa ? 'بایگانی' : 'Archive', exact: true }).click();
-      await confirm();
+      await confirmDestructiveAction(page, fa ? 'fa' : 'en');
       expect(await detail()).toMatchObject({ status: 'archived' });
       await page
         .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} ${name}`, exact: true })
@@ -2349,7 +2383,7 @@ for (const locale of ['en', 'fa'])
           exact: true,
         })
         .click();
-      await confirm();
+      await confirmDestructiveAction(page, fa ? 'fa' : 'en');
       expect(await detail()).toMatchObject({ status: 'inactive' });
     }
     await page.getByRole('tab', { name: fa ? 'برق' : 'Electricity', exact: true }).click();
@@ -2382,7 +2416,7 @@ for (const locale of ['en', 'fa'])
       .getByRole('button', { name: fa ? 'غیرفعال‌سازی' : 'Deactivate', exact: true })
       .click();
     await expect(page.getByRole('dialog')).toContainText(fa ? 'قاعده برق سبز' : 'green rule');
-    await confirm();
+    await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     await page
       .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} Green UI`, exact: true })
       .click();
@@ -2465,12 +2499,7 @@ for (const locale of ['en', 'fa'] as const) {
 for (const locale of ['en', 'fa'] as const) {
   test(`branding publishes only the saved reviewed version (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     let failTimezone = false;
     const accountTimezone = fa ? 'Asia/Tokyo' : 'America/Los_Angeles';
     expect(
@@ -2503,8 +2532,11 @@ for (const locale of ['en', 'fa'] as const) {
         },
       });
     });
+    const titleField = fa ? 'appTitleFa' : 'appTitle';
     const publicTitle = async () =>
-      (await (await page.request.get(`${http.base}/api/public/branding/config`)).json()).appTitle;
+      (await (await page.request.get(`${http.base}/api/public/branding/config`)).json())[
+        titleField
+      ];
     const before = await publicTitle();
     const publicStyle = async () =>
       (await (await page.request.get(`${http.base}/api/public/branding/config`)).json())
@@ -2512,13 +2544,20 @@ for (const locale of ['en', 'fa'] as const) {
     const beforeStyle = await publicStyle();
     const numberStyle = fa ? 'western' : 'persian';
     await page.goto('/admin/branding');
-    const title = page.getByLabel(fa ? 'نام برنامه' : 'App Title', { exact: true });
+    const edit = page.getByRole('button', {
+      name: adminText('admin.settings.edit', locale),
+      exact: true,
+    });
+    const title = page.getByLabel(brandingText(titleField, locale), { exact: true });
     const savedTitle = `Brand published ${locale}`;
+    await edit.click();
     await title.fill(savedTitle);
     const style = page.getByLabel(fa ? 'نمایش اعداد' : 'Number display', { exact: true });
     await style.selectOption(numberStyle);
     await expect(
-      page.getByLabel(fa ? 'پیش‌نمایش نمایش اعداد' : 'Number display preview', { exact: true })
+      page
+        .getByRole('group', { name: brandingText('title', locale), exact: true })
+        .getByLabel(brandingText('numberPreview', locale), { exact: true })
     ).toContainText(fa ? '123,456,789' : '۱۲۳٬۴۵۶٬۷۸۹');
     await page
       .getByLabel(fa ? 'کد هگز رنگ اصلی' : 'Primary hex value', { exact: true })
@@ -2555,7 +2594,10 @@ for (const locale of ['en', 'fa'] as const) {
     await page.reload();
     await expect(title).toHaveValue(savedTitle);
     await expect(style).toHaveValue(numberStyle);
-    const savedTime = page.locator('main time');
+    const savedTime = page
+      .getByRole('heading', { name: brandingText('title', locale), exact: true, level: 1 })
+      .locator('..')
+      .locator('time');
     await expect(savedTime).toHaveCount(1);
     const instant = await savedTime.getAttribute('datetime');
     expect(instant).toBeTruthy();
@@ -2593,6 +2635,7 @@ for (const locale of ['en', 'fa'] as const) {
       .poll(() => preview.evaluate((image: HTMLImageElement) => image.naturalWidth))
       .toBe(1);
 
+    await edit.click();
     await title.fill('Unsaved change');
     await expect(
       page.getByRole('button', { name: fa ? 'انتشار' : 'Activate', exact: true })
@@ -2615,6 +2658,7 @@ for (const locale of ['en', 'fa'] as const) {
         page.evaluate(() => document.documentElement.style.getPropertyValue('--primary-foreground'))
       )
       .toBe('#000000');
+    await edit.click();
     await title.fill(`Next draft ${locale}`);
     await style.selectOption('locale');
     await page
@@ -2688,13 +2732,21 @@ for (const locale of ['en', 'fa'])
       exact: true,
     });
     await english.fill('Published terms');
-    await english.press('ControlOrMeta+a');
+    await english.focus();
+    await english.evaluate((element) => {
+      const selection = window.getSelection()!;
+      const range = document.createRange();
+      range.selectNodeContents(element);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    });
     await page
       .getByRole('group', {
         name: fa ? 'محتوای انگلیسی: قالب‌بندی' : 'English content: Formatting',
       })
       .getByRole('button', { name: fa ? 'پررنگ' : 'Bold', exact: true })
       .click();
+    await expect(english.locator('strong')).toHaveText('Published terms');
     await page
       .getByRole('button', { name: fa ? 'ایجاد پیش‌نویس' : 'Create Draft', exact: true })
       .click();
@@ -2763,10 +2815,10 @@ for (const locale of ['en', 'fa'])
     const discarded = page
       .locator('table:visible > tbody > tr, ol[role=list]:visible > li')
       .filter({ hasText: `discard-${locale}` });
-    page.once('dialog', (dialog) => dialog.accept());
     await discarded
       .getByRole('button', { name: fa ? 'حذف پیش‌نویس' : 'Discard', exact: true })
       .click();
+    await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     await expect(discarded).toHaveCount(0);
     await page.context().clearCookies();
     await page.goto(`/terms?lang=${locale}`);
@@ -2954,6 +3006,7 @@ for (const locale of ['en', 'fa'] as const)
     const secret = saved.maskedConfig.password;
     await page
       .getByRole('row')
+      .or(page.getByRole('listitem'))
       .filter({ hasText: `Live SMTP ${locale}` })
       .getByRole('button', { name: emailText('update'), exact: true })
       .click();
@@ -2975,7 +3028,7 @@ for (const locale of ['en', 'fa'] as const)
     await page.locator('#sms-sender').fill('3000');
     await page.getByRole('combobox', { name: `${text('event')} 1`, exact: true }).fill(eventKey);
     await page.getByRole('textbox', { name: `${text('template')} 1`, exact: true }).fill('42');
-    await page.getByRole('textbox', { name: `${text('variable')} 1.1`, exact: true }).fill('code');
+    await page.getByRole('combobox', { name: `${text('variable')} 1.1`, exact: true }).fill('code');
     await page.getByRole('textbox', { name: `${text('parameter')} 1.1`, exact: true }).fill('CODE');
     await page.locator('form button[type=submit]').click();
     await expect(page.locator('#sms-key')).toHaveCount(0);
@@ -2988,6 +3041,7 @@ for (const locale of ['en', 'fa'] as const)
     const key = sms.maskedConfig.api_key;
     await page
       .getByRole('row')
+      .or(page.getByRole('listitem'))
       .filter({ hasText: `Live SMS ${locale}` })
       .getByRole('button', { name: text('edit'), exact: true })
       .click();
@@ -3004,7 +3058,12 @@ for (const locale of ['en', 'fa'] as const)
     await settleLiveRequests();
     await page.reload();
     await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
-    await expect(page.getByRole('cell', { name: `Live SMS ${locale}`, exact: true })).toBeVisible();
+    await expect(
+      page
+        .getByRole('row')
+        .or(page.getByRole('listitem'))
+        .filter({ hasText: `Live SMS ${locale}` })
+    ).toBeVisible();
   });
 
 for (const locale of ['en', 'fa'] as const) {
