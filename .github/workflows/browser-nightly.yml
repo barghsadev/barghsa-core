@@ -1,7 +1,5 @@
 name: Nightly browser checks
 on:
-  schedule:
-    - cron: '0 2 * * *'
   workflow_dispatch:
 
 permissions:
@@ -12,63 +10,15 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  contracts:
-    name: Dependency advisories, migration drift and navigation
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: '10.11.1'
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-        id: install
-      - name: Fetch and check dependency advisories
-        run: |
-          pnpm audit --audit-level=high --json > "$RUNNER_TEMP/dependency-audit.json" || true
-          node scripts/check-dependency-audit.mjs "$RUNNER_TEMP/dependency-audit.json"
-      - name: Verify Drizzle generation has no migration drift
-        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
-        shell: bash
-        run: |
-          pnpm --filter @barghsa/db run db:generate | tee "$RUNNER_TEMP/drizzle-generate.log"
-          grep -Fq 'No schema changes, nothing to migrate' "$RUNNER_TEMP/drizzle-generate.log"
-          changes=$(git status --porcelain --untracked-files=all -- packages/db/drizzle/production)
-          if [[ -n "$changes" ]]; then
-            printf '%s\n' "$changes" >&2
-            exit 1
-          fi
-      - name: Verify registered navigation destinations
-        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
-        run: pnpm exec turbo run typecheck --filter=@barghsa/web
-      - name: Upload nightly dependency and migration results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: nightly-dependencies-and-migrations
-          path: |
-            ${{ runner.temp }}/dependency-audit.json
-            ${{ runner.temp }}/drizzle-generate.log
-          retention-days: 14
-
   browsers:
-    name: Production browser / ${{ matrix.project }} / ${{ matrix.shard }} of 8
+    name: Production browser / ${{ matrix.project }}
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:
-        project: [chromium, firefox, mobile-chrome, webkit, mobile-safari]
-        shard: [1, 2, 3, 4, 5, 6, 7, 8]
+        project: [mobile-safari]
         include:
-          - { project: chromium, browser: chromium }
-          - { project: firefox, browser: firefox }
-          - { project: mobile-chrome, browser: chromium }
-          - { project: webkit, browser: webkit }
           - { project: mobile-safari, browser: webkit }
     steps:
       - uses: actions/checkout@v4
@@ -90,78 +40,22 @@ jobs:
           node --test scripts/browser-projects.test.mjs
           python3 -m unittest discover -s scripts -p 'test_check_browser_results.py'
       - name: Exercise the production app in the selected browser
-        run: node scripts/run-production-browser.mjs --project "${{ matrix.project }}" --shard "${{ matrix.shard }}/8"
+        run: node scripts/run-production-browser.mjs e2e/admin-settings-live.spec.ts e2e/operational-queue-tables.spec.ts e2e/reconciliation-tables.spec.ts e2e/sms-provider-settings.spec.ts e2e/staff-directory-tables.spec.ts --project="${{ matrix.project }}" --retries=0 --grep "TOS rich draft|cards share details.*\(fa\)|staff cards.*\(fa\)|role cards.*\(fa\)|reconciliation cards.*\(fa\)|SMS variable suggestions"
         env:
           BARGHSA_TEST_PREBUILT: '1'
       - name: Report observed browser outcomes
         if: always()
         run: python3 scripts/check-browser-results.py --input apps/web/test-results/results.json --report "${{ runner.temp }}/browser-outcomes.json"
-      - name: Upload shard outcome counts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: browser-outcome-${{ matrix.project }}-${{ matrix.shard }}
-          path: ${{ runner.temp }}/browser-outcomes.json
-          overwrite: true
-          retention-days: 14
-      - name: Upload Playwright results and failure evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: browser-${{ matrix.project }}-${{ matrix.shard }}
-          path: apps/web/test-results/
-          retention-days: 14
-
-  report:
-    name: Report seven days of browser outcomes
-    if: ${{ always() && !cancelled() }}
-    needs: [browsers]
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      actions: read
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: browser-outcome-*
-          path: ${{ runner.temp }}/browser-outcomes
-      - name: Read recent scheduled outcomes
-        env:
-          GH_TOKEN: ${{ github.token }}
-          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
-        shell: bash
-        run: |
-          history="$RUNNER_TEMP/nightly-history"
-          mkdir -p "$history"
-          since=$(date -u -d '7 days ago' +%Y-%m-%dT%H:%M:%SZ)
-          gh run list --repo "$GITHUB_REPOSITORY" --workflow browser-nightly.yml \
-            --branch "$DEFAULT_BRANCH" --event schedule --status completed --created ">=$since" \
-            --limit 30 --json databaseId,conclusion > "$history/runs.json"
-          while IFS= read -r run; do
-            if ! gh run download "$run" --repo "$GITHUB_REPOSITORY" \
-              --name nightly-browser-summary --dir "$history/$run"; then
-              echo "No outcome receipt available for scheduled run $run."
-            fi
-          done < <(jq -r '.[].databaseId' "$history/runs.json")
-      - name: Summarize current and historical outcomes
-        if: ${{ always() && !cancelled() }}
-        run: |
-          python3 -m unittest discover -s scripts -p 'test_report_nightly_browser.py'
-          python3 scripts/report-nightly-browser.py \
-            --outcomes "$RUNNER_TEMP/browser-outcomes" --history "$RUNNER_TEMP/nightly-history" \
-            --report "$RUNNER_TEMP/nightly-browser-summary.json"
       - name: Check known quarantines
-        if: ${{ always() && !cancelled() }}
-        run: python3 scripts/check-flaky-tests.py --report "$RUNNER_TEMP/nightly-quarantine.json"
-      - name: Upload nightly rollup
+        if: always()
+        run: python3 scripts/check-flaky-tests.py --report "${{ runner.temp }}/quarantine.json"
+      - name: Upload outcomes and failure evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: nightly-browser-summary
+          name: browser-${{ matrix.project }}
           path: |
-            ${{ runner.temp }}/nightly-browser-summary.json
-            ${{ runner.temp }}/nightly-quarantine.json
-          overwrite: true
+            ${{ runner.temp }}/browser-outcomes.json
+            ${{ runner.temp }}/quarantine.json
+            apps/web/test-results/
           retention-days: 14

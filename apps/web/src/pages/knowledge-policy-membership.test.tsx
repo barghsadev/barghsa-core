@@ -92,16 +92,20 @@ const cases = [
     title: 'Policies',
   },
 ] as const;
+function policyMember(choice: typeof policy, priorityOverride: number | null) {
+  const { id, title, policyType, enabled, priority } = choice;
+  return { id, title, policyType, enabled, priority, priorityOverride };
+}
 async function mount(entry: (typeof cases)[number], options: { twoMembers?: boolean } = {}) {
-  const data = {
+  const data: { failed: boolean; wrong: boolean; members: Record<string, unknown>[] } = {
     failed: false,
     wrong: false,
     members:
       entry.kind === 'kb-groups'
-        ? ([] as Record<string, unknown>[])
+        ? []
         : [
-            { ...policy, priorityOverride: null },
-            ...(options.twoMembers ? [{ ...policySecond, priorityOverride: null }] : []),
+            policyMember(policy, null),
+            ...(options.twoMembers ? [policyMember(policySecond, null)] : []),
           ],
   };
   const request = vi.fn(async (url: RequestInfo | URL) => {
@@ -191,10 +195,9 @@ it.each(cases)(
     });
     expect(host.querySelector<HTMLInputElement>(`#${entry.field}`)!.value).toBe(entry.choice.id);
     await submit(entry.field);
-    data.members.push({
-      ...entry.choice,
-      ...(entry.kind === 'policy-groups' ? { priorityOverride: -12 } : {}),
-    });
+    data.members.push(
+      entry.kind === 'policy-groups' ? policyMember(entry.choice, -12) : entry.choice
+    );
     await act(async () => state.success!());
     expect(host.querySelector<HTMLInputElement>(`#${entry.field}`)!.value).toBe('');
     expect(host.textContent).toContain('Changes saved.');
