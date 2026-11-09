@@ -13,6 +13,7 @@ import { historyContextText } from '../lib/history-context.js';
 import { lazy, Suspense, useEffect, useId, useMemo, useRef, useState, type FormEvent } from 'react';
 import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { contractText } from '@barghsa/i18n/contracts';
 import {
   LoadingStatus,
@@ -284,7 +285,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
   const [acceptedScope, setAcceptedScope] = useState<string | null>(null);
   const detail = acceptedScope === scopeKey ? loadedDetail : null;
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<'unavailable' | 'load' | null>(null);
   const [retry, setRetry] = useState(0);
   const [savingCorrection, setSavingCorrection] = useState(false);
   const [correctionError, setCorrectionError] = useState(false);
@@ -354,7 +355,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
     cancelTransport.current?.abort();
     setDetail(null);
     setAcceptedScope(null);
-    setError(true);
+    setError('unavailable');
     setLoading(false);
     capturedCorrection.current = null;
     setUnconfirmedCorrection(false);
@@ -435,7 +436,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
     const controller = new AbortController();
     const token = generation.current;
     setLoading(true);
-    setError(false);
+    setError(null);
     void query
       .refetch()
       .then((reply) => {
@@ -468,7 +469,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
           });
       })
       .catch(() => {
-        if (!controller.signal.aborted && token === generation.current) setError(true);
+        if (!controller.signal.aborted && token === generation.current) setError('load');
       })
       .finally(() => {
         if (!controller.signal.aborted && token === generation.current) setLoading(false);
@@ -856,6 +857,8 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
       {time.notice}
       {loading ? (
         <LoadingStatus>{t('electricity.order.detailLoading', locale)}</LoadingStatus>
+      ) : error === 'unavailable' ? (
+        <p role="alert">{loadingText('recordUnavailable', locale)}</p>
       ) : error || !detail ? (
         <div role="alert" className="space-y-3">
           <p>{t('electricity.order.detailFailed', locale)}</p>

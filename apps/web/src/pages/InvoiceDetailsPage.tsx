@@ -30,6 +30,10 @@ interface InvoiceDetailsPageProps {
   invoiceId: string;
 }
 
+function isInvoiceUnavailable(error: unknown) {
+  return error instanceof InvoiceRequestError && [401, 403, 404].includes(error.status);
+}
+
 /**
  * Customer-facing invoice details (T-04.1.05.04 / S-04.1.05).
  *
@@ -66,7 +70,7 @@ function OwnedInvoiceDetails({
   const locale = useLocale();
   const isRtl = locale === 'fa';
   const [details, setDetails] = useState<CustomerInvoiceDetails | null>(null);
-  const [error, setError] = useState<'not-found' | 'load' | null>(null);
+  const [error, setError] = useState<'unavailable' | 'load' | null>(null);
   const [loading, setLoading] = useState(true);
   const [reload, setReload] = useState(0);
   const read = useOwnedManualServerRead(scope);
@@ -91,9 +95,9 @@ function OwnedInvoiceDetails({
       const next = await readDetails();
       if (current()) setDetails(next);
     } catch (err) {
-      if (current() && err instanceof InvoiceRequestError && [401, 403, 404].includes(err.status)) {
+      if (current() && isInvoiceUnavailable(err)) {
         setDetails(null);
-        setError(err.status === 404 ? 'not-found' : 'load');
+        setError('unavailable');
       }
       throw err;
     }
@@ -110,8 +114,7 @@ function OwnedInvoiceDetails({
         if (current()) setDetails(payload);
       })
       .catch((err: unknown) => {
-        if (current())
-          setError(err instanceof InvoiceRequestError && err.status === 404 ? 'not-found' : 'load');
+        if (current()) setError(isInvoiceUnavailable(err) ? 'unavailable' : 'load');
       })
       .finally(() => {
         if (current()) setLoading(false);
@@ -201,20 +204,21 @@ function OwnedInvoiceDetails({
           <Loader2Icon className="h-4 w-4 animate-spin" aria-hidden="true" />
           {t('invoices.details.loading', locale)}
         </LoadingStatus>
-      ) : error === 'not-found' ? (
-        <p className="text-destructive" role="alert">
-          {t('invoices.details.notFound', locale)}
-        </p>
       ) : error ? (
         <p className="text-destructive" role="alert" data-testid="invoice-load-error">
-          {t('invoices.details.error', locale)}
-          <button
-            type="button"
-            className="ms-2 underline"
-            onClick={() => setReload((value) => value + 1)}
-          >
-            {t('invoices.activity.retry', locale)}
-          </button>
+          {t(
+            error === 'unavailable' ? 'invoices.details.notFound' : 'invoices.details.error',
+            locale
+          )}
+          {error === 'load' && (
+            <button
+              type="button"
+              className="ms-2 underline"
+              onClick={() => setReload((value) => value + 1)}
+            >
+              {t('invoices.activity.retry', locale)}
+            </button>
+          )}
         </p>
       ) : details ? (
         <InvoiceDetailsBody

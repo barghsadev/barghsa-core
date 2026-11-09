@@ -1,5 +1,6 @@
 import { fullNavigation } from './navigation-fixture';
 import { expect, test, type Route } from './coverage-fixture';
+import { t } from '@barghsa/i18n/app';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
 const id = '22222222-2222-4222-8222-222222222222';
@@ -34,6 +35,27 @@ const details = [
     failure: ['Request could not be loaded.', 'درخواست بارگذاری نشد.'],
     retry: ['Try again', 'تلاش دوباره'],
     list: '/solar/requests',
+  },
+  {
+    name: 'electricity',
+    url: `/electricity/orders/${id}`,
+    api: `/api/electricity/orders/${id}`,
+    title: ['Electricity order details', 'جزئیات سفارش برق'],
+    failure: [t('electricity.order.detailFailed', 'en'), t('electricity.order.detailFailed', 'fa')],
+    retry: ['Try again', 'تلاش دوباره'],
+    list: '/electricity/orders',
+    checksDenial: true,
+  },
+  {
+    name: 'invoice',
+    url: `/invoices/${id}`,
+    api: `/api/invoices/${id}`,
+    title: ['Invoice details', 'جزئیات فاکتور'],
+    failure: [t('invoices.details.error', 'en'), t('invoices.details.error', 'fa')],
+    retry: ['Try again', 'تلاش دوباره'],
+    list: '/invoices',
+    checksDenial: true,
+    unavailable: [t('invoices.details.notFound', 'en'), t('invoices.details.notFound', 'fa')],
   },
 ];
 
@@ -89,7 +111,10 @@ for (const [index, locale] of (['en', 'fa'] as const).entries())
             first = route;
             return;
           }
-          return route.fulfill({ status: 404, json: { message: 'Private provider detail' } });
+          return route.fulfill({
+            status: detail.checksDenial && theme === 'light' ? 403 : 404,
+            json: { message: 'Private provider detail' },
+          });
         });
 
         await page.goto(detail.url);
@@ -107,12 +132,14 @@ for (const [index, locale] of (['en', 'fa'] as const).entries())
         await expect(retry.and(main.getByRole('button', { disabled: false }))).toHaveCount(0);
         await expect.poll(() => first !== undefined).toBe(true);
         await first!.fulfill({ status: 503, json: { message: 'Private provider detail' } });
-        await expect(
-          main.getByRole('alert').filter({ hasText: detail.failure[index]! })
-        ).toHaveText(detail.failure[index]!);
+        const failure = main.getByRole('alert').filter({ hasText: detail.failure[index]! });
+        if (detail.checksDenial) await expect(failure).toContainText(detail.failure[index]!);
+        else await expect(failure).toHaveText(detail.failure[index]!);
         await expect(loading).toHaveCount(0);
         await retry.press('Enter');
-        const unavailable = locale === 'fa' ? 'این مورد در دسترس نیست.' : 'Record unavailable.';
+        const unavailable =
+          detail.unavailable?.[index] ??
+          (locale === 'fa' ? 'این مورد در دسترس نیست.' : 'Record unavailable.');
         await expect(main.getByRole('alert').filter({ hasText: unavailable })).toHaveText(
           unavailable
         );
