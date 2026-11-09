@@ -7,3 +7,17 @@ Prometheus takes the oldest age across worker replicas within each environment a
 Apply migration `0283_operations_outbox_backlog_priority` before starting the updated operations receiver. The migration widens the priority check and preserves existing receipts and their mutation guard. Start the updated worker and receiver before activating the new rules. For a binary rollback, remove the two backlog rules and their inhibition entry before restoring the older receiver. Leave the widened receipt check and existing history in place.
 
 On a backlog alert, check worker readiness, configured schedules, provider health and delivery history. Preserve the existing lease, occurrence and provider receipt safeguards during triage. Verify that a controlled eligible backlog crosses each threshold and recovers after drain. Keep receipt evidence scoped to the environment and database. [Notification recovery](../runbooks/notification-outage.md).
+
+## Queue processing metrics
+
+`notifications_outbox_processing_seconds` measures time spent on each leased
+outbox row. Use its count rate for worker throughput and its buckets for
+processing latency. `notifications_delivery_attempts_total` shows channel
+success and failure rates.
+
+`notifications_outbox_expired_leases` counts pending rows with an expired
+claim on the current scrape. `notifications_scheduled_retries_total` increments
+after a channel retry commits. Compare these with queue depth, eligible age
+and the open dead-letter count. Processing and retry counters reset when the
+worker restarts. Use durable delivery history and receipts to reconcile
+individual outcomes.

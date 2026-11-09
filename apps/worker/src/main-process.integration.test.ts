@@ -274,6 +274,9 @@ it('compiled worker serves health/metrics, executes scheduled jobs and drains on
     expect(metricText).toContain('# HELP');
     expect(metricText).toContain('# TYPE provider_sms_credit_low gauge');
     expect(metricText).toContain('notifications_eligible_outbox_age_seconds 0\n');
+    expect(metricText).toContain('notifications_outbox_expired_leases 0\n');
+    expect(metricText).toContain('notifications_outbox_processing_seconds_count 0\n');
+    expect(metricText).toContain('notifications_scheduled_retries_total 0\n');
     expect(metricText).toContain('refund_obligations_unresolved 0\n');
     expect(metricText).toContain('refund_obligations_overdue 0\n');
     expect(metricText).toContain('reconciliation_mismatches_unresolved 0\n');

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T22:49:42+00:00",
-  "source_commit": "5c9ab1d5198c752863ba38f747830ab55a81e662",
+  "updated": "2026-11-09T22:54:44+00:00",
+  "source_commit": "5bbb37f0b002c333256c70a34ad40cb903ba5278",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -9936,7 +9936,8 @@
           "release-0.6-api-worker-shutdown-and-fixture-reuse",
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
-          "release-0.6-business-safety-metrics-and-critical-wallet-drift"
+          "release-0.6-business-safety-metrics-and-critical-wallet-drift",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-api-and-worker-process-verification",
@@ -9984,7 +9985,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e9911b9d91c35ef2af83aecdae804712778d2a4a6cc3e54b8f437b67a6b80421"
+              "sha256": "40ede0611a4f814c2e8c6877fe92a70ec8f32c72bc3e79982b87b9ea8eb6b91c"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -28610,7 +28611,8 @@
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-exception-correlation-and-sensitive-diagnostics",
           "release-0.6-notification-eligible-backlog-alerts",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -28910,7 +28912,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/sms-transport.ts",
@@ -37701,7 +37703,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -37761,7 +37764,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "79a2d539289a73ec326bd77db7d672c9aa9999257c88e246140e0a767f98d8b6"
+              "sha256": "df70a7727dfd637f9a5a3157a0f390a8338af81e803d933e540084a8c802102b"
             },
             {
               "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
@@ -55235,7 +55238,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -55315,7 +55319,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e9911b9d91c35ef2af83aecdae804712778d2a4a6cc3e54b8f437b67a6b80421"
+              "sha256": "40ede0611a4f814c2e8c6877fe92a70ec8f32c72bc3e79982b87b9ea8eb6b91c"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -63837,7 +63841,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-notification-eligible-backlog-alerts",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -63941,7 +63946,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/sms-transport.ts",
@@ -71178,7 +71183,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -71198,7 +71204,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e9911b9d91c35ef2af83aecdae804712778d2a4a6cc3e54b8f437b67a6b80421"
+              "sha256": "40ede0611a4f814c2e8c6877fe92a70ec8f32c72bc3e79982b87b9ea8eb6b91c"
             },
             {
               "path": "apps/worker/src/notifications/outbox-lease.ts",
@@ -71274,7 +71280,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "79a2d539289a73ec326bd77db7d672c9aa9999257c88e246140e0a767f98d8b6"
+              "sha256": "df70a7727dfd637f9a5a3157a0f390a8338af81e803d933e540084a8c802102b"
             },
             {
               "path": "apps/worker/src/notifications/delivery-log.test.ts",
@@ -72458,7 +72464,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -72562,7 +72569,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "79a2d539289a73ec326bd77db7d672c9aa9999257c88e246140e0a767f98d8b6"
+              "sha256": "df70a7727dfd637f9a5a3157a0f390a8338af81e803d933e540084a8c802102b"
             },
             {
               "path": "apps/worker/src/notifications/delivery-log.test.ts",
@@ -73186,7 +73193,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e9911b9d91c35ef2af83aecdae804712778d2a4a6cc3e54b8f437b67a6b80421"
+              "sha256": "40ede0611a4f814c2e8c6877fe92a70ec8f32c72bc3e79982b87b9ea8eb6b91c"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -73266,7 +73273,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "5bbf0ec0251102a957189c846a6615fd9cfa7f59af36c1574edea71f560b908c"
+              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
             },
             {
               "path": "apps/worker/src/notifications/dead-letter.ts",
@@ -74878,7 +74885,8 @@
           "release-0.6-native-integration-acceptance",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-notification-eligible-backlog-alerts",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -74902,7 +74910,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "packages/shared/src/notifications/notification-registry.ts",
@@ -74978,7 +74986,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "79a2d539289a73ec326bd77db7d672c9aa9999257c88e246140e0a767f98d8b6"
+              "sha256": "df70a7727dfd637f9a5a3157a0f390a8338af81e803d933e540084a8c802102b"
             },
             {
               "path": "apps/worker/src/notifications/delivery-log.test.ts",
@@ -76044,7 +76052,8 @@
           "apps/worker/src/main-process.integration.test.ts"
         ],
         "batches": [
-          "release-0.4-delivery-identity-closure"
+          "release-0.4-delivery-identity-closure",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -76056,7 +76065,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/outbox-reader.ts",
@@ -76284,7 +76293,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -76304,7 +76314,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.ts",
@@ -76332,7 +76342,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e9911b9d91c35ef2af83aecdae804712778d2a4a6cc3e54b8f437b67a6b80421"
+              "sha256": "40ede0611a4f814c2e8c6877fe92a70ec8f32c72bc3e79982b87b9ea8eb6b91c"
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
@@ -76404,7 +76414,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "79a2d539289a73ec326bd77db7d672c9aa9999257c88e246140e0a767f98d8b6"
+              "sha256": "df70a7727dfd637f9a5a3157a0f390a8338af81e803d933e540084a8c802102b"
             },
             {
               "path": "apps/worker/src/notifications/delivery-log.test.ts",
@@ -77513,7 +77523,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -77553,7 +77564,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "5bbf0ec0251102a957189c846a6615fd9cfa7f59af36c1574edea71f560b908c"
+              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.ts",
@@ -77758,7 +77769,8 @@
           "docs/operations/notification-monitoring.md"
         ],
         "batches": [
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "unchanged-audit-bindings",
@@ -77766,7 +77778,7 @@
           "source_evidence": [
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "5bbf0ec0251102a957189c846a6615fd9cfa7f59af36c1574edea71f560b908c"
+              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.test.ts",
@@ -77887,7 +77899,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-candidate-acceptance",
           "release-0.5-final-gates",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -78023,7 +78036,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "packages/db/src/schema/in-app-notifications.ts",
@@ -78356,7 +78369,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-candidate-acceptance",
           "release-0.5-final-gates",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -78492,7 +78506,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "packages/db/src/schema/in-app-notifications.ts",
@@ -78855,7 +78869,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-candidate-acceptance",
           "release-0.5-final-gates",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -78991,7 +79006,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "packages/db/src/schema/in-app-notifications.ts",
@@ -79333,7 +79348,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-candidate-acceptance",
           "release-0.5-final-gates",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -79469,7 +79485,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "packages/db/src/schema/in-app-notifications.ts",
@@ -79801,7 +79817,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -79889,7 +79906,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
@@ -80215,7 +80232,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -80303,7 +80321,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
@@ -80651,7 +80669,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -80739,7 +80758,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
@@ -90684,7 +90703,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -90916,7 +90936,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "5bbf0ec0251102a957189c846a6615fd9cfa7f59af36c1574edea71f560b908c"
+              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
             },
             {
               "path": "apps/worker/src/notifications/dead-letter.ts",
@@ -92892,7 +92912,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -92988,7 +93009,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e9911b9d91c35ef2af83aecdae804712778d2a4a6cc3e54b8f437b67a6b80421"
+              "sha256": "40ede0611a4f814c2e8c6877fe92a70ec8f32c72bc3e79982b87b9ea8eb6b91c"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -92996,7 +93017,7 @@
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
-              "sha256": "cf566a039a9c3eacc5302774c75169c0b53c9203e3824eef36242015a303f776"
+              "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.ts",
@@ -93008,7 +93029,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "5bbf0ec0251102a957189c846a6615fd9cfa7f59af36c1574edea71f560b908c"
+              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -93422,7 +93443,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -93510,7 +93532,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
@@ -99912,7 +99934,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -100396,7 +100419,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e9911b9d91c35ef2af83aecdae804712778d2a4a6cc3e54b8f437b67a6b80421"
+              "sha256": "40ede0611a4f814c2e8c6877fe92a70ec8f32c72bc3e79982b87b9ea8eb6b91c"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -101893,7 +101916,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-operational-queue-touch",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "verified-operational-queues-and-worker-exhaustion",
@@ -102033,11 +102057,11 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "79a2d539289a73ec326bd77db7d672c9aa9999257c88e246140e0a767f98d8b6"
+              "sha256": "df70a7727dfd637f9a5a3157a0f390a8338af81e803d933e540084a8c802102b"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "packages/db/src/schema/notification-dead-letter.ts",
@@ -102292,7 +102316,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-operational-queue-touch",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "verified-operational-queues-and-worker-exhaustion",
@@ -102432,11 +102457,11 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "79a2d539289a73ec326bd77db7d672c9aa9999257c88e246140e0a767f98d8b6"
+              "sha256": "df70a7727dfd637f9a5a3157a0f390a8338af81e803d933e540084a8c802102b"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "packages/db/src/schema/notification-dead-letter.ts",
@@ -129253,7 +129278,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -129469,7 +129495,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
@@ -130257,7 +130283,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -130473,7 +130500,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
@@ -131261,7 +131288,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -131477,7 +131505,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
@@ -132265,7 +132293,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -132481,7 +132510,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
@@ -133269,7 +133298,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -133485,7 +133515,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
@@ -134273,7 +134303,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -134489,7 +134520,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
@@ -135361,7 +135392,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -135601,7 +135633,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
@@ -136493,7 +136525,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -136709,7 +136742,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
@@ -137581,7 +137614,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -137821,7 +137855,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
@@ -138713,7 +138747,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -138929,7 +138964,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
@@ -139714,7 +139749,8 @@
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
-          "release-0.6-business-safety-metrics-and-critical-wallet-drift"
+          "release-0.6-business-safety-metrics-and-critical-wallet-drift",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -139890,7 +139926,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
@@ -140489,7 +140525,8 @@
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
-          "release-0.6-business-safety-metrics-and-critical-wallet-drift"
+          "release-0.6-business-safety-metrics-and-critical-wallet-drift",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -140681,7 +140718,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
@@ -141282,7 +141319,8 @@
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
-          "release-0.6-business-safety-metrics-and-critical-wallet-drift"
+          "release-0.6-business-safety-metrics-and-critical-wallet-drift",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -141442,7 +141480,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
@@ -149755,7 +149793,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -149815,7 +149854,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "packages/db/src/schema/idempotency-keys.ts",
@@ -440332,7 +440371,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -440428,7 +440468,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e9911b9d91c35ef2af83aecdae804712778d2a4a6cc3e54b8f437b67a6b80421"
+              "sha256": "40ede0611a4f814c2e8c6877fe92a70ec8f32c72bc3e79982b87b9ea8eb6b91c"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -440436,7 +440476,7 @@
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
-              "sha256": "cf566a039a9c3eacc5302774c75169c0b53c9203e3824eef36242015a303f776"
+              "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.ts",
@@ -440448,7 +440488,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "5bbf0ec0251102a957189c846a6615fd9cfa7f59af36c1574edea71f560b908c"
+              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -440784,7 +440824,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -440880,7 +440921,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e9911b9d91c35ef2af83aecdae804712778d2a4a6cc3e54b8f437b67a6b80421"
+              "sha256": "40ede0611a4f814c2e8c6877fe92a70ec8f32c72bc3e79982b87b9ea8eb6b91c"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -440888,7 +440929,7 @@
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
-              "sha256": "cf566a039a9c3eacc5302774c75169c0b53c9203e3824eef36242015a303f776"
+              "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.ts",
@@ -440900,7 +440941,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "5bbf0ec0251102a957189c846a6615fd9cfa7f59af36c1574edea71f560b908c"
+              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -441235,7 +441276,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -441331,7 +441373,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e9911b9d91c35ef2af83aecdae804712778d2a4a6cc3e54b8f437b67a6b80421"
+              "sha256": "40ede0611a4f814c2e8c6877fe92a70ec8f32c72bc3e79982b87b9ea8eb6b91c"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -441339,7 +441381,7 @@
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
-              "sha256": "cf566a039a9c3eacc5302774c75169c0b53c9203e3824eef36242015a303f776"
+              "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.ts",
@@ -441351,7 +441393,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "5bbf0ec0251102a957189c846a6615fd9cfa7f59af36c1574edea71f560b908c"
+              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -441686,7 +441728,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -441782,7 +441825,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e9911b9d91c35ef2af83aecdae804712778d2a4a6cc3e54b8f437b67a6b80421"
+              "sha256": "40ede0611a4f814c2e8c6877fe92a70ec8f32c72bc3e79982b87b9ea8eb6b91c"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -441790,7 +441833,7 @@
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
-              "sha256": "cf566a039a9c3eacc5302774c75169c0b53c9203e3824eef36242015a303f776"
+              "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.ts",
@@ -441802,7 +441845,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "5bbf0ec0251102a957189c846a6615fd9cfa7f59af36c1574edea71f560b908c"
+              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -442224,7 +442267,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -442348,7 +442392,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e9911b9d91c35ef2af83aecdae804712778d2a4a6cc3e54b8f437b67a6b80421"
+              "sha256": "40ede0611a4f814c2e8c6877fe92a70ec8f32c72bc3e79982b87b9ea8eb6b91c"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -442356,7 +442400,7 @@
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
-              "sha256": "cf566a039a9c3eacc5302774c75169c0b53c9203e3824eef36242015a303f776"
+              "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.ts",
@@ -442368,7 +442412,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "5bbf0ec0251102a957189c846a6615fd9cfa7f59af36c1574edea71f560b908c"
+              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -442777,7 +442821,8 @@
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -442897,11 +442942,11 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "79a2d539289a73ec326bd77db7d672c9aa9999257c88e246140e0a767f98d8b6"
+              "sha256": "df70a7727dfd637f9a5a3157a0f390a8338af81e803d933e540084a8c802102b"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
@@ -443178,7 +443223,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -443270,7 +443316,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
@@ -443398,7 +443444,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "5bbf0ec0251102a957189c846a6615fd9cfa7f59af36c1574edea71f560b908c"
+              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
@@ -443727,7 +443773,8 @@
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -443831,7 +443878,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
@@ -444103,7 +444150,8 @@
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -444207,7 +444255,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
@@ -444479,7 +444527,8 @@
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -444583,7 +444632,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
@@ -485303,7 +485352,8 @@
           "release-0.6-browser-and-edge-privacy",
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
-          "release-0.6-business-safety-metrics-and-critical-wallet-drift"
+          "release-0.6-business-safety-metrics-and-critical-wallet-drift",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "verified-private-monitoring",
@@ -485323,7 +485373,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "5bbf0ec0251102a957189c846a6615fd9cfa7f59af36c1574edea71f560b908c"
+              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
@@ -485485,20 +485535,84 @@
         "story": "06-security-testing-observability.md#spec-ec4f15075ffa"
       },
       "requirement": "| T-06.14.01.04 | Instrument queue metrics: queue depth, oldest-unprocessed age, processing time, failure rate, dead-letter count | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-outbox-worker-processing-metrics"
+        ],
+        "current_acceptance": {
+          "kind": "verified-outbox-queue-and-worker-processing-metrics",
+          "base_commit": "5bbb37f0b002c333256c70a34ad40cb903ba5278",
+          "source_evidence": [
+            {
+              "path": "apps/worker/src/notifications/worker-metrics.ts",
+              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-runner.ts",
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-runner.test.ts",
+              "sha256": "df70a7727dfd637f9a5a3157a0f390a8338af81e803d933e540084a8c802102b"
+            },
+            {
+              "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
+              "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
+            },
+            {
+              "path": "apps/worker/src/operations/alerts.integration.test.ts",
+              "sha256": "2173dc5ab7655d24aa874c1420e509df3584fbc7c35cc08ad1daf9265da42055"
+            },
+            {
+              "path": "apps/worker/src/main-process.integration.test.ts",
+              "sha256": "40ede0611a4f814c2e8c6877fe92a70ec8f32c72bc3e79982b87b9ea8eb6b91c"
+            },
+            {
+              "path": "docs/operations/notification-backlog.md",
+              "sha256": "6271a2975ef9882d1738632d8d1782759f76c06ba00d381e913a1041eb5bc163"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "2cd8d39043d3a544564bd61125812536f6249c5bffd75e770f46ae13fa2df7ad"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-lease.ts",
+              "sha256": "5bb8a2abf2e34656aa0c8e2c0c183d1ae61eb801435623a08ceeee0bfb6813e7"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-reader.ts",
+              "sha256": "7c85d1527191627faf3ada68737d4e69021ea2d5e8b03bfc5ab4b1db46046129"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-reader.test.ts",
+              "sha256": "12052b0427d329584d7c248133f58ec228df3761a4111db7cedb412b97af775b"
+            },
+            {
+              "path": "apps/worker/src/notifications/worker-metrics.test.ts",
+              "sha256": "b95be39bbfec4d25ddf658fbd6da4f84550950dec01d29969dae2a1d16e8e2d1"
+            },
+            {
+              "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
+              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+            }
+          ],
+          "checks": [
+            "The notification worker exposes queue depth, oldest pending and eligible ages, delivery-attempt failure rate, open dead-letter count, processing duration/count, expired active claims and cumulative committed channel retries on the existing private scrape.",
+            "34 related worker unit cases passed. One processing observation is emitted per leased row and only a committed scheduled retry increments the retry counter. An exhausted attempt retains its existing dead-letter behavior.",
+            "23 PostgreSQL receiver and provider cases passed, including exclusion of active and terminal rows from expired leases. Two selected compiled worker health/metrics cases passed, and the one selected compiled HTTP replay case still used one occurrence key and produced one controlled provider acceptance.",
+            "Worker build, targeted lint and formatting passed. The source evidence covers the Worker/Outbox delivery queue and its existing channel retry boundaries."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.14.01.05",
@@ -485561,7 +485675,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "source-bound-financial-gauges-and-critical-wallet-alert",
@@ -485569,7 +485684,7 @@
           "source_evidence": [
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e9911b9d91c35ef2af83aecdae804712778d2a4a6cc3e54b8f437b67a6b80421"
+              "sha256": "40ede0611a4f814c2e8c6877fe92a70ec8f32c72bc3e79982b87b9ea8eb6b91c"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -485577,7 +485692,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "d5c32a647f3b4d2a3457031855e08908ea978bad25ba2ae827058389a5d7e4c9"
+              "sha256": "2173dc5ab7655d24aa874c1420e509df3584fbc7c35cc08ad1daf9265da42055"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
@@ -485609,7 +485724,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "5bbf0ec0251102a957189c846a6615fd9cfa7f59af36c1574edea71f560b908c"
+              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
             },
             {
               "path": "apps/worker/src/wallet/reconciliation-scanner.ts",
@@ -485656,20 +485771,84 @@
         "story": "06-security-testing-observability.md#spec-ec4f15075ffa"
       },
       "requirement": "| T-06.14.01.07 | Instrument worker metrics: job processing rate, lease expiry, retry count, dead-letter count | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-outbox-worker-processing-metrics"
+        ],
+        "current_acceptance": {
+          "kind": "verified-outbox-queue-and-worker-processing-metrics",
+          "base_commit": "5bbb37f0b002c333256c70a34ad40cb903ba5278",
+          "source_evidence": [
+            {
+              "path": "apps/worker/src/notifications/worker-metrics.ts",
+              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-runner.ts",
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-runner.test.ts",
+              "sha256": "df70a7727dfd637f9a5a3157a0f390a8338af81e803d933e540084a8c802102b"
+            },
+            {
+              "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
+              "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
+            },
+            {
+              "path": "apps/worker/src/operations/alerts.integration.test.ts",
+              "sha256": "2173dc5ab7655d24aa874c1420e509df3584fbc7c35cc08ad1daf9265da42055"
+            },
+            {
+              "path": "apps/worker/src/main-process.integration.test.ts",
+              "sha256": "40ede0611a4f814c2e8c6877fe92a70ec8f32c72bc3e79982b87b9ea8eb6b91c"
+            },
+            {
+              "path": "docs/operations/notification-backlog.md",
+              "sha256": "6271a2975ef9882d1738632d8d1782759f76c06ba00d381e913a1041eb5bc163"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "2cd8d39043d3a544564bd61125812536f6249c5bffd75e770f46ae13fa2df7ad"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-lease.ts",
+              "sha256": "5bb8a2abf2e34656aa0c8e2c0c183d1ae61eb801435623a08ceeee0bfb6813e7"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-reader.ts",
+              "sha256": "7c85d1527191627faf3ada68737d4e69021ea2d5e8b03bfc5ab4b1db46046129"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-reader.test.ts",
+              "sha256": "12052b0427d329584d7c248133f58ec228df3761a4111db7cedb412b97af775b"
+            },
+            {
+              "path": "apps/worker/src/notifications/worker-metrics.test.ts",
+              "sha256": "b95be39bbfec4d25ddf658fbd6da4f84550950dec01d29969dae2a1d16e8e2d1"
+            },
+            {
+              "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
+              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+            }
+          ],
+          "checks": [
+            "The notification worker exposes queue depth, oldest pending and eligible ages, delivery-attempt failure rate, open dead-letter count, processing duration/count, expired active claims and cumulative committed channel retries on the existing private scrape.",
+            "34 related worker unit cases passed. One processing observation is emitted per leased row and only a committed scheduled retry increments the retry counter. An exhausted attempt retains its existing dead-letter behavior.",
+            "23 PostgreSQL receiver and provider cases passed, including exclusion of active and terminal rows from expired leases. Two selected compiled worker health/metrics cases passed, and the one selected compiled HTTP replay case still used one occurrence key and produced one controlled provider acceptance.",
+            "Worker build, targeted lint and formatting passed. The source evidence covers the Worker/Outbox delivery queue and its existing channel retry boundaries."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.14.01.08",
@@ -486250,7 +486429,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "source-bound-deployed-alert-config-and-immutable-receipts",
@@ -486274,7 +486454,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "d5c32a647f3b4d2a3457031855e08908ea978bad25ba2ae827058389a5d7e4c9"
+              "sha256": "2173dc5ab7655d24aa874c1420e509df3584fbc7c35cc08ad1daf9265da42055"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -486541,7 +486721,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "source-bound-refund-overdue-alert-and-native-worker",
@@ -486549,7 +486730,7 @@
           "source_evidence": [
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e9911b9d91c35ef2af83aecdae804712778d2a4a6cc3e54b8f437b67a6b80421"
+              "sha256": "40ede0611a4f814c2e8c6877fe92a70ec8f32c72bc3e79982b87b9ea8eb6b91c"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -486557,7 +486738,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "d5c32a647f3b4d2a3457031855e08908ea978bad25ba2ae827058389a5d7e4c9"
+              "sha256": "2173dc5ab7655d24aa874c1420e509df3584fbc7c35cc08ad1daf9265da42055"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
@@ -486581,7 +486762,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "5bbf0ec0251102a957189c846a6615fd9cfa7f59af36c1574edea71f560b908c"
+              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -486652,7 +486833,8 @@
         "batches": [
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "source-bound-financial-gauges-and-critical-wallet-alert",
@@ -486660,7 +486842,7 @@
           "source_evidence": [
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e9911b9d91c35ef2af83aecdae804712778d2a4a6cc3e54b8f437b67a6b80421"
+              "sha256": "40ede0611a4f814c2e8c6877fe92a70ec8f32c72bc3e79982b87b9ea8eb6b91c"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -486668,7 +486850,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "d5c32a647f3b4d2a3457031855e08908ea978bad25ba2ae827058389a5d7e4c9"
+              "sha256": "2173dc5ab7655d24aa874c1420e509df3584fbc7c35cc08ad1daf9265da42055"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
@@ -486700,7 +486882,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "5bbf0ec0251102a957189c846a6615fd9cfa7f59af36c1574edea71f560b908c"
+              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
             },
             {
               "path": "apps/worker/src/wallet/reconciliation-scanner.ts",
@@ -486774,7 +486956,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "source-bound-backlog-metrics-alert-rules-and-receipts",
@@ -486786,11 +486969,11 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "5bbf0ec0251102a957189c846a6615fd9cfa7f59af36c1574edea71f560b908c"
+              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "d5c32a647f3b4d2a3457031855e08908ea978bad25ba2ae827058389a5d7e4c9"
+              "sha256": "2173dc5ab7655d24aa874c1420e509df3584fbc7c35cc08ad1daf9265da42055"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
@@ -486826,7 +487009,7 @@
             },
             {
               "path": "docs/operations/notification-backlog.md",
-              "sha256": "6be32ae993b1fff34ddd0cd230a0c1f7294943ed4e96bfa4f639b1d3a3a529c6"
+              "sha256": "6271a2975ef9882d1738632d8d1782759f76c06ba00d381e913a1041eb5bc163"
             },
             {
               "path": "apps/worker/src/notifications/outbox-reader.ts",
@@ -486874,7 +487057,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "verified-payment-idempotency-conflict-p1",
@@ -486914,7 +487098,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "d5c32a647f3b4d2a3457031855e08908ea978bad25ba2ae827058389a5d7e4c9"
+              "sha256": "2173dc5ab7655d24aa874c1420e509df3584fbc7c35cc08ad1daf9265da42055"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -486989,7 +487173,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "verified-signed-payment-anomaly-rules-and-isolated-receipts",
@@ -487021,11 +487206,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "d5c32a647f3b4d2a3457031855e08908ea978bad25ba2ae827058389a5d7e4c9"
+              "sha256": "2173dc5ab7655d24aa874c1420e509df3584fbc7c35cc08ad1daf9265da42055"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
-              "sha256": "cf566a039a9c3eacc5302774c75169c0b53c9203e3824eef36242015a303f776"
+              "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -487061,7 +487246,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "5bbf0ec0251102a957189c846a6615fd9cfa7f59af36c1574edea71f560b908c"
+              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
@@ -487108,7 +487293,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "verified-confirmed-date-range-replay-and-provider-idempotency",
@@ -487144,7 +487330,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/outbox-reader.ts",
@@ -487194,7 +487380,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "verified-confirmed-date-range-replay-and-provider-idempotency",
@@ -487230,7 +487417,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/outbox-reader.ts",
@@ -724070,7 +724257,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -724202,7 +724390,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e9911b9d91c35ef2af83aecdae804712778d2a4a6cc3e54b8f437b67a6b80421"
+              "sha256": "40ede0611a4f814c2e8c6877fe92a70ec8f32c72bc3e79982b87b9ea8eb6b91c"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -724785,7 +724973,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -724917,7 +725106,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e9911b9d91c35ef2af83aecdae804712778d2a4a6cc3e54b8f437b67a6b80421"
+              "sha256": "40ede0611a4f814c2e8c6877fe92a70ec8f32c72bc3e79982b87b9ea8eb6b91c"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -729052,7 +729241,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
@@ -732693,7 +732882,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-outbox-worker-processing-metrics"
         ]
       }
     },
@@ -739326,7 +739516,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e9911b9d91c35ef2af83aecdae804712778d2a4a6cc3e54b8f437b67a6b80421"
+              "sha256": "40ede0611a4f814c2e8c6877fe92a70ec8f32c72bc3e79982b87b9ea8eb6b91c"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -739402,11 +739592,11 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "79a2d539289a73ec326bd77db7d672c9aa9999257c88e246140e0a767f98d8b6"
+              "sha256": "df70a7727dfd637f9a5a3157a0f390a8338af81e803d933e540084a8c802102b"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/outbox-writer.test.ts",
@@ -739446,7 +739636,7 @@
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
-              "sha256": "cf566a039a9c3eacc5302774c75169c0b53c9203e3824eef36242015a303f776"
+              "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.ts",
@@ -739470,7 +739660,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "5bbf0ec0251102a957189c846a6615fd9cfa7f59af36c1574edea71f560b908c"
+              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
@@ -741287,7 +741477,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -743256,7 +743447,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e9911b9d91c35ef2af83aecdae804712778d2a4a6cc3e54b8f437b67a6b80421"
+              "sha256": "40ede0611a4f814c2e8c6877fe92a70ec8f32c72bc3e79982b87b9ea8eb6b91c"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -743332,11 +743523,11 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "79a2d539289a73ec326bd77db7d672c9aa9999257c88e246140e0a767f98d8b6"
+              "sha256": "df70a7727dfd637f9a5a3157a0f390a8338af81e803d933e540084a8c802102b"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
             },
             {
               "path": "apps/worker/src/notifications/outbox-writer.test.ts",
@@ -743376,7 +743567,7 @@
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
-              "sha256": "cf566a039a9c3eacc5302774c75169c0b53c9203e3824eef36242015a303f776"
+              "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.ts",
@@ -743400,7 +743591,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "5bbf0ec0251102a957189c846a6615fd9cfa7f59af36c1574edea71f560b908c"
+              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
@@ -745123,7 +745314,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -749151,7 +749343,8 @@
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-payment-idempotency-conflict-alert",
-          "release-0.6-security-scenario-and-signed-fixture-reconciliation"
+          "release-0.6-security-scenario-and-signed-fixture-reconciliation",
+          "release-0.6-outbox-worker-processing-metrics"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -844098,6 +844291,142 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/security-scenario-matrix",
       "source_scope_proof": "security-scenario-source-proof.json",
       "source_scope_proof_sha256": "0a39ee9e0ba92337b2590845773cc6cae615ac59d9ba90f746ad07ab26060ddb"
+    },
+    "release-0.6-outbox-worker-processing-metrics": {
+      "batch": "release-0.6-outbox-worker-processing-metrics",
+      "base_commit": "5bbb37f0b002c333256c70a34ad40cb903ba5278",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-03.03.02",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-03.03.05",
+        "02-auth-users-admin.md#T-05.04.02",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.06.02",
+        "02-auth-users-admin.md#T-09.06.03",
+        "02-auth-users-admin.md#T-09.09.01",
+        "02-auth-users-admin.md#T-09.09.02",
+        "02-auth-users-admin.md#T-09.09.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06",
+        "04-invoices-wallet-contracts.md#T-04.1.05.02",
+        "04-invoices-wallet-contracts.md#T-04.1.05.03",
+        "04-invoices-wallet-contracts.md#T-04.1.05.04",
+        "04-invoices-wallet-contracts.md#T-04.2.04.03",
+        "05-notifications-documents-ai.md#T-05.01.01",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.03",
+        "05-notifications-documents-ai.md#T-05.01.04",
+        "05-notifications-documents-ai.md#T-05.01.05",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.01.07",
+        "05-notifications-documents-ai.md#T-05.02.01",
+        "05-notifications-documents-ai.md#T-05.02.02",
+        "05-notifications-documents-ai.md#T-05.02.03",
+        "05-notifications-documents-ai.md#T-05.02.04",
+        "05-notifications-documents-ai.md#T-05.03.01",
+        "05-notifications-documents-ai.md#T-05.03.02",
+        "05-notifications-documents-ai.md#T-05.03.03",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.07.01",
+        "05-notifications-documents-ai.md#T-05.07.02",
+        "05-notifications-documents-ai.md#T-05.07.03",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "05-notifications-documents-ai.md#T-05.07.05",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "06-security-testing-observability.md#T-06.14.01.01",
+        "06-security-testing-observability.md#T-06.14.01.04",
+        "06-security-testing-observability.md#T-06.14.01.06",
+        "06-security-testing-observability.md#T-06.14.01.07",
+        "06-security-testing-observability.md#T-06.15.01.06",
+        "06-security-testing-observability.md#T-06.15.03.01",
+        "06-security-testing-observability.md#T-06.15.03.02",
+        "06-security-testing-observability.md#T-06.15.03.03",
+        "06-security-testing-observability.md#T-06.15.03.04",
+        "06-security-testing-observability.md#T-06.15.03.05",
+        "06-security-testing-observability.md#T-06.15.03.06",
+        "06-security-testing-observability.md#T-06.15.03.07",
+        "07-ui-ux-design.md#T-07.30.02.15",
+        "07-ui-ux-design.md#T-07.30.02.17",
+        "release-readiness#R-02.01",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/notifications/worker-metrics.ts",
+          "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-runner.ts",
+          "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-runner.test.ts",
+          "sha256": "df70a7727dfd637f9a5a3157a0f390a8338af81e803d933e540084a8c802102b"
+        },
+        {
+          "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
+          "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.integration.test.ts",
+          "sha256": "2173dc5ab7655d24aa874c1420e509df3584fbc7c35cc08ad1daf9265da42055"
+        },
+        {
+          "path": "apps/worker/src/main-process.integration.test.ts",
+          "sha256": "40ede0611a4f814c2e8c6877fe92a70ec8f32c72bc3e79982b87b9ea8eb6b91c"
+        },
+        {
+          "path": "docs/operations/notification-backlog.md",
+          "sha256": "6271a2975ef9882d1738632d8d1782759f76c06ba00d381e913a1041eb5bc163"
+        },
+        {
+          "path": "apps/worker/src/main.ts",
+          "sha256": "2cd8d39043d3a544564bd61125812536f6249c5bffd75e770f46ae13fa2df7ad"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-lease.ts",
+          "sha256": "5bb8a2abf2e34656aa0c8e2c0c183d1ae61eb801435623a08ceeee0bfb6813e7"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-reader.ts",
+          "sha256": "7c85d1527191627faf3ada68737d4e69021ea2d5e8b03bfc5ab4b1db46046129"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-reader.test.ts",
+          "sha256": "12052b0427d329584d7c248133f58ec228df3761a4111db7cedb412b97af775b"
+        },
+        {
+          "path": "apps/worker/src/notifications/worker-metrics.test.ts",
+          "sha256": "b95be39bbfec4d25ddf658fbd6da4f84550950dec01d29969dae2a1d16e8e2d1"
+        },
+        {
+          "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
+          "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+        }
+      ],
+      "checks": [
+        "The notification worker exposes queue depth, oldest pending and eligible ages, delivery-attempt failure rate, open dead-letter count, processing duration/count, expired active claims and cumulative committed channel retries on the existing private scrape.",
+        "34 related worker unit cases passed. One processing observation is emitted per leased row and only a committed scheduled retry increments the retry counter. An exhausted attempt retains its existing dead-letter behavior.",
+        "23 PostgreSQL receiver and provider cases passed, including exclusion of active and terminal rows from expired leases. Two selected compiled worker health/metrics cases passed, and the one selected compiled HTTP replay case still used one occurrence key and produced one controlled provider acceptance.",
+        "Worker build, targeted lint and formatting passed. The source evidence covers the Worker/Outbox delivery queue and its existing channel retry boundaries."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/outbox-worker-metrics",
+      "source_scope_proof": "outbox-worker-metrics-source-proof.json",
+      "source_scope_proof_sha256": "4e4f90d661f4b7558f16f3af50df1fd9e319a0f14e6add4204f9e07c586b7fa2"
     }
   },
   "historical_improvements": [

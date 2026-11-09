@@ -1,6 +1,11 @@
 import { createEmailSender, prepareSmsMessage } from '@barghsa/shared/notification-delivery';
 import { afterEach, describe, it, expect, vi } from 'vitest';
 import { runOutboxPoll, sanitizeLastError } from './outbox-runner.js';
+import {
+  exportWorkerMetrics,
+  notificationsOutboxProcessing,
+  notificationsScheduledRetries,
+} from './worker-metrics.js';
 import type {
   INotificationTransport,
   NotificationSendPayload,
@@ -139,6 +144,8 @@ describe('runOutboxPoll', () => {
   });
 
   it('marks only the failing job and returns the row to queued for retry', async () => {
+    notificationsOutboxProcessing.reset();
+    notificationsScheduledRetries.reset();
     const { pool, updates } = makePool();
     vi.spyOn(await import('./outbox-reader.js'), 'leaseOutbox').mockResolvedValue([baseRow]);
 
@@ -170,6 +177,9 @@ describe('runOutboxPoll', () => {
       (u) => u.sql.includes('UPDATE notification_outbox') && u.params[1] === 'scheduled'
     );
     expect(outboxUpdate).toBeTruthy();
+    const metrics = await exportWorkerMetrics();
+    expect(metrics).toContain('notifications_outbox_processing_seconds_count 1\n');
+    expect(metrics).toContain('notifications_scheduled_retries_total 1\n');
   });
 
   it('dead-letters a permanent SMS provider rejection after one attempt', async () => {
@@ -234,6 +244,7 @@ describe('runOutboxPoll', () => {
   });
 
   it('marks a row failed permanently and dead-letters its jobs when max attempts are exhausted', async () => {
+    notificationsScheduledRetries.reset();
     const { pool, updates } = makePool();
     vi.spyOn(await import('./outbox-reader.js'), 'leaseOutbox').mockResolvedValue([
       { ...baseRow, attempts: 4, maxAttempts: 5 },
@@ -258,6 +269,7 @@ describe('runOutboxPoll', () => {
     expect(emailJob!.params[1]).toBe('dead_letter');
     // No further retry scheduled after exhaustion: run_after is null.
     expect(emailJob!.params[6]).toBeNull();
+    expect(await exportWorkerMetrics()).toContain('notifications_scheduled_retries_total 0\n');
   });
 
   it('skips an external channel without marketing opt-in via the availability gate (T-05.05.02)', async () => {

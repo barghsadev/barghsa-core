@@ -26,7 +26,11 @@ import { nextRetryDelayMs } from './retry-schedule.js';
 import { writeDeliveryLog, classifyDeliveryError } from './delivery-log.js';
 import { writeDeadLetter } from './dead-letter.js';
 import { sanitizeError } from './error-redact.js';
-import { recordDeliveryAttempt } from './worker-metrics.js';
+import {
+  notificationsOutboxProcessing,
+  notificationsScheduledRetries,
+  recordDeliveryAttempt,
+} from './worker-metrics.js';
 import { DeliveryOutcomeUnknown, readDeliveryReceipt } from './send-receipt.js';
 import { type DeliveryWindowConfig } from './delivery-window.js';
 import {
@@ -105,6 +109,7 @@ export async function runOutboxPoll(
 
   const settled = await Promise.allSettled(
     rows.map(async (row) => {
+      const startedAt = performance.now();
       let lease: Awaited<ReturnType<typeof startOutboxLease>> | undefined;
       let externalOutcomes: DispatchOutcome[] = [];
       try {
@@ -244,6 +249,7 @@ export async function runOutboxPoll(
         // A stale claimant never changes current jobs, logs, or aggregate state.
         result.failed++;
       } finally {
+        notificationsOutboxProcessing.observe((performance.now() - startedAt) / 1000);
         await lease?.stop();
       }
     })
@@ -373,6 +379,7 @@ async function persistOutcomes(
   // Minimal pool-like surface so the shared writers route through the tx.
   const qpool: QueryPool = { query: q };
   let localOutcomes: DispatchOutcome[] = [];
+  let scheduledRetries = 0;
   try {
     await assertOutboxClaim(qpool, row);
     if (localTransports) {
@@ -422,6 +429,7 @@ async function persistOutcomes(
           runAfter,
         ]
       );
+      if (!ok && runAfter !== null && jobUpdate.rows.length > 0) scheduledRetries++;
       // A job that exhausted its retry budget is copied to the dead-letter queue
       // (T-05.01.06) so the admin panel can triage it (Retry / Resolve / Dismiss).
       // Same transaction as the job status update, so a crash cannot leave a
@@ -471,6 +479,7 @@ async function persistOutcomes(
 
     await tx.commit();
     tx.release();
+    if (scheduledRetries > 0) notificationsScheduledRetries.inc(scheduledRetries);
     for (const outcome of localOutcomes)
       recordDeliveryAttempt(outcome.channel, outcome.result.status);
     return aggregate;

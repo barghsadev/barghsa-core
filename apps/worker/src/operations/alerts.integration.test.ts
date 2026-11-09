@@ -203,7 +203,7 @@ it('retains the P2 credit priority in the authenticated receipt and private admi
   );
 });
 
-it('measures due backlog separately from intentionally scheduled and terminal rows', async () => {
+it('measures due backlog and expired leases separately from future and terminal work', async () => {
   const client = await ctx.pool.connect();
   try {
     await client.query('BEGIN');
@@ -216,10 +216,17 @@ it('measures due backlog separately from intentionally scheduled and terminal ro
         ('ops-admin','fixture.backlog',ARRAY['in_app'],'sending','backlog-sending',NOW()-INTERVAL '20 minutes',NOW()-INTERVAL '5 minutes'),
         ('ops-admin','fixture.backlog',ARRAY['in_app'],'delivered','backlog-done',NOW()-INTERVAL '3 days',NULL)
     `);
+    await client.query(`
+      UPDATE notification_outbox SET lease_token=gen_random_uuid()::text,
+        locked_until=CASE WHEN idempotency_key='backlog-due'
+          THEN NOW()+INTERVAL '1 minute' ELSE NOW()-INTERVAL '1 minute' END
+      WHERE idempotency_key IN ('backlog-due','backlog-sending','backlog-done')
+    `);
     await collectNotificationGauges(client);
     const before = await exportWorkerMetrics();
     expect(before).toContain('notifications_outbox_age_seconds 172800\n');
     expect(before).toContain('notifications_eligible_outbox_age_seconds 660\n');
+    expect(before).toContain('notifications_outbox_expired_leases 1\n');
 
     await client.query(`
       UPDATE notification_outbox SET status='delivered'
@@ -234,7 +241,9 @@ it('measures due backlog separately from intentionally scheduled and terminal ro
       "UPDATE notification_outbox SET status='delivered' WHERE idempotency_key='backlog-sending'"
     );
     await collectNotificationGauges(client);
-    expect(await exportWorkerMetrics()).toContain('notifications_eligible_outbox_age_seconds 0\n');
+    const after = await exportWorkerMetrics();
+    expect(after).toContain('notifications_eligible_outbox_age_seconds 0\n');
+    expect(after).toContain('notifications_outbox_expired_leases 0\n');
   } finally {
     await client.query('ROLLBACK');
     client.release();

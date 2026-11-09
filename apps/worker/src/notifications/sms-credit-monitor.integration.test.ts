@@ -28,8 +28,9 @@ beforeAll(async () => {
   );
   for (const statement of sql.split('--> statement-breakpoint'))
     await ctx.pool.query(statement.trim());
-  await ctx.pool
-    .query(`CREATE TABLE notification_outbox (created_at timestamptz, scheduled_for timestamptz, status text);
+  await ctx.pool.query(`CREATE TABLE notification_outbox (
+      created_at timestamptz, scheduled_for timestamptz, lease_token text, locked_until timestamptz, status text
+    );
     CREATE TABLE notification_dead_letter (status text);
     CREATE TABLE email_provider_configs (id uuid, degraded boolean, status text NOT NULL DEFAULT 'active', degraded_reason text)`);
 }, 40_000);

@@ -1,4 +1,4 @@
-import { Registry, Counter, Gauge } from 'prom-client';
+import { Registry, Counter, Gauge, Histogram } from 'prom-client';
 import type { NotificationChannel } from '@barghsa/shared/notifications';
 
 /**
@@ -18,6 +18,9 @@ import type { NotificationChannel } from '@barghsa/shared/notifications';
  *       waiting to be dispatched (queued + scheduled).
  *   - `notifications_dead_letter_count`         — gauge: number of `open`
  *       dead-letter rows awaiting admin triage.
+ *   - `notifications_outbox_expired_leases`     — pending rows with an expired claim.
+ *   - `notifications_outbox_processing_seconds` — duration of each leased row's processing.
+ *   - `notifications_scheduled_retries_total`   — channel retries scheduled by committed outcomes.
  *
  * The worker serves these at `GET /metrics` on its health port (WORKER_PORT,
  * default 9090) — see `main.ts`. Gauges are recomputed from the database on
@@ -64,6 +67,25 @@ export const notificationsDeliveryAttempts = new Counter({
   registers: [registry],
 });
 
+export const notificationsExpiredLeases = new Gauge({
+  name: 'notifications_outbox_expired_leases',
+  help: 'Number of pending notification outbox rows with an expired lease',
+  registers: [registry],
+});
+
+export const notificationsOutboxProcessing = new Histogram({
+  name: 'notifications_outbox_processing_seconds',
+  help: 'Time spent processing each leased notification outbox row',
+  buckets: [0.01, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 15, 60],
+  registers: [registry],
+});
+
+export const notificationsScheduledRetries = new Counter({
+  name: 'notifications_scheduled_retries_total',
+  help: 'Notification channel retries scheduled by committed delivery outcomes',
+  registers: [registry],
+});
+
 export const providerEmailHealth = new Gauge({
   name: 'provider_email_health',
   help: 'Email provider circuit breaker health: 1=healthy, 0=tripped/degraded',
@@ -98,7 +120,7 @@ export function recordDeliveryAttempt(
 }
 
 /**
- * Recompute the three DB-derived gauges against the given pool. Called on each
+ * Recompute DB-derived gauges against the given pool. Called on each
  * `/metrics` scrape so values reflect live database state.
  */
 export async function collectNotificationGauges(
@@ -111,12 +133,14 @@ export async function collectNotificationGauges(
             COALESCE(MAX(EXTRACT(EPOCH FROM (
               NOW() - GREATEST(created_at, COALESCE(scheduled_for, created_at))
             ))) FILTER (WHERE created_at <= NOW() AND (scheduled_for IS NULL OR scheduled_for <= NOW())), 0)
-              AS eligible_age
+              AS eligible_age,
+            COUNT(*) FILTER (WHERE lease_token IS NOT NULL AND locked_until < NOW()) AS expired_leases
        FROM notification_outbox
       WHERE status IN ('queued', 'scheduled', 'sending')`
   );
   notificationsOutboxAge.set(Number(ageRes.rows[0]?.age ?? 0));
   notificationsEligibleOutboxAge.set(Number(ageRes.rows[0]?.eligible_age ?? 0));
+  notificationsExpiredLeases.set(Number(ageRes.rows[0]?.expired_leases ?? 0));
 
   // Backlog awaiting dispatch: queued + scheduled rows.
   const depthRes = await pool.query(
