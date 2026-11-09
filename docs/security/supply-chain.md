@@ -14,6 +14,10 @@ Triage medium findings within the current sprint. Record the affected component,
 
 The release specification allows MIT, Apache-2.0, ISC, BSD-2-Clause and BSD-3-Clause. Resolve compound expressions against that list: DOMPurify offers Apache-2.0 as an alternative. A package manifest alone does not establish how its license obligations are met. Review the exact shipped version and retain any required notices.
 
+CI inventories the packages in both browser builds and the four immutable runtime images. The license check verifies both shells' font files and notice bytes, including the Apache notice used for the pinned DOMPurify version. An unrecognized compound expression or missing license is listed for review. The report is part of the runtime image scan artifact.
+
+Ordinary direct-main pushes publish pending decisions while the license review is open. Pull requests and manually dispatched CI runs fail on any unapproved component. Run that strict check for the final release candidate before recording acceptance. Each exception in `deploy/licenses/release-approvals.json` requires an exact package URL, inventory scope and observed license set, plus the reviewer, approval reference and conditions. Confirm that every recorded condition is met by the distributed images, including source availability where applicable.
+
 The v0.5 staging image and the built web shells identified the following concrete exceptions to review before launch:
 
 | Shipped dependency                                                    | Declared license                          | Use                                                                            |

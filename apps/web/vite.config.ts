@@ -2,8 +2,8 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
-import { resolve } from 'path';
-import { readFileSync } from 'node:fs';
+import { dirname, resolve } from 'path';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { execFileSync } from 'node:child_process';
 import { isAuthEntryPath } from './entry-routes.js';
@@ -36,15 +36,20 @@ function releaseMetadataPlugin() {
   } satisfies import('vite').Plugin;
 }
 
-function fontNoticesPlugin(): import('vite').Plugin {
+function distributionNoticesPlugin(): import('vite').Plugin {
   const uiRoot = resolve(__dirname, '../../packages/ui');
   const requireFromUi = createRequire(resolve(uiRoot, 'package.json'));
+  const requireFromWeb = createRequire(resolve(__dirname, 'package.json'));
   return {
-    name: 'font-notices',
+    name: 'distribution-notices',
     generateBundle() {
       for (const [name, path] of [
         ['Vazirmatn-OFL.txt', resolve(uiRoot, 'src/fonts/vazirmatn-OFL.txt')],
         ['Inter-OFL.txt', requireFromUi.resolve('@fontsource-variable/inter/LICENSE')],
+        [
+          'DOMPurify-Apache-2.0.txt',
+          resolve(dirname(requireFromWeb.resolve('dompurify')), '../LICENSE'),
+        ],
       ]) {
         this.emitFile({
           type: 'asset',
@@ -52,6 +57,61 @@ function fontNoticesPlugin(): import('vite').Plugin {
           source: readFileSync(path),
         });
       }
+    },
+  };
+}
+
+function browserLicenseInventory(authEntry: boolean): import('vite').Plugin {
+  return {
+    name: 'browser-license-inventory',
+    writeBundle(_options, bundle) {
+      const output = process.env['BARGHSA_LICENSE_INVENTORY_DIR'];
+      if (!output) return;
+      const packages = new Map<string, { name: string; version: string; license: string | null }>();
+      const roots = new Set<string>();
+      const collect = (rawId: string) => {
+        const id = rawId.replace(/^\0+/, '').replaceAll('\\', '/').split('?')[0]!;
+        const marker = '/node_modules/';
+        const index = id.lastIndexOf(marker);
+        if (index === -1) return;
+        const start = index + marker.length;
+        const [namespace, scopedName] = id.slice(start).split('/');
+        const name = namespace?.startsWith('@') ? `${namespace}/${scopedName}` : namespace;
+        if (!name) throw new Error('Missing bundled package name');
+        const root = id.slice(0, start + name.length);
+        if (roots.has(root)) return;
+        const metadata = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8')) as {
+          name?: unknown;
+          version?: unknown;
+          license?: unknown;
+        };
+        if (typeof metadata.name !== 'string' || typeof metadata.version !== 'string') {
+          throw new Error(`Incomplete metadata for bundled package ${name}`);
+        }
+        roots.add(root);
+        const entry = {
+          name: metadata.name,
+          version: metadata.version,
+          license: typeof metadata.license === 'string' ? metadata.license : null,
+        };
+        packages.set(JSON.stringify(entry), entry);
+      };
+      for (const item of Object.values(bundle)) {
+        if (item.type === 'asset') {
+          for (const path of item.originalFileNames) collect(path);
+        } else {
+          for (const [id, module] of Object.entries(item.modules)) {
+            if (module.renderedLength || /\.css(?:\?|$)/.test(id)) collect(id);
+          }
+        }
+      }
+      if (packages.size === 0) throw new Error('Browser package inventory is empty');
+      mkdirSync(output, { recursive: true });
+      const shell = authEntry ? 'auth' : 'app';
+      writeFileSync(
+        resolve(output, `${shell}.json`),
+        JSON.stringify({ shell, packages: [...packages.values()] }, null, 2) + '\n'
+      );
     },
   };
 }
@@ -117,7 +177,8 @@ export default defineConfig(({ mode }) => {
       tailwindcss(),
       immutableAssetsPlugin(),
       releaseMetadataPlugin(),
-      fontNoticesPlugin(),
+      distributionNoticesPlugin(),
+      browserLicenseInventory(authEntry),
     ],
     // CDN base URL — set CDN_URL for production builds so assets resolve via CDN
     base: authEntry ? base.replace(/\/?$/, '/') + 'auth/' : base,

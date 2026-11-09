@@ -5,6 +5,7 @@ on:
   push:
     # Seed a preflight branch at current main, then push the exact candidate for required checks.
     branches: [main, 'codex/preflight/**']
+  workflow_dispatch:
 
 env:
   NODE_VERSION: '24'
@@ -84,6 +85,16 @@ jobs:
           bash scripts/check-runtime-images.sh "$RUNNER_TEMP/runtime-image-scan" \
             "barghsa-ci-app:$GITHUB_SHA" "barghsa-ci-web:$GITHUB_SHA" \
             "barghsa-ci-clamav:$GITHUB_SHA" "barghsa-ci-postgres:$GITHUB_SHA"
+      - name: Verify release license policy handling
+        run: python3 -m unittest discover -s scripts -p 'test_check_release_licenses.py'
+      - name: Check shipped component licenses
+        env:
+          ENFORCE_RELEASE_LICENSES: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
+        run: |
+          args=()
+          if [ "$ENFORCE_RELEASE_LICENSES" != true ]; then args+=(--report-only); fi
+          python3 scripts/check-release-licenses.py "$RUNNER_TEMP/runtime-image-scan" "$GITHUB_SHA" \
+            --report "$RUNNER_TEMP/runtime-image-scan/release-licenses.json" "${args[@]}"
       - name: Upload runtime image vulnerability reports
         if: always()
         uses: actions/upload-artifact@v4

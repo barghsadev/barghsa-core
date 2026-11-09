@@ -8133,12 +8133,10 @@
         "story": "01-platform-infrastructure.md#spec-2b0c597de8ef"
       },
       "requirement": "- **T-03.01.04:** Add `HEALTHCHECK` instruction to all Dockerfiles\n  - **Notes:** Web: `HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 CMD node healthcheck.js` (curl localhost:3000/api/health). API: check `/api/health`. Worker: check via a small script or the readiness endpoint. Interval and start-period must account for NestJS module initialization.\n  - **Dependencies:** T-03.01.01, T-03.01.02\n  - **Complexity:** S",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -8194,8 +8192,47 @@
           "Dockerfile.web",
           "docker-compose.prod.yml"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-shipped-component-license-gate"
+        ],
+        "current_acceptance": {
+          "kind": "current-application-image-healthchecks",
+          "base_commit": "194c1c56bfa0c01ea77e1e9f8b19cc5d91027e88",
+          "source_evidence": [
+            {
+              "path": "Dockerfile.base",
+              "sha256": "c2974d2b6f0fb704d4797b88e7c5175b2aa150d93b8eebb0538ab9be6bfe412a"
+            },
+            {
+              "path": "Dockerfile.web",
+              "sha256": "d2381ff9c3ec67588ac9cb330639710d4c8d2e953670e77460962b8d67301c84"
+            },
+            {
+              "path": "scripts/healthcheck-runtime.cjs",
+              "sha256": "024fe14b3e5888ba77b25a39a014ec3b9bba24007872d5dc306c3a3543b7042e"
+            },
+            {
+              "path": "apps/api/healthcheck.js",
+              "sha256": "c2b43d469d31bc4080002f6ada8042f58e502fa2f923d35268b4ac4519cf2695"
+            },
+            {
+              "path": "apps/worker/healthcheck.js",
+              "sha256": "cce175f83cf5eff02a63429886064a89fd8a5e4c81e7c7e6f544f6571a714ce1"
+            },
+            {
+              "path": "apps/web/healthcheck.js",
+              "sha256": "4d2fc81cf04fcaffc127be89df3a8405ffe55f75d5a7f14e6cd403e8135fe20d"
+            },
+            {
+              "path": "deploy/staging/compose.yml",
+              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+            }
+          ],
+          "checks": [
+            "Exact prior hosted image metadata contains native 30s interval, 10s timeout, 40s startup and three retries for app/worker and web. The shared app image selects readiness from the actual API or worker process command.",
+            "The web image recipe only adds build-time license inventory and its private copy. The Docker health instruction, runtime entry points and all probe implementations retain their prior bytes."
+          ]
+        }
       }
     },
     {
@@ -11171,8 +11208,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Review the exact pinned browser and PDF font copies, the LGPL native libvips distributions, four runtime package exceptions and final OS/tooling distribution notices. Browser font source provenance and both notice assets are verified.",
-        "Implement and run the license gate against the final built assets and immutable images, permitting only reviewed package-specific exceptions. Preserve the DOMPurify Apache-2.0 option and its applicable notices."
+        "Review the exact shipped exceptions, including the verified font copies, LGPL native libvips packages, other runtime libraries and OS or tool packages. Confirm source distribution, replacement conditions and notices as applicable. Record approvals by exact package URL, license and inventory scope.",
+        "Run the implemented strict license check on the immutable release candidate with approved policy entries. Verify the image identities and final distribution. Ordinary direct-main reports show blockers without implying release acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -11209,11 +11246,12 @@
           "release-0.6-immutable-location-and-signature-feed",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-web-fixture-typecheck-and-license-readback",
-          "release-0.6-font-source-provenance"
+          "release-0.6-font-source-provenance",
+          "release-0.6-shipped-component-license-gate"
         ],
         "current_acceptance": null
       },
-      "blocker": "The review packet is ready for owner or legal review of the exact OFL font copies, LGPL libvips binaries and four runtime package exceptions. Corresponding-source and replacement terms for libvips still require review. GeoLite2 removal is already owner approved."
+      "blocker": "The strict gate is implemented. The exact shipped component exceptions still require owner or legal approval and proof of the applicable conditions before release acceptance."
     },
     {
       "key": "01-platform-infrastructure.md#T-05.03.05",
@@ -143939,7 +143977,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "packages/db/src/schema/idempotency-keys.ts",
@@ -438396,7 +438434,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -438787,7 +438825,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -439331,7 +439369,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -439702,7 +439740,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -440073,7 +440111,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -469419,11 +469457,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "1d6843e8f9eeb1779c446fc7080a97b229a1db739942f81ff77579dda1064e0c"
+              "sha256": "d2381ff9c3ec67588ac9cb330639710d4c8d2e953670e77460962b8d67301c84"
             },
             {
               "path": "apps/web/build.mjs",
@@ -469645,11 +469683,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "1d6843e8f9eeb1779c446fc7080a97b229a1db739942f81ff77579dda1064e0c"
+              "sha256": "d2381ff9c3ec67588ac9cb330639710d4c8d2e953670e77460962b8d67301c84"
             },
             {
               "path": "apps/web/build.mjs",
@@ -470983,7 +471021,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -472295,7 +472333,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
             },
             {
               "path": ".gitignore",
@@ -472311,7 +472349,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "1266c7d85d256b9327e57a0e69fcef6f3191cd480a25848496b4c33de8ca29e2"
+              "sha256": "cea098b450ca07840fdd3bd27b48ef55bb5e0773bc6d452a79004d61bc2111c1"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -472372,7 +472410,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
             },
             {
               "path": ".gitignore",
@@ -472498,7 +472536,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -472599,7 +472637,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -472661,7 +472699,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
             },
             {
               "path": "Dockerfile.base",
@@ -472669,7 +472707,7 @@
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "1d6843e8f9eeb1779c446fc7080a97b229a1db739942f81ff77579dda1064e0c"
+              "sha256": "d2381ff9c3ec67588ac9cb330639710d4c8d2e953670e77460962b8d67301c84"
             },
             {
               "path": "deploy/clamav/Dockerfile",
@@ -472677,7 +472715,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "1266c7d85d256b9327e57a0e69fcef6f3191cd480a25848496b4c33de8ca29e2"
+              "sha256": "cea098b450ca07840fdd3bd27b48ef55bb5e0773bc6d452a79004d61bc2111c1"
             },
             {
               "path": "packages/db/scripts/backup/Dockerfile",
@@ -472737,7 +472775,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
             },
             {
               "path": ".gitignore",
@@ -472832,19 +472870,40 @@
         "story": "06-security-testing-observability.md#spec-78eef3232c99"
       },
       "requirement": "| T-06.07.02.05 | Define triage policy: critical/high with credible production path → block release | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-shipped-component-license-gate"
+        ],
+        "current_acceptance": {
+          "kind": "current-supply-chain-triage-policy",
+          "base_commit": "194c1c56bfa0c01ea77e1e9f8b19cc5d91027e88",
+          "source_evidence": [
+            {
+              "path": "docs/security/supply-chain.md",
+              "sha256": "cea098b450ca07840fdd3bd27b48ef55bb5e0773bc6d452a79004d61bc2111c1"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+            },
+            {
+              "path": "scripts/check-runtime-images.sh",
+              "sha256": "2eca8dd26a253b7d487ad99eb5c8b52da7b103f743c8a6f3eb8fdf6957c20bfd"
+            }
+          ],
+          "checks": [
+            "The current runbook defines how to triage medium findings, blocks high and critical findings with credible production paths and requires explicit approval with reason, compensating control and expiry for accepted risk.",
+            "The existing hosted image and dependency scan enforcement remains stronger for high and critical findings. The new license gate does not change those scan thresholds."
+          ]
+        }
       }
     },
     {
@@ -472862,8 +472921,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Review the exact pinned browser and PDF font copies, the LGPL native libvips distributions, four runtime package exceptions and final OS/tooling distribution notices. Browser font source provenance and both notice assets are verified.",
-        "Implement and run the license gate against the final built assets and immutable images, permitting only reviewed package-specific exceptions. Preserve the DOMPurify Apache-2.0 option and its applicable notices."
+        "Review the exact shipped exceptions, including the verified font copies, LGPL native libvips packages, other runtime libraries and OS or tool packages. Confirm source distribution, replacement conditions and notices as applicable. Record approvals by exact package URL, license and inventory scope.",
+        "Run the implemented strict license check on the immutable release candidate with approved policy entries. Verify the image identities and final distribution. Ordinary direct-main reports show blockers without implying release acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -472871,11 +472930,12 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-font-source-provenance"
+          "release-0.6-font-source-provenance",
+          "release-0.6-shipped-component-license-gate"
         ],
         "current_acceptance": null
       },
-      "blocker": "The review packet is ready for owner or legal review of the exact OFL font copies, LGPL libvips binaries and four runtime package exceptions. Corresponding-source and replacement terms for libvips still require review. GeoLite2 removal is already owner approved."
+      "blocker": "The strict gate is implemented. The exact shipped component exceptions still require owner or legal approval and proof of the applicable conditions before release acceptance."
     },
     {
       "key": "06-security-testing-observability.md#T-06.07.02.07",
@@ -473146,7 +473206,7 @@
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "1d6843e8f9eeb1779c446fc7080a97b229a1db739942f81ff77579dda1064e0c"
+              "sha256": "d2381ff9c3ec67588ac9cb330639710d4c8d2e953670e77460962b8d67301c84"
             },
             {
               "path": "deploy/clamav/Dockerfile",
@@ -473158,7 +473218,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -475209,7 +475269,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -475268,7 +475328,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -475280,7 +475340,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "1266c7d85d256b9327e57a0e69fcef6f3191cd480a25848496b4c33de8ca29e2"
+              "sha256": "cea098b450ca07840fdd3bd27b48ef55bb5e0773bc6d452a79004d61bc2111c1"
             },
             {
               "path": "scripts/check-sast.py",
@@ -496201,7 +496261,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
@@ -497546,7 +497606,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -498445,7 +498505,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -499285,7 +499345,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -500128,7 +500188,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/notification-recovery.md",
@@ -501091,7 +501151,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
@@ -502122,7 +502182,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -502670,7 +502730,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -503218,7 +503278,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -503766,7 +503826,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -504314,7 +504374,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -504862,7 +504922,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -505410,7 +505470,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -505958,7 +506018,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -506506,7 +506566,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -507054,7 +507114,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -507602,7 +507662,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -508150,7 +508210,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -508698,7 +508758,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -509246,7 +509306,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -509668,7 +509728,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/localisation.md",
@@ -510256,7 +510316,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/localisation.md",
@@ -510844,7 +510904,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/localisation.md",
@@ -511761,7 +511821,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/localisation.md",
@@ -512170,7 +512230,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/localisation.md",
@@ -512577,7 +512637,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/localisation.md",
@@ -512984,7 +513044,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/localisation.md",
@@ -513331,7 +513391,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -513645,7 +513705,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -513959,7 +514019,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -514273,7 +514333,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -514859,7 +514919,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516107,7 +516167,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -516908,7 +516968,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -517708,7 +517768,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -518456,7 +518516,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/accessibility.md",
@@ -518840,7 +518900,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/accessibility.md",
@@ -519283,7 +519343,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/accessibility.md",
@@ -519774,7 +519834,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/accessibility.md",
@@ -521334,7 +521394,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/accessibility.md",
@@ -521770,7 +521830,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/accessibility.md",
@@ -522702,7 +522762,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/accessibility.md",
@@ -523223,7 +523283,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/accessibility.md",
@@ -523553,7 +523613,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
             },
             {
               "path": ".size-limit.json",
@@ -523953,7 +524013,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/accessibility.md",
@@ -524391,7 +524451,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
             },
             {
               "path": ".size-limit.json",
@@ -524791,7 +524851,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/accessibility.md",
@@ -525408,7 +525468,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/accessibility.md",
@@ -525738,7 +525798,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
             },
             {
               "path": ".size-limit.json",
@@ -526138,7 +526198,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/accessibility.md",
@@ -526545,7 +526605,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -526811,7 +526871,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -527723,7 +527783,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -528635,7 +528695,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -529547,7 +529607,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -530459,7 +530519,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -531371,7 +531431,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -532283,7 +532343,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -533195,7 +533255,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -534107,7 +534167,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -535019,7 +535079,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -535931,7 +535991,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -536843,7 +536903,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -537755,7 +537815,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -538667,7 +538727,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -539579,7 +539639,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -540491,7 +540551,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -541403,7 +541463,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -542315,7 +542375,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -543227,7 +543287,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -544139,7 +544199,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -544997,7 +545057,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/localisation.md",
@@ -545404,7 +545464,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/localisation.md",
@@ -545811,7 +545871,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/localisation.md",
@@ -546218,7 +546278,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/localisation.md",
@@ -546630,7 +546690,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/localisation.md",
@@ -547043,7 +547103,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/localisation.md",
@@ -547450,7 +547510,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/localisation.md",
@@ -547857,7 +547917,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/localisation.md",
@@ -548265,7 +548325,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/localisation.md",
@@ -548674,7 +548734,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/localisation.md",
@@ -549081,7 +549141,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/localisation.md",
@@ -549489,7 +549549,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/localisation.md",
@@ -550736,7 +550796,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -552614,7 +552674,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -554493,7 +554553,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -556341,7 +556401,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -558215,7 +558275,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -560098,7 +560158,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -561954,7 +562014,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -563774,7 +563834,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -565594,7 +565654,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -567415,7 +567475,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -569235,7 +569295,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -571141,7 +571201,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -573052,7 +573112,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -576724,7 +576784,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/notification-recovery.md",
@@ -577867,7 +577927,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -579778,7 +579838,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -581689,7 +581749,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -583600,7 +583660,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -585511,7 +585571,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -587422,7 +587482,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -589333,7 +589393,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -591244,7 +591304,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -593155,7 +593215,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -595066,7 +595126,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -596977,7 +597037,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -598259,7 +598319,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/notification-recovery.md",
@@ -599632,7 +599692,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -601543,7 +601603,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -604766,7 +604826,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -606582,7 +606642,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -608398,7 +608458,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -610214,7 +610274,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -612030,7 +612090,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -613846,7 +613906,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -615662,7 +615722,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "docs/design/design-system.md",
@@ -616981,7 +617041,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -617810,7 +617870,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -618639,7 +618699,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -619468,7 +619528,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -620297,7 +620357,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -621051,7 +621111,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -621851,7 +621911,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -622651,7 +622711,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -623451,7 +623511,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -624255,7 +624315,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -625055,7 +625115,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -625855,7 +625915,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -626656,7 +626716,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -627457,7 +627517,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -628258,7 +628318,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -629059,7 +629119,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -629860,7 +629920,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -630661,7 +630721,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -631462,7 +631522,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -632263,7 +632323,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -633138,7 +633198,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -633967,7 +634027,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -634796,7 +634856,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -635625,7 +635685,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -636454,7 +636514,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -637283,7 +637343,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -638112,7 +638172,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -638941,7 +639001,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -639770,7 +639830,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -640599,7 +640659,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -641428,7 +641488,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -642257,7 +642317,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -643234,7 +643294,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -644368,7 +644428,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -645502,7 +645562,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -646639,7 +646699,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -647776,7 +647836,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -648940,7 +649000,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -650073,7 +650133,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -651206,7 +651266,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -652340,7 +652400,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -653492,7 +653552,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -654627,7 +654687,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -655625,7 +655685,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -656460,7 +656520,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -657303,7 +657363,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -658130,7 +658190,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -658956,7 +659016,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -686169,7 +686229,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -687301,7 +687361,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -688433,7 +688493,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -689565,7 +689625,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -718242,7 +718302,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "packages/db/src/schema/idempotency-keys.ts",
@@ -725965,7 +726025,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
             },
             {
               "path": "apps/api/openapi.json",
@@ -729887,7 +729947,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
             },
             {
               "path": "apps/api/openapi.json",
@@ -735362,7 +735422,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
             },
             {
               "path": ".size-limit.json",
@@ -736614,7 +736674,7 @@
             },
             {
               "path": "apps/web/vite.config.ts",
-              "sha256": "5d2d559db3003d87d9e876af671481184eacb0fc59773cb0902579290c78f081"
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -737482,7 +737542,7 @@
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "1d6843e8f9eeb1779c446fc7080a97b229a1db739942f81ff77579dda1064e0c"
+              "sha256": "d2381ff9c3ec67588ac9cb330639710d4c8d2e953670e77460962b8d67301c84"
             },
             {
               "path": "docs/design/design-system.md",
@@ -737570,7 +737630,8 @@
         "Execute migration/seed ordering, backup/PITR and restore/rollback rehearsals; measure actual service RPO/RTO.",
         "Install required monitoring, alerts and quality schedules and prove first execution/delivery. Local scripts alone are not proof.",
         "Provision approved Persian/English profile.verification_status SMS.ir templates or activate direct text, test owned verified destination and record actual provider acceptance/delivery reports before production. Both 11 October direct-line probes rejected with HTTP400/status123; owner deferred this evidence from v0.3.0 staging only.",
-        "Provide an authorized ClamAV signature feed and verify that the chosen staging scanner loads current vendor data, including clean and infected scan receipts. The direct stage feed returned HTTP 403 and a cooldown."
+        "Provide an authorized ClamAV signature feed and verify that the chosen staging scanner loads current vendor data, including clean and infected scan receipts. The direct stage feed returned HTTP 403 and a cooldown.",
+        "Staging CSP report-only review found five cross-origin image reports and the live public branding response references the same barghsa.com favicon origin. Publish the preserved PNG as a sealed staging asset with authorized staff step-up, verify the byte-identical response and complete the full week of reviewed reports before enforcing CSP."
       ],
       "owner": null,
       "depends_on": [],
@@ -737581,13 +737642,19 @@
           "release-0.6-hybrid-rehearsal-manifest",
           "release-0.6-immutable-location-and-signature-feed",
           "release-0.6-postgres-image-candidate",
-          "release-0.6-combined-runtime-image-candidate"
+          "release-0.6-combined-runtime-image-candidate",
+          "release-0.6-shipped-component-license-gate"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
           "receipts": "/Users/majid/.local/state/barghsa-manual-batches/release-0.3-sms-direct/live-line-probe-receipts.jsonl"
         },
-        "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
+        "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json",
+        "csp_favicon_readback": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/staging-csp-image-origin-aggregate.json",
+          "published_asset": "external",
+          "preserved_png_sha256": "c07a9231b098af0214279477ce0abbfa9bf29a8188885025dbeb415e24a24fda"
+        }
       },
       "blocker": "Production-equivalent host, separate TLS PostgreSQL/pooler, off-server backup storage and payment sandbox protected configuration are not available in the known workspace. The public domain serves legacy WordPress; the accessible app host is disposable staging. Owner access/provisioning direction and SMS.ir live verification status requested together on 2026-11-09. Isolated recovery tests and staging monitoring checks can continue."
     },
@@ -824645,6 +824712,57 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "font-provenance-acceptance-proof.json",
       "source_scope_proof_sha256": "c5fa682f87f0bacf277272b51405d9a266ecbcc19b90a71bce7bbbf1b3beb79a"
+    },
+    "release-0.6-shipped-component-license-gate": {
+      "batch": "release-0.6-shipped-component-license-gate",
+      "base_commit": "194c1c56bfa0c01ea77e1e9f8b19cc5d91027e88",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.07.02.05",
+        "release-readiness#R-05.03",
+        "01-platform-infrastructure.md#T-03.01.04"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+        },
+        {
+          "path": "Dockerfile.web",
+          "sha256": "d2381ff9c3ec67588ac9cb330639710d4c8d2e953670e77460962b8d67301c84"
+        },
+        {
+          "path": "apps/web/vite.config.ts",
+          "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
+        },
+        {
+          "path": "docs/security/supply-chain.md",
+          "sha256": "cea098b450ca07840fdd3bd27b48ef55bb5e0773bc6d452a79004d61bc2111c1"
+        },
+        {
+          "path": "scripts/check-release-licenses.py",
+          "sha256": "5db4d3eb46349f7b8c5eb77ab7327648b372d55dd504c2b2001a9d089f88a31e"
+        },
+        {
+          "path": "scripts/test_check_release_licenses.py",
+          "sha256": "65831c4271ac0500623fc0c4b8579b0a4051aa097bd76e2bd6d70d0946fbeef0"
+        },
+        {
+          "path": "deploy/licenses/release-approvals.json",
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        }
+      ],
+      "checks": [
+        "Six license checker cases passed. They cover exact package version, scope and declared licenses, strict-mode nonzero results with a saved report, invalid approval records, image and SBOM mismatches, missing font or notice bytes, and Go executable inventory grouping.",
+        "Both production Vite outputs were compared with a control build using the original configuration at 194c1c56. All 585 existing files are byte-identical. The only public additions are the two original DOMPurify Apache notices. Both return HTTP 200 with the expected hash; the private package inventory path is unavailable over HTTP.",
+        "Real local browser builds emitted 75 app and 29 auth package records. Both retain the exact three pinned font assets and notices. Reused 36 existing browser cases and 101 budgets because all previously tested bytes match.",
+        "All four exact prior GitHub CycloneDX inventories parse with the new checker. Independently used Docker readback on the isolated Alpine app to verify original libvips and three MIT notice files. This is development evidence; final strict release execution awaits decisions and candidate image IDs.",
+        "GitHub workflow, web image recipe and supply-chain runbook changes are additive. Ordinary direct-main development records policy blockers. Pull requests and manually dispatched release validation enforce the strict result."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "shipped-component-license-gate-proof.json",
+      "source_scope_proof_sha256": "a62b85b6ceae8d8830da45e32f6a3ee3586f587f08a9bf43bfe7efabda8ec141"
     }
   },
   "historical_improvements": [

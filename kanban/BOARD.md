@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 905 | Accepted with unchanged source bindings. |
-| verify | 427 | Existing work may be complete; inspect evidence before building. |
+| done | 907 | Accepted with unchanged source bindings. |
+| verify | 425 | Existing work may be complete; inspect evidence before building. |
 | partial | 30 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -995,7 +995,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-03.01.01` | partial | Earlier partial | Create `Dockerfile.web` with multi-stage build |
 | `01-platform-infrastructure.md#T-03.01.02` | partial | Earlier partial | Create shared `Dockerfile.base` for API and worker (same build, different CMD) |
 | `01-platform-infrastructure.md#T-03.01.03` | verify | Earlier acceptance_verified | Create `.dockerignore` |
-| `01-platform-infrastructure.md#T-03.01.04` | verify | Earlier acceptance_verified | Add `HEALTHCHECK` instruction to all Dockerfiles |
+| `01-platform-infrastructure.md#T-03.01.04` | done | Earlier acceptance_verified | Add `HEALTHCHECK` instruction to all Dockerfiles |
 | `01-platform-infrastructure.md#T-03.01.05` | verify | Earlier acceptance_verified | Implement security hardening in Docker images |
 | `01-platform-infrastructure.md#T-03.02.01` | verify | Earlier acceptance_verified | Create `docker-compose.yml` with PostgreSQL, Redis, MinIO |
 | `01-platform-infrastructure.md#T-03.02.02` | verify | Earlier acceptance_verified | Create `.env.example` with all required development variables |
@@ -1224,7 +1224,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.07.02.02` | done | Recorded batch work | Configure SAST tool (e.g. CodeQL, Semgrep) with custom rules for NestJS/Drizzle security patterns |
 | `06-security-testing-observability.md#T-06.07.02.03` | done | Recorded batch work | Configure container vulnerability scanning (e.g. Trivy, Grype) on Docker images |
 | `06-security-testing-observability.md#T-06.07.02.04` | done | Recorded batch work | Configure secret scanning on every PR (e.g. gitLeaks, truffleHog) |
-| `06-security-testing-observability.md#T-06.07.02.05` | verify | Inventory needed | Define triage policy: critical/high with credible production path → block release |
+| `06-security-testing-observability.md#T-06.07.02.05` | done | Recorded batch work | Define triage policy: critical/high with credible production path → block release |
 | `06-security-testing-observability.md#T-06.07.02.06` | blocked | Recorded batch work | Set up license compliance check (e.g. license-checker) for dependency licenses |
 | `06-security-testing-observability.md#T-06.07.02.07` | partial | Recorded batch work | Generate SBOM (Software Bill of Materials) for each production build |
 | `06-security-testing-observability.md#T-06.07.02.08` | partial | Recorded batch work | Create CI gate config: SCA/SAST/secret/container scans on every PR, full scan on main |
