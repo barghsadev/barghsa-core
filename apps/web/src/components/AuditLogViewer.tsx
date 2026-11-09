@@ -25,7 +25,7 @@ import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueRe
 export function AuditLogViewer(props: {
   scope: ConfigAuditScope;
   refreshKey?: string | number;
-  onDenied?: () => void;
+  onDenied?: (status?: 401 | 403) => void;
 }) {
   return <AuditTimeline key={props.scope} {...props} />;
 }
@@ -36,7 +36,7 @@ function AuditTimeline({
 }: {
   scope: ConfigAuditScope;
   refreshKey?: string | number;
-  onDenied?: () => void;
+  onDenied?: (status?: 401 | 403) => void;
 }) {
   const locale = useLocale(),
     numbers = useNumberFormatting(locale),
@@ -52,14 +52,14 @@ function AuditTimeline({
     handled = useRef<unknown>(null);
   const denial = useRef(onDenied);
   denial.current = onDenied;
-  const clear = useCallback(() => {
+  const clear = useCallback((status?: 401 | 403) => {
     setItems([]);
     setCursor(null);
     setNext(null);
     setCycle(false);
     seen.current.clear();
     handled.current = null;
-    denial.current?.();
+    denial.current?.(status);
   }, []);
   const boundary = useCatalogueScope(clear);
   const validate = useCallback(

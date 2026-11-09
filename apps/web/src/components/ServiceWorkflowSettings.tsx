@@ -45,7 +45,11 @@ const parse = (d: Duration) => {
     ? n * (d.unit === 'days' ? 24 : 1)
     : null;
 };
-export function ServiceWorkflowSettings({ disabled = false, onBusyChange }: CatalogueEditorProps) {
+export function ServiceWorkflowSettings({
+  disabled = false,
+  onBusyChange,
+  onDenied,
+}: CatalogueEditorProps) {
   const locale = useLocale(),
     text = (key: string) => tServiceSettings(`workflow.${key}`, locale);
   const [draft, setDraft] = useState<ServiceWorkflowPolicy>(
@@ -75,7 +79,7 @@ export function ServiceWorkflowSettings({ disabled = false, onBusyChange }: Cata
     setInvalid(false);
     setSaved(false);
   }, []);
-  const state = useSettingsSnapshot(path, isServiceWorkflowView, basis, reset, withdraw);
+  const state = useSettingsSnapshot(path, isServiceWorkflowView, basis, reset, withdraw, onDenied);
   const busy = pending || !!action,
     blocked = disabled || !state.ready || state.changed || state.uncertain;
   useEffect(() => {
@@ -473,7 +477,7 @@ export function ServiceWorkflowSettings({ disabled = false, onBusyChange }: Cata
           confirmationDisabled={blocked || state.uncertain}
           onClose={withdraw}
           onPendingChange={setPending}
-          onDenied={state.scope.deny}
+          onDenied={state.denyCommand}
           onUnconfirmed={state.unconfirmed}
           summary={summary((action.body as { policy: ServiceWorkflowPolicy }).policy)}
           onSuccess={async (result) => {

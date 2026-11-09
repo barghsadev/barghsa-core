@@ -8,10 +8,14 @@ test('target validation and confirmation preserve settings through a failed save
   await mockOppositeNumerals(page, 'en');
   let values = { ticket: 24, verification_case: null, consultation: 48 },
     verified = false,
-    fail = true;
+    fail = true,
+    reads = 0;
   const attempts: unknown[] = [];
   await page.route('**/api/admin/config/service-response-targets', (route) => {
-    if (route.request().method() === 'GET') return route.fulfill({ json: values });
+    if (route.request().method() === 'GET') {
+      reads++;
+      return route.fulfill({ json: values });
+    }
     attempts.push(route.request().postDataJSON());
     if (!verified) return route.fulfill({ status: 403, json: { requiresStepUp: true } });
     if (fail) return route.fulfill({ status: 500, json: {} });
@@ -41,11 +45,26 @@ test('target validation and confirmation preserve settings through a failed save
   await dialog.getByRole('button', { name: 'Confirm', exact: true }).click();
   await dialog.getByLabel('Confirm your password').fill('Test-password');
   await dialog.getByRole('button', { name: 'Confirm', exact: true }).click();
-  await expect(dialog.getByRole('alert')).toBeVisible();
+  await expect(
+    dialog.getByRole('alert').filter({ hasText: 'The outcome is unconfirmed.' })
+  ).toBeVisible();
+  await expect(dialog.getByRole('button', { name: 'Confirm', exact: true })).toBeDisabled();
   expect(values.ticket).toBe(24);
   expect(values.consultation).toBe(48);
   await expect(page.getByText('Changes saved.', { exact: true })).toHaveCount(0);
+  expect(attempts).toHaveLength(2);
+  const readsBeforeRecovery = reads;
+  await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await page.getByRole('button', { name: 'Refresh response targets', exact: true }).click();
+  await expect(
+    page.getByRole('button', { name: 'Save response targets', exact: true })
+  ).toBeEnabled();
+  await expect(input).toHaveValue('72');
+  await expect(page.getByLabel('Hours — Consultation requests', { exact: true })).toHaveValue('96');
+  expect(reads).toBe(readsBeforeRecovery + 1);
+  expect(attempts).toHaveLength(2);
   fail = false;
+  await page.getByRole('button', { name: 'Save response targets', exact: true }).click();
   await dialog.getByRole('button', { name: 'Confirm', exact: true }).click();
   await expect(dialog).toHaveCount(0);
   expect(attempts).toEqual(

@@ -5,6 +5,117 @@ import { fullNavigation } from './navigation-fixture';
 import { DEFAULT_SERVICE_WORKFLOWS, type ServiceWorkflowView } from '@barghsa/shared/admin';
 import { tServiceSettings } from '@barghsa/i18n/service-settings';
 import { t } from '@barghsa/i18n/admin-ui';
+import { loginFormText } from '@barghsa/i18n/login-forms';
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`service workflow follows both grants and clears on session expiry (${locale})`, async ({
+    page,
+  }) => {
+    await setupCatalogueForms(page, locale, locale === 'fa');
+    const copy = (key: string) => tServiceSettings(key, locale);
+    const reads = { targets: 0, escalation: 0, workflows: 0 };
+    let denied: 'targets' | 'escalation' | null = null;
+    let expired = false;
+    await page.route('**/api/admin/config/service-workflows', (route) => {
+      expect(route.request().method()).toBe('GET');
+      reads.workflows++;
+      if (expired || denied) return route.fulfill({ status: expired ? 401 : 403, json: {} });
+      return route.fulfill({
+        json: {
+          policy: DEFAULT_SERVICE_WORKFLOWS,
+          version: 0,
+          roles: [{ id: 'reviewer', name: 'Reviewer' }],
+          teams: [{ id: '10000000-0000-4000-8000-000000000001', name: 'Operations' }],
+        },
+      });
+    });
+    await page.route('**/api/admin/config/service-response-targets', (route) => {
+      expect(route.request().method()).toBe('GET');
+      reads.targets++;
+      if (expired || denied === 'targets')
+        return route.fulfill({ status: expired ? 401 : 403, json: {} });
+      return route.fulfill({ json: { ticket: 24, verification_case: null, consultation: 48 } });
+    });
+    await page.route('**/api/admin/config/escalation-policy', (route) => {
+      expect(route.request().method()).toBe('GET');
+      reads.escalation++;
+      if (denied === 'escalation') return route.fulfill({ status: 403, json: {} });
+      return route.fulfill({
+        json: {
+          ticket: {
+            level2: { delayHours: 36, channels: ['in_app'] },
+            level3: { delayHours: null, channels: ['in_app'] },
+          },
+          verification_case: null,
+          consultation: null,
+        },
+      });
+    });
+    await page.goto('/admin/service-targets');
+    const main = page.getByRole('main');
+    const workflow = main.getByRole('region', { name: copy('workflow.title'), exact: true });
+    const enabled = workflow.getByRole('checkbox', {
+      name: copy('workflow.enabled'),
+      exact: true,
+    });
+    const editor = (kind: 'targets' | 'escalation') =>
+      main.getByRole('group', { name: copy(`admin.${kind}.formTitle`), exact: true });
+    const refresh = (kind: 'targets' | 'escalation') =>
+      editor(kind).getByRole('button', { name: copy(`admin.${kind}.refresh`), exact: true });
+    const workflowRefresh = workflow.getByRole('button', {
+      name: copy('workflow.refresh'),
+      exact: true,
+    });
+    const targets = editor('targets').locator('#target-ticket');
+    const escalation = editor('escalation').locator('#escalation-ticketLevel2');
+    await expect(enabled).toBeEnabled();
+    await expect(targets).toHaveValue('24');
+    await expect(escalation).toHaveValue('36');
+    await escalation.fill('72');
+    denied = 'targets';
+    await refresh('targets').press('Enter');
+    await expect(editor('targets').getByRole('alert')).toContainText(
+      copy('admin.targets.forbidden')
+    );
+    await expect(targets).toHaveCount(0);
+    await expect(enabled).toHaveCount(0);
+    await expect(escalation).toHaveValue('72');
+    expect(reads).toEqual({ targets: 2, escalation: 1, workflows: 1 });
+    await workflowRefresh.press('Enter');
+    await expect(workflow.getByRole('alert')).toHaveText(copy('workflow.forbidden'));
+    await expect(enabled).toHaveCount(0);
+    expect(reads.workflows).toBe(2);
+    denied = null;
+    await refresh('targets').press('Enter');
+    await expect(targets).toHaveValue('24');
+    await workflowRefresh.press('Enter');
+    await expect(enabled).toBeEnabled();
+    await expect(escalation).toHaveValue('72');
+    await targets.fill('60');
+    denied = 'escalation';
+    await refresh('escalation').press('Enter');
+    await expect(editor('escalation').getByRole('alert')).toContainText(
+      copy('admin.escalation.forbidden')
+    );
+    await expect(escalation).toHaveCount(0);
+    await expect(enabled).toHaveCount(0);
+    await expect(targets).toHaveValue('60');
+    expect(reads).toEqual({ targets: 3, escalation: 2, workflows: 3 });
+    expired = true;
+    if (locale === 'fa') await workflowRefresh.press('Enter');
+    else await refresh('targets').press('Enter');
+    await expect(
+      main.getByRole('alert').filter({ hasText: loginFormText('sessionEnded', locale) })
+    ).toBeVisible();
+    await expect(
+      main.getByRole('link', { name: loginFormText('restart', locale) })
+    ).toHaveAttribute('href', '/login');
+    await expect(editor('targets')).toHaveCount(0);
+    await expect(editor('escalation')).toHaveCount(0);
+    await expect(workflow).toHaveCount(0);
+  });
+}
+
 for (const width of [390, 1440])
   for (const locale of ['fa', 'en'] as const)
     for (const dark of [false, true])

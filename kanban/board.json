@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T02:39:31+00:00",
-  "source_commit": "bf1816b4943ede4b02a4269736596eefcc275672",
+  "updated": "2026-11-09T02:49:32+00:00",
+  "source_commit": "36211f45a6db900f306b69ec277e75e20ad62bf8",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35484,7 +35484,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminServiceTargetsPage.tsx",
-              "sha256": "2392b25a7002228b8305bc4ba14254d4057c3ec9423fc04bdd458a842265847c"
+              "sha256": "62514c0b77b49791b4560b455b16ac18fc363469dd5bc0d3a4a14d49bd376432"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -56418,7 +56418,7 @@
             },
             {
               "path": "apps/web/e2e/service-targets.spec.ts",
-              "sha256": "48ea7c1181460bbe50f5ba0e7843045b37c46e7c354708b3d7e1428afc074898"
+              "sha256": "ef1af8a3e3d242c2fcfa3ac9cfd11d8945feee44fe993dcf02de192a96edcbc5"
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
@@ -57529,7 +57529,7 @@
             },
             {
               "path": "apps/web/e2e/service-targets.spec.ts",
-              "sha256": "48ea7c1181460bbe50f5ba0e7843045b37c46e7c354708b3d7e1428afc074898"
+              "sha256": "ef1af8a3e3d242c2fcfa3ac9cfd11d8945feee44fe993dcf02de192a96edcbc5"
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
@@ -58640,7 +58640,7 @@
             },
             {
               "path": "apps/web/e2e/service-targets.spec.ts",
-              "sha256": "48ea7c1181460bbe50f5ba0e7843045b37c46e7c354708b3d7e1428afc074898"
+              "sha256": "ef1af8a3e3d242c2fcfa3ac9cfd11d8945feee44fe993dcf02de192a96edcbc5"
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
@@ -59558,7 +59558,7 @@
             },
             {
               "path": "apps/web/src/hooks/useSettingsSnapshot.ts",
-              "sha256": "10ef2dd3172b3449ad82803cb6d6b91f892b92e276be61c6e034e231e1ce5308"
+              "sha256": "c22b0ab868390c7ccf0de6291468052d9c19db633d8cb6f827546696e4822907"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -63180,7 +63180,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminServiceTargetsPage.tsx",
-              "sha256": "2392b25a7002228b8305bc4ba14254d4057c3ec9423fc04bdd458a842265847c"
+              "sha256": "62514c0b77b49791b4560b455b16ac18fc363469dd5bc0d3a4a14d49bd376432"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -92814,7 +92814,7 @@
             },
             {
               "path": "apps/web/e2e/service-targets.spec.ts",
-              "sha256": "48ea7c1181460bbe50f5ba0e7843045b37c46e7c354708b3d7e1428afc074898"
+              "sha256": "ef1af8a3e3d242c2fcfa3ac9cfd11d8945feee44fe993dcf02de192a96edcbc5"
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
@@ -93857,7 +93857,7 @@
             },
             {
               "path": "apps/web/e2e/service-targets.spec.ts",
-              "sha256": "48ea7c1181460bbe50f5ba0e7843045b37c46e7c354708b3d7e1428afc074898"
+              "sha256": "ef1af8a3e3d242c2fcfa3ac9cfd11d8945feee44fe993dcf02de192a96edcbc5"
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
@@ -94906,7 +94906,7 @@
             },
             {
               "path": "apps/web/e2e/service-targets.spec.ts",
-              "sha256": "48ea7c1181460bbe50f5ba0e7843045b37c46e7c354708b3d7e1428afc074898"
+              "sha256": "ef1af8a3e3d242c2fcfa3ac9cfd11d8945feee44fe993dcf02de192a96edcbc5"
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
@@ -102533,7 +102533,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -103114,7 +103114,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -383929,7 +383929,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
-              "sha256": "461c79ae8dcebd4971ed8b98869b965a1600086f2ec0731c5b0ee757914cca47"
+              "sha256": "3094accd09c58b57b7e9066d527a913fe0efbf672aea6281ee12feb2b7bb2d5c"
             },
             {
               "path": "apps/web/src/lib/saving-catalogue-form.test.ts",
@@ -384786,7 +384786,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
-              "sha256": "461c79ae8dcebd4971ed8b98869b965a1600086f2ec0731c5b0ee757914cca47"
+              "sha256": "3094accd09c58b57b7e9066d527a913fe0efbf672aea6281ee12feb2b7bb2d5c"
             },
             {
               "path": "apps/web/src/lib/saving-catalogue-form.test.ts",
@@ -385644,7 +385644,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
-              "sha256": "461c79ae8dcebd4971ed8b98869b965a1600086f2ec0731c5b0ee757914cca47"
+              "sha256": "3094accd09c58b57b7e9066d527a913fe0efbf672aea6281ee12feb2b7bb2d5c"
             },
             {
               "path": "apps/web/src/lib/saving-catalogue-form.test.ts",
@@ -436726,7 +436726,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useProviderCatalogue.ts",
@@ -452084,7 +452084,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -452537,7 +452537,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -452992,7 +452992,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -453446,7 +453446,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -453840,7 +453840,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -454218,7 +454218,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -454592,7 +454592,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -491203,7 +491203,7 @@
             },
             {
               "path": "apps/web/src/components/AuditLogViewer.tsx",
-              "sha256": "58b12bc1da81841a2888e20ff1360834b2f8cac9bc0f22f0f2685908dc6568fc"
+              "sha256": "8fdc6e6b01fc82b8ad245653625a3b106815b2cb58efa90910ec4f5b45e64f77"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -491319,7 +491319,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
-              "sha256": "5d5d6c4e53e74eaf966cb53f4f2e2ffeefa44ae1dc16af09356410eccaadf2ec"
+              "sha256": "7faf569e30c498a1fb883ddee078c95ecdbe7a22fce6ce29c5467e5412845b19"
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.tsx",
@@ -492934,7 +492934,7 @@
             },
             {
               "path": "apps/web/src/components/AuditLogViewer.tsx",
-              "sha256": "58b12bc1da81841a2888e20ff1360834b2f8cac9bc0f22f0f2685908dc6568fc"
+              "sha256": "8fdc6e6b01fc82b8ad245653625a3b106815b2cb58efa90910ec4f5b45e64f77"
             },
             {
               "path": "apps/web/src/components/BankReceiptFinancialReview.tsx",
@@ -497788,7 +497788,7 @@
             },
             {
               "path": "apps/web/src/components/AuditLogViewer.tsx",
-              "sha256": "58b12bc1da81841a2888e20ff1360834b2f8cac9bc0f22f0f2685908dc6568fc"
+              "sha256": "8fdc6e6b01fc82b8ad245653625a3b106815b2cb58efa90910ec4f5b45e64f77"
             },
             {
               "path": "apps/web/src/components/BankReceiptFinancialReview.tsx",
@@ -512380,7 +512380,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
-              "sha256": "5d5d6c4e53e74eaf966cb53f4f2e2ffeefa44ae1dc16af09356410eccaadf2ec"
+              "sha256": "7faf569e30c498a1fb883ddee078c95ecdbe7a22fce6ce29c5467e5412845b19"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
@@ -517465,7 +517465,7 @@
             },
             {
               "path": "apps/web/e2e/service-workflows.spec.ts",
-              "sha256": "95c244a68af7eb4b51a011c2efdf92e87f4c5ed76064f38b878f2de8e3a679b3"
+              "sha256": "04289e8bcd8a8896c514170f99b9ccaeaf10f07650104d33b702c1ed156da9e9"
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
@@ -517869,7 +517869,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
-              "sha256": "5d5d6c4e53e74eaf966cb53f4f2e2ffeefa44ae1dc16af09356410eccaadf2ec"
+              "sha256": "7faf569e30c498a1fb883ddee078c95ecdbe7a22fce6ce29c5467e5412845b19"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
@@ -567073,7 +567073,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
-              "sha256": "5d5d6c4e53e74eaf966cb53f4f2e2ffeefa44ae1dc16af09356410eccaadf2ec"
+              "sha256": "7faf569e30c498a1fb883ddee078c95ecdbe7a22fce6ce29c5467e5412845b19"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.test.tsx",
@@ -568976,7 +568976,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
-              "sha256": "5d5d6c4e53e74eaf966cb53f4f2e2ffeefa44ae1dc16af09356410eccaadf2ec"
+              "sha256": "7faf569e30c498a1fb883ddee078c95ecdbe7a22fce6ce29c5467e5412845b19"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.test.tsx",
@@ -571164,7 +571164,7 @@
             },
             {
               "path": "apps/web/e2e/service-targets.spec.ts",
-              "sha256": "48ea7c1181460bbe50f5ba0e7843045b37c46e7c354708b3d7e1428afc074898"
+              "sha256": "ef1af8a3e3d242c2fcfa3ac9cfd11d8945feee44fe993dcf02de192a96edcbc5"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -571172,7 +571172,7 @@
             },
             {
               "path": "apps/web/e2e/service-workflows.spec.ts",
-              "sha256": "95c244a68af7eb4b51a011c2efdf92e87f4c5ed76064f38b878f2de8e3a679b3"
+              "sha256": "04289e8bcd8a8896c514170f99b9ccaeaf10f07650104d33b702c1ed156da9e9"
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
@@ -571780,7 +571780,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
-              "sha256": "5d5d6c4e53e74eaf966cb53f4f2e2ffeefa44ae1dc16af09356410eccaadf2ec"
+              "sha256": "7faf569e30c498a1fb883ddee078c95ecdbe7a22fce6ce29c5467e5412845b19"
             },
             {
               "path": "apps/web/src/components/SettingsFormSection.tsx",
@@ -572088,7 +572088,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
-              "sha256": "461c79ae8dcebd4971ed8b98869b965a1600086f2ec0731c5b0ee757914cca47"
+              "sha256": "3094accd09c58b57b7e9066d527a913fe0efbf672aea6281ee12feb2b7bb2d5c"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.test.tsx",
@@ -572096,7 +572096,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
@@ -572232,7 +572232,7 @@
             },
             {
               "path": "apps/web/src/hooks/useSettingsSnapshot.ts",
-              "sha256": "10ef2dd3172b3449ad82803cb6d6b91f892b92e276be61c6e034e231e1ce5308"
+              "sha256": "c22b0ab868390c7ccf0de6291468052d9c19db633d8cb6f827546696e4822907"
             },
             {
               "path": "apps/web/src/hooks/useStaffQueryRead.ts",
@@ -573774,7 +573774,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
-              "sha256": "5d5d6c4e53e74eaf966cb53f4f2e2ffeefa44ae1dc16af09356410eccaadf2ec"
+              "sha256": "7faf569e30c498a1fb883ddee078c95ecdbe7a22fce6ce29c5467e5412845b19"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.test.tsx",
@@ -575677,7 +575677,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
-              "sha256": "5d5d6c4e53e74eaf966cb53f4f2e2ffeefa44ae1dc16af09356410eccaadf2ec"
+              "sha256": "7faf569e30c498a1fb883ddee078c95ecdbe7a22fce6ce29c5467e5412845b19"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.test.tsx",
@@ -577580,7 +577580,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
-              "sha256": "5d5d6c4e53e74eaf966cb53f4f2e2ffeefa44ae1dc16af09356410eccaadf2ec"
+              "sha256": "7faf569e30c498a1fb883ddee078c95ecdbe7a22fce6ce29c5467e5412845b19"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.test.tsx",
@@ -579483,7 +579483,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
-              "sha256": "5d5d6c4e53e74eaf966cb53f4f2e2ffeefa44ae1dc16af09356410eccaadf2ec"
+              "sha256": "7faf569e30c498a1fb883ddee078c95ecdbe7a22fce6ce29c5467e5412845b19"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.test.tsx",
@@ -581386,7 +581386,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
-              "sha256": "5d5d6c4e53e74eaf966cb53f4f2e2ffeefa44ae1dc16af09356410eccaadf2ec"
+              "sha256": "7faf569e30c498a1fb883ddee078c95ecdbe7a22fce6ce29c5467e5412845b19"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.test.tsx",
@@ -583289,7 +583289,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
-              "sha256": "5d5d6c4e53e74eaf966cb53f4f2e2ffeefa44ae1dc16af09356410eccaadf2ec"
+              "sha256": "7faf569e30c498a1fb883ddee078c95ecdbe7a22fce6ce29c5467e5412845b19"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.test.tsx",
@@ -585192,7 +585192,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
-              "sha256": "5d5d6c4e53e74eaf966cb53f4f2e2ffeefa44ae1dc16af09356410eccaadf2ec"
+              "sha256": "7faf569e30c498a1fb883ddee078c95ecdbe7a22fce6ce29c5467e5412845b19"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.test.tsx",
@@ -587095,7 +587095,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
-              "sha256": "5d5d6c4e53e74eaf966cb53f4f2e2ffeefa44ae1dc16af09356410eccaadf2ec"
+              "sha256": "7faf569e30c498a1fb883ddee078c95ecdbe7a22fce6ce29c5467e5412845b19"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.test.tsx",
@@ -588998,7 +588998,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
-              "sha256": "5d5d6c4e53e74eaf966cb53f4f2e2ffeefa44ae1dc16af09356410eccaadf2ec"
+              "sha256": "7faf569e30c498a1fb883ddee078c95ecdbe7a22fce6ce29c5467e5412845b19"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.test.tsx",
@@ -590901,7 +590901,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
-              "sha256": "5d5d6c4e53e74eaf966cb53f4f2e2ffeefa44ae1dc16af09356410eccaadf2ec"
+              "sha256": "7faf569e30c498a1fb883ddee078c95ecdbe7a22fce6ce29c5467e5412845b19"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.test.tsx",
@@ -592804,7 +592804,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
-              "sha256": "5d5d6c4e53e74eaf966cb53f4f2e2ffeefa44ae1dc16af09356410eccaadf2ec"
+              "sha256": "7faf569e30c498a1fb883ddee078c95ecdbe7a22fce6ce29c5467e5412845b19"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.test.tsx",
@@ -595447,7 +595447,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
-              "sha256": "5d5d6c4e53e74eaf966cb53f4f2e2ffeefa44ae1dc16af09356410eccaadf2ec"
+              "sha256": "7faf569e30c498a1fb883ddee078c95ecdbe7a22fce6ce29c5467e5412845b19"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.test.tsx",
@@ -597350,7 +597350,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
-              "sha256": "5d5d6c4e53e74eaf966cb53f4f2e2ffeefa44ae1dc16af09356410eccaadf2ec"
+              "sha256": "7faf569e30c498a1fb883ddee078c95ecdbe7a22fce6ce29c5467e5412845b19"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.test.tsx",
@@ -598962,7 +598962,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The staff inventory covers loading and error on all 48 primary data routes and authorized empty or unset states on 40 routes. Ten customer collections have held first-read and authorized-empty receipts in both languages on Chromium and mobile Safari. The CRM correction scope, storage cleanup recovery and verification settings shared read-denial withdrawal have current source-bound evidence. Reconcile other original route interactions and independently loaded children before full acceptance."
+        "The staff inventory covers loading and error on all 48 primary data routes and authorized empty or unset states on 40 routes. Ten customer collections have held first-read and authorized-empty receipts in both languages on Chromium and mobile Safari. The CRM correction scope, storage cleanup recovery, verification settings shared read denial and combined service-workflow grant withdrawal have current source-bound evidence. Reconcile other original route interactions and independently loaded children before full acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -599108,7 +599108,8 @@
           "release-0.5-crm-correction-visibility",
           "release-0.5-customer-history-first-read",
           "release-0.5-storage-cleanup-read-states",
-          "release-0.5-verification-shared-read-access"
+          "release-0.5-verification-shared-read-access",
+          "release-0.5-service-workflow-grant-revocation"
         ],
         "current_acceptance": null
       }
@@ -698278,7 +698279,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useOnboardingDraft.test.tsx",
@@ -698909,7 +698910,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useOnboardingDraft.test.tsx",
@@ -699540,7 +699541,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useOnboardingDraft.test.tsx",
@@ -700172,7 +700173,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useOnboardingDraft.test.tsx",
@@ -700803,7 +700804,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useOnboardingDraft.test.tsx",
@@ -701434,7 +701435,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useOnboardingDraft.test.tsx",
@@ -702065,7 +702066,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useOnboardingDraft.test.tsx",
@@ -702697,7 +702698,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useOnboardingDraft.test.tsx",
@@ -703328,7 +703329,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useOnboardingDraft.test.tsx",
@@ -703959,7 +703960,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useOnboardingDraft.test.tsx",
@@ -704813,7 +704814,7 @@
             },
             {
               "path": "apps/web/e2e/config-audit.spec.ts",
-              "sha256": "85736d23154d0aef370585c18669d6979d92230da6148e589d969fa916d8b961"
+              "sha256": "980fc435e19cde3cbff2b5a461ea0fa229a5496bb06fa2e61367a788f22c80ef"
             },
             {
               "path": "apps/web/src/components/AuditLogViewer.test.tsx",
@@ -704821,7 +704822,7 @@
             },
             {
               "path": "apps/web/src/components/AuditLogViewer.tsx",
-              "sha256": "58b12bc1da81841a2888e20ff1360834b2f8cac9bc0f22f0f2685908dc6568fc"
+              "sha256": "8fdc6e6b01fc82b8ad245653625a3b106815b2cb58efa90910ec4f5b45e64f77"
             },
             {
               "path": "apps/web/src/components/OtpConfigPanel.tsx",
@@ -706314,11 +706315,11 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
-              "sha256": "461c79ae8dcebd4971ed8b98869b965a1600086f2ec0731c5b0ee757914cca47"
+              "sha256": "3094accd09c58b57b7e9066d527a913fe0efbf672aea6281ee12feb2b7bb2d5c"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -706564,11 +706565,11 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
-              "sha256": "461c79ae8dcebd4971ed8b98869b965a1600086f2ec0731c5b0ee757914cca47"
+              "sha256": "3094accd09c58b57b7e9066d527a913fe0efbf672aea6281ee12feb2b7bb2d5c"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -706799,11 +706800,11 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
-              "sha256": "461c79ae8dcebd4971ed8b98869b965a1600086f2ec0731c5b0ee757914cca47"
+              "sha256": "3094accd09c58b57b7e9066d527a913fe0efbf672aea6281ee12feb2b7bb2d5c"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useGiftCodeCatalogue.test.tsx",
@@ -707031,11 +707032,11 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
-              "sha256": "461c79ae8dcebd4971ed8b98869b965a1600086f2ec0731c5b0ee757914cca47"
+              "sha256": "3094accd09c58b57b7e9066d527a913fe0efbf672aea6281ee12feb2b7bb2d5c"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -707258,11 +707259,11 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
-              "sha256": "461c79ae8dcebd4971ed8b98869b965a1600086f2ec0731c5b0ee757914cca47"
+              "sha256": "3094accd09c58b57b7e9066d527a913fe0efbf672aea6281ee12feb2b7bb2d5c"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -707648,7 +707649,7 @@
             },
             {
               "path": "apps/web/src/hooks/useSettingsSnapshot.ts",
-              "sha256": "10ef2dd3172b3449ad82803cb6d6b91f892b92e276be61c6e034e231e1ce5308"
+              "sha256": "c22b0ab868390c7ccf0de6291468052d9c19db633d8cb6f827546696e4822907"
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
@@ -708028,7 +708029,7 @@
             },
             {
               "path": "apps/web/e2e/service-workflows.spec.ts",
-              "sha256": "95c244a68af7eb4b51a011c2efdf92e87f4c5ed76064f38b878f2de8e3a679b3"
+              "sha256": "04289e8bcd8a8896c514170f99b9ccaeaf10f07650104d33b702c1ed156da9e9"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -708040,7 +708041,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
-              "sha256": "5d5d6c4e53e74eaf966cb53f4f2e2ffeefa44ae1dc16af09356410eccaadf2ec"
+              "sha256": "7faf569e30c498a1fb883ddee078c95ecdbe7a22fce6ce29c5467e5412845b19"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -708048,11 +708049,11 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useSettingsSnapshot.ts",
-              "sha256": "10ef2dd3172b3449ad82803cb6d6b91f892b92e276be61c6e034e231e1ce5308"
+              "sha256": "c22b0ab868390c7ccf0de6291468052d9c19db633d8cb6f827546696e4822907"
             },
             {
               "path": "apps/web/src/lib/service-settings-form.test.ts",
@@ -708064,7 +708065,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminServiceTargetsPage.tsx",
-              "sha256": "2392b25a7002228b8305bc4ba14254d4057c3ec9423fc04bdd458a842265847c"
+              "sha256": "62514c0b77b49791b4560b455b16ac18fc363469dd5bc0d3a4a14d49bd376432"
             },
             {
               "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
@@ -708441,11 +708442,11 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
-              "sha256": "461c79ae8dcebd4971ed8b98869b965a1600086f2ec0731c5b0ee757914cca47"
+              "sha256": "3094accd09c58b57b7e9066d527a913fe0efbf672aea6281ee12feb2b7bb2d5c"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -708713,7 +708714,7 @@
             },
             {
               "path": "apps/web/e2e/service-workflows.spec.ts",
-              "sha256": "95c244a68af7eb4b51a011c2efdf92e87f4c5ed76064f38b878f2de8e3a679b3"
+              "sha256": "04289e8bcd8a8896c514170f99b9ccaeaf10f07650104d33b702c1ed156da9e9"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -708725,7 +708726,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
-              "sha256": "5d5d6c4e53e74eaf966cb53f4f2e2ffeefa44ae1dc16af09356410eccaadf2ec"
+              "sha256": "7faf569e30c498a1fb883ddee078c95ecdbe7a22fce6ce29c5467e5412845b19"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -708733,11 +708734,11 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useSettingsSnapshot.ts",
-              "sha256": "10ef2dd3172b3449ad82803cb6d6b91f892b92e276be61c6e034e231e1ce5308"
+              "sha256": "c22b0ab868390c7ccf0de6291468052d9c19db633d8cb6f827546696e4822907"
             },
             {
               "path": "apps/web/src/lib/service-settings-form.test.ts",
@@ -708749,7 +708750,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminServiceTargetsPage.tsx",
-              "sha256": "2392b25a7002228b8305bc4ba14254d4057c3ec9423fc04bdd458a842265847c"
+              "sha256": "62514c0b77b49791b4560b455b16ac18fc363469dd5bc0d3a4a14d49bd376432"
             },
             {
               "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
@@ -716699,7 +716700,7 @@
             },
             {
               "path": "apps/web/e2e/service-targets.spec.ts",
-              "sha256": "48ea7c1181460bbe50f5ba0e7843045b37c46e7c354708b3d7e1428afc074898"
+              "sha256": "ef1af8a3e3d242c2fcfa3ac9cfd11d8945feee44fe993dcf02de192a96edcbc5"
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
@@ -722654,7 +722655,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useChatRetryAfter.ts",
@@ -726524,7 +726525,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/web/src/hooks/useChatRetryAfter.ts",
@@ -728968,7 +728969,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The staff inventory covers loading and error on all 48 primary data routes and authorized empty or unset states on 40 routes. Ten customer collections have held first-read and authorized-empty receipts in both languages on Chromium and mobile Safari. The CRM correction scope, storage cleanup recovery and verification settings shared read-denial withdrawal have current source-bound evidence. Reconcile other original route interactions and independently loaded children before full acceptance."
+        "The staff inventory covers loading and error on all 48 primary data routes and authorized empty or unset states on 40 routes. Ten customer collections have held first-read and authorized-empty receipts in both languages on Chromium and mobile Safari. The CRM correction scope, storage cleanup recovery, verification settings shared read denial and combined service-workflow grant withdrawal have current source-bound evidence. Reconcile other original route interactions and independently loaded children before full acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -729180,7 +729181,8 @@
           "release-0.5-crm-correction-visibility",
           "release-0.5-customer-history-first-read",
           "release-0.5-storage-cleanup-read-states",
-          "release-0.5-verification-shared-read-access"
+          "release-0.5-verification-shared-read-access",
+          "release-0.5-service-workflow-grant-revocation"
         ]
       }
     },
@@ -729316,7 +729318,7 @@
             },
             {
               "path": "apps/web/src/components/AuditLogViewer.tsx",
-              "sha256": "58b12bc1da81841a2888e20ff1360834b2f8cac9bc0f22f0f2685908dc6568fc"
+              "sha256": "8fdc6e6b01fc82b8ad245653625a3b106815b2cb58efa90910ec4f5b45e64f77"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -729692,7 +729694,7 @@
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
-              "sha256": "5d5d6c4e53e74eaf966cb53f4f2e2ffeefa44ae1dc16af09356410eccaadf2ec"
+              "sha256": "7faf569e30c498a1fb883ddee078c95ecdbe7a22fce6ce29c5467e5412845b19"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -730892,7 +730894,7 @@
             },
             {
               "path": "apps/web/src/hooks/useSettingsSnapshot.ts",
-              "sha256": "10ef2dd3172b3449ad82803cb6d6b91f892b92e276be61c6e034e231e1ce5308"
+              "sha256": "c22b0ab868390c7ccf0de6291468052d9c19db633d8cb6f827546696e4822907"
             },
             {
               "path": "apps/web/src/components/ProfileSwitcher.tsx",
@@ -730968,11 +730970,11 @@
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
-              "sha256": "461c79ae8dcebd4971ed8b98869b965a1600086f2ec0731c5b0ee757914cca47"
+              "sha256": "3094accd09c58b57b7e9066d527a913fe0efbf672aea6281ee12feb2b7bb2d5c"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
-              "sha256": "28da3396ab4c2e5d581746a603fd08322b3d6ff5a69a05219c875941ca5fedda"
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
@@ -731139,7 +731141,8 @@
             "All 101 transfer budgets and the CRM profile browser suite passed on the changed source. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-records-revocation/proof.json",
             "All 101 transfer budgets and the affected Persian/English CRM browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-correction-visibility/proof.json",
             "All 101 transfer budgets and affected Persian/English storage browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-storage-cleanup-read-states/proof.json",
-            "All 101 transfer budgets and affected verification and service-workflow browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-verification-shared-read-access/proof.json"
+            "All 101 transfer budgets and affected verification and service-workflow browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-verification-shared-read-access/proof.json",
+            "All 101 transfer budgets and 58 affected settings browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflow-grant-revocation/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -810846,6 +810849,70 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-verification-shared-read-access/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-verification-shared-read-access/renewed-bindings.json",
       "release_disposition": "Closed shared verification settings read denial and recovery. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-service-workflow-grant-revocation": {
+      "batch": "release-0.5-service-workflow-grant-revocation",
+      "base_commit": "36211f45a6db900f306b69ec277e75e20ad62bf8",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/config-audit.spec.ts",
+          "sha256": "980fc435e19cde3cbff2b5a461ea0fa229a5496bb06fa2e61367a788f22c80ef"
+        },
+        {
+          "path": "apps/web/e2e/service-targets.spec.ts",
+          "sha256": "ef1af8a3e3d242c2fcfa3ac9cfd11d8945feee44fe993dcf02de192a96edcbc5"
+        },
+        {
+          "path": "apps/web/e2e/service-workflows.spec.ts",
+          "sha256": "04289e8bcd8a8896c514170f99b9ccaeaf10f07650104d33b702c1ed156da9e9"
+        },
+        {
+          "path": "apps/web/src/components/AuditLogViewer.tsx",
+          "sha256": "8fdc6e6b01fc82b8ad245653625a3b106815b2cb58efa90910ec4f5b45e64f77"
+        },
+        {
+          "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
+          "sha256": "7faf569e30c498a1fb883ddee078c95ecdbe7a22fce6ce29c5467e5412845b19"
+        },
+        {
+          "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
+          "sha256": "3094accd09c58b57b7e9066d527a913fe0efbf672aea6281ee12feb2b7bb2d5c"
+        },
+        {
+          "path": "apps/web/src/hooks/useCatalogueResource.ts",
+          "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
+        },
+        {
+          "path": "apps/web/src/hooks/useSettingsSnapshot.ts",
+          "sha256": "c22b0ab868390c7ccf0de6291468052d9c19db633d8cb6f827546696e4822907"
+        },
+        {
+          "path": "apps/web/src/pages/AdminServiceTargetsPage.tsx",
+          "sha256": "62514c0b77b49791b4560b455b16ac18fc363469dd5bc0d3a4a14d49bd376432"
+        }
+      ],
+      "checks": [
+        "Both baseline Chromium cases reproduced a combined workflow editor remaining visible after a required response-target read returned HTTP 403. The combined endpoint requires both edit grants, and narrow settings reads remain independently authorized.",
+        "The route withdraws the combined editor on either narrow HTTP 403 and keeps the other authorized panel and its draft. Explicit retry performs a new combined read. HTTP 401 from any participating read or command clears the route and offers sign-in. A direct combined HTTP 403 leaves the separately authorized panels independently controlled.",
+        "All 58 distinct native Chromium and mobile Safari cases passed across the final scoped rerun and 44 unaffected original passes. Fifteen instrumented Chromium cases, 123 focused unit tests, web typecheck, changed-file lint and formatting and all 101 transfer budgets passed.",
+        "The first native run exposed three fixture issues. The session alert selector now targets exact feedback. OTP audit denial checks complete settings removal. The uncertain service-target save case verifies disabled retry, authoritative readback, preserved draft, explicit reconfirmation and identical retry payload. The runtime and final test snapshots differ only in these three e2e specs.",
+        "The unchanged critical gate passed at 19/19 lines and 32/32 branches. The other changed web source met its existing floor at 32/32 lines and 19/24 branches."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflow-grant-revocation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflow-grant-revocation/proof.json",
+      "source_scope_proof_sha256": "ba2ccba425de36ab0681a54983e06ed216b6b92fe6017b0919df96f6956e1c99",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflow-grant-revocation/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflow-grant-revocation/renewed-bindings.json",
+      "release_disposition": "Closed combined service workflow grant withdrawal and verified affected settings recovery. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [

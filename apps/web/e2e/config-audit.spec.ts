@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/admin-ui';
 import { brandingText } from '@barghsa/i18n/branding';
+import { verificationConfigText } from '@barghsa/i18n/verification-config';
 import { configAuditPage, configAuditCursor } from '../src/test/config-audit-fixtures';
 import { publishedBrand } from '../src/test/branding-settings-fixtures';
 import { crmShell } from './crm-shell-fixture';
@@ -128,7 +129,17 @@ for (const scope of ['branding', 'otp', 'service-response-targets'] as const)
           await expect(
             page.getByRole('textbox', { name: brandingText('appTitle', locale), exact: true })
           ).toHaveCount(0);
-        else if (scope === 'otp') await expect(input).toHaveValue('');
-        else await expect(input).toHaveCount(0);
+        else if (scope === 'otp') {
+          await expect(input).toHaveCount(0);
+          await expect(page.locator('#verification-mode-MANUAL')).toHaveCount(0);
+          await expect(
+            page
+              .getByRole('main')
+              .getByRole('alert')
+              .filter({
+                hasText: verificationConfigText('forbidden', locale),
+              })
+          ).toBeVisible();
+        } else await expect(input).toHaveCount(0);
         expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
       });

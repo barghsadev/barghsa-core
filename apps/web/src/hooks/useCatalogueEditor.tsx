@@ -12,7 +12,7 @@ export interface CatalogueEditorProps {
   contextBasis?: string;
   retainChangedDraft?: boolean;
   onBusyChange?: (busy: boolean) => void;
-  onDenied?: () => void;
+  onDenied?: (status?: 401 | 403) => void;
 }
 type CatalogueEditor<Data, Draft extends FieldValues> = ReturnType<typeof useWizardForm<Draft>> & {
   resource: ReturnType<typeof useCatalogueResource<Data>>;
@@ -24,7 +24,7 @@ type CatalogueEditor<Data, Draft extends FieldValues> = ReturnType<typeof useWiz
   saved: boolean;
   stale: boolean;
   resetToCurrent: () => void;
-  deny: () => void;
+  deny: (status?: 401 | 403) => void;
   denied: boolean;
   disabled: boolean;
   submit: (event: FormEvent, capture: (draft: Draft) => TeamAction) => Promise<void>;
@@ -33,7 +33,7 @@ type CatalogueEditor<Data, Draft extends FieldValues> = ReturnType<typeof useWiz
   verifyReceipt: (matches: boolean) => boolean;
   refresh: () => void;
   complete: (value?: Data) => void;
-  onDenied: () => void;
+  onDenied: (status?: 401 | 403) => void;
   onPendingChange: (pending: boolean) => void;
   onUnconfirmed: () => void;
   onValidationError: (fields: unknown[]) => boolean;
@@ -77,21 +77,24 @@ export function useCatalogueEditor<Data, Draft extends FieldValues>(
   const dirtyDraft = useRef(false);
   dirtyDraft.current = editor.form.formState.isDirty;
   const invalidFocus = useRef<FieldPath<Draft> | null>(null);
-  const deny = useCallback(() => {
-    generation.current++;
-    source.current = null;
-    command.current = null;
-    invalidFocus.current = null;
-    data.current = null;
-    commandPendingRef.current = false;
-    setCommandPending(false);
-    reset(defaults);
-    setAction(null);
-    setRequiredRead(null);
-    setSaved(false);
-    setStale(false);
-    callbacks.current.onDenied?.();
-  }, [reset, defaults]);
+  const deny = useCallback(
+    (status?: 401 | 403) => {
+      generation.current++;
+      source.current = null;
+      command.current = null;
+      invalidFocus.current = null;
+      data.current = null;
+      commandPendingRef.current = false;
+      setCommandPending(false);
+      reset(defaults);
+      setAction(null);
+      setRequiredRead(null);
+      setSaved(false);
+      setStale(false);
+      callbacks.current.onDenied?.(status);
+    },
+    [reset, defaults]
+  );
   const scope = useCatalogueScope(deny);
   const resource = useCatalogueResource(scope, path, validate);
   const identity = JSON.stringify([options.identity, resource.ownerKey]);
@@ -336,8 +339,8 @@ export function useCatalogueEditor<Data, Draft extends FieldValues>(
         setSaved(true);
       }
     },
-    onDenied: () => {
-      if (current()) scope.deny();
+    onDenied: (status) => {
+      if (current()) scope.deny(status);
     },
     onPendingChange: (pending) => {
       if (!current()) return;

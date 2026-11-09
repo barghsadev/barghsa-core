@@ -6,17 +6,20 @@ import { queryKeys } from '../lib/query-keys.js';
 import { ServerQueryError } from '../lib/server-query-client.js';
 
 /** Shared permission boundary for the resources of one staff catalogue. */
-export function useCatalogueScope(onDenied: () => void) {
+export function useCatalogueScope(onDenied: (status?: 401 | 403) => void) {
   const identity = useId();
   const live = useRef(0);
   const [version, setVersion] = useState(0);
   const [denied, setDenied] = useState(false);
-  const deny = useCallback(() => {
-    live.current++;
-    onDenied();
-    setDenied(true);
-    setVersion(live.current);
-  }, [onDenied]);
+  const deny = useCallback(
+    (status?: 401 | 403) => {
+      live.current++;
+      onDenied(status);
+      setDenied(true);
+      setVersion(live.current);
+    },
+    [onDenied]
+  );
   const recover = useCallback(() => {
     live.current++;
     setDenied(false);
@@ -85,10 +88,8 @@ export function useCatalogueResource<T>(
       return response.json() as Promise<unknown>;
     },
   });
-  const forbidden =
-    receipt.current !== request &&
-    query.error instanceof ServerQueryError &&
-    (query.error.status === 401 || query.error.status === 403);
+  const status = query.error instanceof ServerQueryError ? query.error.status : null;
+  const forbidden = receipt.current !== request && (status === 401 || status === 403);
   useEffect(() => {
     if (!path || denied) {
       setResult(null);
@@ -96,8 +97,8 @@ export function useCatalogueResource<T>(
     }
     if (live.current !== version || liveKey.current !== key || receipt.current === request) return;
     if (forbidden) {
-      if (query.error instanceof ServerQueryError && query.error.status === 401) onUnauthorized?.();
-      deny();
+      if (status === 401) onUnauthorized?.();
+      deny(status);
       return;
     }
     const loading = query.isPending || query.isFetching;
@@ -130,6 +131,7 @@ export function useCatalogueResource<T>(
     onUnauthorized,
     request,
     forbidden,
+    status,
     query.error,
     query.isPending,
     query.isFetching,
