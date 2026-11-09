@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T15:57:39+00:00",
+  "updated": "2026-11-09T16:04:14+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -8006,7 +8006,8 @@
           "packages/db/package.json"
         ],
         "batches": [
-          "release-0.6-packaged-production-seed"
+          "release-0.6-packaged-production-seed",
+          "release-0.6-production-image-recipes-and-distribution"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -8018,7 +8019,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "df0954295e4a008f008d499986077cb989fef297db62bb1e4312b29f3dd27810"
+              "sha256": "d8b4ee8aeaf1e8ac91447c6a67d3fdb61dac04b7d14417a79e74cc30ce5d7e7e"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -8187,7 +8188,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Published latest/immutable revision tags, registry delivery and production rollout remain assigned to R06/V01 deployment review. Local test tags are not release traceability proof."
+        "Reconcile the epic's Bookworm slim base with the verified digest-pinned Node 24 Alpine images, or prove an equivalent patched Bookworm build. Keep native package and license safeguards.",
+        "Publish and read back approved immutable revision tags and registry digests. Update latest only on approved promotion. Local CI tags and staging transfer tags do not establish registry delivery or production rollout."
       ],
       "owner": null,
       "depends_on": [],
@@ -8249,7 +8251,8 @@
         ],
         "batches": [
           "release-0.6-owner-policy-reconciliation",
-          "release-0.6-remove-runtime-package-managers"
+          "release-0.6-remove-runtime-package-managers",
+          "release-0.6-production-image-recipes-and-distribution"
         ],
         "current_acceptance": null
       }
@@ -8269,7 +8272,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Published latest/immutable revision tags, registry delivery and production rollout remain assigned to R06/V01 deployment review. Local test tags are not release traceability proof."
+        "Reconcile the epic's Bookworm slim base with the verified digest-pinned Node 24 Alpine images, or prove an equivalent patched Bookworm build. Keep native package and license safeguards.",
+        "Publish and read back approved immutable revision tags and registry digests. Update latest only on approved promotion. Local CI tags and staging transfer tags do not establish registry delivery or production rollout."
       ],
       "owner": null,
       "depends_on": [],
@@ -8331,7 +8335,8 @@
         ],
         "batches": [
           "release-0.6-owner-policy-reconciliation",
-          "release-0.6-remove-runtime-package-managers"
+          "release-0.6-remove-runtime-package-managers",
+          "release-0.6-production-image-recipes-and-distribution"
         ],
         "current_acceptance": null
       }
@@ -61202,7 +61207,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-review-preview-deadlines",
           "release-0.6-staging-image-rollback",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-production-image-recipes-and-distribution"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -61350,7 +61356,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "455e8d0db9459b028d2b4ce83d7bb43ea0f90f535546c2d501edf72758be34a2"
+              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -105454,7 +105460,8 @@
           "release-0.6-alpine-node-runtime-candidate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-packaged-production-seed"
+          "release-0.6-packaged-production-seed",
+          "release-0.6-production-image-recipes-and-distribution"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -105826,7 +105833,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "ef2d8af5b359edd372c8b14d365b113bb7a8867f59c0eb2bcca2741fcbdece36"
+              "sha256": "d76ca456f32ce8366832b3ba1c58e7c961bc20a62c26bf8000b41203df56e3b6"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -105838,7 +105845,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "455e8d0db9459b028d2b4ce83d7bb43ea0f90f535546c2d501edf72758be34a2"
+              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -445870,7 +445877,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-review-preview-deadlines",
           "release-0.6-staging-image-rollback",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-production-image-recipes-and-distribution"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -446042,7 +446050,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "455e8d0db9459b028d2b4ce83d7bb43ea0f90f535546c2d501edf72758be34a2"
+              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -459101,7 +459109,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.6-browser-response-policy",
           "release-0.6-staging-image-rollback",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-production-image-recipes-and-distribution"
         ],
         "current_acceptance": {
           "status": "done",
@@ -459341,7 +459350,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "455e8d0db9459b028d2b4ce83d7bb43ea0f90f535546c2d501edf72758be34a2"
+              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -459672,7 +459681,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.6-browser-response-policy",
           "release-0.6-staging-image-rollback",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-production-image-recipes-and-distribution"
         ],
         "current_acceptance": {
           "status": "done",
@@ -459912,7 +459922,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "455e8d0db9459b028d2b4ce83d7bb43ea0f90f535546c2d501edf72758be34a2"
+              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -460241,7 +460251,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.6-browser-response-policy",
           "release-0.6-staging-image-rollback",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-production-image-recipes-and-distribution"
         ],
         "current_acceptance": {
           "status": "done",
@@ -460481,7 +460492,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "455e8d0db9459b028d2b4ce83d7bb43ea0f90f535546c2d501edf72758be34a2"
+              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -460810,7 +460821,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.6-browser-response-policy",
           "release-0.6-staging-image-rollback",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-production-image-recipes-and-distribution"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -461050,7 +461062,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "455e8d0db9459b028d2b4ce83d7bb43ea0f90f535546c2d501edf72758be34a2"
+              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -461878,7 +461890,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.6-browser-response-policy",
           "release-0.6-staging-image-rollback",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-production-image-recipes-and-distribution"
         ],
         "current_acceptance": {
           "status": "done",
@@ -462118,7 +462131,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "455e8d0db9459b028d2b4ce83d7bb43ea0f90f535546c2d501edf72758be34a2"
+              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -462481,7 +462494,8 @@
           "release-0.6-alpine-node-runtime-candidate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-packaged-production-seed"
+          "release-0.6-packaged-production-seed",
+          "release-0.6-production-image-recipes-and-distribution"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -462853,7 +462867,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "ef2d8af5b359edd372c8b14d365b113bb7a8867f59c0eb2bcca2741fcbdece36"
+              "sha256": "d76ca456f32ce8366832b3ba1c58e7c961bc20a62c26bf8000b41203df56e3b6"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -462865,7 +462879,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "455e8d0db9459b028d2b4ce83d7bb43ea0f90f535546c2d501edf72758be34a2"
+              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -463633,7 +463647,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.6-browser-response-policy",
           "release-0.6-staging-image-rollback",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-production-image-recipes-and-distribution"
         ],
         "current_acceptance": {
           "status": "done",
@@ -463873,7 +463888,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "455e8d0db9459b028d2b4ce83d7bb43ea0f90f535546c2d501edf72758be34a2"
+              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -464201,7 +464216,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.6-browser-response-policy",
           "release-0.6-staging-image-rollback",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-production-image-recipes-and-distribution"
         ],
         "current_acceptance": {
           "status": "done",
@@ -464441,7 +464457,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "455e8d0db9459b028d2b4ce83d7bb43ea0f90f535546c2d501edf72758be34a2"
+              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -464770,7 +464786,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.6-browser-response-policy",
           "release-0.6-staging-image-rollback",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-production-image-recipes-and-distribution"
         ],
         "current_acceptance": {
           "status": "done",
@@ -465010,7 +465027,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "455e8d0db9459b028d2b4ce83d7bb43ea0f90f535546c2d501edf72758be34a2"
+              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -465340,7 +465357,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.6-browser-response-policy",
           "release-0.6-staging-image-rollback",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-production-image-recipes-and-distribution"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -465580,7 +465598,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "455e8d0db9459b028d2b4ce83d7bb43ea0f90f535546c2d501edf72758be34a2"
+              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -465932,7 +465950,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.6-browser-response-policy",
           "release-0.6-staging-image-rollback",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-production-image-recipes-and-distribution"
         ],
         "current_acceptance": {
           "status": "done",
@@ -466172,7 +466191,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "455e8d0db9459b028d2b4ce83d7bb43ea0f90f535546c2d501edf72758be34a2"
+              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -466500,7 +466519,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.6-browser-response-policy",
           "release-0.6-staging-image-rollback",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-production-image-recipes-and-distribution"
         ],
         "current_acceptance": {
           "status": "done",
@@ -466740,7 +466760,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "455e8d0db9459b028d2b4ce83d7bb43ea0f90f535546c2d501edf72758be34a2"
+              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -473561,7 +473581,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The exact f0dfc74e preflight produced four image-ID-bound CycloneDX SBOMs. Bind retained SBOMs and scan receipts to the exact images prepared for deployment, including registry digests at production promotion."
+        "CI run 42647680762 produced four verified image-ID-bound CycloneDX SBOMs and matching vulnerability and license reports. Match retained receipts to the exact deployment image IDs and production registry digests."
       ],
       "owner": null,
       "depends_on": [],
@@ -473570,7 +473590,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-private-api-monitoring",
-          "release-0.6-staging-postgres-monitoring-readback"
+          "release-0.6-staging-postgres-monitoring-readback",
+          "release-0.6-production-image-recipes-and-distribution"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -476638,7 +476659,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The release now validates both actual HTTPS health bodies. Existing isolated packaged migration and real rollback rehearsals passed. Verify the smoke, migration ordering and exact live metadata during the accepted v0.6.0 deployment."
+        "Run the release worker for an accepted v0.6.0 candidate and retain its loaded and running image IDs, migration result, live release metadata, readiness/liveness, S3 smoke and Telegram receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -476648,7 +476669,8 @@
         "batches": [
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-runtime-sbom-provenance",
-          "release-0.6-runtime-readiness-and-staging-smoke"
+          "release-0.6-runtime-readiness-and-staging-smoke",
+          "release-0.6-production-image-recipes-and-distribution"
         ],
         "current_acceptance": null
       }
@@ -728890,7 +728912,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "ef2d8af5b359edd372c8b14d365b113bb7a8867f59c0eb2bcca2741fcbdece36"
+              "sha256": "d76ca456f32ce8366832b3ba1c58e7c961bc20a62c26bf8000b41203df56e3b6"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -728898,7 +728920,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "53b897128e806f6a85cb96c7504bd3c5c2f924e5d1b367b696f51c5ace204a42"
+              "sha256": "e7422e80f1254f8217fde683ba57d971f76e53dceefa8db56e6d9ccd0ce1e622"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -728914,7 +728936,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "455e8d0db9459b028d2b4ce83d7bb43ea0f90f535546c2d501edf72758be34a2"
+              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -730609,7 +730631,8 @@
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
           "release-0.6-packaged-production-seed",
-          "release-0.6-workspace-test-and-coverage-configuration"
+          "release-0.6-workspace-test-and-coverage-configuration",
+          "release-0.6-production-image-recipes-and-distribution"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -732778,7 +732801,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "ef2d8af5b359edd372c8b14d365b113bb7a8867f59c0eb2bcca2741fcbdece36"
+              "sha256": "d76ca456f32ce8366832b3ba1c58e7c961bc20a62c26bf8000b41203df56e3b6"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -732786,7 +732809,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "53b897128e806f6a85cb96c7504bd3c5c2f924e5d1b367b696f51c5ace204a42"
+              "sha256": "e7422e80f1254f8217fde683ba57d971f76e53dceefa8db56e6d9ccd0ce1e622"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -732802,7 +732825,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "455e8d0db9459b028d2b4ce83d7bb43ea0f90f535546c2d501edf72758be34a2"
+              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -734404,7 +734427,8 @@
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
           "release-0.6-packaged-production-seed",
-          "release-0.6-workspace-test-and-coverage-configuration"
+          "release-0.6-workspace-test-and-coverage-configuration",
+          "release-0.6-production-image-recipes-and-distribution"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -738338,7 +738362,8 @@
           "release-0.6-native-integration-acceptance",
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
-          "release-0.6-workspace-test-and-coverage-configuration"
+          "release-0.6-workspace-test-and-coverage-configuration",
+          "release-0.6-production-image-recipes-and-distribution"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -826306,6 +826331,90 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "workspace-test-mode-proof.json",
       "source_scope_proof_sha256": "f32fd51a6746a78c45ffd8f7a23467fd3e41b977628c3e4f549b5a230c62d204"
+    },
+    "release-0.6-production-image-recipes-and-distribution": {
+      "batch": "release-0.6-production-image-recipes-and-distribution",
+      "base_commit": "dc96c570f92a7ccee9f57f07b4fd2c95201233a7",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-03.01.01",
+        "01-platform-infrastructure.md#T-03.01.02",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "e7422e80f1254f8217fde683ba57d971f76e53dceefa8db56e6d9ccd0ce1e622"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "643aafb3cabd196826b24d24bb5106d24cd852ac1651a246c5814f9b0d071f47"
+        },
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "d76ca456f32ce8366832b3ba1c58e7c961bc20a62c26bf8000b41203df56e3b6"
+        },
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "d8b4ee8aeaf1e8ac91447c6a67d3fdb61dac04b7d14417a79e74cc30ce5d7e7e"
+        },
+        {
+          "path": "Dockerfile.base",
+          "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
+        },
+        {
+          "path": "Dockerfile.web",
+          "sha256": "d2381ff9c3ec67588ac9cb330639710d4c8d2e953670e77460962b8d67301c84"
+        },
+        {
+          "path": "deploy/production/compose.yml",
+          "sha256": "7b5699f7b41e9b8966764eb9482155c17bcbb3aab1e9ea4084b93984d062bd19"
+        },
+        {
+          "path": "scripts/check-runtime-images.sh",
+          "sha256": "2eca8dd26a253b7d487ad99eb5c8b52da7b103f743c8a6f3eb8fdf6957c20bfd"
+        },
+        {
+          "path": "scripts/check-release-licenses.py",
+          "sha256": "271754dea01f1e5751d57f59160292723e14b994dea8523f0de172e976b499ea"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
+        }
+      ],
+      "checks": [
+        "Reused the tested multistage Node 24 Alpine recipes. The completed exact e47415d3 CI run built app, web, PostgreSQL and ClamAV and reported no high or critical vulnerabilities. All four artifact image IDs, vulnerability JSON and CycloneDX hashes matched the scan receipts and the release license report. Its package inventory is identical to the prior exact review, with 170 entries awaiting a decision.",
+        "The staging worker tags app and web transfers with the full revision and exact Docker image ID. The protected candidate manifest records those IDs. The host checks the loaded images before starting services, then reads back the running API, worker, AI inference and web IDs before activation and notification.",
+        "All 15 release queue and rollback tests passed. Negative fixture loaded-image mismatch failed before startup. Negative running-image mismatch took the rollback path. The isolated Linux amd64 Docker proof preserved both image IDs across actual compressed save/load and retained the rollback tag across two distinct builds of one revision. Bash and ShellCheck passed.",
+        "Production instructions require scan and SBOM hashes, immutable registry digests and post-pull ID equality. No registry image was published, no app release was deployed and no announcement was sent in this batch."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "image-distribution-receipt.json",
+      "source_scope_proof_sha256": "da1a9b7e4cbd6c90c081a3fb4ab639e018730579a1eb648b71eb9bc41cba511f"
     }
   },
   "historical_improvements": [
@@ -826345,15 +826454,15 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-production-image-recipes-and-distribution",
+    "id": "release-0.6-security-header-ci-and-nonce-evidence",
     "release": "0.6.0",
     "task_keys": [
-      "01-platform-infrastructure.md#T-03.01.01",
-      "01-platform-infrastructure.md#T-03.01.02",
-      "06-security-testing-observability.md#T-06.07.02.07",
+      "06-security-testing-observability.md#T-06.02.02.04",
+      "06-security-testing-observability.md#T-06.02.03.04",
+      "06-security-testing-observability.md#T-06.02.03.05",
       "release-readiness#R-05.02"
     ],
-    "goal": "Verify the existing production Docker recipes and image-bound SBOM evidence. Preserve the final deployment-image and package approval boundaries."
+    "goal": "Verify the existing nonce propagation and security-header tests and gate. Reuse the staging report-only and isolated enforce evidence. Keep live CSP observation and production TLS gates open."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",

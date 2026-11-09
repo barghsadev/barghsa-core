@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T15:57:39+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T16:04:14+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -39,11 +39,11 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify the existing production Docker recipes and image-bound SBOM evidence. Preserve the final deployment-image and package approval boundaries.
+Verify the existing nonce propagation and security-header tests and gate. Reuse the staging report-only and isolated enforce evidence. Keep live CSP observation and production TLS gates open.
 
-- `01-platform-infrastructure.md#T-03.01.01`: Create `Dockerfile.web` with multi-stage build
-- `01-platform-infrastructure.md#T-03.01.02`: Create shared `Dockerfile.base` for API and worker (same build, different CMD)
-- `06-security-testing-observability.md#T-06.07.02.07`: Generate SBOM (Software Bill of Materials) for each production build
+- `06-security-testing-observability.md#T-06.02.02.04`: Ensure nonce generation and propagation for inline scripts/styles across the served HTML shell and client
+- `06-security-testing-observability.md#T-06.02.03.04`: Write integration tests: verify all security headers present and correct on responses
+- `06-security-testing-observability.md#T-06.02.03.05`: Add CI check that fails if required security headers are missing or misconfigured
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
 
 ## v0.2.0: Complete customer journeys

@@ -14,12 +14,12 @@ python3 deploy/staging/notify-release.py --check --commit "$commit"
 
 host="${BARGHSA_VPS_HOST:-89.42.199.13}"
 port="${BARGHSA_VPS_SSH_PORT:-30222}"
-tag="vps-$(git rev-parse --short=12 HEAD)"
+tag="vps-$commit"
 remote="root@$host"
 ssh_args=(-p "$port" -o BatchMode=yes)
 scp_args=(-P "$port" -o BatchMode=yes)
 
-images=("barghsa-app:$tag" "barghsa-web:$tag")
+images=()
 if ssh "${ssh_args[@]}" "$remote" 'test -r /etc/barghsa/staging/active-images.env'; then
   stateful=$(ssh "${ssh_args[@]}" "$remote" \
     "grep -E '^BARGHSA_(POSTGRES|CLAMAV)_IMAGE=' /etc/barghsa/staging/active-images.env")
@@ -41,6 +41,18 @@ fi
 
 docker build --platform linux/amd64 -f Dockerfile.base --target production -t "barghsa-app:$tag" .
 docker build --platform linux/amd64 --build-arg "BARGHSA_RELEASE_SHA=$commit" -f Dockerfile.web --target production -t "barghsa-web:$tag" .
+app_id=$(docker image inspect --format '{{.Id}}' "barghsa-app:$tag")
+web_id=$(docker image inspect --format '{{.Id}}' "barghsa-web:$tag")
+[[ "$app_id" =~ ^sha256:[0-9a-f]{64}$ && "$web_id" =~ ^sha256:[0-9a-f]{64}$ ]] || {
+  echo 'Invalid release image IDs' >&2
+  exit 1
+}
+# A rebuild of the same source must never replace a tag used for rollback.
+app_image="barghsa-app:$tag-${app_id#sha256:}"
+web_image="barghsa-web:$tag-${web_id#sha256:}"
+docker image tag "$app_id" "$app_image"
+docker image tag "$web_id" "$web_image"
+images+=("$app_image" "$web_image")
 
 echo 'Transferring release images over SSH' >&2
 docker save "${images[@]}" \
@@ -61,12 +73,14 @@ ssh "${ssh_args[@]}" "$remote" '/usr/local/sbin/barghsa-staging-init-runtime'
 manifest="$(mktemp)"
 trap 'rm -f "$manifest"' EXIT
 cat > "$manifest" <<EOF
-BARGHSA_APP_IMAGE=barghsa-app:$tag
-BARGHSA_WEB_IMAGE=barghsa-web:$tag
+BARGHSA_APP_IMAGE=$app_image
+BARGHSA_APP_IMAGE_ID=$app_id
+BARGHSA_WEB_IMAGE=$web_image
+BARGHSA_WEB_IMAGE_ID=$web_id
 BARGHSA_POSTGRES_IMAGE=$postgres_image
 BARGHSA_CLAMAV_IMAGE=$clamav_image
 EOF
-candidate="/etc/barghsa/staging/candidate-$tag.env"
+candidate="/etc/barghsa/staging/candidate-$tag-${app_id#sha256:}-${web_id#sha256:}.env"
 scp "${scp_args[@]}" "$manifest" "$remote:$candidate"
 # shellcheck disable=SC2029 # The fixed candidate path is intentionally expanded locally.
 ssh "${ssh_args[@]}" "$remote" "chmod 600 $candidate"

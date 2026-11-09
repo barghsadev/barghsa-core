@@ -35,7 +35,16 @@ for key in BARGHSA_APP_IMAGE BARGHSA_WEB_IMAGE BARGHSA_POSTGRES_IMAGE BARGHSA_CL
   [[ "${!key:-}" =~ ^barghsa-(app|web|postgres|clamav):vps-[a-z0-9._-]+$ ]] || {
     printf 'Invalid local image tag: %s\n' "$key" >&2; exit 1;
   }
-  docker image inspect "${!key}" >/dev/null
+  loaded_id=$(docker image inspect --format '{{.Id}}' "${!key}")
+  case "$key" in
+    BARGHSA_APP_IMAGE|BARGHSA_WEB_IMAGE)
+      expected_key=${key}_ID
+      [[ "${!expected_key:-}" =~ ^sha256:[0-9a-f]{64}$ && "$loaded_id" == "${!expected_key}" ]] || {
+        printf 'Loaded image ID differs from the candidate manifest: %s\n' "$key" >&2
+        exit 1
+      }
+      ;;
+  esac
 done
 if [[ -r "$active" ]]; then
   for key in BARGHSA_POSTGRES_IMAGE BARGHSA_CLAMAV_IMAGE; do
@@ -92,6 +101,19 @@ echo 'Disposable staging: no offsite backup is configured' >&2
 "${dc[@]}" up -d --no-deps --wait --wait-timeout 240 web
 "${dc[@]}" up -d --no-deps --wait --wait-timeout 240 worker
 
+for service in api worker ai-inference web; do
+  expected_id=$BARGHSA_APP_IMAGE_ID
+  if [[ "$service" == web ]]; then
+    expected_id=$BARGHSA_WEB_IMAGE_ID
+  fi
+  container=$("${dc[@]}" ps -q "$service")
+  running_id=$(docker container inspect --format '{{.Image}}' "$container")
+  [[ "$running_id" == "$expected_id" ]] || {
+    printf 'Running image ID differs from the candidate manifest: %s\n' "$service" >&2
+    false
+  }
+done
+
 for health in live ready; do
   curl --fail --silent --show-error --max-time 20 "$APP_PUBLIC_URL/api/health/$health" |
     python3 -c '
@@ -121,3 +143,4 @@ docker run --rm --env-file "$runtime" --network barghsa-staging-private \
 install -m 0600 "$candidate" "$active"
 trap - ERR
 printf 'Staging release healthy: %s\n' "$BARGHSA_APP_IMAGE"
+printf 'Staging app and web image IDs: %s %s\n' "$BARGHSA_APP_IMAGE_ID" "$BARGHSA_WEB_IMAGE_ID"

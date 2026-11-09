@@ -153,7 +153,12 @@ API/worker and web images, retaining the active PostgreSQL and ClamAV images
 and all Docker volumes. The script transfers images over SSH, uploads
 Compose and NGINX configuration, initializes root-only random staging secrets
 on first deployment, runs the release script, and checks HTTPS plus a private
-S3 write and public signed read. Subsequent
+S3 write and public signed read. App and web transfer tags include the full
+source revision and image ID, so a rebuild cannot replace a rollback tag. The
+release checks the loaded image IDs against the candidate manifest before
+startup and reads back the running API, worker, AI inference and web image IDs
+before saving the active manifest and announcing the release. The queue log
+records the verified IDs for matching with image scan and SBOM receipts. Subsequent
 releases preserve `/etc/barghsa/staging/runtime.env` and Docker volumes.
 Redis and object-store images are pinned by digest. Already installed exact
 images are reused with Compose's `--policy missing`; missing images are still
