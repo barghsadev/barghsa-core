@@ -65,19 +65,38 @@ jobs:
           path: ${{ runner.temp }}/secret-scan.json
           retention-days: 14
 
-  integrity:
-    name: Verify monorepo integrity
-    needs: [sast, secrets]
-    if: ${{ always() }}
+  images:
+    name: Scan runtime container images
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the four staging runtime images
+        run: |
+          docker build -f Dockerfile.base --target production -t "barghsa-ci-app:$GITHUB_SHA" .
+          docker build -f Dockerfile.web --target production --build-arg "BARGHSA_RELEASE_SHA=$GITHUB_SHA" -t "barghsa-ci-web:$GITHUB_SHA" .
+          docker build -f deploy/clamav/Dockerfile -t "barghsa-ci-clamav:$GITHUB_SHA" .
+          docker build -f packages/db/scripts/backup/Dockerfile -t "barghsa-ci-postgres:$GITHUB_SHA" .
+      - name: Scan exact built image IDs
+        run: |
+          bash scripts/check-runtime-images.sh "$RUNNER_TEMP/runtime-image-scan" \
+            "barghsa-ci-app:$GITHUB_SHA" "barghsa-ci-web:$GITHUB_SHA" \
+            "barghsa-ci-clamav:$GITHUB_SHA" "barghsa-ci-postgres:$GITHUB_SHA"
+      - name: Upload runtime image vulnerability reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: runtime-image-vulnerability-reports
+          path: ${{ runner.temp }}/runtime-image-scan
+          if-no-files-found: warn
+          retention-days: 14
+
+  quality:
+    name: Check build and application integrity
     runs-on: ubuntu-latest
     steps:
-      - name: Require successful source and secret scans
-        env:
-          SAST_RESULT: ${{ needs.sast.result }}
-          SECRET_SCAN_RESULT: ${{ needs.secrets.result }}
-        run: |
-          test "$SAST_RESULT" = success
-          test "$SECRET_SCAN_RESULT" = success
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
         with:
@@ -225,6 +244,26 @@ jobs:
           name: production-browser-failures
           path: apps/web/test-results/
           retention-days: 7
+
+  integrity:
+    name: Verify monorepo integrity
+    needs: [sast, secrets, images, quality]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Require successful application and security checks
+        env:
+          SAST_RESULT: ${{ needs.sast.result }}
+          SECRET_SCAN_RESULT: ${{ needs.secrets.result }}
+          IMAGE_SCAN_RESULT: ${{ needs.images.result }}
+          QUALITY_RESULT: ${{ needs.quality.result }}
+        run: |
+          test "$SAST_RESULT" = success
+          test "$SECRET_SCAN_RESULT" = success
+          test "$IMAGE_SCAN_RESULT" = success
+          test "$QUALITY_RESULT" = success
 
   test:
     name: Run tests
