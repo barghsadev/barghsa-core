@@ -10,7 +10,6 @@ import { formatBrowserDate } from './browser-date';
 import { templateDetail } from '../src/test/document-list-fixtures';
 import { contractTemplate, templateVersion } from '../src/test/contract-settings-fixtures';
 
-const evidence = '/Users/majid/.local/state/barghsa-manual-batches/template-catalogue-tables';
 const digits = (locale: 'en' | 'fa', value: number) =>
   new Intl.NumberFormat(locale, { numberingSystem: locale === 'fa' ? 'latn' : 'arabext' }).format(
     value
@@ -179,7 +178,7 @@ for (const locale of ['en', 'fa'] as const) {
     expect([listReads, detailReads, writes]).toEqual([1, 1, 0]);
     await inspect(page);
     if (locale === 'fa' && info.project.name === 'mobile-safari')
-      await card.screenshot({ path: `${evidence}/document-template-card-fa.png` });
+      await card.screenshot({ path: test.info().outputPath('document-template-card-fa.png') });
     status = 503;
     await page.getByRole('button', { name: word('refresh'), exact: true }).click();
     await expect(workspace.getByRole('alert')).toContainText(word('detailError'));
@@ -280,7 +279,7 @@ for (const locale of ['en', 'fa'] as const) {
     expect([listReads, detailReads, writes]).toEqual([1, 1, 0]);
     await inspect(page);
     if (locale === 'fa' && info.project.name === 'mobile-safari')
-      await card.screenshot({ path: `${evidence}/contract-template-card-fa.png` });
+      await card.screenshot({ path: test.info().outputPath('contract-template-card-fa.png') });
     status = 503;
     await page.getByRole('button', { name: word('refresh'), exact: true }).click();
     await expect(page.getByRole('button', { name: word('listRetry'), exact: true })).toBeVisible();

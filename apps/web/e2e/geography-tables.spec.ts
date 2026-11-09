@@ -62,10 +62,10 @@ for (const locale of ['en', 'fa'] as const) {
     );
     if (locale === 'fa' && info.project.name === 'mobile-safari') {
       await provinceCard.screenshot({
-        path: '/Users/majid/.local/state/barghsa-manual-batches/geography-tables/province-card-fa.png',
+        path: test.info().outputPath('province-card-fa.png'),
       });
       await cityCard.screenshot({
-        path: '/Users/majid/.local/state/barghsa-manual-batches/geography-tables/city-card-fa.png',
+        path: test.info().outputPath('city-card-fa.png'),
       });
     }
     const edit = cityCard.getByRole('button', { name: t('edit'), exact: true });

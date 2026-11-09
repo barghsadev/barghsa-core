@@ -68,7 +68,7 @@ for (const locale of ['en', 'fa'] as const) {
     await checkRoutePresentation(page, info, locale);
     if (locale === 'fa' && info.project.name === 'mobile-safari')
       await card.screenshot({
-        path: '/Users/majid/.local/state/barghsa-manual-batches/staff-directory-tables/staff-card-fa.png',
+        path: test.info().outputPath('staff-card-fa.png'),
       });
 
     await card.getByRole('button', { name: label('editRoles'), exact: true }).click();
@@ -167,7 +167,7 @@ for (const locale of ['en', 'fa'] as const) {
           )
       );
       await rows.nth(1).screenshot({
-        path: '/Users/majid/.local/state/barghsa-manual-batches/staff-directory-tables/role-card-fa.png',
+        path: test.info().outputPath('role-card-fa.png'),
       });
     }
     const module = page.getByRole('combobox', { name: label('compare.module'), exact: true });

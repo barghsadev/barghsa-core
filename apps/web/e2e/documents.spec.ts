@@ -122,7 +122,7 @@ for (const locale of ['en', 'fa'] as const) {
     expect(originalReads).toBe(0);
     if (locale === 'fa')
       await page.screenshot({
-        path: '/Users/majid/.local/state/barghsa-manual-batches/safe-document-detail-preview/details-derived-fa.png',
+        path: test.info().outputPath('details-derived-fa.png'),
         fullPage: true,
       });
     await detail.getByRole('button', { name: words.approve, exact: true }).click();

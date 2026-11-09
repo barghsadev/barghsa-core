@@ -149,7 +149,7 @@ for (const locale of ['en', 'fa'] as const) {
       );
       if (locale === 'fa' && info.project.name === 'mobile-safari')
         await card.screenshot({
-          path: `/Users/majid/.local/state/barghsa-manual-batches/operational-queue-tables/${kind}-card-fa.png`,
+          path: test.info().outputPath(`${kind}-card-fa.png`),
         });
       status = 403;
       await refresh.click();

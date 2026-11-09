@@ -595,7 +595,7 @@ for (const locale of ['en', 'fa'] as const) {
     expect(reads).toBe(3);
     await variable.scrollIntoViewIfNeeded();
     await page.screenshot({
-      path: `/Users/majid/.local/state/barghsa-manual-batches/sms-variable-dropdowns/sms-variable-${locale}.png`,
+      path: test.info().outputPath(`sms-variable-${locale}.png`),
       fullPage: true,
     });
     denied = true;

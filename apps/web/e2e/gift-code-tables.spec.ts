@@ -151,7 +151,7 @@ for (const locale of ['en', 'fa'] as const) {
     await inspect(page);
     if (locale === 'fa' && info.project.name === 'mobile-safari')
       await sample.screenshot({
-        path: '/Users/majid/.local/state/barghsa-manual-batches/gift-code-tables/gift-code-card-fa.png',
+        path: test.info().outputPath('gift-code-card-fa.png'),
       });
     status = 503;
     await page.getByRole('button', { name: word('refresh'), exact: true }).click();
