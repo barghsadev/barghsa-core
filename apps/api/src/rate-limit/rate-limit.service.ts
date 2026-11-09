@@ -40,15 +40,15 @@ export class RateLimitService implements OnModuleDestroy {
     if (!this.pgStore) {
       const pool = getDbPool();
       this.pgStore = new PostgresRateLimiterStore((text, params) => pool.query(text, params), {
-        warn: (msg, ...meta) => this.logger.warn(msg, ...meta),
-        error: (msg, ...meta) => this.logger.error(msg, ...meta),
+        warn: (msg) => this.logger.warn(msg),
+        error: (msg) => this.logger.error(msg),
       });
       this.pgStore.startCleanup();
     }
     if (!this.compositeStore) {
       this.compositeStore = new CompositeRateLimiterStore(this.pgStore, this.redis, {
-        warn: (msg, ...meta) => this.logger.warn(msg, ...meta),
-        error: (msg, ...meta) => this.logger.error(msg, ...meta),
+        warn: (msg) => this.logger.warn(msg),
+        error: (msg) => this.logger.error(msg),
       });
     }
   }

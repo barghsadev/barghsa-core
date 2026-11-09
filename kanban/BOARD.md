@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T21:09:11+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T21:15:51+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 998 | Accepted with unchanged source bindings. |
-| verify | 331 | Existing work may be complete; inspect evidence before building. |
+| done | 1006 | Accepted with unchanged source bindings. |
+| verify | 323 | Existing work may be complete; inspect evidence before building. |
 | partial | 33 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1013,7 +1013,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-04.01.06` | partial | Earlier partial | Hybrid deployment: separate managed PostgreSQL from app VM |
 | `01-platform-infrastructure.md#T-04.01.07` | partial | Earlier partial | Encrypted off-server backup of config, secrets, and critical application files |
 | `01-platform-infrastructure.md#T-04.02.01` | done | Earlier acceptance_verified | Create Redis connection factory with graceful fallback |
-| `01-platform-infrastructure.md#T-04.02.02` | verify | Earlier acceptance_verified | Implement distributed rate-limiting with Redis acceleration + PostgreSQL fallback |
+| `01-platform-infrastructure.md#T-04.02.02` | done | Earlier acceptance_verified | Implement distributed rate-limiting with Redis acceleration + PostgreSQL fallback |
 | `01-platform-infrastructure.md#T-04.02.03` | verify | Earlier acceptance_verified | Implement configuration caching with clear invalidation |
 | `01-platform-infrastructure.md#T-04.02.04` | done | Earlier acceptance_verified | Document Redis architecture decision in ADR |
 | `01-platform-infrastructure.md#T-04.03.01` | verify | Earlier acceptance_verified | Create S3 storage provider abstraction |
@@ -1181,13 +1181,13 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.04.04.04` | verify | Inventory needed | Enforce redirect limits (e.g. max 5 redirects) and verify each redirect destination |
 | `06-security-testing-observability.md#T-06.04.04.05` | verify | Inventory needed | Set strict timeouts, response-size caps (e.g. 10MB) per outbound call |
 | `06-security-testing-observability.md#T-06.04.04.06` | verify | Inventory needed | Write SSRF injection tests: internal IPs, metadata endpoints (169.254.169.254), redirect to private, DNS rebinding |
-| `06-security-testing-observability.md#T-06.05.01.01` | verify | Inventory needed | Design rate-limiting dimensions: IP, user, profile, device, action. Define limit configuration schema |
-| `06-security-testing-observability.md#T-06.05.01.02` | verify | Inventory needed | Implement PostgreSQL-backed rate-limit counters (durable, required for critical paths) |
-| `06-security-testing-observability.md#T-06.05.01.03` | verify | Inventory needed | Implement Redis-accelerated rate-limit counters (optional, fallback to PG) |
-| `06-security-testing-observability.md#T-06.05.01.04` | verify | Inventory needed | Implement NestJS rate-limit guard/decorator with configurable dimensions and limits |
-| `06-security-testing-observability.md#T-06.05.01.05` | verify | Inventory needed | Implement edge-layer rate limiting (nginx/openresty/Caddy config or WAF) |
-| `06-security-testing-observability.md#T-06.05.01.06` | verify | Inventory needed | Ensure `429` response includes `Retry-After` header and localized safe message |
-| `06-security-testing-observability.md#T-06.05.01.07` | verify | Inventory needed | Write integration tests: IP limit, user limit, profile limit, action limit; verify Redis loss doesn't weaken critical limits |
+| `06-security-testing-observability.md#T-06.05.01.01` | done | Recorded batch work | Design rate-limiting dimensions: IP, user, profile, device, action. Define limit configuration schema |
+| `06-security-testing-observability.md#T-06.05.01.02` | done | Recorded batch work | Implement PostgreSQL-backed rate-limit counters (durable, required for critical paths) |
+| `06-security-testing-observability.md#T-06.05.01.03` | done | Recorded batch work | Implement Redis-accelerated rate-limit counters (optional, fallback to PG) |
+| `06-security-testing-observability.md#T-06.05.01.04` | done | Recorded batch work | Implement NestJS rate-limit guard/decorator with configurable dimensions and limits |
+| `06-security-testing-observability.md#T-06.05.01.05` | done | Recorded batch work | Implement edge-layer rate limiting (nginx/openresty/Caddy config or WAF) |
+| `06-security-testing-observability.md#T-06.05.01.06` | done | Recorded batch work | Ensure `429` response includes `Retry-After` header and localized safe message |
+| `06-security-testing-observability.md#T-06.05.01.07` | done | Recorded batch work | Write integration tests: IP limit, user limit, profile limit, action limit; verify Redis loss doesn't weaken critical limits |
 | `06-security-testing-observability.md#T-06.05.02.01` | verify | Inventory needed | Configure OTP send limits: 1/dest/60s, 5/hour, 10/day; IP+device aggregates |
 | `06-security-testing-observability.md#T-06.05.02.02` | verify | Inventory needed | Configure OTP verify limits: 5 failed attempts per challenge → invalidate |
 | `06-security-testing-observability.md#T-06.05.02.03` | verify | Inventory needed | Configure login limits: progressive delay after 5 failures per account+IP in 15min; IP/device spray detection |

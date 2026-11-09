@@ -63,14 +63,18 @@ export class RateLimitGuard implements CanActivate {
       if (!identity) continue;
       const key = rateLimitKey(config.namespace, identity);
 
-      this.logger.debug(`Rate-limit check: ${key} (${config.limit}/${config.windowMs}ms)`);
+      this.logger.debug(
+        `Rate-limit check: ${config.namespace} (${config.limit}/${config.windowMs}ms)`
+      );
 
       const result = config.security
         ? await this.rateLimitService.checkSecurityRateLimit(key, config.limit, config.windowMs)
         : await this.rateLimitService.checkRateLimit(key, config.limit, config.windowMs);
 
       if (!result.allowed) {
-        this.logger.warn(`Rate limit exceeded: ${key} (${result.limit}/${config.windowMs}ms)`);
+        this.logger.warn(
+          `Rate limit exceeded: ${config.namespace} (${result.limit}/${config.windowMs}ms)`
+        );
 
         // Compute seconds remaining for Retry-After header
         const retryAfterSeconds = Math.ceil(result.resetMs / 1000);

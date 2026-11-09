@@ -99,6 +99,29 @@ async function state(c: Context) {
     ).rows,
   };
 }
+
+it('keeps the invitation action quota shared by an authorized profile across actors', async () => {
+  const capped = await setup('Owner');
+  const other = await setup('Owner');
+  await http.pool.query(
+    "INSERT INTO profile_agents(profile_id,user_id,role) VALUES ($1,$2,'Manager')",
+    [capped.profileId, other.actor]
+  );
+  await http.pool.query(
+    'SELECT rate_limit_rolling(false,$1,3600000,10,true) FROM generate_series(1,10)',
+    [`agents:invite:profile:${capped.profileId}`]
+  );
+  const before = await state(capped);
+  for (const context of [capped, other]) {
+    const response = await request(context, 'create', { profileId: capped.profileId });
+    expect(response.status).toBe(429);
+    expect(Number(response.headers.get('retry-after'))).toBeGreaterThan(0);
+  }
+  expect(await state(capped)).toEqual(before);
+  expect((await request(other, 'create')).status).toBe(201);
+  expect((await request(capped, 'withdraw')).status).toBe(200);
+});
+
 for (const operation of ['create', 'withdraw', 'decline'] as const) {
   for (const role of ['Owner', 'Manager'])
     it(`${role} can ${operation} with no step-up and a correlated audit`, async () => {

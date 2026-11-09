@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T21:09:11+00:00",
+  "updated": "2026-11-09T21:15:51+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -10912,12 +10912,10 @@
         "story": "01-platform-infrastructure.md#spec-cab45099c3cc"
       },
       "requirement": "- **T-04.02.02:** Implement distributed rate-limiting with Redis acceleration + PostgreSQL fallback\n  - **Notes:** Sliding window or token bucket counters. Redis: `INCR` + `EXPIRE` for high-frequency limits. When Redis is unavailable, fall back to PostgreSQL counters using `INSERT ... ON CONFLICT` with rate-limit rows. OTP counters, password-attempt counters always keep PostgreSQL backing store (they are security-critical). Redis loss must not bypass rate limits — PostgreSQL fallback provides degraded but functional enforcement.\n  - **Dependencies:** T-04.02.01, S-02.01\n  - **Complexity:** L",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -10989,8 +10987,99 @@
         "changed_paths": [
           "apps/api/src/app.module.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-rate-limiter-and-http-proof",
+          "base_commit": "7c9ebc68f78bc7cdc1387b876dd89bfa1cf761f2",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "943f5fbaf1175e1d85c639c138aa8850d4fa84b8970c219eafa4306c614ac1f8"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
+            },
+            {
+              "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
+              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
+            },
+            {
+              "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
+              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+            },
+            {
+              "path": "apps/api/src/profiles/agents.service.ts",
+              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+            },
+            {
+              "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
+              "sha256": "883a4f897268497108acadebacf664c4b6eaf78df66cbd6d0b8364ab35493799"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.decorator.ts",
+              "sha256": "5a78714dfd36a80dc0225fc98ec2156cbaf35e2d8d8856c2749cb8d0cfdb7485"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.guard.ts",
+              "sha256": "16d5b866af2df85e3f0a57c030011a52e676e50c6beb08a0fa83225eb8e6984d"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.module.ts",
+              "sha256": "f7f7e76e72c95c9ddfae75843c5bc0e15a7120f555636a21e23207dcdc7296fb"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.service.ts",
+              "sha256": "861c1345d3eddd60e47a2082b79328ef1759e3d49f5f8a7e7d2e430e6cafae65"
+            },
+            {
+              "path": "apps/api/src/rate-limit/redis-atomic.integration.test.ts",
+              "sha256": "d8fce6fa64c09ada357ffb7e2a96f0791f08a87a263638f4dd97c1f1a455a5e1"
+            },
+            {
+              "path": "docs/adr/002-redis-scope.md",
+              "sha256": "046dea0a96b6df1efae72af1ef2e58fa01898935307ffffc922ff03fcbbc0698"
+            },
+            {
+              "path": "packages/db/drizzle/production/0120_rolling_rate_limits.sql",
+              "sha256": "0715c4c8dbd6979196a02c54b18b9b5b74952bd6077abaf7c58a5b5457219416"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/_journal.json",
+              "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+            },
+            {
+              "path": "packages/db/src/rolling-rate-limits.test.ts",
+              "sha256": "3963a056188af7996455b697812a78691cce877a2d3899e5644cd588118067ee"
+            },
+            {
+              "path": "packages/shared/src/rate-limit/composite-rate-limiter.ts",
+              "sha256": "6225c6e6dd362da56ee57536c65c150841385795667bf4b0701c4c7888f28e27"
+            },
+            {
+              "path": "packages/shared/src/rate-limit/postgres-rate-limiter.ts",
+              "sha256": "2bc415b8fc2d7d5e5f73ef9702c1ab0889da624a7754eaf781068bdfe3ad1857"
+            },
+            {
+              "path": "packages/shared/src/rate-limit/types.ts",
+              "sha256": "68df2c26a385a8ee584ab8aa82b1c189f9057acab92a08b29b8608632e272776"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Reused eight PostgreSQL rolling-quota tests and eight Redis integration tests from run 42689595374. Their stores, migrations, fixtures and lock match the current sources. Redis outage, replacement, expiry, concurrent admission and early rejection preserved the durable quota. An unrelated stale refresh receipt assertion failed in that run and was corrected separately.",
+            "The five existing compiled login cases passed. The three final compiled cases covered trusted and untrusted forwarding, stable EN/FA 429 responses with Retry-After, omission of resolved identities from diagnostics, a shared profile quota across authorized actors and independent action/profile allowances. All native fixtures used isolated migrated PostgreSQL and were removed."
+          ]
+        }
       }
     },
     {
@@ -11095,14 +11184,16 @@
           "historically_skipped": false
         },
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
+        ],
         "current_acceptance": {
           "kind": "unchanged-audit-bindings",
           "reviewed_sha": "c32ff8195fd423a8a7b7a9ead2f45dc5f8781e99",
           "source_evidence": [
             {
               "path": "docs/adr/002-redis-scope.md",
-              "sha256": "a098b50bb3a798ad089f53e60d44710932170ebd40ad71dbc799337c49dc668a"
+              "sha256": "046dea0a96b6df1efae72af1ef2e58fa01898935307ffffc922ff03fcbbc0698"
             }
           ],
           "checks": [
@@ -32023,7 +32114,8 @@
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-browser-and-edge-privacy",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -32055,11 +32147,11 @@
             },
             {
               "path": "apps/api/src/rate-limit/rate-limit.guard.ts",
-              "sha256": "61591ffc483f5632d4676e4ad46194153003aebd430f5785b9fdef97e547cbd6"
+              "sha256": "16d5b866af2df85e3f0a57c030011a52e676e50c6beb08a0fa83225eb8e6984d"
             },
             {
               "path": "apps/api/src/rate-limit/rate-limit.service.ts",
-              "sha256": "4101afdfe4c67dd09616fbbad234fd76d3e64c0a147fa62634ed10e5aa883093"
+              "sha256": "861c1345d3eddd60e47a2082b79328ef1759e3d49f5f8a7e7d2e430e6cafae65"
             },
             {
               "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
@@ -71672,7 +71764,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-document-http-fixture-isolation",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -72208,7 +72301,7 @@
             },
             {
               "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
-              "sha256": "1506c2dd81da89cc8744f8c6a9423437fdac8db06da96a616e6613da6e34d7e2"
+              "sha256": "883a4f897268497108acadebacf664c4b6eaf78df66cbd6d0b8364ab35493799"
             },
             {
               "path": "apps/api/src/profiles/invitation-notifications.ts",
@@ -476879,19 +476972,80 @@
         "story": "06-security-testing-observability.md#spec-eb5f871b6360"
       },
       "requirement": "| T-06.05.01.01 | Design rate-limiting dimensions: IP, user, profile, device, action. Define limit configuration schema | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-rate-limiter-and-http-proof",
+          "base_commit": "7c9ebc68f78bc7cdc1387b876dd89bfa1cf761f2",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "943f5fbaf1175e1d85c639c138aa8850d4fa84b8970c219eafa4306c614ac1f8"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
+            },
+            {
+              "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
+              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
+            },
+            {
+              "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
+              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+            },
+            {
+              "path": "apps/api/src/profiles/agents.service.ts",
+              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+            },
+            {
+              "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
+              "sha256": "883a4f897268497108acadebacf664c4b6eaf78df66cbd6d0b8364ab35493799"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.decorator.ts",
+              "sha256": "5a78714dfd36a80dc0225fc98ec2156cbaf35e2d8d8856c2749cb8d0cfdb7485"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.guard.ts",
+              "sha256": "16d5b866af2df85e3f0a57c030011a52e676e50c6beb08a0fa83225eb8e6984d"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.module.ts",
+              "sha256": "f7f7e76e72c95c9ddfae75843c5bc0e15a7120f555636a21e23207dcdc7296fb"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.service.ts",
+              "sha256": "861c1345d3eddd60e47a2082b79328ef1759e3d49f5f8a7e7d2e430e6cafae65"
+            },
+            {
+              "path": "docs/adr/002-redis-scope.md",
+              "sha256": "046dea0a96b6df1efae72af1ef2e58fa01898935307ffffc922ff03fcbbc0698"
+            },
+            {
+              "path": "packages/shared/src/rate-limit/types.ts",
+              "sha256": "68df2c26a385a8ee584ab8aa82b1c189f9057acab92a08b29b8608632e272776"
+            }
+          ],
+          "checks": [
+            "The five existing compiled login cases passed. The three final compiled cases covered trusted and untrusted forwarding, stable EN/FA 429 responses with Retry-After, omission of resolved identities from diagnostics, a shared profile quota across authorized actors and independent action/profile allowances. All native fixtures used isolated migrated PostgreSQL and were removed.",
+            "The guard accepts declared IP and authenticated-user dimensions with action-scoped limits. Profile and device quotas use their domain authority and existing identifiers. Only diagnostic content changed in production. The API build, generated contract, typecheck, changed-file lint and formatting passed."
+          ]
+        }
       }
     },
     {
@@ -476905,19 +477059,84 @@
         "story": "06-security-testing-observability.md#spec-eb5f871b6360"
       },
       "requirement": "| T-06.05.01.02 | Implement PostgreSQL-backed rate-limit counters (durable, required for critical paths) | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-rate-limiter-and-http-proof",
+          "base_commit": "7c9ebc68f78bc7cdc1387b876dd89bfa1cf761f2",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "943f5fbaf1175e1d85c639c138aa8850d4fa84b8970c219eafa4306c614ac1f8"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
+            },
+            {
+              "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
+              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
+            },
+            {
+              "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
+              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.decorator.ts",
+              "sha256": "5a78714dfd36a80dc0225fc98ec2156cbaf35e2d8d8856c2749cb8d0cfdb7485"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.guard.ts",
+              "sha256": "16d5b866af2df85e3f0a57c030011a52e676e50c6beb08a0fa83225eb8e6984d"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.module.ts",
+              "sha256": "f7f7e76e72c95c9ddfae75843c5bc0e15a7120f555636a21e23207dcdc7296fb"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.service.ts",
+              "sha256": "861c1345d3eddd60e47a2082b79328ef1759e3d49f5f8a7e7d2e430e6cafae65"
+            },
+            {
+              "path": "packages/db/drizzle/production/0120_rolling_rate_limits.sql",
+              "sha256": "0715c4c8dbd6979196a02c54b18b9b5b74952bd6077abaf7c58a5b5457219416"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/_journal.json",
+              "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+            },
+            {
+              "path": "packages/db/src/rolling-rate-limits.test.ts",
+              "sha256": "3963a056188af7996455b697812a78691cce877a2d3899e5644cd588118067ee"
+            },
+            {
+              "path": "packages/shared/src/rate-limit/postgres-rate-limiter.ts",
+              "sha256": "2bc415b8fc2d7d5e5f73ef9702c1ab0889da624a7754eaf781068bdfe3ad1857"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Reused eight PostgreSQL rolling-quota tests and eight Redis integration tests from run 42689595374. Their stores, migrations, fixtures and lock match the current sources. Redis outage, replacement, expiry, concurrent admission and early rejection preserved the durable quota. An unrelated stale refresh receipt assertion failed in that run and was corrected separately.",
+            "The five existing compiled login cases passed. The three final compiled cases covered trusted and untrusted forwarding, stable EN/FA 429 responses with Retry-After, omission of resolved identities from diagnostics, a shared profile quota across authorized actors and independent action/profile allowances. All native fixtures used isolated migrated PostgreSQL and were removed."
+          ]
+        }
       }
     },
     {
@@ -476931,19 +477150,55 @@
         "story": "06-security-testing-observability.md#spec-eb5f871b6360"
       },
       "requirement": "| T-06.05.01.03 | Implement Redis-accelerated rate-limit counters (optional, fallback to PG) | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-rate-limiter-and-http-proof",
+          "base_commit": "7c9ebc68f78bc7cdc1387b876dd89bfa1cf761f2",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/rate-limit/redis-atomic.integration.test.ts",
+              "sha256": "d8fce6fa64c09ada357ffb7e2a96f0791f08a87a263638f4dd97c1f1a455a5e1"
+            },
+            {
+              "path": "packages/db/drizzle/production/0120_rolling_rate_limits.sql",
+              "sha256": "0715c4c8dbd6979196a02c54b18b9b5b74952bd6077abaf7c58a5b5457219416"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/_journal.json",
+              "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+            },
+            {
+              "path": "packages/db/src/rolling-rate-limits.test.ts",
+              "sha256": "3963a056188af7996455b697812a78691cce877a2d3899e5644cd588118067ee"
+            },
+            {
+              "path": "packages/shared/src/rate-limit/composite-rate-limiter.ts",
+              "sha256": "6225c6e6dd362da56ee57536c65c150841385795667bf4b0701c4c7888f28e27"
+            },
+            {
+              "path": "packages/shared/src/rate-limit/postgres-rate-limiter.ts",
+              "sha256": "2bc415b8fc2d7d5e5f73ef9702c1ab0889da624a7754eaf781068bdfe3ad1857"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Reused eight PostgreSQL rolling-quota tests and eight Redis integration tests from run 42689595374. Their stores, migrations, fixtures and lock match the current sources. Redis outage, replacement, expiry, concurrent admission and early rejection preserved the durable quota. An unrelated stale refresh receipt assertion failed in that run and was corrected separately."
+          ]
+        }
       }
     },
     {
@@ -476957,19 +477212,56 @@
         "story": "06-security-testing-observability.md#spec-eb5f871b6360"
       },
       "requirement": "| T-06.05.01.04 | Implement NestJS rate-limit guard/decorator with configurable dimensions and limits | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-rate-limiter-and-http-proof",
+          "base_commit": "7c9ebc68f78bc7cdc1387b876dd89bfa1cf761f2",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
+              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+            },
+            {
+              "path": "apps/api/src/common/http-exception.filter.ts",
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.decorator.ts",
+              "sha256": "5a78714dfd36a80dc0225fc98ec2156cbaf35e2d8d8856c2749cb8d0cfdb7485"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.guard.ts",
+              "sha256": "16d5b866af2df85e3f0a57c030011a52e676e50c6beb08a0fa83225eb8e6984d"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.module.ts",
+              "sha256": "f7f7e76e72c95c9ddfae75843c5bc0e15a7120f555636a21e23207dcdc7296fb"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.service.ts",
+              "sha256": "861c1345d3eddd60e47a2082b79328ef1759e3d49f5f8a7e7d2e430e6cafae65"
+            },
+            {
+              "path": "packages/i18n/src/auth.ts",
+              "sha256": "18fa277f2415ed215f73b8976c269d3e6ae8b04c620896f8caa08ae8deeb5493"
+            }
+          ],
+          "checks": [
+            "The five existing compiled login cases passed. The three final compiled cases covered trusted and untrusted forwarding, stable EN/FA 429 responses with Retry-After, omission of resolved identities from diagnostics, a shared profile quota across authorized actors and independent action/profile allowances. All native fixtures used isolated migrated PostgreSQL and were removed.",
+            "The guard accepts declared IP and authenticated-user dimensions with action-scoped limits. Profile and device quotas use their domain authority and existing identifiers. Only diagnostic content changed in production. The API build, generated contract, typecheck, changed-file lint and formatting passed."
+          ]
+        }
       }
     },
     {
@@ -476983,19 +477275,52 @@
         "story": "06-security-testing-observability.md#spec-eb5f871b6360"
       },
       "requirement": "| T-06.05.01.05 | Implement edge-layer rate limiting (nginx/openresty/Caddy config or WAF) | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-rate-limiter-and-http-proof",
+          "base_commit": "7c9ebc68f78bc7cdc1387b876dd89bfa1cf761f2",
+          "source_evidence": [
+            {
+              "path": "deploy/pilot/nginx.conf",
+              "sha256": "29dc4b58c3216d8b29a57fd35f24334d36c13014d9685dd5dd2ec8448ac9f179"
+            },
+            {
+              "path": "deploy/staging/README.md",
+              "sha256": "5e2d57359df082a0e58c92af947ccf451c4dfa25727477ec67c58ea40bacf58f"
+            },
+            {
+              "path": "deploy/staging/nginx.conf",
+              "sha256": "a6169fa2716af694ba983c277b145f6da6efabc41ee8c92479582af418b19e21"
+            },
+            {
+              "path": "scripts/check-pilot-proxy.mjs",
+              "sha256": "3d1d3d7004acbcae9f2013b11540545919f0377bd4c90826399115c97bbcbc58"
+            },
+            {
+              "path": "scripts/check-staging-proxy.mjs",
+              "sha256": "b6c301584b799bf501023998d2ff00a2adef99a538b11bd786ff727ad1093c9b"
+            },
+            {
+              "path": "scripts/proxy-fixture.mjs",
+              "sha256": "44b10444a8c51c2afd401002712ab72abf537e259934c128679c9e22b86795dd"
+            }
+          ],
+          "checks": [
+            "Reused the source-bound edge implementation evidence from 01-platform-infrastructure.md#T-04.04.03.",
+            "Both NGINX profiles enforce separate auth 10/s burst 5, upload 5/s burst 3 and AI 5/s burst 2 quotas. The isolated stage exercised both languages on all three paths, including forwarded-IP forgery, localized 429 and Retry-After, security headers, preserved application cooldown and unaffected health. Live candidate rollout remains a separate receipt."
+          ]
+        }
       }
     },
     {
@@ -477009,19 +477334,72 @@
         "story": "06-security-testing-observability.md#spec-eb5f871b6360"
       },
       "requirement": "| T-06.05.01.06 | Ensure `429` response includes `Retry-After` header and localized safe message | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-rate-limiter-and-http-proof",
+          "base_commit": "7c9ebc68f78bc7cdc1387b876dd89bfa1cf761f2",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "943f5fbaf1175e1d85c639c138aa8850d4fa84b8970c219eafa4306c614ac1f8"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
+            },
+            {
+              "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
+              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
+            },
+            {
+              "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
+              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+            },
+            {
+              "path": "apps/api/src/common/http-exception.filter.ts",
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.decorator.ts",
+              "sha256": "5a78714dfd36a80dc0225fc98ec2156cbaf35e2d8d8856c2749cb8d0cfdb7485"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.guard.ts",
+              "sha256": "16d5b866af2df85e3f0a57c030011a52e676e50c6beb08a0fa83225eb8e6984d"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.module.ts",
+              "sha256": "f7f7e76e72c95c9ddfae75843c5bc0e15a7120f555636a21e23207dcdc7296fb"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.service.ts",
+              "sha256": "861c1345d3eddd60e47a2082b79328ef1759e3d49f5f8a7e7d2e430e6cafae65"
+            },
+            {
+              "path": "packages/i18n/src/auth.ts",
+              "sha256": "18fa277f2415ed215f73b8976c269d3e6ae8b04c620896f8caa08ae8deeb5493"
+            }
+          ],
+          "checks": [
+            "The five existing compiled login cases passed. The three final compiled cases covered trusted and untrusted forwarding, stable EN/FA 429 responses with Retry-After, omission of resolved identities from diagnostics, a shared profile quota across authorized actors and independent action/profile allowances. All native fixtures used isolated migrated PostgreSQL and were removed.",
+            "The guard accepts declared IP and authenticated-user dimensions with action-scoped limits. Profile and device quotas use their domain authority and existing identifiers. Only diagnostic content changed in production. The API build, generated contract, typecheck, changed-file lint and formatting passed."
+          ]
+        }
       }
     },
     {
@@ -477035,19 +477413,108 @@
         "story": "06-security-testing-observability.md#spec-eb5f871b6360"
       },
       "requirement": "| T-06.05.01.07 | Write integration tests: IP limit, user limit, profile limit, action limit; verify Redis loss doesn't weaken critical limits | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-rate-limiter-and-http-proof",
+          "base_commit": "7c9ebc68f78bc7cdc1387b876dd89bfa1cf761f2",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "943f5fbaf1175e1d85c639c138aa8850d4fa84b8970c219eafa4306c614ac1f8"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
+            },
+            {
+              "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
+              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
+            },
+            {
+              "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
+              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+            },
+            {
+              "path": "apps/api/src/profiles/agents.service.ts",
+              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+            },
+            {
+              "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
+              "sha256": "883a4f897268497108acadebacf664c4b6eaf78df66cbd6d0b8364ab35493799"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.decorator.ts",
+              "sha256": "5a78714dfd36a80dc0225fc98ec2156cbaf35e2d8d8856c2749cb8d0cfdb7485"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.guard.ts",
+              "sha256": "16d5b866af2df85e3f0a57c030011a52e676e50c6beb08a0fa83225eb8e6984d"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.module.ts",
+              "sha256": "f7f7e76e72c95c9ddfae75843c5bc0e15a7120f555636a21e23207dcdc7296fb"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.service.ts",
+              "sha256": "861c1345d3eddd60e47a2082b79328ef1759e3d49f5f8a7e7d2e430e6cafae65"
+            },
+            {
+              "path": "apps/api/src/rate-limit/redis-atomic.integration.test.ts",
+              "sha256": "d8fce6fa64c09ada357ffb7e2a96f0791f08a87a263638f4dd97c1f1a455a5e1"
+            },
+            {
+              "path": "docs/adr/002-redis-scope.md",
+              "sha256": "046dea0a96b6df1efae72af1ef2e58fa01898935307ffffc922ff03fcbbc0698"
+            },
+            {
+              "path": "packages/db/drizzle/production/0120_rolling_rate_limits.sql",
+              "sha256": "0715c4c8dbd6979196a02c54b18b9b5b74952bd6077abaf7c58a5b5457219416"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/_journal.json",
+              "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+            },
+            {
+              "path": "packages/db/src/rolling-rate-limits.test.ts",
+              "sha256": "3963a056188af7996455b697812a78691cce877a2d3899e5644cd588118067ee"
+            },
+            {
+              "path": "packages/shared/src/rate-limit/composite-rate-limiter.ts",
+              "sha256": "6225c6e6dd362da56ee57536c65c150841385795667bf4b0701c4c7888f28e27"
+            },
+            {
+              "path": "packages/shared/src/rate-limit/postgres-rate-limiter.ts",
+              "sha256": "2bc415b8fc2d7d5e5f73ef9702c1ab0889da624a7754eaf781068bdfe3ad1857"
+            },
+            {
+              "path": "packages/shared/src/rate-limit/types.ts",
+              "sha256": "68df2c26a385a8ee584ab8aa82b1c189f9057acab92a08b29b8608632e272776"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Reused eight PostgreSQL rolling-quota tests and eight Redis integration tests from run 42689595374. Their stores, migrations, fixtures and lock match the current sources. Redis outage, replacement, expiry, concurrent admission and early rejection preserved the durable quota. An unrelated stale refresh receipt assertion failed in that run and was corrected separately.",
+            "The five existing compiled login cases passed. The three final compiled cases covered trusted and untrusted forwarding, stable EN/FA 429 responses with Retry-After, omission of resolved identities from diagnostics, a shared profile quota across authorized actors and independent action/profile allowances. All native fixtures used isolated migrated PostgreSQL and were removed."
+          ]
+        }
       }
     },
     {
@@ -478894,7 +479361,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-proxy-trust-and-request-limits",
-          "release-0.6-browser-and-edge-privacy"
+          "release-0.6-browser-and-edge-privacy",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -478914,7 +479382,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "5d13bd853ccb666821867bbf41a2c5873c8a0a97ab8776d8d00c2f5d706bb0cd"
+              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
             },
             {
               "path": "deploy/pilot/nginx.conf",
@@ -482536,6 +483004,7 @@
           "apps/api/src/auth/delivery-http.integration.test.ts",
           "apps/api/src/auth/otp.service.spec.ts",
           "apps/api/src/auth/otp.service.ts",
+          "apps/api/src/auth/proxy-rate-http.integration.test.ts",
           "apps/api/src/common/http-exception.filter.ts",
           "apps/api/src/common/input-field.exception.test.ts",
           "apps/api/src/crm/crm-v2.service.test.ts",
@@ -482544,6 +483013,9 @@
           "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
           "apps/api/src/invoice/invoice-state-machine.service.test.ts",
           "apps/api/src/invoice/invoice-state-machine.service.ts",
+          "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
+          "apps/api/src/rate-limit/rate-limit.guard.ts",
+          "apps/api/src/rate-limit/rate-limit.service.ts",
           "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
           "apps/api/src/wallet/chargeback-alert.service.ts",
           "apps/api/src/wallet/chargeback-detection.service.ts",
@@ -482553,6 +483025,7 @@
           "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
           "deploy/pilot/nginx.conf",
           "deploy/staging/nginx.conf",
+          "docs/adr/002-redis-scope.md",
           "docs/security/otp.md"
         ],
         "batches": [
@@ -482560,11 +483033,12 @@
           "release-0.6-browser-and-edge-privacy",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-exception-correlation-and-sensitive-diagnostics"
+          "release-0.6-exception-correlation-and-sensitive-diagnostics",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-ingress-authentication-and-wallet-diagnostic-proof",
-          "base_commit": "5cc07e18105af117af0b9c1ee0c2a7a8abf81d29",
+          "base_commit": "7c9ebc68f78bc7cdc1387b876dd89bfa1cf761f2",
           "source_evidence": [
             {
               "path": "deploy/pilot/nginx.conf",
@@ -482661,6 +483135,26 @@
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
               "sha256": "a93e582c0005ad88b9eed68f6c1f5b17662dfdcbfcee4b10dafc7fedb644a8d1"
+            },
+            {
+              "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
+              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+            },
+            {
+              "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
+              "sha256": "883a4f897268497108acadebacf664c4b6eaf78df66cbd6d0b8364ab35493799"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.guard.ts",
+              "sha256": "16d5b866af2df85e3f0a57c030011a52e676e50c6beb08a0fa83225eb8e6984d"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.service.ts",
+              "sha256": "861c1345d3eddd60e47a2082b79328ef1759e3d49f5f8a7e7d2e430e6cafae65"
+            },
+            {
+              "path": "docs/adr/002-redis-scope.md",
+              "sha256": "046dea0a96b6df1efae72af1ef2e58fa01898935307ffffc922ff03fcbbc0698"
             }
           ],
           "checks": [
@@ -482672,7 +483166,8 @@
             "21 selected cases passed against isolated migrated PostgreSQL. They covered durable callback acknowledgement and replay, invoice wallet payment and rollback, bank receipt overpayment and concurrency, and signed chargeback and replay. The private fixture database and network were removed.",
             "API build, typecheck, canonical contract, changed-file lint and formatting passed. Scope review confirmed changes are diagnostic only. Provider data, financial amounts and attachment identifiers remain available through their protected domain records and authorized APIs.",
             "60 invoice-state and receipt unit assertions passed. Failure logs retain internal receipt or transition identifiers and omit private reasons, storage locations, raw provider/database messages and amounts. The protected audit retains its reason and correlation fields.",
-            "Five selected invoice cases passed in an isolated migrated PostgreSQL fixture, covering overdue settlement, concurrency and atomic rollback. The build, canonical contract, final API typecheck and changed-file lint and format passed."
+            "Five selected invoice cases passed in an isolated migrated PostgreSQL fixture, covering overdue settlement, concurrency and atomic rollback. The build, canonical contract, final API typecheck and changed-file lint and format passed.",
+            "Rate-limit diagnostics retain configured namespaces and outcomes. Resolved keys, raw client addresses and backend exception details are omitted. The compiled trusted/untrusted proxy cases verified positive diagnostic content, bounded localized responses and absence of fixture identity values."
           ]
         }
       }
@@ -623784,7 +624279,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-exception-correlation-and-sensitive-diagnostics"
+          "release-0.6-exception-correlation-and-sensitive-diagnostics",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -623920,7 +624416,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "5d13bd853ccb666821867bbf41a2c5873c8a0a97ab8776d8d00c2f5d706bb0cd"
+              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -624619,7 +625115,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-exception-correlation-and-sensitive-diagnostics"
+          "release-0.6-exception-correlation-and-sensitive-diagnostics",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -624755,7 +625252,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "5d13bd853ccb666821867bbf41a2c5873c8a0a97ab8776d8d00c2f5d706bb0cd"
+              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -625454,7 +625951,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-exception-correlation-and-sensitive-diagnostics"
+          "release-0.6-exception-correlation-and-sensitive-diagnostics",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -625590,7 +626088,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "5d13bd853ccb666821867bbf41a2c5873c8a0a97ab8776d8d00c2f5d706bb0cd"
+              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -626289,7 +626787,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-exception-correlation-and-sensitive-diagnostics"
+          "release-0.6-exception-correlation-and-sensitive-diagnostics",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -626425,7 +626924,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "5d13bd853ccb666821867bbf41a2c5873c8a0a97ab8776d8d00c2f5d706bb0cd"
+              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -627124,7 +627623,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-exception-correlation-and-sensitive-diagnostics"
+          "release-0.6-exception-correlation-and-sensitive-diagnostics",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -627260,7 +627760,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "5d13bd853ccb666821867bbf41a2c5873c8a0a97ab8776d8d00c2f5d706bb0cd"
+              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -640001,7 +640501,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-exception-correlation-and-sensitive-diagnostics"
+          "release-0.6-exception-correlation-and-sensitive-diagnostics",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -640137,7 +640638,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "5d13bd853ccb666821867bbf41a2c5873c8a0a97ab8776d8d00c2f5d706bb0cd"
+              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -640836,7 +641337,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-exception-correlation-and-sensitive-diagnostics"
+          "release-0.6-exception-correlation-and-sensitive-diagnostics",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -640972,7 +641474,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "5d13bd853ccb666821867bbf41a2c5873c8a0a97ab8776d8d00c2f5d706bb0cd"
+              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -641671,7 +642173,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-exception-correlation-and-sensitive-diagnostics"
+          "release-0.6-exception-correlation-and-sensitive-diagnostics",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -641807,7 +642310,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "5d13bd853ccb666821867bbf41a2c5873c8a0a97ab8776d8d00c2f5d706bb0cd"
+              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -642506,7 +643009,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-exception-correlation-and-sensitive-diagnostics"
+          "release-0.6-exception-correlation-and-sensitive-diagnostics",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -642642,7 +643146,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "5d13bd853ccb666821867bbf41a2c5873c8a0a97ab8776d8d00c2f5d706bb0cd"
+              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -643341,7 +643845,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-exception-correlation-and-sensitive-diagnostics"
+          "release-0.6-exception-correlation-and-sensitive-diagnostics",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -643477,7 +643982,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "5d13bd853ccb666821867bbf41a2c5873c8a0a97ab8776d8d00c2f5d706bb0cd"
+              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -644176,7 +644681,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-exception-correlation-and-sensitive-diagnostics"
+          "release-0.6-exception-correlation-and-sensitive-diagnostics",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -644312,7 +644818,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "5d13bd853ccb666821867bbf41a2c5873c8a0a97ab8776d8d00c2f5d706bb0cd"
+              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -645011,7 +645517,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-exception-correlation-and-sensitive-diagnostics"
+          "release-0.6-exception-correlation-and-sensitive-diagnostics",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -645147,7 +645654,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "5d13bd853ccb666821867bbf41a2c5873c8a0a97ab8776d8d00c2f5d706bb0cd"
+              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -645846,7 +646353,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-exception-correlation-and-sensitive-diagnostics"
+          "release-0.6-exception-correlation-and-sensitive-diagnostics",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -645982,7 +646490,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "5d13bd853ccb666821867bbf41a2c5873c8a0a97ab8776d8d00c2f5d706bb0cd"
+              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -646681,7 +647189,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-exception-correlation-and-sensitive-diagnostics"
+          "release-0.6-exception-correlation-and-sensitive-diagnostics",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -646817,7 +647326,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "5d13bd853ccb666821867bbf41a2c5873c8a0a97ab8776d8d00c2f5d706bb0cd"
+              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -647516,7 +648025,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-exception-correlation-and-sensitive-diagnostics"
+          "release-0.6-exception-correlation-and-sensitive-diagnostics",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -647652,7 +648162,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "5d13bd853ccb666821867bbf41a2c5873c8a0a97ab8776d8d00c2f5d706bb0cd"
+              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -648351,7 +648861,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-exception-correlation-and-sensitive-diagnostics"
+          "release-0.6-exception-correlation-and-sensitive-diagnostics",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -648487,7 +648998,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "5d13bd853ccb666821867bbf41a2c5873c8a0a97ab8776d8d00c2f5d706bb0cd"
+              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -649186,7 +649697,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-exception-correlation-and-sensitive-diagnostics"
+          "release-0.6-exception-correlation-and-sensitive-diagnostics",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -649322,7 +649834,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "5d13bd853ccb666821867bbf41a2c5873c8a0a97ab8776d8d00c2f5d706bb0cd"
+              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -710375,7 +710887,8 @@
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
-          "release-0.6-security-header-ci-and-nonce-evidence"
+          "release-0.6-security-header-ci-and-nonce-evidence",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -710427,7 +710940,7 @@
             },
             {
               "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
-              "sha256": "1506c2dd81da89cc8744f8c6a9423437fdac8db06da96a616e6613da6e34d7e2"
+              "sha256": "883a4f897268497108acadebacf664c4b6eaf78df66cbd6d0b8364ab35493799"
             },
             {
               "path": "apps/api/src/profiles/invitation-notifications.ts",
@@ -711012,7 +711525,8 @@
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
-          "release-0.6-security-header-ci-and-nonce-evidence"
+          "release-0.6-security-header-ci-and-nonce-evidence",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -711064,7 +711578,7 @@
             },
             {
               "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
-              "sha256": "1506c2dd81da89cc8744f8c6a9423437fdac8db06da96a616e6613da6e34d7e2"
+              "sha256": "883a4f897268497108acadebacf664c4b6eaf78df66cbd6d0b8364ab35493799"
             },
             {
               "path": "apps/api/src/profiles/invitation-notifications.ts",
@@ -711649,7 +712163,8 @@
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
-          "release-0.6-security-header-ci-and-nonce-evidence"
+          "release-0.6-security-header-ci-and-nonce-evidence",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -711701,7 +712216,7 @@
             },
             {
               "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
-              "sha256": "1506c2dd81da89cc8744f8c6a9423437fdac8db06da96a616e6613da6e34d7e2"
+              "sha256": "883a4f897268497108acadebacf664c4b6eaf78df66cbd6d0b8364ab35493799"
             },
             {
               "path": "apps/api/src/profiles/invitation-notifications.ts",
@@ -712287,7 +712802,8 @@
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
-          "release-0.6-security-header-ci-and-nonce-evidence"
+          "release-0.6-security-header-ci-and-nonce-evidence",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -712339,7 +712855,7 @@
             },
             {
               "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
-              "sha256": "1506c2dd81da89cc8744f8c6a9423437fdac8db06da96a616e6613da6e34d7e2"
+              "sha256": "883a4f897268497108acadebacf664c4b6eaf78df66cbd6d0b8364ab35493799"
             },
             {
               "path": "apps/api/src/profiles/invitation-notifications.ts",
@@ -712924,7 +713440,8 @@
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
-          "release-0.6-security-header-ci-and-nonce-evidence"
+          "release-0.6-security-header-ci-and-nonce-evidence",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -712976,7 +713493,7 @@
             },
             {
               "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
-              "sha256": "1506c2dd81da89cc8744f8c6a9423437fdac8db06da96a616e6613da6e34d7e2"
+              "sha256": "883a4f897268497108acadebacf664c4b6eaf78df66cbd6d0b8364ab35493799"
             },
             {
               "path": "apps/api/src/profiles/invitation-notifications.ts",
@@ -713561,7 +714078,8 @@
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
-          "release-0.6-security-header-ci-and-nonce-evidence"
+          "release-0.6-security-header-ci-and-nonce-evidence",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -713613,7 +714131,7 @@
             },
             {
               "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
-              "sha256": "1506c2dd81da89cc8744f8c6a9423437fdac8db06da96a616e6613da6e34d7e2"
+              "sha256": "883a4f897268497108acadebacf664c4b6eaf78df66cbd6d0b8364ab35493799"
             },
             {
               "path": "apps/api/src/profiles/invitation-notifications.ts",
@@ -714198,7 +714716,8 @@
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
-          "release-0.6-security-header-ci-and-nonce-evidence"
+          "release-0.6-security-header-ci-and-nonce-evidence",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -714250,7 +714769,7 @@
             },
             {
               "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
-              "sha256": "1506c2dd81da89cc8744f8c6a9423437fdac8db06da96a616e6613da6e34d7e2"
+              "sha256": "883a4f897268497108acadebacf664c4b6eaf78df66cbd6d0b8364ab35493799"
             },
             {
               "path": "apps/api/src/profiles/invitation-notifications.ts",
@@ -714836,7 +715355,8 @@
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
-          "release-0.6-security-header-ci-and-nonce-evidence"
+          "release-0.6-security-header-ci-and-nonce-evidence",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -714888,7 +715408,7 @@
             },
             {
               "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
-              "sha256": "1506c2dd81da89cc8744f8c6a9423437fdac8db06da96a616e6613da6e34d7e2"
+              "sha256": "883a4f897268497108acadebacf664c4b6eaf78df66cbd6d0b8364ab35493799"
             },
             {
               "path": "apps/api/src/profiles/invitation-notifications.ts",
@@ -715473,7 +715993,8 @@
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
-          "release-0.6-security-header-ci-and-nonce-evidence"
+          "release-0.6-security-header-ci-and-nonce-evidence",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -715525,7 +716046,7 @@
             },
             {
               "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
-              "sha256": "1506c2dd81da89cc8744f8c6a9423437fdac8db06da96a616e6613da6e34d7e2"
+              "sha256": "883a4f897268497108acadebacf664c4b6eaf78df66cbd6d0b8364ab35493799"
             },
             {
               "path": "apps/api/src/profiles/invitation-notifications.ts",
@@ -716110,7 +716631,8 @@
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
-          "release-0.6-security-header-ci-and-nonce-evidence"
+          "release-0.6-security-header-ci-and-nonce-evidence",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -716162,7 +716684,7 @@
             },
             {
               "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
-              "sha256": "1506c2dd81da89cc8744f8c6a9423437fdac8db06da96a616e6613da6e34d7e2"
+              "sha256": "883a4f897268497108acadebacf664c4b6eaf78df66cbd6d0b8364ab35493799"
             },
             {
               "path": "apps/api/src/profiles/invitation-notifications.ts",
@@ -734336,7 +734858,7 @@
             },
             {
               "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
-              "sha256": "1506c2dd81da89cc8744f8c6a9423437fdac8db06da96a616e6613da6e34d7e2"
+              "sha256": "883a4f897268497108acadebacf664c4b6eaf78df66cbd6d0b8364ab35493799"
             },
             {
               "path": "apps/api/src/profiles/invitation-notifications.ts",
@@ -737551,7 +738073,8 @@
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -738280,7 +738803,7 @@
             },
             {
               "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
-              "sha256": "1506c2dd81da89cc8744f8c6a9423437fdac8db06da96a616e6613da6e34d7e2"
+              "sha256": "883a4f897268497108acadebacf664c4b6eaf78df66cbd6d0b8364ab35493799"
             },
             {
               "path": "apps/api/src/profiles/invitation-notifications.ts",
@@ -741379,7 +741902,8 @@
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -745385,7 +745909,8 @@
           "release-0.6-exception-correlation-and-sensitive-diagnostics",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-pilot-and-commercial-topology-documentation",
-          "release-0.6-private-session-cutover-and-health-probes"
+          "release-0.6-private-session-cutover-and-health-probes",
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -837114,6 +837639,147 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-cutover-private",
       "source_scope_proof": "release-0.6-private-session-cutover-and-health-probes.json",
       "source_scope_proof_sha256": "a56aa8e96d063125b13b1fe519efbfb13a555f43b0a360f9bea9c476e591a4ea"
+    },
+    "release-0.6-layered-rate-limits-and-diagnostic-privacy": {
+      "batch": "release-0.6-layered-rate-limits-and-diagnostic-privacy",
+      "base_commit": "7c9ebc68f78bc7cdc1387b876dd89bfa1cf761f2",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.02.02",
+        "06-security-testing-observability.md#T-06.05.01.01",
+        "06-security-testing-observability.md#T-06.05.01.02",
+        "06-security-testing-observability.md#T-06.05.01.03",
+        "06-security-testing-observability.md#T-06.05.01.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.05.01.06",
+        "06-security-testing-observability.md#T-06.05.01.07",
+        "06-security-testing-observability.md#T-06.13.02.06",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "943f5fbaf1175e1d85c639c138aa8850d4fa84b8970c219eafa4306c614ac1f8"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
+        },
+        {
+          "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
+          "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
+        },
+        {
+          "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
+          "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+        },
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.ts",
+          "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+        },
+        {
+          "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
+          "sha256": "883a4f897268497108acadebacf664c4b6eaf78df66cbd6d0b8364ab35493799"
+        },
+        {
+          "path": "apps/api/src/rate-limit/rate-limit.decorator.ts",
+          "sha256": "5a78714dfd36a80dc0225fc98ec2156cbaf35e2d8d8856c2749cb8d0cfdb7485"
+        },
+        {
+          "path": "apps/api/src/rate-limit/rate-limit.guard.ts",
+          "sha256": "16d5b866af2df85e3f0a57c030011a52e676e50c6beb08a0fa83225eb8e6984d"
+        },
+        {
+          "path": "apps/api/src/rate-limit/rate-limit.module.ts",
+          "sha256": "f7f7e76e72c95c9ddfae75843c5bc0e15a7120f555636a21e23207dcdc7296fb"
+        },
+        {
+          "path": "apps/api/src/rate-limit/rate-limit.service.ts",
+          "sha256": "861c1345d3eddd60e47a2082b79328ef1759e3d49f5f8a7e7d2e430e6cafae65"
+        },
+        {
+          "path": "apps/api/src/rate-limit/redis-atomic.integration.test.ts",
+          "sha256": "d8fce6fa64c09ada357ffb7e2a96f0791f08a87a263638f4dd97c1f1a455a5e1"
+        },
+        {
+          "path": "deploy/pilot/nginx.conf",
+          "sha256": "29dc4b58c3216d8b29a57fd35f24334d36c13014d9685dd5dd2ec8448ac9f179"
+        },
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "5e2d57359df082a0e58c92af947ccf451c4dfa25727477ec67c58ea40bacf58f"
+        },
+        {
+          "path": "deploy/staging/nginx.conf",
+          "sha256": "a6169fa2716af694ba983c277b145f6da6efabc41ee8c92479582af418b19e21"
+        },
+        {
+          "path": "docs/adr/002-redis-scope.md",
+          "sha256": "046dea0a96b6df1efae72af1ef2e58fa01898935307ffffc922ff03fcbbc0698"
+        },
+        {
+          "path": "packages/db/drizzle/production/0120_rolling_rate_limits.sql",
+          "sha256": "0715c4c8dbd6979196a02c54b18b9b5b74952bd6077abaf7c58a5b5457219416"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+        },
+        {
+          "path": "packages/db/src/rolling-rate-limits.test.ts",
+          "sha256": "3963a056188af7996455b697812a78691cce877a2d3899e5644cd588118067ee"
+        },
+        {
+          "path": "packages/i18n/src/auth.ts",
+          "sha256": "18fa277f2415ed215f73b8976c269d3e6ae8b04c620896f8caa08ae8deeb5493"
+        },
+        {
+          "path": "packages/shared/src/rate-limit/composite-rate-limiter.ts",
+          "sha256": "6225c6e6dd362da56ee57536c65c150841385795667bf4b0701c4c7888f28e27"
+        },
+        {
+          "path": "packages/shared/src/rate-limit/postgres-rate-limiter.ts",
+          "sha256": "2bc415b8fc2d7d5e5f73ef9702c1ab0889da624a7754eaf781068bdfe3ad1857"
+        },
+        {
+          "path": "packages/shared/src/rate-limit/types.ts",
+          "sha256": "68df2c26a385a8ee584ab8aa82b1c189f9057acab92a08b29b8608632e272776"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        },
+        {
+          "path": "scripts/check-pilot-proxy.mjs",
+          "sha256": "3d1d3d7004acbcae9f2013b11540545919f0377bd4c90826399115c97bbcbc58"
+        },
+        {
+          "path": "scripts/check-staging-proxy.mjs",
+          "sha256": "b6c301584b799bf501023998d2ff00a2adef99a538b11bd786ff727ad1093c9b"
+        },
+        {
+          "path": "scripts/proxy-fixture.mjs",
+          "sha256": "44b10444a8c51c2afd401002712ab72abf537e259934c128679c9e22b86795dd"
+        }
+      ],
+      "checks": [
+        "Reused eight PostgreSQL rolling-quota tests and eight Redis integration tests from run 42689595374. Their stores, migrations, fixtures and lock match the current sources. Redis outage, replacement, expiry, concurrent admission and early rejection preserved the durable quota. An unrelated stale refresh receipt assertion failed in that run and was corrected separately.",
+        "The five existing compiled login cases passed. The three final compiled cases covered trusted and untrusted forwarding, stable EN/FA 429 responses with Retry-After, omission of resolved identities from diagnostics, a shared profile quota across authorized actors and independent action/profile allowances. All native fixtures used isolated migrated PostgreSQL and were removed.",
+        "The guard accepts declared IP and authenticated-user dimensions with action-scoped limits. Profile and device quotas use their domain authority and existing identifiers. Only diagnostic content changed in production. The API build, generated contract, typecheck, changed-file lint and formatting passed.",
+        "Reused the source-bound edge implementation evidence from 01-platform-infrastructure.md#T-04.04.03.",
+        "Both NGINX profiles enforce separate auth 10/s burst 5, upload 5/s burst 3 and AI 5/s burst 2 quotas. The isolated stage exercised both languages on all three paths, including forwarded-IP forgery, localized 429 and Retry-After, security headers, preserved application cooldown and unaffected health. Live candidate rollout remains a separate receipt.",
+        "Rate-limit diagnostics retain configured namespaces and outcomes. Resolved keys, raw client addresses and backend exception details are omitted. The compiled trusted/untrusted proxy cases verified positive diagnostic content, bounded localized responses and absence of fixture identity values."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/layered-rate-limits",
+      "source_scope_proof": "release-0.6-layered-rate-limits-and-diagnostic-privacy.json",
+      "source_scope_proof_sha256": "cd6edd3709ddc2878307548b4b0b6c54859f38467f4624e29b591780d51a8b11"
     }
   },
   "historical_improvements": [

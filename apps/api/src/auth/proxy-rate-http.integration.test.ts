@@ -1,16 +1,21 @@
 import { fetchWithPreauth } from '../test/public-auth.js';
 import { afterEach, expect, it } from 'vitest';
 import { createHash } from 'node:crypto';
+import { t } from '@barghsa/i18n';
 import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>> | undefined;
 afterEach(async () => {
   await http?.close();
 }, 15000);
-async function post(username: string, ip: string) {
+async function post(username: string, ip: string, locale: 'en' | 'fa' = 'en') {
   return fetchWithPreauth(`${http!.base}/api/auth/forgot-password`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-Forwarded-For': ip },
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Forwarded-For': ip,
+      'Accept-Language': locale,
+    },
     body: JSON.stringify({ username }),
   });
 }
@@ -48,7 +53,32 @@ for (const trusted of [false, true]) {
         Math.floor(Date.now() / 3600000) * 3600000,
       ]
     );
-    expect((await post(username, '198.51.100.3')).status).toBe(429);
-    expect((await post(username, '198.51.100.4')).status).toBe(429);
+    for (const [ip, locale] of [
+      ['198.51.100.3', 'en'],
+      ['198.51.100.4', 'fa'],
+    ] as const) {
+      const response = await post(username, ip, locale);
+      expect(response.status).toBe(429);
+      const retryAfter = Number(response.headers.get('retry-after'));
+      expect(retryAfter).toBeGreaterThan(0);
+      const result = await response.json();
+      expect(result).toMatchObject({
+        error: {
+          code: 'RATE_LIMIT:EXCEEDED',
+          correlationId: expect.any(String),
+          message: t('error.rate_limit.retry_after', locale).replace(
+            '{seconds}',
+            new Intl.NumberFormat(locale, { useGrouping: false }).format(retryAfter)
+          ),
+        },
+      });
+      expect(JSON.stringify(result)).not.toContain(username);
+    }
+    const diagnostics = http
+      .logs()
+      .split('[Nest] ')
+      .filter((entry) => entry.includes('[RateLimitGuard]'));
+    expect(diagnostics.join('\n')).toContain('Rate-limit check: forgot-password:ip');
+    expect(diagnostics.join('\n')).not.toMatch(/198\.51\.100\.|127\.0\.0\.1|quota@example\.test/);
   }, 40000);
 }
