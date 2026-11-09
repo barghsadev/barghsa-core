@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T10:35:49+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T10:37:04+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -39,15 +39,8 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Prepare the verified v0.5.0 version and release assets, then publish through an authorized direct-push path and enqueue staging.
+Verify the versioned build. Publish and immediately enqueue v0.5.0 after exact main readback. GitHub rejected the existing CLI identity’s direct push with GH013 under the active required check; use only an owner-authorized direct-push path.
 
-- `07-ui-ux-design.md#T-07.05.01.08`: Ensure all color combinations pass WCAG AA contrast ratios: normal text ≥ 4.5:1, large text ≥ 3:1, UI components ≥ 3:1. Verify with automated tools. Provide a "high contrast" mode toggle that strengthens all contrast ratios.
-- `07-ui-ux-design.md#T-07.05.02.04`: Add CI gate: a11y violations on critical pages block PR merge. Non-critical pages warn but do not block. Violations must be triaged with reason or exemption.
-- `07-ui-ux-design.md#T-07.11.01.03`: Create an API response interceptor that auto-shows toasts for: successful CRUD operations ("Invoice created", "Profile updated", "Order submitted"), API errors (error message from API), network failures ("Connection lost. Retrying...").
-- `07-ui-ux-design.md#T-07.12.01.08`: Every list page, detail page, dashboard widget, and admin page must implement the loading/empty/error pattern. No view renders a blank white page or infinite spinner.
-- `07-ui-ux-design.md#T-07.12.01.09`: Error boundaries per route: React Error Boundary catches unhandled render errors. Shows `ErrorState` with "Something went wrong" + reload button. Logs error to Sentry.
-- `release-readiness#R-04.01`: Verify full customer and admin UI adoption
-- `release-readiness#R-04.02`: Renew accessibility and performance evidence
 
 ## v0.2.0: Complete customer journeys
 
