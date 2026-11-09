@@ -251,7 +251,43 @@ for (const emergency of [false, true]) {
         await expect(button).toHaveAttribute('aria-busy', 'true');
         const dialog = page.getByRole('dialog');
         const password = page.getByTestId('wallet-receipt-step-up-password');
+        const submit = page.getByTestId('wallet-receipt-step-up-submit');
+        const cancel = page.getByTestId('wallet-receipt-step-up-cancel');
         await expect(password).toBeFocused();
+        await expect(submit).toBeDisabled();
+        for (const control of [password, submit, cancel]) {
+          const target = (await control.boundingBox())!;
+          expect(target.width).toBeGreaterThanOrEqual(44);
+          expect(target.height).toBeGreaterThanOrEqual(44);
+        }
+        await password.press('Tab');
+        await expect(cancel).toBeFocused();
+        await cancel.press('Shift+Tab');
+        await expect(password).toBeFocused();
+        const heading = dialog.getByRole('heading', {
+          name: text('admin.walletReceipts.stepUp.title', locale),
+          exact: true,
+        });
+        await expect
+          .poll(() =>
+            heading.evaluate((node) => {
+              const box = node.getBoundingClientRect();
+              return node.contains(
+                document.elementFromPoint(box.x + box.width / 2, box.y + box.height / 2)
+              );
+            })
+          )
+          .toBe(true);
+        if (
+          !emergency &&
+          locale === 'fa' &&
+          darkMode &&
+          test.info().project.name === 'mobile-safari'
+        ) {
+          await dialog.locator('form').screenshot({
+            path: test.info().outputPath('wallet-receipt-verification.png'),
+          });
+        }
         await password.fill('Test-password-123!');
         await page.getByTestId('wallet-receipt-step-up-submit').click();
         await expect(dialog.getByRole('alert')).toHaveText(

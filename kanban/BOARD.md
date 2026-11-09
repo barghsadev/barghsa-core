@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T05:26:27+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T05:41:40+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 870 | Accepted with unchanged source bindings. |
+| done | 871 | Accepted with unchanged source bindings. |
 | verify | 470 | Existing work may be complete; inspect evidence before building. |
-| partial | 23 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 22 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 5 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify and repair conditional wallet receipt verification controls, then reconcile remaining route-level original control evidence. Required-check enforcement and live staging Sentry remain independent.
+Close required GitHub merge-check enforcement and live staging Sentry delivery, then accept and publish the v0.5.0 staging milestone.
 
 - `07-ui-ux-design.md#T-07.05.01.08`: Ensure all color combinations pass WCAG AA contrast ratios: normal text ≥ 4.5:1, large text ≥ 3:1, UI components ≥ 3:1. Verify with automated tools. Provide a "high contrast" mode toggle that strengthens all contrast ratios.
 - `07-ui-ux-design.md#T-07.05.02.04`: Add CI gate: a11y violations on critical pages block PR merge. Non-critical pages warn but do not block. Violations must be triaged with reason or exemption.
@@ -643,7 +643,7 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 
 | Qualified task | State | Build evidence | Required work |
 | --- | --- | --- | --- |
-| `release-readiness#R-04.01` | partial | Recorded batch work | Verify full customer and admin UI adoption |
+| `release-readiness#R-04.01` | done | Recorded batch work | Verify full customer and admin UI adoption |
 | `release-readiness#R-04.02` | done | Recorded batch work | Renew accessibility and performance evidence |
 | `02-auth-users-admin.md#T-09.01.01` | done | Earlier partial | Branding settings page |
 | `02-auth-users-admin.md#T-09.01.02` | done | Earlier acceptance_verified | Theme application |

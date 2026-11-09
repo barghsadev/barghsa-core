@@ -21,6 +21,7 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
 } from 'react';
+import { createPortal } from 'react-dom';
 import { tWalletReceipts as t } from '@barghsa/i18n/wallet-receipts';
 import type { Locale } from '@barghsa/i18n/app';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -33,7 +34,16 @@ import {
 } from '@barghsa/shared/finance';
 import { WalletReceiptTimeline } from '../components/WalletReceiptTimeline.js';
 import { BankReceiptFinancialReview } from '../components/BankReceiptFinancialReview.js';
-import { LoadingStatus, Alert, Button, ListPage, ListViewToggle, ScrollArea } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Alert,
+  Button,
+  buttonVariants,
+  inputVariants,
+  ListPage,
+  ListViewToggle,
+  ScrollArea,
+} from '@barghsa/ui';
 import { t as appText } from '@barghsa/i18n/app';
 import { useListView } from '../hooks/useListView.js';
 import { StaffWalletReceiptList } from '../components/StaffWalletReceiptList.js';
@@ -156,39 +166,20 @@ async function verifyStepUp(password: string, signal: AbortSignal): Promise<bool
   return res.ok;
 }
 
-const TABBABLE_SELECTOR = [
-  'a[href]',
-  'button:not([disabled])',
-  'input:not([disabled]):not([type="hidden"])',
-  'select:not([disabled])',
-  'textarea:not([disabled])',
-  '[tabindex]:not([tabindex="-1"])',
-].join(',');
-
 function getTabbable(root: HTMLElement): HTMLElement[] {
-  return Array.from(root.querySelectorAll<HTMLElement>(TABBABLE_SELECTOR)).filter((el) => {
-    if (el.tabIndex < 0) return false;
-    if (el.getAttribute('aria-hidden') === 'true') return false;
-    return true;
-  });
+  const selector = 'a[href],button,input:not([type=hidden]),select,textarea,[tabindex]';
+  return Array.from(root.querySelectorAll<HTMLElement>(selector)).filter(
+    (el) => el.tabIndex >= 0 && !el.matches(':disabled,[aria-disabled=true],[aria-hidden=true]')
+  );
 }
 
-function inertOutside(keep: HTMLElement): () => void {
-  const applied: HTMLElement[] = [];
-  let current: HTMLElement | null = keep;
-  while (current && current !== document.body) {
-    const parent: HTMLElement | null = current.parentElement;
-    if (!parent) break;
-    for (const sibling of Array.from(parent.children)) {
-      if (sibling === current || !(sibling instanceof HTMLElement)) continue;
-      if (sibling.hasAttribute('inert')) continue;
-      sibling.setAttribute('inert', '');
-      applied.push(sibling);
-    }
-    current = parent;
-  }
+function inertOutside(dialog: HTMLElement): () => void {
+  const background = Array.from(document.body.children).filter(
+    (element) => element !== dialog && !element.hasAttribute('inert')
+  );
+  for (const element of background) element.setAttribute('inert', '');
   return () => {
-    for (const el of applied) el.removeAttribute('inert');
+    for (const element of background) element.removeAttribute('inert');
   };
 }
 
@@ -968,18 +959,15 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
       cancelStepUp();
       return;
     }
-    if (event.key !== 'Tab' || !stepUpDialogRef.current) return;
-    const tabbable = getTabbable(stepUpDialogRef.current);
-    if (tabbable.length === 0) return;
-    const first = tabbable[0]!;
-    const last = tabbable[tabbable.length - 1]!;
-    if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault();
-      last.focus();
-    } else if (!event.shiftKey && document.activeElement === last) {
-      event.preventDefault();
-      first.focus();
-    }
+    if (event.key !== 'Tab') return;
+    const dialog = event.currentTarget;
+    const tabbable = getTabbable(dialog);
+    const index = tabbable.indexOf(document.activeElement as HTMLElement);
+    const next = event.shiftKey
+      ? (tabbable[index - 1] ?? tabbable.at(-1))
+      : (tabbable[index + 1] ?? tabbable[0]);
+    event.preventDefault();
+    (next ?? dialog).focus();
   }
 
   const confirmationWorking = acting || confirmationBusy || stepUpOpen;
@@ -1383,104 +1371,113 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
         </div>
       </ListPage>
 
-      {stepUpOpen && (
-        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- Dialog handles bubbled Escape/Tab and backdrop dismissal; controls remain keyboard accessible.
-        <div
-          ref={stepUpDialogRef}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="wallet-receipt-step-up-title"
-          aria-describedby="wallet-receipt-step-up-description"
-          data-testid="wallet-receipt-step-up-dialog"
-          onKeyDown={onStepUpKeyDown}
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget && !stepUpSubmitting) cancelStepUp();
-          }}
-        >
-          <form
-            onSubmit={submitStepUp}
-            className="w-full max-w-md rounded-lg bg-card text-card-foreground p-6 shadow-lg space-y-4"
+      {stepUpOpen &&
+        createPortal(
+          // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- Dialog handles bubbled Escape/Tab and backdrop dismissal; controls remain keyboard accessible.
+          <div
+            ref={stepUpDialogRef}
+            className="fixed inset-0 z-50 flex justify-center overflow-y-auto bg-black/40 p-4"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="wallet-receipt-step-up-title"
+            aria-describedby="wallet-receipt-step-up-description"
+            data-testid="wallet-receipt-step-up-dialog"
+            tabIndex={-1}
+            onKeyDown={onStepUpKeyDown}
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget && !stepUpSubmitting) cancelStepUp();
+            }}
           >
-            <h3 id="wallet-receipt-step-up-title" className="text-lg font-semibold text-foreground">
-              {copy('stepUp.title')}
-            </h3>
-            <p id="wallet-receipt-step-up-description" className="text-sm text-muted-foreground">
-              {copy('stepUp.description')}
-            </p>
-            {pendingAction?.kind === 'confirm' && (
-              <>
-                {time.notice}
-                <ScrollArea className="h-[35dvh]" role="region" aria-label={copy('review.title')}>
-                  <BankReceiptFinancialReview
-                    review={pendingAction.review}
-                    formatDate={time.format}
-                    formatPaymentDate={(value) => formatPaymentDate(value, locale)}
-                  />
-                </ScrollArea>
-              </>
-            )}
-            <div>
-              <label
-                htmlFor="wallet-receipt-step-up-password"
-                className="block text-sm font-medium text-foreground mb-1"
+            <form
+              onSubmit={submitStepUp}
+              className="my-auto w-full max-w-md rounded-lg bg-card text-card-foreground p-6 shadow-lg space-y-4"
+            >
+              <h3
+                id="wallet-receipt-step-up-title"
+                className="text-lg font-semibold text-foreground"
               >
-                {copy('stepUp.passwordLabel')}
-              </label>
-              <input
-                ref={stepUpPasswordRef}
-                id="wallet-receipt-step-up-password"
-                data-testid="wallet-receipt-step-up-password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                aria-required="true"
-                aria-invalid={Boolean(stepUpError)}
-                aria-describedby={stepUpError ? 'wallet-receipt-step-up-error' : undefined}
-                value={stepUpPassword}
-                onChange={(e) => {
-                  setStepUpPassword(e.target.value);
-                  if (stepUpError) setStepUpError(null);
-                }}
-                className="w-full border border-input rounded px-3 py-2"
-              />
-            </div>
-            {stepUpError && (
-              <p
-                id="wallet-receipt-step-up-error"
-                className="text-sm text-destructive"
-                role="alert"
-              >
-                {stepUpError}
+                {copy('stepUp.title')}
+              </h3>
+              <p id="wallet-receipt-step-up-description" className="text-sm text-muted-foreground">
+                {copy('stepUp.description')}
               </p>
-            )}
-            <div className="flex items-center gap-3">
-              <button
-                type="submit"
-                data-testid="wallet-receipt-step-up-submit"
-                disabled={
-                  stepUpSubmitting ||
-                  !stepUpPassword.trim() ||
-                  (pendingAction?.kind === 'confirm' && time.status !== 'ready')
-                }
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-              >
-                {stepUpSubmitting ? copy('stepUp.verifying') : copy('stepUp.submit')}
-              </button>
-              <button
-                type="button"
-                data-testid="wallet-receipt-step-up-cancel"
-                onClick={cancelStepUp}
-                disabled={stepUpSubmitting}
-                className="px-4 py-2 border border-input rounded text-foreground hover:bg-muted disabled:opacity-50"
-              >
-                {copy('stepUp.cancel')}
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
+              {pendingAction?.kind === 'confirm' && (
+                <>
+                  {time.notice}
+                  <ScrollArea className="h-[35dvh]" role="region" aria-label={copy('review.title')}>
+                    <BankReceiptFinancialReview
+                      review={pendingAction.review}
+                      formatDate={time.format}
+                      formatPaymentDate={(value) => formatPaymentDate(value, locale)}
+                    />
+                  </ScrollArea>
+                </>
+              )}
+              <div>
+                <label
+                  htmlFor="wallet-receipt-step-up-password"
+                  className="block text-sm font-medium text-foreground mb-1"
+                >
+                  {copy('stepUp.passwordLabel')}
+                </label>
+                <input
+                  ref={stepUpPasswordRef}
+                  id="wallet-receipt-step-up-password"
+                  data-testid="wallet-receipt-step-up-password"
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
+                  required
+                  aria-required="true"
+                  aria-invalid={Boolean(stepUpError)}
+                  aria-describedby={stepUpError ? 'wallet-receipt-step-up-error' : undefined}
+                  value={stepUpPassword}
+                  onChange={(e) => {
+                    setStepUpPassword(e.target.value);
+                    if (stepUpError) setStepUpError(null);
+                  }}
+                  className={inputVariants({ className: 'min-h-[44px]' })}
+                />
+              </div>
+              {stepUpError && (
+                <p
+                  id="wallet-receipt-step-up-error"
+                  className="text-sm text-destructive"
+                  role="alert"
+                >
+                  {stepUpError}
+                </p>
+              )}
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  type="submit"
+                  data-testid="wallet-receipt-step-up-submit"
+                  disabled={
+                    stepUpSubmitting ||
+                    !stepUpPassword.trim() ||
+                    (pendingAction?.kind === 'confirm' && time.status !== 'ready')
+                  }
+                  className={buttonVariants({ className: 'min-h-[44px] min-w-[44px]' })}
+                >
+                  {stepUpSubmitting ? copy('stepUp.verifying') : copy('stepUp.submit')}
+                </button>
+                <button
+                  type="button"
+                  data-testid="wallet-receipt-step-up-cancel"
+                  onClick={cancelStepUp}
+                  disabled={stepUpSubmitting}
+                  className={buttonVariants({
+                    variant: 'outline',
+                    className: 'min-h-[44px] min-w-[44px]',
+                  })}
+                >
+                  {copy('stepUp.cancel')}
+                </button>
+              </div>
+            </form>
+          </div>,
+          document.body
+        )}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T05:26:27+00:00",
-  "source_commit": "9e52de154ded24cbe8974adb80374021f8c442e1",
+  "updated": "2026-11-09T05:41:40+00:00",
+  "source_commit": "2f5aa7619f84e140fb4856cb2ec0592487fcf81d",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35500,7 +35500,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/ChartsPage.tsx",
@@ -63196,7 +63196,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/ChartsPage.tsx",
@@ -141104,11 +141104,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
@@ -491525,7 +491525,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -493372,7 +493372,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
+              "sha256": "995d796eb3ede25e7dbe4e47d830185bd765d2aa23943fbe08af7fb52d24345a"
             },
             {
               "path": "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
@@ -494665,7 +494665,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -495556,7 +495556,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -496388,7 +496388,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -498226,7 +498226,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
+              "sha256": "995d796eb3ede25e7dbe4e47d830185bd765d2aa23943fbe08af7fb52d24345a"
             },
             {
               "path": "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
@@ -515891,7 +515891,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -516330,7 +516330,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -519729,7 +519729,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -546666,7 +546666,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
+              "sha256": "995d796eb3ede25e7dbe4e47d830185bd765d2aa23943fbe08af7fb52d24345a"
             },
             {
               "path": "apps/web/package.json",
@@ -547178,11 +547178,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -548536,7 +548536,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
+              "sha256": "995d796eb3ede25e7dbe4e47d830185bd765d2aa23943fbe08af7fb52d24345a"
             },
             {
               "path": "apps/web/package.json",
@@ -549048,11 +549048,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -550407,7 +550407,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
+              "sha256": "995d796eb3ede25e7dbe4e47d830185bd765d2aa23943fbe08af7fb52d24345a"
             },
             {
               "path": "apps/web/package.json",
@@ -550919,11 +550919,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -552247,7 +552247,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
+              "sha256": "995d796eb3ede25e7dbe4e47d830185bd765d2aa23943fbe08af7fb52d24345a"
             },
             {
               "path": "apps/web/package.json",
@@ -552759,11 +552759,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -554113,7 +554113,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
+              "sha256": "995d796eb3ede25e7dbe4e47d830185bd765d2aa23943fbe08af7fb52d24345a"
             },
             {
               "path": "apps/web/package.json",
@@ -554625,11 +554625,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -555988,7 +555988,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
+              "sha256": "995d796eb3ede25e7dbe4e47d830185bd765d2aa23943fbe08af7fb52d24345a"
             },
             {
               "path": "apps/web/package.json",
@@ -556500,11 +556500,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -557836,7 +557836,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
+              "sha256": "995d796eb3ede25e7dbe4e47d830185bd765d2aa23943fbe08af7fb52d24345a"
             },
             {
               "path": "apps/web/package.json",
@@ -558348,11 +558348,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -559648,7 +559648,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
+              "sha256": "995d796eb3ede25e7dbe4e47d830185bd765d2aa23943fbe08af7fb52d24345a"
             },
             {
               "path": "apps/web/package.json",
@@ -560160,11 +560160,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -561460,7 +561460,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
+              "sha256": "995d796eb3ede25e7dbe4e47d830185bd765d2aa23943fbe08af7fb52d24345a"
             },
             {
               "path": "apps/web/package.json",
@@ -561972,11 +561972,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -563273,7 +563273,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
+              "sha256": "995d796eb3ede25e7dbe4e47d830185bd765d2aa23943fbe08af7fb52d24345a"
             },
             {
               "path": "apps/web/package.json",
@@ -563785,11 +563785,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -565085,7 +565085,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
+              "sha256": "995d796eb3ede25e7dbe4e47d830185bd765d2aa23943fbe08af7fb52d24345a"
             },
             {
               "path": "apps/web/package.json",
@@ -565597,11 +565597,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -567423,7 +567423,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -569326,7 +569326,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -572806,11 +572806,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -574124,7 +574124,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -576027,7 +576027,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -577930,7 +577930,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -579833,7 +579833,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -581736,7 +581736,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -583639,7 +583639,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -585542,7 +585542,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -587445,7 +587445,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -589348,7 +589348,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -591251,7 +591251,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -593154,7 +593154,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -595797,7 +595797,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -597700,7 +597700,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -599127,14 +599127,16 @@
           "release-0.5-staff-team-membership-read",
           "release-0.5-page-read-reconciliation",
           "release-0.5-library-read-reconciliation",
-          "release-0.5-original-ui-closure"
+          "release-0.5-original-ui-closure",
+          "release-0.5-wallet-verification-controls"
         ],
         "current_acceptance": {
           "kind": "current_route_read_state_acceptance",
           "reviewed_sha": "d4c1c54b95f7aecfc6e8d26291fb9920ff74d94e",
           "checks": [
             "Reconciled the original loading, empty or unavailable, and error states against named conditions on all 98 canonical paths. The matrix distinguishes 91 populated routes, five redirects and two static media views and verifies 282 current source bindings.",
-            "Verified 48 staff pending and HTTP 503 receipts and 40 applicable authorized-empty surfaces. Two earlier echoing read failures were replaced by the source-bound invoice and wallet safe-error cases. All 11 dashboard owners and the 101 selected independent request sites have scoped evidence."
+            "Verified 48 staff pending and HTTP 503 receipts and 40 applicable authorized-empty surfaces. Two earlier echoing read failures were replaced by the source-bound invoice and wallet safe-error cases. All 11 dashboard owners and the 101 selected independent request sites have scoped evidence.",
+            "Wallet verification UI and unchanged read/confirmation paths rechecked on current source. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-verification-controls/proof.json"
           ],
           "source_evidence": [
             {
@@ -599715,7 +599717,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -600431,7 +600433,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
+              "sha256": "995d796eb3ede25e7dbe4e47d830185bd765d2aa23943fbe08af7fb52d24345a"
             },
             {
               "path": "apps/web/package.json",
@@ -600943,11 +600945,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -602239,7 +602241,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
+              "sha256": "995d796eb3ede25e7dbe4e47d830185bd765d2aa23943fbe08af7fb52d24345a"
             },
             {
               "path": "apps/web/package.json",
@@ -602751,11 +602753,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -604047,7 +604049,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
+              "sha256": "995d796eb3ede25e7dbe4e47d830185bd765d2aa23943fbe08af7fb52d24345a"
             },
             {
               "path": "apps/web/package.json",
@@ -604559,11 +604561,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -605855,7 +605857,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
+              "sha256": "995d796eb3ede25e7dbe4e47d830185bd765d2aa23943fbe08af7fb52d24345a"
             },
             {
               "path": "apps/web/package.json",
@@ -606367,11 +606369,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -607663,7 +607665,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
+              "sha256": "995d796eb3ede25e7dbe4e47d830185bd765d2aa23943fbe08af7fb52d24345a"
             },
             {
               "path": "apps/web/package.json",
@@ -608175,11 +608177,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -609471,7 +609473,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
+              "sha256": "995d796eb3ede25e7dbe4e47d830185bd765d2aa23943fbe08af7fb52d24345a"
             },
             {
               "path": "apps/web/package.json",
@@ -609983,11 +609985,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -611279,7 +611281,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
-              "sha256": "46bb0daf0689483d0bb1d496ee37a41e366bb6d1980d101c4ef49e72f1ff95be"
+              "sha256": "995d796eb3ede25e7dbe4e47d830185bd765d2aa23943fbe08af7fb52d24345a"
             },
             {
               "path": "apps/web/package.json",
@@ -611791,11 +611793,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -639470,7 +639472,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -640602,7 +640604,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -641734,7 +641736,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -642869,7 +642871,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -644004,7 +644006,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -645166,7 +645168,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -646297,7 +646299,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -647428,7 +647430,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -648560,7 +648562,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -649710,7 +649712,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -650843,7 +650845,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -682373,7 +682375,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -683503,7 +683505,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -684633,7 +684635,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -685763,7 +685765,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -708450,7 +708452,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/test/bank-receipt-review-fixture.ts",
@@ -714499,11 +714501,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
-              "sha256": "ca29c8b836a8eafa1a60b690023f0e1a6d6657b9aff6a1c5eff42b27207bde57"
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
@@ -730129,17 +730131,1319 @@
         "Cover RTL/LTR, both themes, desktop/mobile, keyboard, forms, filters, empty/error/loading and stale context.",
         "Record route-level completion rather than a single misleading dashboard percentage."
       ],
-      "status": "partial",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Primary and independent loading, empty and error state evidence is complete for the canonical paths. The original route acceptance still needs per-route conditional controls, filters, forms and stale context reconciled against their named cases.",
-        "The /admin/wallet-receipts password verification dialog still uses compact raw inputs and buttons. Measure and repair the touch targets in that protected receipt workflow, including keyboard focus and unchanged confirmation behavior."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
-        "current_acceptance": null,
+        "current_acceptance": {
+          "kind": "current_per_route_ui_adoption",
+          "reviewed_sha": "ebec4566628b62b158ff0d66c0201fdad8386fef",
+          "checks": [
+            "Reconciled 98 canonical paths against the original named interaction and route-state cases. Verified all 5,952 populated presentation cells against their actual passing case and browser report. The five redirect paths retain navigation receipts.",
+            "The route matrix identifies original shared keyboard, forms, table/filter, responsive, configuration and stale-context criteria, plus current scoped evidence for all 91 production source changes since the route layout proof.",
+            "Wallet verification renders above workspace navigation, retains the reviewed receipt, announces the heading, cycles focus with Tab/Shift+Tab, preserves error and confirmation semantics, and keeps all three interactive targets at least 44px.",
+            "Passed 72 targeted units and 28 Chromium and mobile Safari production-bundle cases using controlled API responses. Critical source coverage passed with 440/477 lines and 492/564 branches. All 101 transfer budgets, formatting, lint and web typecheck passed."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/confirmation-fixture.ts",
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
+            },
+            {
+              "path": "apps/web/e2e/crm-shell-fixture.ts",
+              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+            },
+            {
+              "path": "apps/web/e2e/deadline-forms.spec.ts",
+              "sha256": "71d6936d60a39b4b5e4c1cef6b90eefcfbece11a93f2a305c99866bfee397daa"
+            },
+            {
+              "path": "apps/web/e2e/navigation-fixture.ts",
+              "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
+            },
+            {
+              "path": "apps/web/e2e/receipt-emergency.spec.ts",
+              "sha256": "b541c61bd6653d420cac8845a73cbfeaba9391c30234ddfb610a67588aab4011"
+            },
+            {
+              "path": "apps/web/e2e/staff-receipt-rejection-forms.spec.ts",
+              "sha256": "bf2553c6a5446a336d947921928d444696bc5360668b9abb2e7206125d070afc"
+            },
+            {
+              "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
+              "sha256": "5138ca5b9295eb324295c53447d04bfa3c618e1a71c8e48827c2cd6b071e3fa0"
+            },
+            {
+              "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
+              "sha256": "995d796eb3ede25e7dbe4e47d830185bd765d2aa23943fbe08af7fb52d24345a"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+            },
+            {
+              "path": "apps/web/src/components/AdminAiSections.tsx",
+              "sha256": "2b18fa285f521214cd94e124a7b5cec53d463ecd9cb3414c746054251025b3fe"
+            },
+            {
+              "path": "apps/web/src/components/AuditLogViewer.tsx",
+              "sha256": "8fdc6e6b01fc82b8ad245653625a3b106815b2cb58efa90910ec4f5b45e64f77"
+            },
+            {
+              "path": "apps/web/src/components/AuthLayout.tsx",
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
+            },
+            {
+              "path": "apps/web/src/components/BankReceiptFinancialReview.tsx",
+              "sha256": "c8cacc0997d053e384b975a4b00d7735c8b77e3dde0f2623fd9e8bc39afb71fe"
+            },
+            {
+              "path": "apps/web/src/components/ContractDetail.tsx",
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+            },
+            {
+              "path": "apps/web/src/components/ContractSignaturePanel.tsx",
+              "sha256": "72bb84c58223216ca0c1a881e25da41ecd2f6b107c9331ab2e2e07e37106ed63"
+            },
+            {
+              "path": "apps/web/src/components/ContractsWorkspace.tsx",
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
+            },
+            {
+              "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
+              "sha256": "ae5035d95579e61de2169b37d5da72d143d2018ed0d45e91c887b5aacb88bee0"
+            },
+            {
+              "path": "apps/web/src/components/CrmLegalDocuments.tsx",
+              "sha256": "bcbf611a881e6ebfca1a89b44436f4f55d95704db8f8cbf8d28ea8e6007b115a"
+            },
+            {
+              "path": "apps/web/src/components/CrmProfileRecords.tsx",
+              "sha256": "777e79dcb80bb9b16c11ada11884eeff094d458737d445794b719cc054c87dde"
+            },
+            {
+              "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
+            },
+            {
+              "path": "apps/web/src/components/DeadLetterPanel.tsx",
+              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+            },
+            {
+              "path": "apps/web/src/components/DefaultProfileModal.tsx",
+              "sha256": "3de544561cf23a4d1b7886e2a9584fda744ccdc57eeb1fd8fe6208ebb138e1e4"
+            },
+            {
+              "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+            },
+            {
+              "path": "apps/web/src/components/DocumentDetail.tsx",
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
+            },
+            {
+              "path": "apps/web/src/components/DocumentsWorkspace.tsx",
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
+            },
+            {
+              "path": "apps/web/src/components/GeographyLoadError.tsx",
+              "sha256": "251ad679666fa6c592902bd342d317c7c4041a4630c801d7e177de2132e58b7c"
+            },
+            {
+              "path": "apps/web/src/components/GiftProfilePicker.tsx",
+              "sha256": "a0a2a1512d653ff5cfc2ef00cfa241aa25a7ba9c903b32f37b349bba0d5fe5bc"
+            },
+            {
+              "path": "apps/web/src/components/HighContrastPreference.tsx",
+              "sha256": "b5ce7e8eb121c86ca0920a6fc5357cf699659a1abdd7a005b43949c0dd794cb1"
+            },
+            {
+              "path": "apps/web/src/components/Icon.tsx",
+              "sha256": "277e22791913ed1141250fa4f8c2799dce1073fe57cd53a59247fc46302ca43c"
+            },
+            {
+              "path": "apps/web/src/components/InvitationBanner.tsx",
+              "sha256": "1ad609e0914b939fd6b6eeb4145e5e22661f119856dde50a27c95e045bcdcf6a"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptHistory.tsx",
+              "sha256": "5fab38eabae4f92fa51513d7237e33eba3f9cf9ec29a88d937e52f1e69d10467"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceLedger.tsx",
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
+            },
+            {
+              "path": "apps/web/src/components/KnowledgeAssistantLauncher.tsx",
+              "sha256": "92889d34afab828e2139c3424d4a09da866f62257f2902735240faff9977f3d4"
+            },
+            {
+              "path": "apps/web/src/components/LegalProfileDocuments.tsx",
+              "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
+            },
+            {
+              "path": "apps/web/src/components/MaintenanceNotice.tsx",
+              "sha256": "3a96b04a5d4a296bf79682b8b049ad043d7f88ab79382dd0cfae1c5dcae2feff"
+            },
+            {
+              "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
+              "sha256": "2305b69a26f2288e517360434dbdc8ecab2ceb581ff2690bdcfa3a5ac6bee719"
+            },
+            {
+              "path": "apps/web/src/components/OnboardingDraftList.tsx",
+              "sha256": "e6cb288f4ae443aedb134ad2fffd3617be095134f06890a555c2cf88abc4143a"
+            },
+            {
+              "path": "apps/web/src/components/OnboardingWizard.tsx",
+              "sha256": "0faa5162a685d66ed5278f8e15e353eeca6fd45725cfbc2d7c4caac4dace7aed"
+            },
+            {
+              "path": "apps/web/src/components/OperationalCommandReview.tsx",
+              "sha256": "337ecb8ef476be26e678eb850d9a882b1e6a61948061e12d68d154c48179a747"
+            },
+            {
+              "path": "apps/web/src/components/OrderWalletBalance.tsx",
+              "sha256": "4fcce3e64be56f40c50d27c2a12047db5e40a9147f26aa03539043325b744921"
+            },
+            {
+              "path": "apps/web/src/components/OtpConfigPanel.tsx",
+              "sha256": "1b5ab9de9d15a21b3866772af1198dec94cdad333df8c218731a0e4d2b2692d9"
+            },
+            {
+              "path": "apps/web/src/components/OtpInput.tsx",
+              "sha256": "9a29151dc34a901a6ed898563e6402ed4ff707ff99b56e7486ee50ba7d88abc2"
+            },
+            {
+              "path": "apps/web/src/components/PasswordField.tsx",
+              "sha256": "7de3e8ba6b6766d50cb8275048bd117a7c1eb41d2b7714251775cf6c22e380c1"
+            },
+            {
+              "path": "apps/web/src/components/PreferenceSettingsStatus.tsx",
+              "sha256": "60ff89836dc2fff28c0a153848ee34706908d17c75829e43c0dd925ff3bc38f0"
+            },
+            {
+              "path": "apps/web/src/components/PreferenceSwitch.tsx",
+              "sha256": "ef6947b6dc8f03ccd64a8ac6c12a20f6464726b185c7aab7febe320a7cc3b8dd"
+            },
+            {
+              "path": "apps/web/src/components/ProfileClosureReview.tsx",
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
+            },
+            {
+              "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
+            },
+            {
+              "path": "apps/web/src/components/PublicKnowledgeAssistant.tsx",
+              "sha256": "914ffda1919399c659a4c48cf82b3a678a502e0b5a26d11e7f3d0aaeca5f9fd7"
+            },
+            {
+              "path": "apps/web/src/components/PublishedTermsHistory.tsx",
+              "sha256": "8eae6315b27f1d236743a26c8a40453d60cbcba7a15cf950b7cf1a952d8477bd"
+            },
+            {
+              "path": "apps/web/src/components/RecoveryContactForm.tsx",
+              "sha256": "fe7bfc456c990caa5824d597d6ffa70975324b0eb0c395dcbe2e2b4bd593d809"
+            },
+            {
+              "path": "apps/web/src/components/RegistrationTermsDialog.tsx",
+              "sha256": "62061c68b80134acf6f7f5c91548dc9efe51b89d434225b5ac0f6cb20087ac2b"
+            },
+            {
+              "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+              "sha256": "e418f7e31f7916daaff7c5ae463f8d68fe2c4ac12ab7a4f69390fa2418e0c8ad"
+            },
+            {
+              "path": "apps/web/src/components/RouteErrorBoundary.tsx",
+              "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
+            },
+            {
+              "path": "apps/web/src/components/RouteSkeleton.tsx",
+              "sha256": "c371e664a768721aaf5589f26e7951db525ece11f565c1b542d51b9374820638"
+            },
+            {
+              "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
+              "sha256": "ff5e37578acdef5fb18e19ad2d074c2bb033382ffe322cdd36b1adc94e0ab6a9"
+            },
+            {
+              "path": "apps/web/src/components/SavingOrderComments.tsx",
+              "sha256": "44a3d04079c80cdb5e25cf916402d70f1bf62fcf49e0228007a647b991ba89a2"
+            },
+            {
+              "path": "apps/web/src/components/SecurityRevocationDialog.tsx",
+              "sha256": "b381a20c0e1173438df6937ecd933f44ad3f94958147ff20ab0183e8264df972"
+            },
+            {
+              "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
+              "sha256": "7faf569e30c498a1fb883ddee078c95ecdbe7a22fce6ce29c5467e5412845b19"
+            },
+            {
+              "path": "apps/web/src/components/SimpleElectricityReview.tsx",
+              "sha256": "efdfad97b2e27c10a6655fcbf24cebe9214431bed0d28ec627b2904234344a4a"
+            },
+            {
+              "path": "apps/web/src/components/SolarContractForm.tsx",
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
+            },
+            {
+              "path": "apps/web/src/components/SolarPostalPanel.tsx",
+              "sha256": "59c71fb01bc8be31e528df12d9fefbb3c04e6529fef2b44c029ef8f65fc29760"
+            },
+            {
+              "path": "apps/web/src/components/SolarPostalTrackingEditor.tsx",
+              "sha256": "097160b5e5645e64199a1110d8064463a469c1232c20e69bbad53daaff87be13"
+            },
+            {
+              "path": "apps/web/src/components/StaffEffectivePermissions.tsx",
+              "sha256": "2ca087c168432ca640ee913a14576c8072c49a5e0527f9253421d7ae3eff84a4"
+            },
+            {
+              "path": "apps/web/src/components/StaffPermissionHistory.tsx",
+              "sha256": "7ba68435ad1922cd799f5a3576e4f95c56863969c8d1588b254eb374f73ba53b"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+            },
+            {
+              "path": "apps/web/src/components/TelegramLinkPanel.tsx",
+              "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
+            },
+            {
+              "path": "apps/web/src/components/TicketIntakeForm.tsx",
+              "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
+            },
+            {
+              "path": "apps/web/src/components/TosContent.tsx",
+              "sha256": "4a04ed74640a531a6f59921dabbc7705b0bec6df3fa421dbd9b5892779c65769"
+            },
+            {
+              "path": "apps/web/src/components/TrustedDevices.tsx",
+              "sha256": "7d2fbe27037e1362cf63d8d20aaea1906a6ce0cf422c48e64d4d62a301c9ad3d"
+            },
+            {
+              "path": "apps/web/src/components/VerificationBanner.tsx",
+              "sha256": "7b138e9426501850edcaaaeecb9a17fd198d88d1280e65da906b0de67fb684f6"
+            },
+            {
+              "path": "apps/web/src/components/VerificationPolicySettings.tsx",
+              "sha256": "e4c024675536d143cf33dcc7ee1facd001feacfd247f25e548962f5e0a8524fb"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.tsx",
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
+            },
+            {
+              "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountSettingsEditor.ts",
+              "sha256": "4a3928950a238a70523ffafaae0e23d97683919526756ccd352fafbe52ad4f55"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountTime.tsx",
+              "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+            },
+            {
+              "path": "apps/web/src/hooks/useAsyncData.ts",
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
+            },
+            {
+              "path": "apps/web/src/hooks/useCatalogueConfirmationRead.ts",
+              "sha256": "f82cd597023dc893e5cb9af7972b7158073490c0384f61be9859e72709341618"
+            },
+            {
+              "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
+              "sha256": "3094accd09c58b57b7e9066d527a913fe0efbf672aea6281ee12feb2b7bb2d5c"
+            },
+            {
+              "path": "apps/web/src/hooks/useCatalogueResource.ts",
+              "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
+            },
+            {
+              "path": "apps/web/src/hooks/useCustomerServiceHistory.ts",
+              "sha256": "fc70f03965a95ddb72f468edd7aeeed573b0004925200f569b7293cbf28f0400"
+            },
+            {
+              "path": "apps/web/src/hooks/useFormDraft.ts",
+              "sha256": "1323dc6eefd9e38d6fff5c7de26ea94e7550b3d418b05121507a82254a79e8a9"
+            },
+            {
+              "path": "apps/web/src/hooks/useGeographyOptions.ts",
+              "sha256": "520091b3c30a4f9686760ec8d5691f5f9f7818521c6555efe059ae7ac4333225"
+            },
+            {
+              "path": "apps/web/src/hooks/useGiftCodeCatalogue.ts",
+              "sha256": "4e4d3aec4c22b448a2a2e9e3aa91cadf7c945a5506d311998f9de7ef34c1da5a"
+            },
+            {
+              "path": "apps/web/src/hooks/useListQuery.ts",
+              "sha256": "c6ac6d60b68941befc2b90ab86e50ae6c6518cc5cf096444c74a0ea2ee75c6b3"
+            },
+            {
+              "path": "apps/web/src/hooks/useLocale.ts",
+              "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
+            },
+            {
+              "path": "apps/web/src/hooks/useLoginNativeForm.ts",
+              "sha256": "07702e3d468b3499bbdb13cfe567c09dfc599e184e4109d7f8034a360e9e0a34"
+            },
+            {
+              "path": "apps/web/src/hooks/useNumberFormatting.ts",
+              "sha256": "1e3e43ea13ee7b0e46e1200af1b4a5b39f671063c529c54e43344ab54afd68b1"
+            },
+            {
+              "path": "apps/web/src/hooks/useOnboardingDraft.ts",
+              "sha256": "ab284b4cf3c5e0a6a6b07cbac58adae4540576f062cb2aa7eb301d79a92d75b2"
+            },
+            {
+              "path": "apps/web/src/hooks/useOnboardingForm.ts",
+              "sha256": "da9e89503351249b1a29397825ce8199353dfb5baf58b6aa92bcf84196a207d6"
+            },
+            {
+              "path": "apps/web/src/hooks/useOnboardingSubmission.ts",
+              "sha256": "1fb6a2de10635105dbf3cb84a027bff4cda0aed8c888ec32cbf73eb4a04c52d7"
+            },
+            {
+              "path": "apps/web/src/hooks/useOperationalQueue.ts",
+              "sha256": "2d66f00c756ed9d1d68ea3f4394e243d4c12b6125d47446c0c29f30c88770544"
+            },
+            {
+              "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
+            },
+            {
+              "path": "apps/web/src/hooks/useOwnedGateRead.ts",
+              "sha256": "955e166337afda25d6becbfc9c7e9a47b3b342a6934b04eb6deafcb92e716295"
+            },
+            {
+              "path": "apps/web/src/hooks/useOwnedInvoiceReview.ts",
+              "sha256": "a928b66193795d500754ba8e7e58280bb802ab5659d4fba7e4e626bad1ea3428"
+            },
+            {
+              "path": "apps/web/src/hooks/useOwnedProfileRead.ts",
+              "sha256": "9a0158813169266ded1315664fb99b30988d8e44e69a47d648a77c7b021d1fc9"
+            },
+            {
+              "path": "apps/web/src/hooks/useOwnedStaffServiceRead.ts",
+              "sha256": "32c1269a80fcff189bcb8953f1ea274ceb5d1c2874eb5b8fcee2df31ccecc64a"
+            },
+            {
+              "path": "apps/web/src/hooks/usePasswordRecoveryForm.ts",
+              "sha256": "e95aa4249c21f42e28668f524f6f9b8d5f5b6ac860a16858d5d1e7e529a42135"
+            },
+            {
+              "path": "apps/web/src/hooks/usePreferenceSettingsForm.ts",
+              "sha256": "84646eef89d8e80845dcfab092a8cb22113e79b64a6d35bfeb3b3f9060d2cff4"
+            },
+            {
+              "path": "apps/web/src/hooks/useProfileSettingsEditor.ts",
+              "sha256": "9cb48a0b68c721abaab9c2d5733021ff420eacebdd64aa8cbb45939c421563ac"
+            },
+            {
+              "path": "apps/web/src/hooks/useRegistrationNativeForm.ts",
+              "sha256": "afb7afc4767a9bca7e327091dfa7765d332f96418e1e2c028a1d5f778b2023b8"
+            },
+            {
+              "path": "apps/web/src/hooks/useRiskConfirmation.ts",
+              "sha256": "4c80aac980bd368019b3fec8fd19d7feefd44f1c97dd6b109d73224452f0b1d7"
+            },
+            {
+              "path": "apps/web/src/hooks/useSavedAddressSettingsEditor.ts",
+              "sha256": "956c87397684c412c002da39a5606b17a591325b53cf47fe5d772d91f6f7baaa"
+            },
+            {
+              "path": "apps/web/src/hooks/useSecurityRevocationForm.ts",
+              "sha256": "c67189a8d5d9373b49dfc659e8314bb6492c5b4dcd96235c94ca97fcda647b61"
+            },
+            {
+              "path": "apps/web/src/hooks/useSecuritySettings.ts",
+              "sha256": "b147234e1376089f842f94f1a6969c0336715489441a8b0f922b8411af54005b"
+            },
+            {
+              "path": "apps/web/src/hooks/useSettingsCommand.ts",
+              "sha256": "d26862e04f82d8839ffdee8d100a33ad4aa33119afdff0d129ca336deffbb843"
+            },
+            {
+              "path": "apps/web/src/hooks/useSettingsSnapshot.ts",
+              "sha256": "c22b0ab868390c7ccf0de6291468052d9c19db633d8cb6f827546696e4822907"
+            },
+            {
+              "path": "apps/web/src/hooks/useStaffQueryRead.ts",
+              "sha256": "e21695a1a08c18ea78dcc4a17a19555992e8a94ba3284fea02d3a587bd8ca4e0"
+            },
+            {
+              "path": "apps/web/src/hooks/useTicketCommand.ts",
+              "sha256": "b27c1ecdcb40271844edcf0150b6a3fec7684ea1dca3a18ed131398798a2aa2b"
+            },
+            {
+              "path": "apps/web/src/lib/auth-bootstrap-read.ts",
+              "sha256": "28f3d57a305a339ca4c1b6046bd4206a76e9afce0e0b4c3736bb0341ae4068fd"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
+            },
+            {
+              "path": "apps/web/src/lib/customer-invoices.ts",
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
+            },
+            {
+              "path": "apps/web/src/lib/customer-saving-catalogue.ts",
+              "sha256": "f4e0dc7f2a7b7d6bcd2e350604a8662b230fc8ec9684cf7a18c374010946306b"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/document-template-form.ts",
+              "sha256": "5445f0b304a5652cd0583b58afc5d6d727f6d793af49cfb03c48981bc74fe70d"
+            },
+            {
+              "path": "apps/web/src/lib/documents.ts",
+              "sha256": "23769141261230282f3cde5b9be17da1191e279ba4882b39b5f86c75b8bc3d3f"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-catalogue.ts",
+              "sha256": "3d2357b9a2f11b968493f1aef473027e46a616e05203968bcbf26480d62c3a2e"
+            },
+            {
+              "path": "apps/web/src/lib/email-providers-api.ts",
+              "sha256": "57456f70542968ec9f29ffc86caba06f71ff6119f728cd88b71ebe0fb80d9987"
+            },
+            {
+              "path": "apps/web/src/lib/geography-api.ts",
+              "sha256": "e34e61e4c0e87274ffd8c8219ecbad6253a2202dcfa513458142568f3505ae57"
+            },
+            {
+              "path": "apps/web/src/lib/jobs.ts",
+              "sha256": "18d90b4a7514dca091d4c085f4d73f4814feb1ad114de36d1d498060f37a6141"
+            },
+            {
+              "path": "apps/web/src/lib/notifications.ts",
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
+            },
+            {
+              "path": "apps/web/src/lib/public-auth-fetch.ts",
+              "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
+            },
+            {
+              "path": "apps/web/src/lib/public-auth-response.ts",
+              "sha256": "341644cf1c40ed83f2f761ad697e4e04f5a2abfbaedcffb31fc4ea69c59a0efd"
+            },
+            {
+              "path": "apps/web/src/lib/route-bootstrap-read.ts",
+              "sha256": "322598d4968e5db3d2870cab9c51a3a4f213900f6b2c9d0f53fde8ac4ee9508c"
+            },
+            {
+              "path": "apps/web/src/lib/server-query-client.ts",
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+            },
+            {
+              "path": "apps/web/src/lib/service-intake-records.ts",
+              "sha256": "9b5b05176f6c3974d8cf9bb5d0320d6071204c71d57736bcd05770ad282f7a37"
+            },
+            {
+              "path": "apps/web/src/pages/AIChat.tsx",
+              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+            },
+            {
+              "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
+              "sha256": "b60a6a8d933d095170a0aea17ee963fa5df152d93913592158c37a832619f390"
+            },
+            {
+              "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
+              "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
+            },
+            {
+              "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
+              "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
+            },
+            {
+              "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
+              "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
+            },
+            {
+              "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
+              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+            },
+            {
+              "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+              "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
+            },
+            {
+              "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
+              "sha256": "b77c8cd06fabfee049e7ed41cd68310bf6b202d2fe6d913a089e3350b395a017"
+            },
+            {
+              "path": "apps/web/src/pages/AdminCataloguePage.tsx",
+              "sha256": "0ce4eb4228c830c1d8dd2a426e953dfe0b47154d8e33967bb26c67d65f96d1b6"
+            },
+            {
+              "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
+              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+            },
+            {
+              "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
+              "sha256": "2e450e2a961c755dea1538408f2a5661e6d61693ad5050e34214febfb198ea40"
+            },
+            {
+              "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
+              "sha256": "18b94c9afaf2b37bee9e5e05dca669abdf459c4b2a43b1542e12e2786d2e2409"
+            },
+            {
+              "path": "apps/web/src/pages/AdminContractsPage.tsx",
+              "sha256": "15f2d01acfd38734160c1ca8fb4e571fbe89f5cf4945371170dd9e28a16dbceb"
+            },
+            {
+              "path": "apps/web/src/pages/AdminDashboard.tsx",
+              "sha256": "68f1ff2b4d92335a5e4616850eeec90a7066301fc569bd86df9b00c3b8aad2f2"
+            },
+            {
+              "path": "apps/web/src/pages/AdminDeliveryProvidersPage.tsx",
+              "sha256": "23fb5f4467d4b2482b0ea61d390657af674d0cd7cd0bdefbde269faa998405b1"
+            },
+            {
+              "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
+              "sha256": "b2a8e5cde034539289a0588c98aa1851b3bb4a220cf627c0f1a92623b6eab473"
+            },
+            {
+              "path": "apps/web/src/pages/AdminDocumentsPage.tsx",
+              "sha256": "a22349c1e3e75fbc349b02bfcb29a12cfbff1572b636e525c8fd1c4facd62ff6"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
+              "sha256": "68fa86c23168db0583ae7cbb6655305f858fb26f872837983c9aec3fd59c1e59"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
+              "sha256": "6749b87bf32c141145ee9b31415b542dafbcbcd14c3a8d78f301ed432db8f428"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
+              "sha256": "9753e41d3caf52f333ff9991276aa7c1307dc7207ba2b65d1aafcd637a2a9d9b"
+            },
+            {
+              "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+              "sha256": "a72f4e37a56dd99540aeb5a9ecfe69126db05f322e971061614e9f11f0ab33b0"
+            },
+            {
+              "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
+              "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
+            },
+            {
+              "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
+              "sha256": "a62973132825b7800d32abc470912796421a28adf9ec38d1844c5e15597c8872"
+            },
+            {
+              "path": "apps/web/src/pages/AdminGeographyPage.tsx",
+              "sha256": "12af4bf16aff204ee7d29e9cd7cf691898c514a75a2a08c80004d3d230314794"
+            },
+            {
+              "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
+              "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+            },
+            {
+              "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+              "sha256": "0552f30faffe8b9f6fa5799e21e7c313fd9b2aab9a1f334c081bf693288fb16d"
+            },
+            {
+              "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
+            },
+            {
+              "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
+              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+            },
+            {
+              "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
+            },
+            {
+              "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
+              "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
+            },
+            {
+              "path": "apps/web/src/pages/AdminRolesPage.tsx",
+              "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
+            },
+            {
+              "path": "apps/web/src/pages/AdminServiceTargetsPage.tsx",
+              "sha256": "62514c0b77b49791b4560b455b16ac18fc363469dd5bc0d3a4a14d49bd376432"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
+              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
+              "sha256": "cb2fd0117f8e190f0bc1fbbd2a3ccb7d93a6f80ccc692cf110f75bf5479fa102"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
+            },
+            {
+              "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
+            },
+            {
+              "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
+            },
+            {
+              "path": "apps/web/src/pages/AdminStorageConfig.tsx",
+              "sha256": "4357b96888a6aed8ed9a9d40775e618d9f40f1ded3b8e7a1e724fd11ad15faee"
+            },
+            {
+              "path": "apps/web/src/pages/AdminTosPage.tsx",
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+            },
+            {
+              "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
+              "sha256": "71c5222f07d1c41fa642bd206ade7288d6f22e633950ea487046b1d2f6e1cb0d"
+            },
+            {
+              "path": "apps/web/src/pages/AdminVatPage.tsx",
+              "sha256": "64783c14fd207a752cd57330c9c3c04a90e4282c8dd2397202d7a7a7503ab138"
+            },
+            {
+              "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
+              "sha256": "09f60a37458df8c0db11e399472134f32575a6a3faeba5d8914c2ddda933dbf5"
+            },
+            {
+              "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
+              "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
+            },
+            {
+              "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
+            },
+            {
+              "path": "apps/web/src/pages/BankReceiptsPage.tsx",
+              "sha256": "ab3ee41520c0ecee9eac2f9df6de50eca72fffeef2cda809f709715e16264ca7"
+            },
+            {
+              "path": "apps/web/src/pages/ChartsPage.tsx",
+              "sha256": "5fdc29854efa5e83ac23f04a2f7f621ee3a68b5c76a67837f904aeb085ebc144"
+            },
+            {
+              "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
+            },
+            {
+              "path": "apps/web/src/pages/ConsultationsPage.tsx",
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
+            },
+            {
+              "path": "apps/web/src/pages/ContractsPage.tsx",
+              "sha256": "2cec44911feeb1a68e3c10999adba67118a7ffd8caf6c1f71c6d980f77f91e15"
+            },
+            {
+              "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
+              "sha256": "37206fd46d5fbdc864f9bd7847bf9a745c2ad94fa15ce778a65f1eb77edfed63"
+            },
+            {
+              "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+              "sha256": "b75f3465ba818f07da5d42f1537b9ea8cf73b95adeaae78575d5d46281775f57"
+            },
+            {
+              "path": "apps/web/src/pages/CrmProfileList.tsx",
+              "sha256": "fb30dc041234234c50f4516924132c294d9d556a529e175b249f02de8b5c3fc4"
+            },
+            {
+              "path": "apps/web/src/pages/DashboardPage.tsx",
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
+            },
+            {
+              "path": "apps/web/src/pages/DocumentsPage.tsx",
+              "sha256": "9e48d22e718e01f2c1d1d3212103e8cb95f344dbab9f14923470e3ce73f685f8"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityIncreasePanel.tsx",
+              "sha256": "925593e77d45e9a296f72180196eb04822ae9e597c1fba5a4585b6a4802dd1d4"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
+              "sha256": "52db5fa558c3d16e55014bb8bc98ed7b6ab9cc4f446aecb15924726bcfb470e1"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
+              "sha256": "8e2c4277fc0ce52f91e9a3961b2b3664d5ccb26524044e304223d1e2eaef9f5b"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityPriceAdjustmentsPanel.tsx",
+              "sha256": "7e46b1b86aa22fd3f0a8ae90fd8bdfa4f526f5ee1cf70a7507c5f6a76df93008"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+              "sha256": "98ac0194357d870547c1abc3a340f3ac1a49b90e22cac09ed5fb4ceee2ad543e"
+            },
+            {
+              "path": "apps/web/src/pages/InvoicesPage.tsx",
+              "sha256": "3ceed241a39c1cee1fa6ce6cd63bc9144d85d1b0a49fcb1a81f90e1785e3b2c0"
+            },
+            {
+              "path": "apps/web/src/pages/NotificationCenterPage.tsx",
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
+            },
+            {
+              "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
+            },
+            {
+              "path": "apps/web/src/pages/SavingOrdersPage.tsx",
+              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+            },
+            {
+              "path": "apps/web/src/pages/SavingsOrderPage.tsx",
+              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+            },
+            {
+              "path": "apps/web/src/pages/SavingsPage.tsx",
+              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+            },
+            {
+              "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
+              "sha256": "7cae22ef9196fddbb7a8e09bb9e583255088fbc412601e2986f6a5082a1afc41"
+            },
+            {
+              "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
+              "sha256": "092529a37d2178621babb556d9677d4f0f7497f94ba6d81210b11a45ec61ee48"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestPage.tsx",
+              "sha256": "cd08bddbaaa38991861dd6011f0edbfa2ce435bf9004f2f15da9ce58517dd519"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestsPage.tsx",
+              "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+            },
+            {
+              "path": "apps/web/src/pages/StaffNotificationCenterPage.tsx",
+              "sha256": "c49b212f09a17b3808ac34c20d5223dd8a7ee44baba9124e93e12603f36778aa"
+            },
+            {
+              "path": "apps/web/src/pages/StaffWalletLedgerPage.tsx",
+              "sha256": "854a4e64f40d3ee6789e79da64010745a577316fa3a232ba4dadd8d9cf894428"
+            },
+            {
+              "path": "apps/web/src/pages/TeamPage.tsx",
+              "sha256": "ebbecde19091a8a3109d3c236b388a7e6d362bda9ce71e11ce94a9cb9118fad0"
+            },
+            {
+              "path": "apps/web/src/pages/TicketsPage.tsx",
+              "sha256": "957cdaefba5bb88d77ef2ec2062ed9ad3a87379a3b34dbd09416629d6b20b98e"
+            },
+            {
+              "path": "apps/web/src/pages/VideosPage.tsx",
+              "sha256": "4a8b506e2d253e0029751282e6b3e0acc5038f6cb51dfa2fbe7886fa7776635c"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "44ee2de825c64b4a53473aaf8a022175959f36ed543fa97f6d582949c89be630"
+            },
+            {
+              "path": "apps/web/src/routeTree.gen.ts",
+              "sha256": "c1524622f37c4dc26c3fc7f5746d3a9a2d962c8397db0ab77e61efa0422be658"
+            },
+            {
+              "path": "apps/web/src/routes/_app/ai.tsx",
+              "sha256": "475563b597e66b9cb9bf1bdc2b5614749dcccc324982ff8ce9b265292970c665"
+            },
+            {
+              "path": "apps/web/src/routes/_app/app.tsx",
+              "sha256": "309d24401e4059569adb6d4398b45280da3f060dbe8037ccb873e3228753e65e"
+            },
+            {
+              "path": "apps/web/src/routes/_app/charts.tsx",
+              "sha256": "9c8f718781f7801a7fa4ba508b2d91351bd101cbfbb99cd6cd9f0bbd2719757e"
+            },
+            {
+              "path": "apps/web/src/routes/_app/consultations.$requestId.tsx",
+              "sha256": "a028b6c5c3015c3b0ac47233e3990ad2e9d86f26ad63fa288449ff261a72515f"
+            },
+            {
+              "path": "apps/web/src/routes/_app/consultations.index.tsx",
+              "sha256": "b9814f3d97b1555eb87deab92ac63a95c33df96dc29adccf3c251d82e5b13863"
+            },
+            {
+              "path": "apps/web/src/routes/_app/contracts.tsx",
+              "sha256": "339f4449296ad8c10e0d7d8ab85393878574edb7bb74d73d8d7cdd4bc1dea6da"
+            },
+            {
+              "path": "apps/web/src/routes/_app/dashboard.tsx",
+              "sha256": "ee3f25866165e17be196a67abf9e8a30c437a9644f1b97826de6ad50ffce3615"
+            },
+            {
+              "path": "apps/web/src/routes/_app/documents.tsx",
+              "sha256": "4645c7a3f70278d3cb14cbd407bde35bd21e79600ba5a730fb22620bfad641e9"
+            },
+            {
+              "path": "apps/web/src/routes/_app/electricity/advanced.tsx",
+              "sha256": "51b5984fa1dcebc428fd9c56486a8cbba6529ae35d522b81d24aaab49ab45737"
+            },
+            {
+              "path": "apps/web/src/routes/_app/electricity/index.tsx",
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
+            },
+            {
+              "path": "apps/web/src/routes/_app/electricity/order.tsx",
+              "sha256": "622295a1d60d52de79b1cb74b1ec5215b7a3441cbef8274c6c8a7cc207ef66d4"
+            },
+            {
+              "path": "apps/web/src/routes/_app/electricity/orders.$orderId.tsx",
+              "sha256": "c8d175fde696fdfc384c56fe1ca8e237b85e5e915679c359f5608c02e473df96"
+            },
+            {
+              "path": "apps/web/src/routes/_app/electricity/orders.index.tsx",
+              "sha256": "ef6698f33d7f7fc445915cd632b9432751f9d11512105e02b98231f035619ed2"
+            },
+            {
+              "path": "apps/web/src/routes/_app/invoices/$invoiceId.tsx",
+              "sha256": "7c637a94d2bf510a71d5c2a6f752b3d06e0770aae7c20f0fded9438ccd472bc2"
+            },
+            {
+              "path": "apps/web/src/routes/_app/invoices/index.tsx",
+              "sha256": "423cca3b155685debf98c0128daf64ef1470848d2d892f737c2902319e37650c"
+            },
+            {
+              "path": "apps/web/src/routes/_app/invoices/receipts.tsx",
+              "sha256": "394be548e2e8a8e2f3737d7dc62be9a58ffa91bc9f5892c1586a60c174d83b89"
+            },
+            {
+              "path": "apps/web/src/routes/_app/notifications.tsx",
+              "sha256": "360f09cfdbf3839ebd542bab3b55a8c3d673e2833906a656233103dfd2befa02"
+            },
+            {
+              "path": "apps/web/src/routes/_app/savings.index.tsx",
+              "sha256": "8a765f837ae3e3bda0b87a2fa0ed27ab5b81b904904bf7d29d1cb1337685d5f6"
+            },
+            {
+              "path": "apps/web/src/routes/_app/savings.order.tsx",
+              "sha256": "f3a5c509684bfa13c7d421c27c16bfeea1bcbaaf2220a12e6b0ad27e83d33406"
+            },
+            {
+              "path": "apps/web/src/routes/_app/savings.orders.$orderId.tsx",
+              "sha256": "224436b986af61a4196cdbd5df08cae7d3483024d0e0140ac7adc3ce2e81a796"
+            },
+            {
+              "path": "apps/web/src/routes/_app/savings.orders.index.tsx",
+              "sha256": "6919d76ac32a5a9bb4016af92f7b7394d9452715362bbff7dc3730f6e779a0d3"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/addresses.tsx",
+              "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/index.tsx",
+              "sha256": "47ff271f5d9cf0235d0388d30fa2db1383836f074dd59666c868cfbd91a7cc4d"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/privacy.tsx",
+              "sha256": "f1192935ad8024b4653de301b9782c7bcbc046d42d73042d596e60a50e730ec6"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/profile.tsx",
+              "sha256": "3a2649a34ed1900167c01b78636de665177d8864a73d79f1140b298f643f5b9e"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/security.tsx",
+              "sha256": "9d3e0a0c517b93f7d4eefd6cc2120e4c3d45025d2e1e3c59bf7efb78e57e0765"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/team.tsx",
+              "sha256": "370fc9a2c8652ae1e7e763ef00eb7f61f8444099e197814b204b8d7bced39824"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/timezone.tsx",
+              "sha256": "32f73dc2a6fa3c73b9acf99605e0c1b64794bc179c236895632a7a5f56381f68"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/username.tsx",
+              "sha256": "9ec6bd4c18c86d6101ce57bf33d9cb971515e5882da17ccfc1ea167ee64c09cd"
+            },
+            {
+              "path": "apps/web/src/routes/_app/solar.requests.$requestId.tsx",
+              "sha256": "858972697663c8c5a6e84f7820b7d0a190bbc2bfdd5a6662e0bc4340f6ade72f"
+            },
+            {
+              "path": "apps/web/src/routes/_app/solar.requests.index.tsx",
+              "sha256": "ee98d71a3488353e3af99d0e614fe05b9b6b8705168dc32034f462e2aedb127a"
+            },
+            {
+              "path": "apps/web/src/routes/_app/solar.requests.new.tsx",
+              "sha256": "f9bf77c58f07b3b9eb02eeee7c92efbe60d868ece059f65e429f85216b89d884"
+            },
+            {
+              "path": "apps/web/src/routes/_app/tickets.tsx",
+              "sha256": "508cfd6ffa8554e0d05e90e8d745002bcf0024e8fcd9d3c9446a00061bdfc319"
+            },
+            {
+              "path": "apps/web/src/routes/_app/videos.tsx",
+              "sha256": "6b329dfef1ea120159585eff39bba390d112b858c5243b7a16decb2b0ae43495"
+            },
+            {
+              "path": "apps/web/src/routes/_app/wallet.tsx",
+              "sha256": "06a62593967c8d00199b8fd9c2bdc7deba6f19d24aeefa33e6b1c2a4871c892e"
+            },
+            {
+              "path": "apps/web/src/routes/activate.tsx",
+              "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
+            },
+            {
+              "path": "apps/web/src/routes/admin/agent-slots.tsx",
+              "sha256": "3cc16407251878c638b131b09830d3fc0146e7e46f081a58f2e7fa286e18cc03"
+            },
+            {
+              "path": "apps/web/src/routes/admin/agents.tsx",
+              "sha256": "59d95a0a1525cd564ddfbe8bd25d46f4935922ca3f17c5269b9989821051073d"
+            },
+            {
+              "path": "apps/web/src/routes/admin/ai-models.tsx",
+              "sha256": "a24238103f39d64adfd0e82c4caa668fa65342e36ce72f11acb5212409a8d352"
+            },
+            {
+              "path": "apps/web/src/routes/admin/approval-requests.tsx",
+              "sha256": "59d3cdbbfc48b693d679a3d5c5d89cef4e50bc2dc882abc66319818ce9bd8c0f"
+            },
+            {
+              "path": "apps/web/src/routes/admin/branding.tsx",
+              "sha256": "963e0a94785b811863bffd69874be14ec4b840287ea3fc5688cc0eb29348710f"
+            },
+            {
+              "path": "apps/web/src/routes/admin/catalogue.tsx",
+              "sha256": "1c9d8bb7e0144942694543ceeca3ff46dbfd62c24057dc2553c7da634d38f7fd"
+            },
+            {
+              "path": "apps/web/src/routes/admin/consultations.tsx",
+              "sha256": "53d7ea9b6aa3627a8717b9842d14332ae3fbb5a7afe4ead903a17e1fa17058ea"
+            },
+            {
+              "path": "apps/web/src/routes/admin/contract-limits.tsx",
+              "sha256": "7123fb066d5323e453dee6018cafe2838f61c11c3477ed1c4d07f55f4b17a739"
+            },
+            {
+              "path": "apps/web/src/routes/admin/contract-templates.tsx",
+              "sha256": "149b3b237533a5854a9a3b44e5fdabef15752f64ba8b0e72f5b3e20982e756a8"
+            },
+            {
+              "path": "apps/web/src/routes/admin/contracts.tsx",
+              "sha256": "e51e0994c520ae45bcc4b30a3b01c2daca182ba888969184af45047e34f566d6"
+            },
+            {
+              "path": "apps/web/src/routes/admin/crm/corrections.tsx",
+              "sha256": "9c06e7dc494aba5d80cff651d3dbf1506c9f641fb116973ec1140def97200352"
+            },
+            {
+              "path": "apps/web/src/routes/admin/crm/index.tsx",
+              "sha256": "09aa66084364d0e040949c9ae9c6d42333a964b9ee32983ea5d970ee62c42b49"
+            },
+            {
+              "path": "apps/web/src/routes/admin/crm/profiles.$profileId.tsx",
+              "sha256": "1fe57443b2ad33df05f0af1874add1ad6f38198868c160b6b9def70960761324"
+            },
+            {
+              "path": "apps/web/src/routes/admin/crm/recovery.tsx",
+              "sha256": "d4e71c09a2a6d23bbd3be01f20a2161478c51916ce3214daecabd64ce9126ea3"
+            },
+            {
+              "path": "apps/web/src/routes/admin/document-templates.tsx",
+              "sha256": "25a8f1dc949e6b595aa12a256a7a2e0c9130226dade69b54046da802b8b1c7fd"
+            },
+            {
+              "path": "apps/web/src/routes/admin/documents.tsx",
+              "sha256": "2e17d1323d40dc142d3fe2ee952ebfa3cf5e45da11b12a4dc72e62dc6388defe"
+            },
+            {
+              "path": "apps/web/src/routes/admin/electricity-increases.tsx",
+              "sha256": "80e57cfbe4019d20c23bc9899c8eba3dedd0b9954601e0c42d57341b83110396"
+            },
+            {
+              "path": "apps/web/src/routes/admin/electricity-orders.tsx",
+              "sha256": "99bbc0088e006c0e2b95b1020067786401dd6b731b9338b7aa20e02a0d8c701a"
+            },
+            {
+              "path": "apps/web/src/routes/admin/electricity-price-adjustments.tsx",
+              "sha256": "f839a9b256a5f9e60954f9ca444e855e4ff96f79cd46da377ffef2efb0b00ef8"
+            },
+            {
+              "path": "apps/web/src/routes/admin/electricity-rules.tsx",
+              "sha256": "f1f8db93ed64aaa45c33fd5ed19210beadd11a2428146d652e89e0326555b5db"
+            },
+            {
+              "path": "apps/web/src/routes/admin/failed-jobs.tsx",
+              "sha256": "db6b6cc267aa28d52bce1b2e2de313f4703b750942f20f1d04ecf49d75e3de96"
+            },
+            {
+              "path": "apps/web/src/routes/admin/failed-notifications.tsx",
+              "sha256": "219394e20d76c865a8cb4ae48cf543b035b5acb11653433a5b058812eba0a681"
+            },
+            {
+              "path": "apps/web/src/routes/admin/geography.tsx",
+              "sha256": "0be59af2eef20494dbc2950aaa7222340c28f4c12beca1000e0f4f2a2f776585"
+            },
+            {
+              "path": "apps/web/src/routes/admin/gift-codes.tsx",
+              "sha256": "c5bd414b419a5795333d9df7debb9b09261352ab66513a13e880d6f99d7c3acf"
+            },
+            {
+              "path": "apps/web/src/routes/admin/inbox.tsx",
+              "sha256": "5409a87b514205e80af28a96c1e4f69e51c1ae5d93ca13f9acb0c458c98e0848"
+            },
+            {
+              "path": "apps/web/src/routes/admin/index.tsx",
+              "sha256": "e39bdf6e71133fde57ef7fc5646e25925533c7109a25f89de5ca10f780c66907"
+            },
+            {
+              "path": "apps/web/src/routes/admin/invoices.tsx",
+              "sha256": "40c707341a06966f36f475ad516aaf6ed12f6d27df8ac1f956ec1e59110d881b"
+            },
+            {
+              "path": "apps/web/src/routes/admin/knowledge-bases.tsx",
+              "sha256": "c0293ef220d71a520639e41b0313c12ac4b66efdb27f0b1c80247e463683080a"
+            },
+            {
+              "path": "apps/web/src/routes/admin/maintenance.tsx",
+              "sha256": "9732958eb3065010c506b237203e017c0420538d77b46db73260141b456214a9"
+            },
+            {
+              "path": "apps/web/src/routes/admin/notifications.tsx",
+              "sha256": "59474795b1c14f54363497e70fa0c938485059fcacdb11bcf3f2e1f32a774097"
+            },
+            {
+              "path": "apps/web/src/routes/admin/policies.tsx",
+              "sha256": "68ca4bdccf395c9d369333607bf8658e18755e91e1e0d88501f8352fdfd2c106"
+            },
+            {
+              "path": "apps/web/src/routes/admin/providers.tsx",
+              "sha256": "774b9561ab7d9126f4a941cb4ec0cdd985ffd6ea63bea31d33ee3ece96e05ba7"
+            },
+            {
+              "path": "apps/web/src/routes/admin/reconciliation.tsx",
+              "sha256": "0a494377732dd86b5ebbfe2df68707dddb17292fe7aa4b33046b9f96ccb73215"
+            },
+            {
+              "path": "apps/web/src/routes/admin/roles.tsx",
+              "sha256": "422dcd22625da451ec9f25357fac5f9ed1793fe0086fcf70f4feb287b5d677eb"
+            },
+            {
+              "path": "apps/web/src/routes/admin/saving-orders.tsx",
+              "sha256": "826a59b261266c3caf324033cf1b52340b27fa0dc8a47d7f370b3ad04fceba75"
+            },
+            {
+              "path": "apps/web/src/routes/admin/service-targets.tsx",
+              "sha256": "0b08bb065c1a02cb75f196e301be5cd5737c4f9b1adb1d6c3a309457dc7de1ef"
+            },
+            {
+              "path": "apps/web/src/routes/admin/solar-construction.tsx",
+              "sha256": "59ac7b4c21e3e8fa266952c7a8a0f30ce34d7ece7db16c45a7612da5f39cbf07"
+            },
+            {
+              "path": "apps/web/src/routes/admin/solar-postal.tsx",
+              "sha256": "b2fddd6fe0f7c397ba69c7f0bd41757d88b64322426c296538e70ffe86f06069"
+            },
+            {
+              "path": "apps/web/src/routes/admin/solar-requests.tsx",
+              "sha256": "b62c45cf96cc77f0c14ffba27de034a5cfc3fa98b1f292be2cd4f0624fc4c547"
+            },
+            {
+              "path": "apps/web/src/routes/admin/staff-teams.tsx",
+              "sha256": "a8d7866b16f250a8cac2faec39084fb246119a912435cb6e5575b3c494aa6288"
+            },
+            {
+              "path": "apps/web/src/routes/admin/storage.tsx",
+              "sha256": "04d3761da83ed3ab81ebb802afd27b404c22fb23be008332cdabda23cbc5a3ec"
+            },
+            {
+              "path": "apps/web/src/routes/admin/tickets.tsx",
+              "sha256": "ced5a165ae2248d8864786d2f4961d249b8cc9e0055d00c1fd240fb5ae553796"
+            },
+            {
+              "path": "apps/web/src/routes/admin/tos.tsx",
+              "sha256": "9d038bfdcccf349c5bdf799b29b458b8fa2160522f55a0eb09bff6269377f1af"
+            },
+            {
+              "path": "apps/web/src/routes/admin/upload-policies.tsx",
+              "sha256": "cf22d4281744ca1f190e2089a3bb463420d3c1d7baf00f0614e3ad1e6ea6b966"
+            },
+            {
+              "path": "apps/web/src/routes/admin/users.tsx",
+              "sha256": "8fd7911251231ac25f009cb2e2a15201f8271d5a7dd1ee8664d677a993049165"
+            },
+            {
+              "path": "apps/web/src/routes/admin/vat.tsx",
+              "sha256": "59e9bbd145609a3eee67682e873aa117883a26ae604406c2e6be4d138cd450bd"
+            },
+            {
+              "path": "apps/web/src/routes/admin/verification.tsx",
+              "sha256": "73fb3ac5d5aa187b2fd02acabb1d9fb8673fd3b810dbd3d3f4cdd23ef9cca748"
+            },
+            {
+              "path": "apps/web/src/routes/admin/wallet-ledger/$profileId.tsx",
+              "sha256": "fa5559093ecbca0f25b52df9e8e6f8c6bfae5bcb4062716d1e39344fe4530b6d"
+            },
+            {
+              "path": "apps/web/src/routes/admin/wallet-receipts.tsx",
+              "sha256": "da7983244eda1177c044beda8ebdbf9dc552141d2baab4a2f1102efdb007d592"
+            },
+            {
+              "path": "apps/web/src/routes/app/crm/index.tsx",
+              "sha256": "5c99f835cc17a6bede03318a397456d49fb1e5ec580a04c7f46feae33f568780"
+            },
+            {
+              "path": "apps/web/src/routes/app/crm/profiles.$profileId.tsx",
+              "sha256": "8389aa97454aa02e55127c28b5d3646fb3d6a257edb4a4d28a9999fe640ef3bb"
+            },
+            {
+              "path": "apps/web/src/routes/forgot-password.tsx",
+              "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
+            },
+            {
+              "path": "apps/web/src/routes/index.tsx",
+              "sha256": "4c5213571d795e7b27dbe2db67f6b24ee41b141d0f95c91970a039d075228a7e"
+            },
+            {
+              "path": "apps/web/src/routes/login.tsx",
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.tsx",
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/index.tsx",
+              "sha256": "ad8a7a86d564f4662ade68a5143f40575f702dc597046d32527dcb762cb86b9c"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
+              "sha256": "81c644be74e099b0b985b74182f923530b85367de783be2f862a517325b95cd9"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
+              "sha256": "d7775fe6894ca50a7b293d5162e43267734a5489d23db74d4764e9d39a49bd0c"
+            },
+            {
+              "path": "apps/web/src/routes/register/index.tsx",
+              "sha256": "32072faa2499a42d65f1811e1154193cfdc97f1d246317c6f6009ed4d4611cfc"
+            },
+            {
+              "path": "apps/web/src/routes/register/verify.tsx",
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
+            },
+            {
+              "path": "apps/web/src/routes/support.tsx",
+              "sha256": "b69a5f0e0c0f899aae4aa66f2ec5f49afbb28640d3cb7ccb9e80366bfb326954"
+            },
+            {
+              "path": "apps/web/src/routes/terms.tsx",
+              "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
+            },
+            {
+              "path": "apps/web/src/test/bank-receipt-review-fixture.ts",
+              "sha256": "4309352844fd12bb5565032afc85d3646e481b144eb917355c834d0f9286cc7f"
+            },
+            {
+              "path": "apps/web/src/test/team-catalogue-fixtures.ts",
+              "sha256": "b275fb94c8a256baee23d105d562a16a4e81e3bcb81179d5b382048b894a13f6"
+            },
+            {
+              "path": "packages/i18n/src/admin-ui-messages.ts",
+              "sha256": "c5b8cbae07a56d2b1bf1970b8ec7a979b2389490c7c4cd03da9ce57fe75d1937"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "af3ad608cedfa3278d86de52ffb7b7681897feb0deb96e4e80eba8d2abd4c50f"
+            },
+            {
+              "path": "packages/i18n/src/dashboard.ts",
+              "sha256": "0b1d2e35178c8257602256ad3d6b92e736a42fe0a3adcaa2b8fb83f4005d6e76"
+            },
+            {
+              "path": "packages/i18n/src/document-templates.ts",
+              "sha256": "6d59c36d0e8a913528df1aae00b367d0068733220004686a71c8852f576a7e9e"
+            },
+            {
+              "path": "packages/i18n/src/gifts.ts",
+              "sha256": "67a76eb7ce357cbf1c9c05154ec5afb9c18a4aa742441727300d26c175041815"
+            },
+            {
+              "path": "packages/i18n/src/loading-feedback.ts",
+              "sha256": "7ff1952098bc775eb79152fbb71b98bee9ff893f2774b3f30615311c7ba02761"
+            },
+            {
+              "path": "packages/i18n/src/password-recovery-forms.ts",
+              "sha256": "30fc82591427111bde36ef4f94162dbdc439c9a4039511f2649fd149edb411ef"
+            },
+            {
+              "path": "packages/i18n/src/recovery.ts",
+              "sha256": "16659c1674d11431c050e175d163a86677d5f0283debf94d0ec95ea6e4329e47"
+            },
+            {
+              "path": "packages/i18n/src/security-settings-forms.ts",
+              "sha256": "5bf1909661c701c8368db150c5f2790d26f8ae8aca3b021a9ff42c3480d4b8c7"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "8031d86e84103e0a41b0095526ae781c7d703e29e25c986a93c9ba7a23be1caf"
+            },
+            {
+              "path": "packages/i18n/src/storage-policy-forms.ts",
+              "sha256": "3092c35cdfa65c12aaa28042b0d2f80dc43bf8c2cb81d6a8ead75264ee7e0d5b"
+            },
+            {
+              "path": "packages/i18n/src/workspace-admin-messages.ts",
+              "sha256": "be986c81d062d034cc4a3367c36594520bf189b0e3fa163d68cfe477c402a503"
+            },
+            {
+              "path": "packages/ui/src/components/ui/button.tsx",
+              "sha256": "3a6179e69452f940847f263789a85587ea594c14df539fef910091240b010a84"
+            },
+            {
+              "path": "packages/ui/src/components/ui/input.tsx",
+              "sha256": "5f4483d46179659fbe5add07dc7288e657c5b9eb7cc400c36d3938d53e98c211"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "aab5a31e236ab70a7c588c676e3a0a2cf0bb8250e8d96ecdc469c9be175dcfa2"
+            }
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-verification-controls",
+          "route_matrix": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-verification-controls/route-adoption-receipts.json"
+        },
         "batches": [
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
@@ -730365,7 +731669,8 @@
           "release-0.5-staff-team-membership-read",
           "release-0.5-page-read-reconciliation",
           "release-0.5-library-read-reconciliation",
-          "release-0.5-original-ui-closure"
+          "release-0.5-original-ui-closure",
+          "release-0.5-wallet-verification-controls"
         ]
       }
     },
@@ -731417,7 +732722,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+              "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -732340,7 +733645,8 @@
             "Current staff team membership, routing and recovery journeys and 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-team-membership-read/proof.json",
             "Document file-link and template cases and 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-page-read-reconciliation/proof.json",
             "Solar receipt image recovery, affected native journeys and all 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-library-read-reconciliation/proof.json",
-            "Reminder step-up keyboard and 44px control checks, affected route cases and all 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-original-ui-closure/proof.json"
+            "Reminder step-up keyboard and 44px control checks, affected route cases and all 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-original-ui-closure/proof.json",
+            "Wallet verification UI and unchanged read/confirmation paths rechecked on current source. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-verification-controls/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -732437,7 +733743,8 @@
           "release-0.5-staff-team-membership-read",
           "release-0.5-page-read-reconciliation",
           "release-0.5-library-read-reconciliation",
-          "release-0.5-original-ui-closure"
+          "release-0.5-original-ui-closure",
+          "release-0.5-wallet-verification-controls"
         ]
       }
     },
@@ -815107,6 +816414,1325 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-original-ui-closure/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-original-ui-closure/renewed-bindings.json",
       "release_disposition": "Route loading, empty and error states accepted. Conditional UI adoption, GitHub required check enforcement and actual staging Sentry receipt remain open."
+    },
+    "release-0.5-wallet-verification-controls": {
+      "batch": "release-0.5-wallet-verification-controls",
+      "base_commit": "2f5aa7619f84e140fb4856cb2ec0592487fcf81d",
+      "task_keys": [
+        "release-readiness#R-04.01",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.02"
+      ],
+      "accepted_task_keys": [
+        "release-readiness#R-04.01"
+      ],
+      "partial_task_keys": [],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/confirmation-fixture.ts",
+          "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
+        },
+        {
+          "path": "apps/web/e2e/crm-shell-fixture.ts",
+          "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+        },
+        {
+          "path": "apps/web/e2e/deadline-forms.spec.ts",
+          "sha256": "71d6936d60a39b4b5e4c1cef6b90eefcfbece11a93f2a305c99866bfee397daa"
+        },
+        {
+          "path": "apps/web/e2e/navigation-fixture.ts",
+          "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
+        },
+        {
+          "path": "apps/web/e2e/receipt-emergency.spec.ts",
+          "sha256": "b541c61bd6653d420cac8845a73cbfeaba9391c30234ddfb610a67588aab4011"
+        },
+        {
+          "path": "apps/web/e2e/staff-receipt-rejection-forms.spec.ts",
+          "sha256": "bf2553c6a5446a336d947921928d444696bc5360668b9abb2e7206125d070afc"
+        },
+        {
+          "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
+          "sha256": "5138ca5b9295eb324295c53447d04bfa3c618e1a71c8e48827c2cd6b071e3fa0"
+        },
+        {
+          "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
+          "sha256": "995d796eb3ede25e7dbe4e47d830185bd765d2aa23943fbe08af7fb52d24345a"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/AdminAiSections.tsx",
+          "sha256": "2b18fa285f521214cd94e124a7b5cec53d463ecd9cb3414c746054251025b3fe"
+        },
+        {
+          "path": "apps/web/src/components/AuditLogViewer.tsx",
+          "sha256": "8fdc6e6b01fc82b8ad245653625a3b106815b2cb58efa90910ec4f5b45e64f77"
+        },
+        {
+          "path": "apps/web/src/components/AuthLayout.tsx",
+          "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
+        },
+        {
+          "path": "apps/web/src/components/BankReceiptFinancialReview.tsx",
+          "sha256": "c8cacc0997d053e384b975a4b00d7735c8b77e3dde0f2623fd9e8bc39afb71fe"
+        },
+        {
+          "path": "apps/web/src/components/ContractDetail.tsx",
+          "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+        },
+        {
+          "path": "apps/web/src/components/ContractSignaturePanel.tsx",
+          "sha256": "72bb84c58223216ca0c1a881e25da41ecd2f6b107c9331ab2e2e07e37106ed63"
+        },
+        {
+          "path": "apps/web/src/components/ContractsWorkspace.tsx",
+          "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
+        },
+        {
+          "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
+          "sha256": "ae5035d95579e61de2169b37d5da72d143d2018ed0d45e91c887b5aacb88bee0"
+        },
+        {
+          "path": "apps/web/src/components/CrmLegalDocuments.tsx",
+          "sha256": "bcbf611a881e6ebfca1a89b44436f4f55d95704db8f8cbf8d28ea8e6007b115a"
+        },
+        {
+          "path": "apps/web/src/components/CrmProfileRecords.tsx",
+          "sha256": "777e79dcb80bb9b16c11ada11884eeff094d458737d445794b719cc054c87dde"
+        },
+        {
+          "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
+          "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
+        },
+        {
+          "path": "apps/web/src/components/DeadLetterPanel.tsx",
+          "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+        },
+        {
+          "path": "apps/web/src/components/DefaultProfileModal.tsx",
+          "sha256": "3de544561cf23a4d1b7886e2a9584fda744ccdc57eeb1fd8fe6208ebb138e1e4"
+        },
+        {
+          "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
+          "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+        },
+        {
+          "path": "apps/web/src/components/DocumentDetail.tsx",
+          "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
+        },
+        {
+          "path": "apps/web/src/components/DocumentsWorkspace.tsx",
+          "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
+        },
+        {
+          "path": "apps/web/src/components/GeographyLoadError.tsx",
+          "sha256": "251ad679666fa6c592902bd342d317c7c4041a4630c801d7e177de2132e58b7c"
+        },
+        {
+          "path": "apps/web/src/components/GiftProfilePicker.tsx",
+          "sha256": "a0a2a1512d653ff5cfc2ef00cfa241aa25a7ba9c903b32f37b349bba0d5fe5bc"
+        },
+        {
+          "path": "apps/web/src/components/HighContrastPreference.tsx",
+          "sha256": "b5ce7e8eb121c86ca0920a6fc5357cf699659a1abdd7a005b43949c0dd794cb1"
+        },
+        {
+          "path": "apps/web/src/components/Icon.tsx",
+          "sha256": "277e22791913ed1141250fa4f8c2799dce1073fe57cd53a59247fc46302ca43c"
+        },
+        {
+          "path": "apps/web/src/components/InvitationBanner.tsx",
+          "sha256": "1ad609e0914b939fd6b6eeb4145e5e22661f119856dde50a27c95e045bcdcf6a"
+        },
+        {
+          "path": "apps/web/src/components/InvoiceBankReceiptHistory.tsx",
+          "sha256": "5fab38eabae4f92fa51513d7237e33eba3f9cf9ec29a88d937e52f1e69d10467"
+        },
+        {
+          "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
+          "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
+        },
+        {
+          "path": "apps/web/src/components/InvoiceLedger.tsx",
+          "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
+        },
+        {
+          "path": "apps/web/src/components/KnowledgeAssistantLauncher.tsx",
+          "sha256": "92889d34afab828e2139c3424d4a09da866f62257f2902735240faff9977f3d4"
+        },
+        {
+          "path": "apps/web/src/components/LegalProfileDocuments.tsx",
+          "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
+        },
+        {
+          "path": "apps/web/src/components/MaintenanceNotice.tsx",
+          "sha256": "3a96b04a5d4a296bf79682b8b049ad043d7f88ab79382dd0cfae1c5dcae2feff"
+        },
+        {
+          "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
+          "sha256": "2305b69a26f2288e517360434dbdc8ecab2ceb581ff2690bdcfa3a5ac6bee719"
+        },
+        {
+          "path": "apps/web/src/components/OnboardingDraftList.tsx",
+          "sha256": "e6cb288f4ae443aedb134ad2fffd3617be095134f06890a555c2cf88abc4143a"
+        },
+        {
+          "path": "apps/web/src/components/OnboardingWizard.tsx",
+          "sha256": "0faa5162a685d66ed5278f8e15e353eeca6fd45725cfbc2d7c4caac4dace7aed"
+        },
+        {
+          "path": "apps/web/src/components/OperationalCommandReview.tsx",
+          "sha256": "337ecb8ef476be26e678eb850d9a882b1e6a61948061e12d68d154c48179a747"
+        },
+        {
+          "path": "apps/web/src/components/OrderWalletBalance.tsx",
+          "sha256": "4fcce3e64be56f40c50d27c2a12047db5e40a9147f26aa03539043325b744921"
+        },
+        {
+          "path": "apps/web/src/components/OtpConfigPanel.tsx",
+          "sha256": "1b5ab9de9d15a21b3866772af1198dec94cdad333df8c218731a0e4d2b2692d9"
+        },
+        {
+          "path": "apps/web/src/components/OtpInput.tsx",
+          "sha256": "9a29151dc34a901a6ed898563e6402ed4ff707ff99b56e7486ee50ba7d88abc2"
+        },
+        {
+          "path": "apps/web/src/components/PasswordField.tsx",
+          "sha256": "7de3e8ba6b6766d50cb8275048bd117a7c1eb41d2b7714251775cf6c22e380c1"
+        },
+        {
+          "path": "apps/web/src/components/PreferenceSettingsStatus.tsx",
+          "sha256": "60ff89836dc2fff28c0a153848ee34706908d17c75829e43c0dd925ff3bc38f0"
+        },
+        {
+          "path": "apps/web/src/components/PreferenceSwitch.tsx",
+          "sha256": "ef6947b6dc8f03ccd64a8ac6c12a20f6464726b185c7aab7febe320a7cc3b8dd"
+        },
+        {
+          "path": "apps/web/src/components/ProfileClosureReview.tsx",
+          "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
+        },
+        {
+          "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
+          "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
+        },
+        {
+          "path": "apps/web/src/components/PublicKnowledgeAssistant.tsx",
+          "sha256": "914ffda1919399c659a4c48cf82b3a678a502e0b5a26d11e7f3d0aaeca5f9fd7"
+        },
+        {
+          "path": "apps/web/src/components/PublishedTermsHistory.tsx",
+          "sha256": "8eae6315b27f1d236743a26c8a40453d60cbcba7a15cf950b7cf1a952d8477bd"
+        },
+        {
+          "path": "apps/web/src/components/RecoveryContactForm.tsx",
+          "sha256": "fe7bfc456c990caa5824d597d6ffa70975324b0eb0c395dcbe2e2b4bd593d809"
+        },
+        {
+          "path": "apps/web/src/components/RegistrationTermsDialog.tsx",
+          "sha256": "62061c68b80134acf6f7f5c91548dc9efe51b89d434225b5ac0f6cb20087ac2b"
+        },
+        {
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+          "sha256": "e418f7e31f7916daaff7c5ae463f8d68fe2c4ac12ab7a4f69390fa2418e0c8ad"
+        },
+        {
+          "path": "apps/web/src/components/RouteErrorBoundary.tsx",
+          "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
+        },
+        {
+          "path": "apps/web/src/components/RouteSkeleton.tsx",
+          "sha256": "c371e664a768721aaf5589f26e7951db525ece11f565c1b542d51b9374820638"
+        },
+        {
+          "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
+          "sha256": "ff5e37578acdef5fb18e19ad2d074c2bb033382ffe322cdd36b1adc94e0ab6a9"
+        },
+        {
+          "path": "apps/web/src/components/SavingOrderComments.tsx",
+          "sha256": "44a3d04079c80cdb5e25cf916402d70f1bf62fcf49e0228007a647b991ba89a2"
+        },
+        {
+          "path": "apps/web/src/components/SecurityRevocationDialog.tsx",
+          "sha256": "b381a20c0e1173438df6937ecd933f44ad3f94958147ff20ab0183e8264df972"
+        },
+        {
+          "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
+          "sha256": "7faf569e30c498a1fb883ddee078c95ecdbe7a22fce6ce29c5467e5412845b19"
+        },
+        {
+          "path": "apps/web/src/components/SimpleElectricityReview.tsx",
+          "sha256": "efdfad97b2e27c10a6655fcbf24cebe9214431bed0d28ec627b2904234344a4a"
+        },
+        {
+          "path": "apps/web/src/components/SolarContractForm.tsx",
+          "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
+        },
+        {
+          "path": "apps/web/src/components/SolarPostalPanel.tsx",
+          "sha256": "59c71fb01bc8be31e528df12d9fefbb3c04e6529fef2b44c029ef8f65fc29760"
+        },
+        {
+          "path": "apps/web/src/components/SolarPostalTrackingEditor.tsx",
+          "sha256": "097160b5e5645e64199a1110d8064463a469c1232c20e69bbad53daaff87be13"
+        },
+        {
+          "path": "apps/web/src/components/StaffEffectivePermissions.tsx",
+          "sha256": "2ca087c168432ca640ee913a14576c8072c49a5e0527f9253421d7ae3eff84a4"
+        },
+        {
+          "path": "apps/web/src/components/StaffPermissionHistory.tsx",
+          "sha256": "7ba68435ad1922cd799f5a3576e4f95c56863969c8d1588b254eb374f73ba53b"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+        },
+        {
+          "path": "apps/web/src/components/TelegramLinkPanel.tsx",
+          "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
+        },
+        {
+          "path": "apps/web/src/components/TicketIntakeForm.tsx",
+          "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
+        },
+        {
+          "path": "apps/web/src/components/TosContent.tsx",
+          "sha256": "4a04ed74640a531a6f59921dabbc7705b0bec6df3fa421dbd9b5892779c65769"
+        },
+        {
+          "path": "apps/web/src/components/TrustedDevices.tsx",
+          "sha256": "7d2fbe27037e1362cf63d8d20aaea1906a6ce0cf422c48e64d4d62a301c9ad3d"
+        },
+        {
+          "path": "apps/web/src/components/VerificationBanner.tsx",
+          "sha256": "7b138e9426501850edcaaaeecb9a17fd198d88d1280e65da906b0de67fb684f6"
+        },
+        {
+          "path": "apps/web/src/components/VerificationPolicySettings.tsx",
+          "sha256": "e4c024675536d143cf33dcc7ee1facd001feacfd247f25e548962f5e0a8524fb"
+        },
+        {
+          "path": "apps/web/src/components/WalletTransactionList.tsx",
+          "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
+        },
+        {
+          "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
+          "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
+        },
+        {
+          "path": "apps/web/src/hooks/useAccountSettingsEditor.ts",
+          "sha256": "4a3928950a238a70523ffafaae0e23d97683919526756ccd352fafbe52ad4f55"
+        },
+        {
+          "path": "apps/web/src/hooks/useAccountTime.tsx",
+          "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+        },
+        {
+          "path": "apps/web/src/hooks/useAsyncData.ts",
+          "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
+        },
+        {
+          "path": "apps/web/src/hooks/useCatalogueConfirmationRead.ts",
+          "sha256": "f82cd597023dc893e5cb9af7972b7158073490c0384f61be9859e72709341618"
+        },
+        {
+          "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
+          "sha256": "3094accd09c58b57b7e9066d527a913fe0efbf672aea6281ee12feb2b7bb2d5c"
+        },
+        {
+          "path": "apps/web/src/hooks/useCatalogueResource.ts",
+          "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
+        },
+        {
+          "path": "apps/web/src/hooks/useCustomerServiceHistory.ts",
+          "sha256": "fc70f03965a95ddb72f468edd7aeeed573b0004925200f569b7293cbf28f0400"
+        },
+        {
+          "path": "apps/web/src/hooks/useFormDraft.ts",
+          "sha256": "1323dc6eefd9e38d6fff5c7de26ea94e7550b3d418b05121507a82254a79e8a9"
+        },
+        {
+          "path": "apps/web/src/hooks/useGeographyOptions.ts",
+          "sha256": "520091b3c30a4f9686760ec8d5691f5f9f7818521c6555efe059ae7ac4333225"
+        },
+        {
+          "path": "apps/web/src/hooks/useGiftCodeCatalogue.ts",
+          "sha256": "4e4d3aec4c22b448a2a2e9e3aa91cadf7c945a5506d311998f9de7ef34c1da5a"
+        },
+        {
+          "path": "apps/web/src/hooks/useListQuery.ts",
+          "sha256": "c6ac6d60b68941befc2b90ab86e50ae6c6518cc5cf096444c74a0ea2ee75c6b3"
+        },
+        {
+          "path": "apps/web/src/hooks/useLocale.ts",
+          "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
+        },
+        {
+          "path": "apps/web/src/hooks/useLoginNativeForm.ts",
+          "sha256": "07702e3d468b3499bbdb13cfe567c09dfc599e184e4109d7f8034a360e9e0a34"
+        },
+        {
+          "path": "apps/web/src/hooks/useNumberFormatting.ts",
+          "sha256": "1e3e43ea13ee7b0e46e1200af1b4a5b39f671063c529c54e43344ab54afd68b1"
+        },
+        {
+          "path": "apps/web/src/hooks/useOnboardingDraft.ts",
+          "sha256": "ab284b4cf3c5e0a6a6b07cbac58adae4540576f062cb2aa7eb301d79a92d75b2"
+        },
+        {
+          "path": "apps/web/src/hooks/useOnboardingForm.ts",
+          "sha256": "da9e89503351249b1a29397825ce8199353dfb5baf58b6aa92bcf84196a207d6"
+        },
+        {
+          "path": "apps/web/src/hooks/useOnboardingSubmission.ts",
+          "sha256": "1fb6a2de10635105dbf3cb84a027bff4cda0aed8c888ec32cbf73eb4a04c52d7"
+        },
+        {
+          "path": "apps/web/src/hooks/useOperationalQueue.ts",
+          "sha256": "2d66f00c756ed9d1d68ea3f4394e243d4c12b6125d47446c0c29f30c88770544"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
+          "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedGateRead.ts",
+          "sha256": "955e166337afda25d6becbfc9c7e9a47b3b342a6934b04eb6deafcb92e716295"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedInvoiceReview.ts",
+          "sha256": "a928b66193795d500754ba8e7e58280bb802ab5659d4fba7e4e626bad1ea3428"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedProfileRead.ts",
+          "sha256": "9a0158813169266ded1315664fb99b30988d8e44e69a47d648a77c7b021d1fc9"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedStaffServiceRead.ts",
+          "sha256": "32c1269a80fcff189bcb8953f1ea274ceb5d1c2874eb5b8fcee2df31ccecc64a"
+        },
+        {
+          "path": "apps/web/src/hooks/usePasswordRecoveryForm.ts",
+          "sha256": "e95aa4249c21f42e28668f524f6f9b8d5f5b6ac860a16858d5d1e7e529a42135"
+        },
+        {
+          "path": "apps/web/src/hooks/usePreferenceSettingsForm.ts",
+          "sha256": "84646eef89d8e80845dcfab092a8cb22113e79b64a6d35bfeb3b3f9060d2cff4"
+        },
+        {
+          "path": "apps/web/src/hooks/useProfileSettingsEditor.ts",
+          "sha256": "9cb48a0b68c721abaab9c2d5733021ff420eacebdd64aa8cbb45939c421563ac"
+        },
+        {
+          "path": "apps/web/src/hooks/useRegistrationNativeForm.ts",
+          "sha256": "afb7afc4767a9bca7e327091dfa7765d332f96418e1e2c028a1d5f778b2023b8"
+        },
+        {
+          "path": "apps/web/src/hooks/useRiskConfirmation.ts",
+          "sha256": "4c80aac980bd368019b3fec8fd19d7feefd44f1c97dd6b109d73224452f0b1d7"
+        },
+        {
+          "path": "apps/web/src/hooks/useSavedAddressSettingsEditor.ts",
+          "sha256": "956c87397684c412c002da39a5606b17a591325b53cf47fe5d772d91f6f7baaa"
+        },
+        {
+          "path": "apps/web/src/hooks/useSecurityRevocationForm.ts",
+          "sha256": "c67189a8d5d9373b49dfc659e8314bb6492c5b4dcd96235c94ca97fcda647b61"
+        },
+        {
+          "path": "apps/web/src/hooks/useSecuritySettings.ts",
+          "sha256": "b147234e1376089f842f94f1a6969c0336715489441a8b0f922b8411af54005b"
+        },
+        {
+          "path": "apps/web/src/hooks/useSettingsCommand.ts",
+          "sha256": "d26862e04f82d8839ffdee8d100a33ad4aa33119afdff0d129ca336deffbb843"
+        },
+        {
+          "path": "apps/web/src/hooks/useSettingsSnapshot.ts",
+          "sha256": "c22b0ab868390c7ccf0de6291468052d9c19db633d8cb6f827546696e4822907"
+        },
+        {
+          "path": "apps/web/src/hooks/useStaffQueryRead.ts",
+          "sha256": "e21695a1a08c18ea78dcc4a17a19555992e8a94ba3284fea02d3a587bd8ca4e0"
+        },
+        {
+          "path": "apps/web/src/hooks/useTicketCommand.ts",
+          "sha256": "b27c1ecdcb40271844edcf0150b6a3fec7684ea1dca3a18ed131398798a2aa2b"
+        },
+        {
+          "path": "apps/web/src/lib/auth-bootstrap-read.ts",
+          "sha256": "28f3d57a305a339ca4c1b6046bd4206a76e9afce0e0b4c3736bb0341ae4068fd"
+        },
+        {
+          "path": "apps/web/src/lib/contract-detail-records.ts",
+          "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
+        },
+        {
+          "path": "apps/web/src/lib/customer-invoices.ts",
+          "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
+        },
+        {
+          "path": "apps/web/src/lib/customer-saving-catalogue.ts",
+          "sha256": "f4e0dc7f2a7b7d6bcd2e350604a8662b230fc8ec9684cf7a18c374010946306b"
+        },
+        {
+          "path": "apps/web/src/lib/document-records.ts",
+          "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+        },
+        {
+          "path": "apps/web/src/lib/document-template-form.ts",
+          "sha256": "5445f0b304a5652cd0583b58afc5d6d727f6d793af49cfb03c48981bc74fe70d"
+        },
+        {
+          "path": "apps/web/src/lib/documents.ts",
+          "sha256": "23769141261230282f3cde5b9be17da1191e279ba4882b39b5f86c75b8bc3d3f"
+        },
+        {
+          "path": "apps/web/src/lib/electricity-catalogue.ts",
+          "sha256": "3d2357b9a2f11b968493f1aef473027e46a616e05203968bcbf26480d62c3a2e"
+        },
+        {
+          "path": "apps/web/src/lib/email-providers-api.ts",
+          "sha256": "57456f70542968ec9f29ffc86caba06f71ff6119f728cd88b71ebe0fb80d9987"
+        },
+        {
+          "path": "apps/web/src/lib/geography-api.ts",
+          "sha256": "e34e61e4c0e87274ffd8c8219ecbad6253a2202dcfa513458142568f3505ae57"
+        },
+        {
+          "path": "apps/web/src/lib/jobs.ts",
+          "sha256": "18d90b4a7514dca091d4c085f4d73f4814feb1ad114de36d1d498060f37a6141"
+        },
+        {
+          "path": "apps/web/src/lib/notifications.ts",
+          "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
+        },
+        {
+          "path": "apps/web/src/lib/public-auth-fetch.ts",
+          "sha256": "17b89fb6a46329b2bd7b9e7b6635ab32218786573a57e392e06f46ef4bd664bb"
+        },
+        {
+          "path": "apps/web/src/lib/public-auth-response.ts",
+          "sha256": "341644cf1c40ed83f2f761ad697e4e04f5a2abfbaedcffb31fc4ea69c59a0efd"
+        },
+        {
+          "path": "apps/web/src/lib/route-bootstrap-read.ts",
+          "sha256": "322598d4968e5db3d2870cab9c51a3a4f213900f6b2c9d0f53fde8ac4ee9508c"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "apps/web/src/lib/service-intake-records.ts",
+          "sha256": "9b5b05176f6c3974d8cf9bb5d0320d6071204c71d57736bcd05770ad282f7a37"
+        },
+        {
+          "path": "apps/web/src/pages/AIChat.tsx",
+          "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+        },
+        {
+          "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
+          "sha256": "b60a6a8d933d095170a0aea17ee963fa5df152d93913592158c37a832619f390"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
+          "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
+          "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
+          "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
+          "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+        },
+        {
+          "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+          "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
+        },
+        {
+          "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
+          "sha256": "b77c8cd06fabfee049e7ed41cd68310bf6b202d2fe6d913a089e3350b395a017"
+        },
+        {
+          "path": "apps/web/src/pages/AdminCataloguePage.tsx",
+          "sha256": "0ce4eb4228c830c1d8dd2a426e953dfe0b47154d8e33967bb26c67d65f96d1b6"
+        },
+        {
+          "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
+          "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
+          "sha256": "2e450e2a961c755dea1538408f2a5661e6d61693ad5050e34214febfb198ea40"
+        },
+        {
+          "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
+          "sha256": "18b94c9afaf2b37bee9e5e05dca669abdf459c4b2a43b1542e12e2786d2e2409"
+        },
+        {
+          "path": "apps/web/src/pages/AdminContractsPage.tsx",
+          "sha256": "15f2d01acfd38734160c1ca8fb4e571fbe89f5cf4945371170dd9e28a16dbceb"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDashboard.tsx",
+          "sha256": "68f1ff2b4d92335a5e4616850eeec90a7066301fc569bd86df9b00c3b8aad2f2"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDeliveryProvidersPage.tsx",
+          "sha256": "23fb5f4467d4b2482b0ea61d390657af674d0cd7cd0bdefbde269faa998405b1"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
+          "sha256": "b2a8e5cde034539289a0588c98aa1851b3bb4a220cf627c0f1a92623b6eab473"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDocumentsPage.tsx",
+          "sha256": "a22349c1e3e75fbc349b02bfcb29a12cfbff1572b636e525c8fd1c4facd62ff6"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
+          "sha256": "68fa86c23168db0583ae7cbb6655305f858fb26f872837983c9aec3fd59c1e59"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
+          "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
+          "sha256": "6749b87bf32c141145ee9b31415b542dafbcbcd14c3a8d78f301ed432db8f428"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
+          "sha256": "9753e41d3caf52f333ff9991276aa7c1307dc7207ba2b65d1aafcd637a2a9d9b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "sha256": "a72f4e37a56dd99540aeb5a9ecfe69126db05f322e971061614e9f11f0ab33b0"
+        },
+        {
+          "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
+          "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
+          "sha256": "a62973132825b7800d32abc470912796421a28adf9ec38d1844c5e15597c8872"
+        },
+        {
+          "path": "apps/web/src/pages/AdminGeographyPage.tsx",
+          "sha256": "12af4bf16aff204ee7d29e9cd7cf691898c514a75a2a08c80004d3d230314794"
+        },
+        {
+          "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
+          "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "0552f30faffe8b9f6fa5799e21e7c313fd9b2aab9a1f334c081bf693288fb16d"
+        },
+        {
+          "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
+          "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
+        },
+        {
+          "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
+          "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
+        },
+        {
+          "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
+          "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminRolesPage.tsx",
+          "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
+          "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
+        },
+        {
+          "path": "apps/web/src/pages/AdminServiceTargetsPage.tsx",
+          "sha256": "62514c0b77b49791b4560b455b16ac18fc363469dd5bc0d3a4a14d49bd376432"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
+          "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
+          "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
+          "sha256": "cb2fd0117f8e190f0bc1fbbd2a3ccb7d93a6f80ccc692cf110f75bf5479fa102"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
+          "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
+          "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
+          "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStorageConfig.tsx",
+          "sha256": "4357b96888a6aed8ed9a9d40775e618d9f40f1ded3b8e7a1e724fd11ad15faee"
+        },
+        {
+          "path": "apps/web/src/pages/AdminTosPage.tsx",
+          "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
+          "sha256": "71c5222f07d1c41fa642bd206ade7288d6f22e633950ea487046b1d2f6e1cb0d"
+        },
+        {
+          "path": "apps/web/src/pages/AdminVatPage.tsx",
+          "sha256": "64783c14fd207a752cd57330c9c3c04a90e4282c8dd2397202d7a7a7503ab138"
+        },
+        {
+          "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
+          "sha256": "09f60a37458df8c0db11e399472134f32575a6a3faeba5d8914c2ddda933dbf5"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
+          "sha256": "afabc1833b1a49fe066f1caae1c4c03403280986a62339ea3414b0147644c14a"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+          "sha256": "13d69953a664e63453e9983021518c67aef5b126b61e52cd59c9e6039eb9f1e0"
+        },
+        {
+          "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+          "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
+        },
+        {
+          "path": "apps/web/src/pages/BankReceiptsPage.tsx",
+          "sha256": "ab3ee41520c0ecee9eac2f9df6de50eca72fffeef2cda809f709715e16264ca7"
+        },
+        {
+          "path": "apps/web/src/pages/ChartsPage.tsx",
+          "sha256": "5fdc29854efa5e83ac23f04a2f7f621ee3a68b5c76a67837f904aeb085ebc144"
+        },
+        {
+          "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
+          "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
+        },
+        {
+          "path": "apps/web/src/pages/ConsultationsPage.tsx",
+          "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
+        },
+        {
+          "path": "apps/web/src/pages/ContractsPage.tsx",
+          "sha256": "2cec44911feeb1a68e3c10999adba67118a7ffd8caf6c1f71c6d980f77f91e15"
+        },
+        {
+          "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
+          "sha256": "37206fd46d5fbdc864f9bd7847bf9a745c2ad94fa15ce778a65f1eb77edfed63"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "b75f3465ba818f07da5d42f1537b9ea8cf73b95adeaae78575d5d46281775f57"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileList.tsx",
+          "sha256": "fb30dc041234234c50f4516924132c294d9d556a529e175b249f02de8b5c3fc4"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.tsx",
+          "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
+        },
+        {
+          "path": "apps/web/src/pages/DocumentsPage.tsx",
+          "sha256": "9e48d22e718e01f2c1d1d3212103e8cb95f344dbab9f14923470e3ce73f685f8"
+        },
+        {
+          "path": "apps/web/src/pages/ElectricityIncreasePanel.tsx",
+          "sha256": "925593e77d45e9a296f72180196eb04822ae9e597c1fba5a4585b6a4802dd1d4"
+        },
+        {
+          "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
+          "sha256": "52db5fa558c3d16e55014bb8bc98ed7b6ab9cc4f446aecb15924726bcfb470e1"
+        },
+        {
+          "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
+          "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
+        },
+        {
+          "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
+          "sha256": "8e2c4277fc0ce52f91e9a3961b2b3664d5ccb26524044e304223d1e2eaef9f5b"
+        },
+        {
+          "path": "apps/web/src/pages/ElectricityPriceAdjustmentsPanel.tsx",
+          "sha256": "7e46b1b86aa22fd3f0a8ae90fd8bdfa4f526f5ee1cf70a7507c5f6a76df93008"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "98ac0194357d870547c1abc3a340f3ac1a49b90e22cac09ed5fb4ceee2ad543e"
+        },
+        {
+          "path": "apps/web/src/pages/InvoicesPage.tsx",
+          "sha256": "3ceed241a39c1cee1fa6ce6cd63bc9144d85d1b0a49fcb1a81f90e1785e3b2c0"
+        },
+        {
+          "path": "apps/web/src/pages/NotificationCenterPage.tsx",
+          "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
+        },
+        {
+          "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
+          "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
+        },
+        {
+          "path": "apps/web/src/pages/SavingOrdersPage.tsx",
+          "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+        },
+        {
+          "path": "apps/web/src/pages/SavingsOrderPage.tsx",
+          "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+        },
+        {
+          "path": "apps/web/src/pages/SavingsPage.tsx",
+          "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+        },
+        {
+          "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
+          "sha256": "7cae22ef9196fddbb7a8e09bb9e583255088fbc412601e2986f6a5082a1afc41"
+        },
+        {
+          "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
+          "sha256": "092529a37d2178621babb556d9677d4f0f7497f94ba6d81210b11a45ec61ee48"
+        },
+        {
+          "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+          "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+        },
+        {
+          "path": "apps/web/src/pages/SolarRequestPage.tsx",
+          "sha256": "cd08bddbaaa38991861dd6011f0edbfa2ce435bf9004f2f15da9ce58517dd519"
+        },
+        {
+          "path": "apps/web/src/pages/SolarRequestsPage.tsx",
+          "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+        },
+        {
+          "path": "apps/web/src/pages/StaffNotificationCenterPage.tsx",
+          "sha256": "c49b212f09a17b3808ac34c20d5223dd8a7ee44baba9124e93e12603f36778aa"
+        },
+        {
+          "path": "apps/web/src/pages/StaffWalletLedgerPage.tsx",
+          "sha256": "854a4e64f40d3ee6789e79da64010745a577316fa3a232ba4dadd8d9cf894428"
+        },
+        {
+          "path": "apps/web/src/pages/TeamPage.tsx",
+          "sha256": "ebbecde19091a8a3109d3c236b388a7e6d362bda9ce71e11ce94a9cb9118fad0"
+        },
+        {
+          "path": "apps/web/src/pages/TicketsPage.tsx",
+          "sha256": "957cdaefba5bb88d77ef2ec2062ed9ad3a87379a3b34dbd09416629d6b20b98e"
+        },
+        {
+          "path": "apps/web/src/pages/VideosPage.tsx",
+          "sha256": "4a8b506e2d253e0029751282e6b3e0acc5038f6cb51dfa2fbe7886fa7776635c"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.tsx",
+          "sha256": "44ee2de825c64b4a53473aaf8a022175959f36ed543fa97f6d582949c89be630"
+        },
+        {
+          "path": "apps/web/src/routeTree.gen.ts",
+          "sha256": "c1524622f37c4dc26c3fc7f5746d3a9a2d962c8397db0ab77e61efa0422be658"
+        },
+        {
+          "path": "apps/web/src/routes/_app/ai.tsx",
+          "sha256": "475563b597e66b9cb9bf1bdc2b5614749dcccc324982ff8ce9b265292970c665"
+        },
+        {
+          "path": "apps/web/src/routes/_app/app.tsx",
+          "sha256": "309d24401e4059569adb6d4398b45280da3f060dbe8037ccb873e3228753e65e"
+        },
+        {
+          "path": "apps/web/src/routes/_app/charts.tsx",
+          "sha256": "9c8f718781f7801a7fa4ba508b2d91351bd101cbfbb99cd6cd9f0bbd2719757e"
+        },
+        {
+          "path": "apps/web/src/routes/_app/consultations.$requestId.tsx",
+          "sha256": "a028b6c5c3015c3b0ac47233e3990ad2e9d86f26ad63fa288449ff261a72515f"
+        },
+        {
+          "path": "apps/web/src/routes/_app/consultations.index.tsx",
+          "sha256": "b9814f3d97b1555eb87deab92ac63a95c33df96dc29adccf3c251d82e5b13863"
+        },
+        {
+          "path": "apps/web/src/routes/_app/contracts.tsx",
+          "sha256": "339f4449296ad8c10e0d7d8ab85393878574edb7bb74d73d8d7cdd4bc1dea6da"
+        },
+        {
+          "path": "apps/web/src/routes/_app/dashboard.tsx",
+          "sha256": "ee3f25866165e17be196a67abf9e8a30c437a9644f1b97826de6ad50ffce3615"
+        },
+        {
+          "path": "apps/web/src/routes/_app/documents.tsx",
+          "sha256": "4645c7a3f70278d3cb14cbd407bde35bd21e79600ba5a730fb22620bfad641e9"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/advanced.tsx",
+          "sha256": "51b5984fa1dcebc428fd9c56486a8cbba6529ae35d522b81d24aaab49ab45737"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/index.tsx",
+          "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/order.tsx",
+          "sha256": "622295a1d60d52de79b1cb74b1ec5215b7a3441cbef8274c6c8a7cc207ef66d4"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/orders.$orderId.tsx",
+          "sha256": "c8d175fde696fdfc384c56fe1ca8e237b85e5e915679c359f5608c02e473df96"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/orders.index.tsx",
+          "sha256": "ef6698f33d7f7fc445915cd632b9432751f9d11512105e02b98231f035619ed2"
+        },
+        {
+          "path": "apps/web/src/routes/_app/invoices/$invoiceId.tsx",
+          "sha256": "7c637a94d2bf510a71d5c2a6f752b3d06e0770aae7c20f0fded9438ccd472bc2"
+        },
+        {
+          "path": "apps/web/src/routes/_app/invoices/index.tsx",
+          "sha256": "423cca3b155685debf98c0128daf64ef1470848d2d892f737c2902319e37650c"
+        },
+        {
+          "path": "apps/web/src/routes/_app/invoices/receipts.tsx",
+          "sha256": "394be548e2e8a8e2f3737d7dc62be9a58ffa91bc9f5892c1586a60c174d83b89"
+        },
+        {
+          "path": "apps/web/src/routes/_app/notifications.tsx",
+          "sha256": "360f09cfdbf3839ebd542bab3b55a8c3d673e2833906a656233103dfd2befa02"
+        },
+        {
+          "path": "apps/web/src/routes/_app/savings.index.tsx",
+          "sha256": "8a765f837ae3e3bda0b87a2fa0ed27ab5b81b904904bf7d29d1cb1337685d5f6"
+        },
+        {
+          "path": "apps/web/src/routes/_app/savings.order.tsx",
+          "sha256": "f3a5c509684bfa13c7d421c27c16bfeea1bcbaaf2220a12e6b0ad27e83d33406"
+        },
+        {
+          "path": "apps/web/src/routes/_app/savings.orders.$orderId.tsx",
+          "sha256": "224436b986af61a4196cdbd5df08cae7d3483024d0e0140ac7adc3ce2e81a796"
+        },
+        {
+          "path": "apps/web/src/routes/_app/savings.orders.index.tsx",
+          "sha256": "6919d76ac32a5a9bb4016af92f7b7394d9452715362bbff7dc3730f6e779a0d3"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/addresses.tsx",
+          "sha256": "9614e7084dffc36ddf486c04ab5a3960a790063bfbc7d0a2dcf18058d5bffb10"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/index.tsx",
+          "sha256": "47ff271f5d9cf0235d0388d30fa2db1383836f074dd59666c868cfbd91a7cc4d"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/privacy.tsx",
+          "sha256": "f1192935ad8024b4653de301b9782c7bcbc046d42d73042d596e60a50e730ec6"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/profile.tsx",
+          "sha256": "3a2649a34ed1900167c01b78636de665177d8864a73d79f1140b298f643f5b9e"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/security.tsx",
+          "sha256": "9d3e0a0c517b93f7d4eefd6cc2120e4c3d45025d2e1e3c59bf7efb78e57e0765"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/team.tsx",
+          "sha256": "370fc9a2c8652ae1e7e763ef00eb7f61f8444099e197814b204b8d7bced39824"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/timezone.tsx",
+          "sha256": "32f73dc2a6fa3c73b9acf99605e0c1b64794bc179c236895632a7a5f56381f68"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/username.tsx",
+          "sha256": "9ec6bd4c18c86d6101ce57bf33d9cb971515e5882da17ccfc1ea167ee64c09cd"
+        },
+        {
+          "path": "apps/web/src/routes/_app/solar.requests.$requestId.tsx",
+          "sha256": "858972697663c8c5a6e84f7820b7d0a190bbc2bfdd5a6662e0bc4340f6ade72f"
+        },
+        {
+          "path": "apps/web/src/routes/_app/solar.requests.index.tsx",
+          "sha256": "ee98d71a3488353e3af99d0e614fe05b9b6b8705168dc32034f462e2aedb127a"
+        },
+        {
+          "path": "apps/web/src/routes/_app/solar.requests.new.tsx",
+          "sha256": "f9bf77c58f07b3b9eb02eeee7c92efbe60d868ece059f65e429f85216b89d884"
+        },
+        {
+          "path": "apps/web/src/routes/_app/tickets.tsx",
+          "sha256": "508cfd6ffa8554e0d05e90e8d745002bcf0024e8fcd9d3c9446a00061bdfc319"
+        },
+        {
+          "path": "apps/web/src/routes/_app/videos.tsx",
+          "sha256": "6b329dfef1ea120159585eff39bba390d112b858c5243b7a16decb2b0ae43495"
+        },
+        {
+          "path": "apps/web/src/routes/_app/wallet.tsx",
+          "sha256": "06a62593967c8d00199b8fd9c2bdc7deba6f19d24aeefa33e6b1c2a4871c892e"
+        },
+        {
+          "path": "apps/web/src/routes/activate.tsx",
+          "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
+        },
+        {
+          "path": "apps/web/src/routes/admin/agent-slots.tsx",
+          "sha256": "3cc16407251878c638b131b09830d3fc0146e7e46f081a58f2e7fa286e18cc03"
+        },
+        {
+          "path": "apps/web/src/routes/admin/agents.tsx",
+          "sha256": "59d95a0a1525cd564ddfbe8bd25d46f4935922ca3f17c5269b9989821051073d"
+        },
+        {
+          "path": "apps/web/src/routes/admin/ai-models.tsx",
+          "sha256": "a24238103f39d64adfd0e82c4caa668fa65342e36ce72f11acb5212409a8d352"
+        },
+        {
+          "path": "apps/web/src/routes/admin/approval-requests.tsx",
+          "sha256": "59d3cdbbfc48b693d679a3d5c5d89cef4e50bc2dc882abc66319818ce9bd8c0f"
+        },
+        {
+          "path": "apps/web/src/routes/admin/branding.tsx",
+          "sha256": "963e0a94785b811863bffd69874be14ec4b840287ea3fc5688cc0eb29348710f"
+        },
+        {
+          "path": "apps/web/src/routes/admin/catalogue.tsx",
+          "sha256": "1c9d8bb7e0144942694543ceeca3ff46dbfd62c24057dc2553c7da634d38f7fd"
+        },
+        {
+          "path": "apps/web/src/routes/admin/consultations.tsx",
+          "sha256": "53d7ea9b6aa3627a8717b9842d14332ae3fbb5a7afe4ead903a17e1fa17058ea"
+        },
+        {
+          "path": "apps/web/src/routes/admin/contract-limits.tsx",
+          "sha256": "7123fb066d5323e453dee6018cafe2838f61c11c3477ed1c4d07f55f4b17a739"
+        },
+        {
+          "path": "apps/web/src/routes/admin/contract-templates.tsx",
+          "sha256": "149b3b237533a5854a9a3b44e5fdabef15752f64ba8b0e72f5b3e20982e756a8"
+        },
+        {
+          "path": "apps/web/src/routes/admin/contracts.tsx",
+          "sha256": "e51e0994c520ae45bcc4b30a3b01c2daca182ba888969184af45047e34f566d6"
+        },
+        {
+          "path": "apps/web/src/routes/admin/crm/corrections.tsx",
+          "sha256": "9c06e7dc494aba5d80cff651d3dbf1506c9f641fb116973ec1140def97200352"
+        },
+        {
+          "path": "apps/web/src/routes/admin/crm/index.tsx",
+          "sha256": "09aa66084364d0e040949c9ae9c6d42333a964b9ee32983ea5d970ee62c42b49"
+        },
+        {
+          "path": "apps/web/src/routes/admin/crm/profiles.$profileId.tsx",
+          "sha256": "1fe57443b2ad33df05f0af1874add1ad6f38198868c160b6b9def70960761324"
+        },
+        {
+          "path": "apps/web/src/routes/admin/crm/recovery.tsx",
+          "sha256": "d4e71c09a2a6d23bbd3be01f20a2161478c51916ce3214daecabd64ce9126ea3"
+        },
+        {
+          "path": "apps/web/src/routes/admin/document-templates.tsx",
+          "sha256": "25a8f1dc949e6b595aa12a256a7a2e0c9130226dade69b54046da802b8b1c7fd"
+        },
+        {
+          "path": "apps/web/src/routes/admin/documents.tsx",
+          "sha256": "2e17d1323d40dc142d3fe2ee952ebfa3cf5e45da11b12a4dc72e62dc6388defe"
+        },
+        {
+          "path": "apps/web/src/routes/admin/electricity-increases.tsx",
+          "sha256": "80e57cfbe4019d20c23bc9899c8eba3dedd0b9954601e0c42d57341b83110396"
+        },
+        {
+          "path": "apps/web/src/routes/admin/electricity-orders.tsx",
+          "sha256": "99bbc0088e006c0e2b95b1020067786401dd6b731b9338b7aa20e02a0d8c701a"
+        },
+        {
+          "path": "apps/web/src/routes/admin/electricity-price-adjustments.tsx",
+          "sha256": "f839a9b256a5f9e60954f9ca444e855e4ff96f79cd46da377ffef2efb0b00ef8"
+        },
+        {
+          "path": "apps/web/src/routes/admin/electricity-rules.tsx",
+          "sha256": "f1f8db93ed64aaa45c33fd5ed19210beadd11a2428146d652e89e0326555b5db"
+        },
+        {
+          "path": "apps/web/src/routes/admin/failed-jobs.tsx",
+          "sha256": "db6b6cc267aa28d52bce1b2e2de313f4703b750942f20f1d04ecf49d75e3de96"
+        },
+        {
+          "path": "apps/web/src/routes/admin/failed-notifications.tsx",
+          "sha256": "219394e20d76c865a8cb4ae48cf543b035b5acb11653433a5b058812eba0a681"
+        },
+        {
+          "path": "apps/web/src/routes/admin/geography.tsx",
+          "sha256": "0be59af2eef20494dbc2950aaa7222340c28f4c12beca1000e0f4f2a2f776585"
+        },
+        {
+          "path": "apps/web/src/routes/admin/gift-codes.tsx",
+          "sha256": "c5bd414b419a5795333d9df7debb9b09261352ab66513a13e880d6f99d7c3acf"
+        },
+        {
+          "path": "apps/web/src/routes/admin/inbox.tsx",
+          "sha256": "5409a87b514205e80af28a96c1e4f69e51c1ae5d93ca13f9acb0c458c98e0848"
+        },
+        {
+          "path": "apps/web/src/routes/admin/index.tsx",
+          "sha256": "e39bdf6e71133fde57ef7fc5646e25925533c7109a25f89de5ca10f780c66907"
+        },
+        {
+          "path": "apps/web/src/routes/admin/invoices.tsx",
+          "sha256": "40c707341a06966f36f475ad516aaf6ed12f6d27df8ac1f956ec1e59110d881b"
+        },
+        {
+          "path": "apps/web/src/routes/admin/knowledge-bases.tsx",
+          "sha256": "c0293ef220d71a520639e41b0313c12ac4b66efdb27f0b1c80247e463683080a"
+        },
+        {
+          "path": "apps/web/src/routes/admin/maintenance.tsx",
+          "sha256": "9732958eb3065010c506b237203e017c0420538d77b46db73260141b456214a9"
+        },
+        {
+          "path": "apps/web/src/routes/admin/notifications.tsx",
+          "sha256": "59474795b1c14f54363497e70fa0c938485059fcacdb11bcf3f2e1f32a774097"
+        },
+        {
+          "path": "apps/web/src/routes/admin/policies.tsx",
+          "sha256": "68ca4bdccf395c9d369333607bf8658e18755e91e1e0d88501f8352fdfd2c106"
+        },
+        {
+          "path": "apps/web/src/routes/admin/providers.tsx",
+          "sha256": "774b9561ab7d9126f4a941cb4ec0cdd985ffd6ea63bea31d33ee3ece96e05ba7"
+        },
+        {
+          "path": "apps/web/src/routes/admin/reconciliation.tsx",
+          "sha256": "0a494377732dd86b5ebbfe2df68707dddb17292fe7aa4b33046b9f96ccb73215"
+        },
+        {
+          "path": "apps/web/src/routes/admin/roles.tsx",
+          "sha256": "422dcd22625da451ec9f25357fac5f9ed1793fe0086fcf70f4feb287b5d677eb"
+        },
+        {
+          "path": "apps/web/src/routes/admin/saving-orders.tsx",
+          "sha256": "826a59b261266c3caf324033cf1b52340b27fa0dc8a47d7f370b3ad04fceba75"
+        },
+        {
+          "path": "apps/web/src/routes/admin/service-targets.tsx",
+          "sha256": "0b08bb065c1a02cb75f196e301be5cd5737c4f9b1adb1d6c3a309457dc7de1ef"
+        },
+        {
+          "path": "apps/web/src/routes/admin/solar-construction.tsx",
+          "sha256": "59ac7b4c21e3e8fa266952c7a8a0f30ce34d7ece7db16c45a7612da5f39cbf07"
+        },
+        {
+          "path": "apps/web/src/routes/admin/solar-postal.tsx",
+          "sha256": "b2fddd6fe0f7c397ba69c7f0bd41757d88b64322426c296538e70ffe86f06069"
+        },
+        {
+          "path": "apps/web/src/routes/admin/solar-requests.tsx",
+          "sha256": "b62c45cf96cc77f0c14ffba27de034a5cfc3fa98b1f292be2cd4f0624fc4c547"
+        },
+        {
+          "path": "apps/web/src/routes/admin/staff-teams.tsx",
+          "sha256": "a8d7866b16f250a8cac2faec39084fb246119a912435cb6e5575b3c494aa6288"
+        },
+        {
+          "path": "apps/web/src/routes/admin/storage.tsx",
+          "sha256": "04d3761da83ed3ab81ebb802afd27b404c22fb23be008332cdabda23cbc5a3ec"
+        },
+        {
+          "path": "apps/web/src/routes/admin/tickets.tsx",
+          "sha256": "ced5a165ae2248d8864786d2f4961d249b8cc9e0055d00c1fd240fb5ae553796"
+        },
+        {
+          "path": "apps/web/src/routes/admin/tos.tsx",
+          "sha256": "9d038bfdcccf349c5bdf799b29b458b8fa2160522f55a0eb09bff6269377f1af"
+        },
+        {
+          "path": "apps/web/src/routes/admin/upload-policies.tsx",
+          "sha256": "cf22d4281744ca1f190e2089a3bb463420d3c1d7baf00f0614e3ad1e6ea6b966"
+        },
+        {
+          "path": "apps/web/src/routes/admin/users.tsx",
+          "sha256": "8fd7911251231ac25f009cb2e2a15201f8271d5a7dd1ee8664d677a993049165"
+        },
+        {
+          "path": "apps/web/src/routes/admin/vat.tsx",
+          "sha256": "59e9bbd145609a3eee67682e873aa117883a26ae604406c2e6be4d138cd450bd"
+        },
+        {
+          "path": "apps/web/src/routes/admin/verification.tsx",
+          "sha256": "73fb3ac5d5aa187b2fd02acabb1d9fb8673fd3b810dbd3d3f4cdd23ef9cca748"
+        },
+        {
+          "path": "apps/web/src/routes/admin/wallet-ledger/$profileId.tsx",
+          "sha256": "fa5559093ecbca0f25b52df9e8e6f8c6bfae5bcb4062716d1e39344fe4530b6d"
+        },
+        {
+          "path": "apps/web/src/routes/admin/wallet-receipts.tsx",
+          "sha256": "da7983244eda1177c044beda8ebdbf9dc552141d2baab4a2f1102efdb007d592"
+        },
+        {
+          "path": "apps/web/src/routes/app/crm/index.tsx",
+          "sha256": "5c99f835cc17a6bede03318a397456d49fb1e5ec580a04c7f46feae33f568780"
+        },
+        {
+          "path": "apps/web/src/routes/app/crm/profiles.$profileId.tsx",
+          "sha256": "8389aa97454aa02e55127c28b5d3646fb3d6a257edb4a4d28a9999fe640ef3bb"
+        },
+        {
+          "path": "apps/web/src/routes/forgot-password.tsx",
+          "sha256": "5d53d7bc6d8d8fc54bb4a0bc4fc1b9a33a6d22099c9ffe411fb16f73ff6c4d98"
+        },
+        {
+          "path": "apps/web/src/routes/index.tsx",
+          "sha256": "4c5213571d795e7b27dbe2db67f6b24ee41b141d0f95c91970a039d075228a7e"
+        },
+        {
+          "path": "apps/web/src/routes/login.tsx",
+          "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/complete.tsx",
+          "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/index.tsx",
+          "sha256": "ad8a7a86d564f4662ade68a5143f40575f702dc597046d32527dcb762cb86b9c"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
+          "sha256": "81c644be74e099b0b985b74182f923530b85367de783be2f862a517325b95cd9"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
+          "sha256": "d7775fe6894ca50a7b293d5162e43267734a5489d23db74d4764e9d39a49bd0c"
+        },
+        {
+          "path": "apps/web/src/routes/register/index.tsx",
+          "sha256": "32072faa2499a42d65f1811e1154193cfdc97f1d246317c6f6009ed4d4611cfc"
+        },
+        {
+          "path": "apps/web/src/routes/register/verify.tsx",
+          "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
+        },
+        {
+          "path": "apps/web/src/routes/support.tsx",
+          "sha256": "b69a5f0e0c0f899aae4aa66f2ec5f49afbb28640d3cb7ccb9e80366bfb326954"
+        },
+        {
+          "path": "apps/web/src/routes/terms.tsx",
+          "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
+        },
+        {
+          "path": "apps/web/src/test/bank-receipt-review-fixture.ts",
+          "sha256": "4309352844fd12bb5565032afc85d3646e481b144eb917355c834d0f9286cc7f"
+        },
+        {
+          "path": "apps/web/src/test/team-catalogue-fixtures.ts",
+          "sha256": "b275fb94c8a256baee23d105d562a16a4e81e3bcb81179d5b382048b894a13f6"
+        },
+        {
+          "path": "packages/i18n/src/admin-ui-messages.ts",
+          "sha256": "c5b8cbae07a56d2b1bf1970b8ec7a979b2389490c7c4cd03da9ce57fe75d1937"
+        },
+        {
+          "path": "packages/i18n/src/app.ts",
+          "sha256": "af3ad608cedfa3278d86de52ffb7b7681897feb0deb96e4e80eba8d2abd4c50f"
+        },
+        {
+          "path": "packages/i18n/src/dashboard.ts",
+          "sha256": "0b1d2e35178c8257602256ad3d6b92e736a42fe0a3adcaa2b8fb83f4005d6e76"
+        },
+        {
+          "path": "packages/i18n/src/document-templates.ts",
+          "sha256": "6d59c36d0e8a913528df1aae00b367d0068733220004686a71c8852f576a7e9e"
+        },
+        {
+          "path": "packages/i18n/src/gifts.ts",
+          "sha256": "67a76eb7ce357cbf1c9c05154ec5afb9c18a4aa742441727300d26c175041815"
+        },
+        {
+          "path": "packages/i18n/src/loading-feedback.ts",
+          "sha256": "7ff1952098bc775eb79152fbb71b98bee9ff893f2774b3f30615311c7ba02761"
+        },
+        {
+          "path": "packages/i18n/src/password-recovery-forms.ts",
+          "sha256": "30fc82591427111bde36ef4f94162dbdc439c9a4039511f2649fd149edb411ef"
+        },
+        {
+          "path": "packages/i18n/src/recovery.ts",
+          "sha256": "16659c1674d11431c050e175d163a86677d5f0283debf94d0ec95ea6e4329e47"
+        },
+        {
+          "path": "packages/i18n/src/security-settings-forms.ts",
+          "sha256": "5bf1909661c701c8368db150c5f2790d26f8ae8aca3b021a9ff42c3480d4b8c7"
+        },
+        {
+          "path": "packages/i18n/src/solar.ts",
+          "sha256": "8031d86e84103e0a41b0095526ae781c7d703e29e25c986a93c9ba7a23be1caf"
+        },
+        {
+          "path": "packages/i18n/src/storage-policy-forms.ts",
+          "sha256": "3092c35cdfa65c12aaa28042b0d2f80dc43bf8c2cb81d6a8ead75264ee7e0d5b"
+        },
+        {
+          "path": "packages/i18n/src/workspace-admin-messages.ts",
+          "sha256": "be986c81d062d034cc4a3367c36594520bf189b0e3fa163d68cfe477c402a503"
+        },
+        {
+          "path": "packages/ui/src/components/ui/button.tsx",
+          "sha256": "3a6179e69452f940847f263789a85587ea594c14df539fef910091240b010a84"
+        },
+        {
+          "path": "packages/ui/src/components/ui/input.tsx",
+          "sha256": "5f4483d46179659fbe5add07dc7288e657c5b9eb7cc400c36d3938d53e98c211"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "aab5a31e236ab70a7c588c676e3a0a2cf0bb8250e8d96ecdc469c9be175dcfa2"
+        }
+      ],
+      "checks": [
+        "Reconciled 98 canonical paths against the original named interaction and route-state cases. Verified all 5,952 populated presentation cells against their actual passing case and browser report. The five redirect paths retain navigation receipts.",
+        "The route matrix identifies original shared keyboard, forms, table/filter, responsive, configuration and stale-context criteria, plus current scoped evidence for all 91 production source changes since the route layout proof.",
+        "Wallet verification renders above workspace navigation, retains the reviewed receipt, announces the heading, cycles focus with Tab/Shift+Tab, preserves error and confirmation semantics, and keeps all three interactive targets at least 44px.",
+        "Passed 72 targeted units and 28 Chromium and mobile Safari production-bundle cases using controlled API responses. Critical source coverage passed with 440/477 lines and 492/564 branches. All 101 transfer budgets, formatting, lint and web typecheck passed."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-verification-controls/proof.json",
+      "source_scope_proof_sha256": "07854c91909690199582a5bfe95ccfdff740219ba7d7ee1834c193eb98d61df7",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-verification-controls",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-verification-controls/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-verification-controls/renewed-bindings.json",
+      "release_disposition": "UI adoption accepted. Required GitHub merge check and live staging Sentry receipt remain release gates."
     }
   },
   "historical_improvements": [
@@ -815157,7 +817783,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Verify and repair conditional wallet receipt verification controls, then reconcile remaining route-level original control evidence. Required-check enforcement and live staging Sentry remain independent."
+    "goal": "Close required GitHub merge-check enforcement and live staging Sentry delivery, then accept and publish the v0.5.0 staging milestone."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",

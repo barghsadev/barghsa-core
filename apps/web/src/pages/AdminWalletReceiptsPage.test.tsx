@@ -409,7 +409,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       await approveVisibleConfirmation();
       await act(async () => {
         (
-          container.querySelector(
+          document.querySelector(
             '[data-testid="wallet-receipt-step-up-cancel"]'
           ) as HTMLButtonElement
         ).click();
@@ -421,7 +421,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         button.click();
       });
       await flush();
-      const password = container.querySelector('[data-testid="wallet-receipt-step-up-password"]')!;
+      const password = document.querySelector('[data-testid="wallet-receipt-step-up-password"]')!;
       await act(async () => {
         Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
           password,
@@ -432,7 +432,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       await approveVisibleConfirmation();
       await act(async () => {
         (
-          container.querySelector(
+          document.querySelector(
             '[data-testid="wallet-receipt-step-up-submit"]'
           ) as HTMLButtonElement
         ).click();
@@ -831,9 +831,9 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     await flush();
 
     expect(confirmCalls).toBe(1);
-    expect(container.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).not.toBeNull();
+    expect(document.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).not.toBeNull();
 
-    const password = container.querySelector(
+    const password = document.querySelector(
       '[data-testid="wallet-receipt-step-up-password"]'
     ) as HTMLInputElement;
     await act(async () => {
@@ -844,9 +844,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     await approveVisibleConfirmation();
     await act(async () => {
       (
-        container.querySelector(
-          '[data-testid="wallet-receipt-step-up-submit"]'
-        ) as HTMLButtonElement
+        document.querySelector('[data-testid="wallet-receipt-step-up-submit"]') as HTMLButtonElement
       ).click();
     });
     await flush();
@@ -905,7 +903,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         release(stepUpForbidden());
       });
       await flush();
-      const password = container.querySelector('[data-testid="wallet-receipt-step-up-password"]')!;
+      const password = document.querySelector('[data-testid="wallet-receipt-step-up-password"]')!;
       await act(async () => {
         Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
           password,
@@ -916,7 +914,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       await approveVisibleConfirmation();
       await act(async () => {
         (
-          container.querySelector(
+          document.querySelector(
             '[data-testid="wallet-receipt-step-up-submit"]'
           ) as HTMLButtonElement
         ).click();
@@ -926,7 +924,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         `/api/admin/wallet/bank-receipt-top-ups/${TX_A}/${decision}`,
         `/api/admin/wallet/bank-receipt-top-ups/${TX_A}/${decision}`,
       ]);
-      expect(container.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).toBeNull();
+      expect(document.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).toBeNull();
     }
   );
 
@@ -970,10 +968,12 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     await flush();
 
     expect(confirmCalls).toBe(1);
-    expect(container.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).not.toBeNull();
-    expect(container.textContent).toContain('Verification required');
+    expect(document.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).not.toBeNull();
+    expect(
+      document.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')?.textContent
+    ).toContain('Verification required');
 
-    const password = container.querySelector(
+    const password = document.querySelector(
       '[data-testid="wallet-receipt-step-up-password"]'
     ) as HTMLInputElement;
     await act(async () => {
@@ -984,15 +984,13 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     await approveVisibleConfirmation();
     await act(async () => {
       (
-        container.querySelector(
-          '[data-testid="wallet-receipt-step-up-submit"]'
-        ) as HTMLButtonElement
+        document.querySelector('[data-testid="wallet-receipt-step-up-submit"]') as HTMLButtonElement
       ).click();
     });
     await flush();
 
     expect(confirmCalls).toBe(2);
-    expect(container.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).toBeNull();
+    expect(document.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).toBeNull();
     expect(container.textContent).toContain('Receipt confirmed and wallet credited');
   });
 
@@ -1018,19 +1016,17 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       confirm.click();
     });
     await flush();
-    expect(container.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).not.toBeNull();
+    expect(document.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).not.toBeNull();
 
     await approveVisibleConfirmation();
     await act(async () => {
       (
-        container.querySelector(
-          '[data-testid="wallet-receipt-step-up-cancel"]'
-        ) as HTMLButtonElement
+        document.querySelector('[data-testid="wallet-receipt-step-up-cancel"]') as HTMLButtonElement
       ).click();
     });
     await flush();
 
-    expect(container.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).toBeNull();
+    expect(document.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).toBeNull();
     expect(document.activeElement).toBe(confirm);
   });
 
@@ -1079,12 +1075,14 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     await flush();
 
     expect(rejectCalls).toBe(1);
-    const dialog = container.querySelector('[data-testid="wallet-receipt-step-up-dialog"]');
+    const dialog = document.querySelector('[data-testid="wallet-receipt-step-up-dialog"]');
     expect(dialog).not.toBeNull();
     expect(dialog?.getAttribute('aria-describedby')).toBe('wallet-receipt-step-up-description');
-    expect(container.textContent).toContain('Verification required');
+    expect(
+      document.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')?.textContent
+    ).toContain('Verification required');
 
-    const password = container.querySelector(
+    const password = document.querySelector(
       '[data-testid="wallet-receipt-step-up-password"]'
     ) as HTMLInputElement;
     await act(async () => {
@@ -1095,15 +1093,13 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     await approveVisibleConfirmation();
     await act(async () => {
       (
-        container.querySelector(
-          '[data-testid="wallet-receipt-step-up-submit"]'
-        ) as HTMLButtonElement
+        document.querySelector('[data-testid="wallet-receipt-step-up-submit"]') as HTMLButtonElement
       ).click();
     });
     await flush();
 
     expect(rejectCalls).toBe(2);
-    expect(container.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).toBeNull();
+    expect(document.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).toBeNull();
     expect(container.textContent).toContain('Receipt rejected; balance unchanged');
     expect(
       fetchMock.mock.calls.some(
@@ -1143,19 +1139,17 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     });
     await flush();
-    expect(container.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).not.toBeNull();
+    expect(document.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).not.toBeNull();
 
     await approveVisibleConfirmation();
     await act(async () => {
       (
-        container.querySelector(
-          '[data-testid="wallet-receipt-step-up-cancel"]'
-        ) as HTMLButtonElement
+        document.querySelector('[data-testid="wallet-receipt-step-up-cancel"]') as HTMLButtonElement
       ).click();
     });
     await flush();
 
-    expect(container.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).toBeNull();
+    expect(document.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).toBeNull();
     expect(document.activeElement).toBe(reject);
   });
 
@@ -1199,7 +1193,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     await flush();
     expect(container.querySelector('[role=alert]')?.textContent).toBeTruthy();
     expect(container.textContent).toContain('TRK-aaaa');
-    expect(container.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).toBeNull();
+    expect(document.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).toBeNull();
     expect(
       container.querySelector<HTMLButtonElement>('[data-testid="wallet-receipt-confirm"]')?.disabled
     ).toBe(false);
@@ -1264,7 +1258,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
           .click()
       );
       await flush();
-      const password = container.querySelector<HTMLInputElement>(
+      const password = document.querySelector<HTMLInputElement>(
         '[data-testid="wallet-receipt-step-up-password"]'
       )!;
       await act(async () => {
@@ -1276,13 +1270,13 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       });
       await approveVisibleConfirmation();
       await act(async () =>
-        container
+        document
           .querySelector<HTMLButtonElement>('[data-testid="wallet-receipt-step-up-submit"]')!
           .click()
       );
       await flush();
       expect(confirms).toBe(kind === 'expired-again' ? 2 : 1);
-      const dialog = container.querySelector<HTMLElement>(
+      const dialog = document.querySelector<HTMLElement>(
         '[data-testid="wallet-receipt-step-up-dialog"]'
       )!;
       expect(dialog.querySelector('[role=alert]')?.textContent).toBeTruthy();
@@ -1299,7 +1293,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       await act(async () =>
         dialog.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
       );
-      expect(container.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).toBeNull();
+      expect(document.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).toBeNull();
     }
   );
 
