@@ -146,7 +146,7 @@ for (const locale of ['en', 'fa'] as const) {
       await draft.locator('input[type=email]').fill('staff@example.test');
       if (locale === 'fa' && info.project.name === 'mobile-safari') {
         await draft.screenshot({
-          path: '/Users/majid/.local/state/barghsa-manual-batches/delivery-provider-tables/email-card-fa.png',
+          path: test.info().outputPath('email-card-fa.png'),
         });
       }
       await draft.getByRole('button', { name: emailText('update'), exact: true }).click();
@@ -235,7 +235,7 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(active).toContainText(emailText('health.alertHistory'));
       if (locale === 'fa' && info.project.name === 'mobile-safari') {
         await draft.screenshot({
-          path: '/Users/majid/.local/state/barghsa-manual-batches/delivery-provider-tables/sms-card-fa.png',
+          path: test.info().outputPath('sms-card-fa.png'),
         });
       }
       await draft.getByRole('button', { name: smsText('edit'), exact: true }).click();

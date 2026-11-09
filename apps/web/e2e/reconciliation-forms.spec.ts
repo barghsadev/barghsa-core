@@ -116,7 +116,7 @@ async function inspect(page: Page, locale: string, project: string, name: string
     });
     await expect.poll(async () => (await dialog.boundingBox())?.y ?? -1).toBeGreaterThanOrEqual(0);
     await dialog.screenshot({
-      path: `/Users/majid/.local/state/barghsa-manual-batches/reconciliation-review-forms/${name}-fa.png`,
+      path: test.info().outputPath(`${name}-fa.png`),
     });
   }
 }

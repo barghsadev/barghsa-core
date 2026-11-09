@@ -89,7 +89,7 @@ for (const locale of ['en', 'fa'] as const) {
     );
     if (locale === 'fa' && info.project.name === 'mobile-safari')
       await card.screenshot({
-        path: '/Users/majid/.local/state/barghsa-manual-batches/reconciliation-tables/reconciliation-card-fa.png',
+        path: test.info().outputPath('reconciliation-card-fa.png'),
       });
     hold = true;
     await page.getByRole('button', { name: word('refresh'), exact: true }).click();

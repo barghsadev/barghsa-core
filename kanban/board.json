@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T18:02:48+00:00",
+  "updated": "2026-11-09T18:05:50+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -5528,7 +5528,8 @@
           "release-0.6-nightly-outcome-rollup",
           "release-0.6-nightly-workspace-browser-fixtures",
           "release-0.6-nightly-admin-policy-group-contract",
-          "release-0.6-nightly-navigation-link-audit"
+          "release-0.6-nightly-navigation-link-audit",
+          "release-0.6-nightly-portable-browser-captures"
         ],
         "current_acceptance": null
       }
@@ -12452,7 +12453,8 @@
           "release-0.6-nightly-outcome-rollup",
           "release-0.6-nightly-workspace-browser-fixtures",
           "release-0.6-hosted-nightly-contract-and-incomplete-rollup",
-          "release-0.6-nightly-navigation-link-audit"
+          "release-0.6-nightly-navigation-link-audit",
+          "release-0.6-nightly-portable-browser-captures"
         ],
         "current_acceptance": null
       }
@@ -65659,7 +65661,7 @@
             },
             {
               "path": "apps/web/e2e/geography-tables.spec.ts",
-              "sha256": "2d06a7a7487584dd3410825c3d5dead51d55df4f4b2eb7e2c36aae8ec7da44d5"
+              "sha256": "415aa7716df19270620c05dcb9c8e4a1c2bb4e2bda4500bd5a2a2b0772981343"
             },
             {
               "path": "apps/web/e2e/geography.spec.ts",
@@ -66321,7 +66323,7 @@
             },
             {
               "path": "apps/web/e2e/geography-tables.spec.ts",
-              "sha256": "2d06a7a7487584dd3410825c3d5dead51d55df4f4b2eb7e2c36aae8ec7da44d5"
+              "sha256": "415aa7716df19270620c05dcb9c8e4a1c2bb4e2bda4500bd5a2a2b0772981343"
             },
             {
               "path": "apps/web/e2e/geography.spec.ts",
@@ -66982,7 +66984,7 @@
             },
             {
               "path": "apps/web/e2e/geography-tables.spec.ts",
-              "sha256": "2d06a7a7487584dd3410825c3d5dead51d55df4f4b2eb7e2c36aae8ec7da44d5"
+              "sha256": "415aa7716df19270620c05dcb9c8e4a1c2bb4e2bda4500bd5a2a2b0772981343"
             },
             {
               "path": "apps/web/e2e/geography.spec.ts",
@@ -67642,7 +67644,7 @@
             },
             {
               "path": "apps/web/e2e/geography-tables.spec.ts",
-              "sha256": "2d06a7a7487584dd3410825c3d5dead51d55df4f4b2eb7e2c36aae8ec7da44d5"
+              "sha256": "415aa7716df19270620c05dcb9c8e4a1c2bb4e2bda4500bd5a2a2b0772981343"
             },
             {
               "path": "apps/web/e2e/geography.spec.ts",
@@ -90719,7 +90721,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "1c508a700815ab3ff97862bd33d72ee3c53016ef5ace3a1739f38e527a9467be"
+              "sha256": "ca4d5e4968eb685037d90dc32a95e47dce79d3409d6ec0260c7594e212d03543"
             },
             {
               "path": "apps/web/src/lib/email-providers-api.ts",
@@ -97991,7 +97993,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-tables.spec.ts",
-              "sha256": "d6dde9c73e36667edf9495e19a9df86087a785d3e205af83fa9336c79f254b99"
+              "sha256": "191db10d54aded979af1a9e3f8aca2bc77f56c82d915cb6c8e52c903c4ecb104"
             },
             {
               "path": "apps/web/e2e/gift-codes.spec.ts",
@@ -97999,11 +98001,11 @@
             },
             {
               "path": "apps/web/e2e/reconciliation-forms.spec.ts",
-              "sha256": "007cdbaecb26014734ae856b85f439ba0cbb91ab6a02c6a802a69ab2b2500d3c"
+              "sha256": "bacbe80487a8105819f155533520f232ccfb853d6e5d2af97dbb27c7d843a876"
             },
             {
               "path": "apps/web/e2e/reconciliation-tables.spec.ts",
-              "sha256": "a3859dc08b9234f1a7bb02ec4cb1913d647c0e9f36f158c8159df6ddd57821a1"
+              "sha256": "953f78af148294952783240da1f7842b6e2f0b0ee3d7b10411ecd47146ec2c24"
             },
             {
               "path": "apps/web/e2e/reconciliation.spec.ts",
@@ -99652,7 +99654,7 @@
             },
             {
               "path": "apps/web/e2e/operational-queue-tables.spec.ts",
-              "sha256": "528f52decdd413dad99811ec4cf0ed5898ead621a076d3fd8ed62c3f982d7892"
+              "sha256": "de769da05fd9f31705f0750260019d45957fe58a84356c6bbf77671279e1c3e8"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -100050,7 +100052,7 @@
             },
             {
               "path": "apps/web/e2e/operational-queue-tables.spec.ts",
-              "sha256": "528f52decdd413dad99811ec4cf0ed5898ead621a076d3fd8ed62c3f982d7892"
+              "sha256": "de769da05fd9f31705f0750260019d45957fe58a84356c6bbf77671279e1c3e8"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -101908,7 +101910,7 @@
             },
             {
               "path": "apps/web/e2e/template-catalogue-tables.spec.ts",
-              "sha256": "1f960e2f21d460fdeb9e3e3812b9808d779107e4d45ce33cbb172c353a5c4560"
+              "sha256": "d9ecb16029f58bb16b0a41cb3b1dc2d7c63711e460db9ae5b62786e060010bda"
             },
             {
               "path": "apps/web/src/lib/document-template-form.test.ts",
@@ -102753,7 +102755,7 @@
             },
             {
               "path": "apps/web/e2e/template-catalogue-tables.spec.ts",
-              "sha256": "1f960e2f21d460fdeb9e3e3812b9808d779107e4d45ce33cbb172c353a5c4560"
+              "sha256": "d9ecb16029f58bb16b0a41cb3b1dc2d7c63711e460db9ae5b62786e060010bda"
             },
             {
               "path": "apps/web/src/lib/document-template-form.test.ts",
@@ -109001,7 +109003,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-tables.spec.ts",
-              "sha256": "d6dde9c73e36667edf9495e19a9df86087a785d3e205af83fa9336c79f254b99"
+              "sha256": "191db10d54aded979af1a9e3f8aca2bc77f56c82d915cb6c8e52c903c4ecb104"
             },
             {
               "path": "apps/web/e2e/gift-codes.spec.ts",
@@ -109009,11 +109011,11 @@
             },
             {
               "path": "apps/web/e2e/reconciliation-forms.spec.ts",
-              "sha256": "007cdbaecb26014734ae856b85f439ba0cbb91ab6a02c6a802a69ab2b2500d3c"
+              "sha256": "bacbe80487a8105819f155533520f232ccfb853d6e5d2af97dbb27c7d843a876"
             },
             {
               "path": "apps/web/e2e/reconciliation-tables.spec.ts",
-              "sha256": "a3859dc08b9234f1a7bb02ec4cb1913d647c0e9f36f158c8159df6ddd57821a1"
+              "sha256": "953f78af148294952783240da1f7842b6e2f0b0ee3d7b10411ecd47146ec2c24"
             },
             {
               "path": "apps/web/e2e/reconciliation.spec.ts",
@@ -109892,7 +109894,7 @@
             },
             {
               "path": "apps/web/e2e/template-catalogue-tables.spec.ts",
-              "sha256": "1f960e2f21d460fdeb9e3e3812b9808d779107e4d45ce33cbb172c353a5c4560"
+              "sha256": "d9ecb16029f58bb16b0a41cb3b1dc2d7c63711e460db9ae5b62786e060010bda"
             },
             {
               "path": "apps/web/src/lib/document-template-form.test.ts",
@@ -133052,7 +133054,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "1c508a700815ab3ff97862bd33d72ee3c53016ef5ace3a1739f38e527a9467be"
+              "sha256": "ca4d5e4968eb685037d90dc32a95e47dce79d3409d6ec0260c7594e212d03543"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
@@ -135256,7 +135258,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "1c508a700815ab3ff97862bd33d72ee3c53016ef5ace3a1739f38e527a9467be"
+              "sha256": "ca4d5e4968eb685037d90dc32a95e47dce79d3409d6ec0260c7594e212d03543"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
@@ -179181,7 +179183,7 @@
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -179997,7 +179999,7 @@
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -180810,7 +180812,7 @@
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -181622,7 +181624,7 @@
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -182436,7 +182438,7 @@
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -243289,7 +243291,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-tables.spec.ts",
-              "sha256": "d6dde9c73e36667edf9495e19a9df86087a785d3e205af83fa9336c79f254b99"
+              "sha256": "191db10d54aded979af1a9e3f8aca2bc77f56c82d915cb6c8e52c903c4ecb104"
             },
             {
               "path": "apps/web/e2e/gift-codes.spec.ts",
@@ -243507,7 +243509,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-tables.spec.ts",
-              "sha256": "d6dde9c73e36667edf9495e19a9df86087a785d3e205af83fa9336c79f254b99"
+              "sha256": "191db10d54aded979af1a9e3f8aca2bc77f56c82d915cb6c8e52c903c4ecb104"
             },
             {
               "path": "apps/web/e2e/gift-codes.spec.ts",
@@ -243723,7 +243725,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-tables.spec.ts",
-              "sha256": "d6dde9c73e36667edf9495e19a9df86087a785d3e205af83fa9336c79f254b99"
+              "sha256": "191db10d54aded979af1a9e3f8aca2bc77f56c82d915cb6c8e52c903c4ecb104"
             },
             {
               "path": "apps/web/e2e/gift-codes.spec.ts",
@@ -243939,7 +243941,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-tables.spec.ts",
-              "sha256": "d6dde9c73e36667edf9495e19a9df86087a785d3e205af83fa9336c79f254b99"
+              "sha256": "191db10d54aded979af1a9e3f8aca2bc77f56c82d915cb6c8e52c903c4ecb104"
             },
             {
               "path": "apps/web/e2e/gift-codes.spec.ts",
@@ -244158,7 +244160,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-tables.spec.ts",
-              "sha256": "d6dde9c73e36667edf9495e19a9df86087a785d3e205af83fa9336c79f254b99"
+              "sha256": "191db10d54aded979af1a9e3f8aca2bc77f56c82d915cb6c8e52c903c4ecb104"
             },
             {
               "path": "apps/web/e2e/gift-codes.spec.ts",
@@ -437215,7 +437217,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "1c508a700815ab3ff97862bd33d72ee3c53016ef5ace3a1739f38e527a9467be"
+              "sha256": "ca4d5e4968eb685037d90dc32a95e47dce79d3409d6ec0260c7594e212d03543"
             },
             {
               "path": "apps/web/src/lib/email-providers-api.ts",
@@ -437652,7 +437654,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "1c508a700815ab3ff97862bd33d72ee3c53016ef5ace3a1739f38e527a9467be"
+              "sha256": "ca4d5e4968eb685037d90dc32a95e47dce79d3409d6ec0260c7594e212d03543"
             },
             {
               "path": "apps/web/src/lib/email-providers-api.ts",
@@ -438088,7 +438090,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "1c508a700815ab3ff97862bd33d72ee3c53016ef5ace3a1739f38e527a9467be"
+              "sha256": "ca4d5e4968eb685037d90dc32a95e47dce79d3409d6ec0260c7594e212d03543"
             },
             {
               "path": "apps/web/src/lib/email-providers-api.ts",
@@ -438524,7 +438526,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "1c508a700815ab3ff97862bd33d72ee3c53016ef5ace3a1739f38e527a9467be"
+              "sha256": "ca4d5e4968eb685037d90dc32a95e47dce79d3409d6ec0260c7594e212d03543"
             },
             {
               "path": "apps/web/src/lib/email-providers-api.ts",
@@ -439052,7 +439054,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "1c508a700815ab3ff97862bd33d72ee3c53016ef5ace3a1739f38e527a9467be"
+              "sha256": "ca4d5e4968eb685037d90dc32a95e47dce79d3409d6ec0260c7594e212d03543"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
@@ -439579,7 +439581,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "1c508a700815ab3ff97862bd33d72ee3c53016ef5ace3a1739f38e527a9467be"
+              "sha256": "ca4d5e4968eb685037d90dc32a95e47dce79d3409d6ec0260c7594e212d03543"
             },
             {
               "path": "apps/web/src/components/ProviderAlertHistory.tsx",
@@ -439959,7 +439961,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "1c508a700815ab3ff97862bd33d72ee3c53016ef5ace3a1739f38e527a9467be"
+              "sha256": "ca4d5e4968eb685037d90dc32a95e47dce79d3409d6ec0260c7594e212d03543"
             },
             {
               "path": "apps/web/src/components/ProviderAlertHistory.tsx",
@@ -440516,7 +440518,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "1c508a700815ab3ff97862bd33d72ee3c53016ef5ace3a1739f38e527a9467be"
+              "sha256": "ca4d5e4968eb685037d90dc32a95e47dce79d3409d6ec0260c7594e212d03543"
             },
             {
               "path": "apps/web/src/components/ProviderAlertHistory.tsx",
@@ -440892,7 +440894,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "1c508a700815ab3ff97862bd33d72ee3c53016ef5ace3a1739f38e527a9467be"
+              "sha256": "ca4d5e4968eb685037d90dc32a95e47dce79d3409d6ec0260c7594e212d03543"
             },
             {
               "path": "apps/web/src/components/ProviderAlertHistory.tsx",
@@ -441268,7 +441270,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "1c508a700815ab3ff97862bd33d72ee3c53016ef5ace3a1739f38e527a9467be"
+              "sha256": "ca4d5e4968eb685037d90dc32a95e47dce79d3409d6ec0260c7594e212d03543"
             },
             {
               "path": "apps/web/src/components/ProviderAlertHistory.tsx",
@@ -443983,7 +443985,7 @@
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -444896,7 +444898,7 @@
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -445389,7 +445391,7 @@
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -445701,7 +445703,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -446169,7 +446171,7 @@
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -446582,7 +446584,7 @@
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/e2e/knowledge-documents.spec.ts",
@@ -447017,7 +447019,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -447483,7 +447485,7 @@
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -447970,7 +447972,7 @@
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -448481,7 +448483,7 @@
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -448992,7 +448994,7 @@
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -449503,7 +449505,7 @@
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -450013,7 +450015,7 @@
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -450325,7 +450327,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -491709,7 +491711,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "1c508a700815ab3ff97862bd33d72ee3c53016ef5ace3a1739f38e527a9467be"
+              "sha256": "ca4d5e4968eb685037d90dc32a95e47dce79d3409d6ec0260c7594e212d03543"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -491951,7 +491953,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "1c508a700815ab3ff97862bd33d72ee3c53016ef5ace3a1739f38e527a9467be"
+              "sha256": "ca4d5e4968eb685037d90dc32a95e47dce79d3409d6ec0260c7594e212d03543"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -492193,7 +492195,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "1c508a700815ab3ff97862bd33d72ee3c53016ef5ace3a1739f38e527a9467be"
+              "sha256": "ca4d5e4968eb685037d90dc32a95e47dce79d3409d6ec0260c7594e212d03543"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -515044,7 +515046,7 @@
             },
             {
               "path": "apps/web/e2e/reconciliation-tables.spec.ts",
-              "sha256": "a3859dc08b9234f1a7bb02ec4cb1913d647c0e9f36f158c8159df6ddd57821a1"
+              "sha256": "953f78af148294952783240da1f7842b6e2f0b0ee3d7b10411ecd47146ec2c24"
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
@@ -515361,7 +515363,7 @@
             },
             {
               "path": "apps/web/e2e/reconciliation-tables.spec.ts",
-              "sha256": "a3859dc08b9234f1a7bb02ec4cb1913d647c0e9f36f158c8159df6ddd57821a1"
+              "sha256": "953f78af148294952783240da1f7842b6e2f0b0ee3d7b10411ecd47146ec2c24"
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
@@ -515678,7 +515680,7 @@
             },
             {
               "path": "apps/web/e2e/reconciliation-tables.spec.ts",
-              "sha256": "a3859dc08b9234f1a7bb02ec4cb1913d647c0e9f36f158c8159df6ddd57821a1"
+              "sha256": "953f78af148294952783240da1f7842b6e2f0b0ee3d7b10411ecd47146ec2c24"
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
@@ -515995,7 +515997,7 @@
             },
             {
               "path": "apps/web/e2e/reconciliation-tables.spec.ts",
-              "sha256": "a3859dc08b9234f1a7bb02ec4cb1913d647c0e9f36f158c8159df6ddd57821a1"
+              "sha256": "953f78af148294952783240da1f7842b6e2f0b0ee3d7b10411ecd47146ec2c24"
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
@@ -522173,7 +522175,7 @@
             },
             {
               "path": "apps/web/e2e/reconciliation-forms.spec.ts",
-              "sha256": "007cdbaecb26014734ae856b85f439ba0cbb91ab6a02c6a802a69ab2b2500d3c"
+              "sha256": "bacbe80487a8105819f155533520f232ccfb853d6e5d2af97dbb27c7d843a876"
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
@@ -522221,7 +522223,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "1c508a700815ab3ff97862bd33d72ee3c53016ef5ace3a1739f38e527a9467be"
+              "sha256": "ca4d5e4968eb685037d90dc32a95e47dce79d3409d6ec0260c7594e212d03543"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
@@ -522325,7 +522327,7 @@
             },
             {
               "path": "apps/web/e2e/template-catalogue-tables.spec.ts",
-              "sha256": "1f960e2f21d460fdeb9e3e3812b9808d779107e4d45ce33cbb172c353a5c4560"
+              "sha256": "d9ecb16029f58bb16b0a41cb3b1dc2d7c63711e460db9ae5b62786e060010bda"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -524222,7 +524224,7 @@
             },
             {
               "path": "apps/web/e2e/delivery-provider-tables.spec.ts",
-              "sha256": "98a4155928a3b54f7637bd50ccb45b2edb50fc2d44bcee985b4c84a6edcdbfae"
+              "sha256": "95579be1540acfe5339ec48d717436db7cb78bd1004dcb8fa68bc09db9e599b8"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -576235,7 +576237,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-tables.spec.ts",
-              "sha256": "d6dde9c73e36667edf9495e19a9df86087a785d3e205af83fa9336c79f254b99"
+              "sha256": "191db10d54aded979af1a9e3f8aca2bc77f56c82d915cb6c8e52c903c4ecb104"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -576363,7 +576365,7 @@
             },
             {
               "path": "apps/web/e2e/reconciliation-forms.spec.ts",
-              "sha256": "007cdbaecb26014734ae856b85f439ba0cbb91ab6a02c6a802a69ab2b2500d3c"
+              "sha256": "bacbe80487a8105819f155533520f232ccfb853d6e5d2af97dbb27c7d843a876"
             },
             {
               "path": "apps/web/e2e/refund-forms.spec.ts",
@@ -576419,7 +576421,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "1c508a700815ab3ff97862bd33d72ee3c53016ef5ace3a1739f38e527a9467be"
+              "sha256": "ca4d5e4968eb685037d90dc32a95e47dce79d3409d6ec0260c7594e212d03543"
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
@@ -576471,7 +576473,7 @@
             },
             {
               "path": "apps/web/e2e/staff-directory-tables.spec.ts",
-              "sha256": "5b8d0cbfc2cfdf9199178efd7fd30967c84227e71e8ce7cea7f44bdae82d3393"
+              "sha256": "f9dc0de525bcd830b232f7da1d9e9af0a5fc4975f4b18a7d553983b659205b3e"
             },
             {
               "path": "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
@@ -576531,7 +576533,7 @@
             },
             {
               "path": "apps/web/e2e/template-catalogue-tables.spec.ts",
-              "sha256": "1f960e2f21d460fdeb9e3e3812b9808d779107e4d45ce33cbb172c353a5c4560"
+              "sha256": "d9ecb16029f58bb16b0a41cb3b1dc2d7c63711e460db9ae5b62786e060010bda"
             },
             {
               "path": "apps/web/e2e/terms-theme.spec.ts",
@@ -692300,7 +692302,7 @@
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -692878,7 +692880,7 @@
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -693455,7 +693457,7 @@
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -694034,7 +694036,7 @@
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -694611,7 +694613,7 @@
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -695188,7 +695190,7 @@
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -712933,7 +712935,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "1c508a700815ab3ff97862bd33d72ee3c53016ef5ace3a1739f38e527a9467be"
+              "sha256": "ca4d5e4968eb685037d90dc32a95e47dce79d3409d6ec0260c7594e212d03543"
             },
             {
               "path": "apps/web/src/pages/AdminDeliveryProvidersPage.tsx",
@@ -713725,7 +713727,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-tables.spec.ts",
-              "sha256": "d6dde9c73e36667edf9495e19a9df86087a785d3e205af83fa9336c79f254b99"
+              "sha256": "191db10d54aded979af1a9e3f8aca2bc77f56c82d915cb6c8e52c903c4ecb104"
             },
             {
               "path": "apps/web/e2e/gift-codes.spec.ts",
@@ -720006,7 +720008,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "1c508a700815ab3ff97862bd33d72ee3c53016ef5ace3a1739f38e527a9467be"
+              "sha256": "ca4d5e4968eb685037d90dc32a95e47dce79d3409d6ec0260c7594e212d03543"
             },
             {
               "path": "apps/web/src/lib/sms-providers-api.ts",
@@ -721278,7 +721280,7 @@
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -729330,7 +729332,7 @@
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
@@ -729438,7 +729440,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "1c508a700815ab3ff97862bd33d72ee3c53016ef5ace3a1739f38e527a9467be"
+              "sha256": "ca4d5e4968eb685037d90dc32a95e47dce79d3409d6ec0260c7594e212d03543"
             },
             {
               "path": "apps/web/e2e/staff-knowledge.spec.ts",
@@ -733243,7 +733245,7 @@
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
-              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+              "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
@@ -733347,7 +733349,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "1c508a700815ab3ff97862bd33d72ee3c53016ef5ace3a1739f38e527a9467be"
+              "sha256": "ca4d5e4968eb685037d90dc32a95e47dce79d3409d6ec0260c7594e212d03543"
             },
             {
               "path": "apps/web/e2e/storage-config.spec.ts",
@@ -739804,7 +739806,8 @@
           "release-0.6-diagnostic-history-public-digest",
           "release-0.6-hosted-nightly-contract-and-incomplete-rollup",
           "release-0.6-nightly-admin-policy-group-contract",
-          "release-0.6-nightly-navigation-link-audit"
+          "release-0.6-nightly-navigation-link-audit",
+          "release-0.6-nightly-portable-browser-captures"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -829350,6 +829353,64 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-solar-construction-navigation",
       "source_scope_proof": "release-0.6-nightly-navigation-link-audit.json",
       "source_scope_proof_sha256": "7fa07db4fd7790352a1d66105151ef330e59f0c8d5a8b4df295ec29e88637464"
+    },
+    "release-0.6-nightly-portable-browser-captures": {
+      "batch": "release-0.6-nightly-portable-browser-captures",
+      "base_commit": "44adb51abe56b27b29732868cfb0d763e3fad439",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/delivery-provider-tables.spec.ts",
+          "sha256": "95579be1540acfe5339ec48d717436db7cb78bd1004dcb8fa68bc09db9e599b8"
+        },
+        {
+          "path": "apps/web/e2e/documents.spec.ts",
+          "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
+        },
+        {
+          "path": "apps/web/e2e/geography-tables.spec.ts",
+          "sha256": "415aa7716df19270620c05dcb9c8e4a1c2bb4e2bda4500bd5a2a2b0772981343"
+        },
+        {
+          "path": "apps/web/e2e/gift-code-tables.spec.ts",
+          "sha256": "191db10d54aded979af1a9e3f8aca2bc77f56c82d915cb6c8e52c903c4ecb104"
+        },
+        {
+          "path": "apps/web/e2e/operational-queue-tables.spec.ts",
+          "sha256": "de769da05fd9f31705f0750260019d45957fe58a84356c6bbf77671279e1c3e8"
+        },
+        {
+          "path": "apps/web/e2e/reconciliation-forms.spec.ts",
+          "sha256": "bacbe80487a8105819f155533520f232ccfb853d6e5d2af97dbb27c7d843a876"
+        },
+        {
+          "path": "apps/web/e2e/reconciliation-tables.spec.ts",
+          "sha256": "953f78af148294952783240da1f7842b6e2f0b0ee3d7b10411ecd47146ec2c24"
+        },
+        {
+          "path": "apps/web/e2e/sms-provider-settings.spec.ts",
+          "sha256": "ca4d5e4968eb685037d90dc32a95e47dce79d3409d6ec0260c7594e212d03543"
+        },
+        {
+          "path": "apps/web/e2e/staff-directory-tables.spec.ts",
+          "sha256": "f9dc0de525bcd830b232f7da1d9e9af0a5fc4975f4b18a7d553983b659205b3e"
+        },
+        {
+          "path": "apps/web/e2e/template-catalogue-tables.spec.ts",
+          "sha256": "d9ecb16029f58bb16b0a41cb3b1dc2d7c63711e460db9ae5b62786e060010bda"
+        }
+      ],
+      "checks": [
+        "Hosted Mobile Safari diagnostic run 42668719950 had seven screenshot failures because the test wrote into an absolute workstation path. Ten affected specs now store captures under the per-test Playwright output directory. Assertion bodies and capture conditions are preserved.",
+        "Formatting and ESLint passed. Fifteen focused native Playwright cases passed locally on Mobile Safari and Chromium. The capture cases produced 17 PNGs in their per-test output directories. The separate hosted portability diagnostic 42670730772 was queued and remains outside this local result."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-portable-screenshots",
+      "source_scope_proof": "release-0.6-nightly-portable-browser-captures.json",
+      "source_scope_proof_sha256": "ffa0c8dad53b37d5b486c1f444e981a9e95f50b6e81a6114e90266cde949420d"
     }
   },
   "historical_improvements": [
