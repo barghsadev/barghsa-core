@@ -1,6 +1,6 @@
-import { readWithDeadline } from '../lib/server-query-client.js';
+import { readWithDeadline, ServerQueryError } from '../lib/server-query-client.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { LoadingStatus, Button, DatePicker, datePickerDayBounds, Label } from '@barghsa/ui';
 import { useTimezone } from '../hooks/useTimezone.js';
@@ -51,9 +51,11 @@ function isHistory(value: unknown, targetId?: string): value is { items: Event[]
 export function StaffPermissionHistory({
   target,
   onClose,
+  onDenied,
 }: {
   target: { userId: string; username: string } | null;
   onClose: () => void;
+  onDenied: () => void;
 }) {
   const zone = useTimezone();
   const locale = useLocale();
@@ -67,6 +69,8 @@ export function StaffPermissionHistory({
   const [loading, setLoading] = useState(true),
     [error, setError] = useState(false);
   const [data, setData] = useState<{ items: Event[]; total: number }>({ items: [], total: 0 });
+  const notifyDenied = useRef(onDenied);
+  notifyDenied.current = onDenied;
   const invalid = !!from && !!to && from.getTime() > to.getTime();
   useEffect(() => {
     const controller = new AbortController();
@@ -80,7 +84,7 @@ export function StaffPermissionHistory({
     });
     void readWithDeadline(controller.signal, async (signal) => {
       const response = await fetch(`/api/admin/staff/audit?${query}`, { signal });
-      if (!response.ok) throw new Error('Unavailable');
+      if (!response.ok) throw new ServerQueryError(response.status);
       const result: unknown = await response.json();
       if (!isHistory(result, target?.userId)) throw new Error('Invalid staff history');
       return result;
@@ -88,8 +92,13 @@ export function StaffPermissionHistory({
       .then((result) => {
         if (!controller.signal.aborted) setData(result);
       })
-      .catch(() => {
-        if (!controller.signal.aborted) setError(true);
+      .catch((failure: unknown) => {
+        if (controller.signal.aborted) return;
+        setError(true);
+        if (failure instanceof ServerQueryError && [401, 403].includes(failure.status)) {
+          setData({ items: [], total: 0 });
+          notifyDenied.current();
+        }
       })
       .finally(() => {
         if (!controller.signal.aborted) setLoading(false);
@@ -199,7 +208,7 @@ export function StaffPermissionHistory({
         </div>
       ) : (
         <>
-          {!data.items.length && <p>{label('empty')}</p>}
+          {!data.items.length && <p role="status">{label('empty')}</p>}
           <ol className="space-y-3">
             {data.items.map((event) => (
               <li key={event.id} className="space-y-2 border-s-2 ps-4 py-2">

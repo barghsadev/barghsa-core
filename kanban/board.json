@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T01:31:12+00:00",
-  "source_commit": "a24ed49ccf22cb30e7cefffc685c23186a818bf5",
+  "updated": "2026-11-09T01:44:26+00:00",
+  "source_commit": "a079d7cde5b80037a6eba8c232762d5d1d8cf6f2",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35364,7 +35364,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DefaultProfileModal.tsx",
@@ -49662,7 +49662,7 @@
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
-              "sha256": "b0f8af992ce11bb9e59adb53e56426a4a8f9dfaefbb88b6f4be7e7b1c17b2fe2"
+              "sha256": "d76b0db635ebf04488df914b29152af6f85d1db47d8045facbddb8f1b6250249"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -49674,7 +49674,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "packages/db/src/schema/staff-roles.ts",
@@ -50377,7 +50377,7 @@
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
-              "sha256": "b0f8af992ce11bb9e59adb53e56426a4a8f9dfaefbb88b6f4be7e7b1c17b2fe2"
+              "sha256": "d76b0db635ebf04488df914b29152af6f85d1db47d8045facbddb8f1b6250249"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -50389,7 +50389,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "packages/db/src/schema/staff-roles.ts",
@@ -63076,7 +63076,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DefaultProfileModal.tsx",
@@ -67445,7 +67445,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
-              "sha256": "92976e56e2c74a256643164ff2573e30a01f2a2f644b094fee39aaeb7fd9f2c1"
+              "sha256": "3d8215010ec7995616dc84f6e540847d1874d7f0b23cb5bfb25cc5e86d6f6ffa"
             },
             {
               "path": "apps/web/e2e/notification-delivery-search.spec.ts",
@@ -68697,7 +68697,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
-              "sha256": "92976e56e2c74a256643164ff2573e30a01f2a2f644b094fee39aaeb7fd9f2c1"
+              "sha256": "3d8215010ec7995616dc84f6e540847d1874d7f0b23cb5bfb25cc5e86d6f6ffa"
             },
             {
               "path": "apps/web/e2e/notification-delivery-search.spec.ts",
@@ -71090,7 +71090,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
-              "sha256": "92976e56e2c74a256643164ff2573e30a01f2a2f644b094fee39aaeb7fd9f2c1"
+              "sha256": "3d8215010ec7995616dc84f6e540847d1874d7f0b23cb5bfb25cc5e86d6f6ffa"
             },
             {
               "path": "apps/web/e2e/notification-delivery-search.spec.ts",
@@ -72387,7 +72387,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-              "sha256": "9e731d4e1013edc71fae770bc034863e34ef53270b1e83db1c3dd8adaefdaa3b"
+              "sha256": "92a25ab80e153c8b6bb709a12dc82cfa043c6b6a1deff2960a577f7574157fbc"
             },
             {
               "path": "apps/web/e2e/notification-delivery-search.spec.ts",
@@ -72503,7 +72503,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
-              "sha256": "92976e56e2c74a256643164ff2573e30a01f2a2f644b094fee39aaeb7fd9f2c1"
+              "sha256": "3d8215010ec7995616dc84f6e540847d1874d7f0b23cb5bfb25cc5e86d6f6ffa"
             },
             {
               "path": "apps/api/src/contract/contract-review-notifications.ts",
@@ -73587,7 +73587,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -97832,7 +97832,7 @@
             },
             {
               "path": "apps/web/e2e/failed-notifications-recovery.spec.ts",
-              "sha256": "735a2e1c4bfeb3b2fdb654e7c9965e2f71f96e42fddef49b23893feb394d61cb"
+              "sha256": "1f4bd5dd6b38e3a5117b34082088adc151bf902a66726862c0f632a1a590f1d0"
             },
             {
               "path": "apps/web/e2e/failed-notifications.spec.ts",
@@ -97840,7 +97840,7 @@
             },
             {
               "path": "apps/web/e2e/operational-queue-recovery.spec.ts",
-              "sha256": "8ee68d7684fb4406a740638a2206a4d0cac3fc6e49e572f085811b9b67c5af3b"
+              "sha256": "4db48d3b5ac60fcee1d0bd02e81359266c6b69ca0c4bef3abe913137ece381f7"
             },
             {
               "path": "apps/web/e2e/operational-queue-tables.spec.ts",
@@ -97848,7 +97848,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/OperationalQueueTable.tsx",
@@ -98230,7 +98230,7 @@
             },
             {
               "path": "apps/web/e2e/failed-notifications-recovery.spec.ts",
-              "sha256": "735a2e1c4bfeb3b2fdb654e7c9965e2f71f96e42fddef49b23893feb394d61cb"
+              "sha256": "1f4bd5dd6b38e3a5117b34082088adc151bf902a66726862c0f632a1a590f1d0"
             },
             {
               "path": "apps/web/e2e/failed-notifications.spec.ts",
@@ -98238,7 +98238,7 @@
             },
             {
               "path": "apps/web/e2e/operational-queue-recovery.spec.ts",
-              "sha256": "8ee68d7684fb4406a740638a2206a4d0cac3fc6e49e572f085811b9b67c5af3b"
+              "sha256": "4db48d3b5ac60fcee1d0bd02e81359266c6b69ca0c4bef3abe913137ece381f7"
             },
             {
               "path": "apps/web/e2e/operational-queue-tables.spec.ts",
@@ -98246,7 +98246,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/OperationalQueueTable.tsx",
@@ -109696,7 +109696,7 @@
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
-              "sha256": "b0f8af992ce11bb9e59adb53e56426a4a8f9dfaefbb88b6f4be7e7b1c17b2fe2"
+              "sha256": "d76b0db635ebf04488df914b29152af6f85d1db47d8045facbddb8f1b6250249"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -109712,7 +109712,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
@@ -110368,7 +110368,7 @@
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
-              "sha256": "b0f8af992ce11bb9e59adb53e56426a4a8f9dfaefbb88b6f4be7e7b1c17b2fe2"
+              "sha256": "d76b0db635ebf04488df914b29152af6f85d1db47d8045facbddb8f1b6250249"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -110376,7 +110376,7 @@
             },
             {
               "path": "apps/web/src/components/StaffPermissionHistory.tsx",
-              "sha256": "39b5874f637f4eef32fed75186d7cc981c45deac00c37ff36c6a9f58640c7474"
+              "sha256": "7ba68435ad1922cd799f5a3576e4f95c56863969c8d1588b254eb374f73ba53b"
             },
             {
               "path": "apps/web/src/lib/staff-access-form-schemas.ts",
@@ -110384,7 +110384,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
@@ -491215,7 +491215,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -491251,7 +491251,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-              "sha256": "9e731d4e1013edc71fae770bc034863e34ef53270b1e83db1c3dd8adaefdaa3b"
+              "sha256": "92a25ab80e153c8b6bb709a12dc82cfa043c6b6a1deff2960a577f7574157fbc"
             },
             {
               "path": "apps/web/src/components/OnboardingDraftList.tsx",
@@ -491335,7 +491335,7 @@
             },
             {
               "path": "apps/web/src/components/StaffPermissionHistory.tsx",
-              "sha256": "39b5874f637f4eef32fed75186d7cc981c45deac00c37ff36c6a9f58640c7474"
+              "sha256": "7ba68435ad1922cd799f5a3576e4f95c56863969c8d1588b254eb374f73ba53b"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
@@ -491499,7 +491499,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
@@ -492990,7 +492990,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DefaultProfileModal.tsx",
@@ -493094,7 +493094,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-              "sha256": "9e731d4e1013edc71fae770bc034863e34ef53270b1e83db1c3dd8adaefdaa3b"
+              "sha256": "92a25ab80e153c8b6bb709a12dc82cfa043c6b6a1deff2960a577f7574157fbc"
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
@@ -493174,7 +493174,7 @@
             },
             {
               "path": "apps/web/src/components/StaffPermissionHistory.tsx",
-              "sha256": "39b5874f637f4eef32fed75186d7cc981c45deac00c37ff36c6a9f58640c7474"
+              "sha256": "7ba68435ad1922cd799f5a3576e4f95c56863969c8d1588b254eb374f73ba53b"
             },
             {
               "path": "apps/web/src/components/StaffWalletReceiptList.tsx",
@@ -494451,11 +494451,11 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
-              "sha256": "92976e56e2c74a256643164ff2573e30a01f2a2f644b094fee39aaeb7fd9f2c1"
+              "sha256": "3d8215010ec7995616dc84f6e540847d1874d7f0b23cb5bfb25cc5e86d6f6ffa"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-              "sha256": "9e731d4e1013edc71fae770bc034863e34ef53270b1e83db1c3dd8adaefdaa3b"
+              "sha256": "92a25ab80e153c8b6bb709a12dc82cfa043c6b6a1deff2960a577f7574157fbc"
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.test.tsx",
@@ -494539,7 +494539,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/hooks/useServerMutation.test.tsx",
@@ -494651,7 +494651,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -495342,11 +495342,11 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
-              "sha256": "92976e56e2c74a256643164ff2573e30a01f2a2f644b094fee39aaeb7fd9f2c1"
+              "sha256": "3d8215010ec7995616dc84f6e540847d1874d7f0b23cb5bfb25cc5e86d6f6ffa"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-              "sha256": "9e731d4e1013edc71fae770bc034863e34ef53270b1e83db1c3dd8adaefdaa3b"
+              "sha256": "92a25ab80e153c8b6bb709a12dc82cfa043c6b6a1deff2960a577f7574157fbc"
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.test.tsx",
@@ -495430,7 +495430,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/hooks/useServerMutation.test.tsx",
@@ -495542,7 +495542,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -496174,11 +496174,11 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
-              "sha256": "92976e56e2c74a256643164ff2573e30a01f2a2f644b094fee39aaeb7fd9f2c1"
+              "sha256": "3d8215010ec7995616dc84f6e540847d1874d7f0b23cb5bfb25cc5e86d6f6ffa"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-              "sha256": "9e731d4e1013edc71fae770bc034863e34ef53270b1e83db1c3dd8adaefdaa3b"
+              "sha256": "92a25ab80e153c8b6bb709a12dc82cfa043c6b6a1deff2960a577f7574157fbc"
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.test.tsx",
@@ -496262,7 +496262,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/hooks/useServerMutation.test.tsx",
@@ -496374,7 +496374,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -497844,7 +497844,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DefaultProfileModal.tsx",
@@ -497948,7 +497948,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-              "sha256": "9e731d4e1013edc71fae770bc034863e34ef53270b1e83db1c3dd8adaefdaa3b"
+              "sha256": "92a25ab80e153c8b6bb709a12dc82cfa043c6b6a1deff2960a577f7574157fbc"
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
@@ -498028,7 +498028,7 @@
             },
             {
               "path": "apps/web/src/components/StaffPermissionHistory.tsx",
-              "sha256": "39b5874f637f4eef32fed75186d7cc981c45deac00c37ff36c6a9f58640c7474"
+              "sha256": "7ba68435ad1922cd799f5a3576e4f95c56863969c8d1588b254eb374f73ba53b"
             },
             {
               "path": "apps/web/src/components/StaffWalletReceiptList.tsx",
@@ -511642,7 +511642,7 @@
             },
             {
               "path": "apps/web/e2e/failed-notifications-recovery.spec.ts",
-              "sha256": "735a2e1c4bfeb3b2fdb654e7c9965e2f71f96e42fddef49b23893feb394d61cb"
+              "sha256": "1f4bd5dd6b38e3a5117b34082088adc151bf902a66726862c0f632a1a590f1d0"
             },
             {
               "path": "apps/web/e2e/finance-list-query.spec.ts",
@@ -511698,7 +511698,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -511730,11 +511730,11 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
-              "sha256": "92976e56e2c74a256643164ff2573e30a01f2a2f644b094fee39aaeb7fd9f2c1"
+              "sha256": "3d8215010ec7995616dc84f6e540847d1874d7f0b23cb5bfb25cc5e86d6f6ffa"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-              "sha256": "9e731d4e1013edc71fae770bc034863e34ef53270b1e83db1c3dd8adaefdaa3b"
+              "sha256": "92a25ab80e153c8b6bb709a12dc82cfa043c6b6a1deff2960a577f7574157fbc"
             },
             {
               "path": "apps/web/src/components/OperationalQueueTable.tsx",
@@ -511874,7 +511874,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -512552,7 +512552,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
@@ -515841,7 +515841,7 @@
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
-              "sha256": "b0f8af992ce11bb9e59adb53e56426a4a8f9dfaefbb88b6f4be7e7b1c17b2fe2"
+              "sha256": "d76b0db635ebf04488df914b29152af6f85d1db47d8045facbddb8f1b6250249"
             },
             {
               "path": "apps/web/e2e/staff-wallet-receipt-views.spec.ts",
@@ -516280,7 +516280,7 @@
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
-              "sha256": "b0f8af992ce11bb9e59adb53e56426a4a8f9dfaefbb88b6f4be7e7b1c17b2fe2"
+              "sha256": "d76b0db635ebf04488df914b29152af6f85d1db47d8045facbddb8f1b6250249"
             },
             {
               "path": "apps/web/e2e/staff-wallet-receipt-views.spec.ts",
@@ -517721,7 +517721,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -518221,7 +518221,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
@@ -518313,7 +518313,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
@@ -519679,7 +519679,7 @@
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
-              "sha256": "b0f8af992ce11bb9e59adb53e56426a4a8f9dfaefbb88b6f4be7e7b1c17b2fe2"
+              "sha256": "d76b0db635ebf04488df914b29152af6f85d1db47d8045facbddb8f1b6250249"
             },
             {
               "path": "apps/web/e2e/staff-wallet-receipt-views.spec.ts",
@@ -520789,7 +520789,7 @@
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
-              "sha256": "b0f8af992ce11bb9e59adb53e56426a4a8f9dfaefbb88b6f4be7e7b1c17b2fe2"
+              "sha256": "d76b0db635ebf04488df914b29152af6f85d1db47d8045facbddb8f1b6250249"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -521617,7 +521617,7 @@
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
-              "sha256": "b0f8af992ce11bb9e59adb53e56426a4a8f9dfaefbb88b6f4be7e7b1c17b2fe2"
+              "sha256": "d76b0db635ebf04488df914b29152af6f85d1db47d8045facbddb8f1b6250249"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -522949,7 +522949,7 @@
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
-              "sha256": "b0f8af992ce11bb9e59adb53e56426a4a8f9dfaefbb88b6f4be7e7b1c17b2fe2"
+              "sha256": "d76b0db635ebf04488df914b29152af6f85d1db47d8045facbddb8f1b6250249"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -546748,7 +546748,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -547024,7 +547024,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -547148,7 +547148,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -547220,7 +547220,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -548618,7 +548618,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -548894,7 +548894,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -549018,7 +549018,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -549090,7 +549090,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -550489,7 +550489,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -550765,7 +550765,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -550889,7 +550889,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -550961,7 +550961,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -552329,7 +552329,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -552605,7 +552605,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -552729,7 +552729,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -552801,7 +552801,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -554195,7 +554195,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -554471,7 +554471,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -554595,7 +554595,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -554667,7 +554667,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -556070,7 +556070,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -556346,7 +556346,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -556470,7 +556470,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -556542,7 +556542,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -557918,7 +557918,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -558194,7 +558194,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -558318,7 +558318,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -558390,7 +558390,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -559730,7 +559730,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -560006,7 +560006,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -560130,7 +560130,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -560202,7 +560202,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -561542,7 +561542,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -561818,7 +561818,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -561942,7 +561942,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -562014,7 +562014,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -563355,7 +563355,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -563631,7 +563631,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -563755,7 +563755,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -563827,7 +563827,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -565167,7 +565167,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -565443,7 +565443,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -565567,7 +565567,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -565639,7 +565639,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -566969,7 +566969,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -567237,7 +567237,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -567397,7 +567397,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -567509,7 +567509,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -568872,7 +568872,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -569140,7 +569140,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -569300,7 +569300,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -569412,7 +569412,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -570968,7 +570968,7 @@
             },
             {
               "path": "apps/web/e2e/failed-notifications-recovery.spec.ts",
-              "sha256": "735a2e1c4bfeb3b2fdb654e7c9965e2f71f96e42fddef49b23893feb394d61cb"
+              "sha256": "1f4bd5dd6b38e3a5117b34082088adc151bf902a66726862c0f632a1a590f1d0"
             },
             {
               "path": "apps/web/e2e/failed-notifications.spec.ts",
@@ -571256,7 +571256,7 @@
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
-              "sha256": "b0f8af992ce11bb9e59adb53e56426a4a8f9dfaefbb88b6f4be7e7b1c17b2fe2"
+              "sha256": "d76b0db635ebf04488df914b29152af6f85d1db47d8045facbddb8f1b6250249"
             },
             {
               "path": "apps/web/e2e/staff-wallet-ledger.spec.ts",
@@ -571500,7 +571500,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeadlineForms.test.tsx",
@@ -571640,11 +571640,11 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
-              "sha256": "92976e56e2c74a256643164ff2573e30a01f2a2f644b094fee39aaeb7fd9f2c1"
+              "sha256": "3d8215010ec7995616dc84f6e540847d1874d7f0b23cb5bfb25cc5e86d6f6ffa"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-              "sha256": "9e731d4e1013edc71fae770bc034863e34ef53270b1e83db1c3dd8adaefdaa3b"
+              "sha256": "92a25ab80e153c8b6bb709a12dc82cfa043c6b6a1deff2960a577f7574157fbc"
             },
             {
               "path": "apps/web/src/components/NotificationDropdown.tsx",
@@ -572064,7 +572064,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -572772,7 +572772,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -572944,7 +572944,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -573670,7 +573670,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -573938,7 +573938,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -574098,7 +574098,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -574210,7 +574210,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -575573,7 +575573,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -575841,7 +575841,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -576001,7 +576001,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -576113,7 +576113,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -577476,7 +577476,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -577744,7 +577744,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -577904,7 +577904,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -578016,7 +578016,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -579379,7 +579379,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -579647,7 +579647,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -579807,7 +579807,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -579919,7 +579919,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -581282,7 +581282,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -581550,7 +581550,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -581710,7 +581710,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -581822,7 +581822,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -583185,7 +583185,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -583453,7 +583453,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -583613,7 +583613,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -583725,7 +583725,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -585088,7 +585088,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -585356,7 +585356,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -585516,7 +585516,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -585628,7 +585628,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -586991,7 +586991,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -587259,7 +587259,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -587419,7 +587419,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -587531,7 +587531,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -588894,7 +588894,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -589162,7 +589162,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -589322,7 +589322,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -589434,7 +589434,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -590797,7 +590797,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -591065,7 +591065,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -591225,7 +591225,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -591337,7 +591337,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -592700,7 +592700,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -592968,7 +592968,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -593128,7 +593128,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -593240,7 +593240,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -595343,7 +595343,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -595611,7 +595611,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -595771,7 +595771,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -595883,7 +595883,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -597246,7 +597246,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -597514,7 +597514,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -597674,7 +597674,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -597786,7 +597786,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -598962,7 +598962,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Named account settings, contract and document route cases and dashboard widget states have indexed evidence. Verify remaining staff child-route pending, empty and error conditions against the first-read inventory and original acceptance. Broader route adoption still requires matching route-level evidence."
+        "Account settings, contract and document states, 48 staff first-read loading and error cases, and staff audit and delivery-history denial have indexed evidence. Replace the Roles loading key and Failed Notifications template loading copy. Match the applicable empty and remaining child states to each original route criterion before full acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -599100,7 +599100,8 @@
           "release-0.5-dashboard-widget-acceptance",
           "release-0.5-document-detail-authority",
           "release-0.5-contract-snapshot-states",
-          "release-0.5-account-child-read-recovery"
+          "release-0.5-account-child-read-recovery",
+          "release-0.5-staff-child-pending"
         ],
         "current_acceptance": null
       }
@@ -599346,7 +599347,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -599622,7 +599623,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -599746,7 +599747,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -599818,7 +599819,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -601154,7 +601155,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -601430,7 +601431,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -601554,7 +601555,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -601626,7 +601627,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -602962,7 +602963,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -603238,7 +603239,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -603362,7 +603363,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -603434,7 +603435,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -604770,7 +604771,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -605046,7 +605047,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -605170,7 +605171,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -605242,7 +605243,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -606578,7 +606579,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -606854,7 +606855,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -606978,7 +606979,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -607050,7 +607051,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -608386,7 +608387,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -608662,7 +608663,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -608786,7 +608787,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -608858,7 +608859,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -610194,7 +610195,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -610470,7 +610471,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/src/components/team-action-confirmation.test.tsx",
@@ -610594,7 +610595,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -610666,7 +610667,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+              "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -638009,7 +638010,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -638285,7 +638286,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -639141,7 +639142,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -639417,7 +639418,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -640273,7 +640274,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -640549,7 +640550,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -641408,7 +641409,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -641684,7 +641685,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -642543,7 +642544,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -642819,7 +642820,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -643705,7 +643706,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -643981,7 +643982,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -644836,7 +644837,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -645112,7 +645113,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -645967,7 +645968,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -646243,7 +646244,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -647099,7 +647100,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -647375,7 +647376,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -648249,7 +648250,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -648525,7 +648526,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -649382,7 +649383,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -649658,7 +649659,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -680912,7 +680913,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -681188,7 +681189,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -682042,7 +682043,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -682318,7 +682319,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -683172,7 +683173,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -683448,7 +683449,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -684302,7 +684303,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -684578,7 +684579,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -705000,7 +705001,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             }
           ],
           "checks": [
@@ -705434,7 +705435,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/components/EffectivePermissionsView.tsx",
@@ -705450,7 +705451,7 @@
             },
             {
               "path": "apps/web/src/components/staff-access-inspection.test.tsx",
-              "sha256": "b461d680fc2d138d7222518fe1481f27961a6b97acef28889dd69afca166188f"
+              "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
             },
             {
               "path": "apps/web/e2e/staff-access-inspection.spec.ts",
@@ -716979,15 +716980,15 @@
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
-              "sha256": "b0f8af992ce11bb9e59adb53e56426a4a8f9dfaefbb88b6f4be7e7b1c17b2fe2"
+              "sha256": "d76b0db635ebf04488df914b29152af6f85d1db47d8045facbddb8f1b6250249"
             },
             {
               "path": "apps/web/src/components/StaffPermissionHistory.tsx",
-              "sha256": "39b5874f637f4eef32fed75186d7cc981c45deac00c37ff36c6a9f58640c7474"
+              "sha256": "7ba68435ad1922cd799f5a3576e4f95c56863969c8d1588b254eb374f73ba53b"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
@@ -722582,11 +722583,11 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
-              "sha256": "92976e56e2c74a256643164ff2573e30a01f2a2f644b094fee39aaeb7fd9f2c1"
+              "sha256": "3d8215010ec7995616dc84f6e540847d1874d7f0b23cb5bfb25cc5e86d6f6ffa"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-              "sha256": "9e731d4e1013edc71fae770bc034863e34ef53270b1e83db1c3dd8adaefdaa3b"
+              "sha256": "92a25ab80e153c8b6bb709a12dc82cfa043c6b6a1deff2960a577f7574157fbc"
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
@@ -726460,11 +726461,11 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
-              "sha256": "92976e56e2c74a256643164ff2573e30a01f2a2f644b094fee39aaeb7fd9f2c1"
+              "sha256": "3d8215010ec7995616dc84f6e540847d1874d7f0b23cb5bfb25cc5e86d6f6ffa"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-              "sha256": "9e731d4e1013edc71fae770bc034863e34ef53270b1e83db1c3dd8adaefdaa3b"
+              "sha256": "92a25ab80e153c8b6bb709a12dc82cfa043c6b6a1deff2960a577f7574157fbc"
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
@@ -728960,7 +728961,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Named account settings, contract and document route cases and dashboard widget states have indexed evidence. Verify remaining staff child-route pending, empty and error conditions against the first-read inventory and original acceptance. Broader route adoption still requires matching route-level evidence."
+        "Account settings, contract and document states, 48 staff first-read loading and error cases, and staff audit and delivery-history denial have indexed evidence. Replace the Roles loading key and Failed Notifications template loading copy. Match the applicable empty and remaining child states to each original route criterion before full acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -729164,7 +729165,8 @@
           "release-0.5-dashboard-widget-acceptance",
           "release-0.5-document-detail-authority",
           "release-0.5-contract-snapshot-states",
-          "release-0.5-account-child-read-recovery"
+          "release-0.5-account-child-read-recovery",
+          "release-0.5-staff-child-pending"
         ]
       }
     },
@@ -729396,7 +729398,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+              "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
             },
             {
               "path": "apps/web/src/components/DefaultProfileModal.tsx",
@@ -729528,7 +729530,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-              "sha256": "9e731d4e1013edc71fae770bc034863e34ef53270b1e83db1c3dd8adaefdaa3b"
+              "sha256": "92a25ab80e153c8b6bb709a12dc82cfa043c6b6a1deff2960a577f7574157fbc"
             },
             {
               "path": "apps/web/src/components/NotificationDropdown.tsx",
@@ -729708,7 +729710,7 @@
             },
             {
               "path": "apps/web/src/components/StaffPermissionHistory.tsx",
-              "sha256": "39b5874f637f4eef32fed75186d7cc981c45deac00c37ff36c6a9f58640c7474"
+              "sha256": "7ba68435ad1922cd799f5a3576e4f95c56863969c8d1588b254eb374f73ba53b"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.tsx",
@@ -730192,7 +730194,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
@@ -731117,7 +731119,8 @@
             "All 101 transfer budgets and native catalogue accessibility and checkout journey cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-catalogue-validation/proof.json",
             "All 101 final transfer budgets and affected document/solar browser checks passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-detail-authority/proof.json",
             "All 101 transfer budgets and affected contract journeys passed against the reviewed final runtime. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-snapshot-states/proof.json",
-            "All 101 transfer budgets and affected profile/security journeys passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-account-child-read-recovery/proof.json"
+            "All 101 transfer budgets and affected profile/security journeys passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-account-child-read-recovery/proof.json",
+            "All 101 transfer budgets and affected staff directory and delivery history journeys passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-child-pending/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -810157,6 +810160,76 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-account-child-read-recovery/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-account-child-read-recovery/renewed-bindings.json",
       "release_disposition": "Closed account child read gaps. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-staff-child-pending": {
+      "batch": "release-0.5-staff-child-pending",
+      "base_commit": "a079d7cde5b80037a6eba8c232762d5d1d8cf6f2",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/failed-notifications-recovery.spec.ts",
+          "sha256": "1f4bd5dd6b38e3a5117b34082088adc151bf902a66726862c0f632a1a590f1d0"
+        },
+        {
+          "path": "apps/web/e2e/operational-queue-recovery.spec.ts",
+          "sha256": "4db48d3b5ac60fcee1d0bd02e81359266c6b69ca0c4bef3abe913137ece381f7"
+        },
+        {
+          "path": "apps/web/e2e/staff-users.spec.ts",
+          "sha256": "d76b0db635ebf04488df914b29152af6f85d1db47d8045facbddb8f1b6250249"
+        },
+        {
+          "path": "apps/web/src/components/DeadLetterPanel.tsx",
+          "sha256": "e041dd4318af79086eb1505b6e92b34ad43df3876c1ff950399ae0df9d455616"
+        },
+        {
+          "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
+          "sha256": "3d8215010ec7995616dc84f6e540847d1874d7f0b23cb5bfb25cc5e86d6f6ffa"
+        },
+        {
+          "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
+          "sha256": "92a25ab80e153c8b6bb709a12dc82cfa043c6b6a1deff2960a577f7574157fbc"
+        },
+        {
+          "path": "apps/web/src/components/StaffPermissionHistory.tsx",
+          "sha256": "7ba68435ad1922cd799f5a3576e4f95c56863969c8d1588b254eb374f73ba53b"
+        },
+        {
+          "path": "apps/web/src/components/staff-access-inspection.test.tsx",
+          "sha256": "e5c43215aa622577151a6fd34a67903362d7ae7cc47a5ecc121eea8ec741a564"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
+          "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
+        },
+        {
+          "path": "apps/web/src/pages/admin-boundaries.test.tsx",
+          "sha256": "e2e595c31f2ccf0b0ce1cc6cfc4749674ffdf93bd5460fce8aa865dfaa546ccf"
+        }
+      ],
+      "checks": [
+        "The current-base Chromium build produced a loading announcement without a premature alert or a page exception for all 48 controlled first staff reads. Roles displays common.loading and Failed Notifications uses template wording; these are recorded copy gaps.",
+        "Six baseline native cases reproduced denial in staff audit and notification delivery history leaving the parent private surface open. Both 401 and 403 now invoke the existing parent withdrawal paths. The staff read cancels an in-flight authority refresh. Notification denial also replaces the private history selection in the URL.",
+        "A 503 or malformed history read retains local retry. The existing notification test now exercises HTTP 503 for transient retry and separately asserts full withdrawal after HTTP 403. Empty histories announce their state.",
+        "The authorized-empty collection fixture now supplies the real staff guide availability shape. Its previous fallback returned an array where the guide expects an availability object; the original empty and saved-change assertions remain.",
+        "One browser run hit a screenshot ENOSPC error, a competing fixture build replaced shared outputs, and an unscoped staff alert assertion found two valid alerts. Only the nine unsuccessful or skipped native cases were rerun with fixed build inputs and a scoped denial assertion. Fifty-nine unchanged passing cases were reused on the same product runtime. Four additional cases cover both notification history entry points.",
+        "One instrumented case hit a coverage-record write error and passed its isolated rerun on the available RAM-backed volume. The merged run contains 35 original passing records and one final passing record.",
+        "One hundred nine distinct selected units, seventy-two distinct production cases, thirty-six instrumented Chromium cases, the changed-source coverage gate, and 101 production bundle budgets passed. Web typechecking, changed-file lint and formatting passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-child-pending",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-child-pending/proof.json",
+      "source_scope_proof_sha256": "6a83f1f6c8059d353fdd1eab4537d60895ad82928fd9a756f52d37d30615b9b9",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-child-pending/reviewed-final.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-child-pending/renewed-bindings.json",
+      "release_disposition": "Closed staff history permission-withdrawal gaps. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [
@@ -810207,7 +810280,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Verify and close remaining staff child-route states against the first-read inventory and named route evidence. Keep GitHub merge check enforcement and staging Sentry proof pending on the external prerequisites."
+    "goal": "Fix the two staff loading labels demonstrated in the held-read inventory and reconcile applicable staff empty and child cases with existing route evidence. GitHub required checks and staging Sentry remain separate external gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",

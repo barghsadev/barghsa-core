@@ -320,6 +320,43 @@ for (const [locale, dark] of [
       );
     });
   }
+  test(`delivery history denial withdraws its parent queue and URL selection (${locale}, dark=${dark})`, async ({
+    page,
+  }) => {
+    await shell(page, locale, dark);
+    await page.route('**/api/admin/failed-notifications/access', (route) =>
+      route.fulfill({ json: { canView: true, canRetry: true } })
+    );
+    await page.route('**/api/admin/failed-notifications?*', (route) =>
+      route.fulfill({ json: [deadLetter] })
+    );
+    let historyReads = 0;
+    await page.route('**/api/admin/notifications/delivery-logs?*', (route) => {
+      historyReads++;
+      expect(new URL(route.request().url()).searchParams.get('notificationId')).toBe(
+        deadLetter.outboxId
+      );
+      return route.fulfill({ status: 403, json: {} });
+    });
+    await page.goto('/admin/failed-notifications');
+    await page
+      .locator('summary:visible')
+      .filter({ hasText: t('admin.notifications.deadLetter.details', locale) })
+      .click();
+    await page
+      .getByRole('button', { name: t('admin.notifications.history.title', locale), exact: true })
+      .click();
+    await expect(page.getByRole('alert')).toContainText(
+      t('admin.notifications.deadLetter.accessDenied', locale)
+    );
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(page.locator('main')).not.toContainText(deadLetter.eventKey);
+    await expect
+      .poll(() => new URL(page.url()).searchParams.has('history_notificationId'))
+      .toBe(false);
+    expect(historyReads).toBe(1);
+  });
+
   test(`delivery history remains independent and closes on catalogue denial (${locale}, dark=${dark})`, async ({
     page,
   }, info) => {

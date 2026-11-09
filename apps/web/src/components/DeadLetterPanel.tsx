@@ -217,6 +217,13 @@ export default function DeadLetterPanel({
       setAllHistory(false);
     }
   };
+  function denyHistory() {
+    historyQueries?.setQuery(
+      { filters: { mode: '', notificationId: '', channel: '', status: '' }, page: 1 },
+      true
+    );
+    queue.deny();
+  }
   const actionScope = `${criteria}:${offset}`;
   const previousCriteria = useRef(actionScope);
   if (previousCriteria.current !== actionScope) {
@@ -642,10 +649,15 @@ export default function DeadLetterPanel({
           target={historyTarget}
           queries={historyQueries}
           onClose={closeHistory}
+          onDenied={denyHistory}
         />
       )}
       {!historyQueries && allHistory && queue.canView && (
-        <NotificationDeliveryHistory locale={uiLocale} onClose={() => setAllHistory(false)} />
+        <NotificationDeliveryHistory
+          locale={uiLocale}
+          onClose={() => setAllHistory(false)}
+          onDenied={denyHistory}
+        />
       )}
       {!historyQueries && history && queue.canView && (
         <NotificationDeliveryHistory
@@ -653,6 +665,7 @@ export default function DeadLetterPanel({
           target={history}
           locale={uiLocale}
           onClose={() => setHistory(null)}
+          onDenied={denyHistory}
         />
       )}
       {unconfirmed && !queue.denied && (

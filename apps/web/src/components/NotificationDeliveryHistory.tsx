@@ -1,7 +1,7 @@
 import { useCompactRecords } from '../hooks/useCompactRecords.js';
 import { RecordFields } from './RecordFields.js';
 import type { HistoryColumn } from './HistoryTable.js';
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import {
   LoadingStatus,
   Button,
@@ -22,6 +22,7 @@ import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useServerListQuery } from '../hooks/useServerQuery.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { queryKeys } from '../lib/query-keys.js';
+import { ServerQueryError } from '../lib/server-query-client.js';
 
 interface DeliveryAttempt {
   id: string;
@@ -79,11 +80,13 @@ export function NotificationDeliveryHistory({
   target,
   locale,
   onClose,
+  onDenied,
   queries,
 }: {
   target?: Target | undefined;
   locale: Locale;
   onClose: () => void;
+  onDenied?: () => void;
   queries?: ListQueryBinding | undefined;
 }) {
   const compact = useCompactRecords();
@@ -93,6 +96,8 @@ export function NotificationDeliveryHistory({
   const accountId = useAccountUser();
   const profileRevision = useProfileContextRevision();
   const reader = useId();
+  const notifyDenied = useRef(onDenied);
+  notifyDenied.current = onDenied;
   const [localOffset, setOffset] = useState(0);
   const offset = queries ? (queries.query.page - 1) * 25 : localOffset;
   const [revision, setRevision] = useState(0);
@@ -132,7 +137,7 @@ export function NotificationDeliveryHistory({
     manual: true,
     read: async (signal) => {
       const response = await fetch(`${path}?${params}`, { signal });
-      if (!response.ok) throw new Error('History unavailable');
+      if (!response.ok) throw new ServerQueryError(response.status);
       const result: unknown = await response.json();
       if (
         !Array.isArray(result) ||
@@ -146,6 +151,11 @@ export function NotificationDeliveryHistory({
   });
   const loading = delivery.isPending || delivery.isFetching;
   const error = delivery.isError;
+  const forbidden =
+    delivery.error instanceof ServerQueryError && [401, 403].includes(delivery.error.status);
+  useEffect(() => {
+    if (forbidden) notifyDenied.current?.();
+  }, [forbidden]);
   const rows = delivery.data?.slice(0, 25) ?? [];
   const hasMore = (delivery.data?.length ?? 0) > 25;
   const columns: HistoryColumn<DeliveryAttempt>[] = [
@@ -298,7 +308,7 @@ export function NotificationDeliveryHistory({
             </Button>
           </div>
         ) : rows.length === 0 ? (
-          <p>{label('empty')}</p>
+          <p role="status">{label('empty')}</p>
         ) : compact ? (
           <CardListView
             data={rows}

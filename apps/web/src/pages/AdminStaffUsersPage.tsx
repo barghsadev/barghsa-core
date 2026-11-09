@@ -159,6 +159,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
     [listRevision, setListRevision] = useState(0);
   const workGeneration = useRef(0),
     accessRef = useRef<Access | null>(null),
+    accessRequest = useRef<AbortController | null>(null),
     editingRef = useRef<Staff | null>(null),
     actionRef = useRef<StaffAction | null>(null),
     recoveryRef = useRef<{ access?: Access } | null>(null),
@@ -199,8 +200,11 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
     setUnconfirmed(false);
   }
   function denyAccess() {
+    accessRequest.current?.abort();
     accessRef.current = null;
     setAccess(null);
+    setAccessLoading(false);
+    setAccessError(false);
     setList({ items: [], total: 0 });
     rowsRef.current = [];
     rolesRef.current = [];
@@ -232,6 +236,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
   }
   useEffect(() => {
     const controller = new AbortController();
+    accessRequest.current = controller;
     const recovering = recoveryRef.current;
     setAccessLoading(true);
     setAccessError(false);
@@ -1003,6 +1008,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
               key={history === 'all' ? 'all' : history.userId}
               target={history === 'all' ? null : history}
               onClose={() => setHistory(null)}
+              onDenied={denyAccess}
             />
           )}
           {showCreate && access?.canCreate && (

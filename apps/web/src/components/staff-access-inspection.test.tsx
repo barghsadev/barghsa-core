@@ -1,7 +1,9 @@
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
+import { tWorkspace as staffText } from '@barghsa/i18n/workspace-admin';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { StaffEffectivePermissions } from './StaffEffectivePermissions.js';
+import { StaffPermissionHistory } from './StaffPermissionHistory.js';
 import Roles from '../pages/AdminRolesPage.js';
 import { QueryComponentProvider } from '../test/query-provider.js';
 import Staff from '../pages/AdminStaffUsersPage.js';
@@ -46,6 +48,90 @@ async function click(label: string) {
   expect(button, label).toBeDefined();
   await act(async () => button!.click());
 }
+
+const historyEvent = {
+  id: 'audit-1',
+  targetUserId: target.userId,
+  targetUsername: null,
+  actorUserId: 'operator-without-username',
+  actorUsername: null,
+  addedRoles: [],
+  removedRoles: [],
+  reason: null,
+  createdAt: '2026-10-30T00:00:00Z',
+};
+function renderHistory(person: typeof target | null, onDenied: () => void) {
+  return act(async () =>
+    root.render(
+      <QueryComponentProvider>
+        <StaffPermissionHistory target={person} onDenied={onDenied} onClose={() => {}} />
+      </QueryComponentProvider>
+    )
+  );
+}
+
+it('renders unfiltered staff history and retries invalid response data without retiring access', async () => {
+  const onDenied = vi.fn();
+  let history: unknown = {
+    total: 2,
+    items: [
+      historyEvent,
+      {
+        ...historyEvent,
+        id: 'audit-2',
+        addedRoles: [{ roleId: 'custom', roleName: 'Custom role' }],
+      },
+    ],
+  };
+  const requests: string[] = [];
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (path: string) => {
+      if (path.endsWith('/timezone')) return response({ timezone: 'UTC' });
+      requests.push(path);
+      return response(history);
+    })
+  );
+  await renderHistory(null, onDenied);
+  expect(host.textContent).toContain('operator-without-username');
+  expect(host.textContent).toContain('Custom role');
+  expect(host.textContent).toContain(staffText('admin.staff.audit.unchanged', 'en'));
+  expect(requests[0]).not.toContain('userId');
+  history = null;
+  await click('Apply filters');
+  expect(host.querySelector('[role="alert"]')).not.toBeNull();
+  expect(host.textContent).not.toContain('operator-without-username');
+  expect(onDenied).not.toHaveBeenCalled();
+  history = { total: 0, items: [] };
+  await click('Retry');
+  expect(host.querySelector('[role="status"]')?.textContent).toContain('No role changes');
+});
+
+it('ignores an obsolete audit denial and rejects a record from another staff account', async () => {
+  const onDenied = vi.fn();
+  const next = { ...target, userId: 'staff-two' };
+  let finish!: (result: Response) => void;
+  let oldSignal!: AbortSignal;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn((path: string, options: RequestInit) => {
+      if (path.endsWith('/timezone')) return Promise.resolve(response({ timezone: 'UTC' }));
+      if (path.includes('userId=' + target.userId)) {
+        oldSignal = options.signal!;
+        return new Promise<Response>((resolve) => (finish = resolve));
+      }
+      return Promise.resolve(response({ total: 1, items: [historyEvent] }));
+    })
+  );
+  await renderHistory(target, onDenied);
+  await renderHistory(next, onDenied);
+  expect(oldSignal.aborted).toBe(true);
+  await act(async () => finish(response({}, 403)));
+  expect(host.querySelector('[role="alert"]')).not.toBeNull();
+  expect(host.textContent).not.toContain('operator-without-username');
+  expect(onDenied).not.toHaveBeenCalled();
+});
+
 it('reads the selected account directly, and preserves its last result on failed or foreign refresh', async () => {
   let mode = 'valid';
   const fetcher = vi.fn(async () =>

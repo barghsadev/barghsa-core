@@ -127,6 +127,7 @@ for (const locale of ['en', 'fa']) {
         else if (url.endsWith('/failed-jobs/access')) body = { canView: true, canRetry: true };
         else if (url.endsWith('/agents/options'))
           body = { models: [], kbs: [], policies: [], kbGroups: [], policyGroups: [] };
+        else if (url.endsWith('/staff/knowledge/availability')) body = { available: false };
         return new Response(JSON.stringify(body));
       });
       vi.stubGlobal('fetch', requests);

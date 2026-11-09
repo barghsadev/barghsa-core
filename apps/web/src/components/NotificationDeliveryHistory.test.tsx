@@ -12,6 +12,7 @@ it('resubmitting the same applied history search refreshes its exact query and s
   document.body.append(host);
   const root = createRoot(host);
   let fail = false;
+  const denied = vi.fn();
   const requests: string[] = [];
   vi.stubGlobal(
     'fetch',
@@ -24,7 +25,7 @@ it('resubmitting the same applied history search refreshes its exact query and s
     await act(async () =>
       root.render(
         <QueryComponentProvider>
-          <NotificationDeliveryHistory locale="en" onClose={() => {}} />
+          <NotificationDeliveryHistory locale="en" onClose={() => {}} onDenied={denied} />
         </QueryComponentProvider>
       )
     );
@@ -38,6 +39,7 @@ it('resubmitting the same applied history search refreshes its exact query and s
     expect(requests).toHaveLength(2);
     expect(requests[1]).toBe(requests[0]);
     expect(document.querySelector('[role=dialog] [role=alert]')).not.toBeNull();
+    expect(denied).not.toHaveBeenCalled();
     fail = false;
     const retry = [...document.querySelectorAll<HTMLButtonElement>('[role=dialog] button')].find(
       (button) => button.textContent?.trim() === 'Try again'
@@ -59,6 +61,7 @@ it('retains the prior page during paging and clears private rows when the next r
   document.body.append(host);
   const root = createRoot(host);
   let finish!: (response: Response) => void;
+  const denied = vi.fn();
   const entries = Array.from({ length: 26 }, (_, index) => ({
     id: `10000000-0000-4000-8000-${String(index + 1).padStart(12, '0')}`,
     notificationId: '20000000-0000-4000-8000-000000000001',
@@ -83,7 +86,7 @@ it('retains the prior page during paging and clears private rows when the next r
     await act(async () =>
       root.render(
         <QueryComponentProvider>
-          <NotificationDeliveryHistory locale="en" onClose={() => {}} />
+          <NotificationDeliveryHistory locale="en" onClose={() => {}} onDenied={denied} />
         </QueryComponentProvider>
       )
     );
@@ -100,6 +103,7 @@ it('retains the prior page during paging and clears private rows when the next r
     await act(async () => finish(Response.json({}, { status: 403 })));
     expect(dialog.querySelector('[role=alert]')).not.toBeNull();
     expect(dialog.textContent).not.toContain('Verified first-page receipt');
+    expect(denied).toHaveBeenCalledOnce();
     expect(fetcher).toHaveBeenCalledTimes(2);
   } finally {
     await act(async () => root.unmount());

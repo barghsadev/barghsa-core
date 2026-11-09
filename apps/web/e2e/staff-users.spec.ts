@@ -172,6 +172,10 @@ for (const locale of ['en', 'fa'] as const) {
       target = '10000000-0000-4000-8000-000000000003';
     let fail = true;
     let failTimezone = true;
+    let historyDenied = false;
+    let historyEmpty = false;
+    let holdAccess = false;
+    let heldAccess = false;
     const queries: URLSearchParams[] = [];
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/auth/user', (route) =>
@@ -190,8 +194,12 @@ for (const locale of ['en', 'fa'] as const) {
         ? route.fulfill(fa ? { json: { timezone: 'invalid-zone' } } : { status: 503, json: {} })
         : route.fulfill({ json: { timezone: 'Asia/Tehran' } })
     );
-    await page.route('**/api/admin/staff-access', (route) =>
-      route.fulfill({
+    await page.route('**/api/admin/staff-access', (route) => {
+      if (holdAccess) {
+        heldAccess = true;
+        return;
+      }
+      return route.fulfill({
         json: {
           userId: 'viewer',
           canView: true,
@@ -199,8 +207,8 @@ for (const locale of ['en', 'fa'] as const) {
           canEditRoles: false,
           canDisable: false,
         },
-      })
-    );
+      });
+    });
     await page.route('**/api/admin/staff?*', (route) =>
       route.fulfill({
         json: {
@@ -223,7 +231,9 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/admin/staff/audit?*', (route) => {
       const query = new URL(route.request().url()).searchParams;
       queries.push(query);
+      if (historyDenied) return route.fulfill({ status: 403, json: {} });
       if (fail) return route.fulfill({ status: 503, json: {} });
+      if (historyEmpty) return route.fulfill({ json: { items: [], total: 0 } });
       return route.fulfill({
         json: {
           items: [
@@ -327,6 +337,23 @@ for (const locale of ['en', 'fa'] as const) {
       .click();
     await expect.poll(() => queries.at(-1)?.get('from')).toBeNull();
     await expect.poll(() => queries.at(-1)?.get('to')).toBeNull();
+    historyEmpty = true;
+    await history.getByRole('button', { name: fa ? 'بعدی' : 'Next', exact: true }).click();
+    await expect(history.getByRole('status')).toHaveText(t('admin.staff.audit.empty', locale));
+    holdAccess = true;
+    await page.getByRole('button', { name: t('admin.staff.refresh', locale), exact: true }).click();
+    await expect.poll(() => heldAccess).toBe(true);
+    const abortedAccess = page.waitForEvent('requestfailed', {
+      predicate: (request) => new URL(request.url()).pathname === '/api/admin/staff-access',
+    });
+    historyDenied = true;
+    await history.getByRole('button', { name: fa ? 'قبلی' : 'Previous', exact: true }).click();
+    await abortedAccess;
+    await expect(history).toHaveCount(0);
+    await expect(page.getByText('history@example.test', { exact: true })).toHaveCount(0);
+    await expect(
+      page.getByRole('alert').filter({ hasText: t('admin.staff.forbidden', locale) })
+    ).toHaveCount(1);
   });
 }
 

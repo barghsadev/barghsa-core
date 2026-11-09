@@ -54,12 +54,13 @@ for (const locale of ['en', 'fa'] as const) {
       errorDetail: index === 0 ? null : '<img src=x onerror=alert(1)> token=***',
       createdAt: row.createdAt,
     }));
-    let mode: 'unavailable' | 'wrong-record' | 'valid' | 'empty' = 'unavailable';
+    let mode: 'unavailable' | 'wrong-record' | 'valid' | 'empty' | 'denied' = 'unavailable';
     const queries: URLSearchParams[] = [];
     await page.route('**/api/admin/notifications/delivery-logs?*', (route) => {
       const query = new URL(route.request().url()).searchParams;
       queries.push(query);
-      if (mode === 'unavailable') return route.fulfill({ status: 403, json: {} });
+      if (mode === 'unavailable') return route.fulfill({ status: 503, json: {} });
+      if (mode === 'denied') return route.fulfill({ status: 403, json: {} });
       return route.fulfill({
         json:
           mode === 'wrong-record'
@@ -129,6 +130,17 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(dialog).toContainText(
       fa ? 'هیچ تلاش ارسالی ثبت نشده است.' : 'No delivery attempts have been recorded.'
     );
+    await page.keyboard.press('Escape');
+    await expect(dialog).toHaveCount(0);
+    mode = 'denied';
+    await history.click();
+    await expect(
+      page
+        .getByRole('alert')
+        .filter({ hasText: t('admin.notifications.deadLetter.accessDenied', locale) })
+    ).toBeVisible();
+    await expect(dialog).toHaveCount(0);
+    await expect(page.locator('main')).not.toContainText(row.eventKey);
   });
   test(`failed notification reads reject malformed authority and rows (${locale})`, async ({
     page,
