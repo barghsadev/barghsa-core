@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T15:47:55+00:00",
+  "updated": "2026-11-09T15:53:48+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -10541,7 +10541,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Revised ingress passed synthetic TLS headers tests; verify normal and error headers on the accepted deployed release SHA.",
+        "The exact staged reverse proxy now sends the approved headers on normal API and web responses and the tested error response. Read back the same behavior with the accepted v0.6.0 release SHA.",
         "Live CSP reporting is verified. Review the required report window and prove enforcement; enable HSTS only after verified production TLS and subdomain review."
       ],
       "owner": null,
@@ -10642,7 +10642,8 @@
         ],
         "batches": [
           "release-0.6-browser-origin-security",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-proxy-security-headers"
         ],
         "current_acceptance": null
       }
@@ -469800,7 +469801,8 @@
           "release-0.6-alpine-node-runtime-candidate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-proxy-security-headers"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -469840,7 +469842,7 @@
             },
             {
               "path": "scripts/check-production-security-headers.mjs",
-              "sha256": "b57c5062e64e3c11e026720ee8b01329ff42665e21ec5e4f3e92377c3aeb92a7"
+              "sha256": "92cb6c39c66a25f947f7be0b198f57b306a180d1f633eeffedd377bff2d136ab"
             }
           ],
           "checks": [
@@ -470028,7 +470030,8 @@
           "release-0.6-alpine-node-runtime-candidate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-proxy-security-headers"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -470068,7 +470071,7 @@
             },
             {
               "path": "scripts/check-production-security-headers.mjs",
-              "sha256": "b57c5062e64e3c11e026720ee8b01329ff42665e21ec5e4f3e92377c3aeb92a7"
+              "sha256": "92cb6c39c66a25f947f7be0b198f57b306a180d1f633eeffedd377bff2d136ab"
             }
           ],
           "checks": [
@@ -470236,7 +470239,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-proxy-security-headers"
         ],
         "current_acceptance": null
       }
@@ -470252,21 +470256,55 @@
         "story": "06-security-testing-observability.md#spec-9ca0fd6d9629"
       },
       "requirement": "| T-06.02.03.03 | Ensure `frame-ancestors 'none'` in CSP prevents clickjacking | S |",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "The enforce response sends frame-ancestors none and the live web has X-Frame-Options DENY. Verify actual cross-origin embedding denial and first-party app behavior in production-equivalent browsers."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-proxy-security-headers"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "production-csp-cross-origin-browser-and-first-party-control",
+          "base_commit": "d0905230d9394532706cd75dcb1e5a1d2ec59858",
+          "source_evidence": [
+            {
+              "path": "scripts/check-production-security-headers.mjs",
+              "sha256": "92cb6c39c66a25f947f7be0b198f57b306a180d1f633eeffedd377bff2d136ab"
+            },
+            {
+              "path": "apps/web/server.js",
+              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+            },
+            {
+              "path": "apps/web/e2e/login-ui.spec.ts",
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
+            },
+            {
+              "path": "deploy/staging/nginx.conf",
+              "sha256": "20e7e8fae329e1a336b428174540596ac8ee7cad88001583259ea96ab0b117f1"
+            },
+            {
+              "path": "docs/security/content-security-policy.md",
+              "sha256": "1976b96b826fd7399066b00bd4c3885b7e4171aeedd670dddc46a204ca80920b"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+            }
+          ],
+          "checks": [
+            "Built web header integration now verifies the default report-only and explicit enforce modes, the exact expected directives, fresh HTML nonces on scripts and module preloads, and protective headers on a missing asset. The existing CI step runs the strengthened script. Local header check and formatting passed.",
+            "Chromium, Firefox and WebKit all rejected the exact enforced frame-ancestors policy when copied into a cross-origin fixture with no X-Frame-Options. The separate control with only frame-ancestors removed executed, and the combined production headers also blocked embedding. Eight first-party login cases passed with enforcement in Chromium and WebKit, in English and Persian.",
+            "Staging API initially lacked Permissions-Policy. Its NGINX configuration matched v0.5.0. Applied the existing main template whose only delta is the approved Permissions-Policy and duplicate handling. Validated syntax, reloaded NGINX and verified the HTTPS API, login and 404 responses. The application remains v0.5.0, CSP remains report-only, and HSTS stays disabled on staging.",
+            "The production-equivalent TLS and HSTS verification, the required CSP observation window, and the accepted v0.6.0 staging rollout remain open."
+          ]
+        }
       }
     },
     {
@@ -470284,7 +470322,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Built web and isolated TLS proxy tests verify the current headers and CSP. Add actual production ingress HSTS and enforced browser evidence."
+        "Both application CSP modes, normal and error headers, enforced browser framing, and live staging headers have passed. Verify production-ingress HSTS on the selected production TLS topology."
       ],
       "owner": null,
       "depends_on": [],
@@ -470292,7 +470330,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-proxy-security-headers"
         ],
         "current_acceptance": null
       }
@@ -470312,7 +470351,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Exact required hosted integrity run 42615851185 passed built web security header and staging TLS proxy checks. Verify the production-ingress TLS/HSTS gate after the selected topology is available."
+        "The existing required CI check now validates both CSP modes and the missing-asset response. Verify the exact hosted candidate check and the production-ingress TLS/HSTS gate."
       ],
       "owner": null,
       "depends_on": [],
@@ -470321,7 +470360,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-browser-response-policy",
-          "release-0.6-required-source-and-secret-gates"
+          "release-0.6-required-source-and-secret-gates",
+          "release-0.6-proxy-security-headers"
         ],
         "current_acceptance": null
       }
@@ -738176,7 +738216,8 @@
           "release-0.6-database-client-pool-metrics",
           "release-0.6-staging-postgres-monitoring-readback",
           "release-0.6-packaged-production-seed",
-          "release-0.6-runtime-readiness-and-staging-smoke"
+          "release-0.6-runtime-readiness-and-staging-smoke",
+          "release-0.6-proxy-security-headers"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -825947,6 +825988,55 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "runtime-readiness-capability-proof.json",
       "source_scope_proof_sha256": "e89f46d587f8cf7f7763c69d4ebe468ca4dfd5a0e0e27cb86a3ca055abc2631c"
+    },
+    "release-0.6-proxy-security-headers": {
+      "batch": "release-0.6-proxy-security-headers",
+      "base_commit": "d0905230d9394532706cd75dcb1e5a1d2ec59858",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.04.02",
+        "06-security-testing-observability.md#T-06.02.03.02",
+        "06-security-testing-observability.md#T-06.02.03.03",
+        "06-security-testing-observability.md#T-06.02.03.04",
+        "06-security-testing-observability.md#T-06.02.03.05",
+        "release-readiness#R-05.03",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.05"
+      ],
+      "source_evidence": [
+        {
+          "path": "scripts/check-production-security-headers.mjs",
+          "sha256": "92cb6c39c66a25f947f7be0b198f57b306a180d1f633eeffedd377bff2d136ab"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+        },
+        {
+          "path": "apps/web/e2e/login-ui.spec.ts",
+          "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
+        },
+        {
+          "path": "deploy/staging/nginx.conf",
+          "sha256": "20e7e8fae329e1a336b428174540596ac8ee7cad88001583259ea96ab0b117f1"
+        },
+        {
+          "path": "docs/security/content-security-policy.md",
+          "sha256": "1976b96b826fd7399066b00bd4c3885b7e4171aeedd670dddc46a204ca80920b"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+        }
+      ],
+      "checks": [
+        "Built web header integration now verifies the default report-only and explicit enforce modes, the exact expected directives, fresh HTML nonces on scripts and module preloads, and protective headers on a missing asset. The existing CI step runs the strengthened script. Local header check and formatting passed.",
+        "Chromium, Firefox and WebKit all rejected the exact enforced frame-ancestors policy when copied into a cross-origin fixture with no X-Frame-Options. The separate control with only frame-ancestors removed executed, and the combined production headers also blocked embedding. Eight first-party login cases passed with enforcement in Chromium and WebKit, in English and Persian.",
+        "Staging API initially lacked Permissions-Policy. Its NGINX configuration matched v0.5.0. Applied the existing main template whose only delta is the approved Permissions-Policy and duplicate handling. Validated syntax, reloaded NGINX and verified the HTTPS API, login and 404 responses. The application remains v0.5.0, CSP remains report-only, and HSTS stays disabled on staging.",
+        "The production-equivalent TLS and HSTS verification, the required CSP observation window, and the accepted v0.6.0 staging rollout remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "proxy-security-headers-proof.json",
+      "source_scope_proof_sha256": "f4daa93b1d2196f94a6a697b311a7e11964e1204430c05660f403445a0a84388"
     }
   },
   "historical_improvements": [
@@ -825986,20 +826076,19 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-proxy-security-headers",
+    "id": "release-0.6-workspace-test-and-coverage-configuration",
     "release": "0.6.0",
     "task_keys": [
-      "01-platform-infrastructure.md#T-04.04.02",
-      "06-security-testing-observability.md#T-06.02.03.02",
-      "06-security-testing-observability.md#T-06.02.03.03",
-      "06-security-testing-observability.md#T-06.02.03.04",
-      "06-security-testing-observability.md#T-06.02.03.05"
+      "01-platform-infrastructure.md#T-01.04.01",
+      "01-platform-infrastructure.md#T-01.04.02",
+      "01-platform-infrastructure.md#T-01.04.05",
+      "release-readiness#R-05.02"
     ],
-    "goal": "Verify current reverse-proxy and application security headers against their source and effective TLS/CSP modes. Keep the report-only observation and final staging release gates intact."
+    "goal": "Verify current workspace and package test discovery, coverage floors and Turbo test entry points. Keep the final full release gate separate from source and runner configuration."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",
-    "next_update_after": "v0.6.0 hosted browser and proxy verification, package license disposition and production-equivalent environment availability",
+    "next_update_after": "v0.6.0 hosted browser and test configuration verification, package license disposition and production-equivalent environment availability",
     "method": "v0.5.0 staging and Telegram receipts are confirmed. v0.6.0 owner policy is recorded. Local and disposable staging rehearsals do not satisfy the production-equivalent TLS, provider, off-server recovery, load or schedule gates; production access/provisioning timing is external."
   },
   "capabilities": [

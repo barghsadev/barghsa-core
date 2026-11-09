@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T15:47:55+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T15:53:48+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 911 | Accepted with unchanged source bindings. |
+| done | 912 | Accepted with unchanged source bindings. |
 | verify | 424 | Existing work may be complete; inspect evidence before building. |
-| partial | 27 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 26 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 3 | Named owner or external prerequisite. |
@@ -39,13 +39,12 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify current reverse-proxy and application security headers against their source and effective TLS/CSP modes. Keep the report-only observation and final staging release gates intact.
+Verify current workspace and package test discovery, coverage floors and Turbo test entry points. Keep the final full release gate separate from source and runner configuration.
 
-- `01-platform-infrastructure.md#T-04.04.02`: Configure security headers in reverse proxy
-- `06-security-testing-observability.md#T-06.02.03.02`: Implement `Strict-Transport-Security` header configurable by env; enable HSTS only in production with verified TLS
-- `06-security-testing-observability.md#T-06.02.03.03`: Ensure `frame-ancestors 'none'` in CSP prevents clickjacking
-- `06-security-testing-observability.md#T-06.02.03.04`: Write integration tests: verify all security headers present and correct on responses
-- `06-security-testing-observability.md#T-06.02.03.05`: Add CI check that fails if required security headers are missing or misconfigured
+- `01-platform-infrastructure.md#T-01.04.01`: Create root `vitest.workspace.ts` that includes all packages and apps
+- `01-platform-infrastructure.md#T-01.04.02`: Configure per-package Vitest with coverage thresholds
+- `01-platform-infrastructure.md#T-01.04.05`: Wire `test` and `test:coverage` tasks in `turbo.json`
+- `release-readiness#R-05.02`: Renew security and operational task acceptance
 
 ## v0.2.0: Complete customer journeys
 
@@ -1135,7 +1134,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.02.02.07` | verify | Inventory needed | Verify no `unsafe-eval` usage across codebase (replace `eval`, `new Function`, string setTimeout) |
 | `06-security-testing-observability.md#T-06.02.03.01` | done | Recorded batch work | Implement security headers middleware: `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy` |
 | `06-security-testing-observability.md#T-06.02.03.02` | partial | Recorded batch work | Implement `Strict-Transport-Security` header configurable by env; enable HSTS only in production with verified TLS |
-| `06-security-testing-observability.md#T-06.02.03.03` | partial | Recorded batch work | Ensure `frame-ancestors 'none'` in CSP prevents clickjacking |
+| `06-security-testing-observability.md#T-06.02.03.03` | done | Recorded batch work | Ensure `frame-ancestors 'none'` in CSP prevents clickjacking |
 | `06-security-testing-observability.md#T-06.02.03.04` | partial | Recorded batch work | Write integration tests: verify all security headers present and correct on responses |
 | `06-security-testing-observability.md#T-06.02.03.05` | partial | Recorded batch work | Add CI check that fails if required security headers are missing or misconfigured |
 | `06-security-testing-observability.md#T-06.02.04.01` | done | Recorded batch work | Implement CORS middleware with exact origin allowlist (env config, not wildcard) |
