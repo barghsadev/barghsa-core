@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T16:04:14+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T16:19:51+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 915 | Accepted with unchanged source bindings. |
+| done | 916 | Accepted with unchanged source bindings. |
 | verify | 421 | Existing work may be complete; inspect evidence before building. |
-| partial | 26 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 25 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 3 | Named owner or external prerequisite. |
@@ -39,11 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify the existing nonce propagation and security-header tests and gate. Reuse the staging report-only and isolated enforce evidence. Keep live CSP observation and production TLS gates open.
+Record exact Alpine package metadata and the file-free dependency groups in the prepared owner review. Preserve the strict license gate and pending owner decisions.
 
-- `06-security-testing-observability.md#T-06.02.02.04`: Ensure nonce generation and propagation for inline scripts/styles across the served HTML shell and client
-- `06-security-testing-observability.md#T-06.02.03.04`: Write integration tests: verify all security headers present and correct on responses
-- `06-security-testing-observability.md#T-06.02.03.05`: Add CI check that fails if required security headers are missing or misconfigured
+- `06-security-testing-observability.md#T-06.07.02.06`: Set up license compliance check (e.g. license-checker) for dependency licenses
+- `01-platform-infrastructure.md#T-05.03.04`: Configure security scans in PR gate
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -1128,7 +1127,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.02.02.01` | done | Recorded batch work | Design CSP directive set for web app (nonce-based scripts, hashed styles where needed) |
 | `06-security-testing-observability.md#T-06.02.02.02` | done | Recorded batch work | Implement CSP middleware in web process; support Report-Only mode toggle via config |
 | `06-security-testing-observability.md#T-06.02.02.03` | done | Recorded batch work | Configure CSP reporting endpoint (e.g. `csp-reports` route or external `report-uri`) |
-| `06-security-testing-observability.md#T-06.02.02.04` | partial | Recorded batch work | Ensure nonce generation and propagation for inline scripts/styles across the served HTML shell and client |
+| `06-security-testing-observability.md#T-06.02.02.04` | done | Recorded batch work | Ensure nonce generation and propagation for inline scripts/styles across the served HTML shell and client |
 | `06-security-testing-observability.md#T-06.02.02.05` | done | Recorded batch work | Add CI test that verifies CSP headers in production build |
 | `06-security-testing-observability.md#T-06.02.02.06` | partial | Recorded batch work | Roll out: 1 week Report-Only monitoring → analyze violations → switch to Enforce |
 | `06-security-testing-observability.md#T-06.02.02.07` | verify | Inventory needed | Verify no `unsafe-eval` usage across codebase (replace `eval`, `new Function`, string setTimeout) |

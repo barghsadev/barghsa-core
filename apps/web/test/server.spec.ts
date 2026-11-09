@@ -49,7 +49,7 @@ describe('static server', () => {
     distDir = await mkdtemp(join(tmpdir(), 'barghsa-test-dist-'));
     await writeFile(
       join(distDir, 'index.html'),
-      '<html><head><link rel="modulepreload" href="/assets/app-a1b2c3d4.js"></head><body>Home<script type="module" src="/assets/app-a1b2c3d4.js"></script><script nonce="old-nonce">window.ready=true</script></body></html>'
+      '<html><head><link rel="modulepreload" href="/assets/app-a1b2c3d4.js"><style nonce="old-style-nonce">body { color: red; }</style></head><body>Home<script type="module" src="/assets/app-a1b2c3d4.js"></script><script nonce="old-nonce">window.ready=true</script></body></html>'
     );
     await mkdir(join(distDir, 'assets'));
     await mkdir(join(distDir, 'auth'));
@@ -111,7 +111,7 @@ describe('static server', () => {
   });
 
   it.each(['/', '/index.html', '/account'])(
-    'binds a fresh CSP nonce to every HTML script at %s',
+    'binds a fresh CSP nonce to scripts, module preloads and styles at %s',
     async (path) => {
       const first = await fetch(server, path, 'GET', { 'csp-nonce': 'attacker-nonce' });
       const second = await fetch(server, path);
@@ -121,7 +121,11 @@ describe('static server', () => {
       expect(nonce).toMatch(/^[A-Za-z0-9+/]{32}$/);
       expect(
         first.body.match(new RegExp(`nonce="${nonce!.replace(/[+]/g, '\\+')}"`, 'g'))
-      ).toHaveLength(3);
+      ).toHaveLength(4);
+      expect(first.body).toContain(`<style nonce="${nonce}">`);
+      expect(policy).toContain(`style-src 'self' 'nonce-${nonce}'`);
+      expect(policy).toContain("style-src-attr 'unsafe-inline'");
+      expect(first.body).not.toContain('old-style-nonce');
       expect(first.body).not.toContain('old-nonce');
       expect(policy).not.toContain('attacker-nonce');
       expect(second.headers['content-security-policy-report-only']).not.toBe(policy);

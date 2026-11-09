@@ -14,6 +14,7 @@ import { createFileRoute, useRouter, useSearch } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { Button } from '@barghsa/ui';
+import './complete.css';
 
 export const Route = createFileRoute('/onboarding/complete')({
   component: OnboardingCompletePage,
@@ -59,7 +60,6 @@ function Confetti() {
       className="pointer-events-none absolute inset-0 z-0 overflow-hidden motion-reduce:hidden"
       aria-hidden="true"
     >
-      <style>{`@keyframes confetti-drop {0% {transform:translateY(-10vh) rotate(0deg);opacity:1;}100% {transform:translateY(100vh) rotate(720deg);opacity:0;}} .animate-confetti-drop {animation:confetti-drop ease-in forwards;}`}</style>
       {particles}
     </div>
   );

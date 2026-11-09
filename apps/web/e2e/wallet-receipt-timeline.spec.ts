@@ -214,7 +214,7 @@ for (const locale of ['en', 'fa'] as const)
             },
           });
         });
-        await page.goto('/wallet');
+        const response = await page.goto('/wallet');
         const history = page.getByRole('region', {
           name: t('wallet.history.title', locale),
           exact: true,
@@ -279,6 +279,21 @@ for (const locale of ['en', 'fa'] as const)
         expect(previewRequests).toHaveLength(0);
         expect(page.url()).toBe(beforeView.url);
         const scroll = history.locator('[data-slot="scroll-area-viewport"]');
+        const headers = response?.headers() ?? {};
+        const policy =
+          headers['content-security-policy'] ?? headers['content-security-policy-report-only'];
+        if (policy) {
+          await expect
+            .poll(() =>
+              page.evaluate(
+                () =>
+                  Array.from(document.querySelectorAll('style')).find((style) =>
+                    style.textContent?.startsWith('.base-ui-disable-scrollbar')
+                  )?.sheet?.cssRules.length ?? 0
+              )
+            )
+            .toBe(2);
+        }
         await scroll.focus();
         await scroll.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
         await expect(scroll).toBeFocused();

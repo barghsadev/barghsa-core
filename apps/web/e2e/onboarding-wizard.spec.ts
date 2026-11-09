@@ -1139,6 +1139,7 @@ for (const locale of ['en', 'fa'] as const) {
       requestId: expect.stringMatching(/^[0-9a-f-]{36}$/),
       profileTypes: ['INDIVIDUAL', 'LEGAL'],
     });
+    await expect(page.locator('#firstName')).toHaveValue('Person');
     await page.reload();
     await expect(page.locator('#firstName')).toHaveValue('Person');
     await next(page, locale);
@@ -1166,6 +1167,11 @@ for (const locale of ['en', 'fa'] as const) {
     await heading.scrollIntoViewIfNeeded();
     const notice = page.locator('[data-sonner-toast][data-visible="true"]').first();
     await expect(notice).toBeVisible();
+    await expect(page.locator('[data-sonner-toaster]').first()).toHaveCSS('position', 'fixed');
+    await expect(page.locator('.animate-confetti-drop').first()).toHaveCSS(
+      'animation-name',
+      'confetti-drop'
+    );
     await expect
       .poll(async () => {
         const headingBottom = await heading.evaluate(

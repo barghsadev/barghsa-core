@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T16:04:14+00:00",
+  "updated": "2026-11-09T16:19:51+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -31040,7 +31040,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-review-preview-deadlines",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -31064,7 +31065,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
@@ -31770,7 +31771,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -31826,7 +31828,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/verification-banner.spec.ts",
@@ -32432,7 +32434,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -32448,7 +32451,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -32661,7 +32664,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -32685,7 +32689,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/src/lib/profile-digits.ts",
@@ -32924,7 +32928,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -32952,7 +32957,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/src/hooks/useOnboardingDraft.ts",
@@ -33162,7 +33167,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -33178,15 +33184,19 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "pnpm-lock.yaml",
               "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -33382,7 +33392,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -33398,7 +33409,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
@@ -33697,7 +33708,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-review-preview-deadlines",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -33721,7 +33733,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
@@ -469981,7 +469993,8 @@
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
           "release-0.6-proxy-security-headers",
-          "release-0.6-workspace-test-and-coverage-configuration"
+          "release-0.6-workspace-test-and-coverage-configuration",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -470001,11 +470014,11 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/test/server.spec.ts",
-              "sha256": "56acffbe010618328a8e9427be6c45d4f65580ef32a1baef49aeb22f1af61e96"
+              "sha256": "c16ed8e5146559d0d81f7bd68271ff9da2f4c57113ff908b92d44befa8ac68ed"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -470017,15 +470030,15 @@
             },
             {
               "path": "docs/security/content-security-policy.md",
-              "sha256": "1976b96b826fd7399066b00bd4c3885b7e4171aeedd670dddc46a204ca80920b"
+              "sha256": "e848d2163a3938de7b8b9baf827acf5c61ec7ffcda11715227c51115ce882f55"
             },
             {
               "path": "scripts/check-production-security-headers.mjs",
-              "sha256": "92cb6c39c66a25f947f7be0b198f57b306a180d1f633eeffedd377bff2d136ab"
+              "sha256": "47f36836c4975aaced6c161af3781f75d473695d13662545855a38b0b860fd3e"
             }
           ],
           "checks": [
-            "Nonce design and safe directives documented; both compiled shells have no inline style elements requiring a hash. Dynamic style attribute policy is explicit.",
+            "The production web server issues a fresh nonce for trusted scripts, preloads and style elements in both compiled shells. Arbitrary inline style elements are refused in enforce mode. Dynamic style attributes retain their separate directive. Onboarding confetti now loads bundled CSS. The only fixed inline stylesheet hashes match Sonner 2.0.8 and Base UI 1.7.0. The required production-build check derives both hashes from the installed packages and checks the complete header. No global CSP provider or dependency was added. Comparing Node 24 inputs measured 499910 bytes before, 500211 with the rejected provider and 499.90 KB in the final build, below the existing 500 KB cap.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
@@ -470054,7 +470067,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -470062,11 +470076,11 @@
           "source_evidence": [
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/test/server.spec.ts",
-              "sha256": "56acffbe010618328a8e9427be6c45d4f65580ef32a1baef49aeb22f1af61e96"
+              "sha256": "c16ed8e5146559d0d81f7bd68271ff9da2f4c57113ff908b92d44befa8ac68ed"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -470078,7 +470092,7 @@
             },
             {
               "path": "docs/security/content-security-policy.md",
-              "sha256": "1976b96b826fd7399066b00bd4c3885b7e4171aeedd670dddc46a204ca80920b"
+              "sha256": "e848d2163a3938de7b8b9baf827acf5c61ec7ffcda11715227c51115ce882f55"
             }
           ],
           "checks": [
@@ -470111,7 +470125,8 @@
         "batches": [
           "release-0.6-browser-origin-security",
           "release-0.6-browser-response-policy",
-          "release-0.6-private-api-monitoring"
+          "release-0.6-private-api-monitoring",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -470131,7 +470146,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -470164,21 +470179,79 @@
         "story": "06-security-testing-observability.md#spec-6a02d6e61674"
       },
       "requirement": "| T-06.02.02.04 | Ensure nonce generation and propagation for inline scripts/styles across the served HTML shell and client | L |",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Fresh nonces match scripts and module preloads in both built shells; neither has inline style elements. Review client style element injection in the production-equivalent enforcement rehearsal; dynamic style attributes follow the documented policy."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "production-browser-nonce-and-exact-stylesheet-hash-verification",
+          "base_commit": "ed7a5741cfa1dc9ed308c6a043edd9c1810590f7",
+          "source_evidence": [
+            {
+              "path": "apps/web/server.js",
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
+            },
+            {
+              "path": "scripts/check-production-security-headers.mjs",
+              "sha256": "47f36836c4975aaced6c161af3781f75d473695d13662545855a38b0b860fd3e"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.tsx",
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
+            },
+            {
+              "path": "apps/web/test/server.spec.ts",
+              "sha256": "c16ed8e5146559d0d81f7bd68271ff9da2f4c57113ff908b92d44befa8ac68ed"
+            },
+            {
+              "path": "apps/web/e2e/csp-reports.spec.ts",
+              "sha256": "f60dc2f6c82d2dfc93b2d1a4c5583eeaf6facbacd9ba9632e2c4a486bf7e2f4b"
+            },
+            {
+              "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+            },
+            {
+              "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
+              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
+            },
+            {
+              "path": "docs/security/content-security-policy.md",
+              "sha256": "e848d2163a3938de7b8b9baf827acf5c61ec7ffcda11715227c51115ce882f55"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
+            },
+            {
+              "path": "scripts/test-pilot-proxy.py",
+              "sha256": "40ed7d4f9fb89d400c209f0781926967ecdab7bd923c6d1353722d3bac9e4af6"
+            },
+            {
+              "path": "deploy/staging/nginx-api-proxy.conf",
+              "sha256": "ffc79d8f52d6dd3628d7b0feee4aca07a172f3f33547ff02abe9238244dd5f09"
+            }
+          ],
+          "checks": [
+            "The production web server issues a fresh nonce for trusted scripts, preloads and style elements in both compiled shells. Arbitrary inline style elements are refused in enforce mode. Dynamic style attributes retain their separate directive. Onboarding confetti now loads bundled CSS.",
+            "The only fixed inline stylesheet hashes match Sonner 2.0.8 and Base UI 1.7.0. The required production-build check derives both hashes from the installed packages and checks the complete header. No global CSP provider or dependency was added. Comparing Node 24 inputs measured 499910 bytes before, 500211 with the rejected provider and 499.90 KB in the final build, below the existing 500 KB cap.",
+            "Node 24 built both shells and the package wiring. Twenty-nine server cases passed. Nine native CSP browser cases and thirty affected production-build cases passed across Chromium, Firefox and WebKit. The latter exercised login, onboarding, toasts, confetti and wallet receipt scroll styling under enforcement. All 101 route and interaction bundle budgets passed without changing thresholds.",
+            "The previous staging proxy checks and actual v0.5 response headers are retained. Live production-ingress TLS and HSTS and the report-only observation window remain open."
+          ]
+        }
       }
     },
     {
@@ -470211,7 +470284,8 @@
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
           "release-0.6-proxy-security-headers",
-          "release-0.6-workspace-test-and-coverage-configuration"
+          "release-0.6-workspace-test-and-coverage-configuration",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -470231,11 +470305,11 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/test/server.spec.ts",
-              "sha256": "56acffbe010618328a8e9427be6c45d4f65580ef32a1baef49aeb22f1af61e96"
+              "sha256": "c16ed8e5146559d0d81f7bd68271ff9da2f4c57113ff908b92d44befa8ac68ed"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -470247,11 +470321,11 @@
             },
             {
               "path": "docs/security/content-security-policy.md",
-              "sha256": "1976b96b826fd7399066b00bd4c3885b7e4171aeedd670dddc46a204ca80920b"
+              "sha256": "e848d2163a3938de7b8b9baf827acf5c61ec7ffcda11715227c51115ce882f55"
             },
             {
               "path": "scripts/check-production-security-headers.mjs",
-              "sha256": "92cb6c39c66a25f947f7be0b198f57b306a180d1f633eeffedd377bff2d136ab"
+              "sha256": "47f36836c4975aaced6c161af3781f75d473695d13662545855a38b0b860fd3e"
             }
           ],
           "checks": [
@@ -470278,7 +470352,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The live v0.5 controlled report reached its log sink. Collect and review a full week of representative reports, resolve legitimate violations and verify real browser enforcement."
+        "The live v0.5 controlled report reached the log sink. Resolve the observed cross-origin favicon. Collect and review a full week of representative report-only observations for the policy to enforce, and verify the real customer and staff journeys."
       ],
       "owner": null,
       "depends_on": [],
@@ -470286,7 +470360,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": null
       }
@@ -470338,7 +470413,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -470346,11 +470422,11 @@
           "source_evidence": [
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/test/server.spec.ts",
-              "sha256": "56acffbe010618328a8e9427be6c45d4f65580ef32a1baef49aeb22f1af61e96"
+              "sha256": "c16ed8e5146559d0d81f7bd68271ff9da2f4c57113ff908b92d44befa8ac68ed"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -470374,7 +470450,7 @@
             },
             {
               "path": "docs/security/content-security-policy.md",
-              "sha256": "1976b96b826fd7399066b00bd4c3885b7e4171aeedd670dddc46a204ca80920b"
+              "sha256": "e848d2163a3938de7b8b9baf827acf5c61ec7ffcda11715227c51115ce882f55"
             },
             {
               "path": "scripts/check-staging-proxy.mjs",
@@ -470448,7 +470524,8 @@
         "batches": [
           "release-0.6-browser-response-policy",
           "release-0.6-proxy-security-headers",
-          "release-0.6-workspace-test-and-coverage-configuration"
+          "release-0.6-workspace-test-and-coverage-configuration",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "production-csp-cross-origin-browser-and-first-party-control",
@@ -470456,11 +470533,11 @@
           "source_evidence": [
             {
               "path": "scripts/check-production-security-headers.mjs",
-              "sha256": "92cb6c39c66a25f947f7be0b198f57b306a180d1f633eeffedd377bff2d136ab"
+              "sha256": "47f36836c4975aaced6c161af3781f75d473695d13662545855a38b0b860fd3e"
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -470472,7 +470549,7 @@
             },
             {
               "path": "docs/security/content-security-policy.md",
-              "sha256": "1976b96b826fd7399066b00bd4c3885b7e4171aeedd670dddc46a204ca80920b"
+              "sha256": "e848d2163a3938de7b8b9baf827acf5c61ec7ffcda11715227c51115ce882f55"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -470503,7 +470580,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Both application CSP modes, normal and error headers, enforced browser framing, and live staging headers have passed. Verify production-ingress HSTS on the selected production TLS topology."
+        "The production build, real browser, and staging proxy integration cases passed. Verify HSTS on the selected production TLS ingress."
       ],
       "owner": null,
       "depends_on": [],
@@ -470512,7 +470589,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-browser-response-policy",
-          "release-0.6-proxy-security-headers"
+          "release-0.6-proxy-security-headers",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": null
       }
@@ -470532,7 +470610,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The existing required CI check now validates both CSP modes and the missing-asset response. Verify the exact hosted candidate check and the production-ingress TLS/HSTS gate."
+        "The existing integrity workflow validates production headers in both CSP modes and checks both proxy profiles. Verify the current hosted check and the selected production-ingress TLS/HSTS gate."
       ],
       "owner": null,
       "depends_on": [],
@@ -470542,7 +470620,8 @@
         "batches": [
           "release-0.6-browser-response-policy",
           "release-0.6-required-source-and-secret-gates",
-          "release-0.6-proxy-security-headers"
+          "release-0.6-proxy-security-headers",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": null
       }
@@ -497858,7 +497937,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -497926,7 +498006,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/ContractActivation.test.tsx",
@@ -498757,7 +498837,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -498825,7 +498906,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/ContractActivation.test.tsx",
@@ -499597,7 +499678,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -499665,7 +499747,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/ContractActivation.test.tsx",
@@ -500488,7 +500570,8 @@
           "release-0.5-stale-route-recovery",
           "release-0.5-review-preview-deadlines",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -500532,7 +500615,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
+              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
             },
             {
               "path": "apps/web/package.json",
@@ -500544,7 +500627,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
@@ -502702,7 +502785,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -502814,7 +502898,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AgentPromptTextarea.tsx",
@@ -502886,7 +502970,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -502943,6 +503027,10 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -503250,7 +503338,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -503362,7 +503451,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AgentPromptTextarea.tsx",
@@ -503434,7 +503523,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -503491,6 +503580,10 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -503798,7 +503891,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -503910,7 +504004,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AgentPromptTextarea.tsx",
@@ -503982,7 +504076,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -504039,6 +504133,10 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -504346,7 +504444,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -504458,7 +504557,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AgentPromptTextarea.tsx",
@@ -504530,7 +504629,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -504587,6 +504686,10 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -504894,7 +504997,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -505006,7 +505110,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AgentPromptTextarea.tsx",
@@ -505078,7 +505182,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -505135,6 +505239,10 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -505442,7 +505550,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -505554,7 +505663,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AgentPromptTextarea.tsx",
@@ -505626,7 +505735,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -505683,6 +505792,10 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -505990,7 +506103,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -506102,7 +506216,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AgentPromptTextarea.tsx",
@@ -506174,7 +506288,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -506231,6 +506345,10 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -506538,7 +506656,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -506650,7 +506769,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AgentPromptTextarea.tsx",
@@ -506722,7 +506841,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -506779,6 +506898,10 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -507086,7 +507209,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -507198,7 +507322,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AgentPromptTextarea.tsx",
@@ -507270,7 +507394,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -507327,6 +507451,10 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -507634,7 +507762,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -507746,7 +507875,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AgentPromptTextarea.tsx",
@@ -507818,7 +507947,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -507875,6 +508004,10 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -508182,7 +508315,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -508294,7 +508428,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AgentPromptTextarea.tsx",
@@ -508366,7 +508500,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -508423,6 +508557,10 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -508730,7 +508868,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -508842,7 +508981,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AgentPromptTextarea.tsx",
@@ -508914,7 +509053,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -508971,6 +509110,10 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -509278,7 +509421,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -509390,7 +509534,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AgentPromptTextarea.tsx",
@@ -509462,7 +509606,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -509519,6 +509663,10 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -509826,7 +509974,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -509938,7 +510087,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AgentPromptTextarea.tsx",
@@ -510010,7 +510159,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -510067,6 +510216,10 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -510320,7 +510473,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-essential-control-contrast",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -510384,7 +510538,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
@@ -510908,7 +511062,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-essential-control-contrast",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -510972,7 +511127,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
@@ -511496,7 +511651,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-essential-control-contrast",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -511560,7 +511716,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
@@ -512401,7 +512557,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -512481,7 +512638,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/DateDisplay.tsx",
@@ -512810,7 +512967,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -512890,7 +513048,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/DateDisplay.tsx",
@@ -513217,7 +513375,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -513297,7 +513456,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/DateDisplay.tsx",
@@ -513624,7 +513783,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -513704,7 +513864,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/DateDisplay.tsx",
@@ -514031,7 +514191,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -514075,7 +514236,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -514345,7 +514506,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -514389,7 +514551,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -514659,7 +514821,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -514703,7 +514866,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -514973,7 +515136,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -515017,7 +515181,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -515303,7 +515467,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -515375,7 +515540,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AiModelRecordTable.tsx",
@@ -515939,7 +516104,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-solar-guidance-ready",
           "release-0.5-popup-touch-targets",
-          "release-0.5-signature-target-and-fields"
+          "release-0.5-signature-target-and-fields",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -516359,7 +516525,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -516424,6 +516590,10 @@
             {
               "path": "apps/web/src/lib/contract-detail-records.ts",
               "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -519044,7 +519214,8 @@
           "release-0.5-stale-route-recovery",
           "release-0.5-required-input-semantics",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -519112,7 +519283,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
+              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
             },
             {
               "path": "apps/web/package.json",
@@ -519124,7 +519295,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -519480,7 +519651,8 @@
           "release-0.5-component-direction-matrix",
           "release-0.5-required-input-semantics",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -519560,7 +519732,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
+              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
             },
             {
               "path": "apps/web/index.html",
@@ -519576,7 +519748,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/HighContrastPreference.tsx",
@@ -519923,7 +520095,8 @@
           "release-0.5-component-direction-matrix",
           "release-0.5-required-input-semantics",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -520003,7 +520176,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
+              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
             },
             {
               "path": "apps/web/index.html",
@@ -520019,7 +520192,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/HighContrastPreference.tsx",
@@ -520362,7 +520535,8 @@
           "release-0.5-stale-route-recovery",
           "release-0.5-required-input-semantics",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -520430,7 +520604,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
+              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
             },
             {
               "path": "apps/web/package.json",
@@ -520442,7 +520616,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -520806,7 +520980,8 @@
           "release-0.6-owner-policy-reconciliation",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-reconciliation"
+          "release-0.6-preflight-reconciliation",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -521098,7 +521273,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/order-comment-form-fixture.ts",
@@ -521334,7 +521509,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
+              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
             },
             {
               "path": "apps/web/package.json",
@@ -521346,7 +521521,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
@@ -522330,7 +522505,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-owner-policy-reconciliation",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -522414,7 +522590,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -523342,7 +523518,8 @@
           "release-0.5-component-direction-matrix",
           "release-0.5-required-input-semantics",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -523422,7 +523599,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
+              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
             },
             {
               "path": "apps/web/index.html",
@@ -523438,7 +523615,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/HighContrastPreference.tsx",
@@ -523783,7 +523960,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-owner-policy-reconciliation",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -523867,7 +524045,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -524320,7 +524498,8 @@
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
-          "release-0.6-workspace-test-and-coverage-configuration"
+          "release-0.6-workspace-test-and-coverage-configuration",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -524484,7 +524663,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
@@ -524568,7 +524747,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
+              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
             },
             {
               "path": "apps/web/package.json",
@@ -524580,7 +524759,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -525161,7 +525340,8 @@
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
-          "release-0.6-workspace-test-and-coverage-configuration"
+          "release-0.6-workspace-test-and-coverage-configuration",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -525325,7 +525505,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
@@ -525409,7 +525589,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
+              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
             },
             {
               "path": "apps/web/package.json",
@@ -525421,7 +525601,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -525974,7 +526154,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-owner-policy-reconciliation",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -526058,7 +526239,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -526511,7 +526692,8 @@
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
-          "release-0.6-workspace-test-and-coverage-configuration"
+          "release-0.6-workspace-test-and-coverage-configuration",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -526675,7 +526857,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
@@ -526759,7 +526941,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
+              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
             },
             {
               "path": "apps/web/package.json",
@@ -526771,7 +526953,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -527314,7 +527496,8 @@
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
-          "release-0.6-workspace-test-and-coverage-configuration"
+          "release-0.6-workspace-test-and-coverage-configuration",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "active_github_required_check",
@@ -527353,7 +527536,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
+              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -527423,7 +527606,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -527507,7 +527691,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -528335,7 +528519,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -528419,7 +528604,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -529247,7 +529432,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -529331,7 +529517,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -530159,7 +530345,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -530243,7 +530430,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -531071,7 +531258,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -531155,7 +531343,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -531983,7 +532171,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -532067,7 +532256,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -532895,7 +533084,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -532979,7 +533169,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -533807,7 +533997,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -533891,7 +534082,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -534719,7 +534910,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -534803,7 +534995,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -535631,7 +535823,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -535715,7 +535908,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -536543,7 +536736,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -536627,7 +536821,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -537455,7 +537649,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -537539,7 +537734,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -538367,7 +538562,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -538451,7 +538647,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -539279,7 +539475,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -539363,7 +539560,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -540191,7 +540388,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -540275,7 +540473,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -541103,7 +541301,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -541187,7 +541386,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -542015,7 +542214,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -542099,7 +542299,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -542927,7 +543127,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -543011,7 +543212,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -543839,7 +544040,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -543923,7 +544125,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -544751,7 +544953,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -544835,7 +545038,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -545649,7 +545852,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -545729,7 +545933,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/DateDisplay.tsx",
@@ -546056,7 +546260,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -546136,7 +546341,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/DateDisplay.tsx",
@@ -546463,7 +546668,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -546543,7 +546749,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/DateDisplay.tsx",
@@ -546870,7 +547076,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -546950,7 +547157,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/DateDisplay.tsx",
@@ -547282,7 +547489,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -547362,7 +547570,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/DateDisplay.tsx",
@@ -547695,7 +547903,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -547775,7 +547984,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/DateDisplay.tsx",
@@ -548102,7 +548311,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -548182,7 +548392,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/DateDisplay.tsx",
@@ -548509,7 +548719,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -548589,7 +548800,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/DateDisplay.tsx",
@@ -548917,7 +549128,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -548997,7 +549209,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/DateDisplay.tsx",
@@ -549326,7 +549538,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -549406,7 +549619,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/DateDisplay.tsx",
@@ -549733,7 +549946,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -549813,7 +550027,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/DateDisplay.tsx",
@@ -550141,7 +550355,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550221,7 +550436,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/DateDisplay.tsx",
@@ -550592,7 +550807,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550648,7 +550864,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/BankReceiptFinancialReview.tsx",
@@ -552470,7 +552686,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -552526,7 +552743,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/BankReceiptFinancialReview.tsx",
@@ -554349,7 +554566,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -554405,7 +554623,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/BankReceiptFinancialReview.tsx",
@@ -556197,7 +556415,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -556253,7 +556472,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/BankReceiptFinancialReview.tsx",
@@ -558071,7 +558290,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -558127,7 +558347,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/BankReceiptFinancialReview.tsx",
@@ -559954,7 +560174,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -560010,7 +560231,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/BankReceiptFinancialReview.tsx",
@@ -561810,7 +562031,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -561866,7 +562088,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/BankReceiptFinancialReview.tsx",
@@ -563630,7 +563852,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -563686,7 +563909,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/BankReceiptFinancialReview.tsx",
@@ -565450,7 +565673,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -565506,7 +565730,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/BankReceiptFinancialReview.tsx",
@@ -567271,7 +567495,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -567327,7 +567552,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/BankReceiptFinancialReview.tsx",
@@ -569091,7 +569316,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -569147,7 +569373,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/BankReceiptFinancialReview.tsx",
@@ -570905,7 +571131,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -570969,7 +571196,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -572816,7 +573043,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -572880,7 +573108,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -574748,7 +574976,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -575144,7 +575373,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -575428,7 +575657,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
+              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
             },
             {
               "path": "apps/web/package.json",
@@ -575440,7 +575669,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
@@ -577444,7 +577673,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -577529,6 +577758,10 @@
             {
               "path": "apps/web/src/lib/contract-detail-records.ts",
               "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -577631,7 +577864,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -577695,7 +577929,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -579542,7 +579776,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -579606,7 +579841,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -581453,7 +581688,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -581517,7 +581753,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -583364,7 +583600,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -583428,7 +583665,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -585275,7 +585512,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -585339,7 +585577,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -587186,7 +587424,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -587250,7 +587489,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -589097,7 +589336,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -589161,7 +589401,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -591008,7 +591248,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -591072,7 +591313,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -592919,7 +593160,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -592983,7 +593225,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -594830,7 +595072,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -594894,7 +595137,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -596741,7 +596984,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -596805,7 +597049,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -598631,7 +598875,8 @@
           "release-0.5-stale-route-recovery",
           "release-0.5-review-preview-deadlines",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -598675,7 +598920,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
+              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
             },
             {
               "path": "apps/web/package.json",
@@ -598687,7 +598932,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
@@ -599396,7 +599641,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -599460,7 +599706,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -601307,7 +601553,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -601371,7 +601618,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -603315,7 +603562,8 @@
           "release-0.5-page-read-reconciliation",
           "release-0.5-library-read-reconciliation",
           "release-0.5-original-ui-closure",
-          "release-0.5-wallet-verification-controls"
+          "release-0.5-wallet-verification-controls",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_route_read_state_acceptance",
@@ -604408,7 +604656,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -604453,6 +604701,10 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-original-ui-closure",
@@ -604622,7 +604874,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -604678,7 +604931,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/BankReceiptFinancialReview.tsx",
@@ -606438,7 +606691,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -606494,7 +606748,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/BankReceiptFinancialReview.tsx",
@@ -608254,7 +608508,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -608310,7 +608565,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/BankReceiptFinancialReview.tsx",
@@ -610070,7 +610325,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -610126,7 +610382,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/BankReceiptFinancialReview.tsx",
@@ -611886,7 +612142,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -611942,7 +612199,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/BankReceiptFinancialReview.tsx",
@@ -613702,7 +613959,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -613758,7 +614016,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/BankReceiptFinancialReview.tsx",
@@ -615518,7 +615776,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -615574,7 +615833,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/BankReceiptFinancialReview.tsx",
@@ -676458,7 +676717,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -676554,7 +676814,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -676754,7 +677014,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -676835,6 +677095,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -677126,7 +677390,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -677222,7 +677487,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -677422,7 +677687,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -677503,6 +677768,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -677793,7 +678062,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -677889,7 +678159,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -678089,7 +678359,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -678170,6 +678440,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -678462,7 +678736,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -678558,7 +678833,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -678758,7 +679033,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -678839,6 +679114,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -679131,7 +679410,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -679227,7 +679507,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -679427,7 +679707,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -679508,6 +679788,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -679797,7 +680081,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -679893,7 +680178,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -680093,7 +680378,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -680174,6 +680459,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -680463,7 +680752,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -680559,7 +680849,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -680759,7 +681049,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -680840,6 +681130,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -681130,7 +681424,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -681226,7 +681521,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -681426,7 +681721,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -681507,6 +681802,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -681796,7 +682095,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -681892,7 +682192,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -682092,7 +682392,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -682173,6 +682473,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -682463,7 +682767,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -682559,7 +682864,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -682759,7 +683064,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -682840,6 +683145,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -703598,7 +703907,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -703742,7 +704052,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -703938,7 +704248,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -703987,6 +704297,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -704229,7 +704543,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -704373,7 +704688,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -704569,7 +704884,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -704618,6 +704933,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -704860,7 +705179,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -705004,7 +705324,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -705200,7 +705520,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -705249,6 +705569,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -705492,7 +705816,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -705636,7 +705961,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -705832,7 +706157,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -705881,6 +706206,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -706123,7 +706452,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -706267,7 +706597,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -706463,7 +706793,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -706512,6 +706842,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -706754,7 +707088,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -706898,7 +707233,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -707094,7 +707429,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -707143,6 +707478,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -707385,7 +707724,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -707529,7 +707869,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -707725,7 +708065,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -707774,6 +708114,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -708017,7 +708361,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -708161,7 +708506,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -708357,7 +708702,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -708406,6 +708751,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -708648,7 +708997,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -708792,7 +709142,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -708988,7 +709338,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -709037,6 +709387,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -709279,7 +709633,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-required-input-semantics",
-          "release-0.5-geography-retry-feedback"
+          "release-0.5-geography-retry-feedback",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -709423,7 +709778,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -709619,7 +709974,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -709668,6 +710023,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -716273,7 +716632,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
+              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.tsx",
@@ -716519,7 +716878,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-ui-evidence",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ]
       }
     },
@@ -735811,7 +736171,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -735908,6 +736268,10 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-verification-controls",
@@ -736139,7 +736503,8 @@
           "release-0.5-page-read-reconciliation",
           "release-0.5-library-read-reconciliation",
           "release-0.5-original-ui-closure",
-          "release-0.5-wallet-verification-controls"
+          "release-0.5-wallet-verification-controls",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ]
       }
     },
@@ -736223,7 +736588,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
@@ -736231,7 +736596,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
+              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -736239,7 +736604,7 @@
             },
             {
               "path": "apps/web/server.js",
-              "sha256": "9c5ea6b27ef285797e5a2196f9c01ee616237b3d9fc94f0693c5a1b9d18acc6d"
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
@@ -737387,7 +737752,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -737956,6 +738321,10 @@
             {
               "path": "apps/api/src/common/browser-origin.ts",
               "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.css",
+              "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
             }
           ],
           "checks": [
@@ -738241,7 +738610,8 @@
           "release-0.6-solar-replay-lock-order",
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
-          "release-0.6-workspace-test-and-coverage-configuration"
+          "release-0.6-workspace-test-and-coverage-configuration",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ]
       }
     },
@@ -738363,7 +738733,8 @@
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
-          "release-0.6-production-image-recipes-and-distribution"
+          "release-0.6-production-image-recipes-and-distribution",
+          "release-0.6-security-header-ci-and-nonce-evidence"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -826415,6 +826786,225 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "image-distribution-receipt.json",
       "source_scope_proof_sha256": "da1a9b7e4cbd6c90c081a3fb4ab639e018730579a1eb648b71eb9bc41cba511f"
+    },
+    "release-0.6-security-header-ci-and-nonce-evidence": {
+      "batch": "release-0.6-security-header-ci-and-nonce-evidence",
+      "base_commit": "ed7a5741cfa1dc9ed308c6a043edd9c1810590f7",
+      "task_keys": [
+        "02-auth-users-admin.md#T-03.01.01",
+        "02-auth-users-admin.md#T-03.01.02",
+        "02-auth-users-admin.md#T-03.02.01",
+        "02-auth-users-admin.md#T-03.02.02",
+        "02-auth-users-admin.md#T-03.02.03",
+        "02-auth-users-admin.md#T-03.02.04",
+        "02-auth-users-admin.md#T-03.03.01",
+        "02-auth-users-admin.md#T-03.03.02",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.02",
+        "06-security-testing-observability.md#T-06.02.02.03",
+        "06-security-testing-observability.md#T-06.02.02.04",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.02.06",
+        "06-security-testing-observability.md#T-06.02.03.01",
+        "06-security-testing-observability.md#T-06.02.03.03",
+        "06-security-testing-observability.md#T-06.02.03.04",
+        "06-security-testing-observability.md#T-06.02.03.05",
+        "07-ui-ux-design.md#T-07.01.04.02",
+        "07-ui-ux-design.md#T-07.01.04.03",
+        "07-ui-ux-design.md#T-07.01.04.04",
+        "07-ui-ux-design.md#T-07.01.04.05",
+        "07-ui-ux-design.md#T-07.02.01.01",
+        "07-ui-ux-design.md#T-07.02.01.02",
+        "07-ui-ux-design.md#T-07.02.01.03",
+        "07-ui-ux-design.md#T-07.02.01.04",
+        "07-ui-ux-design.md#T-07.02.01.05",
+        "07-ui-ux-design.md#T-07.02.01.06",
+        "07-ui-ux-design.md#T-07.02.01.07",
+        "07-ui-ux-design.md#T-07.02.02.01",
+        "07-ui-ux-design.md#T-07.02.02.02",
+        "07-ui-ux-design.md#T-07.02.02.03",
+        "07-ui-ux-design.md#T-07.02.02.04",
+        "07-ui-ux-design.md#T-07.03.01.01",
+        "07-ui-ux-design.md#T-07.03.01.02",
+        "07-ui-ux-design.md#T-07.03.01.03",
+        "07-ui-ux-design.md#T-07.03.01.04",
+        "07-ui-ux-design.md#T-07.03.01.05",
+        "07-ui-ux-design.md#T-07.03.01.06",
+        "07-ui-ux-design.md#T-07.03.02.01",
+        "07-ui-ux-design.md#T-07.03.02.02",
+        "07-ui-ux-design.md#T-07.03.02.03",
+        "07-ui-ux-design.md#T-07.03.02.04",
+        "07-ui-ux-design.md#T-07.04.01.01",
+        "07-ui-ux-design.md#T-07.04.01.02",
+        "07-ui-ux-design.md#T-07.04.01.03",
+        "07-ui-ux-design.md#T-07.04.01.04",
+        "07-ui-ux-design.md#T-07.04.01.05",
+        "07-ui-ux-design.md#T-07.04.01.06",
+        "07-ui-ux-design.md#T-07.05.01.01",
+        "07-ui-ux-design.md#T-07.05.01.02",
+        "07-ui-ux-design.md#T-07.05.01.03",
+        "07-ui-ux-design.md#T-07.05.01.04",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.05.01.06",
+        "07-ui-ux-design.md#T-07.05.01.09",
+        "07-ui-ux-design.md#T-07.05.01.10",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.02",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "07-ui-ux-design.md#T-07.06.01.01",
+        "07-ui-ux-design.md#T-07.06.01.02",
+        "07-ui-ux-design.md#T-07.06.01.03",
+        "07-ui-ux-design.md#T-07.06.01.04",
+        "07-ui-ux-design.md#T-07.06.01.05",
+        "07-ui-ux-design.md#T-07.07.01.01",
+        "07-ui-ux-design.md#T-07.07.01.02",
+        "07-ui-ux-design.md#T-07.07.01.03",
+        "07-ui-ux-design.md#T-07.07.01.04",
+        "07-ui-ux-design.md#T-07.07.01.05",
+        "07-ui-ux-design.md#T-07.07.01.06",
+        "07-ui-ux-design.md#T-07.08.01.01",
+        "07-ui-ux-design.md#T-07.08.01.02",
+        "07-ui-ux-design.md#T-07.08.01.03",
+        "07-ui-ux-design.md#T-07.08.01.04",
+        "07-ui-ux-design.md#T-07.08.01.05",
+        "07-ui-ux-design.md#T-07.08.01.06",
+        "07-ui-ux-design.md#T-07.08.02.01",
+        "07-ui-ux-design.md#T-07.08.02.02",
+        "07-ui-ux-design.md#T-07.08.02.03",
+        "07-ui-ux-design.md#T-07.09.01.01",
+        "07-ui-ux-design.md#T-07.09.01.02",
+        "07-ui-ux-design.md#T-07.09.01.03",
+        "07-ui-ux-design.md#T-07.09.01.04",
+        "07-ui-ux-design.md#T-07.09.01.05",
+        "07-ui-ux-design.md#T-07.09.02.01",
+        "07-ui-ux-design.md#T-07.09.02.02",
+        "07-ui-ux-design.md#T-07.09.02.03",
+        "07-ui-ux-design.md#T-07.09.02.04",
+        "07-ui-ux-design.md#T-07.09.02.05",
+        "07-ui-ux-design.md#T-07.09.02.06",
+        "07-ui-ux-design.md#T-07.09.02.07",
+        "07-ui-ux-design.md#T-07.10.01.01",
+        "07-ui-ux-design.md#T-07.10.01.02",
+        "07-ui-ux-design.md#T-07.10.01.03",
+        "07-ui-ux-design.md#T-07.10.01.04",
+        "07-ui-ux-design.md#T-07.10.01.05",
+        "07-ui-ux-design.md#T-07.10.01.06",
+        "07-ui-ux-design.md#T-07.10.02.01",
+        "07-ui-ux-design.md#T-07.10.02.02",
+        "07-ui-ux-design.md#T-07.10.02.03",
+        "07-ui-ux-design.md#T-07.10.02.04",
+        "07-ui-ux-design.md#T-07.10.02.05",
+        "07-ui-ux-design.md#T-07.11.01.01",
+        "07-ui-ux-design.md#T-07.11.01.02",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.11.01.04",
+        "07-ui-ux-design.md#T-07.11.01.05",
+        "07-ui-ux-design.md#T-07.11.02.01",
+        "07-ui-ux-design.md#T-07.11.02.02",
+        "07-ui-ux-design.md#T-07.11.02.03",
+        "07-ui-ux-design.md#T-07.11.02.04",
+        "07-ui-ux-design.md#T-07.11.02.05",
+        "07-ui-ux-design.md#T-07.12.01.01",
+        "07-ui-ux-design.md#T-07.12.01.02",
+        "07-ui-ux-design.md#T-07.12.01.03",
+        "07-ui-ux-design.md#T-07.12.01.04",
+        "07-ui-ux-design.md#T-07.12.01.05",
+        "07-ui-ux-design.md#T-07.12.01.06",
+        "07-ui-ux-design.md#T-07.12.01.07",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "07-ui-ux-design.md#T-07.13.01.01",
+        "07-ui-ux-design.md#T-07.13.01.02",
+        "07-ui-ux-design.md#T-07.13.01.03",
+        "07-ui-ux-design.md#T-07.13.01.04",
+        "07-ui-ux-design.md#T-07.13.01.05",
+        "07-ui-ux-design.md#T-07.13.01.06",
+        "07-ui-ux-design.md#T-07.13.01.07",
+        "07-ui-ux-design.md#T-07.22.01.01",
+        "07-ui-ux-design.md#T-07.22.01.02",
+        "07-ui-ux-design.md#T-07.22.01.03",
+        "07-ui-ux-design.md#T-07.22.01.04",
+        "07-ui-ux-design.md#T-07.22.01.05",
+        "07-ui-ux-design.md#T-07.22.02.01",
+        "07-ui-ux-design.md#T-07.22.02.02",
+        "07-ui-ux-design.md#T-07.22.02.03",
+        "07-ui-ux-design.md#T-07.22.02.04",
+        "07-ui-ux-design.md#T-07.22.02.05",
+        "07-ui-ux-design.md#T-07.28.01.01",
+        "07-ui-ux-design.md#T-07.28.01.02",
+        "07-ui-ux-design.md#T-07.28.01.03",
+        "07-ui-ux-design.md#T-07.28.01.04",
+        "07-ui-ux-design.md#T-07.28.01.05",
+        "07-ui-ux-design.md#T-07.29.01.01",
+        "07-ui-ux-design.md#T-07.29.01.02",
+        "07-ui-ux-design.md#T-07.29.01.03",
+        "07-ui-ux-design.md#T-07.29.01.04",
+        "07-ui-ux-design.md#T-07.29.01.05",
+        "release-readiness#R-01.02",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/server.js",
+          "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
+        },
+        {
+          "path": "scripts/check-production-security-headers.mjs",
+          "sha256": "47f36836c4975aaced6c161af3781f75d473695d13662545855a38b0b860fd3e"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/complete.tsx",
+          "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
+        },
+        {
+          "path": "apps/web/test/server.spec.ts",
+          "sha256": "c16ed8e5146559d0d81f7bd68271ff9da2f4c57113ff908b92d44befa8ac68ed"
+        },
+        {
+          "path": "apps/web/e2e/csp-reports.spec.ts",
+          "sha256": "f60dc2f6c82d2dfc93b2d1a4c5583eeaf6facbacd9ba9632e2c4a486bf7e2f4b"
+        },
+        {
+          "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+          "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+        },
+        {
+          "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
+          "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
+        },
+        {
+          "path": "docs/security/content-security-policy.md",
+          "sha256": "e848d2163a3938de7b8b9baf827acf5c61ec7ffcda11715227c51115ce882f55"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/complete.css",
+          "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
+        },
+        {
+          "path": "scripts/test-pilot-proxy.py",
+          "sha256": "40ed7d4f9fb89d400c209f0781926967ecdab7bd923c6d1353722d3bac9e4af6"
+        },
+        {
+          "path": "deploy/staging/nginx-api-proxy.conf",
+          "sha256": "ffc79d8f52d6dd3628d7b0feee4aca07a172f3f33547ff02abe9238244dd5f09"
+        }
+      ],
+      "checks": [
+        "The production web server issues a fresh nonce for trusted scripts, preloads and style elements in both compiled shells. Arbitrary inline style elements are refused in enforce mode. Dynamic style attributes retain their separate directive. Onboarding confetti now loads bundled CSS.",
+        "The only fixed inline stylesheet hashes match Sonner 2.0.8 and Base UI 1.7.0. The required production-build check derives both hashes from the installed packages and checks the complete header. No global CSP provider or dependency was added. Comparing Node 24 inputs measured 499910 bytes before, 500211 with the rejected provider and 499.90 KB in the final build, below the existing 500 KB cap.",
+        "Node 24 built both shells and the package wiring. Twenty-nine server cases passed. Nine native CSP browser cases and thirty affected production-build cases passed across Chromium, Firefox and WebKit. The latter exercised login, onboarding, toasts, confetti and wallet receipt scroll styling under enforcement. All 101 route and interaction bundle budgets passed without changing thresholds.",
+        "The previous staging proxy checks and actual v0.5 response headers are retained. Live production-ingress TLS and HSTS and the report-only observation window remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "csp-style-and-header-proof.json",
+      "source_scope_proof_sha256": "02ed83e3c9b3c0a93cb26f5ceaa7fe6c8941be6c97330c9402fc4ed9ed7681bf"
     }
   },
   "historical_improvements": [
@@ -826454,15 +827044,14 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-security-header-ci-and-nonce-evidence",
+    "id": "release-0.6-package-metadata-review",
     "release": "0.6.0",
     "task_keys": [
-      "06-security-testing-observability.md#T-06.02.02.04",
-      "06-security-testing-observability.md#T-06.02.03.04",
-      "06-security-testing-observability.md#T-06.02.03.05",
+      "06-security-testing-observability.md#T-06.07.02.06",
+      "01-platform-infrastructure.md#T-05.03.04",
       "release-readiness#R-05.02"
     ],
-    "goal": "Verify the existing nonce propagation and security-header tests and gate. Reuse the staging report-only and isolated enforce evidence. Keep live CSP observation and production TLS gates open."
+    "goal": "Record exact Alpine package metadata and the file-free dependency groups in the prepared owner review. Preserve the strict license gate and pending owner decisions."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",

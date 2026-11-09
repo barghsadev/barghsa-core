@@ -21,6 +21,10 @@ import { isAuthEntryPath } from './entry-routes.js';
 
 const __dirname = join(fileURLToPath(import.meta.url), '..');
 const DEFAULT_DIST_DIR = resolve(__dirname, 'dist');
+const COMPONENT_STYLE_SOURCES = [
+  "'sha256-StEaX+se6YS7pqjzrzMIA0KaX9zF/8zAhvQXZAe5epY='", // Sonner 2.0.8 toast styling
+  "'sha256-kLmvWqfziFavKtqHqRsb90f006UAK2Dmd0It5Iz2KFA='", // Base UI 1.7.0 scrollbar styling
+].join(' ');
 
 /** Content-hashed asset pattern matching vite.config.ts */
 const IMMUTABLE_PATTERN = /\/assets\/.+-[a-zA-Z0-9_-]{8,}\./;
@@ -144,21 +148,23 @@ export function createStaticServer(options = {}) {
     res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
     res.setHeader(
       cspHeader,
-      "default-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; script-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; form-action 'self'; report-uri /api/csp-report"
+      "default-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; script-src 'none'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; form-action 'self'; report-uri /api/csp-report"
     );
 
     // Only trusted build output is annotated. Request headers never supply the nonce.
     const sendHtml = (content) => {
       const nonce = randomBytes(24).toString('base64');
-      const html = content.toString('utf8').replace(/<(script|link)\b[^>]*>/gi, (tag, name) => {
-        if (name.toLowerCase() === 'link' && !/\brel\s*=\s*["']modulepreload["']/i.test(tag))
-          return tag;
-        const clean = tag.replace(/\snonce\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '');
-        return clean.replace(/^<\w+/, (start) => `${start} nonce="${nonce}"`);
-      });
+      const html = content
+        .toString('utf8')
+        .replace(/<(script|style|link)\b[^>]*>/gi, (tag, name) => {
+          if (name.toLowerCase() === 'link' && !/\brel\s*=\s*["']modulepreload["']/i.test(tag))
+            return tag;
+          const clean = tag.replace(/\snonce\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '');
+          return clean.replace(/^<\w+/, (start) => `${start} nonce="${nonce}"`);
+        });
       res.setHeader(
         cspHeader,
-        `default-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; script-src 'strict-dynamic' 'nonce-${nonce}'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; form-action 'self'; report-uri /api/csp-report`
+        `default-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; script-src 'strict-dynamic' 'nonce-${nonce}'; style-src 'self' 'nonce-${nonce}' ${COMPONENT_STYLE_SOURCES}; style-src-attr 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; form-action 'self'; report-uri /api/csp-report`
       );
       res.writeHead(200, {
         'Content-Type': 'text/html; charset=utf-8',

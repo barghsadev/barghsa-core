@@ -17,7 +17,7 @@ test.beforeAll(async () => {
   directory = await mkdtemp(join(tmpdir(), 'barghsa-csp-'));
   await writeFile(
     join(directory, 'index.html'),
-    `<html><head><link rel="modulepreload" href="/entry.js"></head><body><p id="ready"></p><script type="module" src="/entry.js"></script><button id="trigger" onclick="document.getElementById('ready').textContent='Report-only still runs'">Trigger violation</button></body></html>`
+    `<html><head><link rel="modulepreload" href="/entry.js"><style nonce="stale">#ready { color: rgb(1, 2, 3); }</style></head><body><p id="ready"></p><script type="module" src="/entry.js"></script><button id="trigger" onclick="document.getElementById('ready').textContent='Report-only still runs'">Trigger violation</button></body></html>`
   );
   await writeFile(
     join(directory, 'entry.js'),
@@ -83,6 +83,7 @@ for (const signedIn of [false, true])
     await expect(page.locator('#ready')).toHaveText('Trusted module loaded');
     await expect(page.locator('script')).toHaveJSProperty('nonce', nonce);
     await expect(page.locator('link')).toHaveJSProperty('nonce', nonce);
+    await expect(page.locator('style')).toHaveJSProperty('nonce', nonce);
     await page.getByRole('button', { name: 'Trigger violation' }).click();
     await expect(page.locator('#ready')).toHaveText('Report-only still runs');
     await expect.poll(() => reports.length).toBeGreaterThan(0);
@@ -98,3 +99,33 @@ for (const signedIn of [false, true])
       );
     }
   });
+
+test('enforced policy blocks untrusted style elements and keeps dynamic style attributes', async ({
+  page,
+}) => {
+  const originalMode = process.env.WEB_CSP_MODE;
+  process.env.WEB_CSP_MODE = 'enforce';
+  const enforced = createStaticServer({ distDir: directory });
+  if (originalMode === undefined) delete process.env.WEB_CSP_MODE;
+  else process.env.WEB_CSP_MODE = originalMode;
+
+  try {
+    const origin = `http://127.0.0.1:${await listen(enforced)}`;
+    const response = await page.goto(origin);
+    const policy = response!.headers()['content-security-policy'];
+    const nonce = policy.match(/'nonce-([^']+)'/)![1];
+    await expect(page.locator('style')).toHaveJSProperty('nonce', nonce);
+    await expect(page.locator('#ready')).toHaveCSS('color', 'rgb(1, 2, 3)');
+
+    await page.evaluate(() => {
+      const untrustedStyle = document.createElement('style');
+      untrustedStyle.textContent = '#ready { color: rgb(4, 5, 6); }';
+      document.head.appendChild(untrustedStyle);
+      document.getElementById('ready')!.setAttribute('style', 'background-color: rgb(7, 8, 9)');
+    });
+    await expect(page.locator('#ready')).toHaveCSS('color', 'rgb(1, 2, 3)');
+    await expect(page.locator('#ready')).toHaveCSS('background-color', 'rgb(7, 8, 9)');
+  } finally {
+    await new Promise<void>((done) => enforced.close(() => done()));
+  }
+});
