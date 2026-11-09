@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T23:12:44+00:00",
-  "source_commit": "4b30f032b1281dc52bc00afcaf5a03c59e7b4151",
+  "updated": "2026-11-09T23:16:53+00:00",
+  "source_commit": "bf9340cf638bda4437bcc7443517afaae9d2516e",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -483282,20 +483282,111 @@
         "story": "06-security-testing-observability.md#spec-7665a6370b00"
       },
       "requirement": "| T-06.10.02.09 | **Mandatory concurrency tests:** simultaneous wallet payments, duplicate provider callbacks, duplicate bank confirmation, concurrent refund workers, repeated order submission, ownership/role changes during requests, competing state transitions | XL |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-mandatory-concurrency-matrix"
+        ],
+        "current_acceptance": {
+          "kind": "verified-native-and-hosted-concurrency-matrix",
+          "base_commit": "bf9340cf638bda4437bcc7443517afaae9d2516e",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation.service.ts",
+              "sha256": "35a15ed616c718c55797f7997ec566a03c27c5244f11194748e6b8ddd32c2821"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "a45f415770196e8fd7129da867e018ba6fa2d881325da0b32567501ea41cff8e"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "47bc00446b06d70cded63f1ef7acef1b60f0d1923a004d53620df37b43bbda26"
+            },
+            {
+              "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
+              "sha256": "e0f4b283f5838eda4f7430c2d5b5cb9c2b5a56d699230ebb241ecb8d4b968332"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund.controller.ts",
+              "sha256": "2fb0caf2ffd01d3739db87fc9e3b4c279b8137eec62fa2bacb19feabd1da07c3"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
+              "sha256": "224514f9f8c174ddc1320facc6d77ac99b1b9ac4cc1d4a48e4c9f4d69bc46756"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+              "sha256": "9e8100ab2239b915d6b54f6cd5f99a5fdf0fc6b3980366acf9d700930caeb231"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.integration.test.ts",
+              "sha256": "e93f7f13f67b5c64ec13604af9d421413dc5c9bb219f02276ad93b5729d81453"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+              "sha256": "7607f7044224fdc8410a1cd368131198f0cf42986e4ac94de1babbd78951aa30"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
+              "sha256": "03ce3c9d81710e9e96f1a164bb7216e1ef9be3463f58667d52be4655282d974e"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
+            },
+            {
+              "path": "apps/api/src/wallet/staff-wallet-ledger-http.integration.test.ts",
+              "sha256": "0b0ffc9aeb7b75288b0849144358010f6bab4cf40af4af958126a88a55b1c732"
+            },
+            {
+              "path": "apps/api/src/wallet/staff-wallet-ledger.controller.ts",
+              "sha256": "764f677d49b62241a3279ee2aed96af002cba030ed4c86b8647f441ea3ee7001"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.ts",
+              "sha256": "55f13fe08dc4be7fc5d627279416824437db326682dbef81b247816abc8b58c0"
+            },
+            {
+              "path": "packages/db/src/refund-processing.ts",
+              "sha256": "0463da9c77ddbc7742815ae2d48d3819444fd7e6df6ab0346c3e861410ab6fb3"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Simultaneous wallet payments: 16 current native PostgreSQL concurrency cases passed in the 78-case finance run. They verify exact successful debits, same-key replay, reserved funds, competing invoices and collision rollback.",
+            "Duplicate provider callbacks: all 17 current native signed callback cases passed in the 50-case callback run, including two simultaneous deliveries persisting one credit and releasing the original intent.",
+            "Duplicate bank confirmation: the selected native case and all 36 source-matching hosted confirmation cases passed. Two concurrent confirmations and a later retry return one durable credit.",
+            "Concurrent refund workers: the selected compiled worker case and all 27 source-matching hosted wallet-refund HTTP cases passed. Two production retry-runner invocations complete one committed job with one attempt, one invoice update and one wallet credit.",
+            "Repeated order submission: the selected concurrent compiled order case and all 100 source-matching hosted electricity-order cases passed. Both responses return the same order result and exactly one order persists.",
+            "Ownership and role changes during requests: all 36 hosted profile-write and 16 hosted staff wallet-ledger cases passed. The blocked draft write is denied after ownership transfer and the blocked ledger read is denied after role revocation.",
+            "Competing state transitions: all 28 hosted contract cancellation cases passed. Concurrent execution yields one accepted transition and one conflict. Stale contract version execution is also rejected."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.10.02.10",
@@ -845486,6 +845577,104 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/transaction-fixture-reconciliation",
       "source_scope_proof": "transaction-source-scope.json",
       "source_scope_proof_sha256": "a1d4ca24956a3bc2892b6fba759815ad733c2247cca73f9d2b962c2dbc63727e"
+    },
+    "release-0.6-mandatory-concurrency-matrix": {
+      "batch": "release-0.6-mandatory-concurrency-matrix",
+      "base_commit": "bf9340cf638bda4437bcc7443517afaae9d2516e",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.10.02.09"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+          "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+        },
+        {
+          "path": "apps/api/src/contract/contract-cancellation.service.ts",
+          "sha256": "35a15ed616c718c55797f7997ec566a03c27c5244f11194748e6b8ddd32c2821"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+          "sha256": "a45f415770196e8fd7129da867e018ba6fa2d881325da0b32567501ea41cff8e"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-order.service.ts",
+          "sha256": "47bc00446b06d70cded63f1ef7acef1b60f0d1923a004d53620df37b43bbda26"
+        },
+        {
+          "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
+          "sha256": "e0f4b283f5838eda4f7430c2d5b5cb9c2b5a56d699230ebb241ecb8d4b968332"
+        },
+        {
+          "path": "apps/api/src/refund/refund.service.ts",
+          "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+        },
+        {
+          "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+          "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+        },
+        {
+          "path": "apps/api/src/refund/wallet-refund.controller.ts",
+          "sha256": "2fb0caf2ffd01d3739db87fc9e3b4c279b8137eec62fa2bacb19feabd1da07c3"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
+          "sha256": "224514f9f8c174ddc1320facc6d77ac99b1b9ac4cc1d4a48e4c9f4d69bc46756"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+          "sha256": "9e8100ab2239b915d6b54f6cd5f99a5fdf0fc6b3980366acf9d700930caeb231"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.integration.test.ts",
+          "sha256": "e93f7f13f67b5c64ec13604af9d421413dc5c9bb219f02276ad93b5729d81453"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+          "sha256": "7607f7044224fdc8410a1cd368131198f0cf42986e4ac94de1babbd78951aa30"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
+          "sha256": "03ce3c9d81710e9e96f1a164bb7216e1ef9be3463f58667d52be4655282d974e"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+          "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
+        },
+        {
+          "path": "apps/api/src/wallet/staff-wallet-ledger-http.integration.test.ts",
+          "sha256": "0b0ffc9aeb7b75288b0849144358010f6bab4cf40af4af958126a88a55b1c732"
+        },
+        {
+          "path": "apps/api/src/wallet/staff-wallet-ledger.controller.ts",
+          "sha256": "764f677d49b62241a3279ee2aed96af002cba030ed4c86b8647f441ea3ee7001"
+        },
+        {
+          "path": "apps/worker/src/refunds/retry-runner.ts",
+          "sha256": "55f13fe08dc4be7fc5d627279416824437db326682dbef81b247816abc8b58c0"
+        },
+        {
+          "path": "packages/db/src/refund-processing.ts",
+          "sha256": "0463da9c77ddbc7742815ae2d48d3819444fd7e6df6ab0346c3e861410ab6fb3"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "Simultaneous wallet payments: 16 current native PostgreSQL concurrency cases passed in the 78-case finance run. They verify exact successful debits, same-key replay, reserved funds, competing invoices and collision rollback.",
+        "Duplicate provider callbacks: all 17 current native signed callback cases passed in the 50-case callback run, including two simultaneous deliveries persisting one credit and releasing the original intent.",
+        "Duplicate bank confirmation: the selected native case and all 36 source-matching hosted confirmation cases passed. Two concurrent confirmations and a later retry return one durable credit.",
+        "Concurrent refund workers: the selected compiled worker case and all 27 source-matching hosted wallet-refund HTTP cases passed. Two production retry-runner invocations complete one committed job with one attempt, one invoice update and one wallet credit.",
+        "Repeated order submission: the selected concurrent compiled order case and all 100 source-matching hosted electricity-order cases passed. Both responses return the same order result and exactly one order persists.",
+        "Ownership and role changes during requests: all 36 hosted profile-write and 16 hosted staff wallet-ledger cases passed. The blocked draft write is denied after ownership transfer and the blocked ledger read is denied after role revocation.",
+        "Competing state transitions: all 28 hosted contract cancellation cases passed. Concurrent execution yields one accepted transition and one conflict. Stale contract version execution is also rejected."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/transaction-fixture-reconciliation",
+      "source_scope_proof": "mandatory-concurrency-matrix.json",
+      "source_scope_proof_sha256": "181ee9c7ff5695c85b4dcbb0675cfd5fc69c079b1f9e79f4c66bda129cef7778"
     }
   },
   "historical_improvements": [
