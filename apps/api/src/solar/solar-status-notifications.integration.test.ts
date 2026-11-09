@@ -106,7 +106,34 @@ it('replays a keyed document submission once and checks current ownership before
       )
     ).rows[0].count;
 
-  const responses = await Promise.all([complete(), complete()]);
+  const blocker = await http.pool.connect();
+  const pending: Promise<Response>[] = [];
+  const blockedBy = async (pid: number) =>
+    (
+      await http.pool.query<{ pid: number }>(
+        'SELECT pid FROM pg_stat_activity WHERE datname=current_database() AND $1=ANY(pg_blocking_pids(pid))',
+        [pid]
+      )
+    ).rows[0]?.pid;
+  try {
+    await blocker.query('BEGIN');
+    await blocker.query('SELECT id FROM solar_construction_requests WHERE id=$1 FOR UPDATE', [id]);
+    const gate = (await blocker.query<{ pid: number }>('SELECT pg_backend_pid() AS pid')).rows[0]!;
+    // Hold the first request inside its business transaction before the second authenticates.
+    pending.push(complete());
+    let firstPid: number | undefined;
+    await expect.poll(async () => Boolean((firstPid = await blockedBy(gate.pid)))).toBe(true);
+    pending.push(complete());
+    await expect.poll(async () => Boolean(await blockedBy(firstPid!))).toBe(true);
+  } finally {
+    try {
+      await blocker.query('ROLLBACK');
+    } finally {
+      blocker.release();
+      await Promise.allSettled(pending);
+    }
+  }
+  const responses = await Promise.all(pending);
   for (const response of responses) {
     expect(response.status, http.logs()).toBe(200);
     expect(await response.json()).toEqual(expected);

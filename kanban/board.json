@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T13:55:39+00:00",
+  "updated": "2026-11-09T15:02:08+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -38063,7 +38063,8 @@
           "release-0.5-saving-conditional-agreement",
           "release-0.5-solar-guidance-ready",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "verified-electricity-saving-solar-address-flow",
@@ -38231,7 +38232,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -49207,7 +49208,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -49299,7 +49301,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.ts",
@@ -69391,7 +69393,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-private-api-monitoring"
+          "release-0.6-private-api-monitoring",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -69739,7 +69742,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -69755,7 +69758,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.ts",
@@ -115106,7 +115109,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-invoice-response-feedback",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -115382,7 +115386,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -116378,7 +116382,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-invoice-response-feedback",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -116654,7 +116659,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -118232,7 +118237,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-invoice-response-feedback",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -118508,7 +118514,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -119503,7 +119509,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-invoice-response-feedback",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -119779,7 +119786,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -120775,7 +120782,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-invoice-response-feedback",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -121051,7 +121059,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -122046,7 +122054,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-invoice-response-feedback",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -122322,7 +122331,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -123327,7 +123336,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-invoice-response-feedback",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -123611,7 +123621,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -124606,7 +124616,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-invoice-response-feedback",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -124882,7 +124893,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -163959,7 +163970,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -164331,7 +164343,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -164970,7 +164982,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -165342,7 +165355,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -165984,7 +165997,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -166356,7 +166370,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -166996,7 +167010,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -167368,7 +167383,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -168007,7 +168022,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -168379,7 +168395,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -169018,7 +169034,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -169390,7 +169407,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -170028,7 +170045,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -170400,7 +170418,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -171041,7 +171059,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -171413,7 +171432,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -172052,7 +172071,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -172424,7 +172444,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -173063,7 +173083,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -173435,7 +173456,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -174075,7 +174096,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -174447,7 +174469,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -175086,7 +175108,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -175458,7 +175481,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -176096,7 +176119,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -176468,7 +176492,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -177107,7 +177131,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -177479,7 +177504,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -195170,7 +195195,8 @@
           "release-0.5-profile-lifecycle-feedback",
           "release-0.5-dependency-gate-closure",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "verified-profile-closure-preview-expiry-ownership-retention-and-support",
@@ -195430,7 +195456,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -387654,7 +387680,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-solar-guidance-ready",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -387666,7 +387693,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -387786,7 +387813,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -388424,7 +388451,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-solar-guidance-ready",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -388436,7 +388464,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -388556,7 +388584,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -389194,7 +389222,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-solar-guidance-ready",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -389206,7 +389235,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -389326,7 +389355,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -389966,7 +389995,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-solar-guidance-ready",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -389978,7 +390008,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -390098,7 +390128,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -390734,7 +390764,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-solar-guidance-ready",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "verified-solar-building-form-and-address-snapshots",
@@ -390835,7 +390866,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -391375,7 +391406,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-solar-guidance-ready",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "verified-solar-building-form-and-address-snapshots",
@@ -391476,7 +391508,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -392017,7 +392049,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-solar-guidance-ready",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -392029,7 +392062,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -392149,7 +392182,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -392787,7 +392820,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-solar-guidance-ready",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -392799,7 +392833,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -392919,7 +392953,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -393557,7 +393591,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-solar-guidance-ready",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -393569,7 +393604,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -393689,7 +393724,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -394328,7 +394363,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-solar-guidance-ready",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -394340,7 +394376,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -394460,7 +394496,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -395099,7 +395135,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-solar-guidance-ready",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -395111,7 +395148,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -395231,7 +395268,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -395871,7 +395908,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-solar-guidance-ready",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -395883,7 +395921,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -396003,7 +396041,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -396647,7 +396685,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-solar-guidance-ready",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -396659,7 +396698,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -396779,7 +396818,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -397417,7 +397456,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-solar-guidance-ready",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -397429,7 +397469,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -397549,7 +397589,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -398187,7 +398227,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-solar-guidance-ready",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -398199,7 +398240,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -398319,7 +398360,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -398962,7 +399003,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -399002,7 +399044,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
@@ -399078,7 +399120,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -399535,7 +399577,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -399575,7 +399618,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
@@ -399651,7 +399694,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -400108,7 +400151,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -400148,7 +400192,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
@@ -400224,7 +400268,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -400682,7 +400726,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -400722,7 +400767,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
@@ -400798,7 +400843,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -401259,7 +401304,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -401299,7 +401345,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
@@ -401375,7 +401421,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -401832,7 +401878,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -401872,7 +401919,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
@@ -401948,7 +401995,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -402406,7 +402453,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -402446,7 +402494,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
@@ -402522,7 +402570,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -402981,7 +403029,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -403021,7 +403070,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
@@ -403097,7 +403146,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -403554,7 +403603,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -403594,7 +403644,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
@@ -403670,7 +403720,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -404127,7 +404177,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -404167,7 +404218,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
@@ -404243,7 +404294,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -404707,7 +404758,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -404951,7 +405003,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -405223,7 +405275,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -406054,7 +406106,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -406298,7 +406351,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -406570,7 +406623,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -407402,7 +407455,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -407646,7 +407700,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -407918,7 +407972,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -408749,7 +408803,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -408993,7 +409048,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -409265,7 +409320,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -410096,7 +410151,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -410340,7 +410396,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -410612,7 +410668,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -411444,7 +411500,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -411688,7 +411745,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -411960,7 +412017,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -412793,7 +412850,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -413037,7 +413095,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -413309,7 +413367,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -414138,7 +414196,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -414366,7 +414425,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -414722,7 +414781,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -415450,7 +415509,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -415694,7 +415754,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -415966,7 +416026,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -416796,7 +416856,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -417040,7 +417101,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -417312,7 +417373,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -418138,7 +418199,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -418366,7 +418428,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -418722,7 +418784,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -419443,7 +419505,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -419671,7 +419734,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -420027,7 +420090,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -420748,7 +420811,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -420976,7 +421040,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.controller.ts",
@@ -421332,7 +421396,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -424180,7 +424244,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-solar-guidance-ready",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "accepted-all-core-business-audit-event-families-and-append-only-history",
@@ -424672,7 +424737,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -430666,7 +430731,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "implemented-shared-guarded-business-transition-engine-and-complete-unit-matrices",
@@ -430814,7 +430880,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -433376,7 +433442,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_acceptance": {
           "kind": "implemented-shared-guarded-business-transition-engine-and-complete-unit-matrices",
@@ -433524,7 +433591,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -714194,7 +714261,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -715182,7 +715249,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-review-preview-deadlines",
           "release-0.5-consultation-offer-layout",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ],
         "inspection": {
           "wallet_history": "R-01.02 accepted separately.",
@@ -716263,7 +716331,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -717248,7 +717316,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-review-preview-deadlines",
           "release-0.5-consultation-offer-layout",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ]
       }
     },
@@ -719686,7 +719755,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -721417,7 +721486,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-solar-replay-lock-order"
         ]
       }
     },
@@ -723253,7 +723323,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -724101,7 +724171,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
@@ -726053,7 +726123,8 @@
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-review-preview-deadlines",
           "release-0.5-consultation-offer-layout",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-solar-replay-lock-order"
         ]
       }
     },
@@ -726965,7 +727036,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -726989,7 +727060,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.ts",
@@ -729950,7 +730021,8 @@
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-solar-replay-lock-order"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -730867,7 +730939,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
@@ -730891,7 +730963,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
-              "sha256": "8d319f72a0dec25b6b4b7e7e67de7ae4f9a9123ffa13f5446a9ae4b4373bd2aa"
+              "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.ts",
@@ -733739,7 +733811,8 @@
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-solar-replay-lock-order"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -737158,7 +737231,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
-              "sha256": "d1fc1c451dae116a70fca2ebcbc99f2141d17a2ec892eac2d25008c48c7dc82e"
+              "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
             },
             {
               "path": "apps/web/src/hooks/useSettingsSnapshot.ts",
@@ -737548,7 +737621,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-private-api-monitoring"
+          "release-0.6-private-api-monitoring",
+          "release-0.6-solar-replay-lock-order"
         ]
       }
     },
@@ -824858,6 +824932,105 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "database-client-pool-metrics-proof.json",
       "source_scope_proof_sha256": "794665062dfedd899e06e0508db273a8adb9d305ae741bf254f144c91fc57fab"
+    },
+    "release-0.6-solar-replay-lock-order": {
+      "batch": "release-0.6-solar-replay-lock-order",
+      "base_commit": "13dca23b25f4eb9906c6af19daad07e6ac0d553e",
+      "task_keys": [
+        "02-auth-users-admin.md#T-03.04.02",
+        "02-auth-users-admin.md#T-05.02.06",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "04-invoices-wallet-contracts.md#T-04.1.02.01",
+        "04-invoices-wallet-contracts.md#T-04.1.02.02",
+        "04-invoices-wallet-contracts.md#T-04.1.02.04",
+        "04-invoices-wallet-contracts.md#T-04.1.02.05",
+        "04-invoices-wallet-contracts.md#T-04.1.02.06",
+        "04-invoices-wallet-contracts.md#T-04.1.02.07",
+        "04-invoices-wallet-contracts.md#T-04.1.02.08",
+        "04-invoices-wallet-contracts.md#T-04.1.02.09",
+        "04-invoices-wallet-contracts.md#T-04.5.01.01",
+        "04-invoices-wallet-contracts.md#T-04.5.01.02",
+        "04-invoices-wallet-contracts.md#T-04.5.01.03",
+        "04-invoices-wallet-contracts.md#T-04.5.01.04",
+        "04-invoices-wallet-contracts.md#T-04.5.01.05",
+        "04-invoices-wallet-contracts.md#T-04.5.01.06",
+        "04-invoices-wallet-contracts.md#T-04.5.01.07",
+        "04-invoices-wallet-contracts.md#T-04.5.02.01",
+        "04-invoices-wallet-contracts.md#T-04.5.02.02",
+        "04-invoices-wallet-contracts.md#T-04.5.02.03",
+        "04-invoices-wallet-contracts.md#T-04.5.02.04",
+        "04-invoices-wallet-contracts.md#T-04.5.03.01",
+        "04-invoices-wallet-contracts.md#T-04.5.03.02",
+        "04-invoices-wallet-contracts.md#T-04.5.03.03",
+        "02-auth-users-admin.md#T-11.01.03",
+        "03-core-business.md#T-03.11.01.01",
+        "03-core-business.md#T-03.11.01.02",
+        "03-core-business.md#T-03.11.01.03",
+        "03-core-business.md#T-03.11.02.01",
+        "03-core-business.md#T-03.11.02.02",
+        "03-core-business.md#T-03.11.02.03",
+        "03-core-business.md#T-03.11.02.04",
+        "03-core-business.md#T-03.11.02.05",
+        "03-core-business.md#T-03.11.02.06",
+        "03-core-business.md#T-03.11.03.01",
+        "03-core-business.md#T-03.11.03.02",
+        "03-core-business.md#T-03.11.03.03",
+        "03-core-business.md#T-03.11.04.01",
+        "03-core-business.md#T-03.11.04.02",
+        "03-core-business.md#T-03.11.04.03",
+        "03-core-business.md#T-03.12.01.01",
+        "03-core-business.md#T-03.12.01.02",
+        "03-core-business.md#T-03.12.01.03",
+        "03-core-business.md#T-03.12.01.04",
+        "03-core-business.md#T-03.12.02.01",
+        "03-core-business.md#T-03.12.02.02",
+        "03-core-business.md#T-03.12.02.03",
+        "03-core-business.md#T-03.12.02.04",
+        "03-core-business.md#T-03.12.02.05",
+        "03-core-business.md#T-03.12.02.06",
+        "03-core-business.md#T-03.12.03.01",
+        "03-core-business.md#T-03.12.03.02",
+        "03-core-business.md#T-03.12.03.03",
+        "03-core-business.md#T-03.12.03.04",
+        "03-core-business.md#T-03.12.03.05",
+        "03-core-business.md#T-03.12.03.06",
+        "03-core-business.md#T-03.13.01.01",
+        "03-core-business.md#T-03.13.01.02",
+        "03-core-business.md#T-03.13.01.03",
+        "03-core-business.md#T-03.13.01.04",
+        "03-core-business.md#T-03.13.02.01",
+        "03-core-business.md#T-03.13.02.02",
+        "03-core-business.md#T-03.13.02.03",
+        "03-core-business.md#T-03.90.03",
+        "03-core-business.md#T-03.90.11",
+        "03-core-business.md#T-03.90.15",
+        "release-readiness#R-01.01",
+        "release-readiness#R-01.04",
+        "release-readiness#R-02.01",
+        "release-readiness#R-02.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/solar/solar-documents.service.ts",
+          "sha256": "dfac6de39e020737c33222bd11b458abe02a48c5033a6409871e62dc0f8d0533"
+        },
+        {
+          "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
+          "sha256": "1a71a5d6d6a922054f9c4dded450a665d43463cbc5ec38ea434dc805811ffaf5"
+        }
+      ],
+      "checks": [
+        "The previous hosted suite passed 7,783 cases and failed the concurrent keyed solar document completion case with HTTP 401. Holding the real request row reproduced the same HTTP 401 with the original compiled service and the strengthened test.",
+        "Seven cases passed with the final compiled API and an isolated PostgreSQL database migrated to 0282. They verify concurrent identical receipts, exactly one audit and notification fanout, current-owner denial, sink rollback and recovery, and notification occurrence boundaries.",
+        "API SWC build, typecheck, changed-file ESLint and Prettier, and five targeted Semgrep rules passed. The single mutation uses the existing account-first lock helper before taking the current session lock. Other workflows and original assertions are unchanged.",
+        "Only the two changed source hashes were renewed. Unrelated task criteria continue to use their existing evidence. The broader hosted suite and MinIO document integration results are separate from this isolated proof."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "solar-replay-lock-order-proof.json",
+      "source_scope_proof_sha256": "e614d76d9405409a132e46dd48d2d1768332d6655ad844f0f632505c7252ec8e"
     }
   },
   "historical_improvements": [

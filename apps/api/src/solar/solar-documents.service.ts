@@ -144,7 +144,7 @@ export class SolarDocumentsService {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
-      await requireCurrentSession(client, actor);
+      await this.orders.lockOrderActor(client, actor);
       const request = (
         await client.query<{ profile_id: string; status: string }>(
           'SELECT profile_id,status FROM solar_construction_requests WHERE id=$1 FOR UPDATE',
