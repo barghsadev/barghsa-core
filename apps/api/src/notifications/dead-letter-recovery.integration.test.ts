@@ -2,6 +2,9 @@ import { afterAll, beforeAll, beforeEach, expect, it, vi } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
 import { FailedNotificationsService } from '../admin/failed-notifications.service.js';
+import { runOutboxPoll } from '../../../worker/dist/notifications/outbox-runner.js';
+import { deriveChannelIdempotencyKey } from '../../../worker/dist/notifications/outbox-writer.js';
+import { durableDelivery } from '../../../worker/dist/notifications/send-receipt.js';
 const db = vi.hoisted(() => ({ pool: null as unknown as import('pg').Pool }));
 vi.mock('@barghsa/db', async (original) => ({
   ...(await original<typeof import('@barghsa/db')>()),
@@ -63,14 +66,14 @@ beforeEach(async () => {
     `UPDATE staff_roles SET permissions='["admin:jobs:view","admin:jobs:retry"]' WHERE role_id='triage-role'`
   );
 });
-async function seed() {
+async function seed(createdAt?: string) {
   const outbox = randomUUID(),
     job = randomUUID(),
     dead = randomUUID();
   await db.pool.query(
-    `INSERT INTO notification_outbox(id,profile_id,event_key,payload,channels,idempotency_key,status)
-    VALUES ($1::uuid,$2,'invoice.created','{}',ARRAY['email'],$1::text,'failed')`,
-    [outbox, profileId]
+    `INSERT INTO notification_outbox(id,profile_id,event_key,payload,channels,idempotency_key,status,created_at)
+    VALUES ($1::uuid,$2,'invoice.created','{}',ARRAY['email'],$1::text,'failed',COALESCE($3::timestamptz,NOW()))`,
+    [outbox, profileId, createdAt ?? null]
   );
   await db.pool.query(
     `INSERT INTO notification_job(id,outbox_id,channel,status,attempts,delivery_payload)
@@ -84,6 +87,214 @@ async function seed() {
   );
   return { outbox, job, dead };
 }
+
+const replayRange = { from: '2025-11-01T00:00:00Z', to: '2025-11-02T00:00:00Z' };
+
+function previewReplay(range = replayRange, requestHeaders = headers) {
+  return fetch(`${fixture.base}${prefixes[0]}/replay-preview?${new URLSearchParams(range)}`, {
+    headers: requestHeaders,
+  });
+}
+
+function submitReplay(body: Record<string, unknown>, requestHeaders = headers) {
+  return fetch(`${fixture.base}${prefixes[1]}/replay`, {
+    method: 'POST',
+    headers: { ...requestHeaders, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+}
+
+it('delivers only once after concurrent confirmation of an exact outbox revision in range', async () => {
+  const target = await seed(replayRange.from);
+  const excluded = await seed(replayRange.to);
+  const before = await snapshot(target);
+  const response = await previewReplay();
+  expect(response.status).toBe(200);
+  const preview = (await response.json()) as {
+    entries: { id: string; revision: string }[];
+    truncated: boolean;
+  };
+  expect(preview).toMatchObject({
+    truncated: false,
+    entries: [
+      { id: target.dead, outboxId: target.outbox, channel: 'email', eventKey: 'invoice.created' },
+    ],
+  });
+  const { id, revision } = preview.entries[0]!;
+  const body = { ...replayRange, confirm: true, selection: [{ id, revision }] };
+  expect((await submitReplay({ ...body, confirm: false })).status).toBe(400);
+  expect(
+    (await submitReplay({ ...body, selection: [body.selection[0], body.selection[0]] })).status
+  ).toBe(400);
+  expect((await submitReplay(body, { Cookie: headers.Cookie! })).status).toBe(403);
+  expect((await snapshot(target)).audits).toHaveLength(0);
+  const results = await Promise.all([submitReplay(body), submitReplay(body)]);
+  expect(results.map((result) => result.status)).toEqual([200, 200]);
+  const receipts = (await Promise.all(results.map((result) => result.json()))) as {
+    queued: string[];
+    skipped: string[];
+  }[];
+  expect(receipts.flatMap((receipt) => receipt.queued)).toEqual([id]);
+  expect(receipts.flatMap((receipt) => receipt.skipped)).toEqual([id]);
+  const queued = await snapshot(target);
+  expect(queued.outbox).toMatchObject({
+    id: target.outbox,
+    status: 'queued',
+    idempotency_key: before.outbox.idempotency_key,
+  });
+  expect(queued.job).toMatchObject({
+    id: target.job,
+    status: 'queued',
+    delivery_payload: before.job.delivery_payload,
+  });
+  expect(queued.dead.status).toBe('retried');
+  expect(queued.audits).toHaveLength(1);
+  expect(JSON.parse(queued.audits[0].metadata)).toMatchObject({
+    deadLetterId: target.dead,
+    replaySelection: {
+      from: new Date(replayRange.from).toISOString(),
+      to: new Date(replayRange.to).toISOString(),
+      revision,
+    },
+  });
+  expect((await snapshot(excluded)).outbox.status).toBe('failed');
+
+  const provider = { id: randomUUID(), transport: 'smtp' as const };
+  const originalKey = deriveChannelIdempotencyKey(
+    'invoice.created',
+    'email',
+    profileId,
+    before.outbox.idempotency_key,
+    before.outbox.idempotency_version,
+    target.outbox
+  );
+  const send = vi.fn(async () => 'isolated-provider-accepted-once');
+  const poll = () =>
+    runOutboxPoll({
+      pool: db.pool,
+      leaseSize: 1,
+      deliveryWindow: { timezone: 'UTC', startHour: 0, endHour: 24 },
+      availability: () => ({
+        enabledChannels: { email: true },
+        verifiedEmail: true,
+        verifiedPhone: false,
+        marketingOptedIn: {},
+      }),
+      transports: {
+        email: {
+          channel: 'email',
+          async send(payload) {
+            expect(payload.outboxId).toBe(target.outbox);
+            expect(payload.idempotencyKey).toBe(originalKey);
+            const providerRef = await durableDelivery(
+              db.pool,
+              target.outbox,
+              'email',
+              payload.idempotencyKey
+            )(provider, send);
+            return { status: 'delivered', providerRef };
+          },
+        },
+      },
+    });
+  const polls = await Promise.all([poll(), poll()]);
+  expect(polls.reduce((count, result) => count + result.delivered, 0)).toBe(1);
+  expect(await (await submitReplay(body)).json()).toEqual({ queued: [], skipped: [id] });
+  expect((await poll()).leased).toBe(0);
+  expect(send).toHaveBeenCalledOnce();
+  expect((await snapshot(target)).job.status).toBe('done');
+  expect(
+    (
+      await db.pool.query(
+        'SELECT status,idempotency_key,provider_ref FROM notification_send_receipts WHERE outbox_id=$1',
+        [target.outbox]
+      )
+    ).rows
+  ).toEqual([
+    {
+      status: 'accepted',
+      idempotency_key: originalKey,
+      provider_ref: 'isolated-provider-accepted-once',
+    },
+  ]);
+});
+
+it('holds a changed revision, active lease and accepted or uncertain sends after preview', async () => {
+  const range = { from: '2025-11-03T00:00:00Z', to: '2025-11-04T00:00:00Z' };
+  const [changed, leased, unknown, accepted] = await Promise.all([
+    seed(range.from),
+    seed(range.from),
+    seed(range.from),
+    seed(range.from),
+  ]);
+  const response = await previewReplay(range);
+  expect(response.status).toBe(200);
+  const { entries } = (await response.json()) as {
+    entries: { id: string; revision: string }[];
+  };
+  expect(entries).toHaveLength(4);
+  const selection = entries.map(({ id, revision }) => ({ id, revision }));
+  await db.pool.query(
+    "UPDATE notification_dead_letter SET cause='reopened after a new failure' WHERE id=$1",
+    [changed.dead]
+  );
+  await db.pool.query(
+    "UPDATE notification_outbox SET locked_until=NOW()+INTERVAL '1 minute' WHERE id=$1",
+    [leased.outbox]
+  );
+  await db.pool.query(
+    `INSERT INTO notification_send_receipts(outbox_id,channel,status,provider_id,transport,idempotency_key,attempt_token,provider_ref,accepted_at)
+     VALUES ($1,'email','unknown',$3,'smtp','uncertain-occurrence',$4,NULL,NULL),
+       ($2,'email','accepted',$3,'smtp','accepted-occurrence',$5,'provider-receipt',NOW())`,
+    [unknown.outbox, accepted.outbox, randomUUID(), randomUUID(), randomUUID()]
+  );
+  const attempted = await submitReplay({ ...range, confirm: true, selection });
+  expect(attempted.status).toBe(200);
+  expect(await attempted.json()).toEqual({ queued: [], skipped: selection.map(({ id }) => id) });
+  expect(
+    (await Promise.all([changed, leased, unknown, accepted].map(snapshot))).map(
+      ({ outbox, job, audits }) => [outbox.status, job.status, audits.length]
+    )
+  ).toEqual(Array.from({ length: 4 }, () => ['failed', 'dead_letter', 0]));
+  expect(
+    (
+      await db.pool.query(
+        'SELECT status,idempotency_key,provider_ref FROM notification_send_receipts WHERE outbox_id=ANY($1) ORDER BY status',
+        [[unknown.outbox, accepted.outbox]]
+      )
+    ).rows
+  ).toEqual([
+    {
+      status: 'accepted',
+      idempotency_key: 'accepted-occurrence',
+      provider_ref: 'provider-receipt',
+    },
+    { status: 'unknown', idempotency_key: 'uncertain-occurrence', provider_ref: null },
+  ]);
+  const refreshed = await previewReplay(range);
+  expect(await refreshed.json()).toMatchObject({ entries: [{ id: changed.dead }] });
+});
+
+it('requires current staff grants and recent step-up for the bounded replay', async () => {
+  const range = { from: '2025-11-05T00:00:00Z', to: '2025-11-06T00:00:00Z' };
+  const target = await seed(range.from);
+  const response = await previewReplay(range);
+  expect(response.status).toBe(200);
+  const { entries } = (await response.json()) as { entries: { id: string; revision: string }[] };
+  const { id, revision } = entries[0]!;
+  const body = { ...range, confirm: true, selection: [{ id, revision }] };
+  expect((await previewReplay({ ...range, to: '2026-01-01T00:00:00Z' })).status).toBe(400);
+  await db.pool.query(
+    "UPDATE sessions SET step_up_verified_at=NOW()-INTERVAL '30 minutes' WHERE session_id=$1",
+    [actor.sessionId]
+  );
+  expect((await submitReplay(body)).status).toBe(403);
+  await db.pool.query(
+    "UPDATE staff_roles SET permissions='[\"admin:jobs:view\"]' WHERE role_id='triage-role'"
+  );
+  expect((await previewReplay(range)).status).toBe(403);
+  expect((await snapshot(target)).audits).toHaveLength(0);
+});
 
 it.each(['revocation', 'expiry'] as const)(
   'withdraws delivery history after a blocked read encounters %s',

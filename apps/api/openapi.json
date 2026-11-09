@@ -15990,6 +15990,109 @@
         ]
       }
     },
+    "/api/admin/failed-notifications/replay": {
+      "post": {
+        "operationId": "FailedNotificationsController_replay[0]",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "confirm": {
+                    "enum": [
+                      true
+                    ],
+                    "type": "boolean"
+                  },
+                  "from": {
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  "selection": {
+                    "items": {
+                      "properties": {
+                        "id": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "revision": {
+                          "description": "Exact value from the preview",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "revision"
+                      ],
+                      "type": "object"
+                    },
+                    "maxItems": 50,
+                    "minItems": 1,
+                    "type": "array"
+                  },
+                  "to": {
+                    "format": "date-time",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "from",
+                  "to",
+                  "confirm",
+                  "selection"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Requeue the exact confirmed notification retry selection",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/failed-notifications/replay-preview": {
+      "get": {
+        "operationId": "FailedNotificationsController_previewReplay[0]",
+        "parameters": [
+          {
+            "description": "Exclusive UTC outbox creation time",
+            "in": "query",
+            "name": "to",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Inclusive UTC outbox creation time",
+            "in": "query",
+            "name": "from",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Preview eligible notification retries for a UTC outbox date range",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/api/admin/failed-notifications/{id}": {
       "get": {
         "operationId": "FailedNotificationsController_detail[0]",
@@ -18689,6 +18792,109 @@
             "description": ""
           }
         },
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/notifications/dead-letters/replay": {
+      "post": {
+        "operationId": "FailedNotificationsController_replay[1]",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "confirm": {
+                    "enum": [
+                      true
+                    ],
+                    "type": "boolean"
+                  },
+                  "from": {
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  "selection": {
+                    "items": {
+                      "properties": {
+                        "id": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "revision": {
+                          "description": "Exact value from the preview",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "revision"
+                      ],
+                      "type": "object"
+                    },
+                    "maxItems": 50,
+                    "minItems": 1,
+                    "type": "array"
+                  },
+                  "to": {
+                    "format": "date-time",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "from",
+                  "to",
+                  "confirm",
+                  "selection"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Requeue the exact confirmed notification retry selection",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/notifications/dead-letters/replay-preview": {
+      "get": {
+        "operationId": "FailedNotificationsController_previewReplay[1]",
+        "parameters": [
+          {
+            "description": "Exclusive UTC outbox creation time",
+            "in": "query",
+            "name": "to",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Inclusive UTC outbox creation time",
+            "in": "query",
+            "name": "from",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Preview eligible notification retries for a UTC outbox date range",
         "tags": [
           "Admin"
         ]

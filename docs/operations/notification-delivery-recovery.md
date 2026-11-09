@@ -28,6 +28,29 @@ History rows count processing attempts. Recovering an accepted receipt or
 holding an uncertain receipt does not make another provider request, so those
 rows have no measured send duration. The history view explains this distinction.
 
+## Replay a reviewed date range
+
+With `admin:jobs:view` and `admin:jobs:retry`, open
+`GET /api/admin/failed-notifications/replay-preview` with UTC `from` and `to`
+timestamps. The range includes `from` and excludes `to` and uses outbox
+creation time. The maximum range is 31 days. The preview returns up to 50
+eligible dead-letter entries. If `truncated` is true, narrow the range to
+review the remaining entries. The preview has no recipient or payload data.
+
+Use recent session step-up and the CSRF token to submit
+`POST /api/admin/failed-notifications/replay`. Send the same `from` and
+`to`, `confirm: true` and the exact reviewed `{ id, revision }` entries in
+`selection`. Each queued entry commits with its audit record and retains its
+outbox key, channel job and prepared delivery payload. The response separates
+queued and skipped IDs.
+
+An updated revision, active lease, or accepted, sending or unknown receipt
+blocks replay. If two selected channels share an outbox row, the second may
+need a fresh preview after the first finishes. If the request ends without
+a complete response, inspect the audit history and refresh the preview to
+identify which entries committed. Resolve provider uncertainty before any
+new send.
+
 During graceful shutdown, the worker stops new polls and waits for active
 delivery. Once dispatch finishes, it releases any remaining lease it still
 owns, including after bookkeeping failure. It cannot release a replacement

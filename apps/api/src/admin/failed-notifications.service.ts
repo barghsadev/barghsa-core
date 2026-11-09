@@ -1,4 +1,4 @@
-import { requireSessionStepUp } from '../session/session-step-up.js';
+import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
@@ -65,6 +65,10 @@ export interface ListFailedNotificationsOptions {
 
 const DEFAULT_LIST_LIMIT = 50;
 const MAX_LIST_LIMIT = 200;
+export const MAX_REPLAY_SELECTION = 50;
+
+export type NotificationReplayRange = { from: Date; to: Date };
+type NotificationReplaySelection = { id: string; revision: string };
 
 /**
  * Failed-notifications dashboard service (S-09.09, T-09.09.03).
@@ -175,11 +179,85 @@ export class FailedNotificationsService {
     actor: FailedNotificationActor,
     ip: string
   ): Promise<FailedNotificationDto> {
+    return this.retry(id, actor, ip);
+  }
+
+  async previewOutboxReplay(range: NotificationReplayRange, actor: FailedNotificationActor) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actor.userId, 'admin:jobs:view');
+      await requireStaffMutationPermission(client, actor.userId, 'admin:jobs:retry');
+      await requireCurrentSession(client, actor);
+      const { rows } = await client.query<
+        NotificationReplaySelection & {
+          outboxId: string;
+          channel: string;
+          eventKey: string;
+          createdAt: Date;
+        }
+      >(
+        `SELECT dl.id, EXTRACT(EPOCH FROM dl.updated_at)::text AS revision,
+              o.id AS "outboxId", dl.channel, dl.event_key AS "eventKey", o.created_at AS "createdAt"
+         FROM notification_outbox o
+         JOIN notification_dead_letter dl ON dl.outbox_id=o.id AND dl.status='open'
+         JOIN notification_job j ON j.id=dl.job_id AND j.outbox_id=o.id
+           AND j.channel=dl.channel AND j.status='dead_letter'
+         LEFT JOIN notification_send_receipts r ON r.outbox_id=o.id AND r.channel=dl.channel
+        WHERE o.created_at >= $1 AND o.created_at < $2 AND o.status='failed'
+          AND (o.locked_until IS NULL OR o.locked_until < NOW())
+          AND (r.status IS NULL OR r.status='rejected')
+        ORDER BY o.created_at, o.id, dl.id
+        LIMIT $3`,
+        [range.from, range.to, MAX_REPLAY_SELECTION + 1]
+      );
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return {
+        entries: rows.slice(0, MAX_REPLAY_SELECTION),
+        truncated: rows.length > MAX_REPLAY_SELECTION,
+      };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async replayOutbox(
+    range: NotificationReplayRange,
+    selection: NotificationReplaySelection[],
+    actor: FailedNotificationActor,
+    ip: string
+  ) {
+    const queued: string[] = [];
+    const skipped: string[] = [];
+    for (const item of selection) {
+      try {
+        await this.retry(item.id, actor, ip, { ...range, revision: item.revision });
+        queued.push(item.id);
+      } catch (error) {
+        if (!(error instanceof HttpException) || ![404, 409].includes(error.getStatus()))
+          throw error;
+        skipped.push(item.id);
+      }
+    }
+    return { queued, skipped };
+  }
+
+  private retry(
+    id: string,
+    actor: FailedNotificationActor,
+    ip: string,
+    replaySelection?: NotificationReplayRange & { revision: string }
+  ): Promise<FailedNotificationDto> {
     return this.transition(id, actor, ip, 'retried', {
       description: 'Re-queue a dead-lettered notification for a fresh delivery attempt',
       event: 'notification_retried',
       allowedFrom: ['open'],
       requeue: true,
+      ...(replaySelection ? { replaySelection } : {}),
     });
   }
 
@@ -235,6 +313,7 @@ export class FailedNotificationsService {
       event: string;
       requeue: boolean;
       description: string;
+      replaySelection?: NotificationReplayRange & { revision: string };
     }
   ): Promise<FailedNotificationDto> {
     const pool = getDbPool();
@@ -249,6 +328,8 @@ export class FailedNotificationsService {
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actorUserId, 'admin:jobs:retry');
+      if (opts.replaySelection)
+        await requireStaffMutationPermission(client, actorUserId, 'admin:jobs:view');
       const stepUpVerifiedAt = await requireSessionStepUp(client, actor);
       // All delivery/recovery paths lock the parent before a channel or triage
       // row. Reversing this order can deadlock with worker finalization.
@@ -259,13 +340,15 @@ export class FailedNotificationsService {
         [id]
       );
 
+      const selection = opts.replaySelection;
       const result = await client.query(
         `SELECT dl.*, ob.payload
            FROM notification_dead_letter dl
            LEFT JOIN notification_outbox ob ON ob.id = dl.outbox_id
           WHERE dl.id = $1
+            ${selection ? 'AND ob.created_at >= $2 AND ob.created_at < $3 AND EXTRACT(EPOCH FROM dl.updated_at) = $4::numeric' : ''}
           FOR UPDATE OF dl`,
-        [id]
+        selection ? [id, selection.from, selection.to, selection.revision] : [id]
       );
       const row = result.rows[0] as
         | (Record<string, unknown> & { status: string; outbox_id: string; channel: string })
@@ -311,6 +394,9 @@ export class FailedNotificationsService {
             },
             409
           );
+        }
+        if (selection && receipt.rows.some((item) => item.status === 'accepted')) {
+          throw new HttpException({ error: ErrorCodes.CONFLICT_STATE.code }, 409);
         }
         // Re-open delivery for a *retryable* row only: the outbox row must be
         // `failed` and not mid-lease, and the channel job must still be
@@ -372,6 +458,7 @@ export class FailedNotificationsService {
             fromStatus: row.status,
             toStatus,
             eventKey: row.event_key,
+            ...(selection ? { replaySelection: selection } : {}),
           }),
           correlationIdStorage.getStore() ?? uuidv7(),
           ip,

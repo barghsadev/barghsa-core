@@ -1,6 +1,7 @@
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Controller,
+  Body,
   Get,
   HttpCode,
   HttpException,
@@ -12,7 +13,7 @@ import {
   UseGuards,
   ParseUUIDPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
@@ -23,6 +24,7 @@ import {
   DEAD_LETTER_STATUSES,
   DEAD_LETTER_SEVERITIES,
   NOTIFICATION_CHANNELS,
+  MAX_REPLAY_SELECTION,
   type FailedNotificationDto,
 } from './failed-notifications.service.js';
 
@@ -41,6 +43,33 @@ const ListQuerySchema = z.object({
     .pipe(z.number().int().min(0).max(1000000))
     .optional(),
 });
+
+const replayDate = z.iso
+  .datetime()
+  .refine((value) => !/\.\d{4}/.test(value))
+  .transform((value) => new Date(value));
+const replayDates = { from: replayDate, to: replayDate };
+function validReplayRange({ from, to }: { from: Date; to: Date }): boolean {
+  const duration = to.getTime() - from.getTime();
+  return duration > 0 && duration <= 31 * 24 * 60 * 60 * 1000;
+}
+const ReplayPreviewSchema = z.strictObject(replayDates).refine(validReplayRange);
+const ReplayBodySchema = z
+  .strictObject({
+    ...replayDates,
+    confirm: z.literal(true),
+    selection: z
+      .array(
+        z.strictObject({
+          id: z.uuid().transform((value) => value.toLowerCase()),
+          revision: z.string().regex(/^\d{1,13}\.\d{6}$/),
+        })
+      )
+      .min(1)
+      .max(MAX_REPLAY_SELECTION),
+  })
+  .refine(validReplayRange)
+  .refine(({ selection }) => new Set(selection.map(({ id }) => id)).size === selection.length);
 
 /** Swagger enum values for the dead-letter statuses. */
 const STATUSES = [...DEAD_LETTER_STATUSES] as const;
@@ -159,6 +188,59 @@ export class FailedNotificationsController {
       if (parsed.data.offset !== undefined) options.offset = parsed.data.offset;
     }
     return this.failedNotificationsService.listFailedNotifications(options);
+  }
+
+  @Get('replay-preview')
+  @ApiOperation({ summary: 'Preview eligible notification retries for a UTC outbox date range' })
+  @ApiQuery({ name: 'from', type: String, description: 'Inclusive UTC outbox creation time' })
+  @ApiQuery({ name: 'to', type: String, description: 'Exclusive UTC outbox creation time' })
+  async previewReplay(@Query() query: unknown, @Req() req: AuthenticatedRequest) {
+    this.assertViewPermission(req);
+    this.assertRetryPermission(req);
+    const parsed = ReplayPreviewSchema.safeParse(query);
+    if (!parsed.success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    return this.failedNotificationsService.previewOutboxReplay(parsed.data, req.session);
+  }
+
+  @Post('replay')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Requeue the exact confirmed notification retry selection' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['from', 'to', 'confirm', 'selection'],
+      properties: {
+        from: { type: 'string', format: 'date-time' },
+        to: { type: 'string', format: 'date-time' },
+        confirm: { type: 'boolean', enum: [true] },
+        selection: {
+          type: 'array',
+          minItems: 1,
+          maxItems: MAX_REPLAY_SELECTION,
+          items: {
+            type: 'object',
+            required: ['id', 'revision'],
+            properties: {
+              id: { type: 'string', format: 'uuid' },
+              revision: { type: 'string', description: 'Exact value from the preview' },
+            },
+          },
+        },
+      },
+    },
+  })
+  async replay(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    this.assertViewPermission(req);
+    this.assertRetryPermission(req);
+    const parsed = ReplayBodySchema.safeParse(body);
+    if (!parsed.success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    const { from, to, selection } = parsed.data;
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.failedNotificationsService.replayOutbox({ from, to }, selection, req.session, ip);
   }
 
   @Get(':id')

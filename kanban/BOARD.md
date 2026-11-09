@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T22:33:56+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T22:41:00+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1036 | Accepted with unchanged source bindings. |
-| verify | 292 | Existing work may be complete; inspect evidence before building. |
+| done | 1038 | Accepted with unchanged source bindings. |
+| verify | 290 | Existing work may be complete; inspect evidence before building. |
 | partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1404,8 +1404,8 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.15.03.03` | done | Recorded batch work | Configure outbox backlog age alert: oldest-unprocessed > 5 min → P2, > 15 min → P1 |
 | `06-security-testing-observability.md#T-06.15.03.04` | verify | Inventory needed | Configure duplicate payment detection: same idempotency key with different payload → P1 |
 | `06-security-testing-observability.md#T-06.15.03.05` | done | Recorded batch work | Configure provider callback anomaly alert: unexpected signature, replay, stale timestamp → P1 |
-| `06-security-testing-observability.md#T-06.15.03.06` | verify | Inventory needed | Implement safe outbox replay endpoint/CLI: re-queue unprocessed outbox rows within a configurable date range with idempotency protection and operator confirmation |
-| `06-security-testing-observability.md#T-06.15.03.07` | verify | Inventory needed | Write integration test: outbox replay produces no duplicate deliveries, respects idempotency keys |
+| `06-security-testing-observability.md#T-06.15.03.06` | done | Recorded batch work | Implement safe outbox replay endpoint/CLI: re-queue unprocessed outbox rows within a configurable date range with idempotency protection and operator confirmation |
+| `06-security-testing-observability.md#T-06.15.03.07` | done | Recorded batch work | Write integration test: outbox replay produces no duplicate deliveries, respects idempotency keys |
 | `06-security-testing-observability.md#T-06.16.01.01` | verify | Inventory needed | Configure OTel trace exporter to Tempo/Jaeger via OTLP |
 | `06-security-testing-observability.md#T-06.16.01.02` | verify | Inventory needed | Ensure trace context propagation across async boundaries: outbox → worker, queue → handler |
 | `06-security-testing-observability.md#T-06.16.01.03` | verify | Inventory needed | Configure retention: sampled traces 7 days, error/slow 30 days |
