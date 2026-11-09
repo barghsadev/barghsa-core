@@ -6,6 +6,7 @@ vi.mock('../session/session-step-up.js', () => ({
   requireCurrentSession: vi.fn().mockResolvedValue(undefined),
 }));
 import { afterEach, describe, it, expect, vi, beforeEach } from 'vitest';
+import promClient from 'prom-client';
 import { ConflictException, HttpException, Logger, NotFoundException } from '@nestjs/common';
 import { BadRequestException } from '@nestjs/common';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -169,6 +170,7 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
   afterEach(() => vi.restoreAllMocks());
 
   beforeEach(() => {
+    promClient.register.resetMetrics();
     vi.clearAllMocks();
     mockPool.connect.mockResolvedValue(mockClient);
     mockClient.release.mockImplementation(() => {});
@@ -327,6 +329,9 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
 
     expect(result.redirectUrl).toBe(REDIRECT);
     expect(gateway.startPayment).not.toHaveBeenCalled();
+    expect(await promClient.register.metrics()).not.toContain(
+      'payment_idempotency_last_conflict_timestamp_seconds{'
+    );
   });
 
   it('retries gateway start for a matching Pending row that has no redirect yet', async () => {
@@ -355,6 +360,9 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
       })
     ).rejects.toBeInstanceOf(ConflictException);
     expect(gateway.startPayment).not.toHaveBeenCalled();
+    expect(await promClient.register.metrics()).toMatch(
+      /payment_idempotency_last_conflict_timestamp_seconds\{operation="online_topup"\} [1-9]/
+    );
   });
 
   it('rejects a colliding completed credit idempotency key', async () => {

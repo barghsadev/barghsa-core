@@ -4,6 +4,7 @@ import {
   type FinancialSubmissionActor,
 } from '../finance/financial-submission-actor.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
+import { observePaymentKeyConflict } from '../metrics/payment-idempotency-metrics.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import {
   ONLINE_TOPUP_EXPIRY_REASON,
@@ -693,6 +694,7 @@ function assertMatchingPendingTopUp(
   allowExpiredRecovery = false
 ): void {
   if (existing.wallet_id !== canonicalWalletId) {
+    observePaymentKeyConflict('online_topup');
     throw new ConflictException('Idempotency key already used for a different wallet');
   }
   const expired =
@@ -700,12 +702,12 @@ function assertMatchingPendingTopUp(
     existing.state === 'Rejected' &&
     (existing.metadata as { expiry?: { reason?: unknown } } | null)?.expiry?.reason ===
       ONLINE_TOPUP_EXPIRY_REASON;
-  const isSamePending =
-    (existing.state === 'Pending' || expired) &&
+  const matchesPayment =
     existing.type === 'topup' &&
     readOnlineTopUpChannel(existing.metadata) === 'online' &&
     BigInt(existing.amount) === amountIrR;
-  if (!isSamePending) {
+  if (!matchesPayment) observePaymentKeyConflict('online_topup');
+  if (!matchesPayment || (existing.state !== 'Pending' && !expired)) {
     throw new ConflictException('Idempotency key already used for a different wallet operation');
   }
 }

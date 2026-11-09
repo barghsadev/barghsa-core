@@ -1,4 +1,5 @@
 import { lockWalletProfile, assertWalletProfileWritable } from './profile-lock.js';
+import { observePaymentKeyConflict } from '../metrics/payment-idempotency-metrics.js';
 /**
  * PayInvoiceWithWalletService — settle an invoice with a single full
  * wallet debit (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.03 / S-04.2.03).
@@ -190,7 +191,7 @@ export class PayInvoiceWithWalletService {
         }
         this.assertCachedMatchesRequest(parsed, ids.invoiceId, ids.profileId, key);
         const result = resultFromCache(parsed);
-        this.assertExpectedAmount(result.remainingPaid, options.expectedRemainingAmount);
+        this.assertExpectedAmount(result.remainingPaid, options.expectedRemainingAmount, true);
         if (options.expectedReviewHash !== undefined)
           reviews.assertStored(
             result.walletTransaction.metadata,
@@ -226,7 +227,8 @@ export class PayInvoiceWithWalletService {
       const existing = await this.findLedgerByIdempotencyKey(client, key);
       this.assertExpectedAmount(
         existing ? -existing.amount : remaining,
-        options.expectedRemainingAmount
+        options.expectedRemainingAmount,
+        existing !== null
       );
       if (existing) {
         if (options.expectedReviewHash !== undefined)
@@ -393,6 +395,7 @@ export class PayInvoiceWithWalletService {
         error instanceof ConflictException &&
         isWalletDebitIdempotencyCollision(conflictMessage(error))
       ) {
+        observePaymentKeyConflict('wallet_invoice');
         throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION());
       }
       throw error;
@@ -434,6 +437,7 @@ export class PayInvoiceWithWalletService {
       !cachedWalletPaymentMatchesRequest(cached, invoiceId, profileId) ||
       cached.walletTransaction.idempotencyKey !== idempotencyKey
     ) {
+      observePaymentKeyConflict('wallet_invoice');
       throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION());
     }
   }
@@ -460,6 +464,7 @@ export class PayInvoiceWithWalletService {
       amount: input.existing.amount,
     });
     if (!matching) {
+      observePaymentKeyConflict('wallet_invoice');
       throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION());
     }
 
@@ -514,11 +519,17 @@ export class PayInvoiceWithWalletService {
     return result;
   }
 
-  private assertExpectedAmount(actual: bigint, expected: bigint | undefined) {
-    if (expected !== undefined && expected !== actual)
+  private assertExpectedAmount(
+    actual: bigint,
+    expected: bigint | undefined,
+    hasStoredPayment: boolean
+  ) {
+    if (expected !== undefined && expected !== actual) {
+      if (hasStoredPayment) observePaymentKeyConflict('wallet_invoice');
       throw new ConflictException(
         'Invoice amount changed; review the current amount before paying'
       );
+    }
   }
 
   private async settleInvoice(

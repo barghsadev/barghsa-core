@@ -11,6 +11,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import promClient from 'prom-client';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import {
   INVOICE_WALLET_PAYMENT_ENTITY_TYPE,
@@ -201,6 +202,7 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
   let service: PayInvoiceWithWalletService;
 
   beforeEach(() => {
+    promClient.register.resetMetrics();
     vi.clearAllMocks();
     mockPool.connect.mockResolvedValue(mockClient);
     mockClient.release.mockImplementation(() => {});
@@ -457,6 +459,9 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
         (c) => typeof c[0] === 'string' && (c[0] as string).includes('FROM wallets')
       )
     ).toBe(false);
+    expect(await promClient.register.metrics()).not.toContain(
+      'payment_idempotency_last_conflict_timestamp_seconds{'
+    );
   });
 
   it('rejects a retry that reuses the key for a different invoice', async () => {
@@ -473,7 +478,34 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
     await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION());
     expect(walletService.debit).not.toHaveBeenCalled();
     expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+    expect(await promClient.register.metrics()).toMatch(
+      /payment_idempotency_last_conflict_timestamp_seconds\{operation="wallet_invoice"\} [1-9]/
+    );
   });
+
+  it.each([true, false])(
+    'raises an alert on a changed amount only when the key has a stored payment (%s)',
+    async (hasStoredPayment) => {
+      paymentQueries(
+        hasStoredPayment
+          ? {
+              idempotencyInsert: [],
+              idempotencySelect: [{ entity_id: INVOICE_ID, response: cachedResponse() }],
+            }
+          : {}
+      );
+      await expect(pay({ options: { expectedRemainingAmount: 1n } })).rejects.toThrow(
+        'Invoice amount changed; review the current amount before paying'
+      );
+      expect(walletService.debit).not.toHaveBeenCalled();
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+      expect(
+        (await promClient.register.metrics()).includes(
+          'payment_idempotency_last_conflict_timestamp_seconds{operation="wallet_invoice"}'
+        )
+      ).toBe(hasStoredPayment);
+    }
+  );
 
   it('rejects an in-flight idempotency claim without debiting', async () => {
     paymentQueries({

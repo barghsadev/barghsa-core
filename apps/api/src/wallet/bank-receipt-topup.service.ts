@@ -12,6 +12,7 @@ import {
   type ReceiptSubmissionActor,
 } from '../finance/receipt-submission-actor.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
+import { observePaymentKeyConflict } from '../metrics/payment-idempotency-metrics.js';
 import { createHash } from 'node:crypto';
 import {
   ConflictException,
@@ -528,10 +529,10 @@ function assertMatchingPendingBankReceipt(
   receipt: BankReceiptTopUpDetails
 ): void {
   if (existing.wallet_id !== canonicalWalletId) {
+    observePaymentKeyConflict('bank_receipt_topup');
     throw new ConflictException('Idempotency key already used for a different wallet');
   }
-  const isSamePending =
-    existing.state === 'Pending' &&
+  const matchesPayment =
     existing.type === 'topup' &&
     BigInt(existing.amount) === amountIrR &&
     invoiceBankReceiptLookupKeys(receipt.attachmentKey).some(
@@ -539,7 +540,8 @@ function assertMatchingPendingBankReceipt(
         existing.receipt_attachment_key === attachmentKey &&
         receiptDetailsMatch(existing.metadata, { ...receipt, attachmentKey })
     );
-  if (!isSamePending) {
+  if (!matchesPayment) observePaymentKeyConflict('bank_receipt_topup');
+  if (!matchesPayment || existing.state !== 'Pending') {
     throw new ConflictException('Idempotency key already used for a different wallet operation');
   }
 }

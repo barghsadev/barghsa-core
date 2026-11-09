@@ -4,6 +4,47 @@
   'tests':
     [
       {
+        'name': 'Payment key mismatches coalesce across payment operations and resolve',
+        'interval': '1m',
+        'input_series':
+          [
+            {
+              'series': 'payment_idempotency_last_conflict_timestamp_seconds{job="api",environment="staging",database="core",instance="a",pod="a",operation="online_topup"}',
+              'values': '_ 60 60 60 60 60 60',
+            },
+            {
+              'series': 'payment_idempotency_last_conflict_timestamp_seconds{job="api",environment="staging",database="core",instance="b",pod="b",operation="wallet_invoice"}',
+              'values': '_ 60 60 60 60 60 60',
+            },
+          ],
+        'alert_rule_test':
+          [
+            { 'eval_time': '0m', 'alertname': 'PaymentIdempotencyConflict', 'exp_alerts': [] },
+            {
+              'eval_time': '1m',
+              'alertname': 'PaymentIdempotencyConflict',
+              'exp_alerts':
+                [
+                  {
+                    'exp_labels':
+                      {
+                        'job': 'api',
+                        'environment': 'staging',
+                        'database': 'core',
+                        'severity': 'critical',
+                        'priority': 'P1',
+                      },
+                    'exp_annotations':
+                      {
+                        'summary': 'A payment idempotency key was used with conflicting payment data',
+                      },
+                  },
+                ],
+            },
+            { 'eval_time': '6m', 'alertname': 'PaymentIdempotencyConflict', 'exp_alerts': [] },
+          ],
+      },
+      {
         'name': 'Signed payment anomalies fire a single P1 across replicas and clear after five minutes',
         'interval': '1m',
         'input_series':

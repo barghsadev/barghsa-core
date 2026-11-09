@@ -4,6 +4,7 @@ vi.mock('../storage/reserve-storage-copy.js', () => ({
   reserveStorageCopy: vi.fn().mockResolvedValue(undefined),
 }));
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import promClient from 'prom-client';
 import { ConflictException, HttpException, NotFoundException } from '@nestjs/common';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { BANK_RECEIPT_STORAGE_PURPOSE, BANK_RECEIPT_TOPUP_CHANNEL } from '@barghsa/shared/finance';
@@ -170,6 +171,7 @@ describe('BankReceiptTopUpService (T-04.2.02.03)', () => {
   let service: BankReceiptTopUpService;
 
   beforeEach(() => {
+    promClient.register.resetMetrics();
     vi.clearAllMocks();
     mockPool.connect.mockResolvedValue(mockClient);
     mockClient.release.mockImplementation(() => {});
@@ -348,6 +350,9 @@ describe('BankReceiptTopUpService (T-04.2.02.03)', () => {
       )
     ).toBe(false);
     expect(walletService.credit).not.toHaveBeenCalled();
+    expect(await promClient.register.metrics()).not.toContain(
+      'payment_idempotency_last_conflict_timestamp_seconds{'
+    );
   });
 
   it('conflicts when the same key was used for a different amount', async () => {
@@ -356,6 +361,9 @@ describe('BankReceiptTopUpService (T-04.2.02.03)', () => {
     });
     await expect(service.submit(submitInput())).rejects.toBeInstanceOf(ConflictException);
     expect(walletService.credit).not.toHaveBeenCalled();
+    expect(await promClient.register.metrics()).toMatch(
+      /payment_idempotency_last_conflict_timestamp_seconds\{operation="bank_receipt_topup"\} [1-9]/
+    );
   });
 
   it('conflicts when the same key was used for an online top-up', async () => {

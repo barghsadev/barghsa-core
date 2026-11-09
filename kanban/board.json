@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T22:41:00+00:00",
-  "source_commit": "66742eb6c49ef81e14ebb774d1e3f99e065d2902",
+  "updated": "2026-11-09T22:45:43+00:00",
+  "source_commit": "e3ebc635bd82744b977d32a1ed947e45b5c69fcb",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5378,7 +5378,8 @@
           "release-0.6-native-integration-acceptance",
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-notification-eligible-backlog-alerts",
-          "release-0.6-signed-payment-callback-alert"
+          "release-0.6-signed-payment-callback-alert",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "kind": "native-postgresql-fixture-and-mandatory-financial-concurrency",
@@ -5446,7 +5447,7 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "48c24047a4e6bfc45880359d467db66d8f07f85e4565f1bbbba3301794b6249b"
+              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -11156,7 +11157,8 @@
           "apps/api/src/config-cache/config-cache.integration.test.ts"
         ],
         "batches": [
-          "release-0.6-versioned-config-cache-and-diagnostic-privacy"
+          "release-0.6-versioned-config-cache-and-diagnostic-privacy",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-postgresql-cache-and-wallet-proof",
@@ -11184,7 +11186,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.ts",
-              "sha256": "58090bbdb1cba343648ea351c89dccf71d94330dc0d2a01265bf0acc6ae31677"
+              "sha256": "de611a6b2e00ca55389761ce042f344d27a6710321e92b67ac5ae07365409c78"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -72455,7 +72457,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -73255,7 +73258,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "988f0d7a090e80254f5fba3c55e8aca75677b7e98ec7c06114d84ef09b22d776"
+              "sha256": "3c9bc00603fa7f1487e11c24b884fda89449e63f4224ccdddb2af590af4990cb"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -73291,11 +73294,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -77509,7 +77512,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -77529,11 +77533,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -77541,7 +77545,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "988f0d7a090e80254f5fba3c55e8aca75677b7e98ec7c06114d84ef09b22d776"
+              "sha256": "3c9bc00603fa7f1487e11c24b884fda89449e63f4224ccdddb2af590af4990cb"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -85896,7 +85900,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -86080,11 +86085,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -86851,7 +86856,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -87035,11 +87041,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -87806,7 +87812,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -87990,11 +87997,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -88762,7 +88769,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -88946,11 +88954,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -89717,7 +89725,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -89901,11 +89910,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -90674,7 +90683,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -90798,11 +90808,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -90898,7 +90908,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "988f0d7a090e80254f5fba3c55e8aca75677b7e98ec7c06114d84ef09b22d776"
+              "sha256": "3c9bc00603fa7f1487e11c24b884fda89449e63f4224ccdddb2af590af4990cb"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -91416,7 +91426,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -91564,11 +91575,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -92057,7 +92068,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -92241,11 +92253,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -92879,7 +92891,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-signed-payment-callback-alert"
+          "release-0.6-signed-payment-callback-alert",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -92999,11 +93012,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "packages/db/drizzle/0035_create_sms_provider_configs.sql",
@@ -93904,7 +93917,8 @@
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-notification-eligible-backlog-alerts",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -94056,7 +94070,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.ts",
-              "sha256": "58090bbdb1cba343648ea351c89dccf71d94330dc0d2a01265bf0acc6ae31677"
+              "sha256": "de611a6b2e00ca55389761ce042f344d27a6710321e92b67ac5ae07365409c78"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -95319,7 +95333,8 @@
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-notification-eligible-backlog-alerts",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -95471,7 +95486,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.ts",
-              "sha256": "58090bbdb1cba343648ea351c89dccf71d94330dc0d2a01265bf0acc6ae31677"
+              "sha256": "de611a6b2e00ca55389761ce042f344d27a6710321e92b67ac5ae07365409c78"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -99896,7 +99911,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -100224,7 +100240,7 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "48c24047a4e6bfc45880359d467db66d8f07f85e4565f1bbbba3301794b6249b"
+              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
             },
             {
               "path": "apps/api/src/wallet/staff-wallet-balance-http.integration.test.ts",
@@ -102667,7 +102683,8 @@
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-notification-eligible-backlog-alerts",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -102819,7 +102836,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.ts",
-              "sha256": "58090bbdb1cba343648ea351c89dccf71d94330dc0d2a01265bf0acc6ae31677"
+              "sha256": "de611a6b2e00ca55389761ce042f344d27a6710321e92b67ac5ae07365409c78"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -105838,7 +105855,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-signed-payment-callback-alert"
+          "release-0.6-signed-payment-callback-alert",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -106086,11 +106104,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             }
           ],
           "checks": [
@@ -144482,7 +144500,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-rehearsal",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -144506,7 +144525,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.ts",
-              "sha256": "58090bbdb1cba343648ea351c89dccf71d94330dc0d2a01265bf0acc6ae31677"
+              "sha256": "de611a6b2e00ca55389761ce042f344d27a6710321e92b67ac5ae07365409c78"
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
@@ -145043,7 +145062,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-exact-coverage",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -145075,7 +145095,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-topup.service.ts",
-              "sha256": "422fb39d48c2f300060677b7606995c3b1696cac25cc11d285e28cc2e3ba43eb"
+              "sha256": "b764456b6f4d5b9140d9185fa2e55c297716e75291161ec9885f1e3c0da31584"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -146384,7 +146404,8 @@
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -146404,7 +146425,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.ts",
-              "sha256": "58090bbdb1cba343648ea351c89dccf71d94330dc0d2a01265bf0acc6ae31677"
+              "sha256": "de611a6b2e00ca55389761ce042f344d27a6710321e92b67ac5ae07365409c78"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -146772,7 +146793,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -146788,7 +146810,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.ts",
-              "sha256": "58090bbdb1cba343648ea351c89dccf71d94330dc0d2a01265bf0acc6ae31677"
+              "sha256": "de611a6b2e00ca55389761ce042f344d27a6710321e92b67ac5ae07365409c78"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -147382,7 +147404,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -147422,11 +147445,11 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
-              "sha256": "32114d67fd7c64aabdb205a3ae1d09fb8255174802223739ad87aa52e1968f48"
+              "sha256": "21da392e75f793675a20027416b7beedd56e02146f620fe0e9e886bcf272628c"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "48c24047a4e6bfc45880359d467db66d8f07f85e4565f1bbbba3301794b6249b"
+              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -148250,7 +148273,8 @@
           "release-0.5-final-gates",
           "release-0.5-dashboard-browser-recovery",
           "release-0.5-essential-control-contrast",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -148282,11 +148306,11 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
-              "sha256": "32114d67fd7c64aabdb205a3ae1d09fb8255174802223739ad87aa52e1968f48"
+              "sha256": "21da392e75f793675a20027416b7beedd56e02146f620fe0e9e886bcf272628c"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "48c24047a4e6bfc45880359d467db66d8f07f85e4565f1bbbba3301794b6249b"
+              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -148574,7 +148598,8 @@
           "release-0.5-final-gates",
           "release-0.5-dashboard-browser-recovery",
           "release-0.5-essential-control-contrast",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -148610,11 +148635,11 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
-              "sha256": "32114d67fd7c64aabdb205a3ae1d09fb8255174802223739ad87aa52e1968f48"
+              "sha256": "21da392e75f793675a20027416b7beedd56e02146f620fe0e9e886bcf272628c"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "48c24047a4e6bfc45880359d467db66d8f07f85e4565f1bbbba3301794b6249b"
+              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -148895,7 +148920,8 @@
           "release-0.5-final-gates",
           "release-0.5-dashboard-browser-recovery",
           "release-0.5-essential-control-contrast",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -148923,11 +148949,11 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
-              "sha256": "32114d67fd7c64aabdb205a3ae1d09fb8255174802223739ad87aa52e1968f48"
+              "sha256": "21da392e75f793675a20027416b7beedd56e02146f620fe0e9e886bcf272628c"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "48c24047a4e6bfc45880359d467db66d8f07f85e4565f1bbbba3301794b6249b"
+              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -440305,7 +440331,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-signed-payment-callback-alert"
+          "release-0.6-signed-payment-callback-alert",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -440425,11 +440452,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "packages/db/drizzle/0035_create_sms_provider_configs.sql",
@@ -440756,7 +440783,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-signed-payment-callback-alert"
+          "release-0.6-signed-payment-callback-alert",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -440876,11 +440904,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "packages/db/drizzle/0035_create_sms_provider_configs.sql",
@@ -441206,7 +441234,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-signed-payment-callback-alert"
+          "release-0.6-signed-payment-callback-alert",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -441326,11 +441355,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "packages/db/drizzle/0035_create_sms_provider_configs.sql",
@@ -441656,7 +441685,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-signed-payment-callback-alert"
+          "release-0.6-signed-payment-callback-alert",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -441776,11 +441806,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "packages/db/drizzle/0035_create_sms_provider_configs.sql",
@@ -441848,7 +441878,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "988f0d7a090e80254f5fba3c55e8aca75677b7e98ec7c06114d84ef09b22d776"
+              "sha256": "3c9bc00603fa7f1487e11c24b884fda89449e63f4224ccdddb2af590af4990cb"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -442193,7 +442223,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -442341,11 +442372,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "packages/db/drizzle/0035_create_sms_provider_configs.sql",
@@ -443146,7 +443177,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-signed-payment-callback-alert"
+          "release-0.6-signed-payment-callback-alert",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -443370,11 +443402,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "988f0d7a090e80254f5fba3c55e8aca75677b7e98ec7c06114d84ef09b22d776"
+              "sha256": "3c9bc00603fa7f1487e11c24b884fda89449e63f4224ccdddb2af590af4990cb"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "docs/operations/ai-model-tests.md",
@@ -455655,7 +455687,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-signed-payment-callback-alert"
+          "release-0.6-signed-payment-callback-alert",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -455903,11 +455936,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             }
           ],
           "checks": [
@@ -456141,7 +456174,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-signed-payment-callback-alert"
+          "release-0.6-signed-payment-callback-alert",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -456389,11 +456423,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             }
           ],
           "checks": [
@@ -456629,7 +456663,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-signed-payment-callback-alert"
+          "release-0.6-signed-payment-callback-alert",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -456877,11 +456912,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             }
           ],
           "checks": [
@@ -457115,7 +457150,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-signed-payment-callback-alert"
+          "release-0.6-signed-payment-callback-alert",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -457363,11 +457399,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             }
           ],
           "checks": [
@@ -484844,7 +484880,8 @@
           "release-0.6-exception-correlation-and-sensitive-diagnostics",
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-versioned-config-cache-and-diagnostic-privacy",
-          "release-0.6-signed-payment-callback-alert"
+          "release-0.6-signed-payment-callback-alert",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-ingress-authentication-and-wallet-diagnostic-proof",
@@ -484920,15 +484957,15 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.test.ts",
-              "sha256": "629c504dd3ea643a105794467fd5cc3051a9fcf6450a62a40de563bf066ee74a"
+              "sha256": "f6f5c60ab1dc94223cb2a50e8a1afc38c9218adc185e253a5ccd197118a8e211"
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.ts",
-              "sha256": "58090bbdb1cba343648ea351c89dccf71d94330dc0d2a01265bf0acc6ae31677"
+              "sha256": "de611a6b2e00ca55389761ce042f344d27a6710321e92b67ac5ae07365409c78"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "48c24047a4e6bfc45880359d467db66d8f07f85e4565f1bbbba3301794b6249b"
+              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
@@ -485300,7 +485337,8 @@
         "batches": [
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-signed-payment-callback-alert"
+          "release-0.6-signed-payment-callback-alert",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-financial-gauges-and-critical-wallet-alert",
@@ -485316,11 +485354,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "e15eb84a1e8068570c52804e57322060627409f0ba9d98134106d511acbd26a4"
+              "sha256": "d5c32a647f3b4d2a3457031855e08908ea978bad25ba2ae827058389a5d7e4c9"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "988f0d7a090e80254f5fba3c55e8aca75677b7e98ec7c06114d84ef09b22d776"
+              "sha256": "3c9bc00603fa7f1487e11c24b884fda89449e63f4224ccdddb2af590af4990cb"
             },
             {
               "path": "apps/worker/src/refunds/refund-metrics.ts",
@@ -485328,11 +485366,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "docs/operations/refund-monitoring.md",
@@ -485828,7 +485866,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-signed-payment-callback-alert"
+          "release-0.6-signed-payment-callback-alert",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -485844,7 +485883,7 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -485987,7 +486026,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-signed-payment-callback-alert"
+          "release-0.6-signed-payment-callback-alert",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-deployed-alert-config-and-immutable-receipts",
@@ -486007,11 +486047,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "988f0d7a090e80254f5fba3c55e8aca75677b7e98ec7c06114d84ef09b22d776"
+              "sha256": "3c9bc00603fa7f1487e11c24b884fda89449e63f4224ccdddb2af590af4990cb"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "e15eb84a1e8068570c52804e57322060627409f0ba9d98134106d511acbd26a4"
+              "sha256": "d5c32a647f3b4d2a3457031855e08908ea978bad25ba2ae827058389a5d7e4c9"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -486277,7 +486317,8 @@
         "batches": [
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-signed-payment-callback-alert"
+          "release-0.6-signed-payment-callback-alert",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-refund-overdue-alert-and-native-worker",
@@ -486293,19 +486334,19 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "e15eb84a1e8068570c52804e57322060627409f0ba9d98134106d511acbd26a4"
+              "sha256": "d5c32a647f3b4d2a3457031855e08908ea978bad25ba2ae827058389a5d7e4c9"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "988f0d7a090e80254f5fba3c55e8aca75677b7e98ec7c06114d84ef09b22d776"
+              "sha256": "3c9bc00603fa7f1487e11c24b884fda89449e63f4224ccdddb2af590af4990cb"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "apps/worker/src/refunds/refund-metrics.ts",
@@ -486387,7 +486428,8 @@
         ],
         "batches": [
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-signed-payment-callback-alert"
+          "release-0.6-signed-payment-callback-alert",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-financial-gauges-and-critical-wallet-alert",
@@ -486403,11 +486445,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "e15eb84a1e8068570c52804e57322060627409f0ba9d98134106d511acbd26a4"
+              "sha256": "d5c32a647f3b4d2a3457031855e08908ea978bad25ba2ae827058389a5d7e4c9"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "988f0d7a090e80254f5fba3c55e8aca75677b7e98ec7c06114d84ef09b22d776"
+              "sha256": "3c9bc00603fa7f1487e11c24b884fda89449e63f4224ccdddb2af590af4990cb"
             },
             {
               "path": "apps/worker/src/refunds/refund-metrics.ts",
@@ -486415,11 +486457,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "docs/operations/refund-monitoring.md",
@@ -486508,7 +486550,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-signed-payment-callback-alert"
+          "release-0.6-signed-payment-callback-alert",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-backlog-metrics-alert-rules-and-receipts",
@@ -486524,19 +486567,19 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "e15eb84a1e8068570c52804e57322060627409f0ba9d98134106d511acbd26a4"
+              "sha256": "d5c32a647f3b4d2a3457031855e08908ea978bad25ba2ae827058389a5d7e4c9"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "988f0d7a090e80254f5fba3c55e8aca75677b7e98ec7c06114d84ef09b22d776"
+              "sha256": "3c9bc00603fa7f1487e11c24b884fda89449e63f4224ccdddb2af590af4990cb"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -486598,20 +486641,108 @@
         "story": "06-security-testing-observability.md#spec-a791d496e45e"
       },
       "requirement": "| T-06.15.03.04 | Configure duplicate payment detection: same idempotency key with different payload → P1 | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-payment-idempotency-conflict-alert"
+        ],
+        "current_acceptance": {
+          "kind": "verified-payment-idempotency-conflict-p1",
+          "base_commit": "e3ebc635bd82744b977d32a1ed947e45b5c69fcb",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/metrics/payment-idempotency-metrics.ts",
+              "sha256": "c7ec854817f69c7aad1fe37d604a63b32975ee7c34f5af7d1be264f8178dae78"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup.service.ts",
+              "sha256": "de611a6b2e00ca55389761ce042f344d27a6710321e92b67ac5ae07365409c78"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-topup.service.ts",
+              "sha256": "b764456b6f4d5b9140d9185fa2e55c297716e75291161ec9885f1e3c0da31584"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup.service.test.ts",
+              "sha256": "f6f5c60ab1dc94223cb2a50e8a1afc38c9218adc185e253a5ccd197118a8e211"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-topup.service.test.ts",
+              "sha256": "4e239077bd51f4bc0c98c197c922dec22baf99d139a4ef56ec35b99d82809125"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
+              "sha256": "21da392e75f793675a20027416b7beedd56e02146f620fe0e9e886bcf272628c"
+            },
+            {
+              "path": "apps/worker/src/operations/alerts.ts",
+              "sha256": "3c9bc00603fa7f1487e11c24b884fda89449e63f4224ccdddb2af590af4990cb"
+            },
+            {
+              "path": "apps/worker/src/operations/alerts.integration.test.ts",
+              "sha256": "d5c32a647f3b4d2a3457031855e08908ea978bad25ba2ae827058389a5d7e4c9"
+            },
+            {
+              "path": "deploy/monitoring/notification-alerts.yml",
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+            },
+            {
+              "path": "deploy/monitoring/notification-alerts.test.yml",
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+            },
+            {
+              "path": "docs/operations/staging-payment-sandbox.md",
+              "sha256": "3e7f3dca369843582ace04e2b1ad181a397fea22d194a2304d0ef6a89c7d9c06"
+            },
+            {
+              "path": "apps/api/src/idempotency/idempotency-keys.repository.ts",
+              "sha256": "e374dd1a2166c843a594418060975674400d5dbcb837234844d5a05569716fa7"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
+              "sha256": "8fa91fa11e9dd8460ffc736f8ad67a0527bb10bc9e1978bffe2ac30b0457eafc"
+            },
+            {
+              "path": "apps/api/src/metrics/metrics.service.ts",
+              "sha256": "a06d5f3b446efaff6353bdc34ea47e96fbc1a361c6b19324da1542c75ee26601"
+            },
+            {
+              "path": "deploy/monitoring/staging-prometheus.yml",
+              "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+            },
+            {
+              "path": "deploy/monitoring/staging-alertmanager.yml",
+              "sha256": "baa720bcbbe818811a58183bb3d096d863e92dbd347f00bb25263b16dc40b0dd"
+            },
+            {
+              "path": "packages/db/drizzle/production/0283_operations_outbox_backlog_priority.sql",
+              "sha256": "39135fae29951df9164ecca62361b272555bc1d0a63acf208e09f1a9e6204ac4"
+            }
+          ],
+          "checks": [
+            "Online top-up, bank-receipt top-up and wallet invoice payment observe a conflicting payment payload on an already-used key. Exact retries and ordinary first-use stale reviews keep existing behavior. The private metric labels only the fixed operation.",
+            "All 63 related unit cases passed with real metrics registration, including each changed-payload path, exact replay and stale first-use amount. API typecheck, targeted API/worker lint, worker build, format and contract checks passed.",
+            "All 78 isolated PostgreSQL payment cases and 19 receiver cases passed. Native tests retain same-key financial replay, wrong-owner/amount boundaries and simultaneous payment protection.",
+            "Promtool passed all 12 rules and tested a single P1 across payment operations and replicas with clearance after five minutes. Isolated Alertmanager and receiver readback confirm an independent durable operations alert. Live staging activation and paging remain separate."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.15.03.05",
@@ -486634,7 +486765,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-signed-payment-callback-alert"
+          "release-0.6-signed-payment-callback-alert",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_acceptance": {
           "kind": "verified-signed-payment-anomaly-rules-and-isolated-receipts",
@@ -486662,11 +486794,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "988f0d7a090e80254f5fba3c55e8aca75677b7e98ec7c06114d84ef09b22d776"
+              "sha256": "3c9bc00603fa7f1487e11c24b884fda89449e63f4224ccdddb2af590af4990cb"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "e15eb84a1e8068570c52804e57322060627409f0ba9d98134106d511acbd26a4"
+              "sha256": "d5c32a647f3b4d2a3457031855e08908ea978bad25ba2ae827058389a5d7e4c9"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -486674,15 +486806,15 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             },
             {
               "path": "docs/operations/staging-payment-sandbox.md",
-              "sha256": "d3c0295e99beedb26b6d7c955d45424d2f41ab5dcca69db1bdfc116fcc7a46b3"
+              "sha256": "3e7f3dca369843582ace04e2b1ad181a397fea22d194a2304d0ef6a89c7d9c06"
             },
             {
               "path": "apps/api/src/wallet/payment-callback-verifier.ts",
@@ -729033,7 +729165,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.ts",
-              "sha256": "58090bbdb1cba343648ea351c89dccf71d94330dc0d2a01265bf0acc6ae31677"
+              "sha256": "de611a6b2e00ca55389761ce042f344d27a6710321e92b67ac5ae07365409c78"
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
@@ -729073,7 +729205,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-topup.service.ts",
-              "sha256": "422fb39d48c2f300060677b7606995c3b1696cac25cc11d285e28cc2e3ba43eb"
+              "sha256": "b764456b6f4d5b9140d9185fa2e55c297716e75291161ec9885f1e3c0da31584"
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
@@ -729229,11 +729361,11 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
-              "sha256": "32114d67fd7c64aabdb205a3ae1d09fb8255174802223739ad87aa52e1968f48"
+              "sha256": "21da392e75f793675a20027416b7beedd56e02146f620fe0e9e886bcf272628c"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "48c24047a4e6bfc45880359d467db66d8f07f85e4565f1bbbba3301794b6249b"
+              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
             },
             {
               "path": "apps/api/src/wallet/wallet.module.ts",
@@ -732337,7 +732469,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-payment-idempotency-conflict-alert"
         ]
       }
     },
@@ -739162,11 +739295,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "deploy/staging/README.md",
@@ -740930,7 +741063,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -743091,11 +743225,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "3a1b44f256201b8129aa7ee20beaa911d08ca6e8d0aea32cc4bfcb3283925bf0"
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "a64e3785091964785ad8ee076fb0e64cd5e6eec7e5801b2133645074ecad14c1"
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
             },
             {
               "path": "deploy/staging/README.md",
@@ -744765,7 +744899,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -748791,7 +748926,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-migration-journal-formatting",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-payment-idempotency-conflict-alert"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -843458,6 +843594,148 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/outbox-range-replay",
       "source_scope_proof": "outbox-range-replay-source-proof.json",
       "source_scope_proof_sha256": "d86caee88eab09516bd92326b202c8060e76b3a73c24c328c7998060649c19fd"
+    },
+    "release-0.6-payment-idempotency-conflict-alert": {
+      "batch": "release-0.6-payment-idempotency-conflict-alert",
+      "base_commit": "e3ebc635bd82744b977d32a1ed947e45b5c69fcb",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.03",
+        "01-platform-infrastructure.md#T-04.02.03",
+        "02-auth-users-admin.md#T-09.06.01",
+        "02-auth-users-admin.md#T-09.06.02",
+        "02-auth-users-admin.md#T-09.07.01",
+        "02-auth-users-admin.md#T-09.07.02",
+        "02-auth-users-admin.md#T-09.09.01",
+        "02-auth-users-admin.md#T-09.10.01",
+        "02-auth-users-admin.md#T-09.11.01",
+        "04-invoices-wallet-contracts.md#T-04.2.02.01",
+        "04-invoices-wallet-contracts.md#T-04.2.02.03",
+        "04-invoices-wallet-contracts.md#T-04.2.02.06",
+        "04-invoices-wallet-contracts.md#T-04.2.02.07",
+        "04-invoices-wallet-contracts.md#T-04.2.03.01",
+        "04-invoices-wallet-contracts.md#T-04.2.03.02",
+        "04-invoices-wallet-contracts.md#T-04.2.03.03",
+        "04-invoices-wallet-contracts.md#T-04.2.03.04",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07",
+        "05-notifications-documents-ai.md#T-05.07.01",
+        "05-notifications-documents-ai.md#T-05.07.02",
+        "05-notifications-documents-ai.md#T-05.07.03",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "05-notifications-documents-ai.md#T-05.07.05",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.16.01",
+        "05-notifications-documents-ai.md#T-05.16.02",
+        "05-notifications-documents-ai.md#T-05.16.03",
+        "05-notifications-documents-ai.md#T-05.16.04",
+        "06-security-testing-observability.md#T-06.13.02.06",
+        "06-security-testing-observability.md#T-06.14.01.06",
+        "06-security-testing-observability.md#T-06.15.01.01",
+        "06-security-testing-observability.md#T-06.15.01.06",
+        "06-security-testing-observability.md#T-06.15.03.01",
+        "06-security-testing-observability.md#T-06.15.03.02",
+        "06-security-testing-observability.md#T-06.15.03.03",
+        "06-security-testing-observability.md#T-06.15.03.04",
+        "06-security-testing-observability.md#T-06.15.03.05",
+        "release-readiness#R-02.01",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/metrics/payment-idempotency-metrics.ts",
+          "sha256": "c7ec854817f69c7aad1fe37d604a63b32975ee7c34f5af7d1be264f8178dae78"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup.service.ts",
+          "sha256": "de611a6b2e00ca55389761ce042f344d27a6710321e92b67ac5ae07365409c78"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-topup.service.ts",
+          "sha256": "b764456b6f4d5b9140d9185fa2e55c297716e75291161ec9885f1e3c0da31584"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+          "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup.service.test.ts",
+          "sha256": "f6f5c60ab1dc94223cb2a50e8a1afc38c9218adc185e253a5ccd197118a8e211"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-topup.service.test.ts",
+          "sha256": "4e239077bd51f4bc0c98c197c922dec22baf99d139a4ef56ec35b99d82809125"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
+          "sha256": "21da392e75f793675a20027416b7beedd56e02146f620fe0e9e886bcf272628c"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.ts",
+          "sha256": "3c9bc00603fa7f1487e11c24b884fda89449e63f4224ccdddb2af590af4990cb"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.integration.test.ts",
+          "sha256": "d5c32a647f3b4d2a3457031855e08908ea978bad25ba2ae827058389a5d7e4c9"
+        },
+        {
+          "path": "deploy/monitoring/notification-alerts.yml",
+          "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+        },
+        {
+          "path": "deploy/monitoring/notification-alerts.test.yml",
+          "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+        },
+        {
+          "path": "docs/operations/staging-payment-sandbox.md",
+          "sha256": "3e7f3dca369843582ace04e2b1ad181a397fea22d194a2304d0ef6a89c7d9c06"
+        },
+        {
+          "path": "apps/api/src/idempotency/idempotency-keys.repository.ts",
+          "sha256": "e374dd1a2166c843a594418060975674400d5dbcb837234844d5a05569716fa7"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
+          "sha256": "8fa91fa11e9dd8460ffc736f8ad67a0527bb10bc9e1978bffe2ac30b0457eafc"
+        },
+        {
+          "path": "apps/api/src/metrics/metrics.service.ts",
+          "sha256": "a06d5f3b446efaff6353bdc34ea47e96fbc1a361c6b19324da1542c75ee26601"
+        },
+        {
+          "path": "deploy/monitoring/staging-prometheus.yml",
+          "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+        },
+        {
+          "path": "deploy/monitoring/staging-alertmanager.yml",
+          "sha256": "baa720bcbbe818811a58183bb3d096d863e92dbd347f00bb25263b16dc40b0dd"
+        },
+        {
+          "path": "packages/db/drizzle/production/0283_operations_outbox_backlog_priority.sql",
+          "sha256": "39135fae29951df9164ecca62361b272555bc1d0a63acf208e09f1a9e6204ac4"
+        }
+      ],
+      "checks": [
+        "Online top-up, bank-receipt top-up and wallet invoice payment observe a conflicting payment payload on an already-used key. Exact retries and ordinary first-use stale reviews keep existing behavior. The private metric labels only the fixed operation.",
+        "All 63 related unit cases passed with real metrics registration, including each changed-payload path, exact replay and stale first-use amount. API typecheck, targeted API/worker lint, worker build, format and contract checks passed.",
+        "All 78 isolated PostgreSQL payment cases and 19 receiver cases passed. Native tests retain same-key financial replay, wrong-owner/amount boundaries and simultaneous payment protection.",
+        "Promtool passed all 12 rules and tested a single P1 across payment operations and replicas with clearance after five minutes. Isolated Alertmanager and receiver readback confirm an independent durable operations alert. Live staging activation and paging remain separate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/payment-key-conflict-monitoring",
+      "source_scope_proof": "payment-key-conflict-source-proof.json",
+      "source_scope_proof_sha256": "644dc7f3ef12954796823073c7973e99f6b4fc520c30d3b22d6be35c090898fe"
     }
   },
   "historical_improvements": [

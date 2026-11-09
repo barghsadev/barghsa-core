@@ -72,3 +72,15 @@ Use the protected payment event and ledger records to check whether the
 original event settled. Keep uncertain payments in reconciliation and preserve
 their original idempotency keys. Browser confirmation retries and recovery of
 matching in-progress events follow their normal settlement checks.
+
+## Conflicting payment retries
+
+`PaymentIdempotencyConflict` raises a P1 when the online top-up, bank-receipt
+top-up or wallet invoice payment service sees different payment data under a
+previously used key. Exact retries follow their original idempotency checks.
+A stale invoice amount on the first use of a key still requires a new review.
+The private scrape shows only the operation name and the time of detection.
+
+Check the original receipt, ledger and protected audit trail before any
+corrective payment. Preserve the original key and existing settlement record.
+Use a newly reviewed payment only after the prior outcome is known.

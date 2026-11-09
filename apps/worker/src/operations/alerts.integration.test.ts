@@ -247,6 +247,7 @@ it.each([
   { alertname: 'RefundObligationOverdue', severity: 'warning', priority: 'P2' },
   { alertname: 'WalletReconciliationCritical', severity: 'critical', priority: 'P1' },
   { alertname: 'PaymentCallbackAnomaly', severity: 'critical', priority: 'P1' },
+  { alertname: 'PaymentIdempotencyConflict', severity: 'critical', priority: 'P1' },
 ])('records $alertname only with its matching severity and priority', async (labels) => {
   const input = envelope();
   Object.assign(input.alerts[0]!.labels, labels);

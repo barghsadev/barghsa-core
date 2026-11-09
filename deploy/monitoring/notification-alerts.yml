@@ -79,6 +79,16 @@ groups:
           priority: P1
         annotations:
           summary: A payment callback had an invalid signature, stale timestamp or replayed event ID
+      - alert: PaymentIdempotencyConflict
+        expr: |
+          max without (instance, pod, operation) (
+            max_over_time(payment_idempotency_last_conflict_timestamp_seconds[5m])
+          ) > time() - 300
+        labels:
+          severity: critical
+          priority: P1
+        annotations:
+          summary: A payment idempotency key was used with conflicting payment data
   - name: barghsa-ai-models
     rules:
       - alert: AiModelCircuitOpen
