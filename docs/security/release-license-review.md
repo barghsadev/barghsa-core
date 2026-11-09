@@ -45,6 +45,8 @@ The `e47415d3` scan reproduced the same 170 review entries. The accompanying `re
 
 The `42d2c407` preflight inventory contains 594 entries. All 170 review entries match the prepared packet by distribution scope, exact package URL and observed licenses. The other 424 entries pass the existing allowlist, and the inventory contains no GeoLite2 dataset package. The CI artifact records the four built image IDs and their scan receipts. Package-specific approval and verification against the final release images remain pending. [Current inventory and image receipts](https://github.com/barghsadev/barghsa-core/actions/runs/42701427330).
 
+The full workflow at `fa7d7416ad254dae8bab76e8a8a00231715554dc` exercised the strict gate. The image job passed its preceding checks and failed at “Check shipped component licenses.” The four image SBOMs reproduce the same 594 package and scope entries, with 170 requiring review and 424 allowed. The SHA-256 of its `release-licenses.json` is `81dbbd7badc34ceb289045fed66289377d346022b2fb8406e81a9b01f867e82f`. [Strict gate job and inventory](https://github.com/barghsadev/barghsa-core/actions/runs/42709841616/job/129476154963).
+
 - Record an owner or legal reviewer, approved package names, exact versions, platforms, conditions, and the GeoLite2 decision.
 - Use the original Alpine license expressions in the packet to review the terms. Trivy can report several license tokens without the original expression's operators. Record the applicable notice, source and replacement conditions for each exact package and image scope.
 - Build the final web and native images and verify the notices actually accompany the approved assets and packages. Include corresponding-source and distribution evidence where the reviewer requires it.

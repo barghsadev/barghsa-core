@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T22:21:17+00:00",
-  "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
+  "updated": "2026-11-09T22:24:46+00:00",
+  "source_commit": "5c12ec800295c67738b01f4b9ad8040d8234bf73",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -13324,7 +13324,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Record owner or legal dispositions for the exact 170 package/scope/license rows. The 42d2c407 inventory matches the prepared packet. Verify package-specific notices, corresponding source and replacement rights where applicable.",
+        "Record owner or legal dispositions for the exact 170 package/scope/license rows reproduced by the strict fa7d7416 gate. Verify package-specific notices, corresponding source and replacement rights where applicable.",
         "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions."
       ],
       "owner": null,
@@ -13368,15 +13368,16 @@
           "release-0.6-postgres-go-license-notices",
           "release-0.6-staging-postgres-monitoring-readback",
           "release-0.6-package-metadata-review",
-          "release-0.6-current-license-inventory-readback"
+          "release-0.6-current-license-inventory-readback",
+          "release-0.6-strict-license-gate-readback"
         ],
         "current_acceptance": {
-          "kind": "source-bound-current-inventory-pending-approval",
-          "base_commit": "af5d303a0876b181e38dcc7468a89f4457e32a72",
+          "kind": "source-bound-strict-gate-failed-pending-approval",
+          "base_commit": "fa7d7416ad254dae8bab76e8a8a00231715554dc",
           "source_evidence": [
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "943f17676c4f3d011002ac8a10277057eb32664853e0fb19540a0160fd9c2326"
+              "sha256": "a00456f52f852ae69799b4dc2d36b82e672001c8c05dafdf86cc514340dad8b1"
             },
             {
               "path": "deploy/licenses/release-approvals.json",
@@ -13400,8 +13401,9 @@
             }
           ],
           "checks": [
-            "The immutable 42d2c407 preflight artifact contains 594 package-and-distribution entries from four identified runtime images. All 170 review-required tuples match the prepared owner packet by exact package URL, distribution scope and observed licenses. The other 424 entries are allowed by the existing policy.",
-            "The source-bound inventory contains no GeoLite2 dataset package, consistent with the recorded fallback decision. The inventory is report-only while owner or legal approval remains pending. The strict final distribution gate and package-specific notices, source and replacement conditions still apply."
+            "Full CI 42709841616 at exact fa7d7416, job 129476154963, failed Check shipped component licenses after the earlier image steps succeeded.",
+            "All four image inventories match the 42d2c407 comparison across 594 package/scope/license/status tuples. 170 still require exact dispositions, 424 are allowed, and GeoLite2 is absent.",
+            "The policy and approvals file are unchanged. Owner or legal dispositions, verification of applicable conditions and strict acceptance of the immutable release images remain required."
           ]
         },
         "exact_license_report": {
@@ -26942,7 +26944,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-current-license-inventory-readback"
+          "release-0.6-current-license-inventory-readback",
+          "release-0.6-strict-license-gate-readback"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -27098,7 +27101,7 @@
             },
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "943f17676c4f3d011002ac8a10277057eb32664853e0fb19540a0160fd9c2326"
+              "sha256": "a00456f52f852ae69799b4dc2d36b82e672001c8c05dafdf86cc514340dad8b1"
             }
           ],
           "checks": [
@@ -480559,7 +480562,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Record owner or legal dispositions for the exact 170 package/scope/license rows. The 42d2c407 inventory matches the prepared packet. Verify package-specific notices, corresponding source and replacement rights where applicable.",
+        "Record owner or legal dispositions for the exact 170 package/scope/license rows reproduced by the strict fa7d7416 gate. Verify package-specific notices, corresponding source and replacement rights where applicable.",
         "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions."
       ],
       "owner": null,
@@ -480574,15 +480577,16 @@
           "release-0.6-postgres-go-license-notices",
           "release-0.6-staging-postgres-monitoring-readback",
           "release-0.6-package-metadata-review",
-          "release-0.6-current-license-inventory-readback"
+          "release-0.6-current-license-inventory-readback",
+          "release-0.6-strict-license-gate-readback"
         ],
         "current_acceptance": {
-          "kind": "source-bound-current-inventory-pending-approval",
-          "base_commit": "af5d303a0876b181e38dcc7468a89f4457e32a72",
+          "kind": "source-bound-strict-gate-failed-pending-approval",
+          "base_commit": "fa7d7416ad254dae8bab76e8a8a00231715554dc",
           "source_evidence": [
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "943f17676c4f3d011002ac8a10277057eb32664853e0fb19540a0160fd9c2326"
+              "sha256": "a00456f52f852ae69799b4dc2d36b82e672001c8c05dafdf86cc514340dad8b1"
             },
             {
               "path": "deploy/licenses/release-approvals.json",
@@ -480606,8 +480610,9 @@
             }
           ],
           "checks": [
-            "The immutable 42d2c407 preflight artifact contains 594 package-and-distribution entries from four identified runtime images. All 170 review-required tuples match the prepared owner packet by exact package URL, distribution scope and observed licenses. The other 424 entries are allowed by the existing policy.",
-            "The source-bound inventory contains no GeoLite2 dataset package, consistent with the recorded fallback decision. The inventory is report-only while owner or legal approval remains pending. The strict final distribution gate and package-specific notices, source and replacement conditions still apply."
+            "Full CI 42709841616 at exact fa7d7416, job 129476154963, failed Check shipped component licenses after the earlier image steps succeeded.",
+            "All four image inventories match the 42d2c407 comparison across 594 package/scope/license/status tuples. 170 still require exact dispositions, 424 are allowed, and GeoLite2 is absent.",
+            "The policy and approvals file are unchanged. Owner or legal dispositions, verification of applicable conditions and strict acceptance of the immutable release images remain required."
           ]
         },
         "exact_license_report": {
@@ -842465,6 +842470,49 @@
       "checks": [
         "Exact preflight 42710260315 job 129477830697 identified the generated journal as the sole format warning. The correction adds one terminal newline. Parsed entries, order, checksums in historical proofs and migration SQL are unchanged; old and new bytes were compared."
       ]
+    },
+    "release-0.6-strict-license-gate-readback": {
+      "batch": "release-0.6-strict-license-gate-readback",
+      "base_commit": "fa7d7416ad254dae8bab76e8a8a00231715554dc",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/security/release-license-review.md",
+          "sha256": "a00456f52f852ae69799b4dc2d36b82e672001c8c05dafdf86cc514340dad8b1"
+        },
+        {
+          "path": "deploy/licenses/release-approvals.json",
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        },
+        {
+          "path": "scripts/check-release-licenses.py",
+          "sha256": "271754dea01f1e5751d57f59160292723e14b994dea8523f0de172e976b499ea"
+        },
+        {
+          "path": "Dockerfile.base",
+          "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+        }
+      ],
+      "checks": [
+        "Full CI 42709841616 at exact fa7d7416, job 129476154963, failed Check shipped component licenses after the earlier image steps succeeded.",
+        "All four image inventories match the 42d2c407 comparison across 594 package/scope/license/status tuples. 170 still require exact dispositions, 424 are allowed, and GeoLite2 is absent.",
+        "The policy and approvals file are unchanged. Owner or legal dispositions, verification of applicable conditions and strict acceptance of the immutable release images remain required."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/license-strict-42709841616",
+      "source_scope_proof": "strict-gate-comparison.json",
+      "source_scope_proof_sha256": "36a48c323a89db863618f8e28f5734325a328572a85e67b541e466f5a1e0f030"
     }
   },
   "historical_improvements": [
