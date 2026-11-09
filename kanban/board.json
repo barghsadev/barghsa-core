@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T02:18:39+00:00",
-  "source_commit": "a3b262f3a17686203f1186dd4fcc34e1c0e39524",
+  "updated": "2026-11-09T02:22:11+00:00",
+  "source_commit": "5be7fc7ca4752c6fa699e89c607ce303143079f0",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -598962,7 +598962,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The staff primary-read inventory covers loading and error on all 48 data routes and authorized empty or unset states on 40 routes in both languages. CRM profile records additionally have current receipts for narrower correction access, paging, tab re-entry and parent withdrawal on denial. Reconcile the remaining original child states and applicable interactions before full route acceptance."
+        "All 48 staff primary reads have loading and error receipts, with 40 authorized empty or unset cases. Ten customer collections now have held first-read and authorized-empty receipts in both languages on Chromium and mobile Safari. The CRM correction-access change has browser and PostgreSQL HTTP receipts. Reconcile remaining named route interactions and independent child read states before full route acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -599105,7 +599105,8 @@
           "release-0.5-staff-loading-labels",
           "release-0.5-staff-empty-acceptance",
           "release-0.5-crm-records-revocation",
-          "release-0.5-crm-correction-visibility"
+          "release-0.5-crm-correction-visibility",
+          "release-0.5-customer-history-first-read"
         ],
         "current_acceptance": null
       }
@@ -728965,7 +728966,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The staff primary-read inventory covers loading and error on all 48 data routes and authorized empty or unset states on 40 routes in both languages. CRM profile records additionally have current receipts for narrower correction access, paging, tab re-entry and parent withdrawal on denial. Reconcile the remaining original child states and applicable interactions before full route acceptance."
+        "All 48 staff primary reads have loading and error receipts, with 40 authorized empty or unset cases. Ten customer collections now have held first-read and authorized-empty receipts in both languages on Chromium and mobile Safari. The CRM correction-access change has browser and PostgreSQL HTTP receipts. Reconcile remaining named route interactions and independent child read states before full route acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -729174,7 +729175,8 @@
           "release-0.5-staff-loading-labels",
           "release-0.5-staff-empty-acceptance",
           "release-0.5-crm-records-revocation",
-          "release-0.5-crm-correction-visibility"
+          "release-0.5-crm-correction-visibility",
+          "release-0.5-customer-history-first-read"
         ]
       }
     },
@@ -810624,6 +810626,129 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-correction-visibility/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-correction-visibility/renewed-bindings.json",
       "release_disposition": "Closed the narrow CRM correction-visibility case. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-customer-history-first-read": {
+      "batch": "release-0.5-customer-history-first-read",
+      "base_commit": "5be7fc7ca4752c6fa699e89c607ce303143079f0",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/components/ContractsWorkspace.tsx",
+          "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
+        },
+        {
+          "path": "apps/web/src/components/DocumentsWorkspace.tsx",
+          "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
+        },
+        {
+          "path": "apps/web/src/components/RouteErrorBoundary.tsx",
+          "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
+        },
+        {
+          "path": "apps/web/src/components/RouteSkeleton.tsx",
+          "sha256": "c371e664a768721aaf5589f26e7951db525ece11f565c1b542d51b9374820638"
+        },
+        {
+          "path": "apps/web/src/hooks/useListQuery.ts",
+          "sha256": "c6ac6d60b68941befc2b90ab86e50ae6c6518cc5cf096444c74a0ea2ee75c6b3"
+        },
+        {
+          "path": "apps/web/src/pages/BankReceiptsPage.tsx",
+          "sha256": "ab3ee41520c0ecee9eac2f9df6de50eca72fffeef2cda809f709715e16264ca7"
+        },
+        {
+          "path": "apps/web/src/pages/ConsultationsPage.tsx",
+          "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
+        },
+        {
+          "path": "apps/web/src/pages/ContractsPage.tsx",
+          "sha256": "2cec44911feeb1a68e3c10999adba67118a7ffd8caf6c1f71c6d980f77f91e15"
+        },
+        {
+          "path": "apps/web/src/pages/DocumentsPage.tsx",
+          "sha256": "9e48d22e718e01f2c1d1d3212103e8cb95f344dbab9f14923470e3ce73f685f8"
+        },
+        {
+          "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
+          "sha256": "8e2c4277fc0ce52f91e9a3961b2b3664d5ccb26524044e304223d1e2eaef9f5b"
+        },
+        {
+          "path": "apps/web/src/pages/InvoicesPage.tsx",
+          "sha256": "3ceed241a39c1cee1fa6ce6cd63bc9144d85d1b0a49fcb1a81f90e1785e3b2c0"
+        },
+        {
+          "path": "apps/web/src/pages/NotificationCenterPage.tsx",
+          "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
+        },
+        {
+          "path": "apps/web/src/pages/SavingOrdersPage.tsx",
+          "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+        },
+        {
+          "path": "apps/web/src/pages/SolarRequestsPage.tsx",
+          "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+        },
+        {
+          "path": "apps/web/src/pages/TicketsPage.tsx",
+          "sha256": "957cdaefba5bb88d77ef2ec2062ed9ad3a87379a3b34dbd09416629d6b20b98e"
+        },
+        {
+          "path": "apps/web/src/routes/_app/consultations.index.tsx",
+          "sha256": "b9814f3d97b1555eb87deab92ac63a95c33df96dc29adccf3c251d82e5b13863"
+        },
+        {
+          "path": "apps/web/src/routes/_app/contracts.tsx",
+          "sha256": "339f4449296ad8c10e0d7d8ab85393878574edb7bb74d73d8d7cdd4bc1dea6da"
+        },
+        {
+          "path": "apps/web/src/routes/_app/documents.tsx",
+          "sha256": "4645c7a3f70278d3cb14cbd407bde35bd21e79600ba5a730fb22620bfad641e9"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/orders.index.tsx",
+          "sha256": "ef6698f33d7f7fc445915cd632b9432751f9d11512105e02b98231f035619ed2"
+        },
+        {
+          "path": "apps/web/src/routes/_app/invoices/index.tsx",
+          "sha256": "423cca3b155685debf98c0128daf64ef1470848d2d892f737c2902319e37650c"
+        },
+        {
+          "path": "apps/web/src/routes/_app/invoices/receipts.tsx",
+          "sha256": "394be548e2e8a8e2f3737d7dc62be9a58ffa91bc9f5892c1586a60c174d83b89"
+        },
+        {
+          "path": "apps/web/src/routes/_app/notifications.tsx",
+          "sha256": "360f09cfdbf3839ebd542bab3b55a8c3d673e2833906a656233103dfd2befa02"
+        },
+        {
+          "path": "apps/web/src/routes/_app/savings.orders.index.tsx",
+          "sha256": "6919d76ac32a5a9bb4016af92f7b7394d9452715362bbff7dc3730f6e779a0d3"
+        },
+        {
+          "path": "apps/web/src/routes/_app/solar.requests.index.tsx",
+          "sha256": "ee98d71a3488353e3af99d0e614fe05b9b6b8705168dc32034f462e2aedb127a"
+        },
+        {
+          "path": "apps/web/src/routes/_app/tickets.tsx",
+          "sha256": "508cfd6ffa8554e0d05e90e8d745002bcf0024e8fcd9d3c9446a00061bdfc319"
+        }
+      ],
+      "checks": [
+        "Forty production-browser cases passed. Each held the authorized first read, checked localized loading and absence of an early empty state, then released an empty response and checked loading settled with no rows, pagination, alerts, repeated primary reads, mutation or runtime exception.",
+        "The ten route receipts cover electricity, saving, solar, consultation, invoices, contracts, bank receipts, documents, notifications and tickets in Persian and English on Chromium and mobile Safari. The notification center probe distinguishes its primary read from the bell read.",
+        "The prebuilt application and pushed source differ only in kanban metadata. No application source changed. Prior failure, filter, form, keyboard and ownership receipts remain separate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-history-first-read",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-history-first-read/customer-collection-states.json",
+      "source_scope_proof_sha256": "6f9c1c5ef9d4d3efab544358ffcb1b83a79053727155d29fe4ce8c1d2087e522",
+      "release_disposition": "Recorded first-read state receipts for ten customer collections. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [
@@ -810674,7 +810799,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Reconcile remaining original customer and staff child states and interactions against route-level evidence. GitHub required checks and staging Sentry remain independent."
+    "goal": "Match remaining independent route and child interactions against named receipts. Prioritize uncovered customer details and separate settings panels. GitHub required checks and staging Sentry remain independent."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
