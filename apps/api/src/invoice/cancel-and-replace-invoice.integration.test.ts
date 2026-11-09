@@ -290,9 +290,16 @@ describe('CancelAndReplaceInvoiceService — real PostgreSQL (T-04.1.05.02)', ()
 
   it('rolls back cancellation, replacement and audits when issuing the replacement fails', async () => {
     const originalId = await insertInvoice({ state: 'Unpaid' });
-    await ctx.pool.query(
-      "CREATE FUNCTION reject_replacement_issue() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test replacement issue audit failure'; END $$; CREATE TRIGGER reject_replacement_issue BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event='invoice.issue') EXECUTE FUNCTION reject_replacement_issue()"
-    );
+    await ctx.pool.query(`
+      CREATE SEQUENCE replacement_issue_attempts;
+      CREATE FUNCTION reject_replacement_issue() RETURNS trigger LANGUAGE plpgsql AS $$
+      BEGIN
+        PERFORM nextval('replacement_issue_attempts');
+        RAISE EXCEPTION 'test replacement issue audit failure';
+      END $$;
+      CREATE TRIGGER reject_replacement_issue BEFORE INSERT ON audit_log
+        FOR EACH ROW WHEN (NEW.event='invoice.issue') EXECUTE FUNCTION reject_replacement_issue()
+    `);
     try {
       await expect(
         service.cancelAndReplaceInvoice({
@@ -304,7 +311,10 @@ describe('CancelAndReplaceInvoiceService — real PostgreSQL (T-04.1.05.02)', ()
           actorUserId: ACTOR_USER_ID,
           now: NOW,
         })
-      ).rejects.toThrow('test replacement issue audit failure');
+      ).rejects.toThrow(/^Invoice transition failed$/);
+      expect(
+        (await ctx.pool.query('SELECT is_called FROM replacement_issue_attempts')).rows[0]
+      ).toEqual({ is_called: true });
       expect(
         (
           await ctx.pool.query('SELECT state,cancelled_at,metadata FROM invoices WHERE id=$1', [
@@ -324,7 +334,9 @@ describe('CancelAndReplaceInvoiceService — real PostgreSQL (T-04.1.05.02)', ()
         ).rows
       ).toHaveLength(0);
     } finally {
-      await ctx.pool.query('DROP TRIGGER reject_replacement_issue ON audit_log');
+      await ctx.pool.query(
+        'DROP TRIGGER reject_replacement_issue ON audit_log; DROP SEQUENCE replacement_issue_attempts'
+      );
     }
   });
 

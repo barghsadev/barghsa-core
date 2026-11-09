@@ -291,11 +291,14 @@ describe('ManualInvoiceService', () => {
         return { rows: [] };
       });
 
-      await expect(service.createManualInvoice(command())).rejects.toThrow('DB down');
+      await expect(service.createManualInvoice(command())).rejects.toThrow(
+        /^Invoice transition failed$/
+      );
 
       const calls = mockClient.query.mock.calls.map((c) =>
         (c[0] as string).trim().split(/\s+/)[0]!.toUpperCase()
       );
+      expect(calls).toContain('UPDATE');
       expect(calls).toContain('ROLLBACK');
       expect(calls).not.toContain('COMMIT');
     });

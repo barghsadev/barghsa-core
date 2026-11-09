@@ -445,9 +445,16 @@ describe('CreateAdjustmentInvoiceService — real PostgreSQL (T-04.1.05.03)', ()
       const originalId = await insertInvoice({ state: 'Paid', paidAmount: ORIGINAL_TOTAL });
       const before = (await ctx.pool.query('SELECT * FROM invoices WHERE id=$1', [originalId]))
         .rows[0];
-      await ctx.pool.query(
-        "CREATE OR REPLACE FUNCTION reject_adjustment_issue() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test adjustment audit failure'; END $$; CREATE TRIGGER reject_adjustment_issue BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event='invoice.issue') EXECUTE FUNCTION reject_adjustment_issue()"
-      );
+      await ctx.pool.query(`
+        CREATE SEQUENCE adjustment_issue_attempts;
+        CREATE OR REPLACE FUNCTION reject_adjustment_issue() RETURNS trigger LANGUAGE plpgsql AS $$
+        BEGIN
+          PERFORM nextval('adjustment_issue_attempts');
+          RAISE EXCEPTION 'test adjustment audit failure';
+        END $$;
+        CREATE TRIGGER reject_adjustment_issue BEFORE INSERT ON audit_log
+          FOR EACH ROW WHEN (NEW.event='invoice.issue') EXECUTE FUNCTION reject_adjustment_issue()
+      `);
       try {
         await expect(
           service.createAdjustmentInvoice({
@@ -457,7 +464,10 @@ describe('CreateAdjustmentInvoiceService — real PostgreSQL (T-04.1.05.03)', ()
             actorUserId: ACTOR_USER_ID,
             now: NOW,
           })
-        ).rejects.toThrow('test adjustment audit failure');
+        ).rejects.toThrow(/^Invoice transition failed$/);
+        expect(
+          (await ctx.pool.query('SELECT is_called FROM adjustment_issue_attempts')).rows[0]
+        ).toEqual({ is_called: true });
         expect(
           (await ctx.pool.query('SELECT * FROM invoices WHERE id=$1', [originalId])).rows[0]
         ).toEqual(before);
@@ -469,7 +479,9 @@ describe('CreateAdjustmentInvoiceService — real PostgreSQL (T-04.1.05.03)', ()
           ).rows
         ).toHaveLength(0);
       } finally {
-        await ctx.pool.query('DROP TRIGGER reject_adjustment_issue ON audit_log');
+        await ctx.pool.query(
+          'DROP TRIGGER reject_adjustment_issue ON audit_log; DROP SEQUENCE adjustment_issue_attempts'
+        );
       }
     }
   );

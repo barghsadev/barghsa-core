@@ -284,9 +284,16 @@ describe('ManualInvoiceService — real PostgreSQL integration (T-04.1.02.02)', 
         .rows[0]!.n,
     };
 
-    await ctx.pool.query(
-      "CREATE FUNCTION reject_manual_issue() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test manual issue audit failure'; END $$; CREATE TRIGGER reject_manual_issue BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event='invoice.issue') EXECUTE FUNCTION reject_manual_issue()"
-    );
+    await ctx.pool.query(`
+      CREATE SEQUENCE manual_issue_attempts;
+      CREATE FUNCTION reject_manual_issue() RETURNS trigger LANGUAGE plpgsql AS $$
+      BEGIN
+        PERFORM nextval('manual_issue_attempts');
+        RAISE EXCEPTION 'test manual issue audit failure';
+      END $$;
+      CREATE TRIGGER reject_manual_issue BEFORE INSERT ON audit_log
+        FOR EACH ROW WHEN (NEW.event='invoice.issue') EXECUTE FUNCTION reject_manual_issue()
+    `);
     try {
       await expect(
         service.createManualInvoice({
@@ -294,9 +301,14 @@ describe('ManualInvoiceService — real PostgreSQL integration (T-04.1.02.02)', 
           actorUserId: ACTOR_USER_ID,
           lines: [{ description: 'x', quantity: 1, unitPrice: 100n, vatRate: 0 }],
         })
-      ).rejects.toThrow('test manual issue audit failure');
+      ).rejects.toThrow(/^Invoice transition failed$/);
+      expect((await ctx.pool.query('SELECT is_called FROM manual_issue_attempts')).rows[0]).toEqual(
+        { is_called: true }
+      );
     } finally {
-      await ctx.pool.query('DROP TRIGGER reject_manual_issue ON audit_log');
+      await ctx.pool.query(
+        'DROP TRIGGER reject_manual_issue ON audit_log; DROP SEQUENCE manual_issue_attempts'
+      );
     }
 
     const after = {

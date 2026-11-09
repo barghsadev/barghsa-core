@@ -5,14 +5,14 @@ import * as argon2 from 'argon2';
 import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
-const token = 'b'.repeat(64);
+const token = `v2_${'b'.repeat(64)}`;
 const tokenHash = createHash('sha256').update(token).digest('hex');
 const newPassword = 'Activated-staff-password-123!';
 const activate = () =>
   fetchWithPreauth(`${http.base}/api/auth/activate-staff`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token, newPassword }),
+    body: JSON.stringify({ token, invitation: tokenHash, newPassword }),
   });
 
 beforeEach(async () => {
