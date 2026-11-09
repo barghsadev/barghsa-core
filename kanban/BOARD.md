@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T18:51:06+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T18:57:06+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 952 | Accepted with unchanged source bindings. |
-| verify | 382 | Existing work may be complete; inspect evidence before building. |
+| done | 953 | Accepted with unchanged source bindings. |
+| verify | 381 | Existing work may be complete; inspect evidence before building. |
 | partial | 28 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1003,7 +1003,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-03.02.04` | verify | Earlier acceptance_verified | Configure file-watch with proper polling for Docker-for-Mac compatibility |
 | `01-platform-infrastructure.md#T-03.03.01` | done | Earlier acceptance_verified | Implement liveness and readiness controllers in NestJS API |
 | `01-platform-infrastructure.md#T-03.03.02` | verify | Earlier acceptance_verified | Implement graceful `SIGTERM` handler for NestJS API and worker |
-| `01-platform-infrastructure.md#T-03.03.03` | verify | Earlier acceptance_verified | Implement graceful shutdown for web frontend server |
+| `01-platform-infrastructure.md#T-03.03.03` | done | Earlier acceptance_verified | Implement graceful shutdown for web frontend server |
 | `01-platform-infrastructure.md#T-03.03.04` | done | Earlier partial | Add readiness check that excludes non-critical dependencies |
 | `01-platform-infrastructure.md#T-04.01.01` | partial | Earlier partial | Configure PostgreSQL connection pooling strategy |
 | `01-platform-infrastructure.md#T-04.01.02` | partial | Earlier partial | Configure automated backups with WAL archiving and PITR |

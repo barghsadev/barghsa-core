@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T18:51:06+00:00",
+  "updated": "2026-11-09T18:57:06+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -9765,12 +9765,10 @@
         "story": "01-platform-infrastructure.md#spec-fa9c8259e872"
       },
       "requirement": "- **T-03.03.03:** Implement graceful shutdown for web frontend server\n  - **Notes:** Vite dev server handles this in dev mode. Production Node.js server handles `SIGTERM`: stop accepting connections, drain existing keep-alive connections up to deadline, finish pending HTML/static responses, close server. If connections remain, force-close them after deadline.\n  - **Dependencies:** S-03.01\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -9802,8 +9800,38 @@
         "changed_paths": [
           "apps/web/server.js"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-static-server-shutdown-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-production-web-subprocess",
+          "base_commit": "17cb2a945c4c1e66e7e5edd3d203a12fca22df68",
+          "source_evidence": [
+            {
+              "path": "apps/web/server.js",
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
+            },
+            {
+              "path": "apps/web/test/server-shutdown.spec.ts",
+              "sha256": "913d19a70976e4dbb18fc7020b9b058db02cdcebb627bc1ca11dc0a330e1c2c3"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "5a3332374e37d4a7d9eb5165a34156172d191be2dc1c3e77b1068eca5ab3818a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Three source-bound tests started the production static server as a child process. Idle SIGTERM exited 0. A paused 16 MiB response stayed active until all bytes drained, with the listener refusing new connections before exit 0. A paused response still open at the configured deadline exited 1."
+          ]
+        }
       }
     },
     {
@@ -740331,7 +740359,8 @@
           "release-0.6-database-pool-deadlines-and-log-privacy",
           "release-0.6-database-migration-baseline-and-upgrade",
           "release-0.6-native-seed-and-bootstrap-acceptance",
-          "release-0.6-current-ci-definition-contract-and-coverage-controls"
+          "release-0.6-current-ci-definition-contract-and-coverage-controls",
+          "release-0.6-static-server-shutdown-acceptance"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -830495,6 +830524,42 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/ci-integrity-reuse-42675559782",
       "source_scope_proof": "release-0.6-current-ci-definition-contract-and-coverage-controls.json",
       "source_scope_proof_sha256": "531a9d00539f998bcbe6283d410fcee37141a8186a672482d848e57ce941911e"
+    },
+    "release-0.6-static-server-shutdown-acceptance": {
+      "batch": "release-0.6-static-server-shutdown-acceptance",
+      "base_commit": "17cb2a945c4c1e66e7e5edd3d203a12fca22df68",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-03.03.03",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/server.js",
+          "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
+        },
+        {
+          "path": "apps/web/test/server-shutdown.spec.ts",
+          "sha256": "913d19a70976e4dbb18fc7020b9b058db02cdcebb627bc1ca11dc0a330e1c2c3"
+        },
+        {
+          "path": "apps/web/vitest.config.ts",
+          "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+        },
+        {
+          "path": "apps/web/package.json",
+          "sha256": "5a3332374e37d4a7d9eb5165a34156172d191be2dc1c3e77b1068eca5ab3818a"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "Three source-bound tests started the production static server as a child process. Idle SIGTERM exited 0. A paused 16 MiB response stayed active until all bytes drained, with the listener refusing new connections before exit 0. A paused response still open at the configured deadline exited 1."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/static-server-shutdown",
+      "source_scope_proof": "release-0.6-static-server-shutdown-acceptance.json",
+      "source_scope_proof_sha256": "5e253bbd4845b932cf5b61480f14107f3ceec8d13984b53200d2461a2aac7d0a"
     }
   },
   "historical_improvements": [
