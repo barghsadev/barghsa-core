@@ -165,9 +165,11 @@ export class OtpService {
 
     // Explicit local opt-in; production never emits the code.
     if (process.env.NODE_ENV === 'development' && process.env.OTP_CONSOLE === 'true') {
-      this.logger.debug(`[DEV] OTP for ${destination}: ${otp}`);
+      this.logger.debug(`[DEV] OTP for challenge ${challengeId}: ${otp}`);
     }
-    this.logger.debug(`OTP challenge created for ${destination} (${challengeId})`);
+    this.logger.debug(
+      `OTP challenge created: challengeId=${challengeId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+    );
 
     return { challengeId, destination };
   }
@@ -272,9 +274,11 @@ export class OtpService {
 
     // Explicit local opt-in; production never emits the code.
     if (process.env.NODE_ENV === 'development' && process.env.OTP_CONSOLE === 'true') {
-      this.logger.debug(`[DEV] OTP for ${destination}: ${otp}`);
+      this.logger.debug(`[DEV] OTP for challenge ${challengeId}: ${otp}`);
     }
-    this.logger.debug(`OTP login challenge created for user ${userId} (${challengeId})`);
+    this.logger.debug(
+      `OTP challenge created for user ${userId} challengeId=${challengeId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+    );
 
     return { challengeId, destination };
   }
@@ -358,9 +362,11 @@ export class OtpService {
 
     // Explicit local opt-in; production never emits the code.
     if (process.env.NODE_ENV === 'development' && process.env.OTP_CONSOLE === 'true') {
-      this.logger.debug(`[DEV] OTP for ${destination}: ${otp}`);
+      this.logger.debug(`[DEV] OTP for challenge ${challengeId}: ${otp}`);
     }
-    this.logger.debug(`OTP resend for ${destination} (${challengeId})`);
+    this.logger.debug(
+      `OTP resent: challengeId=${challengeId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+    );
 
     return { challengeId };
   }
@@ -429,7 +435,9 @@ export class OtpService {
       throw new HttpException({ statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code }, 409);
     }
 
-    this.logger.debug(`OTP verified for challenge ${challengeId}`);
+    this.logger.debug(
+      `OTP verified for challenge ${challengeId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+    );
 
     return { verified: true, challengeId };
   }

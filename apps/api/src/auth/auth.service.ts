@@ -298,7 +298,9 @@ export class AuthService {
       // branch below). A disabled account never gets a password-change token,
       // a session, or an OTP challenge.
       if (userResult.rows[0].disabled_at) {
-        this.logger.warn(`Login blocked for disabled user ${userId} from ${ip}`);
+        this.logger.warn(
+          `Login blocked for disabled user ${userId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+        );
         throw new HttpException(
           { statusCode: 403, error: ErrorCodes.AUTH_ACCOUNT_DISABLED.code },
           403
@@ -331,7 +333,9 @@ export class AuthService {
           );
         }
 
-        this.logger.log(`Password change required for user ${userId} from ${ip}`);
+        this.logger.log(
+          `Password change required for user ${userId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+        );
 
         return {
           requiresOtp: false,
@@ -377,7 +381,9 @@ export class AuthService {
           input.deviceInfo?.fingerprint
         );
 
-        this.logger.log(`OTP challenge created for login: user ${userId} from ${ip}`);
+        this.logger.log(
+          `Login OTP challenge created for user ${userId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+        );
 
         return {
           requiresOtp: true,
@@ -399,7 +405,9 @@ export class AuthService {
         // Non-critical — counter will expire naturally
       });
 
-      this.logger.log(`User logged in: ${userId} (${input.username}) from ${ip}`);
+      this.logger.log(
+        `User logged in: ${userId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
 
       return {
         requiresOtp: false,
@@ -489,7 +497,7 @@ export class AuthService {
       if (isSameAsCurrent) {
         await client.query('ROLLBACK');
         this.logger.warn(
-          `Password reuse (same as current) detected for user ${user.user_id} from ${ip}`
+          `Password reuse (same as current) detected for user ${user.user_id} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
         );
         throw new HttpException(
           { statusCode: 422, error: ErrorCodes.AUTH_LOGIN_PASSWORD_REUSED.code },
@@ -502,7 +510,9 @@ export class AuthService {
         const isReused = await argon2.verify(entry.password_hash, input.newPassword);
         if (isReused) {
           await client.query('ROLLBACK');
-          this.logger.warn(`Password reuse detected for user ${user.user_id} from ${ip}`);
+          this.logger.warn(
+            `Password reuse detected for user ${user.user_id} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+          );
           throw new HttpException(
             { statusCode: 422, error: ErrorCodes.AUTH_LOGIN_PASSWORD_REUSED.code },
             422
@@ -575,7 +585,9 @@ export class AuthService {
 
       await client.query('COMMIT');
 
-      this.logger.log(`Password changed for user ${user.user_id} from ${ip}`);
+      this.logger.log(
+        `Password changed for user ${user.user_id} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
 
       return {
         message: 'Password changed successfully. Please log in with your new password.',
@@ -768,7 +780,9 @@ export class AuthService {
         [challengeRow.user_id]
       );
       if (challengeUserStatus.rows.length > 0 && challengeUserStatus.rows[0].disabled_at) {
-        this.logger.warn(`OTP login blocked for disabled user ${challengeRow.user_id} from ${ip}`);
+        this.logger.warn(
+          `OTP login blocked for disabled user ${challengeRow.user_id} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+        );
         throw new HttpException(
           { statusCode: 403, error: ErrorCodes.AUTH_ACCOUNT_DISABLED.code },
           403
@@ -907,7 +921,9 @@ export class AuthService {
           )
           .catch(() => {});
 
-      this.logger.log(`Login OTP verified: user ${userId} from ${ip}`);
+      this.logger.log(
+        `Login OTP verified for user ${userId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
 
       return {
         userId,
@@ -1131,7 +1147,9 @@ export class AuthService {
 
       await client.query('COMMIT');
 
-      this.logger.log(`User created: ${userId} (${row.destination}) from ${ip}`);
+      this.logger.log(
+        `User created: ${userId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
 
       return {
         userId,
@@ -1346,7 +1364,9 @@ export class AuthService {
       const isSameAsCurrent = await argon2.verify(currentHash, input.newPassword);
       if (isSameAsCurrent) {
         await client.query('ROLLBACK');
-        this.logger.warn(`Password reuse (same as current) detected for user ${userId} from ${ip}`);
+        this.logger.warn(
+          `Password reuse (same as current) detected for user ${userId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+        );
         throw new HttpException(
           { statusCode: 422, error: ErrorCodes.AUTH_LOGIN_PASSWORD_REUSED.code },
           422
@@ -1358,7 +1378,9 @@ export class AuthService {
         const isReused = await argon2.verify(entry.password_hash, input.newPassword);
         if (isReused) {
           await client.query('ROLLBACK');
-          this.logger.warn(`Password reuse detected for user ${userId} from ${ip}`);
+          this.logger.warn(
+            `Password reuse detected for user ${userId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+          );
           throw new HttpException(
             { statusCode: 422, error: ErrorCodes.AUTH_LOGIN_PASSWORD_REUSED.code },
             422
@@ -1416,7 +1438,9 @@ export class AuthService {
       await this.assertResetDeadline(client, input.challengeId);
       await client.query('COMMIT');
 
-      this.logger.log(`Password reset for user ${userId} from ${ip}`);
+      this.logger.log(
+        `Password reset for user ${userId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
 
       return {
         message: 'Your password has been reset. Please log in with your new password.',
@@ -1629,7 +1653,7 @@ export class AuthService {
       // Verify the challenge was created for the new username (operation scoping)
       if (challengeDestination !== newUsername) {
         this.logger.warn(
-          `Challenge destination mismatch: challenge ${challengeId} was for ${challengeDestination} but request is for ${newUsername}`
+          `Username change rejected for challenge ${challengeId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
         );
         throw new HttpException(
           { statusCode: 400, error: ErrorCodes.AUTH_CHANGE_USERNAME_INVALID.code },
@@ -1762,9 +1786,7 @@ export class AuthService {
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
 
-      this.logger.log(
-        `Username changed: user ${userId} from ${ip} (${currentUser.username} → ${newUsername})`
-      );
+      this.logger.log(`Username changed for user ${userId} correlationId=${correlationId}`);
 
       return { message: 'Username changed successfully.' };
     } catch (err) {
@@ -1938,7 +1960,7 @@ export class AuthService {
       // Verify the challenge was created for the contact value (operation scoping)
       if (challengeDestination !== contactValue) {
         this.logger.warn(
-          `Challenge destination mismatch: challenge ${challengeId} was for ${challengeDestination} but request is for ${contactValue}`
+          `Add contact rejected for challenge ${challengeId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
         );
         throw new HttpException(
           { statusCode: 400, error: ErrorCodes.AUTH_CHANGE_USERNAME_INVALID.code },
@@ -2015,7 +2037,9 @@ export class AuthService {
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
 
-      this.logger.log(`Contact added: user ${userId} ${contactType}=${contactValue} from ${ip}`);
+      this.logger.log(
+        `Contact added for user ${userId} type=${contactType} correlationId=${correlationId}`
+      );
 
       return { message: 'Contact added successfully.' };
     } catch (err) {

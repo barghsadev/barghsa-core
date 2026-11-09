@@ -6,6 +6,7 @@ import { verificationIsCurrent, type VerificationPolicy } from '@barghsa/shared/
 import { VerificationEvidenceService } from './verification-evidence.service.js';
 import { notifySessionsRevoked } from '../auth/session-notifications.js';
 import { InputFieldException } from '../common/input-field.exception.js';
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { editCrmLegalInfo, readCrmLegalInfo } from './crm-profile-legal.js';
 import { editCrmAddress } from './crm-profile-address.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -916,12 +917,16 @@ export class CrmV2Service {
       await requireSessionStepUp(client, actor, ownRevocation);
       await client.query('COMMIT');
 
-      this.logger.debug(`Password change forced for user ${userId} by ${actorUserId}: ${reason}`);
+      this.logger.debug(
+        `Password change forced for user ${userId} by ${actorUserId} correlationId=${correlationId}`
+      );
 
       return { success: true, userId, reason };
     } catch (err) {
       await client.query('ROLLBACK');
-      this.logger.error(`Failed to force password change for user ${userId}: ${String(err)}`);
+      this.logger.error(
+        `Failed to force password change for user ${userId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
       throw err;
     } finally {
       client.release();
@@ -1008,12 +1013,16 @@ export class CrmV2Service {
       await requireSessionStepUp(client, actor, ownRevocation);
       await client.query('COMMIT');
 
-      this.logger.debug(`Sessions expired for user ${userId} by ${actorUserId}: ${reason}`);
+      this.logger.debug(
+        `Sessions expired for user ${userId} by ${actorUserId} correlationId=${correlationId}`
+      );
 
       return { success: true, userId, reason };
     } catch (err) {
       await client.query('ROLLBACK');
-      this.logger.error(`Failed to expire sessions for user ${userId}: ${String(err)}`);
+      this.logger.error(
+        `Failed to expire sessions for user ${userId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
       throw err;
     } finally {
       client.release();
@@ -1249,7 +1258,9 @@ export class CrmV2Service {
       await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
 
-      this.logger.debug(`Profile ${profileId} archived by ${actorUserId}: ${reason}`);
+      this.logger.debug(
+        `Profile ${profileId} archived by ${actorUserId} correlationId=${correlationId}`
+      );
 
       return {
         success: true,
@@ -1259,7 +1270,9 @@ export class CrmV2Service {
       };
     } catch (err) {
       await client.query('ROLLBACK');
-      this.logger.error(`Failed to delete profile ${profileId}: ${String(err)}`);
+      this.logger.error(
+        `Failed to archive profile ${profileId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
       throw err;
     } finally {
       client.release();

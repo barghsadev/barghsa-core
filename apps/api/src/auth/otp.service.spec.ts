@@ -71,6 +71,7 @@ describe('OtpService', () => {
         result = await service.resendChallenge('console-challenge', '127.0.0.1', 'registration');
       }
       expect(debug.mock.calls.some(([message]) => String(message).includes('654321'))).toBe(prints);
+      expect(JSON.stringify(debug.mock.calls)).not.toContain(destination);
       expect(JSON.stringify(result)).not.toContain('654321');
       // Console delivery must retain the challenge and encrypted durable outbox.
       expect(

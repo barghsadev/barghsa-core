@@ -3326,7 +3326,9 @@ export class AdminService {
     } catch (err) {
       await client.query('ROLLBACK').catch(() => {});
       if (err instanceof HttpException) throw err;
-      this.logger.error(`Failed to disable staff user ${input.userId}: ${String(err)}`);
+      this.logger.error(
+        `Failed to disable staff user ${input.userId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
       throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
       client.release();

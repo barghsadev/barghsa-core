@@ -131,6 +131,7 @@ it('registers using the message received by the provider and wipes the encrypted
     encrypted_payload: null,
     provider_ref: 'mailbox-receipt',
   });
+  expect(fixture.logs()).not.toContain(received[0]!.to[0]);
 });
 
 it('retries provider failure and cancels replaced or expired codes without sending them', async () => {
@@ -831,6 +832,17 @@ it('changes username only with both codes delivered to the old and new mailboxes
   ]);
   const code = (address: string) =>
     received.find((message) => message.to[0] === address)!.text.match(/\d{6}/)![0];
+  const mismatched = await post(
+    'auth/change-username',
+    {
+      newUsername: 'unbound-contact@example.test',
+      otpChallengeId: pair.challengeId,
+      otp: code('pair-new@example.test'),
+      previousOtp: code('provider@example.test'),
+    },
+    headers
+  );
+  expect(mismatched.status).toBe(400);
   const response = await post(
     'auth/change-username',
     {
@@ -853,6 +865,13 @@ it('changes username only with both codes delivered to the old and new mailboxes
       )
     ).rows[0].count
   ).toBe(2);
+  const logs = fixture.logs();
+  for (const address of [
+    'pair-new@example.test',
+    'provider@example.test',
+    'unbound-contact@example.test',
+  ])
+    expect(logs).not.toContain(address);
 });
 
 it.each(['customer', 'staff', 'admin'] as const)(
@@ -947,6 +966,8 @@ it.each(['customer', 'staff', 'admin'] as const)(
     });
     expect(returning.status).toBe(200);
     expect(await returning.json()).toMatchObject({ requiresOtp: false });
+    expect(fixture.logs()).not.toContain(credentials.username);
+    expect(fixture.logs()).not.toContain(credentials.password);
     const sessionCount = async () =>
       (await fixture.pool.query('SELECT count(*)::int AS count FROM sessions')).rows[0].count;
     const beforeRiskChecks = await sessionCount();

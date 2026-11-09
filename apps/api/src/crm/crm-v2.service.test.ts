@@ -1,5 +1,8 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { Logger } from '@nestjs/common';
 import { CrmV2Service } from './crm-v2.service.js';
+
+afterEach(() => vi.restoreAllMocks());
 
 // Actual session authority and lock/deadline races use the migrated HTTP suite.
 vi.mock('../session/session-step-up.js', () => ({
@@ -320,6 +323,7 @@ describe('CrmV2Service.forcePasswordChange', () => {
   }
 
   it('forces password change and revokes sessions', async () => {
+    const debug = vi.spyOn(Logger.prototype, 'debug').mockImplementation(() => undefined);
     const { pool, mockConnect } = mockPool();
     const { client, mockClientQuery, mockRelease } = mockClient();
     const ms = createMockSessionService();
@@ -347,6 +351,8 @@ describe('CrmV2Service.forcePasswordChange', () => {
 
     expect(result).not.toBeNull();
     expect(result).not.toHaveProperty('error');
+    expect(debug).toHaveBeenCalledWith(expect.stringContaining('correlationId='));
+    expect(JSON.stringify(debug.mock.calls)).not.toContain('Security incident');
     expect(ms.revokeAllUserSessions).toHaveBeenCalledWith(TARGET_USER_ID, undefined, client);
     expect(mockRelease).toHaveBeenCalledTimes(1);
   });
@@ -413,6 +419,7 @@ describe('CrmV2Service.forcePasswordChange', () => {
   });
 
   it('rolls back transaction on DB error', async () => {
+    const errorLog = vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
     const { pool, mockConnect } = mockPool();
     const { client, mockClientQuery, mockRelease } = mockClient();
     const ms = createMockSessionService();
@@ -440,6 +447,8 @@ describe('CrmV2Service.forcePasswordChange', () => {
     ).rejects.toThrow();
     expect(mockClientQuery).toHaveBeenCalledWith('ROLLBACK');
     expect(mockRelease).toHaveBeenCalled();
+    expect(errorLog).toHaveBeenCalledWith(expect.stringContaining('correlationId='));
+    expect(JSON.stringify(errorLog.mock.calls)).not.toContain('DB insert failed');
   });
 });
 
@@ -541,6 +550,7 @@ describe('CrmV2Service.expireSessions', () => {
   });
 
   it('rolls back transaction on DB error', async () => {
+    const errorLog = vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
     const { pool, mockConnect } = mockPool();
     const { client, mockClientQuery, mockRelease } = mockClient();
     const ms = createMockSessionService();
@@ -567,5 +577,7 @@ describe('CrmV2Service.expireSessions', () => {
     ).rejects.toThrow();
     expect(mockClientQuery).toHaveBeenCalledWith('ROLLBACK');
     expect(mockRelease).toHaveBeenCalled();
+    expect(errorLog).toHaveBeenCalledWith(expect.stringContaining('correlationId='));
+    expect(JSON.stringify(errorLog.mock.calls)).not.toContain('DB insert failed');
   });
 });

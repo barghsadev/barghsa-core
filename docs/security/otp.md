@@ -6,6 +6,8 @@ The challenge stores a SHA-256 digest. The restricted auth delivery queue tempor
 
 Retain challenge and delivery metadata for receipt correlation and linked account-recovery evidence. Challenge expiry is enforced by the API even when delivery cleanup is delayed.
 
+The console can show a code only when `NODE_ENV=development` and `OTP_CONSOLE=true`. The diagnostic uses the challenge reference. Application logs for issuance and resend use challenge and correlation references.
+
 ## Staff invitations
 
 A staff invitation email includes a link with a public invitation reference and a separate one-time activation code. The reference is the SHA-256 digest of the random code. The activation form submits the code in the JSON body with the matching reference. The existing 24-hour expiry, rate limit and atomic single-use activation apply.

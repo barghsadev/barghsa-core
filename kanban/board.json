@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T20:33:25+00:00",
+  "updated": "2026-11-09T20:40:31+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -9433,7 +9433,8 @@
           "apps/api/src/auth/otp.service.ts"
         ],
         "batches": [
-          "release-0.6-development-env-and-watcher-acceptance"
+          "release-0.6-development-env-and-watcher-acceptance",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-development-configuration-and-behavior",
@@ -9465,11 +9466,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             }
           ],
           "checks": [
@@ -16736,7 +16737,8 @@
           "release-0.5-final-gates",
           "release-0.5-review-preview-deadlines",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -16748,11 +16750,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/otp-config.ts",
@@ -16776,11 +16778,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
@@ -17355,7 +17357,8 @@
           "release-0.5-final-gates",
           "release-0.5-review-preview-deadlines",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -17367,11 +17370,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/otp-config.ts",
@@ -17395,11 +17398,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
@@ -18101,7 +18104,8 @@
           "release-0.5-final-gates",
           "release-0.5-review-preview-deadlines",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -18113,11 +18117,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/otp-config.ts",
@@ -18141,11 +18145,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
@@ -18711,7 +18715,8 @@
           "release-0.5-final-gates",
           "release-0.5-review-preview-deadlines",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -18723,11 +18728,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/otp-config.ts",
@@ -18751,11 +18756,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
@@ -19335,7 +19340,8 @@
           "release-0.5-final-gates",
           "release-0.5-review-preview-deadlines",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -19347,11 +19353,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/otp-config.ts",
@@ -19375,11 +19381,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
@@ -19960,7 +19966,8 @@
           "release-0.5-final-gates",
           "release-0.5-review-preview-deadlines",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -19972,11 +19979,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/otp-config.ts",
@@ -20000,11 +20007,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
@@ -20584,7 +20591,8 @@
           "release-0.5-final-gates",
           "release-0.5-review-preview-deadlines",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -20596,11 +20604,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/otp-config.ts",
@@ -20624,11 +20632,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
@@ -21212,7 +21220,8 @@
           "release-0.5-final-gates",
           "release-0.5-review-preview-deadlines",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -21224,11 +21233,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/otp-config.ts",
@@ -21252,11 +21261,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
@@ -21898,7 +21907,8 @@
           "release-0.6-password-hash-calibration",
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -21906,7 +21916,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
@@ -22721,7 +22731,8 @@
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -22733,7 +22744,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
@@ -22741,7 +22752,7 @@
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/device-trust-ip.ts",
@@ -23636,7 +23647,8 @@
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -23648,7 +23660,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
@@ -23656,7 +23668,7 @@
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/device-trust-ip.ts",
@@ -23676,11 +23688,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/session/cookie.helper.ts",
@@ -24451,7 +24463,8 @@
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -24463,7 +24476,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
@@ -24487,7 +24500,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
@@ -25239,7 +25252,8 @@
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -25251,7 +25265,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/session/cookie.helper.ts",
@@ -25921,7 +25935,8 @@
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -25933,7 +25948,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/session/cookie.helper.ts",
@@ -26675,7 +26690,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -26687,7 +26703,7 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
@@ -27573,7 +27589,8 @@
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -27581,7 +27598,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -27625,7 +27642,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/crm/crm-verification.integration.test.ts",
@@ -29186,7 +29203,8 @@
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -29198,11 +29216,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/session/csrf.guard.ts",
@@ -29877,7 +29895,8 @@
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -29893,7 +29912,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/dto/reset-password.dto.ts",
@@ -29901,7 +29920,7 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -31057,7 +31076,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -31069,7 +31089,7 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
@@ -31700,7 +31720,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-browser-and-edge-privacy"
+          "release-0.6-browser-and-edge-privacy",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -31712,7 +31733,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
@@ -31724,7 +31745,7 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
@@ -36058,7 +36079,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-review-preview-deadlines",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -36070,7 +36092,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -36078,7 +36100,7 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -41237,7 +41259,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -41253,11 +41276,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
@@ -42596,7 +42619,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -42612,11 +42636,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
@@ -43963,7 +43987,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -43979,11 +44004,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
@@ -46097,7 +46122,8 @@
           "release-0.5-crm-archive-touch-targets",
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -46133,11 +46159,11 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.test.ts",
-              "sha256": "61d8d173e4824e06351aabf81c27aecfaea15f7941cc45165bbdeb516d6bf4fc"
+              "sha256": "8aaa098e0e823a9684bd5c8feb79206f690e10b7805cdacbb0288d1fe06d7cf2"
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/crm/crm.module.ts",
@@ -46939,7 +46965,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -46983,11 +47010,11 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.test.ts",
-              "sha256": "61d8d173e4824e06351aabf81c27aecfaea15f7941cc45165bbdeb516d6bf4fc"
+              "sha256": "8aaa098e0e823a9684bd5c8feb79206f690e10b7805cdacbb0288d1fe06d7cf2"
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/crm/crm-verification.integration.test.ts",
@@ -48225,7 +48252,8 @@
           "release-0.5-crm-archive-touch-targets",
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -48245,7 +48273,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/crm/crm-verification.integration.test.ts",
@@ -49386,7 +49414,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -49398,7 +49427,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
@@ -49414,7 +49443,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/crm/crm-verification.integration.test.ts",
@@ -51066,7 +51095,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-solar-replay-lock-order",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -51098,7 +51128,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/crm/profile-archive-acceptance.integration.test.ts",
@@ -52256,7 +52286,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-review-preview-deadlines",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -52272,7 +52303,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -52292,11 +52323,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/dto/register.dto.ts",
@@ -52996,7 +53027,8 @@
           "release-0.5-protected-contract-and-finance",
           "release-0.5-protected-staff-browser-closure",
           "release-0.5-dependency-gate-closure",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -53012,7 +53044,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -54140,7 +54172,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-api-worker-shutdown-and-fixture-reuse",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -54152,7 +54185,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/crm/crm-profile-records-http.integration.test.ts",
@@ -57944,7 +57977,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -57964,7 +57998,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/test/http-fixture.ts",
@@ -58938,7 +58972,8 @@
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-review-preview-deadlines",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -58950,7 +58985,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -60051,7 +60086,8 @@
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-review-preview-deadlines",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -60063,7 +60099,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -61164,7 +61200,8 @@
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-review-preview-deadlines",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -61176,7 +61213,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -62215,7 +62252,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-manual-verification-mode-and-unavailable-api",
@@ -62235,7 +62273,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
@@ -62727,7 +62765,8 @@
           "release-0.6-staging-image-rollback",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-production-image-recipes-and-distribution",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -62735,7 +62774,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/crm/crm-verification.integration.test.ts",
@@ -69736,7 +69775,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-dependency-gate-closure",
           "release-0.5-route-census-closure",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -69756,7 +69796,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -71326,7 +71366,8 @@
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-document-http-fixture-isolation"
+          "release-0.6-document-http-fixture-isolation",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -71898,7 +71939,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
@@ -71922,7 +71963,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/session/self-revocation.integration.test.ts",
@@ -78653,7 +78694,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -78669,7 +78711,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -79065,7 +79107,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -79081,7 +79124,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -79499,7 +79542,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -79515,7 +79559,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -92214,7 +92258,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -92230,7 +92275,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -92705,7 +92750,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -92721,7 +92767,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/approval-notifications.ts",
@@ -94116,7 +94162,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -94132,7 +94179,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/approval-notifications.ts",
@@ -95496,7 +95543,8 @@
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-review-preview-deadlines",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -95508,7 +95556,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -96541,7 +96589,8 @@
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-review-preview-deadlines",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -96553,7 +96602,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -97592,7 +97641,8 @@
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-review-preview-deadlines",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -97604,7 +97654,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -101445,7 +101495,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -101461,7 +101512,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/approval-notifications.ts",
@@ -102815,7 +102866,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-native-staff-control-targets",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -102827,7 +102879,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/contract-template-commit.integration.test.ts",
@@ -103661,7 +103713,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-native-staff-control-targets",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -103673,7 +103726,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/contract-template-commit.integration.test.ts",
@@ -110807,7 +110860,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-native-staff-control-targets",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -110819,7 +110873,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/contract-template-commit.integration.test.ts",
@@ -112580,7 +112634,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-review-preview-deadlines",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -112596,7 +112651,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -112612,11 +112667,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/staff-activation-http.integration.test.ts",
@@ -113281,7 +113336,8 @@
           "release-0.5-protected-staff-browser-closure",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -113297,7 +113353,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -145002,7 +145058,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-rehearsal",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -145014,7 +145071,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/wallet/online-topup.integration.test.ts",
@@ -195467,7 +195524,8 @@
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -195595,7 +195653,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -196392,7 +196450,8 @@
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -196520,7 +196579,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -197318,7 +197377,8 @@
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-profile-closure-preview-expiry-ownership-retention-and-support",
@@ -197330,7 +197390,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -198385,7 +198445,8 @@
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -198397,7 +198458,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -200337,7 +200398,8 @@
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -200349,7 +200411,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -202271,7 +202333,8 @@
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -202399,7 +202462,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -274746,7 +274809,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -274758,7 +274822,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -275709,7 +275773,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -275721,7 +275786,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -276672,7 +276737,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -276684,7 +276750,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -277635,7 +277701,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -277647,7 +277714,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -278598,7 +278665,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -278610,7 +278678,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -279561,7 +279629,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -279573,7 +279642,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -280524,7 +280593,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -280536,7 +280606,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -281487,7 +281557,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -281499,7 +281570,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -282450,7 +282521,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -282462,7 +282534,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -283413,7 +283485,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -283425,7 +283498,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -284376,7 +284449,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -284388,7 +284462,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -285339,7 +285413,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -285351,7 +285426,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -286303,7 +286378,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -286315,7 +286391,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -287266,7 +287342,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -287278,7 +287355,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -288229,7 +288306,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -288241,7 +288319,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -289192,7 +289270,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -289204,7 +289283,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -290155,7 +290234,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -290167,7 +290247,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -293684,7 +293764,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -293696,7 +293777,7 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
@@ -301239,7 +301320,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -301251,7 +301333,7 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
@@ -321809,7 +321891,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -321821,7 +321904,7 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
@@ -352512,7 +352595,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -352524,7 +352608,7 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
@@ -470539,7 +470623,8 @@
         "batches": [
           "release-0.6-password-hash-calibration",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-password-creation-verification",
@@ -470547,15 +470632,15 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/test/auth.service.spec.ts",
@@ -470673,7 +470758,8 @@
         "batches": [
           "release-0.6-password-hash-calibration",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-password-creation-verification",
@@ -470689,15 +470775,15 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/test/auth.service.spec.ts",
@@ -471039,7 +471125,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-otp-issuance-expiry-and-delivery-acceptance"
+          "release-0.6-otp-issuance-expiry-and-delivery-acceptance",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -471047,11 +471134,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             }
           ],
           "checks": [
@@ -471083,7 +471170,8 @@
         "batches": [
           "release-0.6-otp-issuance-expiry-and-delivery-acceptance",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -471091,7 +471179,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
@@ -471099,11 +471187,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
@@ -471159,7 +471247,8 @@
         "batches": [
           "release-0.6-otp-issuance-expiry-and-delivery-acceptance",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -471171,11 +471260,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
@@ -471183,11 +471272,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -471227,7 +471316,8 @@
         "batches": [
           "release-0.6-otp-issuance-expiry-and-delivery-acceptance",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -471239,7 +471329,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
@@ -471251,11 +471341,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
@@ -471275,7 +471365,7 @@
             },
             {
               "path": "docs/security/otp.md",
-              "sha256": "2908ac23a7a66b5e73397b3c9e0363b038765fb5fc8a16c86a94cd32de589cc9"
+              "sha256": "6ea9b24cf002c0c19ac5ce076e1b80b16851673d562659bdc0b792c491da376b"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -471319,7 +471409,8 @@
         "batches": [
           "release-0.6-otp-issuance-expiry-and-delivery-acceptance",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -471331,11 +471422,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/otp-device-http.integration.test.ts",
@@ -471347,11 +471438,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             }
           ],
           "checks": [
@@ -471447,7 +471538,8 @@
         "batches": [
           "release-0.6-otp-issuance-expiry-and-delivery-acceptance",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -471459,11 +471551,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
@@ -471471,11 +471563,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/crm/account-recovery.service.ts",
@@ -471525,7 +471617,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-otp-issuance-expiry-and-delivery-acceptance"
+          "release-0.6-otp-issuance-expiry-and-delivery-acceptance",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -471537,11 +471630,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             }
           ],
           "checks": [
@@ -471573,7 +471666,8 @@
         "batches": [
           "release-0.6-otp-issuance-expiry-and-delivery-acceptance",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -471585,11 +471679,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
@@ -471609,11 +471703,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
@@ -471633,7 +471727,7 @@
             },
             {
               "path": "docs/security/otp.md",
-              "sha256": "2908ac23a7a66b5e73397b3c9e0363b038765fb5fc8a16c86a94cd32de589cc9"
+              "sha256": "6ea9b24cf002c0c19ac5ce076e1b80b16851673d562659bdc0b792c491da376b"
             },
             {
               "path": "packages/db/src/schema/auth-delivery-outbox.ts",
@@ -471670,7 +471764,8 @@
           "release-0.6-mfa-device-and-financial-authorization",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-mfa-and-device-verification",
@@ -471682,11 +471777,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
@@ -471747,7 +471842,8 @@
           "release-0.6-mfa-device-and-financial-authorization",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-mfa-and-device-verification",
@@ -471759,11 +471855,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
@@ -471836,7 +471932,8 @@
           "release-0.6-mfa-device-and-financial-authorization",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-mfa-and-device-verification",
@@ -471848,11 +471945,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
@@ -471913,7 +472010,8 @@
           "release-0.6-mfa-device-and-financial-authorization",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-mfa-and-device-verification",
@@ -471925,11 +472023,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
@@ -472108,7 +472206,8 @@
           "release-0.6-mfa-device-and-financial-authorization",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-mfa-and-device-verification",
@@ -472120,11 +472219,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
@@ -472185,7 +472284,8 @@
           "release-0.6-mfa-device-and-financial-authorization",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-mfa-and-device-verification",
@@ -472197,11 +472297,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
@@ -472437,7 +472537,8 @@
         "batches": [
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-browser-and-edge-privacy"
+          "release-0.6-browser-and-edge-privacy",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-session-authority",
@@ -472457,11 +472558,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
@@ -472485,7 +472586,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
@@ -472734,7 +472835,8 @@
           "release-0.6-mfa-device-and-financial-authorization",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-mfa-and-device-verification",
@@ -472746,11 +472848,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
@@ -472869,7 +472971,8 @@
         "batches": [
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-browser-and-edge-privacy"
+          "release-0.6-browser-and-edge-privacy",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-session-authority",
@@ -472889,11 +472992,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
@@ -472909,7 +473012,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
@@ -473279,7 +473382,8 @@
         "batches": [
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-browser-and-edge-privacy"
+          "release-0.6-browser-and-edge-privacy",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-session-authority",
@@ -473295,7 +473399,7 @@
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
@@ -473307,7 +473411,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/session/cookie.helper.test.ts",
@@ -482022,23 +482126,32 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Review application, worker, database and ingress error log sinks for token, identity and payment detail redaction in a production-equivalent configuration. Run a representative sensitive-input rehearsal and verify the configured sink receipts."
+        "Complete the remaining application and worker sink review, including generic HTTP errors, database and ingress error logs. Rehearse representative token, identity and payment inputs against the configured production-equivalent sinks and verify their receipts."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [
+          "apps/api/src/admin/admin.service.ts",
+          "apps/api/src/auth/auth.service.ts",
+          "apps/api/src/auth/delivery-http.integration.test.ts",
+          "apps/api/src/auth/otp.service.spec.ts",
+          "apps/api/src/auth/otp.service.ts",
+          "apps/api/src/crm/crm-v2.service.test.ts",
+          "apps/api/src/crm/crm-v2.service.ts",
           "deploy/pilot/nginx.conf",
-          "deploy/staging/nginx.conf"
+          "deploy/staging/nginx.conf",
+          "docs/security/otp.md"
         ],
         "batches": [
           "release-0.6-database-pool-deadlines-and-log-privacy",
-          "release-0.6-browser-and-edge-privacy"
+          "release-0.6-browser-and-edge-privacy",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
-          "kind": "source-bound-private-ingress-proof",
-          "base_commit": "fb5409974f4845cfd335013f45d12f9012954bc0",
+          "kind": "source-bound-ingress-and-authentication-diagnostic-proof",
+          "base_commit": "374f885752a82dfe01a407bc66689f758dc1a77d",
           "source_evidence": [
             {
               "path": "deploy/pilot/nginx.conf",
@@ -482051,10 +482164,45 @@
             {
               "path": "docs/security/session-lifetime.md",
               "sha256": "85efc197eccc06fc801bf1b9991389241a4ff376f98fbba0006b16a8e8b5e738"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.spec.ts",
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
+            },
+            {
+              "path": "apps/api/src/crm/crm-v2.service.test.ts",
+              "sha256": "8aaa098e0e823a9684bd5c8feb79206f690e10b7805cdacbb0288d1fe06d7cf2"
+            },
+            {
+              "path": "apps/api/src/crm/crm-v2.service.ts",
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
+            },
+            {
+              "path": "docs/security/otp.md",
+              "sha256": "6ea9b24cf002c0c19ac5ce076e1b80b16851673d562659bdc0b792c491da376b"
             }
           ],
           "checks": [
-            "The live staging config inherited the standard raw request access log. The source change strips query and referrer values and normalizes individual revocation paths for staging and pilot. Full staging syntax passed on the installed NGINX binary. Ten private loopback requests verified both log formats while the handler retained the original query and expected status."
+            "The live staging config inherited the standard raw request access log. The source change strips query and referrer values and normalizes individual revocation paths for staging and pilot. Full staging syntax passed on the installed NGINX binary. Ten private loopback requests verified both log formats while the handler retained the original query and expected status.",
+            "77 targeted unit assertions passed across OTP, auth and CRM. Positive log assertions confirm correlation references remain while contact destinations, staff notes and raw database errors are omitted. OTP codes remain available only to the explicitly enabled local development console, without destination values.",
+            "Five compiled HTTP cases passed against isolated migrated PostgreSQL using a synthetic mailbox: registration, mismatch and successful username replacement, trusted-device sign-in, and both staff-disablement transaction cases. The isolated database and network were removed.",
+            "API build, typecheck, changed-file formatting and lint, and canonical OpenAPI contract passed. Scoped diff review confirmed the authorization and transaction logic, audit payloads and provider delivery behavior are preserved."
           ]
         }
       }
@@ -622579,7 +622727,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -622619,7 +622768,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
@@ -622631,7 +622780,7 @@
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/device-trust-ip.test.ts",
@@ -622703,11 +622852,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/password-notifications.ts",
@@ -623412,7 +623561,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -623452,7 +623602,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
@@ -623464,7 +623614,7 @@
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/device-trust-ip.test.ts",
@@ -623536,11 +623686,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/password-notifications.ts",
@@ -624245,7 +624395,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -624285,7 +624436,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
@@ -624297,7 +624448,7 @@
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/device-trust-ip.test.ts",
@@ -624369,11 +624520,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/password-notifications.ts",
@@ -625078,7 +625229,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -625118,7 +625270,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
@@ -625130,7 +625282,7 @@
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/device-trust-ip.test.ts",
@@ -625202,11 +625354,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/password-notifications.ts",
@@ -625911,7 +626063,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -625951,7 +626104,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
@@ -625963,7 +626116,7 @@
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/device-trust-ip.test.ts",
@@ -626035,11 +626188,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/password-notifications.ts",
@@ -638786,7 +638939,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -638826,7 +638980,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
@@ -638838,7 +638992,7 @@
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/device-trust-ip.test.ts",
@@ -638910,11 +639064,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/password-notifications.ts",
@@ -639619,7 +639773,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -639659,7 +639814,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
@@ -639671,7 +639826,7 @@
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/device-trust-ip.test.ts",
@@ -639743,11 +639898,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/password-notifications.ts",
@@ -640452,7 +640607,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -640492,7 +640648,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
@@ -640504,7 +640660,7 @@
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/device-trust-ip.test.ts",
@@ -640576,11 +640732,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/password-notifications.ts",
@@ -641285,7 +641441,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -641325,7 +641482,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
@@ -641337,7 +641494,7 @@
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/device-trust-ip.test.ts",
@@ -641409,11 +641566,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/password-notifications.ts",
@@ -642118,7 +642275,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -642158,7 +642316,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
@@ -642170,7 +642328,7 @@
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/device-trust-ip.test.ts",
@@ -642242,11 +642400,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/password-notifications.ts",
@@ -642951,7 +643109,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -642991,7 +643150,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
@@ -643003,7 +643162,7 @@
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/device-trust-ip.test.ts",
@@ -643075,11 +643234,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/password-notifications.ts",
@@ -643784,7 +643943,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -643824,7 +643984,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
@@ -643836,7 +643996,7 @@
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/device-trust-ip.test.ts",
@@ -643908,11 +644068,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/password-notifications.ts",
@@ -644617,7 +644777,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -644657,7 +644818,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
@@ -644669,7 +644830,7 @@
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/device-trust-ip.test.ts",
@@ -644741,11 +644902,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/password-notifications.ts",
@@ -645450,7 +645611,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -645490,7 +645652,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
@@ -645502,7 +645664,7 @@
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/device-trust-ip.test.ts",
@@ -645574,11 +645736,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/password-notifications.ts",
@@ -646283,7 +646445,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -646323,7 +646486,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
@@ -646335,7 +646498,7 @@
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/device-trust-ip.test.ts",
@@ -646407,11 +646570,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/password-notifications.ts",
@@ -647116,7 +647279,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -647156,7 +647320,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
@@ -647168,7 +647332,7 @@
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/device-trust-ip.test.ts",
@@ -647240,11 +647404,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/password-notifications.ts",
@@ -647949,7 +648113,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -647989,7 +648154,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
@@ -648001,7 +648166,7 @@
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/device-trust-ip.test.ts",
@@ -648073,11 +648238,11 @@
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
-              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
-              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
             },
             {
               "path": "apps/api/src/auth/password-notifications.ts",
@@ -665491,7 +665656,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-stale-route-recovery",
           "release-0.5-ownership-transfer-receipt",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -665519,7 +665685,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
@@ -666132,7 +666298,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-stale-route-recovery",
           "release-0.5-ownership-transfer-receipt",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -666160,7 +666327,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
@@ -666773,7 +666940,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-stale-route-recovery",
           "release-0.5-ownership-transfer-receipt",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -666801,7 +666969,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
@@ -667412,7 +667580,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-stale-route-recovery",
           "release-0.5-ownership-transfer-receipt",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -667440,7 +667609,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
@@ -668051,7 +668220,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-stale-route-recovery",
           "release-0.5-ownership-transfer-receipt",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -668079,7 +668249,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
@@ -668692,7 +668862,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-stale-route-recovery",
           "release-0.5-ownership-transfer-receipt",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -668720,7 +668891,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
@@ -669332,7 +669503,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-stale-route-recovery",
           "release-0.5-ownership-transfer-receipt",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -669360,7 +669532,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
@@ -669972,7 +670144,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-stale-route-recovery",
           "release-0.5-ownership-transfer-receipt",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -670000,7 +670173,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
@@ -670612,7 +670785,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-stale-route-recovery",
           "release-0.5-ownership-transfer-receipt",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -670640,7 +670814,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
@@ -671252,7 +671426,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-stale-route-recovery",
           "release-0.5-ownership-transfer-receipt",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -671280,7 +671455,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
@@ -671892,7 +672067,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-stale-route-recovery",
           "release-0.5-ownership-transfer-receipt",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -671920,7 +672096,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
@@ -672532,7 +672708,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-stale-route-recovery",
           "release-0.5-ownership-transfer-receipt",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -672560,7 +672737,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
@@ -681883,7 +682060,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -681899,7 +682077,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -682557,7 +682735,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -682573,7 +682752,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -683230,7 +683409,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -683246,7 +683426,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -683905,7 +684085,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -683921,7 +684102,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -684580,7 +684761,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -684596,7 +684778,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -685252,7 +685434,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -685268,7 +685451,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -685924,7 +686107,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -685940,7 +686124,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -686597,7 +686781,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -686613,7 +686798,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -687269,7 +687454,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -687285,7 +687471,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -687942,7 +688128,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -687958,7 +688145,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -718581,7 +718768,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-verification-settings",
@@ -718605,7 +718793,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -718653,11 +718841,11 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.test.ts",
-              "sha256": "61d8d173e4824e06351aabf81c27aecfaea15f7941cc45165bbdeb516d6bf4fc"
+              "sha256": "8aaa098e0e823a9684bd5c8feb79206f690e10b7805cdacbb0288d1fe06d7cf2"
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
@@ -719079,7 +719267,8 @@
           "release-0.6-api-worker-shutdown-and-fixture-reuse",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -719103,7 +719292,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/service-targets-http.integration.test.ts",
@@ -719789,7 +719978,8 @@
           "release-0.6-api-worker-shutdown-and-fixture-reuse",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -719813,7 +720003,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/service-targets-http.integration.test.ts",
@@ -724542,7 +724732,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
@@ -727684,7 +727874,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-document-http-fixture-isolation",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ]
       }
     },
@@ -727716,7 +727907,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -732326,7 +732517,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-document-http-fixture-isolation",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ]
       }
     },
@@ -732374,7 +732566,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -732638,7 +732830,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
@@ -732766,7 +732958,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/crm/crm-verification.integration.test.ts",
@@ -736258,7 +736450,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-document-http-fixture-isolation",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -736331,7 +736524,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -736579,7 +736772,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
@@ -736707,7 +736900,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/crm/crm-verification.integration.test.ts",
@@ -740083,7 +740276,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-document-http-fixture-isolation",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -744081,7 +744275,8 @@
           "release-0.6-document-http-fixture-isolation",
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-browser-and-edge-privacy"
+          "release-0.6-browser-and-edge-privacy",
+          "release-0.6-authentication-and-crm-diagnostic-privacy"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -835338,6 +835533,57 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-and-edge-privacy",
       "source_scope_proof": "release-0.6-browser-and-edge-privacy.json",
       "source_scope_proof_sha256": "bd6968c6407dc939a972cfc3c679a5c6c0414d3ac0c945dbaa3dfd93e0b24f82"
+    },
+    "release-0.6-authentication-and-crm-diagnostic-privacy": {
+      "batch": "release-0.6-authentication-and-crm-diagnostic-privacy",
+      "base_commit": "374f885752a82dfe01a407bc66689f758dc1a77d",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.13.02.06",
+        "06-security-testing-observability.md#T-06.01.02.08",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
+        },
+        {
+          "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+          "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.spec.ts",
+          "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.test.ts",
+          "sha256": "8aaa098e0e823a9684bd5c8feb79206f690e10b7805cdacbb0288d1fe06d7cf2"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
+        },
+        {
+          "path": "docs/security/otp.md",
+          "sha256": "6ea9b24cf002c0c19ac5ce076e1b80b16851673d562659bdc0b792c491da376b"
+        }
+      ],
+      "checks": [
+        "77 targeted unit assertions passed across OTP, auth and CRM. Positive log assertions confirm correlation references remain while contact destinations, staff notes and raw database errors are omitted. OTP codes remain available only to the explicitly enabled local development console, without destination values.",
+        "Five compiled HTTP cases passed against isolated migrated PostgreSQL using a synthetic mailbox: registration, mismatch and successful username replacement, trusted-device sign-in, and both staff-disablement transaction cases. The isolated database and network were removed.",
+        "API build, typecheck, changed-file formatting and lint, and canonical OpenAPI contract passed. Scoped diff review confirmed the authorization and transaction logic, audit payloads and provider delivery behavior are preserved."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/auth-diagnostic-privacy",
+      "source_scope_proof": "release-0.6-authentication-and-crm-diagnostic-privacy.json",
+      "source_scope_proof_sha256": "20b74868034dd60044306bbaf123745a6ac00b5487f4b7554678e358e33f58f8"
     }
   },
   "historical_improvements": [
