@@ -201,3 +201,50 @@ it('makes no wallet request or funding offer while the profile owner is unresolv
   expect(container.textContent).not.toContain('Wallet top-up needed:');
   expect(container.querySelector<HTMLButtonElement>('button')!.disabled).toBe(true);
 });
+it.each([false, true])(
+  'withdraws wallet funding information on session expiry (staff: %s)',
+  async (staff) => {
+    const fetcher = vi
+      .fn()
+      .mockResolvedValueOnce(response('1000'))
+      .mockResolvedValueOnce(new Response(null, { status: 503 }))
+      .mockResolvedValueOnce(new Response(null, { status: 401 }));
+    vi.stubGlobal('fetch', fetcher);
+    const { container } = await mount({
+      profileId: profile,
+      total: '5000',
+      invoiceId: other,
+      staff,
+    });
+    const funding = () => container.querySelector(`a[href="/wallet?returnInvoiceId=${other}"]`);
+    const refresh = () => act(async () => container.querySelector('button')!.click());
+    await vi.waitFor(() =>
+      expect(container.textContent).toContain('Available wallet balance: 1000')
+    );
+    expect(container.textContent).toContain('Wallet top-up needed: 4000');
+    expect(Boolean(funding())).toBe(!staff);
+
+    await refresh();
+    await vi.waitFor(() =>
+      expect(container.textContent).toContain('Wallet balance is unavailable.')
+    );
+    expect(container.textContent).not.toContain('Available wallet balance: 1000');
+    expect(Boolean(funding())).toBe(!staff);
+
+    await refresh();
+    await vi.waitFor(() =>
+      expect(container.textContent).toContain(
+        'Current access does not allow viewing this wallet balance.'
+      )
+    );
+    expect(container.textContent).not.toContain('Wallet balance is unavailable.');
+    expect(container.textContent).not.toContain('The customer can fund this profile wallet online');
+    expect(funding()).toBeNull();
+    const path = staff ? `/api/staff/profiles/${profile}/wallet-balance` : `/api/wallet/${profile}`;
+    expect(fetcher.mock.calls.map(([url, init]) => [url, init?.method ?? 'GET'])).toEqual([
+      [path, 'GET'],
+      [path, 'GET'],
+      [path, 'GET'],
+    ]);
+  }
+);

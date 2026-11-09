@@ -54,7 +54,7 @@ export function OrderWalletBalance({
           : `/api/wallet/${encodeURIComponent(profileId)}`,
         { credentials: 'include', signal, cache: 'no-store' }
       );
-      if (response.status === 403 || response.status === 404)
+      if (response.status === 401 || response.status === 403 || response.status === 404)
         return { balance: null, denied: true };
       if (!response.ok) throw new Error('Wallet unavailable');
       const value = (await response.json()) as {

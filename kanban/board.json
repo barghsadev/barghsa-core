@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T03:40:43+00:00",
-  "source_commit": "01bd2070a6d5934939d0f8e9809db2190ff8feb2",
+  "updated": "2026-11-09T03:48:47+00:00",
+  "source_commit": "2e7ad9a96f062a664cd3a8bf3342755a725ef04b",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -421654,11 +421654,11 @@
             },
             {
               "path": "apps/web/src/components/OrderWalletBalance.test.tsx",
-              "sha256": "87acd662cf11ffe98d866c9f0cb61f6f1d812b8628b37e45e1c64bad95cf3980"
+              "sha256": "a61a2f651215fe9c5c456bbe5861298daef4a91d60fd1ccd62b548b342341a15"
             },
             {
               "path": "apps/web/src/components/OrderWalletBalance.tsx",
-              "sha256": "cf8c0c4965bd30c086d8305aba0eace8a05d8087dd7710422603f3072158c32d"
+              "sha256": "366c4540701e3f1ad130bc951bedb4280e47bf4f9051307dabcea5508d83b40f"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
@@ -493114,7 +493114,7 @@
             },
             {
               "path": "apps/web/src/components/OrderWalletBalance.tsx",
-              "sha256": "cf8c0c4965bd30c086d8305aba0eace8a05d8087dd7710422603f3072158c32d"
+              "sha256": "366c4540701e3f1ad130bc951bedb4280e47bf4f9051307dabcea5508d83b40f"
             },
             {
               "path": "apps/web/src/components/OwnershipBanner.tsx",
@@ -497968,7 +497968,7 @@
             },
             {
               "path": "apps/web/src/components/OrderWalletBalance.tsx",
-              "sha256": "cf8c0c4965bd30c086d8305aba0eace8a05d8087dd7710422603f3072158c32d"
+              "sha256": "366c4540701e3f1ad130bc951bedb4280e47bf4f9051307dabcea5508d83b40f"
             },
             {
               "path": "apps/web/src/components/OwnershipBanner.tsx",
@@ -598963,7 +598963,7 @@
       "launch_required": true,
       "remaining": [
         "The canonical route inventory now links primary read, detail, dashboard, entry or static evidence for every path. The 13 routes with changed direct sources have newer scoped receipts. Complete the remaining independent list and detail states by checking each child's applicable loading, retry and empty or unavailable behavior against the named receipts.",
-        "The independent gift-code eligibility reads now have current bilingual loading, keyboard retry, empty and preserved-selection evidence. Other conditional reads and controls retain their prior scope."
+        "Current proof covers the shared wallet balance read across the four launch service families and preserves scoped receipts for 11 independent child owners. Check the contract signature first-read error and the remaining child conditions and per-route controls before full acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -599116,7 +599116,8 @@
           "release-0.5-saving-detail-denied-read",
           "release-0.5-customer-collection-first-retry",
           "release-0.5-launch-entry-acceptance",
-          "release-0.5-gift-profile-read-retry"
+          "release-0.5-gift-profile-read-retry",
+          "release-0.5-conditional-read-reconciliation"
         ],
         "current_acceptance": null
       }
@@ -728981,7 +728982,7 @@
       "launch_required": true,
       "remaining": [
         "All 98 canonical paths have per-route receipt links, including 93 populated layout observations, and the current build passed 86 launch-entry, public account and guide cases. Close the original per-route control acceptance by reconciling keyboard, forms, filters and stale-context conditions against the named cases. Carry only evidence within its recorded scope.",
-        "The independent gift-code eligibility reads now have current bilingual loading, keyboard retry, empty and preserved-selection evidence. Other conditional reads and controls retain their prior scope."
+        "Current proof covers the shared wallet balance read across the four launch service families and preserves scoped receipts for 11 independent child owners. Check the contract signature first-read error and the remaining child conditions and per-route controls before full acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -729200,7 +729201,8 @@
           "release-0.5-saving-detail-denied-read",
           "release-0.5-customer-collection-first-retry",
           "release-0.5-launch-entry-acceptance",
-          "release-0.5-gift-profile-read-retry"
+          "release-0.5-gift-profile-read-retry",
+          "release-0.5-conditional-read-reconciliation"
         ]
       }
     },
@@ -731164,7 +731166,8 @@
             "All 101 transfer budgets and 62 affected notification browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-settings-session/proof.json",
             "All 101 transfer budgets and 64 affected staff and provider browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-configuration-adoption/proof.json",
             "All 101 transfer budgets and 48 customer detail/fulfillment cases and eight independent staff detail cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-detail-denied-read/proof.json",
-            "All 101 transfer budgets and 28 native gift-code cases passed. Auth assets are byte-identical. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-gift-profile-read-retry/proof.json"
+            "All 101 transfer budgets and 28 native gift-code cases passed. Auth assets are byte-identical. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-gift-profile-read-retry/proof.json",
+            "All 101 transfer budgets and 24 current native cases across the launch services passed. Auth assets are byte-identical. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-read-reconciliation/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -811318,6 +811321,41 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-gift-profile-read-retry/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-gift-profile-read-retry/renewed-bindings.json",
       "release_disposition": "Verified the gift profile eligibility lookup and the affected gift-code journeys. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-conditional-read-reconciliation": {
+      "batch": "release-0.5-conditional-read-reconciliation",
+      "base_commit": "2e7ad9a96f062a664cd3a8bf3342755a725ef04b",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/components/OrderWalletBalance.test.tsx",
+          "sha256": "a61a2f651215fe9c5c456bbe5861298daef4a91d60fd1ccd62b548b342341a15"
+        },
+        {
+          "path": "apps/web/src/components/OrderWalletBalance.tsx",
+          "sha256": "366c4540701e3f1ad130bc951bedb4280e47bf4f9051307dabcea5508d83b40f"
+        }
+      ],
+      "checks": [
+        "Both baseline unit cases reproduced the ordinary unknown-balance state after HTTP 401. Session expiry now follows the existing unavailable state. The customer funding link and staff funding guidance are withdrawn, and the existing 503 fallback and exact scope remain available.",
+        "All 16 wallet component tests passed, including the two regressions. The 24 native Chromium and mobile Safari cases also passed across electricity, saving, solar and consultation. The native cases cover current production staff funding views and scoped customer journeys in Persian and English.",
+        "The critical gate passed at 26/26 lines and 63/63 branches. Web typecheck, changed-file lint, formatting and all 101 transfer budgets passed. Auth assets are byte-identical.",
+        "Reconciled 76 previously passed cases for 11 independent component owners by matching the current source hash, original proof and actual named case receipt. The scope of each case is recorded individually."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-read-reconciliation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-read-reconciliation/proof.json",
+      "source_scope_proof_sha256": "e04f6665378f0a338a1f0cfd32153907cbe7b1edd8cce5926a001fcef815e015",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-read-reconciliation/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-read-reconciliation/renewed-bindings.json",
+      "release_disposition": "Closed the wallet balance session-expiry display and reconciled scoped child receipts. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [
@@ -811368,7 +811406,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Use the canonical evidence inventory to reconcile original controls and independently loaded children. Find any exact missing cases before adding more tests. GitHub required-check enforcement and staging Sentry remain independent."
+    "goal": "Verify and close the contract signature first-read state, then reconcile the remaining independent child conditions and original per-route controls. Required-check enforcement and live staging Sentry remain independent."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
