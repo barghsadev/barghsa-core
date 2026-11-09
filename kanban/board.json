@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T21:17:32+00:00",
+  "updated": "2026-11-09T21:20:58+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -11214,12 +11214,10 @@
         "story": "01-platform-infrastructure.md#spec-9399c8e51869"
       },
       "requirement": "- **T-04.03.01:** Create S3 storage provider abstraction\n  - **Notes:** Interface: `StorageProvider` with methods: `putObject(key, body, contentType, metadata)`, `getObject(key) → stream`, `deleteObject(key)`, `presignedPutUrl(key, expiresIn) → URL`, `presignedGetUrl(key, expiresIn) → URL`, `listObjects(prefix)`. Implementation: `S3StorageProvider` using `@aws-sdk/client-s3`. Factory selects provider based on config.\n  - **Dependencies:** None (standalone)\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -11296,8 +11294,55 @@
           "packages/shared/src/storage/storage-provider.ts",
           "pnpm-lock.yaml"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-storage-abstraction-direct-transfer-and-admin"
+        ],
+        "current_acceptance": {
+          "kind": "renewed-matching-storage-api-and-browser-proof",
+          "base_commit": "42d2c40721ad40ba244eaa5bdac0e036a595c84a",
+          "source_evidence": [
+            {
+              "path": "packages/shared/src/storage/file-operations.test.ts",
+              "sha256": "941049e73a146a578253ee20e5ead4ea3a69015b06bdb123783a1e1a59ff2725"
+            },
+            {
+              "path": "packages/shared/src/storage/immutable-storage.test.ts",
+              "sha256": "cbba8a79401b5c8056d6910dd3cc9d2402ee411a5646005746b56d83b1fe95d2"
+            },
+            {
+              "path": "packages/shared/src/storage/runtime-config.test.ts",
+              "sha256": "885e982d1f734a3c551b811f3230240b163f6eb5aab9ddbc83f72b354e934c3b"
+            },
+            {
+              "path": "packages/shared/src/storage/runtime-config.ts",
+              "sha256": "7e35bb12545ebe9f932fa671d47c4f0d855ed9ebd6a2cd20008e6b659fb663db"
+            },
+            {
+              "path": "packages/shared/src/storage/s3-storage-provider.ts",
+              "sha256": "2281b7baea118f61094f67829a63379b5fc0a2505adf3278d5ccfe998405644e"
+            },
+            {
+              "path": "packages/shared/src/storage/storage-factory.ts",
+              "sha256": "ccb3f15331f001e46984c3cc9e9d9cba72a3d87893b2d01e9da6f8b53b09668f"
+            },
+            {
+              "path": "packages/shared/src/storage/storage-provider.ts",
+              "sha256": "f10209540e8bbaa5b3dee7e48de78a9d9a6103bbd2c95c9a482ad085b0b11499"
+            },
+            {
+              "path": "packages/shared/src/storage/storage.test.ts",
+              "sha256": "1a45253e6327390059aec9aa158b8954aed838338f98823c44aceb88c182f3a5"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Reviewed the existing AWS SDK S3 adapter and factory against the required upload, streaming get, delete, listing and presigned PUT/GET interface. The same factory resolves internal and browser endpoints from active configuration.",
+            "Reused current matching 28 adapter, 12 file-operation, 15 runtime-config and 15 immutable-storage cases from run 42681795739. Their source files, test files and dependency lock match."
+          ]
+        }
       }
     },
     {
@@ -11311,12 +11356,10 @@
         "story": "01-platform-infrastructure.md#spec-9399c8e51869"
       },
       "requirement": "- **T-04.03.02:** Implement presigned URL workflow for direct browser upload/download\n  - **Notes:** On upload request, API validates: file type (allowlisted extensions + MIME detection), size limits, user/profile permissions, business record association. On success, returns a presigned PUT URL. Frontend uploads directly to S3 from browser. After upload, API verifies the object exists (by checksum or metadata call) and marks it as Pending scan. Never proxy large file bodies through API.\n  - **Dependencies:** T-04.03.01\n  - **Complexity:** L",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -11409,8 +11452,95 @@
           "apps/web/src/lib/knowledge-base-upload.test.ts",
           "apps/web/src/lib/knowledge-base-upload.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-storage-abstraction-direct-transfer-and-admin"
+        ],
+        "current_acceptance": {
+          "kind": "renewed-matching-storage-api-and-browser-proof",
+          "base_commit": "42d2c40721ad40ba244eaa5bdac0e036a595c84a",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/documents/document-http.integration.test.ts",
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
+            },
+            {
+              "path": "apps/api/src/documents/document-storage.service.ts",
+              "sha256": "8b13acb8b019522ecffca88a0af2e8f49d990cc01d0ce431e19e782745f1d851"
+            },
+            {
+              "path": "apps/api/src/storage/storage-access-http.integration.test.ts",
+              "sha256": "d76ca1f9e100eeb3e2c8d68568c41ac0bc4ff20a3fa8f92dd0e93aa5e6817f6f"
+            },
+            {
+              "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
+              "sha256": "2f790e5e306d653fd426cc38bf25d8ce66d26573d6645d166b534e06c37edd06"
+            },
+            {
+              "path": "apps/api/src/upload/multipart-http.integration.test.ts",
+              "sha256": "0ee98fc4cf227e14756ddae7f3625ef888af7631412c26c4a35ae66ec3d817e6"
+            },
+            {
+              "path": "apps/api/src/upload/upload.controller.ts",
+              "sha256": "8148fdf77c21ea21b8a89f057239fbfe1c3d125a8480db7d2bb1fa32aa34cade"
+            },
+            {
+              "path": "apps/api/src/upload/upload.service.ts",
+              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+            },
+            {
+              "path": "apps/web/src/components/FileUpload.test.tsx",
+              "sha256": "e6d567309b7f26d8086e538dd7da85d5036ea580f0ed78eed153a27ad119bc57"
+            },
+            {
+              "path": "apps/web/src/components/FileUpload.tsx",
+              "sha256": "85954b76f4b1aab887523eff4a0276fb84338ec8ec340a2e7b033eaf01ed9f21"
+            },
+            {
+              "path": "apps/web/src/lib/file-upload.ts",
+              "sha256": "f7c3a5681103494a0863496de72efd72f08a2da9f34d22a456c47be467e57cd2"
+            },
+            {
+              "path": "packages/shared/src/storage/file-operations.test.ts",
+              "sha256": "941049e73a146a578253ee20e5ead4ea3a69015b06bdb123783a1e1a59ff2725"
+            },
+            {
+              "path": "packages/shared/src/storage/immutable-storage.test.ts",
+              "sha256": "cbba8a79401b5c8056d6910dd3cc9d2402ee411a5646005746b56d83b1fe95d2"
+            },
+            {
+              "path": "packages/shared/src/storage/runtime-config.test.ts",
+              "sha256": "885e982d1f734a3c551b811f3230240b163f6eb5aab9ddbc83f72b354e934c3b"
+            },
+            {
+              "path": "packages/shared/src/storage/runtime-config.ts",
+              "sha256": "7e35bb12545ebe9f932fa671d47c4f0d855ed9ebd6a2cd20008e6b659fb663db"
+            },
+            {
+              "path": "packages/shared/src/storage/s3-storage-provider.ts",
+              "sha256": "2281b7baea118f61094f67829a63379b5fc0a2505adf3278d5ccfe998405644e"
+            },
+            {
+              "path": "packages/shared/src/storage/storage-factory.ts",
+              "sha256": "ccb3f15331f001e46984c3cc9e9d9cba72a3d87893b2d01e9da6f8b53b09668f"
+            },
+            {
+              "path": "packages/shared/src/storage/storage-provider.ts",
+              "sha256": "f10209540e8bbaa5b3dee7e48de78a9d9a6103bbd2c95c9a482ad085b0b11499"
+            },
+            {
+              "path": "packages/shared/src/storage/storage.test.ts",
+              "sha256": "1a45253e6327390059aec9aa158b8954aed838338f98823c44aceb88c182f3a5"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "The API validates declared file constraints, business association, ownership and current authority before issuing direct browser PUT or multipart URLs. It verifies stored bytes, MIME, size and checksum before sealing or entering PendingScan with the configured scanner. The API does not proxy large transfer bodies.",
+            "Reused 43 document HTTP, 24 storage-record HTTP, three storage-access HTTP and two multipart HTTP cases from run 42689595374, plus nine browser upload-component assertions. Matching tests cover real MinIO signing, mismatch rejection, download byte identity and durable configured-scanner jobs. The run's separate stale refresh assertion was corrected independently."
+          ]
+        }
       }
     },
     {
@@ -11535,12 +11665,10 @@
         "story": "01-platform-infrastructure.md#spec-9399c8e51869"
       },
       "requirement": "- **T-04.03.04:** Create admin configuration UI for storage\n  - **Notes:** Admin page: endpoint, region, bucket, access key, secret key (masked, write-only). Path-style toggle. Private endpoint URL, public endpoint URL. Connection test button. Validate that secrets are encrypted at rest using AES-256 (AWS KMS or envelope encryption with local key). UI never exposes secret key values after entry.\n  - **Dependencies:** T-04.03.01, E-04 cross-epic Narration\n  - **Complexity:** L\n  - **UI/UX:** Settings page with masked fields, \"Test Connection\" button, success/failure feedback. On save, validate connection before marking config Active.",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -11593,8 +11721,91 @@
           "apps/api/src/storage/storage-config.service.ts",
           "apps/web/src/pages/AdminStorageConfig.tsx"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-storage-abstraction-direct-transfer-and-admin"
+        ],
+        "current_acceptance": {
+          "kind": "renewed-matching-storage-api-and-browser-proof",
+          "base_commit": "42d2c40721ad40ba244eaa5bdac0e036a595c84a",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
+              "sha256": "a6aca6dacbd846cf0d13a4a7f449d9000edc9fcdbf241a76f3a4288cbdb65c26"
+            },
+            {
+              "path": "apps/api/src/storage/storage-config.service.ts",
+              "sha256": "9c1b861ec6f60acf718ed653ed6dbaae227975dd2517db42e0867cf064440026"
+            },
+            {
+              "path": "apps/web/e2e/storage-config.spec.ts",
+              "sha256": "e321d25707e696fdd0be680c44fb5cc316ea220e9ce4141bf108eac8b4ad6820"
+            },
+            {
+              "path": "apps/web/e2e/storage-policy-forms.spec.ts",
+              "sha256": "fbf7236507119aa8be55567e23fbf079ce6f5afb0341463409afa83b70dc7089"
+            },
+            {
+              "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
+              "sha256": "42df2e46bc26e35b2b194da2e0f358c97fdcbc1ccc5ec797d3b58270c3f77411"
+            },
+            {
+              "path": "apps/web/src/pages/AdminStorageConfig.tsx",
+              "sha256": "4357b96888a6aed8ed9a9d40775e618d9f40f1ded3b8e7a1e724fd11ad15faee"
+            },
+            {
+              "path": "apps/web/src/pages/storage-policy-forms.test.tsx",
+              "sha256": "56759456a593c679d182c822eeb93515360190b178078777ef5ffed012ff5ef5"
+            },
+            {
+              "path": "apps/web/src/routes/admin/storage.tsx",
+              "sha256": "04d3761da83ed3ab81ebb802afd27b404c22fb23be008332cdabda23cbc5a3ec"
+            },
+            {
+              "path": "packages/shared/src/auth-delivery/crypto.ts",
+              "sha256": "17fe265691828cecd084cef72d146c036b6c2695441b7f0871975000c18455d0"
+            },
+            {
+              "path": "packages/shared/src/storage/file-operations.test.ts",
+              "sha256": "941049e73a146a578253ee20e5ead4ea3a69015b06bdb123783a1e1a59ff2725"
+            },
+            {
+              "path": "packages/shared/src/storage/immutable-storage.test.ts",
+              "sha256": "cbba8a79401b5c8056d6910dd3cc9d2402ee411a5646005746b56d83b1fe95d2"
+            },
+            {
+              "path": "packages/shared/src/storage/runtime-config.test.ts",
+              "sha256": "885e982d1f734a3c551b811f3230240b163f6eb5aab9ddbc83f72b354e934c3b"
+            },
+            {
+              "path": "packages/shared/src/storage/runtime-config.ts",
+              "sha256": "7e35bb12545ebe9f932fa671d47c4f0d855ed9ebd6a2cd20008e6b659fb663db"
+            },
+            {
+              "path": "packages/shared/src/storage/s3-storage-provider.ts",
+              "sha256": "2281b7baea118f61094f67829a63379b5fc0a2505adf3278d5ccfe998405644e"
+            },
+            {
+              "path": "packages/shared/src/storage/storage-factory.ts",
+              "sha256": "ccb3f15331f001e46984c3cc9e9d9cba72a3d87893b2d01e9da6f8b53b09668f"
+            },
+            {
+              "path": "packages/shared/src/storage/storage-provider.ts",
+              "sha256": "f10209540e8bbaa5b3dee7e48de78a9d9a6103bbd2c95c9a482ad085b0b11499"
+            },
+            {
+              "path": "packages/shared/src/storage/storage.test.ts",
+              "sha256": "1a45253e6327390059aec9aa158b8954aed838338f98823c44aceb88c182f3a5"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Reused the prior source-bound admin storage acceptance under 05-notifications-documents-ai.md#T-05.09.03 and 24 matching storage-config API cases from run 42689595374. The current UI has endpoint, region, bucket, credential identifier, password-masked write-only secret, path style, private/public URLs, Test Connection, result feedback and versioned save.",
+            "The active version remains in the existing encrypted configuration store as approved. AES-256-GCM protects the secret. The save probe performs a disposable upload and signed browser download with byte comparison, then preserves the prior active revision on failed authority, stale version, provider test or audit persistence. The production-equivalent storage, lifecycle, scanner and restore receipts remain separate operational gates."
+          ]
+        }
       }
     },
     {
@@ -745955,7 +746166,8 @@
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-pilot-and-commercial-topology-documentation",
           "release-0.6-private-session-cutover-and-health-probes",
-          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy",
+          "release-0.6-storage-abstraction-direct-transfer-and-admin"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -837881,6 +838093,141 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/staged-alerts-readback",
       "source_scope_proof": "release-0.6-staged-operations-alert-readback.json",
       "source_scope_proof_sha256": "6e374de76231381dcc903b190be2cdeca98ec903f10b1355ed64a873505a6a0b"
+    },
+    "release-0.6-storage-abstraction-direct-transfer-and-admin": {
+      "batch": "release-0.6-storage-abstraction-direct-transfer-and-admin",
+      "base_commit": "42d2c40721ad40ba244eaa5bdac0e036a595c84a",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.03.01",
+        "01-platform-infrastructure.md#T-04.03.02",
+        "01-platform-infrastructure.md#T-04.03.04",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/documents/document-http.integration.test.ts",
+          "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
+        },
+        {
+          "path": "apps/api/src/documents/document-storage.service.ts",
+          "sha256": "8b13acb8b019522ecffca88a0af2e8f49d990cc01d0ce431e19e782745f1d851"
+        },
+        {
+          "path": "apps/api/src/storage/storage-access-http.integration.test.ts",
+          "sha256": "d76ca1f9e100eeb3e2c8d68568c41ac0bc4ff20a3fa8f92dd0e93aa5e6817f6f"
+        },
+        {
+          "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
+          "sha256": "a6aca6dacbd846cf0d13a4a7f449d9000edc9fcdbf241a76f3a4288cbdb65c26"
+        },
+        {
+          "path": "apps/api/src/storage/storage-config.service.ts",
+          "sha256": "9c1b861ec6f60acf718ed653ed6dbaae227975dd2517db42e0867cf064440026"
+        },
+        {
+          "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
+          "sha256": "2f790e5e306d653fd426cc38bf25d8ce66d26573d6645d166b534e06c37edd06"
+        },
+        {
+          "path": "apps/api/src/upload/multipart-http.integration.test.ts",
+          "sha256": "0ee98fc4cf227e14756ddae7f3625ef888af7631412c26c4a35ae66ec3d817e6"
+        },
+        {
+          "path": "apps/api/src/upload/upload.controller.ts",
+          "sha256": "8148fdf77c21ea21b8a89f057239fbfe1c3d125a8480db7d2bb1fa32aa34cade"
+        },
+        {
+          "path": "apps/api/src/upload/upload.service.ts",
+          "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+        },
+        {
+          "path": "apps/web/e2e/storage-config.spec.ts",
+          "sha256": "e321d25707e696fdd0be680c44fb5cc316ea220e9ce4141bf108eac8b4ad6820"
+        },
+        {
+          "path": "apps/web/e2e/storage-policy-forms.spec.ts",
+          "sha256": "fbf7236507119aa8be55567e23fbf079ce6f5afb0341463409afa83b70dc7089"
+        },
+        {
+          "path": "apps/web/src/components/FileUpload.test.tsx",
+          "sha256": "e6d567309b7f26d8086e538dd7da85d5036ea580f0ed78eed153a27ad119bc57"
+        },
+        {
+          "path": "apps/web/src/components/FileUpload.tsx",
+          "sha256": "85954b76f4b1aab887523eff4a0276fb84338ec8ec340a2e7b033eaf01ed9f21"
+        },
+        {
+          "path": "apps/web/src/lib/file-upload.ts",
+          "sha256": "f7c3a5681103494a0863496de72efd72f08a2da9f34d22a456c47be467e57cd2"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
+          "sha256": "42df2e46bc26e35b2b194da2e0f358c97fdcbc1ccc5ec797d3b58270c3f77411"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStorageConfig.tsx",
+          "sha256": "4357b96888a6aed8ed9a9d40775e618d9f40f1ded3b8e7a1e724fd11ad15faee"
+        },
+        {
+          "path": "apps/web/src/pages/storage-policy-forms.test.tsx",
+          "sha256": "56759456a593c679d182c822eeb93515360190b178078777ef5ffed012ff5ef5"
+        },
+        {
+          "path": "apps/web/src/routes/admin/storage.tsx",
+          "sha256": "04d3761da83ed3ab81ebb802afd27b404c22fb23be008332cdabda23cbc5a3ec"
+        },
+        {
+          "path": "packages/shared/src/auth-delivery/crypto.ts",
+          "sha256": "17fe265691828cecd084cef72d146c036b6c2695441b7f0871975000c18455d0"
+        },
+        {
+          "path": "packages/shared/src/storage/file-operations.test.ts",
+          "sha256": "941049e73a146a578253ee20e5ead4ea3a69015b06bdb123783a1e1a59ff2725"
+        },
+        {
+          "path": "packages/shared/src/storage/immutable-storage.test.ts",
+          "sha256": "cbba8a79401b5c8056d6910dd3cc9d2402ee411a5646005746b56d83b1fe95d2"
+        },
+        {
+          "path": "packages/shared/src/storage/runtime-config.test.ts",
+          "sha256": "885e982d1f734a3c551b811f3230240b163f6eb5aab9ddbc83f72b354e934c3b"
+        },
+        {
+          "path": "packages/shared/src/storage/runtime-config.ts",
+          "sha256": "7e35bb12545ebe9f932fa671d47c4f0d855ed9ebd6a2cd20008e6b659fb663db"
+        },
+        {
+          "path": "packages/shared/src/storage/s3-storage-provider.ts",
+          "sha256": "2281b7baea118f61094f67829a63379b5fc0a2505adf3278d5ccfe998405644e"
+        },
+        {
+          "path": "packages/shared/src/storage/storage-factory.ts",
+          "sha256": "ccb3f15331f001e46984c3cc9e9d9cba72a3d87893b2d01e9da6f8b53b09668f"
+        },
+        {
+          "path": "packages/shared/src/storage/storage-provider.ts",
+          "sha256": "f10209540e8bbaa5b3dee7e48de78a9d9a6103bbd2c95c9a482ad085b0b11499"
+        },
+        {
+          "path": "packages/shared/src/storage/storage.test.ts",
+          "sha256": "1a45253e6327390059aec9aa158b8954aed838338f98823c44aceb88c182f3a5"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "Reviewed the existing AWS SDK S3 adapter and factory against the required upload, streaming get, delete, listing and presigned PUT/GET interface. The same factory resolves internal and browser endpoints from active configuration.",
+        "Reused current matching 28 adapter, 12 file-operation, 15 runtime-config and 15 immutable-storage cases from run 42681795739. Their source files, test files and dependency lock match.",
+        "The API validates declared file constraints, business association, ownership and current authority before issuing direct browser PUT or multipart URLs. It verifies stored bytes, MIME, size and checksum before sealing or entering PendingScan with the configured scanner. The API does not proxy large transfer bodies.",
+        "Reused 43 document HTTP, 24 storage-record HTTP, three storage-access HTTP and two multipart HTTP cases from run 42689595374, plus nine browser upload-component assertions. Matching tests cover real MinIO signing, mismatch rejection, download byte identity and durable configured-scanner jobs. The run's separate stale refresh assertion was corrected independently.",
+        "Reused the prior source-bound admin storage acceptance under 05-notifications-documents-ai.md#T-05.09.03 and 24 matching storage-config API cases from run 42689595374. The current UI has endpoint, region, bucket, credential identifier, password-masked write-only secret, path style, private/public URLs, Test Connection, result feedback and versioned save.",
+        "The active version remains in the existing encrypted configuration store as approved. AES-256-GCM protects the secret. The save probe performs a disposable upload and signed browser download with byte comparison, then preserves the prior active revision on failed authority, stale version, provider test or audit persistence. The production-equivalent storage, lifecycle, scanner and restore receipts remain separate operational gates."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/storage-abstraction-direct-transfer-and-admin",
+      "source_scope_proof": "release-0.6-storage-abstraction-direct-transfer-and-admin.json",
+      "source_scope_proof_sha256": "9be9fcd8fd403af1333cbe5b60c79336abc99981cd3066ea8ce1a6138256383d"
     }
   },
   "historical_improvements": [
