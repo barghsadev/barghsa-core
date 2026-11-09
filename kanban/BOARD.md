@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T21:55:58+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T21:58:10+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1028 | Accepted with unchanged source bindings. |
-| verify | 300 | Existing work may be complete; inspect evidence before building. |
+| done | 1029 | Accepted with unchanged source bindings. |
+| verify | 299 | Existing work may be complete; inspect evidence before building. |
 | partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1049,7 +1049,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-06.01.01` | verify | Earlier deferred | Initialize `packages/shared` with tsconfig and dependencies |
 | `01-platform-infrastructure.md#T-06.01.02` | verify | Earlier deferred | Create username validation and normalization helpers |
 | `01-platform-infrastructure.md#T-06.01.03` | verify | Earlier deferred | Create password validation with strength meter logic |
-| `01-platform-infrastructure.md#T-06.01.04` | verify | Earlier acceptance_verified | Create stable error code enum with HTTP status mapping |
+| `01-platform-infrastructure.md#T-06.01.04` | done | Earlier acceptance_verified | Create stable error code enum with HTTP status mapping |
 | `01-platform-infrastructure.md#T-06.01.05` | verify | Earlier deferred | Create pagination helper schemas |
 | `01-platform-infrastructure.md#T-06.02.01` | verify | Earlier deferred | Initialize `packages/i18n` with message dictionary structure |
 | `01-platform-infrastructure.md#T-06.02.02` | verify | Earlier deferred | Create Jalali calendar date utilities |

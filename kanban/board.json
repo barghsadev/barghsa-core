@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T21:55:58+00:00",
+  "updated": "2026-11-09T21:58:10+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -6004,7 +6004,8 @@
           "packages/shared/src/errors/error-codes.ts"
         ],
         "batches": [
-          "release-0.6-exception-correlation-and-sensitive-diagnostics"
+          "release-0.6-exception-correlation-and-sensitive-diagnostics",
+          "release-0.6-stable-error-catalogue"
         ],
         "current_acceptance": {
           "kind": "source-bound-runtime-and-outbox-reconciliation",
@@ -6080,7 +6081,7 @@
             },
             {
               "path": "packages/shared/src/errors/error-codes.ts",
-              "sha256": "601308abae084cc1b43259664628dbb942417115b7823caf5be604fd4a7c52fe"
+              "sha256": "3587d311b8216369d39c2d683fb019ff35b8338f4b08cc3ad2ef7a95369cae8b"
             },
             {
               "path": "packages/shared/src/errors/domain-error-codes.ts",
@@ -6090,7 +6091,8 @@
           "checks": [
             "47 targeted filter, middleware and logger unit assertions passed. They cover stable error codes, EN/FA localization, severity, generated UUIDv7 and valid inbound correlation propagation, and independent request contexts.",
             "14 cases passed through the compiled API and isolated migrated PostgreSQL. Authentication, validation, unmatched routes and oversized requests used private error handling, and an AI-model background job persisted the same correlation ID returned to the caller.",
-            "Reused the native worker assertion that retry and encrypted-message erasure preserve the request correlation without logging message content. The worker source, test, migrations and lock match the prior accepted native run."
+            "Reused the native worker assertion that retry and encrypted-message erasure preserve the request correlation without logging message content. The worker source, test, migrations and lock match the prior accepted native run.",
+            "Renewed only the stable catalogue binding after a four-value AI severity metadata repair. Existing error codes, HTTP response metadata and affected consumer tests match."
           ]
         }
       }
@@ -14074,12 +14076,10 @@
         "story": "01-platform-infrastructure.md#spec-ea595a631b8f"
       },
       "requirement": "- **T-06.01.04:** Create stable error code enum with HTTP status mapping\n  - **Notes:** Error codes as `const` object or TypeScript `enum`. Each code maps to: `httpStatus: number`, `title: string` (English), `retryable: boolean`. Backend returns `{ error: { code: string, message: string (localized), correlationId: string } }`. Never expose stack traces or raw provider/database errors.\n  - **Dependencies:** T-06.01.01\n  - **Complexity:** S",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -14258,29 +14258,70 @@
           "historically_skipped": true
         },
         "changed_paths": [
-          "apps/api/src/admin/admin.service.ts",
-          "apps/api/src/app.factory.ts",
-          "apps/api/src/auth/delivery-http.integration.test.ts",
-          "apps/api/src/auth/otp.service.ts",
-          "apps/api/src/common/http-exception.filter.ts",
-          "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-          "apps/api/src/notifications/notifications.service.ts",
-          "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
-          "apps/api/test/http-exception-filter.spec.ts",
-          "apps/worker/src/ai-models/test-runner.test.ts",
-          "apps/worker/src/ai-models/test-runner.ts",
-          "apps/worker/src/auth-delivery/providers.ts",
-          "apps/worker/src/auth-delivery/runner.integration.test.ts",
-          "apps/worker/src/auth-delivery/runner.ts",
-          "apps/worker/src/notifications/outbox-reader.ts",
-          "packages/db/drizzle/production/meta/_journal.json",
-          "packages/i18n/src/auth.ts",
-          "packages/shared/package.json",
-          "packages/shared/src/errors/domain-error-codes.ts",
           "packages/shared/src/errors/error-codes.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-stable-error-catalogue"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-compiled-error-contract",
+          "base_commit": "21dc29f5d70732f7488cab87e356830daeb50a67",
+          "source_evidence": [
+            {
+              "path": "packages/shared/src/errors/error-codes.ts",
+              "sha256": "3587d311b8216369d39c2d683fb019ff35b8338f4b08cc3ad2ef7a95369cae8b"
+            },
+            {
+              "path": "packages/shared/src/errors/domain-error-codes.ts",
+              "sha256": "f053c51302cec1e66dc1777b2d07f2d9bdea18eedf8d1622c7f45920228b06e3"
+            },
+            {
+              "path": "packages/shared/src/errors/index.ts",
+              "sha256": "5704f4bdba987459ef5be79d2581d8e03d7d648928c9ac41b18be20c2972261b"
+            },
+            {
+              "path": "packages/shared/scripts/package-exports.check.mjs",
+              "sha256": "922ded9af31a8f81d01a858fbfa947c24b460dc2d3d9e5d1ee006903760fdaea"
+            },
+            {
+              "path": "packages/shared/package.json",
+              "sha256": "5fceb0d150ea5c2b58032a25319fdf98a693da0a38b2e46e91122f00029b7f5e"
+            },
+            {
+              "path": "apps/api/src/common/http-exception.filter.ts",
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
+            },
+            {
+              "path": "apps/api/src/common/correlation-id.middleware.ts",
+              "sha256": "b127659fda54ecb4543d5dbbbfbcb873538f912ce5e0cf4d93ee4043ac36903e"
+            },
+            {
+              "path": "apps/api/src/common/correlation-logger.ts",
+              "sha256": "d751f6cfb30907eb95ea9a281326a6ac51399e185f9957c38d70f18438e7d561"
+            },
+            {
+              "path": "apps/api/src/common/correlation-logger.test.ts",
+              "sha256": "30a92c68318ec0edbe94b1d685adf15e9b0c5561205dde97f75e776be85f7d91"
+            },
+            {
+              "path": "apps/api/src/common/input-field.exception.test.ts",
+              "sha256": "d4ff943e66eb5a7df6b30851a63159f872b63b15b440d753eebd130bf3a3b77f"
+            },
+            {
+              "path": "apps/api/test/http-exception-filter.spec.ts",
+              "sha256": "f3586ab27d07958743bb485101076133c0e5b3a90688c2eed06a8888e84cd928"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Compared the complete prior and current source. Only four invalid AI severity metadata values changed from warning to the supported warn literal. Existing codes, HTTP statuses, titles, retryability and message keys match exactly.",
+            "Compiled ESM and CommonJS exports agree for all 231 core and domain errors. Checked 13 fallback HTTP statuses and the allowed metadata shape. All 27 shared package export/declaration checks passed.",
+            "All 50 exception, input validation and correlation logger unit cases passed. They preserve localized public errors, correlation IDs and private provider/database failure detail. API, web and worker typechecks and changed-file lint/format passed."
+          ]
+        }
       }
     },
     {
@@ -42092,7 +42133,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-stable-error-catalogue"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -42232,7 +42274,7 @@
             },
             {
               "path": "packages/shared/src/errors/error-codes.ts",
-              "sha256": "601308abae084cc1b43259664628dbb942417115b7823caf5be604fd4a7c52fe"
+              "sha256": "3587d311b8216369d39c2d683fb019ff35b8338f4b08cc3ad2ef7a95369cae8b"
             },
             {
               "path": "apps/api/src/test/submission-audit.ts",
@@ -42546,7 +42588,8 @@
             "Bindings renewed by release-0.5-candidate-acceptance: 92 affected units, 70 native correction, authority, solar and saving cases, 24 public authentication and terms cases, and 97 unchanged bundle limits. Ownership, monetary commands and confirmation assertions remain covered.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
-            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain."
+            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
+            "Renewed only the stable catalogue binding after a four-value AI severity metadata repair. Existing error codes, HTTP response metadata and affected consumer tests match."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -43452,7 +43495,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-stable-error-catalogue"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -43592,7 +43636,7 @@
             },
             {
               "path": "packages/shared/src/errors/error-codes.ts",
-              "sha256": "601308abae084cc1b43259664628dbb942417115b7823caf5be604fd4a7c52fe"
+              "sha256": "3587d311b8216369d39c2d683fb019ff35b8338f4b08cc3ad2ef7a95369cae8b"
             },
             {
               "path": "apps/api/src/test/submission-audit.ts",
@@ -43906,7 +43950,8 @@
             "Bindings renewed by release-0.5-candidate-acceptance: 92 affected units, 70 native correction, authority, solar and saving cases, 24 public authentication and terms cases, and 97 unchanged bundle limits. Ownership, monetary commands and confirmation assertions remain covered.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
-            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain."
+            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
+            "Renewed only the stable catalogue binding after a four-value AI severity metadata repair. Existing error codes, HTTP response metadata and affected consumer tests match."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -44820,7 +44865,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-stable-error-catalogue"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -44960,7 +45006,7 @@
             },
             {
               "path": "packages/shared/src/errors/error-codes.ts",
-              "sha256": "601308abae084cc1b43259664628dbb942417115b7823caf5be604fd4a7c52fe"
+              "sha256": "3587d311b8216369d39c2d683fb019ff35b8338f4b08cc3ad2ef7a95369cae8b"
             },
             {
               "path": "apps/api/src/test/submission-audit.ts",
@@ -45274,7 +45320,8 @@
             "Bindings renewed by release-0.5-candidate-acceptance: 92 affected units, 70 native correction, authority, solar and saving cases, 24 public authentication and terms cases, and 97 unchanged bundle limits. Ownership, monetary commands and confirmation assertions remain covered.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
-            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain."
+            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
+            "Renewed only the stable catalogue binding after a four-value AI severity metadata repair. Existing error codes, HTTP response metadata and affected consumer tests match."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -747209,7 +747256,8 @@
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
           "release-0.6-native-financial-foreign-id-http",
           "release-0.6-authorization-policy-and-staff-grants",
-          "release-0.6-incident-runbook-criteria"
+          "release-0.6-incident-runbook-criteria",
+          "release-0.6-stable-error-catalogue"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -840000,6 +840048,74 @@
         "Reviewed image and compatible migration recovery, smoke and reconciliation checks, incident reporting and blameless follow-up.",
         "Current changed runbook formatting and links passed. Runtime alert links and quarterly review receipts remain separate."
       ]
+    },
+    "release-0.6-stable-error-catalogue": {
+      "batch": "release-0.6-stable-error-catalogue",
+      "base_commit": "21dc29f5d70732f7488cab87e356830daeb50a67",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.05.01",
+        "01-platform-infrastructure.md#T-06.01.04",
+        "02-auth-users-admin.md#T-04.01.01",
+        "02-auth-users-admin.md#T-04.01.02",
+        "02-auth-users-admin.md#T-04.01.03",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "packages/shared/src/errors/error-codes.ts",
+          "sha256": "3587d311b8216369d39c2d683fb019ff35b8338f4b08cc3ad2ef7a95369cae8b"
+        },
+        {
+          "path": "packages/shared/src/errors/domain-error-codes.ts",
+          "sha256": "f053c51302cec1e66dc1777b2d07f2d9bdea18eedf8d1622c7f45920228b06e3"
+        },
+        {
+          "path": "packages/shared/src/errors/index.ts",
+          "sha256": "5704f4bdba987459ef5be79d2581d8e03d7d648928c9ac41b18be20c2972261b"
+        },
+        {
+          "path": "packages/shared/scripts/package-exports.check.mjs",
+          "sha256": "922ded9af31a8f81d01a858fbfa947c24b460dc2d3d9e5d1ee006903760fdaea"
+        },
+        {
+          "path": "packages/shared/package.json",
+          "sha256": "5fceb0d150ea5c2b58032a25319fdf98a693da0a38b2e46e91122f00029b7f5e"
+        },
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
+        },
+        {
+          "path": "apps/api/src/common/correlation-id.middleware.ts",
+          "sha256": "b127659fda54ecb4543d5dbbbfbcb873538f912ce5e0cf4d93ee4043ac36903e"
+        },
+        {
+          "path": "apps/api/src/common/correlation-logger.ts",
+          "sha256": "d751f6cfb30907eb95ea9a281326a6ac51399e185f9957c38d70f18438e7d561"
+        },
+        {
+          "path": "apps/api/src/common/correlation-logger.test.ts",
+          "sha256": "30a92c68318ec0edbe94b1d685adf15e9b0c5561205dde97f75e776be85f7d91"
+        },
+        {
+          "path": "apps/api/src/common/input-field.exception.test.ts",
+          "sha256": "d4ff943e66eb5a7df6b30851a63159f872b63b15b440d753eebd130bf3a3b77f"
+        },
+        {
+          "path": "apps/api/test/http-exception-filter.spec.ts",
+          "sha256": "f3586ab27d07958743bb485101076133c0e5b3a90688c2eed06a8888e84cd928"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "Compared the complete prior and current source. Only four invalid AI severity metadata values changed from warning to the supported warn literal. Existing codes, HTTP statuses, titles, retryability and message keys match exactly.",
+        "Compiled ESM and CommonJS exports agree for all 231 core and domain errors. Checked 13 fallback HTTP statuses and the allowed metadata shape. All 27 shared package export/declaration checks passed.",
+        "All 50 exception, input validation and correlation logger unit cases passed. They preserve localized public errors, correlation IDs and private provider/database failure detail. API, web and worker typechecks and changed-file lint/format passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/stable-error-catalogue"
     }
   },
   "historical_improvements": [

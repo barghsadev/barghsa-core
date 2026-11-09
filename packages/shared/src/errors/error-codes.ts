@@ -57,7 +57,7 @@ export const ErrorCodes = {
     title: 'AI model connection temporarily paused',
     retryable: true,
     messageKey: 'error.ai.model_circuit_open',
-    severity: 'warning' as ErrorSeverity,
+    severity: 'warn',
   },
   AI_KNOWLEDGE_BUSY: {
     code: 'AI_KNOWLEDGE_BUSY',
@@ -105,7 +105,7 @@ export const ErrorCodes = {
     title: 'AI model monthly budget is exhausted',
     retryable: false,
     messageKey: 'error.ai.model_budget_exhausted',
-    severity: 'warning' as ErrorSeverity,
+    severity: 'warn',
   },
   AI_INFERENCE_BUSY: {
     code: 'AI_INFERENCE_BUSY',
@@ -113,7 +113,7 @@ export const ErrorCodes = {
     title: 'AI requests are temporarily busy',
     retryable: true,
     messageKey: 'error.ai.inference_busy',
-    severity: 'warning' as ErrorSeverity,
+    severity: 'warn',
   },
   AI_INFERENCE_UNAVAILABLE: {
     code: 'AI_INFERENCE_UNAVAILABLE',
@@ -121,7 +121,7 @@ export const ErrorCodes = {
     title: 'AI assistant is temporarily unavailable',
     retryable: true,
     messageKey: 'error.ai.inference_unavailable',
-    severity: 'warning' as ErrorSeverity,
+    severity: 'warn',
   },
   MAINTENANCE_ACTIVE: {
     code: 'MAINTENANCE:ACTIVE',
