@@ -76,9 +76,16 @@ for (const locale of ['en', 'fa'] as const) {
     let hold = true;
     let fail = false;
     let malformed = false;
+    let result: 'rows' | 'denied' | 'empty' = 'rows';
     await page.route(/\/api\/contracts(?:\?|$)/, (route) => {
       const params = new URL(route.request().url()).searchParams;
       queries.push(params);
+      if (queries.length === 1) {
+        held = route;
+        return;
+      }
+      if (result === 'denied') return route.fulfill({ status: 403, json: {} });
+      if (result === 'empty') return route.fulfill({ json: { contracts: [], nextBefore: null } });
       if (fail) return route.fulfill({ status: 503, json: {} });
       if (malformed)
         return route.fulfill({
@@ -111,6 +118,11 @@ for (const locale of ['en', 'fa'] as const) {
         .locator('li')
         .filter({ has: page.locator('bdi').getByText(id, { exact: true }) });
     await page.goto('/contracts?state=Active');
+    await expect.poll(() => !!held).toBe(true);
+    await expect(page.getByRole('main').getByText(contractText('loading', locale))).toBeVisible();
+    await expect(page.getByText(contractText('empty', locale), { exact: true })).toHaveCount(0);
+    await held!.fulfill({ json: body(first, first) });
+    held = undefined;
     await expect(reference(first)).toBeVisible();
     await page.getByRole('button', { name: contractText('next', locale), exact: true }).click();
     await expect(reference(older)).toBeVisible();
@@ -238,5 +250,27 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       page.getByRole('combobox', { name: t('historyDates.preset', locale), exact: true })
     ).toBeDisabled();
+    await closeHistoryFilters(page, locale);
+    const refresh = main.getByRole('button', {
+      name: contractText('refresh', locale),
+      exact: true,
+    });
+    result = 'denied';
+    await refresh.click();
+    await expect(
+      main.getByRole('alert').filter({ hasText: contractText('denied', locale) })
+    ).toBeVisible();
+    await expect(reference(searched)).toHaveCount(0);
+    await expect(main.getByText(contractText('empty', locale), { exact: true })).toHaveCount(0);
+    const deniedQuery = queries.at(-1)!;
+    expect(deniedQuery.get('q')).toBe('retry');
+    result = 'empty';
+    await refresh.focus();
+    await page.keyboard.press('Enter');
+    await expect(main.getByText(contractText('empty', locale), { exact: true })).toBeVisible();
+    await expect(
+      main.getByRole('alert').filter({ hasText: contractText('denied', locale) })
+    ).toHaveCount(0);
+    expect(queries.at(-1)?.toString()).toBe(deniedQuery.toString());
   });
 }

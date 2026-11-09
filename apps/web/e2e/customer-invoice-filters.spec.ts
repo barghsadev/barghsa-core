@@ -70,9 +70,16 @@ for (const locale of ['en', 'fa'] as const) {
     let held: Route | undefined;
     let hold = true;
     let fail = false;
+    let result: 'rows' | 'denied' | 'empty' = 'rows';
     await page.route(/\/api\/invoices(?:\?|$)/, (route) => {
       const query = new URL(route.request().url()).searchParams;
       queries.push(query);
+      if (queries.length === 1) {
+        held = route;
+        return;
+      }
+      if (result === 'denied') return route.fulfill({ status: 403, json: {} });
+      if (result === 'empty') return route.fulfill({ json: { invoices: [], nextBefore: null } });
       if (fail) return route.fulfill({ status: 503, json: {} });
       if (query.get('min') && !query.has('statuses') && hold) {
         held = route;
@@ -91,6 +98,14 @@ for (const locale of ['en', 'fa'] as const) {
     const copy = (key: string) => t(`invoices.filter.${key}`, locale);
     const link = (id: string) => page.getByRole('main').locator(`a[href="/invoices/${id}"]`);
     await page.goto('/invoices?status=unpaid');
+    const main = page.getByRole('main');
+    await expect.poll(() => !!held).toBe(true);
+    await expect(
+      main.getByRole('status').filter({ hasText: t('invoices.loading', locale) })
+    ).toBeVisible();
+    await expect(main.getByText(copy('unpaidEmpty'), { exact: true })).toHaveCount(0);
+    await held!.fulfill({ json: body(first, first) });
+    held = undefined;
     await expect(link(first)).toBeVisible();
     await page.getByRole('button', { name: copy('more'), exact: true }).click();
     await expect(link(older)).toBeVisible();
@@ -205,5 +220,22 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       page.getByRole('combobox', { name: t('historyDates.preset', locale), exact: true })
     ).toBeDisabled();
+    result = 'denied';
+    await page.reload();
+    const denial = main
+      .getByRole('alert')
+      .filter({ hasText: t('historyPagination.accessDenied', locale) });
+    await expect(denial).toBeVisible();
+    await expect(link(searched)).toHaveCount(0);
+    await expect(main.getByText(t('historyDates.empty', locale), { exact: true })).toHaveCount(0);
+    const deniedQuery = queries.at(-1)!;
+    expect(deniedQuery.get('q')).toBe('retry');
+    result = 'empty';
+    const retry = denial.getByRole('button', { name: copy('retry'), exact: true });
+    await retry.focus();
+    await page.keyboard.press('Enter');
+    await expect(main.getByText(t('historyDates.empty', locale), { exact: true })).toBeVisible();
+    await expect(denial).toHaveCount(0);
+    expect(queries.at(-1)?.toString()).toBe(deniedQuery.toString());
   });
 }

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T23:57:29+00:00",
-  "source_commit": "f03cd51e888e7be0417a46310b70052fdc3c5e28",
+  "updated": "2026-11-09T00:00:56+00:00",
+  "source_commit": "3a4ceaff7c83d7f4eb12164794d34ad2c28526a8",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -598486,7 +598486,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer and staff dashboard receipts now include stale server-owned profile recovery, isolated widget failures, loaded/empty states and denial withdrawal. Complete the original route-level state and interaction reconciliation for the remaining list, detail and admin routes. Check only uncovered applicable first-load empty, denied and stale states."
+        "Dashboard and customer contract and invoice list receipts now cover the applicable loading, denial and empty recovery states. Reconcile original acceptance for the remaining list, detail and admin routes and verify specific uncovered states."
       ],
       "owner": null,
       "depends_on": [],
@@ -598611,7 +598611,8 @@
           "release-0.5-operational-route-receipts",
           "release-0.5-config-and-customer-route-receipts",
           "release-0.5-lazy-panel-waits",
-          "release-0.5-dashboard-profile-conflict"
+          "release-0.5-dashboard-profile-conflict",
+          "release-0.5-customer-financial-list-states"
         ],
         "current_acceptance": null
       }
@@ -637424,7 +637425,7 @@
             },
             {
               "path": "apps/web/e2e/customer-invoice-filters.spec.ts",
-              "sha256": "9df96a1aa6f16c2f30f56845f667495172a276a302342711539a49bf6574241f"
+              "sha256": "d9d690daa1f4217f59936e5afe88bc5ce33d9e2bcab38465302f3287089b7471"
             },
             {
               "path": "apps/web/e2e/customer-list-recovery.spec.ts",
@@ -638548,7 +638549,7 @@
             },
             {
               "path": "apps/web/e2e/customer-invoice-filters.spec.ts",
-              "sha256": "9df96a1aa6f16c2f30f56845f667495172a276a302342711539a49bf6574241f"
+              "sha256": "d9d690daa1f4217f59936e5afe88bc5ce33d9e2bcab38465302f3287089b7471"
             },
             {
               "path": "apps/web/e2e/customer-list-recovery.spec.ts",
@@ -639672,7 +639673,7 @@
             },
             {
               "path": "apps/web/e2e/customer-invoice-filters.spec.ts",
-              "sha256": "9df96a1aa6f16c2f30f56845f667495172a276a302342711539a49bf6574241f"
+              "sha256": "d9d690daa1f4217f59936e5afe88bc5ce33d9e2bcab38465302f3287089b7471"
             },
             {
               "path": "apps/web/e2e/customer-list-recovery.spec.ts",
@@ -640799,7 +640800,7 @@
             },
             {
               "path": "apps/web/e2e/customer-invoice-filters.spec.ts",
-              "sha256": "9df96a1aa6f16c2f30f56845f667495172a276a302342711539a49bf6574241f"
+              "sha256": "d9d690daa1f4217f59936e5afe88bc5ce33d9e2bcab38465302f3287089b7471"
             },
             {
               "path": "apps/web/e2e/customer-list-recovery.spec.ts",
@@ -641926,7 +641927,7 @@
             },
             {
               "path": "apps/web/e2e/customer-invoice-filters.spec.ts",
-              "sha256": "9df96a1aa6f16c2f30f56845f667495172a276a302342711539a49bf6574241f"
+              "sha256": "d9d690daa1f4217f59936e5afe88bc5ce33d9e2bcab38465302f3287089b7471"
             },
             {
               "path": "apps/web/e2e/customer-list-recovery.spec.ts",
@@ -643080,7 +643081,7 @@
             },
             {
               "path": "apps/web/e2e/customer-invoice-filters.spec.ts",
-              "sha256": "9df96a1aa6f16c2f30f56845f667495172a276a302342711539a49bf6574241f"
+              "sha256": "d9d690daa1f4217f59936e5afe88bc5ce33d9e2bcab38465302f3287089b7471"
             },
             {
               "path": "apps/web/e2e/customer-list-recovery.spec.ts",
@@ -644203,7 +644204,7 @@
             },
             {
               "path": "apps/web/e2e/customer-invoice-filters.spec.ts",
-              "sha256": "9df96a1aa6f16c2f30f56845f667495172a276a302342711539a49bf6574241f"
+              "sha256": "d9d690daa1f4217f59936e5afe88bc5ce33d9e2bcab38465302f3287089b7471"
             },
             {
               "path": "apps/web/e2e/customer-list-recovery.spec.ts",
@@ -645326,7 +645327,7 @@
             },
             {
               "path": "apps/web/e2e/customer-invoice-filters.spec.ts",
-              "sha256": "9df96a1aa6f16c2f30f56845f667495172a276a302342711539a49bf6574241f"
+              "sha256": "d9d690daa1f4217f59936e5afe88bc5ce33d9e2bcab38465302f3287089b7471"
             },
             {
               "path": "apps/web/e2e/customer-list-recovery.spec.ts",
@@ -646450,7 +646451,7 @@
             },
             {
               "path": "apps/web/e2e/customer-invoice-filters.spec.ts",
-              "sha256": "9df96a1aa6f16c2f30f56845f667495172a276a302342711539a49bf6574241f"
+              "sha256": "d9d690daa1f4217f59936e5afe88bc5ce33d9e2bcab38465302f3287089b7471"
             },
             {
               "path": "apps/web/e2e/customer-list-recovery.spec.ts",
@@ -647592,7 +647593,7 @@
             },
             {
               "path": "apps/web/e2e/customer-invoice-filters.spec.ts",
-              "sha256": "9df96a1aa6f16c2f30f56845f667495172a276a302342711539a49bf6574241f"
+              "sha256": "d9d690daa1f4217f59936e5afe88bc5ce33d9e2bcab38465302f3287089b7471"
             },
             {
               "path": "apps/web/e2e/customer-list-recovery.spec.ts",
@@ -648717,7 +648718,7 @@
             },
             {
               "path": "apps/web/e2e/customer-invoice-filters.spec.ts",
-              "sha256": "9df96a1aa6f16c2f30f56845f667495172a276a302342711539a49bf6574241f"
+              "sha256": "d9d690daa1f4217f59936e5afe88bc5ce33d9e2bcab38465302f3287089b7471"
             },
             {
               "path": "apps/web/e2e/customer-list-recovery.spec.ts",
@@ -680219,7 +680220,7 @@
             },
             {
               "path": "apps/web/e2e/customer-invoice-filters.spec.ts",
-              "sha256": "9df96a1aa6f16c2f30f56845f667495172a276a302342711539a49bf6574241f"
+              "sha256": "d9d690daa1f4217f59936e5afe88bc5ce33d9e2bcab38465302f3287089b7471"
             },
             {
               "path": "apps/web/e2e/customer-list-recovery.spec.ts",
@@ -681341,7 +681342,7 @@
             },
             {
               "path": "apps/web/e2e/customer-invoice-filters.spec.ts",
-              "sha256": "9df96a1aa6f16c2f30f56845f667495172a276a302342711539a49bf6574241f"
+              "sha256": "d9d690daa1f4217f59936e5afe88bc5ce33d9e2bcab38465302f3287089b7471"
             },
             {
               "path": "apps/web/e2e/customer-list-recovery.spec.ts",
@@ -682463,7 +682464,7 @@
             },
             {
               "path": "apps/web/e2e/customer-invoice-filters.spec.ts",
-              "sha256": "9df96a1aa6f16c2f30f56845f667495172a276a302342711539a49bf6574241f"
+              "sha256": "d9d690daa1f4217f59936e5afe88bc5ce33d9e2bcab38465302f3287089b7471"
             },
             {
               "path": "apps/web/e2e/customer-list-recovery.spec.ts",
@@ -683585,7 +683586,7 @@
             },
             {
               "path": "apps/web/e2e/customer-invoice-filters.spec.ts",
-              "sha256": "9df96a1aa6f16c2f30f56845f667495172a276a302342711539a49bf6574241f"
+              "sha256": "d9d690daa1f4217f59936e5afe88bc5ce33d9e2bcab38465302f3287089b7471"
             },
             {
               "path": "apps/web/e2e/customer-list-recovery.spec.ts",
@@ -728259,7 +728260,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer and staff dashboard receipts now include stale server-owned profile recovery, isolated widget failures, loaded/empty states and denial withdrawal. Complete the original route-level state and interaction reconciliation for the remaining list, detail and admin routes. Check only uncovered applicable first-load empty, denied and stale states."
+        "Dashboard and customer contract and invoice list receipts now cover the applicable loading, denial and empty recovery states. Reconcile original acceptance for the remaining list, detail and admin routes and verify specific uncovered states."
       ],
       "owner": null,
       "depends_on": [],
@@ -728450,7 +728451,8 @@
           "release-0.5-operational-route-receipts",
           "release-0.5-config-and-customer-route-receipts",
           "release-0.5-lazy-panel-waits",
-          "release-0.5-dashboard-profile-conflict"
+          "release-0.5-dashboard-profile-conflict",
+          "release-0.5-customer-financial-list-states"
         ]
       }
     },
@@ -808571,6 +808573,38 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-profile-conflict/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-profile-conflict/renewed-bindings.json",
       "release_disposition": "Closed dashboard recovery when the server changes the active profile. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-customer-financial-list-states": {
+      "batch": "release-0.5-customer-financial-list-states",
+      "base_commit": "3a4ceaff7c83d7f4eb12164794d34ad2c28526a8",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/customer-contract-filters.spec.ts",
+          "sha256": "afcf799b6e8a4ebf53bfa6594744b31afbe0780d8c74802e4ee5dee387de23f5"
+        },
+        {
+          "path": "apps/web/e2e/customer-invoice-filters.spec.ts",
+          "sha256": "d9d690daa1f4217f59936e5afe88bc5ce33d9e2bcab38465302f3287089b7471"
+        }
+      ],
+      "checks": [
+        "Eight browser cases passed on matching production assets. English and Persian cases in Chromium and Mobile Safari verify first-load feedback, denied reads and true empty results for the customer contracts and invoices lists.",
+        "The existing filter, pagination, time settings, reference and exact-amount assertions still pass. Contract refresh withdraws prior rows when access is denied. Keyboard recovery preserves the selected filters and waits for an authorized empty response. Formatting and lint pass."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-financial-list-states",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-financial-list-states/proof.json",
+      "source_scope_proof_sha256": "0c8122b6d102b7f70a8b95867c74b7fecfb48133083bcc1bd32df97261019c63",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-financial-list-states/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-financial-list-states/renewed-bindings.json",
+      "release_disposition": "Recorded the missing customer contract and invoice list state evidence. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [
@@ -808621,7 +808655,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Compare original route acceptance with named and measured evidence for list, detail and admin routes. Verify only uncovered applicable first-load empty, denied and stale states. Repository required-check enforcement and staging Sentry delivery remain independent gates."
+    "goal": "Compare original detail and admin route acceptance with named cases and measured layouts. Verify uncovered applicable first-load empty, denied and stale states. GitHub merge enforcement and staging Sentry delivery remain independent."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
