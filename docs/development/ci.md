@@ -1,18 +1,12 @@
 # CI execution modes
 
-Enabled on 2026-09-20 at the project owner's request to reduce batch turnaround.
+Ordinary pushes and pull requests run affected workspace tests. The integrity gate includes builds, types, formatting, lint, contracts, the task board, dependency and image scans, static analysis, and secret scanning. Fast-mode results explicitly report the scope of coverage measured.
 
-Pull requests run affected workspace tests without coverage instrumentation. They retain builds, types, formatting, lint, contract and database snapshot checks, task-board integrity checks, dependency scanning, static security analysis, and secret scanning.
+Manually dispatch CI to run the full release checks. They include coverage from the last released commit, the Chromium production-browser suite, and the strict release policy checks. The existing `CI_FULL_CHECKS` and `CI_FULL_PR_CHECKS` variables can also select full checks for their respective event scopes.
 
-The full production browser suite and coverage collection/enforcement are temporarily disabled for pull requests. The existing combined coverage check reports this exemption explicitly and still fails if tests or integrity checks fail. Its green result in fast mode does not mean coverage was measured. Do not use it as coverage evidence in a handoff.
+Direct pushes to `main` require **Verify monorepo integrity** on the exact candidate. Seed preflight refs at the verified remote `main` SHA and push the candidate as the next update. A stack can fast-forward together after the exact tip passes. Seeding at an unpublished candidate can create duplicate check contexts when a later push cancels the seed run. Keep diagnostic snapshots on a parent that already contains their board changes because the secret scanner reads all branch history.
 
-Pushes to main retain full tests, browser checks, and coverage enforcement. Nightly browser checks remain unchanged. New pushes cancel obsolete CI runs for the same pull request.
-
-Restore full PR checks with `gh variable set CI_FULL_PR_CHECKS --body true`, then rerun CI. Delete the variable or set it to false to return to temporary mode. Remove the FULL_CI conditions and this document when the temporary exception ends.
-
-Tradeoff: PRs no longer block on browser regressions or coverage thresholds; those are detected by the full main-branch run. Keep task-specific browser validation for changed user flows before pushing.
-
-Manual development now pushes directly to main. CI does not block staging deployment. See `kanban/WORKFLOW.md` for current release authority.
+Nightly jobs are separate from the integrity check. The release workflow in `kanban/WORKFLOW.md` governs when to enqueue staging after the verified release push.
 
 ## Reusing local builds
 

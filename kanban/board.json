@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T17:46:58+00:00",
+  "updated": "2026-11-09T17:57:00+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -5767,7 +5767,8 @@
           "release-0.6-nightly-version-and-smoke-contracts",
           "release-0.6-nightly-auth-and-finance-browser-fixtures",
           "release-0.6-nightly-outcome-rollup",
-          "release-0.6-nightly-workspace-browser-fixtures"
+          "release-0.6-nightly-workspace-browser-fixtures",
+          "release-0.6-hosted-nightly-contract-and-incomplete-rollup"
         ],
         "current_acceptance": null
       }
@@ -12447,7 +12448,8 @@
           "release-0.6-nightly-version-and-smoke-contracts",
           "release-0.6-nightly-auth-and-finance-browser-fixtures",
           "release-0.6-nightly-outcome-rollup",
-          "release-0.6-nightly-workspace-browser-fixtures"
+          "release-0.6-nightly-workspace-browser-fixtures",
+          "release-0.6-hosted-nightly-contract-and-incomplete-rollup"
         ],
         "current_acceptance": null
       }
@@ -473590,7 +473592,8 @@
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-verified-auth-specification-digest"
+          "release-0.6-verified-auth-specification-digest",
+          "release-0.6-diagnostic-history-public-digest"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -473610,7 +473613,7 @@
             },
             {
               "path": ".gitleaksignore",
-              "sha256": "56cfb3d22a61639d29d6f556bb8df077ffe1b6fa711b077c17f7cfb308db692f"
+              "sha256": "eb3d342ff8dddd8a311839d8bb991ede93097169299ee930bfcc65c8fdb001f6"
             },
             {
               "path": "apps/web/build.mjs",
@@ -473640,7 +473643,8 @@
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
             "Pinned Trivy converted all four exact hosted inventory reports without rescanning. The new verifier accepted four exact SBOMs and rejected mismatched, empty or unbound SBOMs and a report with a high finding.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
-            "The existing full-history scanner now recognizes that exact historical fingerprint. Five scanner controls, the actual synthetic credential detection/redaction control and a full local scan of 3,052 commits passed. The local scan reported zero leaks. The next exact hosted integrity result is required for direct main."
+            "The existing full-history scanner now recognizes that exact historical fingerprint. Five scanner controls, the actual synthetic credential detection/redaction control and a full local scan of 3,052 commits passed. The local scan reported zero leaks. The next exact hosted integrity result is required for direct main.",
+            "The exact diagnostic-branch occurrence of the verified public authentication specification digest is scoped to one historical fingerprint. The 3,060-commit local history scan reported zero leaks and the actual synthetic credential detection/redaction control passed."
           ]
         }
       }
@@ -473674,7 +473678,8 @@
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-verified-auth-specification-digest"
+          "release-0.6-verified-auth-specification-digest",
+          "release-0.6-diagnostic-history-public-digest"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -473694,7 +473699,7 @@
             },
             {
               "path": ".gitleaksignore",
-              "sha256": "56cfb3d22a61639d29d6f556bb8df077ffe1b6fa711b077c17f7cfb308db692f"
+              "sha256": "eb3d342ff8dddd8a311839d8bb991ede93097169299ee930bfcc65c8fdb001f6"
             },
             {
               "path": "scripts/check-secrets.py",
@@ -473711,7 +473716,8 @@
             "Gitleaks flagged a specification SHA-256 on the exact preflight commit. Verified the digest against the committed public file. Only the exact historical fingerprint is excluded. Synthetic credential detection, redaction, and a full 3,018-commit scan with zero leaks passed locally.",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
-            "The existing full-history scanner now recognizes that exact historical fingerprint. Five scanner controls, the actual synthetic credential detection/redaction control and a full local scan of 3,052 commits passed. The local scan reported zero leaks. The next exact hosted integrity result is required for direct main."
+            "The existing full-history scanner now recognizes that exact historical fingerprint. Five scanner controls, the actual synthetic credential detection/redaction control and a full local scan of 3,052 commits passed. The local scan reported zero leaks. The next exact hosted integrity result is required for direct main.",
+            "The exact diagnostic-branch occurrence of the verified public authentication specification digest is scoped to one historical fingerprint. The 3,060-commit local history scan reported zero leaks and the actual synthetic credential detection/redaction control passed."
           ]
         },
         "ci_checkpoint": {
@@ -474069,7 +474075,8 @@
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-verified-auth-specification-digest"
+          "release-0.6-verified-auth-specification-digest",
+          "release-0.6-diagnostic-history-public-digest"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -474089,7 +474096,7 @@
             },
             {
               "path": ".gitleaksignore",
-              "sha256": "56cfb3d22a61639d29d6f556bb8df077ffe1b6fa711b077c17f7cfb308db692f"
+              "sha256": "eb3d342ff8dddd8a311839d8bb991ede93097169299ee930bfcc65c8fdb001f6"
             },
             {
               "path": "scripts/check-secrets.py",
@@ -474106,7 +474113,8 @@
             "Gitleaks flagged a specification SHA-256 on the exact preflight commit. Verified the digest against the committed public file. Only the exact historical fingerprint is excluded. Synthetic credential detection, redaction, and a full 3,018-commit scan with zero leaks passed locally.",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
-            "The existing full-history scanner now recognizes that exact historical fingerprint. Five scanner controls, the actual synthetic credential detection/redaction control and a full local scan of 3,052 commits passed. The local scan reported zero leaks. The next exact hosted integrity result is required for direct main."
+            "The existing full-history scanner now recognizes that exact historical fingerprint. Five scanner controls, the actual synthetic credential detection/redaction control and a full local scan of 3,052 commits passed. The local scan reported zero leaks. The next exact hosted integrity result is required for direct main.",
+            "The exact diagnostic-branch occurrence of the verified public authentication specification digest is scoped to one historical fingerprint. The 3,060-commit local history scan reported zero leaks and the actual synthetic credential detection/redaction control passed."
           ]
         },
         "current_scan_checkpoint": {
@@ -705278,7 +705286,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "57e2cbaf913e45d859115b5fece0f3872eedded37845c2bcc17b70209674b86a"
+              "sha256": "ef51213c1a574bbb6b11ed66824cf031d9d104fcbaa6bc46c369d5f2cd28161f"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -705329,7 +705337,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json"
+            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
+            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical."
           ],
           "criterion_result": "Full-page individual/legal/both checkbox chooser, canonical selection order, owner-bound durable request key, resume and lost-receipt recovery verified.",
           "limitations": [
@@ -705914,7 +705923,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "57e2cbaf913e45d859115b5fece0f3872eedded37845c2bcc17b70209674b86a"
+              "sha256": "ef51213c1a574bbb6b11ed66824cf031d9d104fcbaa6bc46c369d5f2cd28161f"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -705965,7 +705974,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json"
+            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
+            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical."
           ],
           "criterion_result": "Required personal identity and checksum, optional title, dependent province/city, address/postal validation, save-before-step server drafts, review and exact submission receipt verified.",
           "limitations": [
@@ -706550,7 +706560,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "57e2cbaf913e45d859115b5fece0f3872eedded37845c2bcc17b70209674b86a"
+              "sha256": "ef51213c1a574bbb6b11ed66824cf031d9d104fcbaa6bc46c369d5f2cd28161f"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -706601,7 +706611,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json"
+            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
+            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical."
           ],
           "criterion_result": "Representative and company identity, required/unique national identifier, company type, optional localized registration date/contact/economic fields, required dependent address, optional verified document workflow, review and persisted verification status verified.",
           "limitations": [
@@ -707187,7 +707198,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "57e2cbaf913e45d859115b5fece0f3872eedded37845c2bcc17b70209674b86a"
+              "sha256": "ef51213c1a574bbb6b11ed66824cf031d9d104fcbaa6bc46c369d5f2cd28161f"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -707238,7 +707249,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json"
+            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
+            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical."
           ],
           "criterion_result": "Aggregate persisted profile summaries, first initial dashboard choice, explicit alternate selection, saved context, exact final receipt and current /app dashboard entry verified.",
           "limitations": [
@@ -707823,7 +707835,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "57e2cbaf913e45d859115b5fece0f3872eedded37845c2bcc17b70209674b86a"
+              "sha256": "ef51213c1a574bbb6b11ed66824cf031d9d104fcbaa6bc46c369d5f2cd28161f"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -707874,7 +707886,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json"
+            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
+            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical."
           ],
           "criterion_result": "Customer /app and nested availability guard redirects empty accounts to onboarding; unavailable reads fail rather than inventing an empty account; staff context remains independent.",
           "limitations": [
@@ -708459,7 +708472,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "57e2cbaf913e45d859115b5fece0f3872eedded37845c2bcc17b70209674b86a"
+              "sha256": "ef51213c1a574bbb6b11ed66824cf031d9d104fcbaa6bc46c369d5f2cd28161f"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -708510,7 +708523,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json"
+            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
+            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical."
           ],
           "criterion_result": "Active legal-profile directory verifies initials avatars, masked contacts, role/status badges, actual/unknown invitation/join/sign-in dates, owner crown and transfer entry.",
           "limitations": [
@@ -709095,7 +709109,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "57e2cbaf913e45d859115b5fece0f3872eedded37845c2bcc17b70209674b86a"
+              "sha256": "ef51213c1a574bbb6b11ed66824cf031d9d104fcbaa6bc46c369d5f2cd28161f"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -709146,7 +709160,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json"
+            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
+            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical."
           ],
           "criterion_result": "Invitation username/role and optional bounded plain-text message, local validation, self/existing-member safeguards, current authority, retained failure draft and safe note display verified.",
           "limitations": [
@@ -709732,7 +709747,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "57e2cbaf913e45d859115b5fece0f3872eedded37845c2bcc17b70209674b86a"
+              "sha256": "ef51213c1a574bbb6b11ed66824cf031d9d104fcbaa6bc46c369d5f2cd28161f"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -709783,7 +709798,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json"
+            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
+            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical."
           ],
           "criterion_result": "Member/invitation detail dialogs verify scoped identity and public activity, role editing, guarded removal, withdrawal, current ownership and captured step-up/receipt recovery.",
           "limitations": [
@@ -710368,7 +710384,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "57e2cbaf913e45d859115b5fece0f3872eedded37845c2bcc17b70209674b86a"
+              "sha256": "ef51213c1a574bbb6b11ed66824cf031d9d104fcbaa6bc46c369d5f2cd28161f"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -710419,7 +710435,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json"
+            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
+            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical."
           ],
           "criterion_result": "Account-bound pending invitations identify company/inviter and remain until accept/decline. Onboarding acceptance requires no new profile, binds company/role and opens the accepted context explicitly.",
           "limitations": [
@@ -711004,7 +711021,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "57e2cbaf913e45d859115b5fece0f3872eedded37845c2bcc17b70209674b86a"
+              "sha256": "ef51213c1a574bbb6b11ed66824cf031d9d104fcbaa6bc46c369d5f2cd28161f"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -711055,7 +711072,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json"
+            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
+            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical."
           ],
           "criterion_result": "Owner rows cannot be removed or edited through ordinary member actions. Bound ownership transfer, current authority, step-up, stale/expiry/retry and last-owner safeguards verified.",
           "limitations": [
@@ -739773,7 +739791,9 @@
           "release-0.6-nightly-auth-and-finance-browser-fixtures",
           "release-0.6-verified-auth-specification-digest",
           "release-0.6-nightly-outcome-rollup",
-          "release-0.6-nightly-workspace-browser-fixtures"
+          "release-0.6-nightly-workspace-browser-fixtures",
+          "release-0.6-diagnostic-history-public-digest",
+          "release-0.6-hosted-nightly-contract-and-incomplete-rollup"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -829168,6 +829188,87 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-workspace-fixture-repair",
       "source_scope_proof": "receipt.json",
       "source_scope_proof_sha256": "f51db9600d3993f4ab78a416cacf2bc88f5c725b4e9b802a275ea016858d10b5"
+    },
+    "release-0.6-diagnostic-history-public-digest": {
+      "batch": "release-0.6-diagnostic-history-public-digest",
+      "base_commit": "9ae679ce49f9da9406cd0daa6cb66bbd9cbc9f86",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".gitleaksignore",
+          "sha256": "eb3d342ff8dddd8a311839d8bb991ede93097169299ee930bfcc65c8fdb001f6"
+        },
+        {
+          "path": "kanban/epics/02-auth-users-admin.md",
+          "sha256": "caba2c48cfb51ef51950b6eead29b7997f804d5cb196b77b65de7c46fa76c774"
+        },
+        {
+          "path": "scripts/check-secrets.py",
+          "sha256": "48f9666ec7e7e97a97d79efd05886d7df1a0e2f8c793dcd998a27eef337ca4aa"
+        },
+        {
+          "path": "docs/development/ci.md",
+          "sha256": "ef51213c1a574bbb6b11ed66824cf031d9d104fcbaa6bc46c369d5f2cd28161f"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+        }
+      ],
+      "checks": [
+        "The exact diagnostic-branch occurrence of the verified public authentication specification digest is scoped to one historical fingerprint. The 3,060-commit local history scan reported zero leaks and the actual synthetic credential detection/redaction control passed.",
+        "The diagnostic-branch finding in hosted run 42668143857 was verified from its exact source line and redacted artifact 13697452882."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-auth-digest-scan",
+      "source_scope_proof": "release-0.6-diagnostic-history-public-digest.json",
+      "source_scope_proof_sha256": "271837b27f1609a789be7338a9865a7395e16952c86fe0d5d38e4e970cd6a54e"
+    },
+    "release-0.6-hosted-nightly-contract-and-incomplete-rollup": {
+      "batch": "release-0.6-hosted-nightly-contract-and-incomplete-rollup",
+      "base_commit": "9ae679ce49f9da9406cd0daa6cb66bbd9cbc9f86",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "69e0220154038aa58e37d5d6f2754ad67d8cf8ccb24d647a8de4a6303ffa26d6"
+        },
+        {
+          "path": "scripts/check-dependency-audit.mjs",
+          "sha256": "419d82abc01f0f46614ec100e7c15074b7c092e30f1ceebf3ff4de6506877c61"
+        },
+        {
+          "path": "scripts/report-nightly-browser.py",
+          "sha256": "f43b1769a315bf296b5234a9e501f18d196445c34b6346ea823b913b9478385f"
+        },
+        {
+          "path": "scripts/test_report_nightly_browser.py",
+          "sha256": "8e053b0560830292f2d0bb9493ef7d8fd6a54bbbd3c5118222aec4159e403d52"
+        },
+        {
+          "path": "scripts/check-flaky-tests.py",
+          "sha256": "0768ffe3ef92d4c170fc72b2ba406a3bf78e81ba3338a8b5c78089755ef14b02"
+        },
+        {
+          "path": "scripts/quarantine-registry.json",
+          "sha256": "157a74b0da194e57fcfd444594a710eeba719bb205bfd9969b5d5e634fbb58b2"
+        }
+      ],
+      "checks": [
+        "Hosted diagnostic run 42668480792 used the unchanged contracts and report jobs. Job 129338399942 passed the high/critical dependency gate, Drizzle generation with zero drift and registered navigation typechecking. Artifact 13697038397 records dependency and migration output.",
+        "The controlled browser job supplied one valid outcome. Report job 129338451571 read the scheduled history, recorded one of 40 shards and 39 missing, failed the incomplete gate and uploaded the rollup and quarantine output in artifact 13696634451. The actual scheduled and complete browser gates remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-browser-rollup/hosted-42668480792",
+      "source_scope_proof": "release-0.6-hosted-nightly-contract-and-incomplete-rollup.json",
+      "source_scope_proof_sha256": "ac9532ba0680d7ce197aef17b6cb07cd70290966b47322cf87857d527b37fccd"
     }
   },
   "historical_improvements": [
