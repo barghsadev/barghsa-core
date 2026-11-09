@@ -125,6 +125,7 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
   const { retainedFileIds: retained, files } = version.watch();
   const [linkError, setLinkError] = useState(false);
   const [links, setLinks] = useState<Record<string, string>>({});
+  const [pendingLinks, setPendingLinks] = useState<string[]>([]);
   const [state, setState] = useState<'loading' | 'ready' | 'denied' | 'error'>('loading');
   const [revision, setRevision] = useState(0);
   const [detailRevision, setDetailRevision] = useState(0);
@@ -141,9 +142,9 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
     JSON.stringify(['template-detail', selected])
   );
   const listRequest = useRef<AbortController | null>(null);
-  const linkRequests = useRef(new Set<AbortController>());
+  const linkRequests = useRef(new Map<string, AbortController>());
   function retireLinks() {
-    for (const controller of linkRequests.current) controller.abort();
+    for (const controller of linkRequests.current.values()) controller.abort();
     linkRequests.current.clear();
   }
   const visibleRows = acceptedCriteria === criteria ? rows : null;
@@ -195,6 +196,7 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
     errorFocus.current = null;
     setUncertain(false);
     setLinks({});
+    setPendingLinks([]);
     setLinkError(false);
     setVersionChanged(false);
     setAction(null);
@@ -271,6 +273,7 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
         else if (previous.versions?.[0]?.id !== latest?.id) {
           retireLinks();
           setLinks({});
+          setPendingLinks([]);
           const ids = new Set(latest?.files.map((file) => file.id) ?? []);
           version.setValue(
             'retainedFileIds',
@@ -373,10 +376,12 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
   }
 
   async function getLink(versionId: string, fileId: string) {
-    if (!selected || accessDenied.current) return;
+    const key = `${versionId}:${fileId}`;
+    if (!selected || accessDenied.current || linkRequests.current.has(key)) return;
     const current = linkGeneration.current;
     const controller = new AbortController();
-    linkRequests.current.add(controller);
+    linkRequests.current.set(key, controller);
+    setPendingLinks([...linkRequests.current.keys()]);
     try {
       const data = await readDetail<unknown>(
         `/api/admin/document-templates/${selected}/versions/${versionId}/files/${fileId}/download`,
@@ -389,7 +394,7 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
         current === linkGeneration.current &&
         !accessDenied.current
       ) {
-        setLinks((links) => ({ ...links, [fileId]: url }));
+        setLinks((links) => ({ ...links, [key]: url }));
         setLinkError(false);
       }
     } catch (reason: unknown) {
@@ -398,7 +403,10 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
       if (templateAccessDenied(reason)) denyAccess();
       else setLinkError(true);
     } finally {
-      linkRequests.current.delete(controller);
+      if (linkRequests.current.get(key) === controller) {
+        linkRequests.current.delete(key);
+        setPendingLinks([...linkRequests.current.keys()]);
+      }
     }
   }
 
@@ -910,29 +918,39 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
                           </p>
                         ) : null}
                         <ul className="space-y-2 text-sm">
-                          {version.files.map((file) => (
-                            <li key={file.id} className="flex flex-wrap items-center gap-2">
-                              <span dir="auto">{file.originalName}</span>
-                              <Button
-                                type="button"
-                                variant="outline"
-                                onClick={() => void getLink(version.id, file.id)}
-                              >
-                                {word('download')}
-                              </Button>
-                              {links[file.id] ? (
-                                <a
-                                  href={links[file.id]}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  referrerPolicy="no-referrer"
-                                  className="text-primary underline"
+                          {version.files.map((file) => {
+                            const key = `${version.id}:${file.id}`;
+                            const pending = pendingLinks.includes(key);
+                            return (
+                              <li key={file.id} className="flex flex-wrap items-center gap-2">
+                                <span dir="auto">{file.originalName}</span>
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  loading={pending}
+                                  onClick={() => void getLink(version.id, file.id)}
                                 >
-                                  {word('openFile')}
-                                </a>
-                              ) : null}
-                            </li>
-                          ))}
+                                  {word('download')}
+                                </Button>
+                                {pending && (
+                                  <LoadingStatus className="sr-only">
+                                    {word('linkLoading')}
+                                  </LoadingStatus>
+                                )}
+                                {links[key] ? (
+                                  <a
+                                    href={links[key]}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    referrerPolicy="no-referrer"
+                                    className="text-primary underline"
+                                  >
+                                    {word('openFile')}
+                                  </a>
+                                ) : null}
+                              </li>
+                            );
+                          })}
                         </ul>
                         <div className="text-sm">
                           <span className="font-medium">{word('placeholders')}: </span>

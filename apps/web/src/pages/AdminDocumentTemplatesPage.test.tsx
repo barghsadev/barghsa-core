@@ -338,7 +338,11 @@ it('builds the next version from selected old files and new PDF files', async ()
 
 it('keeps authorized template detail through file-link failures and clears the error on recovery', async () => {
   const url = 'https://files.example.test/terms.docx';
-  const replies = [response({}, 503), response(null), response({ url })];
+  let finish!: (value: Response) => void;
+  const held = new Promise<Response>((resolve) => {
+    finish = resolve;
+  });
+  const replies = [held, response(null), response({ url })];
   const fetcher = vi.fn(async (path: string) => {
     if (path.endsWith('/download')) return replies.shift()!;
     return path.includes(`/${TEMPLATE}`) ? response(detail) : response(list);
@@ -349,6 +353,22 @@ it('keeps authorized template detail through file-link failures and clears the e
   const failure = 'Could not get the file link. Try again.';
   for (const remaining of [2, 1]) {
     await click('Get file link');
+    if (remaining === 2) {
+      const [requesting, other] = Array.from(container.querySelectorAll('button')).filter(
+        (button) => button.textContent === 'Get file link'
+      );
+      expect(requesting!.disabled).toBe(true);
+      expect(requesting!.getAttribute('aria-busy')).toBe('true');
+      expect(other!.disabled).toBe(false);
+      expect(requesting!.closest('li')?.querySelector('[role="status"]')?.textContent).toBe(
+        'Getting the file link…'
+      );
+      await act(async () => requesting!.click());
+      expect(replies).toHaveLength(2);
+      await act(async () => finish(response({}, 503)));
+      expect(requesting!.disabled).toBe(false);
+      expect(container.textContent).not.toContain('Getting the file link…');
+    }
     expect(replies).toHaveLength(remaining);
     expect(container.querySelector('[role="alert"]')?.textContent).toBe(failure);
     expect(container.querySelector('a[href]')).toBeNull();
@@ -359,6 +379,49 @@ it('keeps authorized template detail through file-link failures and clears the e
   expect(container.textContent).not.toContain(failure);
   expect(container.querySelector<HTMLAnchorElement>('a[href]')?.href).toBe(url);
   expect(fetcher.mock.calls.filter(([path]) => !path.endsWith('/download'))).toHaveLength(2);
+});
+
+it('retires a pending file link when leaving its template and withdraws denied detail', async () => {
+  const pending: { signal: AbortSignal; finish: (value: Response) => void }[] = [];
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (path: string, options: RequestInit) => {
+      if (path.endsWith('/download'))
+        return new Promise<Response>((finish) => pending.push({ signal: options.signal!, finish }));
+      return path.includes(`/${TEMPLATE}`) ? response(detail) : response(list);
+    })
+  );
+  const download = () =>
+    Array.from(container.querySelectorAll('button')).find(
+      (button) => button.textContent === 'Get file link'
+    )!;
+  await render();
+  await click('Customer agreement');
+  const first = download();
+  await act(async () => {
+    first.click();
+    first.click();
+  });
+  expect(pending).toHaveLength(1);
+  expect(first.disabled).toBe(true);
+
+  await click('Add template');
+  expect(pending[0]!.signal.aborted).toBe(true);
+  expect(container.textContent).not.toContain('Getting the file link…');
+  await click('Customer agreement');
+  await click('Get file link');
+  expect(pending).toHaveLength(2);
+  await act(async () =>
+    pending[0]!.finish(response({ url: 'https://files.example.test/old.pdf' }))
+  );
+  expect(download().getAttribute('aria-busy')).toBe('true');
+  expect(container.querySelector('a[href]')).toBeNull();
+
+  await act(async () => pending[1]!.finish(response({}, 403)));
+  expect(container.querySelector('#document-template-files')).toBeNull();
+  expect(container.querySelector('a[href]')).toBeNull();
+  expect(container.textContent).not.toContain('Getting the file link…');
+  expect(container.querySelector('[role="alert"]')).not.toBeNull();
 });
 
 it('keeps the empty history visible while reviewing the first file version', async () => {

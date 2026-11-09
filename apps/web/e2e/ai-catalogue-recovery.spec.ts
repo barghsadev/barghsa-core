@@ -61,7 +61,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.locator('#ai-model-token').fill('test-only-private-token');
     fail = true;
     await page.getByRole('button', { name: m('refresh'), exact: true }).click();
-    await expect(page.getByRole('alert')).toContainText(m('error'));
+    await expect(page.getByRole('alert').filter({ hasText: m('error') })).toContainText(m('error'));
     await expect(page.locator('#ai-model-token')).toHaveValue('test-only-private-token');
     await page.locator('#ai-model-modelName').fill('During recovery');
     fail = false;
@@ -93,7 +93,9 @@ for (const locale of ['en', 'fa'] as const) {
     await dialog.getByRole('button', { name: m('refresh'), exact: true }).click();
     await expect(dialog).toHaveCount(0);
     await expect(page.locator('table')).toHaveCount(0);
-    await expect(page.getByRole('alert')).toHaveText(m('forbidden'));
+    await expect(page.getByRole('alert').filter({ hasText: m('forbidden') })).toHaveText(
+      m('forbidden')
+    );
   });
   test(`agent list and options recover independently and preserve prompt and test-chat work (${locale})`, async ({
     page,
@@ -138,7 +140,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.locator('#agent-system-prompt').fill('Retained system prompt');
     failList = true;
     await page.getByRole('button', { name: a('refresh'), exact: true }).click();
-    await expect(page.getByRole('alert')).toContainText(a('error'));
+    await expect(page.getByRole('alert').filter({ hasText: a('error') })).toContainText(a('error'));
     await page.locator('#agent-description').fill('During recovery');
     const optionsBefore = optionReads,
       detailBefore = detailReads;
@@ -149,7 +151,9 @@ for (const locale of ['en', 'fa'] as const) {
     expect(detailReads).toBe(detailBefore);
     failOptions = true;
     await page.getByRole('button', { name: a('refresh'), exact: true }).click();
-    await expect(page.getByRole('alert')).toContainText(a('optionsError'));
+    await expect(page.getByRole('alert').filter({ hasText: a('optionsError') })).toContainText(
+      a('optionsError')
+    );
     const listsBefore = listReads;
     failOptions = false;
     removed = true;
@@ -176,7 +180,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(page.locator('#agent-system-prompt')).toHaveCount(0);
     await expect(page.locator('#test-chat-message')).toHaveCount(0);
-    await expect(page.getByRole('alert')).toHaveText(a('denied'));
+    await expect(page.getByRole('alert').filter({ hasText: a('denied') })).toHaveText(a('denied'));
   });
   test(`agent settings retry is independent and changed configuration retains editing until reset (${locale})`, async ({
     page,
@@ -226,7 +230,9 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await page.goto('/admin/agents');
     await page.getByRole('button', { name: `${a('edit')} ${aiAgent.title}`, exact: true }).click();
-    await expect(page.getByRole('alert')).toContainText(a('detailError'));
+    await expect(page.getByRole('alert').filter({ hasText: a('detailError') })).toContainText(
+      a('detailError')
+    );
     fail = false;
     await page.getByRole('button', { name: a('detailRetry'), exact: true }).click();
     await expect(page.locator('#agent-system-prompt')).toHaveValue(aiDetail.systemPrompt);

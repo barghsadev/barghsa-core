@@ -78,6 +78,49 @@ async function inspect(page: Page, locale: string, info: TestInfo, kind: string)
 }
 
 for (const locale of ['en', 'fa'] as const) {
+  test(`template file link announces its pending read and can retry (${locale})`, async ({
+    page,
+  }, info) => {
+    const { word } = await setup(page, locale);
+    const url = 'https://files.example.test/terms.pdf';
+    let reads = 0;
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    await page.route(
+      `**/api/admin/document-templates/${templateDetail.id}/versions/${templateDetail.versions[0]!.id}/files/${templateFile.id}/download`,
+      async (route) => {
+        if (++reads !== 1) return route.fulfill({ json: { url } });
+        await held;
+        return route.fulfill({ status: 503, json: {} });
+      }
+    );
+    const download = page.getByRole('button', { name: word('download'), exact: true });
+    const loading = page.getByRole('status').filter({ hasText: word('linkLoading') });
+    await download.click();
+    try {
+      await expect.poll(() => reads).toBe(1);
+      await expect(download).toBeDisabled();
+      await expect(download).toHaveAttribute('aria-busy', 'true');
+      await expect(loading).toHaveText(word('linkLoading'));
+      if (locale === 'fa' && info.project.name === 'mobile-safari') {
+        await download.locator('..').screenshot({ path: info.outputPath('file-link-pending.png') });
+      }
+    } finally {
+      release();
+    }
+    await expect(page.getByRole('alert').filter({ hasText: word('linkError') })).toBeVisible();
+    await expect(loading).toHaveCount(0);
+    await expect(download).toBeEnabled();
+    await download.click();
+    await expect(page.getByRole('link', { name: word('openFile'), exact: true })).toHaveAttribute(
+      'href',
+      url
+    );
+    expect(reads).toBe(2);
+  });
+
   test(`document metadata keeps raw input, maps server fields and owns one confirmed command (${locale})`, async ({
     page,
   }, info) => {
