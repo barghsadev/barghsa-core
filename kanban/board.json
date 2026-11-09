@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T04:17:16+00:00",
-  "source_commit": "f5cc2bfac52080114f5785bcfa832e74676a3674",
+  "updated": "2026-11-09T04:22:55+00:00",
+  "source_commit": "62b4eb6d875a606ea17340c27346d15646f5ad07",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -421719,7 +421719,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "bd273d31e61952b3a0e1434d93d3020b62d1415717280aa6709f73c378f2610c"
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -494697,7 +494697,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "bd273d31e61952b3a0e1434d93d3020b62d1415717280aa6709f73c378f2610c"
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -494721,7 +494721,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
@@ -495588,7 +495588,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "bd273d31e61952b3a0e1434d93d3020b62d1415717280aa6709f73c378f2610c"
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -495612,7 +495612,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
@@ -496420,7 +496420,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "bd273d31e61952b3a0e1434d93d3020b62d1415717280aa6709f73c378f2610c"
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -496444,7 +496444,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
@@ -517247,7 +517247,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
-              "sha256": "1632a723ed687ab70812e18737dca1e8b430611d0d885b4c6096fda68a240191"
+              "sha256": "50030a7917f70cc995899a626bd9f586412a7fd977c855ab12b0fd8589cd7270"
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
@@ -518275,7 +518275,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "bd273d31e61952b3a0e1434d93d3020b62d1415717280aa6709f73c378f2610c"
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
@@ -520675,7 +520675,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
-              "sha256": "1632a723ed687ab70812e18737dca1e8b430611d0d885b4c6096fda68a240191"
+              "sha256": "50030a7917f70cc995899a626bd9f586412a7fd977c855ab12b0fd8589cd7270"
             },
             {
               "path": "apps/web/e2e/electricity-pre-active-rejection.spec.ts",
@@ -521503,7 +521503,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
-              "sha256": "1632a723ed687ab70812e18737dca1e8b430611d0d885b4c6096fda68a240191"
+              "sha256": "50030a7917f70cc995899a626bd9f586412a7fd977c855ab12b0fd8589cd7270"
             },
             {
               "path": "apps/web/e2e/electricity-pre-active-rejection.spec.ts",
@@ -522835,7 +522835,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
-              "sha256": "1632a723ed687ab70812e18737dca1e8b430611d0d885b4c6096fda68a240191"
+              "sha256": "50030a7917f70cc995899a626bd9f586412a7fd977c855ab12b0fd8589cd7270"
             },
             {
               "path": "apps/web/e2e/electricity-pre-active-rejection.spec.ts",
@@ -547202,7 +547202,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "bd273d31e61952b3a0e1434d93d3020b62d1415717280aa6709f73c378f2610c"
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -547346,7 +547346,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -549072,7 +549072,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "bd273d31e61952b3a0e1434d93d3020b62d1415717280aa6709f73c378f2610c"
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -549216,7 +549216,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -550943,7 +550943,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "bd273d31e61952b3a0e1434d93d3020b62d1415717280aa6709f73c378f2610c"
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -551087,7 +551087,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -552783,7 +552783,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "bd273d31e61952b3a0e1434d93d3020b62d1415717280aa6709f73c378f2610c"
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -552927,7 +552927,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -554649,7 +554649,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "bd273d31e61952b3a0e1434d93d3020b62d1415717280aa6709f73c378f2610c"
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -554793,7 +554793,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -556524,7 +556524,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "bd273d31e61952b3a0e1434d93d3020b62d1415717280aa6709f73c378f2610c"
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -556668,7 +556668,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -558372,7 +558372,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "bd273d31e61952b3a0e1434d93d3020b62d1415717280aa6709f73c378f2610c"
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -558516,7 +558516,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -560184,7 +560184,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "bd273d31e61952b3a0e1434d93d3020b62d1415717280aa6709f73c378f2610c"
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -560328,7 +560328,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -561996,7 +561996,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "bd273d31e61952b3a0e1434d93d3020b62d1415717280aa6709f73c378f2610c"
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -562140,7 +562140,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -563809,7 +563809,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "bd273d31e61952b3a0e1434d93d3020b62d1415717280aa6709f73c378f2610c"
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -563953,7 +563953,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -565621,7 +565621,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "bd273d31e61952b3a0e1434d93d3020b62d1415717280aa6709f73c378f2610c"
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -565765,7 +565765,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -567635,7 +567635,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -569538,7 +569538,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -570906,7 +570906,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
-              "sha256": "1632a723ed687ab70812e18737dca1e8b430611d0d885b4c6096fda68a240191"
+              "sha256": "50030a7917f70cc995899a626bd9f586412a7fd977c855ab12b0fd8589cd7270"
             },
             {
               "path": "apps/web/e2e/electricity-customer-cancellation-recovery.spec.ts",
@@ -572866,7 +572866,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "bd273d31e61952b3a0e1434d93d3020b62d1415717280aa6709f73c378f2610c"
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
@@ -573078,7 +573078,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-draft-persistence.tsx",
@@ -574336,7 +574336,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -576239,7 +576239,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -578142,7 +578142,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -580045,7 +580045,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -581948,7 +581948,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -583851,7 +583851,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -585754,7 +585754,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -587657,7 +587657,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -589560,7 +589560,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -591463,7 +591463,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -593366,7 +593366,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -596009,7 +596009,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -597912,7 +597912,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -598965,7 +598965,7 @@
       "launch_required": true,
       "remaining": [
         "The 98-path inventory retains primary read, detail, layout and redirect evidence. All 27 component owners in the selected request inventory now have scoped source and case references or a verified write-only classification.",
-        "Current checkout evidence now covers simple electricity and saving balance loading, retry, denied access and exact recovery. Reconcile the remaining route and hook-owned conditions and original controls before full acceptance."
+        "Current receipts cover checkout wallet states and simple or advanced revision option loading and recovery. Reconcile the remaining route and hook-owned conditions and original route controls before full acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -599122,7 +599122,8 @@
           "release-0.5-conditional-read-reconciliation",
           "release-0.5-signature-first-read-feedback",
           "release-0.5-embedded-ticket-read-states",
-          "release-0.5-checkout-wallet-read-states"
+          "release-0.5-checkout-wallet-read-states",
+          "release-0.5-revision-options-pending"
         ],
         "current_acceptance": null
       }
@@ -599820,7 +599821,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "bd273d31e61952b3a0e1434d93d3020b62d1415717280aa6709f73c378f2610c"
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -599964,7 +599965,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -601628,7 +601629,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "bd273d31e61952b3a0e1434d93d3020b62d1415717280aa6709f73c378f2610c"
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -601772,7 +601773,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -603436,7 +603437,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "bd273d31e61952b3a0e1434d93d3020b62d1415717280aa6709f73c378f2610c"
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -603580,7 +603581,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -605244,7 +605245,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "bd273d31e61952b3a0e1434d93d3020b62d1415717280aa6709f73c378f2610c"
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -605388,7 +605389,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -607052,7 +607053,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "bd273d31e61952b3a0e1434d93d3020b62d1415717280aa6709f73c378f2610c"
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -607196,7 +607197,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -608860,7 +608861,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "bd273d31e61952b3a0e1434d93d3020b62d1415717280aa6709f73c378f2610c"
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -609004,7 +609005,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -610668,7 +610669,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "bd273d31e61952b3a0e1434d93d3020b62d1415717280aa6709f73c378f2610c"
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -610812,7 +610813,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -650572,7 +650573,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
-              "sha256": "1632a723ed687ab70812e18737dca1e8b430611d0d885b4c6096fda68a240191"
+              "sha256": "50030a7917f70cc995899a626bd9f586412a7fd977c855ab12b0fd8589cd7270"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -650864,7 +650865,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -651405,7 +651406,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
-              "sha256": "1632a723ed687ab70812e18737dca1e8b430611d0d885b4c6096fda68a240191"
+              "sha256": "50030a7917f70cc995899a626bd9f586412a7fd977c855ab12b0fd8589cd7270"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -651697,7 +651698,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -652246,7 +652247,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
-              "sha256": "1632a723ed687ab70812e18737dca1e8b430611d0d885b4c6096fda68a240191"
+              "sha256": "50030a7917f70cc995899a626bd9f586412a7fd977c855ab12b0fd8589cd7270"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -652538,7 +652539,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -653071,7 +653072,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
-              "sha256": "1632a723ed687ab70812e18737dca1e8b430611d0d885b4c6096fda68a240191"
+              "sha256": "50030a7917f70cc995899a626bd9f586412a7fd977c855ab12b0fd8589cd7270"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -653363,7 +653364,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -653895,7 +653896,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
-              "sha256": "1632a723ed687ab70812e18737dca1e8b430611d0d885b4c6096fda68a240191"
+              "sha256": "50030a7917f70cc995899a626bd9f586412a7fd977c855ab12b0fd8589cd7270"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -654187,7 +654188,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
-              "sha256": "9896fd2782a6e959301e731535fdde5f9b142aa1bbe4bfcb0ec8e809aeda586c"
+              "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
             },
             {
               "path": "apps/web/src/pages/electricity-finance-query.test.tsx",
@@ -728987,7 +728988,7 @@
       "launch_required": true,
       "remaining": [
         "The 98-path inventory retains primary read, detail, layout and redirect evidence. All 27 component owners in the selected request inventory now have scoped source and case references or a verified write-only classification.",
-        "Current checkout evidence now covers simple electricity and saving balance loading, retry, denied access and exact recovery. Reconcile the remaining route and hook-owned conditions and original controls before full acceptance."
+        "Current receipts cover checkout wallet states and simple or advanced revision option loading and recovery. Reconcile the remaining route and hook-owned conditions and original route controls before full acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -729210,7 +729211,8 @@
           "release-0.5-conditional-read-reconciliation",
           "release-0.5-signature-first-read-feedback",
           "release-0.5-embedded-ticket-read-states",
-          "release-0.5-checkout-wallet-read-states"
+          "release-0.5-checkout-wallet-read-states",
+          "release-0.5-revision-options-pending"
         ]
       }
     },
@@ -730310,7 +730312,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "bd273d31e61952b3a0e1434d93d3020b62d1415717280aa6709f73c378f2610c"
+              "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -731178,7 +731180,8 @@
             "All 101 transfer budgets and 24 current native cases across the launch services passed. Auth assets are byte-identical. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-read-reconciliation/proof.json",
             "All 101 transfer budgets and 16 native signing cases passed. Auth assets are byte-identical. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-signature-first-read-feedback/proof.json",
             "All 101 transfer budgets and 20 scoped native ticket, legal-document and receipt history cases passed. Auth assets are byte-identical. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-embedded-ticket-read-states/proof.json",
-            "Current simple electricity and saving checkout balance states and staff funding views passed on both native engines. All 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-checkout-wallet-read-states/proof.json"
+            "Current simple electricity and saving checkout balance states and staff funding views passed on both native engines. All 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-checkout-wallet-read-states/proof.json",
+            "Current simple and advanced revision journeys and 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-revision-options-pending/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -731268,7 +731271,8 @@
           "release-0.5-geography-retry-feedback",
           "release-0.5-consultation-offer-layout",
           "release-0.5-conditional-heading-acceptance",
-          "release-0.5-checkout-wallet-read-states"
+          "release-0.5-checkout-wallet-read-states",
+          "release-0.5-revision-options-pending"
         ]
       }
     },
@@ -811493,6 +811497,45 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-checkout-wallet-read-states/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-checkout-wallet-read-states/renewed-bindings.json",
       "release_disposition": "Closed simple electricity and saving checkout balance read states. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-revision-options-pending": {
+      "batch": "release-0.5-revision-options-pending",
+      "base_commit": "62b4eb6d875a606ea17340c27346d15646f5ad07",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
+          "sha256": "50030a7917f70cc995899a626bd9f586412a7fd977c855ab12b0fd8589cd7270"
+        },
+        {
+          "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
+          "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
+        },
+        {
+          "path": "apps/web/src/pages/electricity-correction-forms.test.tsx",
+          "sha256": "caa6aaeb0ef365f973b1835fa1dc7475fbaba4ea09da65e45505e1f1a76baafd"
+        }
+      ],
+      "checks": [
+        "Three Chromium predecessor cases in Persian and English reproduced the missing pending notice before the first options read settled. A fourth baseline case and the JSON reporter could not write artifacts because the host volume was full. The predecessor log records those outcomes separately.",
+        "The current revision form announces loading on its first options request and explicit retry, and removes the announcement on failure, denial or successful settlement. Preview remains disabled until authorized, valid options are ready.",
+        "Twenty-eight Chromium and mobile Safari cases passed. Eight directly verify the held read, temporary failure and keyboard retry across simple and advanced revision modes in both locales. The cases keep the unsent note and send no preview or revision write during options recovery.",
+        "Fifty-two focused units passed, including a malformed mandatory-green response that keeps Review blocked until a valid retry. The critical coverage gate passed at 270/286 lines and 267/313 branches. All 101 transfer budgets, web typecheck, lint and formatting passed. Auth assets are byte-identical."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-revision-options-pending",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-revision-options-pending/proof.json",
+      "source_scope_proof_sha256": "3ceac873e74da5c446ea79ff165d2a3d75d25db06b9e1d93a5475040c8b4a18e",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-revision-options-pending/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-revision-options-pending/renewed-bindings.json",
+      "release_disposition": "Closed current revision option pending feedback. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [

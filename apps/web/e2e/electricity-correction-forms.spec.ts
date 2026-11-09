@@ -615,14 +615,21 @@ for (const locale of ['en', 'fa'] as const)
         advanced
       );
       let reads = 0,
+        releaseInitial!: () => void,
         release!: () => void;
+      const initial = new Promise<void>((done) => {
+        releaseInitial = done;
+      });
       const held = new Promise<void>((done) => {
         release = done;
       });
       await page.route(
         `**/api/electricity/periods/${advanced ? 'advanced' : 'simple'}`,
         async (route) => {
-          if (++reads === 1) return route.fulfill({ status: 503, json: {} });
+          if (++reads === 1) {
+            await initial;
+            return route.fulfill({ status: 503, json: {} });
+          }
           await held;
           return route.fulfill({
             json: advanced
@@ -638,24 +645,40 @@ for (const locale of ['en', 'fa'] as const)
       await page.goto(`/electricity/orders/${correctionOrder}`);
       const form = page.getByTestId('electricity-revision-form');
       const retry = page.getByTestId('electricity-revision-options-retry');
-      await expect(retry).toBeEnabled();
-      await expect(retry).toHaveText(t('electricity.order.retry', locale));
-      await page.locator('#revision-note').fill('Retained unsent revision');
+      const loading = form.getByRole('status').filter({
+        hasText: t('electricity.order.period.loading', locale),
+      });
       const preview = form.getByRole('button', {
         name: t('electricity.order.revision.preview', locale),
         exact: true,
       });
+      try {
+        await expect.poll(() => reads).toBe(1);
+        await expect(loading).toBeVisible();
+        await expect(preview).toBeDisabled();
+      } finally {
+        releaseInitial();
+      }
+      await expect(retry).toBeEnabled();
+      await expect(retry).toHaveText(t('electricity.order.retry', locale));
+      await expect(loading).toHaveCount(0);
+      await page.locator('#revision-note').fill('Retained unsent revision');
       await expect(preview).toBeDisabled();
       await retry.focus();
       await page.keyboard.press('Enter');
-      await expect.poll(() => reads).toBe(2);
-      await expect(preview).toBeDisabled();
-      await expect(page.locator('#revision-note')).toHaveValue('Retained unsent revision');
-      expect(state.quotePreviews).toHaveLength(0);
-      expect(state.revisionWrites).toHaveLength(0);
-      release();
+      try {
+        await expect.poll(() => reads).toBe(2);
+        await expect(loading).toBeVisible();
+        await expect(preview).toBeDisabled();
+        await expect(page.locator('#revision-note')).toHaveValue('Retained unsent revision');
+        expect(state.quotePreviews).toHaveLength(0);
+        expect(state.revisionWrites).toHaveLength(0);
+      } finally {
+        release();
+      }
       await expect(preview).toBeEnabled();
       await expect(retry).toHaveCount(0);
+      await expect(loading).toHaveCount(0);
       await expect(page.locator('#revision-note')).toHaveValue('Retained unsent revision');
       await inspectForm(page, form, 'electricity-revision-form');
       expect(state.quotePreviews).toHaveLength(0);

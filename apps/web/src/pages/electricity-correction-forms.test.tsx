@@ -499,8 +499,23 @@ it('waits for the advanced mandatory-green policy before creating any preview', 
   await submit('electricity-revision-form');
   expect(calls('/revision-preview')).toHaveLength(0);
   expect(host.querySelector<HTMLButtonElement>('button[type=submit]')!.disabled).toBe(true);
+  expect(host.querySelector('[role="status"]')?.textContent).toContain(
+    t('electricity.order.period.loading', 'en')
+  );
+  await act(async () => resolve(Response.json({ mandatoryGreenEnabled: 'true' })));
+  expect(host.textContent).not.toContain(t('electricity.order.period.loading', 'en'));
+  expect(host.querySelector<HTMLButtonElement>('button[type=submit]')!.disabled).toBe(true);
+  await act(async () =>
+    host
+      .querySelector<HTMLButtonElement>('[data-testid=electricity-revision-options-retry]')!
+      .click()
+  );
+  expect(host.querySelector('[role="status"]')?.textContent).toContain(
+    t('electricity.order.period.loading', 'en')
+  );
   await act(async () => resolve(Response.json({ mandatoryGreenEnabled: true })));
   expect(host.querySelector<HTMLButtonElement>('button[type=submit]')!.disabled).toBe(false);
+  expect(host.textContent).not.toContain(t('electricity.order.period.loading', 'en'));
   expect(host.querySelector('#revision-green')).toBeNull();
   expect(input('revision-note').value).toBe('Retained advanced response');
 });

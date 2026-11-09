@@ -23,6 +23,7 @@ import {
   Button,
   DependentSelect,
   Input,
+  LoadingStatus,
   Textarea,
   DateTimePicker,
   NativeSelect,
@@ -972,6 +973,9 @@ export function ElectricityOrderRevisionForm({
             </p>
           ) : null}
           {lock.owner === 'address' ? <p role="status">{copy('busy')}</p> : null}
+          {!optionsReady && !optionsError && (
+            <LoadingStatus>{t('electricity.order.period.loading', locale)}</LoadingStatus>
+          )}
           {optionsError ? (
             <Button
               type="button"
