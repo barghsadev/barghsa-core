@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T00:37:42+00:00",
-  "source_commit": "70fc7ba73ca8664aeaf37da1e56312bd53622f30",
+  "updated": "2026-11-09T00:42:50+00:00",
+  "source_commit": "878443e370b12f7648f8d083c9639c9f76842f50",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -195368,7 +195368,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -197306,7 +197306,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -253346,7 +253346,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -253358,7 +253358,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -254484,7 +254484,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -254496,7 +254496,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -255618,7 +255618,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -255630,7 +255630,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -256751,7 +256751,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -256763,7 +256763,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -257885,7 +257885,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -257897,7 +257897,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -259019,7 +259019,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -259031,7 +259031,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -260158,7 +260158,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -260170,7 +260170,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -261295,7 +261295,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -261307,7 +261307,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -262430,7 +262430,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -262442,7 +262442,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -263568,7 +263568,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -263580,7 +263580,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -264708,7 +264708,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -264720,7 +264720,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -265843,7 +265843,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -265855,7 +265855,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -266977,7 +266977,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -266989,7 +266989,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -268112,7 +268112,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -268124,7 +268124,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -269247,7 +269247,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -269259,7 +269259,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -270383,7 +270383,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -270395,7 +270395,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -421522,7 +421522,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -491299,7 +491299,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -508297,7 +508297,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -512300,7 +512300,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -517965,7 +517965,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -518981,7 +518981,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -546884,7 +546884,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -546980,7 +546980,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -548750,7 +548750,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -548846,7 +548846,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -550617,7 +550617,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -550713,7 +550713,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -552453,7 +552453,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -552549,7 +552549,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -554315,7 +554315,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -554411,7 +554411,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -556186,7 +556186,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -556282,7 +556282,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -558030,7 +558030,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -558126,7 +558126,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -559838,7 +559838,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -559934,7 +559934,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -561646,7 +561646,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -561742,7 +561742,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -563455,7 +563455,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -563551,7 +563551,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -565263,7 +565263,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -565359,7 +565359,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -567077,7 +567077,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -567225,7 +567225,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -568972,7 +568972,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -569120,7 +569120,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -572456,7 +572456,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -572652,7 +572652,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -573754,7 +573754,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -573902,7 +573902,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -575649,7 +575649,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -575797,7 +575797,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -577544,7 +577544,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -577692,7 +577692,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -579439,7 +579439,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -579587,7 +579587,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -581334,7 +581334,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -581482,7 +581482,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -583229,7 +583229,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -583377,7 +583377,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -585124,7 +585124,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -585272,7 +585272,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -587019,7 +587019,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -587167,7 +587167,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -588914,7 +588914,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -589062,7 +589062,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -590809,7 +590809,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -590957,7 +590957,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -592704,7 +592704,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -592852,7 +592852,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -595339,7 +595339,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -595487,7 +595487,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -597234,7 +597234,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -597382,7 +597382,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -598486,7 +598486,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Controlled first-read 503 receipts cover all 48 admin data routes. Both previously observed raw error surfaces now use localized feedback, with pending, retry and denial verified in two languages and two browsers. Reconcile remaining applicable loading, empty, denied and stale states and route-specific interaction/layout requirements with named evidence."
+        "Admin first-read HTTP 503 coverage includes all 48 data routes with both discovered message leaks repaired. Customer consultation detail now has named pending, transient retry and authorization withdrawal evidence. Reconcile the remaining applicable loading, empty, denied and stale states and route-specific interaction/layout requirements with named evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -598617,7 +598617,8 @@
           "release-0.5-staff-ledger-permission-withdrawal",
           "release-0.5-document-template-read-boundary",
           "release-0.5-admin-first-read-probe",
-          "release-0.5-safe-admin-read-errors"
+          "release-0.5-safe-admin-read-errors",
+          "release-0.5-customer-consultation-denial"
         ],
         "current_acceptance": null
       }
@@ -599303,7 +599304,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -599399,7 +599400,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -601107,7 +601108,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -601203,7 +601204,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -602911,7 +602912,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -603007,7 +603008,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -604715,7 +604716,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -604811,7 +604812,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -606519,7 +606520,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -606615,7 +606616,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -608323,7 +608324,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -608419,7 +608420,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -610127,7 +610128,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -610223,7 +610224,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -688456,7 +688457,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -689297,7 +689298,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -690140,7 +690141,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -690981,7 +690982,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -691822,7 +691823,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -692667,7 +692668,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -693512,7 +693513,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -694353,7 +694354,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -695194,7 +695195,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -696036,7 +696037,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -696883,7 +696884,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -710295,7 +710296,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/e2e/customer-service-history-scope.spec.ts",
@@ -716640,7 +716641,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -716652,7 +716653,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "efe8d481350dafe9233f8115661c4cb1212abaefe4a460283d82535ad147ab2a"
+              "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -728265,7 +728266,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Controlled first-read 503 receipts cover all 48 admin data routes. Both previously observed raw error surfaces now use localized feedback, with pending, retry and denial verified in two languages and two browsers. Reconcile remaining applicable loading, empty, denied and stale states and route-specific interaction/layout requirements with named evidence."
+        "Admin first-read HTTP 503 coverage includes all 48 data routes with both discovered message leaks repaired. Customer consultation detail now has named pending, transient retry and authorization withdrawal evidence. Reconcile the remaining applicable loading, empty, denied and stale states and route-specific interaction/layout requirements with named evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -728462,7 +728463,8 @@
           "release-0.5-staff-ledger-permission-withdrawal",
           "release-0.5-document-template-read-boundary",
           "release-0.5-admin-first-read-probe",
-          "release-0.5-safe-admin-read-errors"
+          "release-0.5-safe-admin-read-errors",
+          "release-0.5-customer-consultation-denial"
         ]
       }
     },
@@ -729530,7 +729532,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "81f536b7133bb257046c3b7053b0274a39a22bee5c5b247eb8a3077b638f6dd3"
+              "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -730401,7 +730403,8 @@
             "All 101 transfer budgets pass on the unavailable financial detail build. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-detail-denial/proof.json",
             "All 101 transfer budgets pass on the staff ledger permission withdrawal build. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-ledger-permission-withdrawal/proof.json",
             "All 101 transfer budgets pass on the document template read-boundary build. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-template-read-boundary/proof.json",
-            "All 101 transfer budgets and affected native invoice deadline and wallet receipt accessibility cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-safe-admin-read-errors/proof.json"
+            "All 101 transfer budgets and affected native invoice deadline and wallet receipt accessibility cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-safe-admin-read-errors/proof.json",
+            "All 101 transfer budgets and affected native consultation accessibility and keyboard cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-consultation-denial/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -809034,6 +809037,41 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-safe-admin-read-errors/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-safe-admin-read-errors/renewed-bindings.json",
       "release_disposition": "Closed both observed admin first-read message leaks. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-customer-consultation-denial": {
+      "batch": "release-0.5-customer-consultation-denial",
+      "base_commit": "878443e370b12f7648f8d083c9639c9f76842f50",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
+          "sha256": "b91712600cb643c9067bf0904d894645cfcf21a73fc7ac2edd0491e639266d1f"
+        },
+        {
+          "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
+          "sha256": "ead90aa6bb250d2b34a9894cfb6fd9e016fc7e96eee8c349fe3bbb7bfed01dc1"
+        }
+      ],
+      "checks": [
+        "Baseline showed customer consultation 401 and 403 reads present a retryable service error. Final 401, 403 and 404 reads withdraw accepted detail, draft and review state and show the localized terminal unavailable view. Temporary read failures retain recoverable drafts.",
+        "All 35 focused unit cases passed. The prior 403 expectation now requires the exact unavailable alert and hidden retry; existing private-data and stale-read assertions remain. Changed-source coverage passed with 8 of 9 lines and 7 of 8 branches.",
+        "Four corrected production-build cases in Persian and English across Chromium and Mobile Safari verified pending, transient 503, keyboard retry, 403 and fresh-entry behavior. Eight unaffected cases on the same production build verified information recovery, staff offer, payment handoff and completion. The first diagnostic had one test-driver navigation race after successful denial; the corrected fixture waits for the list heading.",
+        "Web typechecking, changed-file lint and formatting, and all 101 transfer budgets passed. The release build matches final production source, with only one test assertion block changed after build."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-consultation-denial",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-consultation-denial/proof.json",
+      "source_scope_proof_sha256": "38dfb8174e7024bf960bde25c5b8deeabbb4f444933a76d77962ad0470c40fe1",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-consultation-denial/reviewed-final.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-consultation-denial/renewed-bindings.json",
+      "release_disposition": "Closed customer consultation detail read authorization withdrawal. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [
@@ -809084,7 +809122,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Reconcile applicable loading, empty, denied and stale states and route-specific layout/interaction criteria with named receipts. Prioritize customer launch service routes and remaining admin child data owners. GitHub required-check enforcement and staging Sentry delivery remain independent gates."
+    "goal": "Reconcile remaining customer launch-service route and admin child read states against exact named receipts. Verify uncovered conditional states and route-level interaction/layout criteria. GitHub required-check enforcement and staging Sentry delivery remain independent gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",

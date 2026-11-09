@@ -1062,7 +1062,8 @@ it('cancels an old consultation read after a profile revision without replacing 
     expect(view.host.querySelector('form')).toBeNull();
     expect(view.host.textContent).not.toContain('Private requested detail');
     expect(view.host.textContent).not.toContain('Old private draft');
-    expect(view.host.textContent).toContain(copy('detailLoadError'));
+    expect(view.host.querySelector('[role=alert]')?.textContent).toBe('Record unavailable.');
+    expect(view.host.textContent).not.toContain(copy('informationReload'));
   } finally {
     await view.close();
   }
@@ -1083,6 +1084,37 @@ it('keeps a missing consultation on a safe terminal view', async () => {
     await view.close();
   }
 });
+
+it.each([401, 403, 404])(
+  'withdraws consultation details after a denied refresh (%s)',
+  async (status) => {
+    let denied = false;
+    const fetcher = vi.fn(async () =>
+      denied ? Response.json({ message: 'Private API data' }, { status }) : Response.json(detail())
+    );
+    const view = await mount(ConsultationDetailPage, fetcher);
+    try {
+      await view.fill('Private consultation draft');
+      denied = true;
+      await view.click(copy('informationReload'));
+      expect(view.host.querySelector('[role=alert]')?.textContent).toBe('Record unavailable.');
+      expect(view.host.querySelector('form')).toBeNull();
+      expect(view.host.textContent).not.toContain('Private API data');
+      expect(view.host.textContent).not.toContain('Private requested detail');
+      expect(view.host.textContent).not.toContain(copy('informationReload'));
+      expect(fetcher).toHaveBeenCalledTimes(2);
+
+      denied = false;
+      await act(async () => refreshProfileContext());
+      expect(view.host.querySelector<HTMLTextAreaElement>('#consultation-information')?.value).toBe(
+        ''
+      );
+      expect(fetcher).toHaveBeenCalledTimes(3);
+    } finally {
+      await view.close();
+    }
+  }
+);
 
 it('keeps unsent consultation information through a rejected fresh read and authorized manual recovery', async () => {
   let valid = true,

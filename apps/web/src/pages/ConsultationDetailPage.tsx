@@ -176,7 +176,7 @@ export function ConsultationDetailPage() {
     review: ConsultationOfferReview;
     checked: boolean;
   } | null>(null);
-  useEffect(() => {
+  function clearPrivateDetail() {
     ++generation.current;
     profileId.current = null;
     setDetail(null);
@@ -189,6 +189,9 @@ export function ConsultationDetailPage() {
     setInfoSent(false);
     setDecisionReview(null);
     setOfferRecovery(null);
+  }
+  useEffect(() => {
+    clearPrivateDetail();
     return () => actionTransport.current?.abort();
   }, [scope]);
   useEffect(
@@ -298,17 +301,8 @@ export function ConsultationDetailPage() {
       .then((result) => {
         if (controller.signal.aborted || capturedGeneration !== generation.current) return;
         if (profileId.current && profileId.current !== result.request.profile_id) {
-          ++generation.current;
           actionTransport.current?.abort();
-          pendingInformation.current = null;
-          informationForm.reset({ reason: '' });
-          setInformationUnconfirmed(false);
-          setActionError(false);
-          setInfoSent(false);
-          actionPending.current = false;
-          setSending(false);
-          setDecisionReview(null);
-          setOfferRecovery(null);
+          clearPrivateDetail();
         }
         if (offerAtRead && !actionPending.current) {
           const reviewed = offerAtRead.review;
@@ -353,13 +347,15 @@ export function ConsultationDetailPage() {
       })
       .catch((reason: unknown) => {
         if (!controller.signal.aborted && capturedGeneration === generation.current) {
+          if (reason instanceof ServerQueryError && [401, 403, 404].includes(reason.status)) {
+            actionTransport.current?.abort();
+            clearPrivateDetail();
+            setError('notFound');
+            return;
+          }
           setDetail(null);
           setDecisionReview(null);
-          setError(
-            reason instanceof ServerQueryError && reason.status === 404
-              ? 'notFound'
-              : 'detailLoadError'
-          );
+          setError('detailLoadError');
         }
       })
       .finally(() => {
