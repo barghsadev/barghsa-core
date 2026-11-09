@@ -75,6 +75,13 @@ async function accountStatus() {
   expect(button).toBeDefined();
   await act(async () => button!.click());
 }
+function stubDisplayFetch(fetchAvailability: typeof fetch) {
+  const fetchMaintenance = vi.fn(async () => Response.json({ capabilities: [] }));
+  vi.stubGlobal('fetch', (url: RequestInfo | URL, init?: RequestInit) =>
+    url === '/api/maintenance' ? fetchMaintenance() : fetchAvailability(url, init)
+  );
+  return fetchMaintenance;
+}
 it.each(['public', 'staff', 'launcher', 'page'] as const)(
   'keeps %s availability manual and cancels pending bytes on page-only unmount',
   async (owner) => {
@@ -88,15 +95,17 @@ it.each(['public', 'staff', 'launcher', 'page'] as const)(
         });
       return response;
     });
-    vi.stubGlobal('fetch', fetcher);
+    const fetchMaintenance = stubDisplayFetch(fetcher);
     await render(owner);
     expect(fetcher).toHaveBeenCalledOnce();
+    expect(fetchMaintenance).toHaveBeenCalledTimes(owner === 'page' ? 1 : 0);
     expect(signal.aborted).toBe(false);
     await act(async () => {
       window.dispatchEvent(new Event('focus'));
       window.dispatchEvent(new Event('online'));
     });
     expect(fetcher).toHaveBeenCalledOnce();
+    expect(fetchMaintenance).toHaveBeenCalledTimes(owner === 'page' ? 1 : 0);
     await render(owner, 'staff-a', false);
     expect(signal.aborted).toBe(true);
     await act(async () =>
@@ -110,8 +119,7 @@ it.each(['staff', 'launcher', 'page'] as const)(
   async (owner) => {
     let old = true;
     let signal!: AbortSignal, finish!: (value: unknown) => void;
-    vi.stubGlobal(
-      'fetch',
+    stubDisplayFetch(
       vi.fn(async (_url: RequestInfo | URL, init?: RequestInit) => {
         if (!old) return Response.json(owner === 'staff' ? { available: false } : unavailable);
         signal = init!.signal as AbortSignal;

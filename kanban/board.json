@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T21:31:32+00:00",
+  "updated": "2026-11-09T21:34:27+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -38655,7 +38655,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-web-fixture-typecheck-and-license-readback",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -38959,7 +38960,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/hooks/useOwnedIntakeRead.ts",
@@ -39057,7 +39058,8 @@
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance",
           "limitations": [
@@ -107174,7 +107176,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-web-fixture-typecheck-and-license-readback",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "status": "done",
@@ -107374,7 +107377,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/lib/brand-config.ts",
@@ -107420,7 +107423,8 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -459493,7 +459497,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-web-fixture-typecheck-and-license-readback",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "status": "done",
@@ -459693,7 +459698,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/lib/brand-config.ts",
@@ -459739,7 +459744,8 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -459977,7 +459983,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-web-fixture-typecheck-and-license-readback",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -460181,7 +460188,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/lib/brand-config.ts",
@@ -460239,7 +460246,8 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -460487,7 +460495,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-web-fixture-typecheck-and-license-readback",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "status": "done",
@@ -460687,7 +460696,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/lib/brand-config.ts",
@@ -460733,7 +460742,8 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -460970,7 +460980,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-web-fixture-typecheck-and-license-readback",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -461174,7 +461185,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/lib/brand-config.ts",
@@ -461232,7 +461243,8 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -461478,7 +461490,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-web-fixture-typecheck-and-license-readback",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "status": "done",
@@ -461678,7 +461691,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/lib/brand-config.ts",
@@ -461724,7 +461737,8 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -461957,7 +461971,8 @@
           "release-0.6-staging-image-rollback",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-production-image-recipes-and-distribution",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "status": "done",
@@ -462269,7 +462284,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             }
           ],
           "checks": [
@@ -462304,7 +462319,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
-            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed."
+            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -462530,7 +462546,8 @@
           "release-0.6-staging-image-rollback",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-production-image-recipes-and-distribution",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "status": "done",
@@ -462842,7 +462859,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             }
           ],
           "checks": [
@@ -462877,7 +462894,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
-            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed."
+            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -463101,7 +463119,8 @@
           "release-0.6-staging-image-rollback",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-production-image-recipes-and-distribution",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "status": "done",
@@ -463413,7 +463432,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             }
           ],
           "checks": [
@@ -463448,7 +463467,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
-            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed."
+            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -463672,7 +463692,8 @@
           "release-0.6-staging-image-rollback",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-production-image-recipes-and-distribution",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -463988,7 +464009,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             }
           ],
           "checks": [
@@ -464035,7 +464056,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
-            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed."
+            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -464742,7 +464764,8 @@
           "release-0.6-staging-image-rollback",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-production-image-recipes-and-distribution",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "status": "done",
@@ -465054,7 +465077,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             }
           ],
           "checks": [
@@ -465089,7 +465112,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
-            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed."
+            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -466506,7 +466530,8 @@
           "release-0.6-staging-image-rollback",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-production-image-recipes-and-distribution",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "status": "done",
@@ -466818,7 +466843,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             }
           ],
           "checks": [
@@ -466853,7 +466878,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
-            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed."
+            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -467076,7 +467102,8 @@
           "release-0.6-staging-image-rollback",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-production-image-recipes-and-distribution",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "status": "done",
@@ -467388,7 +467415,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             }
           ],
           "checks": [
@@ -467423,7 +467450,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
-            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed."
+            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -467647,7 +467675,8 @@
           "release-0.6-staging-image-rollback",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-production-image-recipes-and-distribution",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "status": "done",
@@ -467959,7 +467988,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             }
           ],
           "checks": [
@@ -467994,7 +468023,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
-            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed."
+            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -468219,7 +468249,8 @@
           "release-0.6-staging-image-rollback",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-production-image-recipes-and-distribution",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -468535,7 +468566,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             }
           ],
           "checks": [
@@ -468582,7 +468613,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
-            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed."
+            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -468813,7 +468845,8 @@
           "release-0.6-staging-image-rollback",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-production-image-recipes-and-distribution",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "status": "done",
@@ -469125,7 +469158,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             }
           ],
           "checks": [
@@ -469160,7 +469193,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
-            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed."
+            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -469383,7 +469417,8 @@
           "release-0.6-staging-image-rollback",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-production-image-recipes-and-distribution",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "status": "done",
@@ -469695,7 +469730,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             }
           ],
           "checks": [
@@ -469730,7 +469765,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
-            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed."
+            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -503361,7 +503397,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-web-fixture-typecheck-and-license-readback",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "source-bound-query-provider-and-devtools",
@@ -503885,7 +503922,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/pages/crm-directory-query.test.tsx",
@@ -504039,7 +504076,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed the affected browser fixture binding with the exact passed journey scope recorded in release-0.6-nightly-auth-and-finance-browser-fixtures."
+            "Renewed the affected browser fixture binding with the exact passed journey scope recorded in release-0.6-nightly-auth-and-finance-browser-fixtures.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "limitations": [
             "No query-key/read/mutation page adoption, all-page cancellation, complete milestone, live providers, deployment or production acceptance is certified."
@@ -508264,7 +508302,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-web-fixture-typecheck-and-license-readback",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "source-bound-query-provider-and-devtools",
@@ -508788,7 +508827,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/pages/crm-directory-query.test.tsx",
@@ -508942,7 +508981,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed the affected browser fixture binding with the exact passed journey scope recorded in release-0.6-nightly-auth-and-finance-browser-fixtures."
+            "Renewed the affected browser fixture binding with the exact passed journey scope recorded in release-0.6-nightly-auth-and-finance-browser-fixtures.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "limitations": [
             "No query-key/read/mutation page adoption, all-page cancellation, complete milestone, live providers, deployment or production acceptance is certified."
@@ -578286,7 +578326,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -578578,7 +578619,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -579824,7 +579865,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -580203,7 +580245,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -580495,7 +580538,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -581741,7 +581784,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -582140,7 +582184,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -583396,7 +583441,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -584938,7 +584983,8 @@
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
             "Renewed the affected browser fixture binding with the exact passed journey scope recorded in release-0.6-nightly-auth-and-finance-browser-fixtures.",
-            "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures."
+            "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-member-recovery/proof.json",
           "limitations": [
@@ -585035,7 +585081,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -585327,7 +585374,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -586573,7 +586620,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -586952,7 +587000,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -587244,7 +587293,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -588490,7 +588539,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -588869,7 +588919,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -589161,7 +589212,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -590407,7 +590458,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -590786,7 +590838,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -591078,7 +591131,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -592324,7 +592377,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -592703,7 +592757,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -592995,7 +593050,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -594241,7 +594296,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -594620,7 +594676,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -594912,7 +594969,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -596158,7 +596215,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -596537,7 +596595,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -596829,7 +596888,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -598075,7 +598134,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -598454,7 +598514,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -598746,7 +598807,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -599992,7 +600053,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -600371,7 +600433,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -600663,7 +600726,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -601909,7 +601972,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -602288,7 +602352,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -602580,7 +602645,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -603826,7 +603891,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -604205,7 +604271,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -604497,7 +604564,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -605743,7 +605810,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -606868,7 +606936,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -607160,7 +607229,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -608406,7 +608475,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -608785,7 +608855,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -609077,7 +609148,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -610323,7 +610394,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -675471,7 +675543,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -675771,7 +675844,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/response-metadata-panel.test.tsx",
@@ -675955,7 +676028,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "criterion_result": "Current lazy floating launcher opens the direction-aware Sheet with current-profile availability, knowledge identity/title, close/focus return, scrolling conversation and current scoped input/suggestions. Dedicated full page reuses the same panel; unavailable/error states recover without stale private content.",
           "limitations": [
@@ -676157,7 +676231,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -676457,7 +676532,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/response-metadata-panel.test.tsx",
@@ -676641,7 +676716,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "criterion_result": "Shared ChatMessage uses distinct user/assistant bubbles, literal escaped text, source title/document/excerpt disclosure, safe policy-category badges and recorded localized times. Missing historical metadata remains unavailable; customer messages expose no private rules or source identities outside authorized projection.",
           "limitations": [
@@ -676845,7 +676921,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -677145,7 +677222,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/response-metadata-panel.test.tsx",
@@ -677329,7 +677406,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "criterion_result": "Shared bounded auto-resizing ChatInput supports composition-safe Enter, Shift+Enter newline, current validation/disabled/loading/cooldown and contextual knowledge prompt chips. Explicit direct account status uses authorized dashboard data, separate receipt labels and scope checks; it never reaches inference.",
           "limitations": [
@@ -677531,7 +677609,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -677831,7 +677910,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/response-metadata-panel.test.tsx",
@@ -678015,7 +678094,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "criterion_result": "Current welcome includes named greeting when available, localized help/suggested questions and current Individual/Legal profile context. Profile/account changes remount private history and suppress late availability or answers.",
           "limitations": [
@@ -678216,7 +678296,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -678516,7 +678597,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/response-metadata-panel.test.tsx",
@@ -678700,7 +678781,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "criterion_result": "Customer questions negotiate Unicode-safe SSE on the existing endpoint only after inference/output policy/source/current-authority/audit checks. UI shows pending dots and progressive incomplete text, requires matching complete receipt plus clean EOF, bounds malformed/UTF8/oversized/unexpected-status input and preserves exact retry on interruption. JSON compatibility, cached scope checks and one-inference replay remain intact. No artificial delay or first-text latency claim.",
           "limitations": [
@@ -679400,7 +679482,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -679700,7 +679783,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/response-metadata-panel.test.tsx",
@@ -679884,7 +679967,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "criterion_result": "Questions retain language preference, model trusted context instructs same language as user question, and current FA/EN strings/numbers/account-zone timestamps, RTL/LTR, sources, cooldown and keyboard/IME behavior verified. Actual provider semantic behavior remains subject to existing live release gates.",
           "limitations": [
@@ -680086,7 +680170,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -680386,7 +680471,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/response-metadata-panel.test.tsx",
@@ -680570,7 +680655,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "criterion_result": "Current Individual/Legal session/profile/slot/source boundaries and customer replay isolation verified; staff questions use fixed staff/public knowledge with current grants/context, CSRF and no business profile/history. Changed session/account/grant/source/model budgets and policy denials withhold text; raw provider tokens never stream.",
           "limitations": [
@@ -680773,7 +680859,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -681073,7 +681160,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/response-metadata-panel.test.tsx",
@@ -681258,7 +681345,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "The isolated admin preview keeps its request ID after a timeout or pending receipt. The shared chat composer and all 101 budgets passed scoped verification. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-test-chat-deadline/proof.json"
+            "The isolated admin preview keeps its request ID after a timeout or pending receipt. The shared chat composer and all 101 budgets passed scoped verification. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-test-chat-deadline/proof.json",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "criterion_result": "AdminAgentTestChat reuses shared input/messages, lists every agent with inactive drafts disabled, refuses forged inactive selection, retains captured session-owned conversations and shows source/policy/token/latency metadata. Current permission/agent removal clears private work and uncertain retries retain request identity.",
           "limitations": [
@@ -681459,7 +681547,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -681759,7 +681848,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/response-metadata-panel.test.tsx",
@@ -681943,7 +682032,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "criterion_result": "ResponseMetadataPanel expands source title/document/excerpt, effective rule outcomes, policy priority, input/output/safe total tokens and latency. Null/legacy or overflowing values remain unavailable; stored markup is literal and overridden rules are not promoted.",
           "limitations": [
@@ -682143,7 +682233,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -682443,7 +682534,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/response-metadata-panel.test.tsx",
@@ -682627,7 +682718,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "criterion_result": "New Conversation clears visible turns, draft message, captured retry/conversation state and quota while preserving current selector context; selection changes start fresh. In-flight/context changes abort late receipts; audit/history records remain durable.",
           "limitations": [
@@ -682827,7 +682919,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -683127,7 +683220,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/response-metadata-panel.test.tsx",
@@ -683311,7 +683404,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "criterion_result": "Current SQL rolling limit enforces10/min/admin across requests, response remainingQuota is localized and429 Retry-After blocks retry/new sends until cooldown. Exact replay does not repeat inference, and current session/CSRF/authority still apply.",
           "limitations": [
@@ -683511,7 +683605,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -683811,7 +683906,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/response-metadata-panel.test.tsx",
@@ -683996,7 +684091,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "The isolated admin preview keeps its request ID after a timeout or pending receipt. The shared chat composer and all 101 budgets passed scoped verification. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-test-chat-deadline/proof.json"
+            "The isolated admin preview keeps its request ID after a timeout or pending receipt. The shared chat composer and all 101 budgets passed scoped verification. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-test-chat-deadline/proof.json",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "criterion_result": "Admin preview uses separate session-owned ai_test_chat_turns with bounded history, request hashes and expiry. It does not mutate production conversations or business data; actual budgets/redaction/current source and mandatory marked append-only admin_test_chat security audits remain active. UI history reset does not delete audit evidence.",
           "limitations": [
@@ -737636,7 +737732,7 @@
             },
             {
               "path": "apps/web/src/components/assistant-display-query.test.tsx",
-              "sha256": "d78cea2570cd84e0fcb15157a52f1da362b2d6c5adc2758a29b8583749c9cf38"
+              "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
             },
             {
               "path": "apps/web/src/components/ProfileAvailabilityGuard.tsx",
@@ -737812,7 +737908,8 @@
             "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
-            "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures."
+            "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures.",
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -738613,7 +738710,8 @@
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
-          "release-0.6-versioned-config-cache-and-diagnostic-privacy"
+          "release-0.6-versioned-config-cache-and-diagnostic-privacy",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -746455,7 +746553,8 @@
           "release-0.6-versioned-config-cache-and-diagnostic-privacy",
           "release-0.6-dynamic-js-lint-and-sanitized-html-boundary",
           "release-0.6-current-license-inventory-readback",
-          "release-0.6-service-objectives-and-priorities"
+          "release-0.6-service-objectives-and-priorities",
+          "release-0.6-assistant-display-maintenance-fixture"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -838716,6 +838815,93 @@
       "checks": [
         "Reviewed P1 customer outage and financial integrity, P2 degradation and backlog, and P3 working-hours warning with separate response and ownership expectations. The specific owner-approved notification rule and staged readback confirm low SMS credit remains P2. Alert transport labels and deployment/routing remain separately assessed.",
         "Matched all six indicators to the unchanged reliability budgets and restore limits. Definitions cover authenticated eligible outcomes, route p95, representative mobile p75 LCP, due-to-claim job p99 and late misses, verified RPO and readiness-through-finance RTO. No SLO measurement or dashboard deployment is implied."
+      ]
+    },
+    "release-0.6-assistant-display-maintenance-fixture": {
+      "batch": "release-0.6-assistant-display-maintenance-fixture",
+      "base_commit": "0eb8814d07383ec931fea8a4860da3087b8e03b2",
+      "task_keys": [
+        "02-auth-users-admin.md#T-03.03.06",
+        "02-auth-users-admin.md#T-09.11.04",
+        "05-notifications-documents-ai.md#T-05.19.01",
+        "05-notifications-documents-ai.md#T-05.19.02",
+        "05-notifications-documents-ai.md#T-05.19.03",
+        "05-notifications-documents-ai.md#T-05.20.01",
+        "05-notifications-documents-ai.md#T-05.20.02",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "07-ui-ux-design.md#T-07.01.04.01",
+        "07-ui-ux-design.md#T-07.01.04.06",
+        "07-ui-ux-design.md#T-07.11.01.01",
+        "07-ui-ux-design.md#T-07.11.01.02",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.11.01.04",
+        "07-ui-ux-design.md#T-07.11.01.05",
+        "07-ui-ux-design.md#T-07.11.02.01",
+        "07-ui-ux-design.md#T-07.11.02.02",
+        "07-ui-ux-design.md#T-07.11.02.03",
+        "07-ui-ux-design.md#T-07.11.02.04",
+        "07-ui-ux-design.md#T-07.11.02.05",
+        "07-ui-ux-design.md#T-07.12.01.01",
+        "07-ui-ux-design.md#T-07.12.01.02",
+        "07-ui-ux-design.md#T-07.12.01.03",
+        "07-ui-ux-design.md#T-07.12.01.04",
+        "07-ui-ux-design.md#T-07.12.01.06",
+        "07-ui-ux-design.md#T-07.12.01.07",
+        "07-ui-ux-design.md#T-07.20.01.01",
+        "07-ui-ux-design.md#T-07.20.01.02",
+        "07-ui-ux-design.md#T-07.20.01.03",
+        "07-ui-ux-design.md#T-07.20.01.04",
+        "07-ui-ux-design.md#T-07.20.01.05",
+        "07-ui-ux-design.md#T-07.20.01.07",
+        "07-ui-ux-design.md#T-07.20.01.08",
+        "07-ui-ux-design.md#T-07.21.01.01",
+        "07-ui-ux-design.md#T-07.21.01.02",
+        "07-ui-ux-design.md#T-07.21.01.03",
+        "07-ui-ux-design.md#T-07.21.01.04",
+        "07-ui-ux-design.md#T-07.21.01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/components/assistant-display-query.test.tsx",
+          "sha256": "9372c20f684526dc01a1e0f068aa48367c66473088ff93eaa28b8d0c3740fd03"
+        },
+        {
+          "path": "apps/web/src/pages/AIChat.tsx",
+          "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
+        },
+        {
+          "path": "apps/web/src/components/MaintenanceNotice.tsx",
+          "sha256": "3a96b04a5d4a296bf79682b8b049ad043d7f88ab79382dd0cfae1c5dcae2feff"
+        },
+        {
+          "path": "apps/web/src/hooks/useMaintenance.ts",
+          "sha256": "40d33aa865ec496437afff7c9010c5b0c76f5ba22e21624d68a583c74bb1ce27"
+        },
+        {
+          "path": "apps/web/src/test/query-provider.tsx",
+          "sha256": "ac44623d5e62f2bf5f2e8a6e57e79cfaf42539ff065d7b076e66de27a5b7f947"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "Hosted exact run 42697837840 job 129434451985 failed 1 of 5504 web tests. The same display test reproduced locally because the existing fetch mock treated the new read-only AI maintenance lookup and the assistant availability lookup as one request.",
+        "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed.",
+        "All 95 assertions across six assistant and maintenance test files passed. Final web typecheck and changed-file ESLint passed. Product code did not change. Full hosted acceptance remains dependent on the corrected exact run."
       ]
     }
   },
