@@ -1,11 +1,12 @@
 import { test, expect } from './coverage-fixture';
+import { t as tWorkspace } from '@barghsa/i18n/workspace';
 import { brandSettings } from '../src/test/branding-settings-fixtures';
 
 const id = '11111111-1111-4111-8111-111111111111';
 const amount = '10000000000000001';
 const western = '10,000,000,000,000,001';
 const persian = '۱۰٬۰۰۰٬۰۰۰٬۰۰۰٬۰۰۰٬۰۰۱';
-for (const locale of ['en', 'fa']) {
+for (const locale of ['en', 'fa'] as const) {
   test(`published number preference reaches finance without changing submitted values (${locale})`, async ({
     page,
   }) => {
@@ -200,6 +201,8 @@ for (const locale of ['en', 'fa']) {
     walletAmount = Number.MAX_SAFE_INTEGER + 1;
     isStaff = false;
     await page.goto('/wallet');
-    await expect(page.locator('main .text-3xl')).toHaveText('—');
+    const wallet = page.getByTestId('wallet-page');
+    await expect(wallet.getByRole('alert')).toHaveText(tWorkspace('wallet.page.loadError', locale));
+    await expect(wallet.getByTestId('wallet-balance')).toHaveCount(0);
   });
 }

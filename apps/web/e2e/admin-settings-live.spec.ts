@@ -2594,7 +2594,10 @@ for (const locale of ['en', 'fa'] as const) {
     await page.reload();
     await expect(title).toHaveValue(savedTitle);
     await expect(style).toHaveValue(numberStyle);
-    const savedTime = page.locator('main time');
+    const savedTime = page
+      .getByRole('heading', { name: brandingText('title', locale), exact: true, level: 1 })
+      .locator('..')
+      .locator('time');
     await expect(savedTime).toHaveCount(1);
     const instant = await savedTime.getAttribute('datetime');
     expect(instant).toBeTruthy();

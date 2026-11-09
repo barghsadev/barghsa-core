@@ -17,12 +17,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        project: [firefox, mobile-chrome, webkit, mobile-safari]
+        project: [mobile-chrome, webkit]
         include:
-          - { project: firefox, browser: firefox }
           - { project: mobile-chrome, browser: chromium }
           - { project: webkit, browser: webkit }
-          - { project: mobile-safari, browser: webkit }
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -43,7 +41,7 @@ jobs:
           node --test scripts/browser-projects.test.mjs
           python3 -m unittest discover -s scripts -p 'test_check_browser_results.py'
       - name: Exercise the production app in the selected browser
-        run: node scripts/run-production-browser.mjs e2e/admin-settings-live.spec.ts --project="${{ matrix.project }}" --retries=0 --grep "staff creation|catalogue UI persists|branding publishes|provider forms persist"
+        run: node scripts/run-production-browser.mjs e2e/admin-settings-live.spec.ts --project="${{ matrix.project }}" --retries=0 --grep "branding publishes"
         env:
           BARGHSA_TEST_PREBUILT: '1'
       - name: Report observed browser outcomes

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T17:36:12+00:00",
+  "updated": "2026-11-09T17:46:58+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -5183,7 +5183,7 @@
             },
             {
               "path": "docs/flaky-test-quarantine.md",
-              "sha256": "232b56c1782338cde424dabf711cef091e9784c23a832f4b7c1c67e25bd29431"
+              "sha256": "7d775e050d6a44c3953db16d9bde7f1e92fbc5cabb983951ad0f777ead10c2a0"
             }
           ],
           "checks": [
@@ -5194,7 +5194,8 @@
             "Renewed the quarantine process document binding after its nightly topology paragraph documented the eight-shard partition. The ordinary test and quarantine policy sections are unchanged.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
             "Renewed the quarantine process document binding after documenting the independent nightly dependency and migration check.",
-            "Renewed the quarantine process document binding after recording the 02:00 UTC schedule and all three desktop engines plus both mobile projects."
+            "Renewed the quarantine process document binding after recording the 02:00 UTC schedule and all three desktop engines plus both mobile projects.",
+            "Renewed the quarantine process document binding after documenting scheduled outcome rollup and receipt handling."
           ]
         }
       }
@@ -5294,7 +5295,7 @@
             },
             {
               "path": "docs/flaky-test-quarantine.md",
-              "sha256": "232b56c1782338cde424dabf711cef091e9784c23a832f4b7c1c67e25bd29431"
+              "sha256": "7d775e050d6a44c3953db16d9bde7f1e92fbc5cabb983951ad0f777ead10c2a0"
             }
           ],
           "checks": [
@@ -5305,7 +5306,8 @@
             "Renewed the quarantine process document binding after its nightly topology paragraph documented the eight-shard partition. The ordinary test and quarantine policy sections are unchanged.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
             "Renewed the quarantine process document binding after documenting the independent nightly dependency and migration check.",
-            "Renewed the quarantine process document binding after recording the 02:00 UTC schedule and all three desktop engines plus both mobile projects."
+            "Renewed the quarantine process document binding after recording the 02:00 UTC schedule and all three desktop engines plus both mobile projects.",
+            "Renewed the quarantine process document binding after documenting scheduled outcome rollup and receipt handling."
           ]
         }
       }
@@ -5522,7 +5524,9 @@
           "release-0.6-nightly-browser-shard-capacity",
           "release-0.6-nightly-navigation-and-chromium",
           "release-0.6-nightly-version-and-smoke-contracts",
-          "release-0.6-nightly-auth-and-finance-browser-fixtures"
+          "release-0.6-nightly-auth-and-finance-browser-fixtures",
+          "release-0.6-nightly-outcome-rollup",
+          "release-0.6-nightly-workspace-browser-fixtures"
         ],
         "current_acceptance": null
       }
@@ -5672,7 +5676,7 @@
             },
             {
               "path": "docs/flaky-test-quarantine.md",
-              "sha256": "232b56c1782338cde424dabf711cef091e9784c23a832f4b7c1c67e25bd29431"
+              "sha256": "7d775e050d6a44c3953db16d9bde7f1e92fbc5cabb983951ad0f777ead10c2a0"
             }
           ],
           "checks": [
@@ -5683,7 +5687,8 @@
             "Renewed the quarantine process document binding after its nightly topology paragraph documented the eight-shard partition. The ordinary test and quarantine policy sections are unchanged.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
             "Renewed the quarantine process document binding after documenting the independent nightly dependency and migration check.",
-            "Renewed the quarantine process document binding after recording the 02:00 UTC schedule and all three desktop engines plus both mobile projects."
+            "Renewed the quarantine process document binding after recording the 02:00 UTC schedule and all three desktop engines plus both mobile projects.",
+            "Renewed the quarantine process document binding after documenting scheduled outcome rollup and receipt handling."
           ]
         }
       }
@@ -5760,7 +5765,9 @@
           "release-0.6-nightly-browser-shard-capacity",
           "release-0.6-nightly-navigation-and-chromium",
           "release-0.6-nightly-version-and-smoke-contracts",
-          "release-0.6-nightly-auth-and-finance-browser-fixtures"
+          "release-0.6-nightly-auth-and-finance-browser-fixtures",
+          "release-0.6-nightly-outcome-rollup",
+          "release-0.6-nightly-workspace-browser-fixtures"
         ],
         "current_acceptance": null
       }
@@ -12400,9 +12407,9 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Record a complete actual 02:00 UTC scheduled run across the Chromium, Firefox, WebKit and both mobile projects. Local discovery verified the same partition and actual scheduled run results are required.",
-        "Record the fresh dependency advisory, Drizzle migration-drift and shell navigation job outcomes from the actual schedule. The registered shell destinations are verified locally by web typecheck and targeted tests.",
-        "Verify destinations outside the typed workspace shell registry, seven-day observed flake analysis and an authorized results receiver."
+        "Record a complete actual 02:00 UTC scheduled run across Chromium, Firefox, WebKit and both mobile projects with the exact per-shard results.",
+        "Read back the advisory, Drizzle drift, navigation and seven-day outcome reports from an actual scheduled run. The rollup publishes internally in GitHub Actions and reports missing outcomes explicitly.",
+        "Verify destinations outside the typed workspace shell registry and configure an authorized dedicated results receiver."
       ],
       "owner": null,
       "depends_on": [],
@@ -12438,7 +12445,9 @@
           "release-0.6-nightly-advisory-and-schema-gate",
           "release-0.6-nightly-navigation-and-chromium",
           "release-0.6-nightly-version-and-smoke-contracts",
-          "release-0.6-nightly-auth-and-finance-browser-fixtures"
+          "release-0.6-nightly-auth-and-finance-browser-fixtures",
+          "release-0.6-nightly-outcome-rollup",
+          "release-0.6-nightly-workspace-browser-fixtures"
         ],
         "current_acceptance": null
       }
@@ -31593,7 +31602,7 @@
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
-              "sha256": "760edc3a65bce950d270cc5254d66bea82fce5aee44a38f47d0bab7ed76c72a6"
+              "sha256": "3640a970d3aa732cf8533e8811757edfd2bef506bda544300865da789f7c1d1e"
             },
             {
               "path": "apps/web/src/components/DefaultProfileModal.tsx",
@@ -31745,7 +31754,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/profile-onboarding-acceptance",
           "limitations": [
@@ -33937,7 +33947,7 @@
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
-              "sha256": "760edc3a65bce950d270cc5254d66bea82fce5aee44a38f47d0bab7ed76c72a6"
+              "sha256": "3640a970d3aa732cf8533e8811757edfd2bef506bda544300865da789f7c1d1e"
             },
             {
               "path": "apps/web/e2e/profile-switch.spec.ts",
@@ -33987,7 +33997,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/profile-onboarding-acceptance",
           "limitations": [
@@ -34261,7 +34272,7 @@
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
-              "sha256": "760edc3a65bce950d270cc5254d66bea82fce5aee44a38f47d0bab7ed76c72a6"
+              "sha256": "3640a970d3aa732cf8533e8811757edfd2bef506bda544300865da789f7c1d1e"
             },
             {
               "path": "apps/web/e2e/profile-switch.spec.ts",
@@ -34401,7 +34412,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/profile-onboarding-acceptance",
           "limitations": [
@@ -57009,7 +57021,7 @@
             },
             {
               "path": "apps/web/e2e/number-preferences.spec.ts",
-              "sha256": "a3caf6041fbbe7f850fb9539ff603604cd2b33035593025dcec6536b9e8878d3"
+              "sha256": "8ce250a01a95056d1aa4c2cba2ddb36430d507439bbc15c00f46ada7d71a9b5f"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -57139,7 +57151,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
             "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged.",
-            "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained."
+            "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
+            "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-administration",
           "limitations": [
@@ -69185,7 +69198,7 @@
             },
             {
               "path": "apps/web/e2e/notification-delivery-search.spec.ts",
-              "sha256": "cf60cf8b9d9e436af10f65dc325f853450bc41bb3f3d2d6383f06a68c00f7329"
+              "sha256": "01e6a97ece0be3dde8a6b2cd07de032813e568013b9f6116989a531c0041a39e"
             },
             {
               "path": "apps/api/src/contract/contract-review-notifications.ts",
@@ -69477,7 +69490,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
-            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain."
+            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
+            "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/notification-foundation-acceptance",
@@ -70441,7 +70455,7 @@
             },
             {
               "path": "apps/web/e2e/notification-delivery-search.spec.ts",
-              "sha256": "cf60cf8b9d9e436af10f65dc325f853450bc41bb3f3d2d6383f06a68c00f7329"
+              "sha256": "01e6a97ece0be3dde8a6b2cd07de032813e568013b9f6116989a531c0041a39e"
             },
             {
               "path": "apps/api/src/contract/contract-review-notifications.ts",
@@ -71489,7 +71503,8 @@
             "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
             "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
-            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain."
+            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
+            "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/database-native-active-inbox-templates",
@@ -72843,7 +72858,7 @@
             },
             {
               "path": "apps/web/e2e/notification-delivery-search.spec.ts",
-              "sha256": "cf60cf8b9d9e436af10f65dc325f853450bc41bb3f3d2d6383f06a68c00f7329"
+              "sha256": "01e6a97ece0be3dde8a6b2cd07de032813e568013b9f6116989a531c0041a39e"
             },
             {
               "path": "apps/api/src/contract/contract-review-notifications.ts",
@@ -73122,7 +73137,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
-            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain."
+            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
+            "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/notification-foundation-acceptance",
@@ -74142,7 +74158,7 @@
             },
             {
               "path": "apps/web/e2e/notification-delivery-search.spec.ts",
-              "sha256": "cf60cf8b9d9e436af10f65dc325f853450bc41bb3f3d2d6383f06a68c00f7329"
+              "sha256": "01e6a97ece0be3dde8a6b2cd07de032813e568013b9f6116989a531c0041a39e"
             },
             {
               "path": "packages/db/drizzle/production/0128_notification_attempt_history.sql",
@@ -74546,7 +74562,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
-            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain."
+            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
+            "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures."
           ],
           "limitations": [
             "Migration0128 preserves earlier processing rows and snapshots retained receipts. It cannot reconstruct already missing historical attempts; legacy rows must not be summed as physical sends. Drain old workers before rollout."
@@ -473572,7 +473589,8 @@
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-verified-auth-specification-digest"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -473592,7 +473610,7 @@
             },
             {
               "path": ".gitleaksignore",
-              "sha256": "9ce5f18a938c71c2db3a07abf1486ebdefa1480e0d80b10c1c7277ad660af4d6"
+              "sha256": "56cfb3d22a61639d29d6f556bb8df077ffe1b6fa711b077c17f7cfb308db692f"
             },
             {
               "path": "apps/web/build.mjs",
@@ -473621,7 +473639,8 @@
             "Gitleaks flagged a specification SHA-256 on the exact preflight commit. Verified the digest against the committed public file. Only the exact historical fingerprint is excluded. Synthetic credential detection, redaction, and a full 3,018-commit scan with zero leaks passed locally.",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
             "Pinned Trivy converted all four exact hosted inventory reports without rescanning. The new verifier accepted four exact SBOMs and rejected mismatched, empty or unbound SBOMs and a report with a high finding.",
-            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
+            "The existing full-history scanner now recognizes that exact historical fingerprint. Five scanner controls, the actual synthetic credential detection/redaction control and a full local scan of 3,052 commits passed. The local scan reported zero leaks. The next exact hosted integrity result is required for direct main."
           ]
         }
       }
@@ -473654,7 +473673,8 @@
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-verified-auth-specification-digest"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -473674,7 +473694,7 @@
             },
             {
               "path": ".gitleaksignore",
-              "sha256": "9ce5f18a938c71c2db3a07abf1486ebdefa1480e0d80b10c1c7277ad660af4d6"
+              "sha256": "56cfb3d22a61639d29d6f556bb8df077ffe1b6fa711b077c17f7cfb308db692f"
             },
             {
               "path": "scripts/check-secrets.py",
@@ -473690,7 +473710,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Gitleaks flagged a specification SHA-256 on the exact preflight commit. Verified the digest against the committed public file. Only the exact historical fingerprint is excluded. Synthetic credential detection, redaction, and a full 3,018-commit scan with zero leaks passed locally.",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
-            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
+            "The existing full-history scanner now recognizes that exact historical fingerprint. Five scanner controls, the actual synthetic credential detection/redaction control and a full local scan of 3,052 commits passed. The local scan reported zero leaks. The next exact hosted integrity result is required for direct main."
           ]
         },
         "ci_checkpoint": {
@@ -474047,7 +474068,8 @@
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-verified-auth-specification-digest"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -474067,7 +474089,7 @@
             },
             {
               "path": ".gitleaksignore",
-              "sha256": "9ce5f18a938c71c2db3a07abf1486ebdefa1480e0d80b10c1c7277ad660af4d6"
+              "sha256": "56cfb3d22a61639d29d6f556bb8df077ffe1b6fa711b077c17f7cfb308db692f"
             },
             {
               "path": "scripts/check-secrets.py",
@@ -474083,7 +474105,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Gitleaks flagged a specification SHA-256 on the exact preflight commit. Verified the digest against the committed public file. Only the exact historical fingerprint is excluded. Synthetic credential detection, redaction, and a full 3,018-commit scan with zero leaks passed locally.",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
-            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
+            "The existing full-history scanner now recognizes that exact historical fingerprint. Five scanner controls, the actual synthetic credential detection/redaction control and a full local scan of 3,052 commits passed. The local scan reported zero leaks. The next exact hosted integrity result is required for direct main."
           ]
         },
         "current_scan_checkpoint": {
@@ -498732,7 +498755,7 @@
             },
             {
               "path": "apps/web/e2e/notification-delivery-search.spec.ts",
-              "sha256": "cf60cf8b9d9e436af10f65dc325f853450bc41bb3f3d2d6383f06a68c00f7329"
+              "sha256": "01e6a97ece0be3dde8a6b2cd07de032813e568013b9f6116989a531c0041a39e"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -499229,7 +499252,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-lists-and-receipts",
           "limitations": [
@@ -499633,7 +499657,7 @@
             },
             {
               "path": "apps/web/e2e/notification-delivery-search.spec.ts",
-              "sha256": "cf60cf8b9d9e436af10f65dc325f853450bc41bb3f3d2d6383f06a68c00f7329"
+              "sha256": "01e6a97ece0be3dde8a6b2cd07de032813e568013b9f6116989a531c0041a39e"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -500130,7 +500154,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-lists-and-receipts",
           "limitations": [
@@ -500475,7 +500500,7 @@
             },
             {
               "path": "apps/web/e2e/notification-delivery-search.spec.ts",
-              "sha256": "cf60cf8b9d9e436af10f65dc325f853450bc41bb3f3d2d6383f06a68c00f7329"
+              "sha256": "01e6a97ece0be3dde8a6b2cd07de032813e568013b9f6116989a531c0041a39e"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -500972,7 +500997,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-lists-and-receipts",
           "limitations": [
@@ -516305,7 +516331,7 @@
             },
             {
               "path": "apps/web/e2e/notification-delivery-search.spec.ts",
-              "sha256": "cf60cf8b9d9e436af10f65dc325f853450bc41bb3f3d2d6383f06a68c00f7329"
+              "sha256": "01e6a97ece0be3dde8a6b2cd07de032813e568013b9f6116989a531c0041a39e"
             },
             {
               "path": "apps/web/e2e/operations-list-query.spec.ts",
@@ -516665,7 +516691,8 @@
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mobile-lists-and-touch",
           "limitations": [
@@ -576251,7 +576278,7 @@
             },
             {
               "path": "apps/web/e2e/notification-delivery-search.spec.ts",
-              "sha256": "cf60cf8b9d9e436af10f65dc325f853450bc41bb3f3d2d6383f06a68c00f7329"
+              "sha256": "01e6a97ece0be3dde8a6b2cd07de032813e568013b9f6116989a531c0041a39e"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -578668,7 +578695,8 @@
             "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed the affected browser fixture binding with the exact passed journey scope recorded in release-0.6-nightly-auth-and-finance-browser-fixtures."
+            "Renewed the affected browser fixture binding with the exact passed journey scope recorded in release-0.6-nightly-auth-and-finance-browser-fixtures.",
+            "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-member-recovery/proof.json",
           "limitations": [
@@ -729335,7 +729363,7 @@
             },
             {
               "path": "apps/web/e2e/notification-delivery-search.spec.ts",
-              "sha256": "cf60cf8b9d9e436af10f65dc325f853450bc41bb3f3d2d6383f06a68c00f7329"
+              "sha256": "01e6a97ece0be3dde8a6b2cd07de032813e568013b9f6116989a531c0041a39e"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -731206,7 +731234,8 @@
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
             "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
+            "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures."
           ],
           "limitations": [],
           "operational_limits": [
@@ -733247,7 +733276,7 @@
             },
             {
               "path": "apps/web/e2e/notification-delivery-search.spec.ts",
-              "sha256": "cf60cf8b9d9e436af10f65dc325f853450bc41bb3f3d2d6383f06a68c00f7329"
+              "sha256": "01e6a97ece0be3dde8a6b2cd07de032813e568013b9f6116989a531c0041a39e"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -735116,7 +735145,8 @@
             "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
-            "Renewed the shared release-version browser binding after preserving the historical milestone check in the root-version suite. All 25 focused release and smoke cases passed across the five browser projects."
+            "Renewed the shared release-version browser binding after preserving the historical milestone check in the root-version suite. All 25 focused release and smoke cases passed across the five browser projects.",
+            "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures."
           ],
           "limitations": [
             "Current staging is v0.3.0/2ac708c11225a1239156787cddfdd3ab094fb8f8, API/web/worker healthy and Redis/object storage readiness verified. After effective v0.4.0 criteria are accepted, deploy its immutable candidate and verify actual AI routing, slot isolation and notification/storage operations. Earlier v0.1.29/forced-TLS warning description is stale and does not dispatch a rebuild.",
@@ -739740,7 +739770,10 @@
           "release-0.6-nightly-advisory-and-schema-gate",
           "release-0.6-nightly-navigation-and-chromium",
           "release-0.6-nightly-version-and-smoke-contracts",
-          "release-0.6-nightly-auth-and-finance-browser-fixtures"
+          "release-0.6-nightly-auth-and-finance-browser-fixtures",
+          "release-0.6-verified-auth-specification-digest",
+          "release-0.6-nightly-outcome-rollup",
+          "release-0.6-nightly-workspace-browser-fixtures"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -829010,6 +829043,131 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-journey-repair",
       "source_scope_proof": "receipt.json",
       "source_scope_proof_sha256": "0fe2938491f19b90136ee4e949d3ef87afc16b582ca3f58709fe5c4ebb057cb7"
+    },
+    "release-0.6-verified-auth-specification-digest": {
+      "batch": "release-0.6-verified-auth-specification-digest",
+      "base_commit": "43c6e4af2c315eba6067d4d3e21780b7786cfd09",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".gitleaksignore",
+          "sha256": "56cfb3d22a61639d29d6f556bb8df077ffe1b6fa711b077c17f7cfb308db692f"
+        },
+        {
+          "path": "kanban/epics/02-auth-users-admin.md",
+          "sha256": "caba2c48cfb51ef51950b6eead29b7997f804d5cb196b77b65de7c46fa76c774"
+        },
+        {
+          "path": "scripts/check-secrets.py",
+          "sha256": "48f9666ec7e7e97a97d79efd05886d7df1a0e2f8c793dcd998a27eef337ca4aa"
+        },
+        {
+          "path": "scripts/test_check_secrets.py",
+          "sha256": "340475480e6455a18f7731f34b2e298e37f2259dbc97234353a0f9ad931a16fe"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+        }
+      ],
+      "checks": [
+        "GitHub run 42666346573 reported one redacted generic-api-key finding at board line 976. The line is a specification_sources binding and its value matches a freshly computed SHA-256 of the tracked public auth epic.",
+        "The existing full-history scanner now recognizes that exact historical fingerprint. Five scanner controls, the actual synthetic credential detection/redaction control and a full local scan of 3,052 commits passed. The local scan reported zero leaks. The next exact hosted integrity result is required for direct main."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-auth-digest-scan",
+      "source_scope_proof": "receipt.json",
+      "source_scope_proof_sha256": "f8b8206d1fa41a418af0d2c64205266fff78e1f4b7e11f3946da5077719c3d25"
+    },
+    "release-0.6-nightly-outcome-rollup": {
+      "batch": "release-0.6-nightly-outcome-rollup",
+      "base_commit": "43c6e4af2c315eba6067d4d3e21780b7786cfd09",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "69e0220154038aa58e37d5d6f2754ad67d8cf8ccb24d647a8de4a6303ffa26d6"
+        },
+        {
+          "path": "docs/flaky-test-quarantine.md",
+          "sha256": "7d775e050d6a44c3953db16d9bde7f1e92fbc5cabb983951ad0f777ead10c2a0"
+        },
+        {
+          "path": "scripts/report-nightly-browser.py",
+          "sha256": "f43b1769a315bf296b5234a9e501f18d196445c34b6346ea823b913b9478385f"
+        },
+        {
+          "path": "scripts/test_report_nightly_browser.py",
+          "sha256": "8e053b0560830292f2d0bb9493ef7d8fd6a54bbbd3c5118222aec4159e403d52"
+        },
+        {
+          "path": "scripts/check-browser-results.py",
+          "sha256": "1e7086dac76325086f48072519d3c9052fd973eee4299d1c533b484d4b4f45b0"
+        },
+        {
+          "path": "scripts/check-flaky-tests.py",
+          "sha256": "0768ffe3ef92d4c170fc72b2ba406a3bf78e81ba3338a8b5c78089755ef14b02"
+        }
+      ],
+      "checks": [
+        "The nightly rollup receives compact outcomes for all 40 exact project/shard slots, checks the quarantine registry once, and uses completed scheduled runs from the prior seven days. Three focused controls preserve observed flake counts and distinguish missing or malformed receipts.",
+        "The existing two browser result controls and nine quarantine controls passed. The actual GitHub seven-day history contained seven failures. With no current shard inputs, the CLI failed closed and reported unknown historic flake counts. No actual scheduled execution of the new rollup has been accepted."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-browser-rollup",
+      "source_scope_proof": "receipt.json",
+      "source_scope_proof_sha256": "1b1b3b617a4dbc4a7073f32211c0cde48f1ebba26543a914d65e957f89935be5"
+    },
+    "release-0.6-nightly-workspace-browser-fixtures": {
+      "batch": "release-0.6-nightly-workspace-browser-fixtures",
+      "base_commit": "43c6e4af2c315eba6067d4d3e21780b7786cfd09",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/notification-delivery-search.spec.ts",
+          "sha256": "01e6a97ece0be3dde8a6b2cd07de032813e568013b9f6116989a531c0041a39e"
+        },
+        {
+          "path": "apps/web/e2e/number-preferences.spec.ts",
+          "sha256": "8ce250a01a95056d1aa4c2cba2ddb36430d507439bbc15c00f46ada7d71a9b5f"
+        },
+        {
+          "path": "apps/web/e2e/profile-display-name.spec.ts",
+          "sha256": "3640a970d3aa732cf8533e8811757edfd2bef506bda544300865da789f7c1d1e"
+        },
+        {
+          "path": "apps/web/src/components/ProfileSwitcher.tsx",
+          "sha256": "01e0a438a69e7f67a6a401dfe066cd2fb9d775ad41b3f0fa6cd2f49c0a6ac928"
+        },
+        {
+          "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
+          "sha256": "2305b69a26f2288e517360434dbdc8ecab2ceb581ff2690bdcfa3a5ac6bee719"
+        },
+        {
+          "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
+          "sha256": "aad1930ca49184d346f77e102578e0ead1f7158ac8e46e96f2785b799ed6bf73"
+        }
+      ],
+      "checks": [
+        "Hosted diagnostic run 42661539400 passed all 16 profile-name and eight delivery-search cases across Firefox, WebKit and both mobile projects. The accepted file bytes match that exact commit. Profile choices assert the rendered radio names and active state; a delivery authorization denial closes the search, hides prior results and prevents further reads.",
+        "All ten bilingual number-preference cases passed across the five browser projects on the compiled v0.5.0 build. The current catalogue and draft shapes are used. Displayed amounts are localized, the editable limit keeps a raw integer and the exact submitted value remains asserted. An unsafe wallet value renders the load error and no balance."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-workspace-fixture-repair",
+      "source_scope_proof": "receipt.json",
+      "source_scope_proof_sha256": "f51db9600d3993f4ab78a416cacf2bc88f5c725b4e9b802a275ea016858d10b5"
     }
   },
   "historical_improvements": [
