@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T00:27:55+00:00",
-  "source_commit": "bb7b73bd66c7dc32e92edf3fcf6b1ecbf14de49b",
+  "updated": "2026-11-09T00:32:26+00:00",
+  "source_commit": "df839dc67c0fe1bc2a76ab6a8dac33f2a0df4a8a",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -598486,7 +598486,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Dashboard, customer financial lists and detail surfaces, staff invoice ledger, and document templates have scoped state evidence. The template list, detail and signed-link paths now withdraw on shared permission loss. Compare remaining admin route states against original criteria and verify any uncovered behavior."
+        "Controlled first-read 503 receipts cover all 48 admin data routes. Invoice reminder settings and the wallet receipt queue render the supplied 503 message and need safe localized read-error copy. Reconcile the other applicable loading, empty, denied and stale states with named route and layout receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -598615,7 +598615,8 @@
           "release-0.5-customer-financial-list-states",
           "release-0.5-financial-detail-denial",
           "release-0.5-staff-ledger-permission-withdrawal",
-          "release-0.5-document-template-read-boundary"
+          "release-0.5-document-template-read-boundary",
+          "release-0.5-admin-first-read-probe"
         ],
         "current_acceptance": null
       }
@@ -728263,7 +728264,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Dashboard, customer financial lists and detail surfaces, staff invoice ledger, and document templates have scoped state evidence. The template list, detail and signed-link paths now withdraw on shared permission loss. Compare remaining admin route states against original criteria and verify any uncovered behavior."
+        "Controlled first-read 503 receipts cover all 48 admin data routes. Invoice reminder settings and the wallet receipt queue render the supplied 503 message and need safe localized read-error copy. Reconcile the other applicable loading, empty, denied and stale states with named route and layout receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -728458,7 +728459,8 @@
           "release-0.5-customer-financial-list-states",
           "release-0.5-financial-detail-denial",
           "release-0.5-staff-ledger-permission-withdrawal",
-          "release-0.5-document-template-read-boundary"
+          "release-0.5-document-template-read-boundary",
+          "release-0.5-admin-first-read-probe"
         ]
       }
     },
@@ -808751,6 +808753,241 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-template-read-boundary/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-template-read-boundary/renewed-bindings.json",
       "release_disposition": "Closed malformed template response recovery and shared authorization withdrawal. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-admin-first-read-probe": {
+      "batch": "release-0.5-admin-first-read-probe",
+      "base_commit": "df839dc67c0fe1bc2a76ab6a8dac33f2a0df4a8a",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/crm-shell-fixture.ts",
+          "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+        },
+        {
+          "path": "apps/web/e2e/navigation-fixture.ts",
+          "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
+        },
+        {
+          "path": "apps/web/src/routeTree.gen.ts",
+          "sha256": "c1524622f37c4dc26c3fc7f5746d3a9a2d962c8397db0ab77e61efa0422be658"
+        },
+        {
+          "path": "apps/web/src/routes/admin/agent-slots.tsx",
+          "sha256": "3cc16407251878c638b131b09830d3fc0146e7e46f081a58f2e7fa286e18cc03"
+        },
+        {
+          "path": "apps/web/src/routes/admin/agents.tsx",
+          "sha256": "59d95a0a1525cd564ddfbe8bd25d46f4935922ca3f17c5269b9989821051073d"
+        },
+        {
+          "path": "apps/web/src/routes/admin/ai-models.tsx",
+          "sha256": "a24238103f39d64adfd0e82c4caa668fa65342e36ce72f11acb5212409a8d352"
+        },
+        {
+          "path": "apps/web/src/routes/admin/approval-requests.tsx",
+          "sha256": "59d3cdbbfc48b693d679a3d5c5d89cef4e50bc2dc882abc66319818ce9bd8c0f"
+        },
+        {
+          "path": "apps/web/src/routes/admin/branding.tsx",
+          "sha256": "963e0a94785b811863bffd69874be14ec4b840287ea3fc5688cc0eb29348710f"
+        },
+        {
+          "path": "apps/web/src/routes/admin/catalogue.tsx",
+          "sha256": "1c9d8bb7e0144942694543ceeca3ff46dbfd62c24057dc2553c7da634d38f7fd"
+        },
+        {
+          "path": "apps/web/src/routes/admin/consultations.tsx",
+          "sha256": "53d7ea9b6aa3627a8717b9842d14332ae3fbb5a7afe4ead903a17e1fa17058ea"
+        },
+        {
+          "path": "apps/web/src/routes/admin/contract-limits.tsx",
+          "sha256": "7123fb066d5323e453dee6018cafe2838f61c11c3477ed1c4d07f55f4b17a739"
+        },
+        {
+          "path": "apps/web/src/routes/admin/contract-templates.tsx",
+          "sha256": "149b3b237533a5854a9a3b44e5fdabef15752f64ba8b0e72f5b3e20982e756a8"
+        },
+        {
+          "path": "apps/web/src/routes/admin/contracts.tsx",
+          "sha256": "e51e0994c520ae45bcc4b30a3b01c2daca182ba888969184af45047e34f566d6"
+        },
+        {
+          "path": "apps/web/src/routes/admin/crm/corrections.tsx",
+          "sha256": "9c06e7dc494aba5d80cff651d3dbf1506c9f641fb116973ec1140def97200352"
+        },
+        {
+          "path": "apps/web/src/routes/admin/crm/index.tsx",
+          "sha256": "09aa66084364d0e040949c9ae9c6d42333a964b9ee32983ea5d970ee62c42b49"
+        },
+        {
+          "path": "apps/web/src/routes/admin/crm/profiles.$profileId.tsx",
+          "sha256": "1fe57443b2ad33df05f0af1874add1ad6f38198868c160b6b9def70960761324"
+        },
+        {
+          "path": "apps/web/src/routes/admin/crm/recovery.tsx",
+          "sha256": "d4e71c09a2a6d23bbd3be01f20a2161478c51916ce3214daecabd64ce9126ea3"
+        },
+        {
+          "path": "apps/web/src/routes/admin/document-templates.tsx",
+          "sha256": "25a8f1dc949e6b595aa12a256a7a2e0c9130226dade69b54046da802b8b1c7fd"
+        },
+        {
+          "path": "apps/web/src/routes/admin/documents.tsx",
+          "sha256": "2e17d1323d40dc142d3fe2ee952ebfa3cf5e45da11b12a4dc72e62dc6388defe"
+        },
+        {
+          "path": "apps/web/src/routes/admin/electricity-increases.tsx",
+          "sha256": "80e57cfbe4019d20c23bc9899c8eba3dedd0b9954601e0c42d57341b83110396"
+        },
+        {
+          "path": "apps/web/src/routes/admin/electricity-orders.tsx",
+          "sha256": "99bbc0088e006c0e2b95b1020067786401dd6b731b9338b7aa20e02a0d8c701a"
+        },
+        {
+          "path": "apps/web/src/routes/admin/electricity-price-adjustments.tsx",
+          "sha256": "f839a9b256a5f9e60954f9ca444e855e4ff96f79cd46da377ffef2efb0b00ef8"
+        },
+        {
+          "path": "apps/web/src/routes/admin/electricity-rules.tsx",
+          "sha256": "f1f8db93ed64aaa45c33fd5ed19210beadd11a2428146d652e89e0326555b5db"
+        },
+        {
+          "path": "apps/web/src/routes/admin/failed-jobs.tsx",
+          "sha256": "db6b6cc267aa28d52bce1b2e2de313f4703b750942f20f1d04ecf49d75e3de96"
+        },
+        {
+          "path": "apps/web/src/routes/admin/failed-notifications.tsx",
+          "sha256": "219394e20d76c865a8cb4ae48cf543b035b5acb11653433a5b058812eba0a681"
+        },
+        {
+          "path": "apps/web/src/routes/admin/geography.tsx",
+          "sha256": "0be59af2eef20494dbc2950aaa7222340c28f4c12beca1000e0f4f2a2f776585"
+        },
+        {
+          "path": "apps/web/src/routes/admin/gift-codes.tsx",
+          "sha256": "c5bd414b419a5795333d9df7debb9b09261352ab66513a13e880d6f99d7c3acf"
+        },
+        {
+          "path": "apps/web/src/routes/admin/inbox.tsx",
+          "sha256": "5409a87b514205e80af28a96c1e4f69e51c1ae5d93ca13f9acb0c458c98e0848"
+        },
+        {
+          "path": "apps/web/src/routes/admin/index.tsx",
+          "sha256": "e39bdf6e71133fde57ef7fc5646e25925533c7109a25f89de5ca10f780c66907"
+        },
+        {
+          "path": "apps/web/src/routes/admin/invoices.tsx",
+          "sha256": "40c707341a06966f36f475ad516aaf6ed12f6d27df8ac1f956ec1e59110d881b"
+        },
+        {
+          "path": "apps/web/src/routes/admin/knowledge-bases.tsx",
+          "sha256": "c0293ef220d71a520639e41b0313c12ac4b66efdb27f0b1c80247e463683080a"
+        },
+        {
+          "path": "apps/web/src/routes/admin/maintenance.tsx",
+          "sha256": "9732958eb3065010c506b237203e017c0420538d77b46db73260141b456214a9"
+        },
+        {
+          "path": "apps/web/src/routes/admin/notifications.tsx",
+          "sha256": "59474795b1c14f54363497e70fa0c938485059fcacdb11bcf3f2e1f32a774097"
+        },
+        {
+          "path": "apps/web/src/routes/admin/policies.tsx",
+          "sha256": "68ca4bdccf395c9d369333607bf8658e18755e91e1e0d88501f8352fdfd2c106"
+        },
+        {
+          "path": "apps/web/src/routes/admin/providers.tsx",
+          "sha256": "774b9561ab7d9126f4a941cb4ec0cdd985ffd6ea63bea31d33ee3ece96e05ba7"
+        },
+        {
+          "path": "apps/web/src/routes/admin/reconciliation.tsx",
+          "sha256": "0a494377732dd86b5ebbfe2df68707dddb17292fe7aa4b33046b9f96ccb73215"
+        },
+        {
+          "path": "apps/web/src/routes/admin/roles.tsx",
+          "sha256": "422dcd22625da451ec9f25357fac5f9ed1793fe0086fcf70f4feb287b5d677eb"
+        },
+        {
+          "path": "apps/web/src/routes/admin/saving-orders.tsx",
+          "sha256": "826a59b261266c3caf324033cf1b52340b27fa0dc8a47d7f370b3ad04fceba75"
+        },
+        {
+          "path": "apps/web/src/routes/admin/service-targets.tsx",
+          "sha256": "0b08bb065c1a02cb75f196e301be5cd5737c4f9b1adb1d6c3a309457dc7de1ef"
+        },
+        {
+          "path": "apps/web/src/routes/admin/solar-construction.tsx",
+          "sha256": "59ac7b4c21e3e8fa266952c7a8a0f30ce34d7ece7db16c45a7612da5f39cbf07"
+        },
+        {
+          "path": "apps/web/src/routes/admin/solar-postal.tsx",
+          "sha256": "b2fddd6fe0f7c397ba69c7f0bd41757d88b64322426c296538e70ffe86f06069"
+        },
+        {
+          "path": "apps/web/src/routes/admin/solar-requests.tsx",
+          "sha256": "b62c45cf96cc77f0c14ffba27de034a5cfc3fa98b1f292be2cd4f0624fc4c547"
+        },
+        {
+          "path": "apps/web/src/routes/admin/staff-teams.tsx",
+          "sha256": "a8d7866b16f250a8cac2faec39084fb246119a912435cb6e5575b3c494aa6288"
+        },
+        {
+          "path": "apps/web/src/routes/admin/storage.tsx",
+          "sha256": "04d3761da83ed3ab81ebb802afd27b404c22fb23be008332cdabda23cbc5a3ec"
+        },
+        {
+          "path": "apps/web/src/routes/admin/tickets.tsx",
+          "sha256": "ced5a165ae2248d8864786d2f4961d249b8cc9e0055d00c1fd240fb5ae553796"
+        },
+        {
+          "path": "apps/web/src/routes/admin/tos.tsx",
+          "sha256": "9d038bfdcccf349c5bdf799b29b458b8fa2160522f55a0eb09bff6269377f1af"
+        },
+        {
+          "path": "apps/web/src/routes/admin/upload-policies.tsx",
+          "sha256": "cf22d4281744ca1f190e2089a3bb463420d3c1d7baf00f0614e3ad1e6ea6b966"
+        },
+        {
+          "path": "apps/web/src/routes/admin/users.tsx",
+          "sha256": "8fd7911251231ac25f009cb2e2a15201f8271d5a7dd1ee8664d677a993049165"
+        },
+        {
+          "path": "apps/web/src/routes/admin/vat.tsx",
+          "sha256": "59e9bbd145609a3eee67682e873aa117883a26ae604406c2e6be4d138cd450bd"
+        },
+        {
+          "path": "apps/web/src/routes/admin/verification.tsx",
+          "sha256": "73fb3ac5d5aa187b2fd02acabb1d9fb8673fd3b810dbd3d3f4cdd23ef9cca748"
+        },
+        {
+          "path": "apps/web/src/routes/admin/wallet-ledger/$profileId.tsx",
+          "sha256": "fa5559093ecbca0f25b52df9e8e6f8c6bfae5bcb4062716d1e39344fe4530b6d"
+        },
+        {
+          "path": "apps/web/src/routes/admin/wallet-receipts.tsx",
+          "sha256": "da7983244eda1177c044beda8ebdbf9dc552141d2baab4a2f1102efdb007d592"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "All 48 canonical admin data surfaces showed a heading and error feedback after a controlled first-read HTTP 503 in Chromium. The admin index redirects to /app. The invoice reminder settings and wallet receipt queue echo the supplied 503 message. The other 46 suppress the injected text.",
+        "Initial probes missed the versioned inbox endpoint and the price and recovery pages that read only after receiving a valid identifier. Follow-up fixtures exercised those endpoints. The staff-team retest waited for the debounced members response and verified that loading cleared after all three failures.",
+        "This evidence is scoped to the first-read error state. Original route-level loading, empty, permission withdrawal, interaction and layout criteria retain their independent acceptance requirements."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-first-read-probe",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-first-read-probe/proof.json",
+      "source_scope_proof_sha256": "b38d48cae1c9081b54fec3f3474c656f001634d44777e7d8b6c380509c955889",
+      "release_disposition": "Recorded first-read HTTP 503 evidence for every admin data route and identified two message-handling gaps. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [
@@ -808801,7 +809038,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Reconcile the remaining admin and read-owning child routes against their original requirements and named cases. Verify only uncovered applicable first-load, empty, denied and stale states. GitHub merge enforcement and staging Sentry delivery remain independent."
+    "goal": "Replace unclassified 503 response text in invoice reminder settings and the wallet receipt queue with existing safe localized read-error copy. Verify local retry and denial, then reconcile other named route criteria. GitHub merge enforcement and staging Sentry delivery remain independent."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
