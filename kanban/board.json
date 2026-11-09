@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T17:19:31+00:00",
+  "updated": "2026-11-09T17:24:37+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -5520,7 +5520,8 @@
         "batches": [
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-nightly-browser-shard-capacity",
-          "release-0.6-nightly-navigation-and-chromium"
+          "release-0.6-nightly-navigation-and-chromium",
+          "release-0.6-nightly-version-and-smoke-contracts"
         ],
         "current_acceptance": null
       }
@@ -5756,7 +5757,8 @@
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
           "release-0.6-nightly-browser-shard-capacity",
-          "release-0.6-nightly-navigation-and-chromium"
+          "release-0.6-nightly-navigation-and-chromium",
+          "release-0.6-nightly-version-and-smoke-contracts"
         ],
         "current_acceptance": null
       }
@@ -12432,7 +12434,8 @@
           "2026-09-21-nightly-browser-repairs",
           "release-0.6-nightly-browser-shard-capacity",
           "release-0.6-nightly-advisory-and-schema-gate",
-          "release-0.6-nightly-navigation-and-chromium"
+          "release-0.6-nightly-navigation-and-chromium",
+          "release-0.6-nightly-version-and-smoke-contracts"
         ],
         "current_acceptance": null
       }
@@ -25909,10 +25912,6 @@
               "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
             },
             {
-              "path": "apps/web/e2e/release-candidate-version.spec.ts",
-              "sha256": "cf43daa4e9645f4f4f39e85571deeb0760b739d819bea665e70fa6cfa5cf7a1f"
-            },
-            {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
               "sha256": "fe7bfc456c990caa5824d597d6ffa70975324b0eb0c395dcbe2e2b4bd593d809"
             },
@@ -26007,6 +26006,10 @@
             {
               "path": "releases/0.2.0.md",
               "sha256": "9b3caf108d949a60c77a020794826a29ec8404c828f16e49bf0c3e47f1a8e04b"
+            },
+            {
+              "path": "apps/web/e2e/release-version.spec.ts",
+              "sha256": "22408f5b2a29e0f9e216cc3b8c7e2fc5336be3bba62c65542d02e3bb81f99cf7"
             }
           ],
           "checks": [
@@ -26042,7 +26045,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
-            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain."
+            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
+            "Renewed the shared release-version browser binding after preserving the historical milestone check in the root-version suite. All 25 focused release and smoke cases passed across the five browser projects."
           ],
           "criterion_result": "Session/public-auth/refresh/payment-confirmation CSRF preserved; owner-approved independent provider proofs and bounded native telemetry, including actual WebKit metadata, verified. Payment-return GET read-only.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-closure",
@@ -30226,10 +30230,6 @@
               "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
             },
             {
-              "path": "apps/web/e2e/release-candidate-version.spec.ts",
-              "sha256": "cf43daa4e9645f4f4f39e85571deeb0760b739d819bea665e70fa6cfa5cf7a1f"
-            },
-            {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
               "sha256": "fe7bfc456c990caa5824d597d6ffa70975324b0eb0c395dcbe2e2b4bd593d809"
             },
@@ -30324,6 +30324,10 @@
             {
               "path": "releases/0.2.0.md",
               "sha256": "9b3caf108d949a60c77a020794826a29ec8404c828f16e49bf0c3e47f1a8e04b"
+            },
+            {
+              "path": "apps/web/e2e/release-version.spec.ts",
+              "sha256": "22408f5b2a29e0f9e216cc3b8c7e2fc5336be3bba62c65542d02e3bb81f99cf7"
             }
           ],
           "checks": [
@@ -30359,7 +30363,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
-            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain."
+            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
+            "Renewed the shared release-version browser binding after preserving the historical milestone check in the root-version suite. All 25 focused release and smoke cases passed across the five browser projects."
           ],
           "criterion_result": "Owner-approved manual recovery implemented: restricted sealed evidence, independent current reviewer/step-up, dedicated claimant OTP with pre-login CSRF, immutable single-use target/approval, complete before/after audit, revocation of lost authentication and forced password change. Closure requires fresh committed login and both actual manual support-notice references; no automatic notice or live-provider claim.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-closure",
@@ -106541,7 +106546,7 @@
             },
             {
               "path": "apps/web/e2e/release-version.spec.ts",
-              "sha256": "b325551e96feac8f054a2bbdbd8ac88d425ed3455e50a185fab15367e7b97d0a"
+              "sha256": "22408f5b2a29e0f9e216cc3b8c7e2fc5336be3bba62c65542d02e3bb81f99cf7"
             }
           ],
           "checks": [
@@ -106598,7 +106603,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
-            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed."
+            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
+            "Renewed the shared release-version browser binding after preserving the historical milestone check in the root-version suite. All 25 focused release and smoke cases passed across the five browser projects."
           ],
           "limitations": [
             "Provision protected CUSTOMER_TELEGRAM credentials after identifying the existing ngrok webhook owner/secret location (already asked once); hand off the callback without disturbing unrelated integration. At the accepted staging release, verify actual customer/profile linking, private Telegram reply/root version, exact provider message receipts and live slot/authority isolation. Local implementation and 127 related cases are accepted; live operations are not certified."
@@ -292456,10 +292462,6 @@
               "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
             },
             {
-              "path": "apps/web/e2e/release-candidate-version.spec.ts",
-              "sha256": "cf43daa4e9645f4f4f39e85571deeb0760b739d819bea665e70fa6cfa5cf7a1f"
-            },
-            {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
               "sha256": "fe7bfc456c990caa5824d597d6ffa70975324b0eb0c395dcbe2e2b4bd593d809"
             },
@@ -292554,6 +292556,10 @@
             {
               "path": "releases/0.2.0.md",
               "sha256": "9b3caf108d949a60c77a020794826a29ec8404c828f16e49bf0c3e47f1a8e04b"
+            },
+            {
+              "path": "apps/web/e2e/release-version.spec.ts",
+              "sha256": "22408f5b2a29e0f9e216cc3b8c7e2fc5336be3bba62c65542d02e3bb81f99cf7"
             }
           ],
           "checks": [
@@ -292589,7 +292595,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
-            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain."
+            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
+            "Renewed the shared release-version browser binding after preserving the historical milestone check in the root-version suite. All 25 focused release and smoke cases passed across the five browser projects."
           ],
           "criterion_result": "Current authenticated provider adapter, bounded timeout/auth/no-data/circuit/manual fallback and post-provider ownership/session recheck verified; owner-approved existing bill route reconciled.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-closure",
@@ -300008,10 +300015,6 @@
               "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
             },
             {
-              "path": "apps/web/e2e/release-candidate-version.spec.ts",
-              "sha256": "cf43daa4e9645f4f4f39e85571deeb0760b739d819bea665e70fa6cfa5cf7a1f"
-            },
-            {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
               "sha256": "fe7bfc456c990caa5824d597d6ffa70975324b0eb0c395dcbe2e2b4bd593d809"
             },
@@ -300106,6 +300109,10 @@
             {
               "path": "releases/0.2.0.md",
               "sha256": "9b3caf108d949a60c77a020794826a29ec8404c828f16e49bf0c3e47f1a8e04b"
+            },
+            {
+              "path": "apps/web/e2e/release-version.spec.ts",
+              "sha256": "22408f5b2a29e0f9e216cc3b8c7e2fc5336be3bba62c65542d02e3bb81f99cf7"
             }
           ],
           "checks": [
@@ -300141,7 +300148,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
-            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain."
+            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
+            "Renewed the shared release-version browser binding after preserving the historical milestone check in the root-version suite. All 25 focused release and smoke cases passed across the five browser projects."
           ],
           "criterion_result": "UUIDv7/FKs/commercial states/submitted actor/period/energy/power/green fields and immutable settings/pricing/composition snapshots verified by current schema and native submission cases; approved mode/separate snapshot representation reconciled.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-closure",
@@ -320575,10 +320583,6 @@
               "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
             },
             {
-              "path": "apps/web/e2e/release-candidate-version.spec.ts",
-              "sha256": "cf43daa4e9645f4f4f39e85571deeb0760b739d819bea665e70fa6cfa5cf7a1f"
-            },
-            {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
               "sha256": "fe7bfc456c990caa5824d597d6ffa70975324b0eb0c395dcbe2e2b4bd593d809"
             },
@@ -320673,6 +320677,10 @@
             {
               "path": "releases/0.2.0.md",
               "sha256": "9b3caf108d949a60c77a020794826a29ec8404c828f16e49bf0c3e47f1a8e04b"
+            },
+            {
+              "path": "apps/web/e2e/release-version.spec.ts",
+              "sha256": "22408f5b2a29e0f9e216cc3b8c7e2fc5336be3bba62c65542d02e3bb81f99cf7"
             }
           ],
           "checks": [
@@ -320708,7 +320716,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
-            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain."
+            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
+            "Renewed the shared release-version browser binding after preserving the historical milestone check in the root-version suite. All 25 focused release and smoke cases passed across the five browser projects."
           ],
           "criterion_result": "All valid actual pre-active order termination/rejection and exact committed remaining financial returns retain source-bound acceptance; new private wizard discard is actor/profile/mode scoped, CSRF protected, audited, rollback safe and leaves all business records untouched. Separate existing leave-without-save behavior retained. Four-service lifecycle/browser evidence current.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-closure",
@@ -351275,10 +351284,6 @@
               "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
             },
             {
-              "path": "apps/web/e2e/release-candidate-version.spec.ts",
-              "sha256": "cf43daa4e9645f4f4f39e85571deeb0760b739d819bea665e70fa6cfa5cf7a1f"
-            },
-            {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
               "sha256": "fe7bfc456c990caa5824d597d6ffa70975324b0eb0c395dcbe2e2b4bd593d809"
             },
@@ -351373,6 +351378,10 @@
             {
               "path": "releases/0.2.0.md",
               "sha256": "9b3caf108d949a60c77a020794826a29ec8404c828f16e49bf0c3e47f1a8e04b"
+            },
+            {
+              "path": "apps/web/e2e/release-version.spec.ts",
+              "sha256": "22408f5b2a29e0f9e216cc3b8c7e2fc5336be3bba62c65542d02e3bb81f99cf7"
             }
           ],
           "checks": [
@@ -351408,7 +351417,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
-            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain."
+            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
+            "Renewed the shared release-version browser binding after preserving the historical milestone check in the root-version suite. All 25 focused release and smoke cases passed across the five browser projects."
           ],
           "criterion_result": "UUIDv7/FKs, active plan/hardware/bill/address, commercial/financial states, agreement text/version snapshot and timestamps verified by current migrated submission cases; immutable agreement_version_id FK approved/reconciled.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-closure",
@@ -463604,7 +463614,7 @@
             },
             {
               "path": "apps/web/e2e/release-version.spec.ts",
-              "sha256": "b325551e96feac8f054a2bbdbd8ac88d425ed3455e50a185fab15367e7b97d0a"
+              "sha256": "22408f5b2a29e0f9e216cc3b8c7e2fc5336be3bba62c65542d02e3bb81f99cf7"
             }
           ],
           "checks": [
@@ -463673,7 +463683,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
-            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed."
+            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
+            "Renewed the shared release-version browser binding after preserving the historical milestone check in the root-version suite. All 25 focused release and smoke cases passed across the five browser projects."
           ],
           "limitations": [
             "Provision protected CUSTOMER_TELEGRAM credentials after identifying the existing ngrok webhook owner/secret location (already asked once); hand off the callback without disturbing unrelated integration. At the accepted staging release, verify actual customer/profile linking, private Telegram reply/root version, exact provider message receipts and live slot/authority isolation. Local implementation and 127 related cases are accepted; live operations are not certified."
@@ -734985,10 +734996,6 @@
               "sha256": "0d38ca16dff0d91baf910710ab6f0e82f44fb03b09a2d42796e34de9cfd6b5ee"
             },
             {
-              "path": "apps/web/e2e/release-version.spec.ts",
-              "sha256": "b325551e96feac8f054a2bbdbd8ac88d425ed3455e50a185fab15367e7b97d0a"
-            },
-            {
               "path": "apps/web/src/lib/brand-config.ts",
               "sha256": "c071d391d00df11d9d0c6fa8f7a7f385cab812636cc610b6a54ad358ca44aba5"
             },
@@ -735003,6 +735010,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/e2e/release-version.spec.ts",
+              "sha256": "22408f5b2a29e0f9e216cc3b8c7e2fc5336be3bba62c65542d02e3bb81f99cf7"
             }
           ],
           "checks": [
@@ -735078,7 +735089,8 @@
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
             "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
+            "Renewed the shared release-version browser binding after preserving the historical milestone check in the root-version suite. All 25 focused release and smoke cases passed across the five browser projects."
           ],
           "limitations": [
             "Current staging is v0.3.0/2ac708c11225a1239156787cddfdd3ab094fb8f8, API/web/worker healthy and Redis/object storage readiness verified. After effective v0.4.0 criteria are accepted, deploy its immutable candidate and verify actual AI routing, slot isolation and notification/storage operations. Earlier v0.1.29/forced-TLS warning description is stale and does not dispatch a rebuild.",
@@ -739700,7 +739712,8 @@
           "release-0.6-pilot-proxy-and-cache-policy",
           "release-0.6-nightly-browser-shard-capacity",
           "release-0.6-nightly-advisory-and-schema-gate",
-          "release-0.6-nightly-navigation-and-chromium"
+          "release-0.6-nightly-navigation-and-chromium",
+          "release-0.6-nightly-version-and-smoke-contracts"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -828860,6 +828873,50 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-navigation-contract",
       "source_scope_proof": "receipt.json",
       "source_scope_proof_sha256": "05f13219e2366cfa304d0805dcf12681d28516600282a36d35c7dfef55614402"
+    },
+    "release-0.6-nightly-version-and-smoke-contracts": {
+      "batch": "release-0.6-nightly-version-and-smoke-contracts",
+      "base_commit": "2db2fb3dfcaaffee7b111b5ae98890f3dba47ea9",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/release-version.spec.ts",
+          "sha256": "22408f5b2a29e0f9e216cc3b8c7e2fc5336be3bba62c65542d02e3bb81f99cf7"
+        },
+        {
+          "path": "apps/web/e2e/smoke.spec.ts",
+          "sha256": "48363e531e343c80d21b17b36ffda9625f5e0835ac9a3b9e2bb4336f8347b9dd"
+        },
+        {
+          "path": "package.json",
+          "sha256": "0d38ca16dff0d91baf910710ab6f0e82f44fb03b09a2d42796e34de9cfd6b5ee"
+        },
+        {
+          "path": "apps/web/src/routes/index.tsx",
+          "sha256": "4c5213571d795e7b27dbe2db67f6b24ee41b141d0f95c91970a039d075228a7e"
+        },
+        {
+          "path": "apps/web/src/components/AuthLayout.tsx",
+          "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "Reproduced the hardcoded v0.2.0 test failure in the hosted nightly logs. Consolidated its exact 200 response, version and capture checks into the existing two-locale test. The retained test also verifies metadata SHA, direction and viewport bounds and reads the root version on each release.",
+        "The signed-out home check now verifies the implemented redirect to the localized sign-in screen. Existing HTML direction, language, root and deterministic identity checks still run.",
+        "All 25 targeted Playwright cases passed across desktop Chromium, Firefox, WebKit, Android Chrome and iPhone Safari against the compiled v0.5.0 production build. The candidate release SHA, full nightly outcomes and actual staging receipts remain separate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-version-smoke",
+      "source_scope_proof": "receipt.json",
+      "source_scope_proof_sha256": "71659b54be86337f7cb538ea95a7a88f066dc8e5a72afbb93ab5bc4eb2601f59"
     }
   },
   "historical_improvements": [

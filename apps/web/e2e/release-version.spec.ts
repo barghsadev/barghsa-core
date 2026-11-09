@@ -20,13 +20,17 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(badge).toHaveText(`v${version}`);
     await expect(badge).toHaveAttribute('dir', 'ltr');
     await expect(badge.locator('..')).toHaveText(`${shellText('appVersion', locale)} v${version}`);
-    const metadata = await (await page.request.get('/release.json')).json();
-    expect(metadata).toEqual({ version, commit: expect.stringMatching(/^[a-f0-9]{40}$/) });
+    const metadata = await page.request.get('/release.json');
+    expect(metadata.status()).toBe(200);
+    expect(await metadata.json()).toEqual({
+      version,
+      commit: expect.stringMatching(/^[a-f0-9]{40}$/),
+    });
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true
     );
     await page.screenshot({
-      path: `test-results/release-version-${locale}-${info.project.name}.png`,
+      path: info.outputPath('release-version.png'),
       fullPage: true,
     });
   });
