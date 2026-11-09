@@ -28518,6 +28518,10 @@
               "application/json": {
                 "schema": {
                   "properties": {
+                    "canReadCorrections": {
+                      "description": "Current correction-history access, returned for verification pages",
+                      "type": "boolean"
+                    },
                     "items": {
                       "items": {
                         "type": "object"

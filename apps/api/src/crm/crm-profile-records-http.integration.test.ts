@@ -203,6 +203,7 @@ it('includes setup and correction decisions without returning identity values or
   expect(raw).not.toContain('private-identity');
   expect(raw).not.toContain('private-evidence');
   const result = JSON.parse(raw) as CrmRecordPage<CrmVerificationRecord>;
+  expect(result).toMatchObject({ canReadCorrections: true });
   expect(result.items).toEqual(
     expect.arrayContaining([
       expect.objectContaining({
@@ -229,6 +230,7 @@ it('includes setup and correction decisions without returning identity values or
     const restricted = await read(otherCompany, 'verification');
     expect(restricted.status).toBe(200);
     const visible = (await restricted.json()) as CrmRecordPage<CrmVerificationRecord>;
+    expect(visible).toMatchObject({ canReadCorrections: false });
     expect(visible.items.map((row) => row.event).sort()).toEqual([
       'profile_onboarding_completed',
       'verification_change',

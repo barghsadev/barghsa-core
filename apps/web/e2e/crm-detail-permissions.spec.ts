@@ -188,6 +188,7 @@ for (const locale of ['fa', 'en'] as const) {
     };
     const current = {
       ...detail(false, true),
+      viewerPermissions: { ...detail(false, true).viewerPermissions, canReadDocuments: true },
       agentRelationships: { items: [invitation], nextCursor: 'older-agents' },
       verificationHistory: { items: [verification], nextCursor: 'older-history' },
     };
@@ -239,7 +240,8 @@ for (const locale of ['fa', 'en'] as const) {
     await page.route(`**/api/crm/profiles/${id}/records/verification*`, (route) => {
       const cursor = new URL(route.request().url()).searchParams.get('cursor');
       if (recordsUnavailable) return route.fulfill({ status: unavailableStatus, json: {} });
-      if (!cursor) return route.fulfill({ json: { items: [], nextCursor: null } });
+      if (!cursor)
+        return route.fulfill({ json: { items: [], nextCursor: null, canReadCorrections: true } });
       requests.push(cursor);
       if (++historyAttempts === 1)
         return route.fulfill({ json: { items: 'invalid', nextCursor: null } });
@@ -256,6 +258,7 @@ for (const locale of ['fa', 'en'] as const) {
             },
           ],
           nextCursor: null,
+          canReadCorrections: true,
         },
       });
     });
@@ -349,6 +352,74 @@ for (const locale of ['fa', 'en'] as const) {
     await expect(panel).toContainText(t('crm.records.empty', locale));
     await expect(panel.getByRole('table')).toHaveCount(0);
     expect(profileReads).toBe(2);
+  });
+
+  test(`CRM verification paging withdraws correction history after the grant narrows (${locale})`, async ({
+    page,
+  }) => {
+    await page.addInitScript((lang) => {
+      localStorage.setItem('barghsa.locale', lang);
+      if (document.documentElement) document.documentElement.lang = lang;
+      new MutationObserver(() => {
+        document.documentElement.lang = lang;
+      }).observe(document, { childList: true });
+    }, locale);
+    const publicRecord = {
+      id: 'public-verification',
+      event: 'verification_change',
+      actor: 'reviewer@example.test',
+      previousStatus: 'ACTIVE',
+      newStatus: 'VERIFIED',
+      reason: 'General verification evidence',
+      createdAt: '2026-08-02T01:00:00Z',
+    };
+    const correction = {
+      ...publicRecord,
+      id: 'correction-verification',
+      event: 'verification_case_reviewed',
+      reason: 'Private correction evidence',
+    };
+    const current = detail(false, true);
+    let canReadCorrections = true;
+    let profileReads = 0;
+    await page.route('**/api/**', defaultApiResponse);
+    await page.route(`**/api/crm/profiles/${id}`, (route) => {
+      profileReads += 1;
+      return route.fulfill({
+        json: {
+          ...current,
+          viewerPermissions: {
+            ...current.viewerPermissions,
+            canReadDocuments: canReadCorrections,
+          },
+          verificationHistory: {
+            items: canReadCorrections ? [correction, publicRecord] : [publicRecord],
+            nextCursor: canReadCorrections ? 'older-history' : null,
+          },
+        },
+      });
+    });
+    await page.route(`**/api/crm/profiles/${id}/records/verification?*`, (route) => {
+      expect(new URL(route.request().url()).searchParams.get('cursor')).toBe('older-history');
+      return route.fulfill({ json: { items: [], nextCursor: null, canReadCorrections } });
+    });
+    await page.goto(`/admin/crm/profiles/${id}`);
+    const history = page.getByRole('tab', {
+      name: t('crm.profile.tab.verificationHistory', locale),
+      exact: true,
+    });
+    await history.click();
+    const panel = page.getByRole('tabpanel');
+    await expect(panel).toContainText('Private correction evidence');
+    canReadCorrections = false;
+    await panel.getByRole('button', { name: t('crm.records.older', locale), exact: true }).click();
+    await expect(panel.getByText('Private correction evidence')).toHaveCount(0);
+    await expect(panel).toContainText('General verification evidence');
+    expect(profileReads).toBe(2);
+    await history.press('Home');
+    await history.click();
+    await expect(panel.getByText('Private correction evidence')).toHaveCount(0);
+    await expect(panel).toContainText('General verification evidence');
   });
 }
 for (const locale of ['fa', 'en'] as const) {

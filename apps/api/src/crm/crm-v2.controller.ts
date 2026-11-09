@@ -215,6 +215,10 @@ export class CrmV2Controller {
       properties: {
         items: { type: 'array', items: { type: 'object' }, maxItems: 20 },
         nextCursor: { type: 'string', nullable: true },
+        canReadCorrections: {
+          type: 'boolean',
+          description: 'Current correction-history access, returned for verification pages',
+        },
       },
     },
   })
@@ -235,14 +239,15 @@ export class CrmV2Controller {
       .safeParse(query);
     if (!params.success || !page.success)
       throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    const canReadCorrections = hasStaffPermission(req, 'verification:read');
     const result = await this.crmV2Service.getProfileRecords(
       params.data.profileId,
       params.data.kind,
       page.data.cursor,
-      hasStaffPermission(req, 'verification:read')
+      canReadCorrections
     );
     if (!result) throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
-    return result;
+    return params.data.kind === 'verification' ? { ...result, canReadCorrections } : result;
   }
 
   /**

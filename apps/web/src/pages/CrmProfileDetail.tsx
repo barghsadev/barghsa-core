@@ -300,6 +300,13 @@ function CrmProfileDetailContent() {
     [locale]
   );
   const [reloadKey, setReloadKey] = useState(0);
+  const reloadProfile = useCallback(() => {
+    activeRead.current?.cancel();
+    setData(null);
+    setError(null);
+    setLoading(true);
+    setReloadKey((key) => key + 1);
+  }, []);
   const [activeTab, setActiveTab] = useState('overview');
   const [editingAddress, setEditingAddress] = useState<string | null>(null);
   const [editingLegal, setEditingLegal] = useState(false);
@@ -593,12 +600,7 @@ function CrmProfileDetailContent() {
               {error ?? t('crm.profile.error.generic', locale)}
             </p>
           </div>
-          <Button
-            type="button"
-            variant="outline"
-            className="mt-4 mx-2"
-            onClick={() => setReloadKey((key) => key + 1)}
-          >
+          <Button type="button" variant="outline" className="mt-4 mx-2" onClick={reloadProfile}>
             {t('crm.records.retry', locale)}
           </Button>
           <Link
@@ -1384,6 +1386,8 @@ function CrmProfileDetailContent() {
             profileId={profileId}
             kind="agents"
             initial={data.agentRelationships}
+            canReadCorrections={data.viewerPermissions?.canReadDocuments === true}
+            onCorrectionAccessChanged={reloadProfile}
             onProfileUnavailable={withdrawProfile}
           />
         </div>
@@ -1400,6 +1404,8 @@ function CrmProfileDetailContent() {
             profileId={profileId}
             kind="verification"
             initial={data.verificationHistory}
+            canReadCorrections={data.viewerPermissions?.canReadDocuments === true}
+            onCorrectionAccessChanged={reloadProfile}
             onProfileUnavailable={withdrawProfile}
           />
         </div>

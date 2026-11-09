@@ -78,6 +78,8 @@ type RecordsProps = {
   profileId: string;
   kind: Kind;
   initial: unknown;
+  canReadCorrections: boolean;
+  onCorrectionAccessChanged: () => void;
   onProfileUnavailable: (status: 401 | 403 | 404) => void;
 };
 export function CrmProfileRecords(props: RecordsProps) {
@@ -90,7 +92,14 @@ export function CrmProfileRecords(props: RecordsProps) {
     />
   );
 }
-function OwnedCrmProfileRecords({ profileId, kind, initial, onProfileUnavailable }: RecordsProps) {
+function OwnedCrmProfileRecords({
+  profileId,
+  kind,
+  initial,
+  canReadCorrections,
+  onCorrectionAccessChanged,
+  onProfileUnavailable,
+}: RecordsProps) {
   const client = useQueryClient();
   const reader = useId();
   const actor = useAccountUser();
@@ -144,6 +153,15 @@ function OwnedCrmProfileRecords({ profileId, kind, initial, onProfileUnavailable
           onProfileUnavailable(response.status);
         }
         if (!response.ok) throw new Error();
+        if (kind === 'verification') {
+          const scope = (response.value as { canReadCorrections?: unknown } | null)
+            ?.canReadCorrections;
+          if (typeof scope !== 'boolean') throw new Error();
+          if (scope !== canReadCorrections) {
+            onCorrectionAccessChanged();
+            return;
+          }
+        }
         const result = parsePage(response.value, kind);
         if (!result || (cursor && result.nextCursor === cursor)) throw new Error();
         if (!controller.signal.aborted)
@@ -166,7 +184,17 @@ function OwnedCrmProfileRecords({ profileId, kind, initial, onProfileUnavailable
         if (request.current === controller) request.current = null;
       }
     },
-    [profileId, kind, actor, contextRevision, client, reader, onProfileUnavailable]
+    [
+      profileId,
+      kind,
+      actor,
+      contextRevision,
+      client,
+      reader,
+      canReadCorrections,
+      onCorrectionAccessChanged,
+      onProfileUnavailable,
+    ]
   );
   useEffect(() => {
     const firstPage = parsePage(initial, kind);

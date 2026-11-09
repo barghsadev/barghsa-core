@@ -36,6 +36,7 @@ const record = {
 const oldRecords = { items: [record], nextCursor: null };
 type Owner = 'directory' | 'records' | 'documents';
 const onProfileUnavailable = vi.fn();
+const onCorrectionAccessChanged = vi.fn();
 let host: HTMLDivElement, root: Root;
 beforeEach(() => {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
@@ -47,6 +48,7 @@ afterEach(async () => {
   await act(async () => root.unmount());
   host.remove();
   onProfileUnavailable.mockClear();
+  onCorrectionAccessChanged.mockClear();
   vi.unstubAllGlobals();
 });
 async function render(
@@ -57,6 +59,7 @@ async function render(
     canRead?: boolean;
     profile?: string;
     initial?: unknown;
+    canReadCorrections?: boolean;
   } = {}
 ) {
   const profile = options.profile ?? 'profile-a';
@@ -68,6 +71,8 @@ async function render(
         profileId={profile}
         kind="verification"
         initial={options.initial ?? null}
+        canReadCorrections={options.canReadCorrections ?? false}
+        onCorrectionAccessChanged={onCorrectionAccessChanged}
         onProfileUnavailable={onProfileUnavailable}
       />
     ) : (
@@ -107,6 +112,7 @@ function payload(owner: Owner, fresh = false, profileId = 'profile-a') {
             },
           ],
           nextCursor: null,
+          canReadCorrections: false,
         }
       : {
           profileId,
@@ -210,6 +216,21 @@ it.each([401, 403, 404])(
     expect(host.textContent).toContain('New permitted actor');
   }
 );
+it('requires a valid verification read scope and asks the parent to reload on change', async () => {
+  let response: unknown = { items: [], nextCursor: null };
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async () => Response.json(response))
+  );
+  await render('records', { initial: oldRecords, canReadCorrections: true });
+  await click(t('crm.records.refresh', 'en'));
+  expect(host.querySelector('[role=alert]')).not.toBeNull();
+  expect(onCorrectionAccessChanged).not.toHaveBeenCalled();
+  response = payload('records', true);
+  await click(t('crm.records.retry', 'en'));
+  expect(onCorrectionAccessChanged).toHaveBeenCalledTimes(1);
+  expect(host.textContent).not.toContain('New permitted actor');
+});
 it.each(['profile', 'permission'] as const)(
   'cancels signed-document bytes on %s replacement and requires a new manual read',
   async (replacement) => {
