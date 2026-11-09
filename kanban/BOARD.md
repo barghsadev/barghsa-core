@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T19:16:20+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T19:22:43+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 961 | Accepted with unchanged source bindings. |
-| verify | 371 | Existing work may be complete; inspect evidence before building. |
-| partial | 30 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 969 | Accepted with unchanged source bindings. |
+| verify | 362 | Existing work may be complete; inspect evidence before building. |
+| partial | 31 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 3 | Named owner or external prerequisite. |
@@ -1091,15 +1091,15 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.01.01.05` | partial | Recorded batch work | Add migration for existing plain/hash migration if any; ensure seamless upgrade |
 | `06-security-testing-observability.md#T-06.01.01.06` | done | Recorded batch work | Write unit tests: hash verification, salt uniqueness, cost parameter changes, timing-safe comparison |
 | `06-security-testing-observability.md#T-06.01.01.07` | partial | Recorded batch work | Security review: confirm no plaintext password leaks via error paths, logs, analytics, or serialization |
-| `06-security-testing-observability.md#T-06.01.02.01` | verify | Inventory needed | Implement `OtpService` with cryptographically random OTP generation (6-digit numeric) |
-| `06-security-testing-observability.md#T-06.01.02.02` | verify | Inventory needed | Store OTPs as SHA-256/Argonid hashes; never store plaintext |
-| `06-security-testing-observability.md#T-06.01.02.03` | verify | Inventory needed | Implement attempt counter (max 5 per challenge → auto-invalidate) |
-| `06-security-testing-observability.md#T-06.01.02.04` | verify | Inventory needed | Implement TTL expiry (configurable: default 5 min) with cleanup job |
-| `06-security-testing-observability.md#T-06.01.02.05` | verify | Inventory needed | Implement rate limiting: 1 OTP per destination per 60s, 5/hour, 10/day; IP + device aggregates |
-| `06-security-testing-observability.md#T-06.01.02.06` | verify | Inventory needed | Ensure all OTP responses are generic ("If valid, an OTP was sent") — never reveal account existence |
-| `06-security-testing-observability.md#T-06.01.02.07` | verify | Inventory needed | Invalidate OTP after: successful verification, replacement request, expiry, or account compromise |
-| `06-security-testing-observability.md#T-06.01.02.08` | verify | Inventory needed | Print OTP to console in DEV environment only; never in production logs |
-| `06-security-testing-observability.md#T-06.01.02.09` | verify | Inventory needed | Write integration tests: OTP create, verify, consume, expire, exceed attempts, rate limit |
+| `06-security-testing-observability.md#T-06.01.02.01` | done | Recorded batch work | Implement `OtpService` with cryptographically random OTP generation (6-digit numeric) |
+| `06-security-testing-observability.md#T-06.01.02.02` | done | Recorded batch work | Store OTPs as SHA-256/Argonid hashes; never store plaintext |
+| `06-security-testing-observability.md#T-06.01.02.03` | done | Recorded batch work | Implement attempt counter (max 5 per challenge → auto-invalidate) |
+| `06-security-testing-observability.md#T-06.01.02.04` | done | Recorded batch work | Implement TTL expiry (configurable: default 5 min) with cleanup job |
+| `06-security-testing-observability.md#T-06.01.02.05` | done | Recorded batch work | Implement rate limiting: 1 OTP per destination per 60s, 5/hour, 10/day; IP + device aggregates |
+| `06-security-testing-observability.md#T-06.01.02.06` | partial | Recorded batch work | Ensure all OTP responses are generic ("If valid, an OTP was sent") — never reveal account existence |
+| `06-security-testing-observability.md#T-06.01.02.07` | done | Recorded batch work | Invalidate OTP after: successful verification, replacement request, expiry, or account compromise |
+| `06-security-testing-observability.md#T-06.01.02.08` | done | Recorded batch work | Print OTP to console in DEV environment only; never in production logs |
+| `06-security-testing-observability.md#T-06.01.02.09` | done | Recorded batch work | Write integration tests: OTP create, verify, consume, expire, exceed attempts, rate limit |
 | `06-security-testing-observability.md#T-06.01.03.01` | verify | Inventory needed | Design MFA enforcement engine: risk rules for customers, mandatory for staff/admins |
 | `06-security-testing-observability.md#T-06.01.03.02` | verify | Inventory needed | Implement step-up authentication gate for sensitive actions (payment confirmation, refunds, role changes, credential changes, session revocation) |
 | `06-security-testing-observability.md#T-06.01.03.03` | verify | Inventory needed | Implement device fingerprinting and trust scoring (cookie-based device ID, user-agent, IP geo, known device list) |

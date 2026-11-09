@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T19:16:20+00:00",
+  "updated": "2026-11-09T19:22:43+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -470444,19 +470444,35 @@
         "story": "06-security-testing-observability.md#spec-018192d1184d"
       },
       "requirement": "| T-06.01.02.01 | Implement `OtpService` with cryptographically random OTP generation (6-digit numeric) | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-otp-issuance-expiry-and-delivery-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-otp-runtime-verification",
+          "base_commit": "532c46e0bbfd552bf997cd23a86912f79192ef2f",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/otp.service.spec.ts",
+              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+            }
+          ],
+          "checks": [
+            "OtpService generates six decimal digits through node:crypto randomInt. Existing generation, validation and challenge issuance cases passed."
+          ]
+        }
       }
     },
     {
@@ -470470,19 +470486,67 @@
         "story": "06-security-testing-observability.md#spec-018192d1184d"
       },
       "requirement": "| T-06.01.02.02 | Store OTPs as SHA-256/Argonid hashes; never store plaintext | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-otp-issuance-expiry-and-delivery-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-otp-runtime-verification",
+          "base_commit": "532c46e0bbfd552bf997cd23a86912f79192ef2f",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/auth/otp-http.integration.test.ts",
+              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.spec.ts",
+              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+            },
+            {
+              "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
+              "sha256": "612abb6419e56df269dd9e87b53faa22d7d6973196b2a324f912acee29cbdcd5"
+            },
+            {
+              "path": "apps/worker/src/auth-delivery/runner.ts",
+              "sha256": "f2f15c04243b5e896b589977ef1c9c986ad28f87e6a9ee4bf5e71177ba218b8b"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/_journal.json",
+              "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+            },
+            {
+              "path": "packages/db/src/schema/auth-delivery-outbox.ts",
+              "sha256": "aee8f23098e024c21779117261a3971fec96b82aef31dc086ba77b8fe669662b"
+            },
+            {
+              "path": "packages/db/src/schema/otp-challenge.ts",
+              "sha256": "8d807533a9009649a0f7c083bf16cd1074cabd62ed45cc4f32920261110b8d77"
+            }
+          ],
+          "checks": [
+            "The challenge and delivery binding use a SHA-256 digest. The code is encrypted for the restricted delivery job, erased at a terminal delivery state and excluded from the general inbox. Current native issuance and delivery passed; the prior exact worker auth-delivery file passed all 44 cases."
+          ]
+        }
       }
     },
     {
@@ -470496,19 +470560,59 @@
         "story": "06-security-testing-observability.md#spec-018192d1184d"
       },
       "requirement": "| T-06.01.02.03 | Implement attempt counter (max 5 per challenge → auto-invalidate) | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-otp-issuance-expiry-and-delivery-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-otp-runtime-verification",
+          "base_commit": "532c46e0bbfd552bf997cd23a86912f79192ef2f",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/auth/otp-http.integration.test.ts",
+              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.spec.ts",
+              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/_journal.json",
+              "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+            },
+            {
+              "path": "packages/db/src/schema/otp-challenge.ts",
+              "sha256": "8d807533a9009649a0f7c083bf16cd1074cabd62ed45cc4f32920261110b8d77"
+            }
+          ],
+          "checks": [
+            "The source defines five attempts. Real concurrent login verification exhausted the challenge after five wrong codes and rejected the correct code after exhaustion."
+          ]
+        }
       }
     },
     {
@@ -470522,19 +470626,83 @@
         "story": "06-security-testing-observability.md#spec-018192d1184d"
       },
       "requirement": "| T-06.01.02.04 | Implement TTL expiry (configurable: default 5 min) with cleanup job | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-otp-issuance-expiry-and-delivery-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-otp-runtime-verification",
+          "base_commit": "532c46e0bbfd552bf997cd23a86912f79192ef2f",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+            },
+            {
+              "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
+              "sha256": "d1aabea1e925b9d87105299942dedc70d6face0faf0b2469a3138f4c4700b58a"
+            },
+            {
+              "path": "apps/api/src/auth/otp-config.ts",
+              "sha256": "f520f360b9532408741dc00e22f188f443e07b8546debbcd6bd9317f745c4161"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.spec.ts",
+              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+            },
+            {
+              "path": "apps/api/src/auth/registration-http.integration.test.ts",
+              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+            },
+            {
+              "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
+              "sha256": "612abb6419e56df269dd9e87b53faa22d7d6973196b2a324f912acee29cbdcd5"
+            },
+            {
+              "path": "apps/worker/src/auth-delivery/runner.ts",
+              "sha256": "f2f15c04243b5e896b589977ef1c9c986ad28f87e6a9ee4bf5e71177ba218b8b"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+            },
+            {
+              "path": "docs/security/otp.md",
+              "sha256": "c0f3a5f262af66cb231f6a5ccc436c396c82753099d974aa4d2bd6d60f3226e7"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/_journal.json",
+              "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+            },
+            {
+              "path": "packages/db/src/schema/auth-delivery-outbox.ts",
+              "sha256": "aee8f23098e024c21779117261a3971fec96b82aef31dc086ba77b8fe669662b"
+            },
+            {
+              "path": "packages/db/src/schema/otp-challenge.ts",
+              "sha256": "8d807533a9009649a0f7c083bf16cd1074cabd62ed45cc4f32920261110b8d77"
+            }
+          ],
+          "checks": [
+            "The versioned lifetime defaults to 300 seconds and accepts integers from 60 to 900. Native updates preserved deadlines on issued challenges. Four real registration transactions rolled back when expiry crossed a database wait. The worker cancels eligible expired deliveries and erases encrypted payloads. The retained challenge metadata supports delivery receipts and account-recovery references."
+          ]
+        }
       }
     },
     {
@@ -470548,19 +470716,55 @@
         "story": "06-security-testing-observability.md#spec-018192d1184d"
       },
       "requirement": "| T-06.01.02.05 | Implement rate limiting: 1 OTP per destination per 60s, 5/hour, 10/day; IP + device aggregates | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-otp-issuance-expiry-and-delivery-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-otp-runtime-verification",
+          "base_commit": "532c46e0bbfd552bf997cd23a86912f79192ef2f",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/auth/otp-device-http.integration.test.ts",
+              "sha256": "c5cdcc69344e8ee66a2a0f8344714615054e51880cb7ef39ce4bac4431e328ad"
+            },
+            {
+              "path": "apps/api/src/auth/otp-http.integration.test.ts",
+              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.spec.ts",
+              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+            }
+          ],
+          "checks": [
+            "The existing destination windows are 1 per minute, 5 per hour and 10 per day. Durable IP and browser digest limits supplement them. Nine current device cases passed, including atomic last-slot claims and equal enforcement for known and unknown reset identities. The actual HTTP guard also rejected stacked IP and authenticated-user overages."
+          ]
+        }
       }
     },
     {
@@ -470574,19 +470778,57 @@
         "story": "06-security-testing-observability.md#spec-018192d1184d"
       },
       "requirement": "| T-06.01.02.06 | Ensure all OTP responses are generic (\"If valid, an OTP was sent\") — never reveal account existence | S |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Resolve public registration account disclosure. The recommended public response preserves database uniqueness and defers duplicate-specific feedback until contact possession is verified. Owner decision requested."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-otp-issuance-expiry-and-delivery-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-otp-runtime-verification",
+          "base_commit": "532c46e0bbfd552bf997cd23a86912f79192ef2f",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/auth/otp-device-http.integration.test.ts",
+              "sha256": "c5cdcc69344e8ee66a2a0f8344714615054e51880cb7ef39ce4bac4431e328ad"
+            },
+            {
+              "path": "apps/api/src/auth/otp-http.integration.test.ts",
+              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.spec.ts",
+              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+            }
+          ],
+          "checks": [
+            "Current password reset returns opaque responses for both known and unknown accounts. Failed login uses a generic credential error. Public registration currently emits USERNAME_TAKEN before verifying contact possession."
+          ]
+        }
       }
     },
     {
@@ -470600,19 +470842,71 @@
         "story": "06-security-testing-observability.md#spec-018192d1184d"
       },
       "requirement": "| T-06.01.02.07 | Invalidate OTP after: successful verification, replacement request, expiry, or account compromise | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-otp-issuance-expiry-and-delivery-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-otp-runtime-verification",
+          "base_commit": "532c46e0bbfd552bf997cd23a86912f79192ef2f",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/auth/otp-http.integration.test.ts",
+              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.spec.ts",
+              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+            },
+            {
+              "path": "apps/api/src/crm/account-recovery.service.ts",
+              "sha256": "3c95563456fc50fda944eceec8a64ba67719084aba6d5764c2645e271bfb55a1"
+            },
+            {
+              "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
+              "sha256": "612abb6419e56df269dd9e87b53faa22d7d6973196b2a324f912acee29cbdcd5"
+            },
+            {
+              "path": "apps/worker/src/auth-delivery/runner.ts",
+              "sha256": "f2f15c04243b5e896b589977ef1c9c986ad28f87e6a9ee4bf5e71177ba218b8b"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+            },
+            {
+              "path": "packages/db/src/schema/auth-delivery-outbox.ts",
+              "sha256": "aee8f23098e024c21779117261a3971fec96b82aef31dc086ba77b8fe669662b"
+            }
+          ],
+          "checks": [
+            "Native concurrency tests enforce one use and protect a consumed challenge from resend. Current source checks expiry, purpose, account and credential version. The worker cases verified cancellation after consumption, replacement, expiry, disablement and credential change, with payload erasure."
+          ]
+        }
       }
     },
     {
@@ -470626,19 +470920,39 @@
         "story": "06-security-testing-observability.md#spec-018192d1184d"
       },
       "requirement": "| T-06.01.02.08 | Print OTP to console in DEV environment only; never in production logs | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-otp-issuance-expiry-and-delivery-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-otp-runtime-verification",
+          "base_commit": "532c46e0bbfd552bf997cd23a86912f79192ef2f",
+          "source_evidence": [
+            {
+              "path": ".env.example",
+              "sha256": "596f78ae3d2a24f7834fcbb46e315011011ccc47b087e25b58e14933e9e0b239"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.spec.ts",
+              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+            }
+          ],
+          "checks": [
+            "Thirty-three OTP unit cases passed. The code reaches the console only under development mode and the explicit flag; registration, login and resend checks cover staging, production, test, disabled and unset flags and exclude it from API responses."
+          ]
+        }
       }
     },
     {
@@ -470652,19 +470966,87 @@
         "story": "06-security-testing-observability.md#spec-018192d1184d"
       },
       "requirement": "| T-06.01.02.09 | Write integration tests: OTP create, verify, consume, expire, exceed attempts, rate limit | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-otp-issuance-expiry-and-delivery-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-otp-runtime-verification",
+          "base_commit": "532c46e0bbfd552bf997cd23a86912f79192ef2f",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
+              "sha256": "d1aabea1e925b9d87105299942dedc70d6face0faf0b2469a3138f4c4700b58a"
+            },
+            {
+              "path": "apps/api/src/auth/otp-config.ts",
+              "sha256": "f520f360b9532408741dc00e22f188f443e07b8546debbcd6bd9317f745c4161"
+            },
+            {
+              "path": "apps/api/src/auth/otp-device-http.integration.test.ts",
+              "sha256": "c5cdcc69344e8ee66a2a0f8344714615054e51880cb7ef39ce4bac4431e328ad"
+            },
+            {
+              "path": "apps/api/src/auth/otp-http.integration.test.ts",
+              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.spec.ts",
+              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+            },
+            {
+              "path": "apps/api/src/auth/registration-http.integration.test.ts",
+              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+            },
+            {
+              "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
+              "sha256": "612abb6419e56df269dd9e87b53faa22d7d6973196b2a324f912acee29cbdcd5"
+            },
+            {
+              "path": "apps/worker/src/auth-delivery/runner.ts",
+              "sha256": "f2f15c04243b5e896b589977ef1c9c986ad28f87e6a9ee4bf5e71177ba218b8b"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+            },
+            {
+              "path": "docs/security/otp.md",
+              "sha256": "c0f3a5f262af66cb231f6a5ccc436c396c82753099d974aa4d2bd6d60f3226e7"
+            },
+            {
+              "path": "packages/db/src/schema/auth-delivery-outbox.ts",
+              "sha256": "aee8f23098e024c21779117261a3971fec96b82aef31dc086ba77b8fe669662b"
+            }
+          ],
+          "checks": [
+            "Twenty-one current native HTTP cases cover issuance, exact expiry races, verification, consume/replay, five concurrent failures, wrong purpose/account, device rate limits and malformed configuration. Source-bound hosted delivery coverage adds expiry, credential changes and encrypted payload cleanup."
+          ]
+        }
       }
     },
     {
@@ -741082,7 +741464,8 @@
           "release-0.6-development-env-and-watcher-acceptance",
           "release-0.6-api-worker-shutdown-and-fixture-reuse",
           "release-0.6-password-hash-calibration",
-          "release-0.6-reconciliation-fixture-document-boundary"
+          "release-0.6-reconciliation-fixture-document-boundary",
+          "release-0.6-otp-issuance-expiry-and-delivery-acceptance"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -831617,6 +832000,114 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/reconciliation-fixture-document-boundary",
       "source_scope_proof": "release-0.6-reconciliation-fixture-document-boundary.json",
       "source_scope_proof_sha256": "b1e3f603ec6e822c913f430d6e60939f3a8e553be0485910eeea3a6748bf9ddf"
+    },
+    "release-0.6-otp-issuance-expiry-and-delivery-acceptance": {
+      "batch": "release-0.6-otp-issuance-expiry-and-delivery-acceptance",
+      "base_commit": "532c46e0bbfd552bf997cd23a86912f79192ef2f",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.01.02.01",
+        "06-security-testing-observability.md#T-06.01.02.02",
+        "06-security-testing-observability.md#T-06.01.02.03",
+        "06-security-testing-observability.md#T-06.01.02.04",
+        "06-security-testing-observability.md#T-06.01.02.05",
+        "06-security-testing-observability.md#T-06.01.02.06",
+        "06-security-testing-observability.md#T-06.01.02.07",
+        "06-security-testing-observability.md#T-06.01.02.08",
+        "06-security-testing-observability.md#T-06.01.02.09",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".env.example",
+          "sha256": "596f78ae3d2a24f7834fcbb46e315011011ccc47b087e25b58e14933e9e0b239"
+        },
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+        },
+        {
+          "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+          "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+        },
+        {
+          "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
+          "sha256": "d1aabea1e925b9d87105299942dedc70d6face0faf0b2469a3138f4c4700b58a"
+        },
+        {
+          "path": "apps/api/src/auth/otp-config.ts",
+          "sha256": "f520f360b9532408741dc00e22f188f443e07b8546debbcd6bd9317f745c4161"
+        },
+        {
+          "path": "apps/api/src/auth/otp-device-http.integration.test.ts",
+          "sha256": "c5cdcc69344e8ee66a2a0f8344714615054e51880cb7ef39ce4bac4431e328ad"
+        },
+        {
+          "path": "apps/api/src/auth/otp-http.integration.test.ts",
+          "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.spec.ts",
+          "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+        },
+        {
+          "path": "apps/api/src/auth/registration-http.integration.test.ts",
+          "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+        },
+        {
+          "path": "apps/api/src/crm/account-recovery.service.ts",
+          "sha256": "3c95563456fc50fda944eceec8a64ba67719084aba6d5764c2645e271bfb55a1"
+        },
+        {
+          "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
+          "sha256": "612abb6419e56df269dd9e87b53faa22d7d6973196b2a324f912acee29cbdcd5"
+        },
+        {
+          "path": "apps/worker/src/auth-delivery/runner.ts",
+          "sha256": "f2f15c04243b5e896b589977ef1c9c986ad28f87e6a9ee4bf5e71177ba218b8b"
+        },
+        {
+          "path": "apps/worker/src/main.ts",
+          "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+        },
+        {
+          "path": "docs/security/otp.md",
+          "sha256": "c0f3a5f262af66cb231f6a5ccc436c396c82753099d974aa4d2bd6d60f3226e7"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+        },
+        {
+          "path": "packages/db/src/schema/auth-delivery-outbox.ts",
+          "sha256": "aee8f23098e024c21779117261a3971fec96b82aef31dc086ba77b8fe669662b"
+        },
+        {
+          "path": "packages/db/src/schema/otp-challenge.ts",
+          "sha256": "8d807533a9009649a0f7c083bf16cd1074cabd62ed45cc4f32920261110b8d77"
+        }
+      ],
+      "checks": [
+        "OtpService generates six decimal digits through node:crypto randomInt. Existing generation, validation and challenge issuance cases passed.",
+        "The challenge and delivery binding use a SHA-256 digest. The code is encrypted for the restricted delivery job, erased at a terminal delivery state and excluded from the general inbox. Current native issuance and delivery passed; the prior exact worker auth-delivery file passed all 44 cases.",
+        "The source defines five attempts. Real concurrent login verification exhausted the challenge after five wrong codes and rejected the correct code after exhaustion.",
+        "The versioned lifetime defaults to 300 seconds and accepts integers from 60 to 900. Native updates preserved deadlines on issued challenges. Four real registration transactions rolled back when expiry crossed a database wait. The worker cancels eligible expired deliveries and erases encrypted payloads. The retained challenge metadata supports delivery receipts and account-recovery references.",
+        "The existing destination windows are 1 per minute, 5 per hour and 10 per day. Durable IP and browser digest limits supplement them. Nine current device cases passed, including atomic last-slot claims and equal enforcement for known and unknown reset identities. The actual HTTP guard also rejected stacked IP and authenticated-user overages.",
+        "Current password reset returns opaque responses for both known and unknown accounts. Failed login uses a generic credential error. Public registration currently emits USERNAME_TAKEN before verifying contact possession.",
+        "Native concurrency tests enforce one use and protect a consumed challenge from resend. Current source checks expiry, purpose, account and credential version. The worker cases verified cancellation after consumption, replacement, expiry, disablement and credential change, with payload erasure.",
+        "Thirty-three OTP unit cases passed. The code reaches the console only under development mode and the explicit flag; registration, login and resend checks cover staging, production, test, disabled and unset flags and exclude it from API responses.",
+        "Twenty-one current native HTTP cases cover issuance, exact expiry races, verification, consume/replay, five concurrent failures, wrong purpose/account, device rate limits and malformed configuration. Source-bound hosted delivery coverage adds expiry, credential changes and encrypted payload cleanup."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/otp-issuance-and-expiry",
+      "source_scope_proof": "release-0.6-otp-issuance-expiry-and-delivery-acceptance.json",
+      "source_scope_proof_sha256": "6aab3d5475d040d4b289fb970f27e44a9c06208983335d8bcea1c6bdf614b13a"
     }
   },
   "historical_improvements": [
