@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T21:58:10+00:00",
+  "updated": "2026-11-09T22:00:06+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -14482,12 +14482,10 @@
         "story": "01-platform-infrastructure.md#spec-c6754926b602"
       },
       "requirement": "- **T-06.02.03:** Create timezone-aware date/time display utilities\n  - **Notes:** All timestamps stored as UTC `timestamptz`. When displaying, convert to user's configured timezone (default: `Asia/Tehran`, UTC+3:30). Use `Intl.DateTimeFormat` with `timeZone` option. Functions: `formatInTimezone(utcDate, timezone, locale, format)`, `formatTime(utcDate, timezone)`, `formatDate(utcDate, timezone, locale)`. User can change timezone in profile settings.\n  - **Dependencies:** T-06.02.01\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -14577,8 +14575,79 @@
           "apps/web/e2e/form-accessibility.spec.ts",
           "apps/web/e2e/admin-settings-live.spec.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-timezone-and-direction"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-timezone-and-direction-checks",
+          "base_commit": "8e2069238acc15febeff4106e7a2de9ed1c4c64e",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/user-settings/timezone-http.integration.test.ts",
+              "sha256": "a40749eb612fa60400f044b760f2d0fee5614fa6ec669a3225a5035b3df04cbe"
+            },
+            {
+              "path": "apps/api/src/user-settings/user-settings.controller.ts",
+              "sha256": "ae50b0b03f65adcfa2cfdd9ce74c63144d0043767573be09c0ab27f7d1404e06"
+            },
+            {
+              "path": "apps/api/src/session/session.guard.ts",
+              "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+            },
+            {
+              "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+              "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+            },
+            {
+              "path": "packages/db/drizzle/production/0082_restore_foundation_constraints.sql",
+              "sha256": "2bc3a50f31c5fab9548992be2d06741e8d5da86c53fab3be86ec85075a74dff8"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "architecture.md",
+              "sha256": "cbcd79a588d4abc2e4e65760058504bc6619fba4cdd00e76db457ec0e9e0c7e2"
+            },
+            {
+              "path": "packages/i18n/src/date-time.ts",
+              "sha256": "4c509aa5cbc6c8c50c342914c887d3bdd44e71ace6542f5d65c10ee2542c645a"
+            },
+            {
+              "path": "packages/i18n/src/date-time.test.ts",
+              "sha256": "a48c6388730c7113f22d873cca23797f069c7f2cf75169dcefe06777cbd66bda"
+            },
+            {
+              "path": "packages/i18n/src/timezone.ts",
+              "sha256": "1bb61a26dfb41ea28d7cb81da2e331de9046a4235cffa3f8f1f403f6c0755118"
+            },
+            {
+              "path": "apps/web/src/hooks/useTimezone.ts",
+              "sha256": "f251d68f5fd82d7d1fd3e1a592db5b3f02c7562dc4d8e5042d6732f1ca9a62ef"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountTime.tsx",
+              "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountTime.test.tsx",
+              "sha256": "0362048bfd281c205250cef68745a3f34e9f9a7c6680f163a8270f92c10ebac7"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/timezone.tsx",
+              "sha256": "32f73dc2a6fa3c73b9acf99605e0c1b64794bc179c236895632a7a5f56381f68"
+            },
+            {
+              "path": "apps/web/e2e/timezone-settings.spec.ts",
+              "sha256": "f3e9a003c229307e0907473c6c93fa0f7d8b776e782c9af3be749fb1c0eb4193"
+            }
+          ],
+          "checks": [
+            "Reviewed UTC instant storage and explicit offset validation, Intl formatting in the account's validated IANA timezone, Asia/Tehran default, current preference updates and failure without guessing the host timezone.",
+            "Current date/time and calendar suites passed 22 assertions and account-time and direction suites passed 4 assertions. Both English and Persian Chromium settings journeys passed with a retryable load, keyboard selection and failed-save recovery. Reused three passing native timezone HTTP cases from exact run 42699842646 job 129441604092 because all listed API, session, migration and lock bytes match."
+          ]
+        }
       }
     },
     {
@@ -14592,12 +14661,10 @@
         "story": "01-platform-infrastructure.md#spec-c6754926b602"
       },
       "requirement": "- **T-06.02.04:** Create logic for RTL/LTR switching based on locale\n  - **Notes:** When locale is `fa`, set `<html dir=\"rtl\">`, when `en`, set `ltr`. CSS variables or Tailwind `rtl:`/`ltr:` modifiers handle layout flip. Export a `useDirection()` hook that returns `'rtl' | 'ltr'` based on current locale. Components use this for icon positioning, text alignment, margin/padding mirroring.\n  - **Dependencies:** T-06.02.01, S-06.03\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -14896,8 +14963,67 @@
           "apps/web/src/routes/_app/settings/profile.tsx",
           "packages/ui/src/styles.css"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-timezone-and-direction"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-timezone-and-direction-checks",
+          "base_commit": "8e2069238acc15febeff4106e7a2de9ed1c4c64e",
+          "source_evidence": [
+            {
+              "path": "apps/web/src/hooks/useLocale.ts",
+              "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
+            },
+            {
+              "path": "apps/web/src/hooks/useDirection.ts",
+              "sha256": "6f66a0fea3613868bf0e824cddf18901f5e9c03fa282ef49abba7e52acdb0f60"
+            },
+            {
+              "path": "apps/web/src/hooks/useFlippedPlacement.ts",
+              "sha256": "65c17ac093e447ddfda7a2464454b040dcc5b97c39c416f07f66069c2670e7ff"
+            },
+            {
+              "path": "apps/web/src/components/DirectionAware.tsx",
+              "sha256": "eeab386b97ae2cff0a6daeecd807b0e1c160197c72f99c4bd95385670e60723a"
+            },
+            {
+              "path": "apps/web/src/components/Icon.tsx",
+              "sha256": "277e22791913ed1141250fa4f8c2799dce1073fe57cd53a59247fc46302ca43c"
+            },
+            {
+              "path": "apps/web/src/providers/UiDirectionProvider.tsx",
+              "sha256": "48edc81247cc48097381e1404b2ecc9d855a58187761541778558e4f069f3a3a"
+            },
+            {
+              "path": "apps/web/src/providers/UiDirectionProvider.test.tsx",
+              "sha256": "0e2f23a175180096177c236cff4d2f1316040f460770cc5337b7a1a2b6ab9ae0"
+            },
+            {
+              "path": "apps/web/src/routes/__root.tsx",
+              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+            },
+            {
+              "path": "packages/ui/src/direction-provider.ts",
+              "sha256": "d85fb7cd269d6742ad572d8fde95328b21372580a4d1eb1e12b04354114aa768"
+            },
+            {
+              "path": "apps/web/e2e/direction-component.spec.ts",
+              "sha256": "0894c25e430cf620abcd7efd14f5b718eb0e3bf92c093f1be2a1c96feb12df88"
+            },
+            {
+              "path": "apps/web/e2e/fixtures/direction/main.tsx",
+              "sha256": "1e5c297a61633a6a01516c38c746b0f27c657aec7094a6f2f116ed07a5beb079"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Verified the existing hook's dir field exposes the locale-derived rtl/ltr value and its flags serve existing callers. The root provider updates document direction and the shared UI provider on live language changes.",
+            "The current direction unit case and five Chromium component cases passed. Verified horizontal keyboard navigation in both directions, vertical navigation, and live direction switching without losing selected state."
+          ]
+        }
       }
     },
     {
@@ -747257,7 +747383,8 @@
           "release-0.6-native-financial-foreign-id-http",
           "release-0.6-authorization-policy-and-staff-grants",
           "release-0.6-incident-runbook-criteria",
-          "release-0.6-stable-error-catalogue"
+          "release-0.6-stable-error-catalogue",
+          "release-0.6-timezone-and-direction"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -840116,6 +840243,130 @@
         "All 50 exception, input validation and correlation logger unit cases passed. They preserve localized public errors, correlation IDs and private provider/database failure detail. API, web and worker typechecks and changed-file lint/format passed."
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/stable-error-catalogue"
+    },
+    "release-0.6-timezone-and-direction": {
+      "batch": "release-0.6-timezone-and-direction",
+      "base_commit": "8e2069238acc15febeff4106e7a2de9ed1c4c64e",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-06.02.03",
+        "01-platform-infrastructure.md#T-06.02.04",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/user-settings/timezone-http.integration.test.ts",
+          "sha256": "a40749eb612fa60400f044b760f2d0fee5614fa6ec669a3225a5035b3df04cbe"
+        },
+        {
+          "path": "apps/api/src/user-settings/user-settings.controller.ts",
+          "sha256": "ae50b0b03f65adcfa2cfdd9ce74c63144d0043767573be09c0ab27f7d1404e06"
+        },
+        {
+          "path": "apps/api/src/session/session.guard.ts",
+          "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0082_restore_foundation_constraints.sql",
+          "sha256": "2bc3a50f31c5fab9548992be2d06741e8d5da86c53fab3be86ec85075a74dff8"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        },
+        {
+          "path": "architecture.md",
+          "sha256": "cbcd79a588d4abc2e4e65760058504bc6619fba4cdd00e76db457ec0e9e0c7e2"
+        },
+        {
+          "path": "packages/i18n/src/date-time.ts",
+          "sha256": "4c509aa5cbc6c8c50c342914c887d3bdd44e71ace6542f5d65c10ee2542c645a"
+        },
+        {
+          "path": "packages/i18n/src/date-time.test.ts",
+          "sha256": "a48c6388730c7113f22d873cca23797f069c7f2cf75169dcefe06777cbd66bda"
+        },
+        {
+          "path": "packages/i18n/src/timezone.ts",
+          "sha256": "1bb61a26dfb41ea28d7cb81da2e331de9046a4235cffa3f8f1f403f6c0755118"
+        },
+        {
+          "path": "apps/web/src/hooks/useTimezone.ts",
+          "sha256": "f251d68f5fd82d7d1fd3e1a592db5b3f02c7562dc4d8e5042d6732f1ca9a62ef"
+        },
+        {
+          "path": "apps/web/src/hooks/useAccountTime.tsx",
+          "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+        },
+        {
+          "path": "apps/web/src/hooks/useAccountTime.test.tsx",
+          "sha256": "0362048bfd281c205250cef68745a3f34e9f9a7c6680f163a8270f92c10ebac7"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/timezone.tsx",
+          "sha256": "32f73dc2a6fa3c73b9acf99605e0c1b64794bc179c236895632a7a5f56381f68"
+        },
+        {
+          "path": "apps/web/e2e/timezone-settings.spec.ts",
+          "sha256": "f3e9a003c229307e0907473c6c93fa0f7d8b776e782c9af3be749fb1c0eb4193"
+        },
+        {
+          "path": "apps/web/src/hooks/useLocale.ts",
+          "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
+        },
+        {
+          "path": "apps/web/src/hooks/useDirection.ts",
+          "sha256": "6f66a0fea3613868bf0e824cddf18901f5e9c03fa282ef49abba7e52acdb0f60"
+        },
+        {
+          "path": "apps/web/src/hooks/useFlippedPlacement.ts",
+          "sha256": "65c17ac093e447ddfda7a2464454b040dcc5b97c39c416f07f66069c2670e7ff"
+        },
+        {
+          "path": "apps/web/src/components/DirectionAware.tsx",
+          "sha256": "eeab386b97ae2cff0a6daeecd807b0e1c160197c72f99c4bd95385670e60723a"
+        },
+        {
+          "path": "apps/web/src/components/Icon.tsx",
+          "sha256": "277e22791913ed1141250fa4f8c2799dce1073fe57cd53a59247fc46302ca43c"
+        },
+        {
+          "path": "apps/web/src/providers/UiDirectionProvider.tsx",
+          "sha256": "48edc81247cc48097381e1404b2ecc9d855a58187761541778558e4f069f3a3a"
+        },
+        {
+          "path": "apps/web/src/providers/UiDirectionProvider.test.tsx",
+          "sha256": "0e2f23a175180096177c236cff4d2f1316040f460770cc5337b7a1a2b6ab9ae0"
+        },
+        {
+          "path": "apps/web/src/routes/__root.tsx",
+          "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+        },
+        {
+          "path": "packages/ui/src/direction-provider.ts",
+          "sha256": "d85fb7cd269d6742ad572d8fde95328b21372580a4d1eb1e12b04354114aa768"
+        },
+        {
+          "path": "apps/web/e2e/direction-component.spec.ts",
+          "sha256": "0894c25e430cf620abcd7efd14f5b718eb0e3bf92c093f1be2a1c96feb12df88"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/direction/main.tsx",
+          "sha256": "1e5c297a61633a6a01516c38c746b0f27c657aec7094a6f2f116ed07a5beb079"
+        }
+      ],
+      "checks": [
+        "Reviewed UTC instant storage and explicit offset validation, Intl formatting in the account's validated IANA timezone, Asia/Tehran default, current preference updates and failure without guessing the host timezone.",
+        "Current date/time and calendar suites passed 22 assertions and account-time and direction suites passed 4 assertions. Both English and Persian Chromium settings journeys passed with a retryable load, keyboard selection and failed-save recovery. Reused three passing native timezone HTTP cases from exact run 42699842646 job 129441604092 because all listed API, session, migration and lock bytes match.",
+        "Verified the existing hook's dir field exposes the locale-derived rtl/ltr value and its flags serve existing callers. The root provider updates document direction and the shared UI provider on live language changes.",
+        "The current direction unit case and five Chromium component cases passed. Verified horizontal keyboard navigation in both directions, vertical navigation, and live direction switching without losing selected state."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/timezone-and-direction",
+      "source_scope_proof": "timezone-direction-proof.json",
+      "source_scope_proof_sha256": "1cb9d9e0be7f0354e89c14a59b10bc544f19ecd594ed1c7ae8e680bd58ab10de"
     }
   },
   "historical_improvements": [

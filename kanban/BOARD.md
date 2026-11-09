@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T21:58:10+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T22:00:06+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1029 | Accepted with unchanged source bindings. |
-| verify | 299 | Existing work may be complete; inspect evidence before building. |
+| done | 1031 | Accepted with unchanged source bindings. |
+| verify | 297 | Existing work may be complete; inspect evidence before building. |
 | partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1053,8 +1053,8 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-06.01.05` | verify | Earlier deferred | Create pagination helper schemas |
 | `01-platform-infrastructure.md#T-06.02.01` | verify | Earlier deferred | Initialize `packages/i18n` with message dictionary structure |
 | `01-platform-infrastructure.md#T-06.02.02` | verify | Earlier deferred | Create Jalali calendar date utilities |
-| `01-platform-infrastructure.md#T-06.02.03` | verify | Earlier acceptance_verified | Create timezone-aware date/time display utilities |
-| `01-platform-infrastructure.md#T-06.02.04` | verify | Earlier acceptance_verified | Create logic for RTL/LTR switching based on locale |
+| `01-platform-infrastructure.md#T-06.02.03` | done | Earlier acceptance_verified | Create timezone-aware date/time display utilities |
+| `01-platform-infrastructure.md#T-06.02.04` | done | Earlier acceptance_verified | Create logic for RTL/LTR switching based on locale |
 | `01-platform-infrastructure.md#T-06.02.05` | verify | Earlier acceptance_verified | Localize number/currency formatting |
 | `01-platform-infrastructure.md#T-06.03.01` | verify | Earlier deferred | Initialize `packages/ui` with shadcn/ui and Base UI |
 | `01-platform-infrastructure.md#T-06.03.02` | verify | Earlier acceptance_verified | Create themed component set with RTL support |
