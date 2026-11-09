@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T20:45:00+00:00",
+  "updated": "2026-11-09T20:50:10+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -5798,12 +5798,10 @@
         "story": "01-platform-infrastructure.md#spec-6f3bffbef128"
       },
       "requirement": "- **T-01.05.01:** Implement global NestJS `HttpExceptionFilter` and `CorrelationIdMiddleware`\n  - **Notes:** Filter catches `HttpException`, `ZodError` (validation), and unhandled `Error`. Maps to codes from `@barghsa/shared/errors`. Resolves localized messages via i18n service. Logs the error with correlation ID and request metadata at appropriate severity (debug for 4xx, error for 5xx). Middleware generates UUIDv7 correlation ID on every request, stores in `cls-rtracer` or `AsyncLocalStorage`, and sets `X-Correlation-ID` response header. Backend services log correlation ID for traceability.\n  - **Dependencies:** T-06.01.04 (error codes), S-06.02 (i18n)\n  - **Complexity:** M\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -6005,8 +6003,96 @@
           "packages/shared/src/errors/domain-error-codes.ts",
           "packages/shared/src/errors/error-codes.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-runtime-and-outbox-reconciliation",
+          "base_commit": "5cc07e18105af117af0b9c1ee0c2a7a8abf81d29",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/app.factory.ts",
+              "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
+            },
+            {
+              "path": "apps/api/src/app.module.ts",
+              "sha256": "d15b1829ecfe92ff7a6f3e86c3b6cad6d15703297a9fe122751f870b56498d76"
+            },
+            {
+              "path": "apps/api/src/common/correlation-id.middleware.ts",
+              "sha256": "b127659fda54ecb4543d5dbbbfbcb873538f912ce5e0cf4d93ee4043ac36903e"
+            },
+            {
+              "path": "apps/api/src/common/correlation-logger.ts",
+              "sha256": "d751f6cfb30907eb95ea9a281326a6ac51399e185f9957c38d70f18438e7d561"
+            },
+            {
+              "path": "apps/api/src/common/correlation-logger.test.ts",
+              "sha256": "30a92c68318ec0edbe94b1d685adf15e9b0c5561205dde97f75e776be85f7d91"
+            },
+            {
+              "path": "apps/api/src/common/http-exception.filter.ts",
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
+            },
+            {
+              "path": "apps/api/src/common/error-http.integration.test.ts",
+              "sha256": "f28c37a438edcca316f73ffb2e5ef1b5c4d16f7bfcefddcfe791f876f179ca00"
+            },
+            {
+              "path": "apps/api/test/http-exception-filter.spec.ts",
+              "sha256": "f3586ab27d07958743bb485101076133c0e5b3a90688c2eed06a8888e84cd928"
+            },
+            {
+              "path": "apps/api/src/common/input-field.exception.test.ts",
+              "sha256": "d4ff943e66eb5a7df6b30851a63159f872b63b15b440d753eebd130bf3a3b77f"
+            },
+            {
+              "path": "apps/api/src/ai-models/ai-model-test-queue-http.integration.test.ts",
+              "sha256": "8ad38badace3eb15bb5878f4d876bb30196d7cc3b9b0fce70f445f95fd6398de"
+            },
+            {
+              "path": "apps/api/src/ai-models/ai-model-test-queue.service.ts",
+              "sha256": "1337d434af233e488f588e2b20d0cb45d2cca6589864466e923c960ed40c1ed7"
+            },
+            {
+              "path": "apps/worker/src/auth-delivery/runner.ts",
+              "sha256": "d8734308b2f9ecade81c09e44553886a126056a20f80c170bab6406e970e790a"
+            },
+            {
+              "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
+              "sha256": "807750e5e4dcda43d6ac82e6575813a5c371d77c89c288cd6f70156425743253"
+            },
+            {
+              "path": "apps/worker/src/auth-delivery/providers.ts",
+              "sha256": "8d0b41f73b2fbf4957d7a35194a0bf6401e26d0d40e27fb9325f0855a618645d"
+            },
+            {
+              "path": "apps/worker/src/delivery-log.ts",
+              "sha256": "89f80840755a7a3e24bfbd658d64039f193a74bfdb9f68ef8608c3b922641224"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/_journal.json",
+              "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "packages/shared/src/errors/error-codes.ts",
+              "sha256": "601308abae084cc1b43259664628dbb942417115b7823caf5be604fd4a7c52fe"
+            },
+            {
+              "path": "packages/shared/src/errors/domain-error-codes.ts",
+              "sha256": "f053c51302cec1e66dc1777b2d07f2d9bdea18eedf8d1622c7f45920228b06e3"
+            }
+          ],
+          "checks": [
+            "47 targeted filter, middleware and logger unit assertions passed. They cover stable error codes, EN/FA localization, severity, generated UUIDv7 and valid inbound correlation propagation, and independent request contexts.",
+            "14 cases passed through the compiled API and isolated migrated PostgreSQL. Authentication, validation, unmatched routes and oversized requests used private error handling, and an AI-model background job persisted the same correlation ID returned to the caller.",
+            "Reused the native worker assertion that retry and encrypted-message erasure preserve the request correlation without logging message content. The worker source, test, migrations and lock match the prior accepted native run."
+          ]
+        }
       }
     },
     {
@@ -27592,7 +27678,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -27680,7 +27767,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+              "sha256": "512cbcb98e3e2ff31f94952f234030493d5901266a28e0490d51e3088994cca1"
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
@@ -98737,7 +98824,8 @@
           "release-0.6-reconciliation-fixture-document-boundary",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -98905,7 +98993,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+              "sha256": "512cbcb98e3e2ff31f94952f234030493d5901266a28e0490d51e3088994cca1"
             },
             {
               "path": "apps/api/src/notifications/order-notifications.ts",
@@ -113701,7 +113789,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -113721,11 +113810,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.test.ts",
-              "sha256": "331a63cc2b01ab02b5909e5cdf69333063826718140cf6272f3e2a590d130db4"
+              "sha256": "346ddd012b068bbc325221f932c59579efa0c979cbe3862e687ff2304cd89af8"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
-              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+              "sha256": "a93e582c0005ad88b9eed68f6c1f5b17662dfdcbfcee4b10dafc7fedb644a8d1"
             },
             {
               "path": "apps/api/src/invoice/invoice-state.model.test.ts",
@@ -114273,7 +114362,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -114293,11 +114383,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.test.ts",
-              "sha256": "331a63cc2b01ab02b5909e5cdf69333063826718140cf6272f3e2a590d130db4"
+              "sha256": "346ddd012b068bbc325221f932c59579efa0c979cbe3862e687ff2304cd89af8"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
-              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+              "sha256": "a93e582c0005ad88b9eed68f6c1f5b17662dfdcbfcee4b10dafc7fedb644a8d1"
             },
             {
               "path": "apps/api/src/invoice/invoice-state.model.test.ts",
@@ -114844,7 +114934,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -114864,11 +114955,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.test.ts",
-              "sha256": "331a63cc2b01ab02b5909e5cdf69333063826718140cf6272f3e2a590d130db4"
+              "sha256": "346ddd012b068bbc325221f932c59579efa0c979cbe3862e687ff2304cd89af8"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
-              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+              "sha256": "a93e582c0005ad88b9eed68f6c1f5b17662dfdcbfcee4b10dafc7fedb644a8d1"
             },
             {
               "path": "apps/api/src/invoice/invoice-state.model.test.ts",
@@ -115416,7 +115507,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -115436,11 +115528,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.test.ts",
-              "sha256": "331a63cc2b01ab02b5909e5cdf69333063826718140cf6272f3e2a590d130db4"
+              "sha256": "346ddd012b068bbc325221f932c59579efa0c979cbe3862e687ff2304cd89af8"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
-              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+              "sha256": "a93e582c0005ad88b9eed68f6c1f5b17662dfdcbfcee4b10dafc7fedb644a8d1"
             },
             {
               "path": "apps/api/src/invoice/invoice-state.model.test.ts",
@@ -115987,7 +116079,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -116007,11 +116100,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.test.ts",
-              "sha256": "331a63cc2b01ab02b5909e5cdf69333063826718140cf6272f3e2a590d130db4"
+              "sha256": "346ddd012b068bbc325221f932c59579efa0c979cbe3862e687ff2304cd89af8"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
-              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+              "sha256": "a93e582c0005ad88b9eed68f6c1f5b17662dfdcbfcee4b10dafc7fedb644a8d1"
             },
             {
               "path": "apps/api/src/invoice/invoice-state.model.test.ts",
@@ -116558,7 +116651,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -116578,11 +116672,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.test.ts",
-              "sha256": "331a63cc2b01ab02b5909e5cdf69333063826718140cf6272f3e2a590d130db4"
+              "sha256": "346ddd012b068bbc325221f932c59579efa0c979cbe3862e687ff2304cd89af8"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
-              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+              "sha256": "a93e582c0005ad88b9eed68f6c1f5b17662dfdcbfcee4b10dafc7fedb644a8d1"
             },
             {
               "path": "apps/api/src/invoice/invoice-state.model.test.ts",
@@ -149157,7 +149251,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-ui-evidence",
           "release-0.5-exact-coverage",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -149185,11 +149280,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "a1a9ef08684c18aea02bf177f7cc224c0d76cb69d30502e280a17c790c88652b"
+              "sha256": "8cbd93cce90fd60467029ab953605fe79349d14b213e5f2d3195b54576c52804"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+              "sha256": "512cbcb98e3e2ff31f94952f234030493d5901266a28e0490d51e3088994cca1"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
@@ -149217,7 +149312,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
-              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+              "sha256": "a93e582c0005ad88b9eed68f6c1f5b17662dfdcbfcee4b10dafc7fedb644a8d1"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
@@ -149727,7 +149822,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-ui-evidence",
           "release-0.5-exact-coverage",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -149775,11 +149871,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "a1a9ef08684c18aea02bf177f7cc224c0d76cb69d30502e280a17c790c88652b"
+              "sha256": "8cbd93cce90fd60467029ab953605fe79349d14b213e5f2d3195b54576c52804"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+              "sha256": "512cbcb98e3e2ff31f94952f234030493d5901266a28e0490d51e3088994cca1"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
@@ -149807,7 +149903,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
-              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+              "sha256": "a93e582c0005ad88b9eed68f6c1f5b17662dfdcbfcee4b10dafc7fedb644a8d1"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
@@ -150339,7 +150435,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-ui-evidence",
           "release-0.5-exact-coverage",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -150395,11 +150492,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "a1a9ef08684c18aea02bf177f7cc224c0d76cb69d30502e280a17c790c88652b"
+              "sha256": "8cbd93cce90fd60467029ab953605fe79349d14b213e5f2d3195b54576c52804"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+              "sha256": "512cbcb98e3e2ff31f94952f234030493d5901266a28e0490d51e3088994cca1"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
@@ -150427,7 +150524,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
-              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+              "sha256": "a93e582c0005ad88b9eed68f6c1f5b17662dfdcbfcee4b10dafc7fedb644a8d1"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
@@ -150977,7 +151074,8 @@
           "release-0.5-exact-coverage",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -151033,11 +151131,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "a1a9ef08684c18aea02bf177f7cc224c0d76cb69d30502e280a17c790c88652b"
+              "sha256": "8cbd93cce90fd60467029ab953605fe79349d14b213e5f2d3195b54576c52804"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+              "sha256": "512cbcb98e3e2ff31f94952f234030493d5901266a28e0490d51e3088994cca1"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
@@ -151065,7 +151163,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
-              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+              "sha256": "a93e582c0005ad88b9eed68f6c1f5b17662dfdcbfcee4b10dafc7fedb644a8d1"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
@@ -151716,7 +151814,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-ui-evidence",
           "release-0.5-exact-coverage",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -151772,11 +151871,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "a1a9ef08684c18aea02bf177f7cc224c0d76cb69d30502e280a17c790c88652b"
+              "sha256": "8cbd93cce90fd60467029ab953605fe79349d14b213e5f2d3195b54576c52804"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+              "sha256": "512cbcb98e3e2ff31f94952f234030493d5901266a28e0490d51e3088994cca1"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
@@ -151804,7 +151903,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
-              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+              "sha256": "a93e582c0005ad88b9eed68f6c1f5b17662dfdcbfcee4b10dafc7fedb644a8d1"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
@@ -152246,7 +152345,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-ui-evidence",
           "release-0.5-exact-coverage",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -152274,11 +152374,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "a1a9ef08684c18aea02bf177f7cc224c0d76cb69d30502e280a17c790c88652b"
+              "sha256": "8cbd93cce90fd60467029ab953605fe79349d14b213e5f2d3195b54576c52804"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+              "sha256": "512cbcb98e3e2ff31f94952f234030493d5901266a28e0490d51e3088994cca1"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
@@ -152306,7 +152406,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
-              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+              "sha256": "a93e582c0005ad88b9eed68f6c1f5b17662dfdcbfcee4b10dafc7fedb644a8d1"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
@@ -152726,7 +152826,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-ui-evidence",
           "release-0.5-exact-coverage",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -152754,11 +152855,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "a1a9ef08684c18aea02bf177f7cc224c0d76cb69d30502e280a17c790c88652b"
+              "sha256": "8cbd93cce90fd60467029ab953605fe79349d14b213e5f2d3195b54576c52804"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+              "sha256": "512cbcb98e3e2ff31f94952f234030493d5901266a28e0490d51e3088994cca1"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
@@ -152786,7 +152887,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
-              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+              "sha256": "a93e582c0005ad88b9eed68f6c1f5b17662dfdcbfcee4b10dafc7fedb644a8d1"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
@@ -153207,7 +153308,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-ui-evidence",
           "release-0.5-exact-coverage",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -153235,11 +153337,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "a1a9ef08684c18aea02bf177f7cc224c0d76cb69d30502e280a17c790c88652b"
+              "sha256": "8cbd93cce90fd60467029ab953605fe79349d14b213e5f2d3195b54576c52804"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+              "sha256": "512cbcb98e3e2ff31f94952f234030493d5901266a28e0490d51e3088994cca1"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
@@ -153267,7 +153369,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
-              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+              "sha256": "a93e582c0005ad88b9eed68f6c1f5b17662dfdcbfcee4b10dafc7fedb644a8d1"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
@@ -153689,7 +153791,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-ui-evidence",
           "release-0.5-exact-coverage",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -153717,11 +153820,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "a1a9ef08684c18aea02bf177f7cc224c0d76cb69d30502e280a17c790c88652b"
+              "sha256": "8cbd93cce90fd60467029ab953605fe79349d14b213e5f2d3195b54576c52804"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+              "sha256": "512cbcb98e3e2ff31f94952f234030493d5901266a28e0490d51e3088994cca1"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
@@ -153749,7 +153852,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
-              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+              "sha256": "a93e582c0005ad88b9eed68f6c1f5b17662dfdcbfcee4b10dafc7fedb644a8d1"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
@@ -154179,7 +154282,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-ui-evidence",
           "release-0.5-exact-coverage",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -154207,11 +154311,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "a1a9ef08684c18aea02bf177f7cc224c0d76cb69d30502e280a17c790c88652b"
+              "sha256": "8cbd93cce90fd60467029ab953605fe79349d14b213e5f2d3195b54576c52804"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+              "sha256": "512cbcb98e3e2ff31f94952f234030493d5901266a28e0490d51e3088994cca1"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
@@ -154239,7 +154343,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
-              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+              "sha256": "a93e582c0005ad88b9eed68f6c1f5b17662dfdcbfcee4b10dafc7fedb644a8d1"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
@@ -154661,7 +154765,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-ui-evidence",
           "release-0.5-exact-coverage",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -154689,11 +154794,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "a1a9ef08684c18aea02bf177f7cc224c0d76cb69d30502e280a17c790c88652b"
+              "sha256": "8cbd93cce90fd60467029ab953605fe79349d14b213e5f2d3195b54576c52804"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+              "sha256": "512cbcb98e3e2ff31f94952f234030493d5901266a28e0490d51e3088994cca1"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
@@ -154721,7 +154826,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
-              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+              "sha256": "a93e582c0005ad88b9eed68f6c1f5b17662dfdcbfcee4b10dafc7fedb644a8d1"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
@@ -473180,7 +473285,8 @@
         "batches": [
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-browser-and-edge-privacy"
+          "release-0.6-browser-and-edge-privacy",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-session-authority",
@@ -473361,6 +473467,10 @@
             {
               "path": "packages/shared/src/analytics/index.test.ts",
               "sha256": "2ba2073de74257f9986e6c6b7ac44aa6f884153c9c47d791f2822f56b1022a53"
+            },
+            {
+              "path": "apps/api/src/auth/auth.controller.test.ts",
+              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
             }
           ],
           "checks": [
@@ -473372,7 +473482,9 @@
             "Sixteen web form tests and twelve compiled Chromium and Mobile Safari cases passed. Browser tests covered Persian and English, early legacy fragment scrubbing, empty code before entry, no browser storage, stale response cancellation and unchanged CSP. Both web tiers, all 101 route budgets and six cold-auth transfers passed.",
             "The final API and worker builds, typechecks, dictionary build, lint, formatting and canonical contract verification passed. The contract is unchanged. A read-only staging query observed zero live pending staff activations and zero live queued activation rows before the fix.",
             "Scoped review verified browser storage, structured identity input, auth URL references, recovery proof handling, typed product analytics and route-error reporting. The browser and analytics suites passed eight tests and the route-error controller passed twenty-one.",
-            "The live staging config inherited the standard raw request access log. The source change strips query and referrer values and normalizes individual revocation paths for staging and pilot. Full staging syntax passed on the installed NGINX binary. Ten private loopback requests verified both log formats while the handler retained the original query and expected status."
+            "The live staging config inherited the standard raw request access log. The source change strips query and referrer values and normalizes individual revocation paths for staging and pilot. Full staging syntax passed on the installed NGINX binary. Ten private loopback requests verified both log formats while the handler retained the original query and expected status.",
+            "Hosted be0cac75 run 42689595374 job 129405764028 passed the entire 43-case document HTTP file and 7,799 of 7,800 API assertions. The sole failure was the old refresh JSON fixture expecting the raw session bearer. Its replacement asserts the exact session reference, preserves the cookie assertions and additionally verifies both credentials use their HttpOnly cookie paths.",
+            "All 75 auth-controller unit cases passed against the corrected fixture. The exact hosted run containing the correction is tracked separately."
           ]
         }
       }
@@ -482164,7 +482276,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Review remaining application, worker, database and ingress error sinks. Invoice transitions still log free-form reasons outside their protected audit. Rehearse representative token, identity and payment inputs against configured production-equivalent sinks and verify their receipts."
+        "Complete review of the remaining application, worker, database and ingress error sinks. Rehearse representative token, identity and payment inputs against configured production-equivalent sinks and verify their receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -482180,6 +482292,10 @@
           "apps/api/src/common/input-field.exception.test.ts",
           "apps/api/src/crm/crm-v2.service.test.ts",
           "apps/api/src/crm/crm-v2.service.ts",
+          "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+          "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+          "apps/api/src/invoice/invoice-state-machine.service.test.ts",
+          "apps/api/src/invoice/invoice-state-machine.service.ts",
           "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
           "apps/api/src/wallet/chargeback-alert.service.ts",
           "apps/api/src/wallet/chargeback-detection.service.ts",
@@ -482195,11 +482311,12 @@
           "release-0.6-database-pool-deadlines-and-log-privacy",
           "release-0.6-browser-and-edge-privacy",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "source-bound-ingress-authentication-and-wallet-diagnostic-proof",
-          "base_commit": "3467b7cd2044e3664d59221a71b09c66997e84e2",
+          "base_commit": "5cc07e18105af117af0b9c1ee0c2a7a8abf81d29",
           "source_evidence": [
             {
               "path": "deploy/pilot/nginx.conf",
@@ -482280,6 +482397,22 @@
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
               "sha256": "48c24047a4e6bfc45880359d467db66d8f07f85e4565f1bbbba3301794b6249b"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+              "sha256": "8cbd93cce90fd60467029ab953605fe79349d14b213e5f2d3195b54576c52804"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+              "sha256": "512cbcb98e3e2ff31f94952f234030493d5901266a28e0490d51e3088994cca1"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-state-machine.service.test.ts",
+              "sha256": "346ddd012b068bbc325221f932c59579efa0c979cbe3862e687ff2304cd89af8"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
+              "sha256": "a93e582c0005ad88b9eed68f6c1f5b17662dfdcbfcee4b10dafc7fedb644a8d1"
             }
           ],
           "checks": [
@@ -482289,7 +482422,9 @@
             "API build, typecheck, changed-file formatting and lint, and canonical OpenAPI contract passed. Scoped diff review confirmed the authorization and transaction logic, audit payloads and provider delivery behavior are preserved.",
             "122 targeted unit assertions passed, including positive HTTP route and correlation logging and omission of raw client IP, URL values, arbitrary exception messages and provider error text.",
             "21 selected cases passed against isolated migrated PostgreSQL. They covered durable callback acknowledgement and replay, invoice wallet payment and rollback, bank receipt overpayment and concurrency, and signed chargeback and replay. The private fixture database and network were removed.",
-            "API build, typecheck, canonical contract, changed-file lint and formatting passed. Scope review confirmed changes are diagnostic only. Provider data, financial amounts and attachment identifiers remain available through their protected domain records and authorized APIs."
+            "API build, typecheck, canonical contract, changed-file lint and formatting passed. Scope review confirmed changes are diagnostic only. Provider data, financial amounts and attachment identifiers remain available through their protected domain records and authorized APIs.",
+            "60 invoice-state and receipt unit assertions passed. Failure logs retain internal receipt or transition identifiers and omit private reasons, storage locations, raw provider/database messages and amounts. The protected audit retains its reason and correlation fields.",
+            "Five selected invoice cases passed in an isolated migrated PostgreSQL fixture, covering overdue settlement, concurrency and atomic rollback. The build, canonical contract, final API typecheck and changed-file lint and format passed."
           ]
         }
       }
@@ -622815,7 +622950,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -622839,7 +622975,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "3474658bc2faa88e1fc8c3432ddb9306bc4ee3e97a419707f981f7420d0de0d4"
+              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -623649,7 +623785,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -623673,7 +623810,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "3474658bc2faa88e1fc8c3432ddb9306bc4ee3e97a419707f981f7420d0de0d4"
+              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -624483,7 +624620,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -624507,7 +624645,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "3474658bc2faa88e1fc8c3432ddb9306bc4ee3e97a419707f981f7420d0de0d4"
+              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -625317,7 +625455,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -625341,7 +625480,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "3474658bc2faa88e1fc8c3432ddb9306bc4ee3e97a419707f981f7420d0de0d4"
+              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -626151,7 +626290,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -626175,7 +626315,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "3474658bc2faa88e1fc8c3432ddb9306bc4ee3e97a419707f981f7420d0de0d4"
+              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -639027,7 +639167,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -639051,7 +639192,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "3474658bc2faa88e1fc8c3432ddb9306bc4ee3e97a419707f981f7420d0de0d4"
+              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -639861,7 +640002,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -639885,7 +640027,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "3474658bc2faa88e1fc8c3432ddb9306bc4ee3e97a419707f981f7420d0de0d4"
+              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -640695,7 +640837,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -640719,7 +640862,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "3474658bc2faa88e1fc8c3432ddb9306bc4ee3e97a419707f981f7420d0de0d4"
+              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -641529,7 +641672,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -641553,7 +641697,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "3474658bc2faa88e1fc8c3432ddb9306bc4ee3e97a419707f981f7420d0de0d4"
+              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -642363,7 +642507,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -642387,7 +642532,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "3474658bc2faa88e1fc8c3432ddb9306bc4ee3e97a419707f981f7420d0de0d4"
+              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -643197,7 +643342,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -643221,7 +643367,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "3474658bc2faa88e1fc8c3432ddb9306bc4ee3e97a419707f981f7420d0de0d4"
+              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -644031,7 +644177,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -644055,7 +644202,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "3474658bc2faa88e1fc8c3432ddb9306bc4ee3e97a419707f981f7420d0de0d4"
+              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -644865,7 +645012,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -644889,7 +645037,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "3474658bc2faa88e1fc8c3432ddb9306bc4ee3e97a419707f981f7420d0de0d4"
+              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -645699,7 +645847,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -645723,7 +645872,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "3474658bc2faa88e1fc8c3432ddb9306bc4ee3e97a419707f981f7420d0de0d4"
+              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -646533,7 +646682,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -646557,7 +646707,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "3474658bc2faa88e1fc8c3432ddb9306bc4ee3e97a419707f981f7420d0de0d4"
+              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -647367,7 +647517,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -647391,7 +647542,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "3474658bc2faa88e1fc8c3432ddb9306bc4ee3e97a419707f981f7420d0de0d4"
+              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -648201,7 +648352,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -648225,7 +648377,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "3474658bc2faa88e1fc8c3432ddb9306bc4ee3e97a419707f981f7420d0de0d4"
+              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -723887,11 +724039,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.test.ts",
-              "sha256": "331a63cc2b01ab02b5909e5cdf69333063826718140cf6272f3e2a590d130db4"
+              "sha256": "346ddd012b068bbc325221f932c59579efa0c979cbe3862e687ff2304cd89af8"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
-              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+              "sha256": "a93e582c0005ad88b9eed68f6c1f5b17662dfdcbfcee4b10dafc7fedb644a8d1"
             },
             {
               "path": "apps/api/src/invoice/invoice-state.model.test.ts",
@@ -725011,11 +725163,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "a1a9ef08684c18aea02bf177f7cc224c0d76cb69d30502e280a17c790c88652b"
+              "sha256": "8cbd93cce90fd60467029ab953605fe79349d14b213e5f2d3195b54576c52804"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+              "sha256": "512cbcb98e3e2ff31f94952f234030493d5901266a28e0490d51e3088994cca1"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
@@ -727975,7 +728127,8 @@
           "release-0.6-document-http-fixture-isolation",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ]
       }
     },
@@ -744379,7 +744532,8 @@
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-browser-and-edge-privacy",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-exception-correlation-and-sensitive-diagnostics"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -835741,6 +835895,126 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/http-and-wallet-diagnostic-privacy",
       "source_scope_proof": "release-0.6-http-and-wallet-diagnostic-privacy.json",
       "source_scope_proof_sha256": "0d6ab020df78c3e540b4d2a98e35e27d23e4dc81a9d7074e0a1948a8aeb302a2"
+    },
+    "release-0.6-exception-correlation-and-sensitive-diagnostics": {
+      "batch": "release-0.6-exception-correlation-and-sensitive-diagnostics",
+      "base_commit": "5cc07e18105af117af0b9c1ee0c2a7a8abf81d29",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.05.01",
+        "06-security-testing-observability.md#T-06.13.02.06",
+        "06-security-testing-observability.md#T-06.01.04.08",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.controller.test.ts",
+          "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+          "sha256": "8cbd93cce90fd60467029ab953605fe79349d14b213e5f2d3195b54576c52804"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+          "sha256": "512cbcb98e3e2ff31f94952f234030493d5901266a28e0490d51e3088994cca1"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.service.test.ts",
+          "sha256": "346ddd012b068bbc325221f932c59579efa0c979cbe3862e687ff2304cd89af8"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
+          "sha256": "a93e582c0005ad88b9eed68f6c1f5b17662dfdcbfcee4b10dafc7fedb644a8d1"
+        },
+        {
+          "path": "apps/api/src/app.factory.ts",
+          "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
+        },
+        {
+          "path": "apps/api/src/app.module.ts",
+          "sha256": "d15b1829ecfe92ff7a6f3e86c3b6cad6d15703297a9fe122751f870b56498d76"
+        },
+        {
+          "path": "apps/api/src/common/correlation-id.middleware.ts",
+          "sha256": "b127659fda54ecb4543d5dbbbfbcb873538f912ce5e0cf4d93ee4043ac36903e"
+        },
+        {
+          "path": "apps/api/src/common/correlation-logger.ts",
+          "sha256": "d751f6cfb30907eb95ea9a281326a6ac51399e185f9957c38d70f18438e7d561"
+        },
+        {
+          "path": "apps/api/src/common/correlation-logger.test.ts",
+          "sha256": "30a92c68318ec0edbe94b1d685adf15e9b0c5561205dde97f75e776be85f7d91"
+        },
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
+        },
+        {
+          "path": "apps/api/src/common/error-http.integration.test.ts",
+          "sha256": "f28c37a438edcca316f73ffb2e5ef1b5c4d16f7bfcefddcfe791f876f179ca00"
+        },
+        {
+          "path": "apps/api/test/http-exception-filter.spec.ts",
+          "sha256": "f3586ab27d07958743bb485101076133c0e5b3a90688c2eed06a8888e84cd928"
+        },
+        {
+          "path": "apps/api/src/common/input-field.exception.test.ts",
+          "sha256": "d4ff943e66eb5a7df6b30851a63159f872b63b15b440d753eebd130bf3a3b77f"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-model-test-queue-http.integration.test.ts",
+          "sha256": "8ad38badace3eb15bb5878f4d876bb30196d7cc3b9b0fce70f445f95fd6398de"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-model-test-queue.service.ts",
+          "sha256": "1337d434af233e488f588e2b20d0cb45d2cca6589864466e923c960ed40c1ed7"
+        },
+        {
+          "path": "apps/worker/src/auth-delivery/runner.ts",
+          "sha256": "d8734308b2f9ecade81c09e44553886a126056a20f80c170bab6406e970e790a"
+        },
+        {
+          "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
+          "sha256": "807750e5e4dcda43d6ac82e6575813a5c371d77c89c288cd6f70156425743253"
+        },
+        {
+          "path": "apps/worker/src/auth-delivery/providers.ts",
+          "sha256": "8d0b41f73b2fbf4957d7a35194a0bf6401e26d0d40e27fb9325f0855a618645d"
+        },
+        {
+          "path": "apps/worker/src/delivery-log.ts",
+          "sha256": "89f80840755a7a3e24bfbd658d64039f193a74bfdb9f68ef8608c3b922641224"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        },
+        {
+          "path": "packages/shared/src/errors/error-codes.ts",
+          "sha256": "601308abae084cc1b43259664628dbb942417115b7823caf5be604fd4a7c52fe"
+        },
+        {
+          "path": "packages/shared/src/errors/domain-error-codes.ts",
+          "sha256": "f053c51302cec1e66dc1777b2d07f2d9bdea18eedf8d1622c7f45920228b06e3"
+        }
+      ],
+      "checks": [
+        "47 targeted filter, middleware and logger unit assertions passed. They cover stable error codes, EN/FA localization, severity, generated UUIDv7 and valid inbound correlation propagation, and independent request contexts.",
+        "14 cases passed through the compiled API and isolated migrated PostgreSQL. Authentication, validation, unmatched routes and oversized requests used private error handling, and an AI-model background job persisted the same correlation ID returned to the caller.",
+        "Reused the native worker assertion that retry and encrypted-message erasure preserve the request correlation without logging message content. The worker source, test, migrations and lock match the prior accepted native run.",
+        "60 invoice-state and receipt unit assertions passed. Failure logs retain internal receipt or transition identifiers and omit private reasons, storage locations, raw provider/database messages and amounts. The protected audit retains its reason and correlation fields.",
+        "Five selected invoice cases passed in an isolated migrated PostgreSQL fixture, covering overdue settlement, concurrency and atomic rollback. The build, canonical contract, final API typecheck and changed-file lint and format passed.",
+        "Hosted be0cac75 run 42689595374 job 129405764028 passed the entire 43-case document HTTP file and 7,799 of 7,800 API assertions. The sole failure was the old refresh JSON fixture expecting the raw session bearer. Its replacement asserts the exact session reference, preserves the cookie assertions and additionally verifies both credentials use their HttpOnly cookie paths.",
+        "All 75 auth-controller unit cases passed against the corrected fixture. The exact hosted run containing the correction is tracked separately."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/exception-correlation-and-sensitive-diagnostics",
+      "source_scope_proof": "release-0.6-exception-correlation-and-sensitive-diagnostics.json",
+      "source_scope_proof_sha256": "5274c467c04e92b9d8d9aa6630a11f8b7496b999d36ced491bee8dd3ebe8fb75"
     }
   },
   "historical_improvements": [

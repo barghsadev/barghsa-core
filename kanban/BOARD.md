@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T20:45:00+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T20:50:10+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 988 | Accepted with unchanged source bindings. |
-| verify | 341 | Existing work may be complete; inspect evidence before building. |
+| done | 989 | Accepted with unchanged source bindings. |
+| verify | 340 | Existing work may be complete; inspect evidence before building. |
 | partial | 33 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -973,7 +973,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-01.04.04` | partial | Earlier partial | Configure Playwright for E2E testing |
 | `01-platform-infrastructure.md#T-01.04.05` | done | Earlier acceptance_verified | Wire `test` and `test:coverage` tasks in `turbo.json` |
 | `01-platform-infrastructure.md#T-01.04.06` | partial | Earlier partial | Configure flaky-test quarantine process |
-| `01-platform-infrastructure.md#T-01.05.01` | verify | Earlier acceptance_verified | Implement global NestJS `HttpExceptionFilter` and `CorrelationIdMiddleware` |
+| `01-platform-infrastructure.md#T-01.05.01` | done | Earlier acceptance_verified | Implement global NestJS `HttpExceptionFilter` and `CorrelationIdMiddleware` |
 | `01-platform-infrastructure.md#T-02.01.01` | done | Earlier acceptance_verified | Initialize `packages/db` with Drizzle ORM, `pg`, `pg-pool`, and drizzle-kit |
 | `01-platform-infrastructure.md#T-02.01.02` | done | Earlier acceptance_verified | Create PostgreSQL pool factory with configurable pool, statement timeout, lock timeout, and idle transaction guard |
 | `01-platform-infrastructure.md#T-02.01.03` | done | Earlier acceptance_verified | Implement query timeout and cancellation via Drizzle configuration |

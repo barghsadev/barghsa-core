@@ -200,10 +200,6 @@ export class InvoiceStateMachineService {
       const setClauses = [`state = $2`];
       const values: unknown[] = [invoiceId, to];
       let paramIdx = 3;
-      if (opts.reason) {
-        // Store reason in metadata JSONB if needed; for now just log it
-        this.logger.debug(`Transition ${from}→${to} on ${invoiceId}: ${opts.reason}`);
-      }
       for (const se of sideEffects) {
         setClauses.push(`${se.column} = $${paramIdx}`);
         values.push(se.value);
@@ -244,8 +240,8 @@ export class InvoiceStateMachineService {
       if (error instanceof BadRequestException || error instanceof NotFoundException) {
         throw error;
       }
-      this.logger.error(`Invoice transition failed: ${String(error)}`);
-      throw new InternalServerErrorException(`Invoice transition failed: ${String(error)}`);
+      this.logger.error(`Invoice ${invoiceId} transition ${from} → ${to} failed`);
+      throw new InternalServerErrorException('Invoice transition failed');
     } finally {
       if (ownsClient) client.release();
     }

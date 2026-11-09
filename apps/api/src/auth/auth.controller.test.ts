@@ -200,10 +200,14 @@ describe('refresh and logout boundaries', () => {
     expect(sessions.getSessionById).not.toHaveBeenCalled();
     expect(cookies.cookie).not.toHaveBeenCalled();
   });
-  it('returns the rotated CSRF token and replaces both credentials', async () => {
+  it('returns the session reference and rotated CSRF token, with credentials only in cookies', async () => {
     const { controller, sessions, cookies, res } = fixture();
     expect(await controller.refresh(request({ cookies: { barghsa_refresh: 'old' } }), res)).toEqual(
-      { sessionId: 'new-session', csrfToken: 'new-csrf', expiresAt: sessionResult.expiresAt }
+      {
+        sessionId: 'session-ref:949051864095682be92c08527c6ae331756ba4ba0999f75bf9f96467070a2b89',
+        csrfToken: 'new-csrf',
+        expiresAt: sessionResult.expiresAt,
+      }
     );
     expect(sessions.redeemRefreshToken).toHaveBeenCalledWith('old');
     expect(sessions.getSessionById).toHaveBeenCalledWith('new-session');
@@ -212,6 +216,16 @@ describe('refresh and logout boundaries', () => {
       ['barghsa_refresh', 'new-refresh'],
       ['barghsa_csrf', 'new-csrf'],
     ]);
+    expect(cookies.cookie).toHaveBeenCalledWith(
+      'barghsa_session',
+      'new-session',
+      expect.objectContaining({ httpOnly: true, path: '/api' })
+    );
+    expect(cookies.cookie).toHaveBeenCalledWith(
+      'barghsa_refresh',
+      'new-refresh',
+      expect.objectContaining({ httpOnly: true, path: '/api/auth/refresh' })
+    );
   });
   it.each([undefined, '', 123, 'valid-session'])(
     'clears cookies at matching scopes on logout: %j',

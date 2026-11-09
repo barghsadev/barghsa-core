@@ -5,10 +5,11 @@
  * flow: validation → DB lock → UPDATE → audit INSERT → COMMIT.
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { afterEach, describe, it, expect, vi, beforeEach } from 'vitest';
 import {
   BadRequestException,
   InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js';
@@ -20,6 +21,8 @@ import {
   type InvoiceState,
   type TransitionContext,
 } from './invoice-state.model.js';
+
+afterEach(() => vi.restoreAllMocks());
 
 // ---- Mocks ----
 const mockClient = {
@@ -318,18 +321,21 @@ describe('InvoiceStateMachineService', () => {
     });
 
     it('rolls back on error', async () => {
+      const errorLog = vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
       mockClient.query
         .mockReset()
         .mockResolvedValueOnce({ rows: [] }) // BEGIN
         .mockResolvedValueOnce({ rows: [makeInvoiceRow({ state: 'Draft' })] }) // FOR UPDATE
-        .mockRejectedValueOnce(new Error('DB failure')) // UPDATE fails
+        .mockRejectedValueOnce(new Error('DB failure with private payment details')) // UPDATE fails
         .mockResolvedValueOnce({ rows: [] }); // ROLLBACK
 
-      await expect(
-        service.transition('inv-001', 'Draft', 'Unpaid', {
-          actorUserId: 'user-001',
-        })
-      ).rejects.toThrow(InternalServerErrorException);
+      const failure = service.transition('inv-001', 'Draft', 'Unpaid', {
+        actorUserId: 'user-001',
+      });
+      await expect(failure).rejects.toThrow(InternalServerErrorException);
+      await expect(failure).rejects.toHaveProperty('message', 'Invoice transition failed');
+      expect(errorLog).toHaveBeenCalledWith('Invoice inv-001 transition Draft → Unpaid failed');
+      expect(JSON.stringify(errorLog.mock.calls)).not.toContain('private payment details');
 
       expect(
         mockClient.query.mock.calls.some((c: unknown[]) => (c[0] as string) === 'ROLLBACK')
@@ -338,6 +344,7 @@ describe('InvoiceStateMachineService', () => {
     });
 
     it('records audit metadata with reason and correlationId', async () => {
+      const debug = vi.spyOn(Logger.prototype, 'debug').mockImplementation(() => undefined);
       mockTransitionFlowSuccess('Draft', 3);
 
       await service.transition('inv-001', 'Draft', 'Unpaid', {
@@ -357,6 +364,7 @@ describe('InvoiceStateMachineService', () => {
       expect(params[3]).toContain('Manual invoice issue'); // metadata JSON
       expect(params[4]).toBe('corr-123'); // correlation_id
       expect(params[5]).toBe('192.168.1.1'); // ip
+      expect(JSON.stringify(debug.mock.calls)).not.toContain('Manual invoice issue');
     });
   });
 

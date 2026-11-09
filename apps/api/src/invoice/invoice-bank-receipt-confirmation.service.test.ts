@@ -1,8 +1,8 @@
 import { InputFieldException } from '../common/input-field.exception.js';
 import { receiptDecisionSession } from '../test/receipt-decision-session.js';
 import { invoiceReceiptFingerprint } from './invoice-bank-receipt-confirmation.service.js';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { HttpException } from '@nestjs/common';
+import { afterEach, describe, it, expect, vi, beforeEach } from 'vitest';
+import { HttpException, Logger } from '@nestjs/common';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   BANK_RECEIPT_OVERPAYMENT_ERRORS,
@@ -20,6 +20,7 @@ import {
 import { InvoiceBankReceiptConfirmationService } from './invoice-bank-receipt-confirmation.service.js';
 import type { WalletService } from '../wallet/wallet.service.js';
 import type { InvoiceStateMachineService } from './invoice-state-machine.service.js';
+import type { StorageProvider } from '@barghsa/shared/storage';
 import {
   APPROVAL_REQUEST_APPROVED_EVENT,
   APPROVAL_REQUEST_REJECTED_EVENT,
@@ -322,6 +323,8 @@ describe('InvoiceBankReceiptConfirmationService (T-04.3.01.03 / T-04.3.01.04)', 
   let invoiceStateMachine: { transition: ReturnType<typeof vi.fn> };
   let service: InvoiceBankReceiptConfirmationService;
 
+  afterEach(() => vi.restoreAllMocks());
+
   beforeEach(() => {
     vi.clearAllMocks();
     mockPool.connect.mockResolvedValue(mockClient);
@@ -358,6 +361,27 @@ describe('InvoiceBankReceiptConfirmationService (T-04.3.01.03 / T-04.3.01.04)', 
       attachmentKey: ATTACHMENT,
     });
     expect(walletService.credit).not.toHaveBeenCalled();
+  });
+
+  it('omits signed storage details from attachment failure diagnostics', async () => {
+    const warn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
+    const storage = {
+      presignedGetUrl: vi.fn().mockRejectedValue(new Error('private-storage-credential')),
+    };
+    const withStorage = new InvoiceBankReceiptConfirmationService(
+      walletService as unknown as WalletService,
+      storage as unknown as StorageProvider
+    );
+    script();
+
+    const [receipt] = await withStorage.listPending();
+    expect(receipt).toMatchObject({ receiptId: RECEIPT_ID, attachmentUrl: null });
+    expect(storage.presignedGetUrl).toHaveBeenCalledWith(ATTACHMENT, expect.any(Number));
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining(`Could not sign attachment for invoice bank receipt ${RECEIPT_ID}`)
+    );
+    expect(JSON.stringify(warn.mock.calls)).not.toContain(ATTACHMENT);
+    expect(JSON.stringify(warn.mock.calls)).not.toContain('private-storage-credential');
   });
 
   it('returns 404 for a missing receipt', async () => {
