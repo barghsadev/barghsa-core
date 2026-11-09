@@ -2,6 +2,7 @@ import { beforeAll, afterAll, beforeEach, expect, it, vi } from 'vitest';
 import { Pool } from 'pg';
 import { randomUUID } from 'node:crypto';
 import type { Redis } from 'ioredis';
+import { Logger } from '@nestjs/common';
 const state = vi.hoisted(() => ({
   pool: undefined as Pool | undefined,
   afterRead: undefined as (() => Promise<void>) | undefined,
@@ -98,6 +99,19 @@ it('rejects stale Redis after a committed change without cache invalidation', as
     version: 2,
     cachedAtGlobalVersion: 6,
   });
+});
+it('reads the durable value after a Redis error without logging backend details', async () => {
+  const warn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
+  redis.get.mockRejectedValueOnce(new Error('private cache connection detail'));
+  try {
+    expect(await service.get('audit.cache')).toBe(9);
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('Redis read failed, falling back to PostgreSQL')
+    );
+    expect(JSON.stringify(warn.mock.calls)).not.toContain('private cache connection detail');
+  } finally {
+    warn.mockRestore();
+  }
 });
 it('does not certify a row read before a concurrent committed update', async () => {
   state.afterRead = commitUpdate;

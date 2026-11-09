@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T21:20:58+00:00",
+  "updated": "2026-11-09T21:23:38+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -11093,12 +11093,10 @@
         "story": "01-platform-infrastructure.md#spec-cab45099c3cc"
       },
       "requirement": "- **T-04.02.03:** Implement configuration caching with clear invalidation\n  - **Notes:** Admin config settings (VAT rates, product prices, thresholds) are immutable and change infrequently. Cache them in Redis for 5 minutes with a key prefix `config:*`. On admin config version change, publish a Redis invalidation event or bump a version counter. Cache miss → read from PostgreSQL → populate Redis. Never serve stale config for financial calculations.\n  - **Dependencies:** T-04.02.01\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -11140,8 +11138,64 @@
         "changed_paths": [
           "apps/api/src/config-cache/config-cache.integration.test.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-versioned-config-cache-and-diagnostic-privacy"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-postgresql-cache-and-wallet-proof",
+          "base_commit": "6a9899d7af3815ff210a8ffa9a21c349720f826c",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+            },
+            {
+              "path": "apps/api/src/config-cache/config-cache.integration.test.ts",
+              "sha256": "a78b69f7b7f8e268c3f6594cf536a405411dbe39d765c0d273896c36e47e3662"
+            },
+            {
+              "path": "apps/api/src/config-cache/config-cache.module.ts",
+              "sha256": "77d74f0c872ea0ed040bc7baf3c6b72f4e3ec06afae665400c00100bf1ee9904"
+            },
+            {
+              "path": "apps/api/src/config-cache/config-cache.service.ts",
+              "sha256": "72398081aea677a3495577ca8effa59594eee1f02988bb982bb6251a03b88e83"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-http.integration.test.ts",
+              "sha256": "75cfaae2a6308de878f20ff3c1b474e5dbb65b5b20115807c35e6e3e83a853b8"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup.service.ts",
+              "sha256": "58090bbdb1cba343648ea351c89dccf71d94330dc0d2a01265bf0acc6ae31677"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "docs/adr/002-redis-scope.md",
+              "sha256": "046dea0a96b6df1efae72af1ef2e58fa01898935307ffffc922ff03fcbbc0698"
+            },
+            {
+              "path": "packages/shared/src/config-cache/config-cache.test.ts",
+              "sha256": "627b63a633340301a773cb84dbe3152b4083ca7cb78ab81f48fe62b2461524aa"
+            },
+            {
+              "path": "packages/shared/src/config-cache/config-cache.ts",
+              "sha256": "e58d2b6837cec2af58cb7793ee5a033267b2cfe81321b623e790b75cf2c9d7f0"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Reviewed the five-minute versioned Redis entries, PostgreSQL fallbacks and post-commit eviction. A durable version read guards every hit, and a concurrent commit cannot certify an older row for reuse. Reused 37 shared cache cases from run 42681795739 with matching cache and lock sources.",
+            "Eight final native cases passed against isolated migrated PostgreSQL. Six covered fallback, stale versions, commit races, previous entries and diagnostic redaction. Two compiled wallet cases preserved locked limit validation and immutable accepted retry behavior after a limit change.",
+            "The financial transaction reads the locked current configuration directly. Only Redis diagnostic metadata was omitted in the API adapter. API build, typecheck, generated contract, changed-file lint and formatting passed."
+          ]
+        }
       }
     },
     {
@@ -483218,6 +483272,8 @@
           "apps/api/src/auth/proxy-rate-http.integration.test.ts",
           "apps/api/src/common/http-exception.filter.ts",
           "apps/api/src/common/input-field.exception.test.ts",
+          "apps/api/src/config-cache/config-cache.integration.test.ts",
+          "apps/api/src/config-cache/config-cache.service.ts",
           "apps/api/src/crm/crm-v2.service.test.ts",
           "apps/api/src/crm/crm-v2.service.ts",
           "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
@@ -483245,11 +483301,12 @@
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-exception-correlation-and-sensitive-diagnostics",
-          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy",
+          "release-0.6-versioned-config-cache-and-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-ingress-authentication-and-wallet-diagnostic-proof",
-          "base_commit": "7c9ebc68f78bc7cdc1387b876dd89bfa1cf761f2",
+          "base_commit": "6a9899d7af3815ff210a8ffa9a21c349720f826c",
           "source_evidence": [
             {
               "path": "deploy/pilot/nginx.conf",
@@ -483366,6 +483423,14 @@
             {
               "path": "docs/adr/002-redis-scope.md",
               "sha256": "046dea0a96b6df1efae72af1ef2e58fa01898935307ffffc922ff03fcbbc0698"
+            },
+            {
+              "path": "apps/api/src/config-cache/config-cache.integration.test.ts",
+              "sha256": "a78b69f7b7f8e268c3f6594cf536a405411dbe39d765c0d273896c36e47e3662"
+            },
+            {
+              "path": "apps/api/src/config-cache/config-cache.service.ts",
+              "sha256": "72398081aea677a3495577ca8effa59594eee1f02988bb982bb6251a03b88e83"
             }
           ],
           "checks": [
@@ -483378,7 +483443,8 @@
             "API build, typecheck, canonical contract, changed-file lint and formatting passed. Scope review confirmed changes are diagnostic only. Provider data, financial amounts and attachment identifiers remain available through their protected domain records and authorized APIs.",
             "60 invoice-state and receipt unit assertions passed. Failure logs retain internal receipt or transition identifiers and omit private reasons, storage locations, raw provider/database messages and amounts. The protected audit retains its reason and correlation fields.",
             "Five selected invoice cases passed in an isolated migrated PostgreSQL fixture, covering overdue settlement, concurrency and atomic rollback. The build, canonical contract, final API typecheck and changed-file lint and format passed.",
-            "Rate-limit diagnostics retain configured namespaces and outcomes. Resolved keys, raw client addresses and backend exception details are omitted. The compiled trusted/untrusted proxy cases verified positive diagnostic content, bounded localized responses and absence of fixture identity values."
+            "Rate-limit diagnostics retain configured namespaces and outcomes. Resolved keys, raw client addresses and backend exception details are omitted. The compiled trusted/untrusted proxy cases verified positive diagnostic content, bounded localized responses and absence of fixture identity values.",
+            "The configuration-cache API adapter retains stable failure notices and omits backend exception strings. The native fallback test injected a sensitive sentinel, returned the durable value and verified that the sentinel was absent from the warning."
           ]
         }
       }
@@ -734738,7 +734804,7 @@
             },
             {
               "path": "apps/api/src/config-cache/config-cache.integration.test.ts",
-              "sha256": "35e0a8a7f2c3b2f06b71c5bc100189dce602b325dd26a3f074edc824c0a3dc32"
+              "sha256": "a78b69f7b7f8e268c3f6594cf536a405411dbe39d765c0d273896c36e47e3662"
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.integration.test.ts",
@@ -738330,7 +738396,8 @@
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
-          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy",
+          "release-0.6-versioned-config-cache-and-diagnostic-privacy"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -738683,7 +738750,7 @@
             },
             {
               "path": "apps/api/src/config-cache/config-cache.integration.test.ts",
-              "sha256": "35e0a8a7f2c3b2f06b71c5bc100189dce602b325dd26a3f074edc824c0a3dc32"
+              "sha256": "a78b69f7b7f8e268c3f6594cf536a405411dbe39d765c0d273896c36e47e3662"
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.integration.test.ts",
@@ -742159,7 +742226,8 @@
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
-          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy",
+          "release-0.6-versioned-config-cache-and-diagnostic-privacy"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -746167,7 +746235,8 @@
           "release-0.6-pilot-and-commercial-topology-documentation",
           "release-0.6-private-session-cutover-and-health-probes",
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
-          "release-0.6-storage-abstraction-direct-transfer-and-admin"
+          "release-0.6-storage-abstraction-direct-transfer-and-admin",
+          "release-0.6-versioned-config-cache-and-diagnostic-privacy"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -838228,6 +838297,70 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/storage-abstraction-direct-transfer-and-admin",
       "source_scope_proof": "release-0.6-storage-abstraction-direct-transfer-and-admin.json",
       "source_scope_proof_sha256": "9be9fcd8fd403af1333cbe5b60c79336abc99981cd3066ea8ce1a6138256383d"
+    },
+    "release-0.6-versioned-config-cache-and-diagnostic-privacy": {
+      "batch": "release-0.6-versioned-config-cache-and-diagnostic-privacy",
+      "base_commit": "6a9899d7af3815ff210a8ffa9a21c349720f826c",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.02.03",
+        "06-security-testing-observability.md#T-06.13.02.06",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+        },
+        {
+          "path": "apps/api/src/config-cache/config-cache.integration.test.ts",
+          "sha256": "a78b69f7b7f8e268c3f6594cf536a405411dbe39d765c0d273896c36e47e3662"
+        },
+        {
+          "path": "apps/api/src/config-cache/config-cache.module.ts",
+          "sha256": "77d74f0c872ea0ed040bc7baf3c6b72f4e3ec06afae665400c00100bf1ee9904"
+        },
+        {
+          "path": "apps/api/src/config-cache/config-cache.service.ts",
+          "sha256": "72398081aea677a3495577ca8effa59594eee1f02988bb982bb6251a03b88e83"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-http.integration.test.ts",
+          "sha256": "75cfaae2a6308de878f20ff3c1b474e5dbb65b5b20115807c35e6e3e83a853b8"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup.service.ts",
+          "sha256": "58090bbdb1cba343648ea351c89dccf71d94330dc0d2a01265bf0acc6ae31677"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+        },
+        {
+          "path": "docs/adr/002-redis-scope.md",
+          "sha256": "046dea0a96b6df1efae72af1ef2e58fa01898935307ffffc922ff03fcbbc0698"
+        },
+        {
+          "path": "packages/shared/src/config-cache/config-cache.test.ts",
+          "sha256": "627b63a633340301a773cb84dbe3152b4083ca7cb78ab81f48fe62b2461524aa"
+        },
+        {
+          "path": "packages/shared/src/config-cache/config-cache.ts",
+          "sha256": "e58d2b6837cec2af58cb7793ee5a033267b2cfe81321b623e790b75cf2c9d7f0"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "Reviewed the five-minute versioned Redis entries, PostgreSQL fallbacks and post-commit eviction. A durable version read guards every hit, and a concurrent commit cannot certify an older row for reuse. Reused 37 shared cache cases from run 42681795739 with matching cache and lock sources.",
+        "Eight final native cases passed against isolated migrated PostgreSQL. Six covered fallback, stale versions, commit races, previous entries and diagnostic redaction. Two compiled wallet cases preserved locked limit validation and immutable accepted retry behavior after a limit change.",
+        "The financial transaction reads the locked current configuration directly. Only Redis diagnostic metadata was omitted in the API adapter. API build, typecheck, generated contract, changed-file lint and formatting passed.",
+        "The configuration-cache API adapter retains stable failure notices and omits backend exception strings. The native fallback test injected a sensitive sentinel, returned the durable value and verified that the sentinel was absent from the warning."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/versioned-config-cache",
+      "source_scope_proof": "release-0.6-versioned-config-cache-and-diagnostic-privacy.json",
+      "source_scope_proof_sha256": "46a36f180ccc9c5f79f1f1a85b305214a4aeb83b3f2fcc41dd61d33f08bca028"
     }
   },
   "historical_improvements": [

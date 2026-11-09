@@ -46,8 +46,8 @@ export class ConfigCacheService {
     private readonly redis: Redis | null
   ) {
     const cacheLogger: ConfigCacheLogger = {
-      warn: (msg: string, ...meta: unknown[]) => this.logger.warn(msg, ...meta),
-      error: (msg: string, ...meta: unknown[]) => this.logger.error(msg, ...meta),
+      warn: (msg) => this.logger.warn(msg),
+      error: (msg) => this.logger.error(msg),
     };
 
     this.cache = new ConfigCache(

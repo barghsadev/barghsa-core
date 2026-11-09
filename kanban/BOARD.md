@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T21:20:58+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T21:23:38+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1010 | Accepted with unchanged source bindings. |
-| verify | 319 | Existing work may be complete; inspect evidence before building. |
+| done | 1011 | Accepted with unchanged source bindings. |
+| verify | 318 | Existing work may be complete; inspect evidence before building. |
 | partial | 33 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1014,7 +1014,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-04.01.07` | partial | Earlier partial | Encrypted off-server backup of config, secrets, and critical application files |
 | `01-platform-infrastructure.md#T-04.02.01` | done | Earlier acceptance_verified | Create Redis connection factory with graceful fallback |
 | `01-platform-infrastructure.md#T-04.02.02` | done | Earlier acceptance_verified | Implement distributed rate-limiting with Redis acceleration + PostgreSQL fallback |
-| `01-platform-infrastructure.md#T-04.02.03` | verify | Earlier acceptance_verified | Implement configuration caching with clear invalidation |
+| `01-platform-infrastructure.md#T-04.02.03` | done | Earlier acceptance_verified | Implement configuration caching with clear invalidation |
 | `01-platform-infrastructure.md#T-04.02.04` | done | Earlier acceptance_verified | Document Redis architecture decision in ADR |
 | `01-platform-infrastructure.md#T-04.03.01` | done | Earlier acceptance_verified | Create S3 storage provider abstraction |
 | `01-platform-infrastructure.md#T-04.03.02` | done | Earlier acceptance_verified | Implement presigned URL workflow for direct browser upload/download |
