@@ -26,4 +26,4 @@
 2. Verify current persisted flag state and the server's enforcement, including no new side effects for disabled operations. Check existing obligations and unrelated workflows before reopening.
 3. Re-enable only after the approved fix and affected journey checks pass. [AI chat maintenance example](../operations/ai-inference.md).
 
-Call the primary, service owner and Finance or security when the rollback cannot restore verified state. Preserve the failed and restored versions, exact verification receipts and recovery decision in the incident follow-up. [Incident response](../operations/incident-response.md).
+Call the primary, service owner and Finance or security when the rollback cannot restore verified state. Preserve the failed and restored versions, exact verification receipts and recovery decision in the incident report. Conduct a blameless review of the timeline, contributing conditions and corrective actions. [Incident response](../operations/incident-response.md).

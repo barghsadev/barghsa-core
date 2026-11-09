@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T21:54:29+00:00",
+  "updated": "2026-11-09T21:55:58+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -13696,7 +13696,8 @@
         ],
         "batches": [
           "release-0.6-staging-image-rollback",
-          "release-0.6-incident-response-and-runbooks"
+          "release-0.6-incident-response-and-runbooks",
+          "release-0.6-incident-runbook-criteria"
         ],
         "current_acceptance": null
       }
@@ -16988,7 +16989,8 @@
           "docs/runbooks/ai-provider-outage.md"
         ],
         "batches": [
-          "release-0.6-incident-response-and-runbooks"
+          "release-0.6-incident-response-and-runbooks",
+          "release-0.6-incident-runbook-criteria"
         ],
         "current_acceptance": {
           "kind": "source-bound-operations-documentation",
@@ -17016,11 +17018,11 @@
             },
             {
               "path": "docs/runbooks/storage-outage.md",
-              "sha256": "0f20dd60e58b471f1c05983271c2976cac13ab19e8ad0ac29bcbec820b48a05c"
+              "sha256": "17d1fc6fc38f41034e6d63d1567d14ce4f07d8242fe8b38cb94ac92a125db17f"
             },
             {
               "path": "docs/runbooks/notification-outage.md",
-              "sha256": "df9739d98b9e9ef2ac4c420e288e3c79d826bdd911fd40e55e7e1333017df309"
+              "sha256": "6fea6084ab62bb9f939b56a1b8c3b8d0a33af8e2542532054b2b292938c45b9b"
             },
             {
               "path": "docs/runbooks/credential-compromise.md",
@@ -17028,7 +17030,7 @@
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
-              "sha256": "0b103cf914cbe4527c281e2b75fc4abe7b0f6f6005cf2d1ca46b14f19a1477ce"
+              "sha256": "6fc4859717556e5ec7e8e6fc079c683c13dcf163e52342e068306d407fc9e2db"
             },
             {
               "path": "docs/runbooks/redis-loss.md",
@@ -17040,7 +17042,8 @@
             }
           ],
           "checks": [
-            "All ten required incident runbooks exist and are indexed. Reviewed documented severity, symptoms and impact, responsible operator, numbered recovery steps, existing protected commands or authorized UI paths, verification, escalation and post-incident evidence. Verified cross-links and exact route or command references without changing live systems."
+            "All ten required incident runbooks exist and are indexed. Reviewed documented severity, symptoms and impact, responsible operator, numbered recovery steps, existing protected commands or authorized UI paths, verification, escalation and post-incident evidence. Verified cross-links and exact route or command references without changing live systems.",
+            "Reviewed current additions for read-only storage recovery, verified-contact OTP and blameless review. Existing incident documentation criteria and source links still pass."
           ]
         }
       }
@@ -17198,7 +17201,8 @@
           "docs/runbooks/ai-provider-outage.md"
         ],
         "batches": [
-          "release-0.6-incident-response-and-runbooks"
+          "release-0.6-incident-response-and-runbooks",
+          "release-0.6-incident-runbook-criteria"
         ],
         "current_acceptance": {
           "kind": "source-bound-operations-documentation",
@@ -17230,11 +17234,11 @@
             },
             {
               "path": "docs/runbooks/storage-outage.md",
-              "sha256": "0f20dd60e58b471f1c05983271c2976cac13ab19e8ad0ac29bcbec820b48a05c"
+              "sha256": "17d1fc6fc38f41034e6d63d1567d14ce4f07d8242fe8b38cb94ac92a125db17f"
             },
             {
               "path": "docs/runbooks/notification-outage.md",
-              "sha256": "df9739d98b9e9ef2ac4c420e288e3c79d826bdd911fd40e55e7e1333017df309"
+              "sha256": "6fea6084ab62bb9f939b56a1b8c3b8d0a33af8e2542532054b2b292938c45b9b"
             },
             {
               "path": "docs/runbooks/credential-compromise.md",
@@ -17242,7 +17246,7 @@
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
-              "sha256": "0b103cf914cbe4527c281e2b75fc4abe7b0f6f6005cf2d1ca46b14f19a1477ce"
+              "sha256": "6fc4859717556e5ec7e8e6fc079c683c13dcf163e52342e068306d407fc9e2db"
             },
             {
               "path": "docs/runbooks/redis-loss.md",
@@ -17254,7 +17258,8 @@
             }
           ],
           "checks": [
-            "Reviewed the documented P0–P3 response times, primary and secondary rotation, private channel and P0 phone response, protected evidence and credential revocation, Persian and English customer drafts, and five-working-day post-incident follow-up. Alert priorities are distinct from confirmed incident severities. The active on-call rota, destination and dead-man readback are separate deployment requirements."
+            "Reviewed the documented P0–P3 response times, primary and secondary rotation, private channel and P0 phone response, protected evidence and credential revocation, Persian and English customer drafts, and five-working-day post-incident follow-up. Alert priorities are distinct from confirmed incident severities. The active on-call rota, destination and dead-man readback are separate deployment requirements.",
+            "Reviewed current additions for read-only storage recovery, verified-contact OTP and blameless review. Existing incident documentation criteria and source links still pass."
           ]
         }
       }
@@ -485733,19 +485738,38 @@
         "story": "06-security-testing-observability.md#spec-b335ba1cbf53"
       },
       "requirement": "| T-06.17.01.01 | Write Payment/Wallet Mismatch runbook: detection, freeze, reconciliation, correction, verification | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "docs/runbooks/payment-wallet-mismatch.md"
+        ],
+        "batches": [
+          "release-0.6-incident-runbook-criteria"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-incident-runbook-review",
+          "base_commit": "60c79d9c2dc9d6e729f4d6878633581a86fc0ed4",
+          "source_evidence": [
+            {
+              "path": "docs/runbooks/payment-wallet-mismatch.md",
+              "sha256": "3d93ef1f083cf42d39853ad94c565d4ea0b1c8ecce85e3106b74b10dc6a37aa6"
+            },
+            {
+              "path": "docs/operations/incident-response.md",
+              "sha256": "0fa45e27ac71f56e1a2729845ae52efec1f4e6e30760efff11be1ea584724ca1"
+            }
+          ],
+          "checks": [
+            "Reviewed detection, affected-payment containment, provider inquiry, audited correction and independent invoice and ledger readback.",
+            "Checked documentation and existing source-linked recovery paths. No incident was induced or live recovery certified."
+          ]
+        }
       }
     },
     {
@@ -485759,19 +485783,38 @@
         "story": "06-security-testing-observability.md#spec-b335ba1cbf53"
       },
       "requirement": "| T-06.17.01.02 | Write Refund Backlog runbook: identify stuck refunds, manual intervention, idempotent replay | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "docs/runbooks/refund-backlog.md"
+        ],
+        "batches": [
+          "release-0.6-incident-runbook-criteria"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-incident-runbook-review",
+          "base_commit": "60c79d9c2dc9d6e729f4d6878633581a86fc0ed4",
+          "source_evidence": [
+            {
+              "path": "docs/runbooks/refund-backlog.md",
+              "sha256": "a5d219b41a21ad89796e76b46c140db1ebfd520c1e315de17a27d45e039aea3e"
+            },
+            {
+              "path": "docs/operations/incident-response.md",
+              "sha256": "0fa45e27ac71f56e1a2729845ae52efec1f4e6e30760efff11be1ea584724ca1"
+            }
+          ],
+          "checks": [
+            "Reviewed identification of overdue obligations, external outcome reconciliation, current authority, one authorized same-identity retry and proof of full settlement.",
+            "Checked documentation and existing source-linked recovery paths. No incident was induced or live recovery certified."
+          ]
+        }
       }
     },
     {
@@ -485785,19 +485828,43 @@
         "story": "06-security-testing-observability.md#spec-b335ba1cbf53"
       },
       "requirement": "| T-06.17.01.03 | Write Database Failover/Restore runbook: promote replica, PITR restore, verify RPO/RTO, application reconnect | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "docs/runbooks/database-failover.md",
+          "docs/runbooks/database-restore.md"
+        ],
+        "batches": [
+          "release-0.6-incident-runbook-criteria"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-incident-runbook-review",
+          "base_commit": "60c79d9c2dc9d6e729f4d6878633581a86fc0ed4",
+          "source_evidence": [
+            {
+              "path": "docs/runbooks/database-failover.md",
+              "sha256": "96a04793edb15a9f7cb5fa6519c7d2da5827f7e72918cac172b6882816e6bb4f"
+            },
+            {
+              "path": "docs/runbooks/database-restore.md",
+              "sha256": "f98b041a7ec71d27be5b0bb9cc59e41cb33039f9f6343536962cb62a1efea494"
+            },
+            {
+              "path": "docs/operations/incident-response.md",
+              "sha256": "0fa45e27ac71f56e1a2729845ae52efec1f4e6e30760efff11be1ea584724ca1"
+            }
+          ],
+          "checks": [
+            "Reviewed single-writer fencing and promotion, TLS reconnect, isolated PITR, fingerprint and committed-record readback, measured recovery objectives and escalation.",
+            "Checked documentation and existing source-linked recovery paths. No incident was induced or live recovery certified."
+          ]
+        }
       }
     },
     {
@@ -485811,19 +485878,38 @@
         "story": "06-security-testing-observability.md#spec-b335ba1cbf53"
       },
       "requirement": "| T-06.17.01.04 | Write Object-Storage Outage runbook: fallback to local/read-only, switch region, restore from versioning | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "docs/runbooks/storage-outage.md"
+        ],
+        "batches": [
+          "release-0.6-incident-runbook-criteria"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-incident-runbook-review",
+          "base_commit": "60c79d9c2dc9d6e729f4d6878633581a86fc0ed4",
+          "source_evidence": [
+            {
+              "path": "docs/runbooks/storage-outage.md",
+              "sha256": "17d1fc6fc38f41034e6d63d1567d14ce4f07d8242fe8b38cb94ac92a125db17f"
+            },
+            {
+              "path": "docs/operations/incident-response.md",
+              "sha256": "0fa45e27ac71f56e1a2729845ae52efec1f4e6e30760efff11be1ea584724ca1"
+            }
+          ],
+          "checks": [
+            "Reviewed scoped read-only fallback, approved region change preserving versions and holds, version-aware checksum recovery and authorized browser revalidation.",
+            "Checked documentation and existing source-linked recovery paths. No incident was induced or live recovery certified."
+          ]
+        }
       }
     },
     {
@@ -485837,19 +485923,38 @@
         "story": "06-security-testing-observability.md#spec-b335ba1cbf53"
       },
       "requirement": "| T-06.17.01.05 | Write Notification Outage runbook: switch provider, verify OTP delivery, in-app fallback | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "docs/runbooks/notification-outage.md"
+        ],
+        "batches": [
+          "release-0.6-incident-runbook-criteria"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-incident-runbook-review",
+          "base_commit": "60c79d9c2dc9d6e729f4d6878633581a86fc0ed4",
+          "source_evidence": [
+            {
+              "path": "docs/runbooks/notification-outage.md",
+              "sha256": "6fea6084ab62bb9f939b56a1b8c3b8d0a33af8e2542532054b2b292938c45b9b"
+            },
+            {
+              "path": "docs/operations/incident-response.md",
+              "sha256": "0fa45e27ac71f56e1a2729845ae52efec1f4e6e30760efff11be1ea584724ca1"
+            }
+          ],
+          "checks": [
+            "Reviewed tested provider replacement, controlled native OTP verification, private in-app business updates, uncertain send reconciliation and actual channel receipts.",
+            "Checked documentation and existing source-linked recovery paths. No incident was induced or live recovery certified."
+          ]
+        }
       }
     },
     {
@@ -485863,19 +485968,38 @@
         "story": "06-security-testing-observability.md#spec-b335ba1cbf53"
       },
       "requirement": "| T-06.17.01.06 | Write Credential Compromise runbook: revoke sessions, rotate keys, notify users, audit trail | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "docs/runbooks/credential-compromise.md"
+        ],
+        "batches": [
+          "release-0.6-incident-runbook-criteria"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-incident-runbook-review",
+          "base_commit": "60c79d9c2dc9d6e729f4d6878633581a86fc0ed4",
+          "source_evidence": [
+            {
+              "path": "docs/runbooks/credential-compromise.md",
+              "sha256": "7ec48a447595fd62046804e970a0272ce6510fcf29796b6253a987a63f096056"
+            },
+            {
+              "path": "docs/operations/incident-response.md",
+              "sha256": "0fa45e27ac71f56e1a2729845ae52efec1f4e6e30760efff11be1ea584724ca1"
+            }
+          ],
+          "checks": [
+            "Reviewed scoped credential revocation, protected rotation, affected-customer communication approval, sanitized audit preservation and negative verification.",
+            "Checked documentation and existing source-linked recovery paths. No incident was induced or live recovery certified."
+          ]
+        }
       }
     },
     {
@@ -485889,21 +486013,39 @@
         "story": "06-security-testing-observability.md#spec-b335ba1cbf53"
       },
       "requirement": "| T-06.17.01.07 | Write Bad Deployment runbook: rollback, smoke test, incident report, blameless post-mortem | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [
-          "release-0.6-staging-image-rollback"
+        "changed_paths": [
+          "docs/runbooks/bad-deployment.md"
         ],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-staging-image-rollback",
+          "release-0.6-incident-runbook-criteria"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-incident-runbook-review",
+          "base_commit": "60c79d9c2dc9d6e729f4d6878633581a86fc0ed4",
+          "source_evidence": [
+            {
+              "path": "docs/runbooks/bad-deployment.md",
+              "sha256": "6fc4859717556e5ec7e8e6fc079c683c13dcf163e52342e068306d407fc9e2db"
+            },
+            {
+              "path": "docs/operations/incident-response.md",
+              "sha256": "0fa45e27ac71f56e1a2729845ae52efec1f4e6e30760efff11be1ea584724ca1"
+            }
+          ],
+          "checks": [
+            "Reviewed image and compatible migration recovery, smoke and reconciliation checks, incident reporting and blameless follow-up.",
+            "Checked documentation and existing source-linked recovery paths. No incident was induced or live recovery certified."
+          ]
+        }
       }
     },
     {
@@ -747066,7 +747208,8 @@
           "release-0.6-incident-response-and-runbooks",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
           "release-0.6-native-financial-foreign-id-http",
-          "release-0.6-authorization-policy-and-staff-grants"
+          "release-0.6-authorization-policy-and-staff-grants",
+          "release-0.6-incident-runbook-criteria"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -839791,6 +839934,71 @@
       "checks": [
         "Reviewed the customer/profile and staff/system policy, additive scoped roles, current owner and selected-profile rules, resource/action checks, explicitly scoped document reads, protected decisions and durable worker or signed-callback authority. Owner-approved read-only AI launch scope and profile navigation retained. This records the policy design; it does not certify every route, a single policy class, or every denial audit.",
         "Verified the six seeded system roles, current database permission loading, role union, deny for malformed or missing grants and exact capability checks, customer-context denial, explicit admin/wildcard authority and current-role revocation. Reused 208 passing hosted cases from 42699842646 job 129441604092 across permission resolution, operating context, effective permission readback, CRM and admin boundaries. All listed code, tests, migrations and lock bytes match."
+      ]
+    },
+    "release-0.6-incident-runbook-criteria": {
+      "batch": "release-0.6-incident-runbook-criteria",
+      "base_commit": "60c79d9c2dc9d6e729f4d6878633581a86fc0ed4",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.04.01",
+        "01-platform-infrastructure.md#T-07.04.04",
+        "06-security-testing-observability.md#T-06.17.01.01",
+        "06-security-testing-observability.md#T-06.17.01.02",
+        "06-security-testing-observability.md#T-06.17.01.03",
+        "06-security-testing-observability.md#T-06.17.01.04",
+        "06-security-testing-observability.md#T-06.17.01.05",
+        "06-security-testing-observability.md#T-06.17.01.06",
+        "06-security-testing-observability.md#T-06.17.01.07",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/operations/incident-response.md",
+          "sha256": "0fa45e27ac71f56e1a2729845ae52efec1f4e6e30760efff11be1ea584724ca1"
+        },
+        {
+          "path": "docs/runbooks/bad-deployment.md",
+          "sha256": "6fc4859717556e5ec7e8e6fc079c683c13dcf163e52342e068306d407fc9e2db"
+        },
+        {
+          "path": "docs/runbooks/credential-compromise.md",
+          "sha256": "7ec48a447595fd62046804e970a0272ce6510fcf29796b6253a987a63f096056"
+        },
+        {
+          "path": "docs/runbooks/database-failover.md",
+          "sha256": "96a04793edb15a9f7cb5fa6519c7d2da5827f7e72918cac172b6882816e6bb4f"
+        },
+        {
+          "path": "docs/runbooks/database-restore.md",
+          "sha256": "f98b041a7ec71d27be5b0bb9cc59e41cb33039f9f6343536962cb62a1efea494"
+        },
+        {
+          "path": "docs/runbooks/notification-outage.md",
+          "sha256": "6fea6084ab62bb9f939b56a1b8c3b8d0a33af8e2542532054b2b292938c45b9b"
+        },
+        {
+          "path": "docs/runbooks/payment-wallet-mismatch.md",
+          "sha256": "3d93ef1f083cf42d39853ad94c565d4ea0b1c8ecce85e3106b74b10dc6a37aa6"
+        },
+        {
+          "path": "docs/runbooks/refund-backlog.md",
+          "sha256": "a5d219b41a21ad89796e76b46c140db1ebfd520c1e315de17a27d45e039aea3e"
+        },
+        {
+          "path": "docs/runbooks/storage-outage.md",
+          "sha256": "17d1fc6fc38f41034e6d63d1567d14ce4f07d8242fe8b38cb94ac92a125db17f"
+        }
+      ],
+      "checks": [
+        "Reviewed detection, affected-payment containment, provider inquiry, audited correction and independent invoice and ledger readback.",
+        "Reviewed identification of overdue obligations, external outcome reconciliation, current authority, one authorized same-identity retry and proof of full settlement.",
+        "Reviewed single-writer fencing and promotion, TLS reconnect, isolated PITR, fingerprint and committed-record readback, measured recovery objectives and escalation.",
+        "Reviewed scoped read-only fallback, approved region change preserving versions and holds, version-aware checksum recovery and authorized browser revalidation.",
+        "Reviewed tested provider replacement, controlled native OTP verification, private in-app business updates, uncertain send reconciliation and actual channel receipts.",
+        "Reviewed scoped credential revocation, protected rotation, affected-customer communication approval, sanitized audit preservation and negative verification.",
+        "Reviewed image and compatible migration recovery, smoke and reconciliation checks, incident reporting and blameless follow-up.",
+        "Current changed runbook formatting and links passed. Runtime alert links and quarterly review receipts remain separate."
       ]
     }
   },

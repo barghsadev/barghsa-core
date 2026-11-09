@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T21:54:29+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T21:55:58+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1021 | Accepted with unchanged source bindings. |
-| verify | 307 | Existing work may be complete; inspect evidence before building. |
+| done | 1028 | Accepted with unchanged source bindings. |
+| verify | 300 | Existing work may be complete; inspect evidence before building. |
 | partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1417,13 +1417,13 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.16.02.04` | verify | Inventory needed | Implement release correlation: send release marker to Sentry on each production deploy |
 | `06-security-testing-observability.md#T-06.16.02.05` | verify | Inventory needed | Configure performance monitoring integration (tracing) with Sentry |
 | `06-security-testing-observability.md#T-06.16.02.06` | verify | Inventory needed | Write integration test: error reported to Sentry, PII scrubbed, release tag present |
-| `06-security-testing-observability.md#T-06.17.01.01` | verify | Inventory needed | Write Payment/Wallet Mismatch runbook: detection, freeze, reconciliation, correction, verification |
-| `06-security-testing-observability.md#T-06.17.01.02` | verify | Inventory needed | Write Refund Backlog runbook: identify stuck refunds, manual intervention, idempotent replay |
-| `06-security-testing-observability.md#T-06.17.01.03` | verify | Inventory needed | Write Database Failover/Restore runbook: promote replica, PITR restore, verify RPO/RTO, application reconnect |
-| `06-security-testing-observability.md#T-06.17.01.04` | verify | Inventory needed | Write Object-Storage Outage runbook: fallback to local/read-only, switch region, restore from versioning |
-| `06-security-testing-observability.md#T-06.17.01.05` | verify | Inventory needed | Write Notification Outage runbook: switch provider, verify OTP delivery, in-app fallback |
-| `06-security-testing-observability.md#T-06.17.01.06` | verify | Inventory needed | Write Credential Compromise runbook: revoke sessions, rotate keys, notify users, audit trail |
-| `06-security-testing-observability.md#T-06.17.01.07` | verify | Recorded batch work | Write Bad Deployment runbook: rollback, smoke test, incident report, blameless post-mortem |
+| `06-security-testing-observability.md#T-06.17.01.01` | done | Recorded batch work | Write Payment/Wallet Mismatch runbook: detection, freeze, reconciliation, correction, verification |
+| `06-security-testing-observability.md#T-06.17.01.02` | done | Recorded batch work | Write Refund Backlog runbook: identify stuck refunds, manual intervention, idempotent replay |
+| `06-security-testing-observability.md#T-06.17.01.03` | done | Recorded batch work | Write Database Failover/Restore runbook: promote replica, PITR restore, verify RPO/RTO, application reconnect |
+| `06-security-testing-observability.md#T-06.17.01.04` | done | Recorded batch work | Write Object-Storage Outage runbook: fallback to local/read-only, switch region, restore from versioning |
+| `06-security-testing-observability.md#T-06.17.01.05` | done | Recorded batch work | Write Notification Outage runbook: switch provider, verify OTP delivery, in-app fallback |
+| `06-security-testing-observability.md#T-06.17.01.06` | done | Recorded batch work | Write Credential Compromise runbook: revoke sessions, rotate keys, notify users, audit trail |
+| `06-security-testing-observability.md#T-06.17.01.07` | done | Recorded batch work | Write Bad Deployment runbook: rollback, smoke test, incident report, blameless post-mortem |
 | `06-security-testing-observability.md#T-06.17.01.08` | verify | Inventory needed | Store runbooks in `docs/runbooks/` with alert links; review quarterly |
 | `06-security-testing-observability.md#T-06.17.02.01` | done | Recorded batch work | Design capability-based maintenance mode: granular toggles per module/capability with admin UI |
 | `06-security-testing-observability.md#T-06.17.02.02` | done | Recorded batch work | Implement maintenance mode middleware: check capability toggle before processing; return `503` with safe message and support link |
