@@ -15,6 +15,7 @@ const labels: Record<string, string> = {
     'پردازش اعلان‌ها با تأخیر روبه‌رو است / Notification processing is delayed',
   NotificationOutboxBacklogCritical:
     'تأخیر پردازش اعلان‌ها بحرانی است / Notification processing is critically delayed',
+  RefundObligationOverdue: 'تعهد بازپرداخت معوق است / Mandatory refund is overdue',
   AiModelCircuitOpen: 'مدل هوش مصنوعی در دسترس نیست / AI model unavailable',
   WorkerUnavailable: 'پردازشگر پس‌زمینه در دسترس نیست / Background worker unavailable',
 };
@@ -27,6 +28,7 @@ const alertPriorities = new Map<string, 'P1' | 'P2'>([
   ['SmsProviderLowCredit', 'P2'],
   ['NotificationOutboxBacklog', 'P2'],
   ['NotificationOutboxBacklogCritical', 'P1'],
+  ['RefundObligationOverdue', 'P2'],
 ]);
 type Alert = {
   name: string;

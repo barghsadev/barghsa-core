@@ -4,6 +4,51 @@
   'tests':
     [
       {
+        'name': 'Overdue mandatory refunds alert once per database scope and recover',
+        'interval': '1m',
+        'input_series':
+          [
+            {
+              'series': 'refund_obligations_overdue{job="worker",environment="staging",database="core",instance="a",pod="a"}',
+              'values': '0 1 0',
+            },
+            {
+              'series': 'refund_obligations_overdue{job="worker",environment="staging",database="core",instance="b",pod="b"}',
+              'values': '0 2 0',
+            },
+            {
+              'series': 'refund_obligations_overdue{job="worker",environment="staging",database="other",instance="a",pod="a"}',
+              'values': '0 0 0',
+            },
+          ],
+        'alert_rule_test':
+          [
+            { 'eval_time': '0m', 'alertname': 'RefundObligationOverdue', 'exp_alerts': [] },
+            {
+              'eval_time': '1m',
+              'alertname': 'RefundObligationOverdue',
+              'exp_alerts':
+                [
+                  {
+                    'exp_labels':
+                      {
+                        'job': 'worker',
+                        'environment': 'staging',
+                        'database': 'core',
+                        'severity': 'warning',
+                        'priority': 'P2',
+                      },
+                    'exp_annotations':
+                      {
+                        'summary': 'At least one mandatory refund has remained outstanding for more than one hour',
+                      },
+                  },
+                ],
+            },
+            { 'eval_time': '2m', 'alertname': 'RefundObligationOverdue', 'exp_alerts': [] },
+          ],
+      },
+      {
         'name': 'Eligible outbox backlog crosses strict P2 and P1 boundaries and recovers',
         'interval': '1m',
         'input_series':

@@ -53,6 +53,15 @@ groups:
           priority: P1
         annotations:
           summary: Eligible notification outbox backlog exceeds fifteen minutes
+  - name: barghsa-refund-obligations
+    rules:
+      - alert: RefundObligationOverdue
+        expr: max without (instance, pod) (refund_obligations_overdue) > 0
+        labels:
+          severity: warning
+          priority: P2
+        annotations:
+          summary: At least one mandatory refund has remained outstanding for more than one hour
   - name: barghsa-ai-models
     rules:
       - alert: AiModelCircuitOpen

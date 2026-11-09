@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T22:08:09+00:00",
+  "updated": "2026-11-09T22:13:59+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -9931,7 +9931,8 @@
         ],
         "batches": [
           "release-0.6-api-worker-shutdown-and-fixture-reuse",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-api-and-worker-process-verification",
@@ -9963,7 +9964,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/jobs/poller-group.ts",
@@ -9979,7 +9980,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
+              "sha256": "7aa85c44adae2f6a2a7fe052237c439287eee58904cf93ad757a5c7fa88ec41a"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -55208,7 +55209,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -55288,11 +55290,11 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
+              "sha256": "7aa85c44adae2f6a2a7fe052237c439287eee58904cf93ad757a5c7fa88ec41a"
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/profiles/invitation-expiry.integration.test.ts",
@@ -71135,7 +71137,8 @@
           "release-0.6-native-integration-acceptance",
           "release-0.6-api-worker-shutdown-and-fixture-reuse",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -71151,11 +71154,11 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
+              "sha256": "7aa85c44adae2f6a2a7fe052237c439287eee58904cf93ad757a5c7fa88ec41a"
             },
             {
               "path": "apps/worker/src/notifications/outbox-lease.ts",
@@ -72410,7 +72413,8 @@
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -73138,11 +73142,11 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
+              "sha256": "7aa85c44adae2f6a2a7fe052237c439287eee58904cf93ad757a5c7fa88ec41a"
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "packages/db/drizzle/production/meta/0269_snapshot.json",
@@ -73210,7 +73214,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "fe4219dfa5fcedd3b23cb774a08e6ae96d0567f77a383f679cca86e7fb27ff9a"
+              "sha256": "9d39742c4f3d5baa316b015c300bc612e2cc0241a9fa4d4fad74e6978348b12a"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -73246,11 +73250,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "fa61b9af6fc7fd12490b5b6dd7c9dfcd0600f07a127b727f9246f42524294a85"
+              "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -76232,7 +76236,8 @@
           "release-0.6-native-integration-acceptance",
           "release-0.6-api-worker-shutdown-and-fixture-reuse",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -76280,7 +76285,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
+              "sha256": "7aa85c44adae2f6a2a7fe052237c439287eee58904cf93ad757a5c7fa88ec41a"
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
@@ -77456,7 +77461,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.6-private-api-monitoring",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -77476,11 +77482,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "fa61b9af6fc7fd12490b5b6dd7c9dfcd0600f07a127b727f9246f42524294a85"
+              "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -77488,7 +77494,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "fe4219dfa5fcedd3b23cb774a08e6ae96d0567f77a383f679cca86e7fb27ff9a"
+              "sha256": "9d39742c4f3d5baa316b015c300bc612e2cc0241a9fa4d4fad74e6978348b12a"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -85836,7 +85842,8 @@
           "release-0.5-action-contrast",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -86020,11 +86027,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "fa61b9af6fc7fd12490b5b6dd7c9dfcd0600f07a127b727f9246f42524294a85"
+              "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -86787,7 +86794,8 @@
           "release-0.5-action-contrast",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -86971,11 +86979,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "fa61b9af6fc7fd12490b5b6dd7c9dfcd0600f07a127b727f9246f42524294a85"
+              "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -87738,7 +87746,8 @@
           "release-0.5-action-contrast",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -87922,11 +87931,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "fa61b9af6fc7fd12490b5b6dd7c9dfcd0600f07a127b727f9246f42524294a85"
+              "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -88690,7 +88699,8 @@
           "release-0.5-action-contrast",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -88874,11 +88884,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "fa61b9af6fc7fd12490b5b6dd7c9dfcd0600f07a127b727f9246f42524294a85"
+              "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -89641,7 +89651,8 @@
           "release-0.5-action-contrast",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -89825,11 +89836,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "fa61b9af6fc7fd12490b5b6dd7c9dfcd0600f07a127b727f9246f42524294a85"
+              "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -90594,7 +90605,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-private-api-monitoring",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -90718,11 +90730,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "fa61b9af6fc7fd12490b5b6dd7c9dfcd0600f07a127b727f9246f42524294a85"
+              "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -90818,7 +90830,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "fe4219dfa5fcedd3b23cb774a08e6ae96d0567f77a383f679cca86e7fb27ff9a"
+              "sha256": "9d39742c4f3d5baa316b015c300bc612e2cc0241a9fa4d4fad74e6978348b12a"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -91332,7 +91344,8 @@
           "release-0.5-action-contrast",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -91480,11 +91493,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "fa61b9af6fc7fd12490b5b6dd7c9dfcd0600f07a127b727f9246f42524294a85"
+              "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -91969,7 +91982,8 @@
           "release-0.5-action-contrast",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -92153,11 +92167,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "fa61b9af6fc7fd12490b5b6dd7c9dfcd0600f07a127b727f9246f42524294a85"
+              "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -92788,7 +92802,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-route-census-closure",
           "release-0.6-api-worker-shutdown-and-fixture-reuse",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -92884,11 +92899,11 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
+              "sha256": "7aa85c44adae2f6a2a7fe052237c439287eee58904cf93ad757a5c7fa88ec41a"
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -92908,11 +92923,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "fa61b9af6fc7fd12490b5b6dd7c9dfcd0600f07a127b727f9246f42524294a85"
+              "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "packages/db/drizzle/0035_create_sms_provider_configs.sql",
@@ -99795,7 +99810,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-exception-correlation-and-sensitive-diagnostics",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -100279,11 +100295,11 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
+              "sha256": "7aa85c44adae2f6a2a7fe052237c439287eee58904cf93ad757a5c7fa88ec41a"
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/refunds/reconciliation-scanner.integration.test.ts",
@@ -105729,7 +105745,8 @@
           "release-0.5-staff-workspace-read-closure",
           "release-0.5-dependency-gate-closure",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -105845,7 +105862,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "packages/shared/src/ai-models/index.ts",
@@ -105977,11 +105994,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "fa61b9af6fc7fd12490b5b6dd7c9dfcd0600f07a127b727f9246f42524294a85"
+              "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
             }
           ],
           "checks": [
@@ -106364,7 +106381,8 @@
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
           "release-0.5-staff-confirmation-fixtures",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -106524,7 +106542,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -129116,7 +129134,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -129328,7 +129347,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -130117,7 +130136,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -130329,7 +130349,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -131118,7 +131138,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -131330,7 +131351,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -132119,7 +132140,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -132331,7 +132353,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -133120,7 +133142,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -133332,7 +133355,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -134121,7 +134144,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -134333,7 +134357,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -135206,7 +135230,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -135442,7 +135467,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -136335,7 +136360,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -136547,7 +136573,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -137420,7 +137446,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -137656,7 +137683,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -138549,7 +138576,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -138761,7 +138789,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -139548,7 +139576,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-web-fixture-typecheck-and-license-readback",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -139720,7 +139749,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -140321,7 +140350,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-web-fixture-typecheck-and-license-readback",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -140509,7 +140539,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -141112,7 +141142,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-web-fixture-typecheck-and-license-readback",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -141268,7 +141299,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -143872,7 +143903,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -143908,7 +143940,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/wallet/reconciliation-scanner.integration.test.ts",
@@ -146611,7 +146643,8 @@
           "release-0.5-final-rehearsal",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -146659,7 +146692,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
@@ -324917,7 +324950,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -324969,7 +325003,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -325817,7 +325851,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -325869,7 +325904,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -326720,7 +326755,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -326772,7 +326808,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -327620,7 +327656,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -327672,7 +327709,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -328521,7 +328558,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -328573,7 +328611,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -329421,7 +329459,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -329473,7 +329512,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -330323,7 +330362,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -330375,7 +330415,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -331229,7 +331269,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -331281,7 +331322,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -339582,7 +339623,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -339634,7 +339676,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -340490,7 +340532,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -340542,7 +340585,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -341399,7 +341442,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -341451,7 +341495,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -440043,7 +440087,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-route-census-closure",
           "release-0.6-api-worker-shutdown-and-fixture-reuse",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -440139,11 +440184,11 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
+              "sha256": "7aa85c44adae2f6a2a7fe052237c439287eee58904cf93ad757a5c7fa88ec41a"
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -440163,11 +440208,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "fa61b9af6fc7fd12490b5b6dd7c9dfcd0600f07a127b727f9246f42524294a85"
+              "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "packages/db/drizzle/0035_create_sms_provider_configs.sql",
@@ -440491,7 +440536,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-route-census-closure",
           "release-0.6-api-worker-shutdown-and-fixture-reuse",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -440587,11 +440633,11 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
+              "sha256": "7aa85c44adae2f6a2a7fe052237c439287eee58904cf93ad757a5c7fa88ec41a"
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -440611,11 +440657,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "fa61b9af6fc7fd12490b5b6dd7c9dfcd0600f07a127b727f9246f42524294a85"
+              "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "packages/db/drizzle/0035_create_sms_provider_configs.sql",
@@ -440938,7 +440984,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-route-census-closure",
           "release-0.6-api-worker-shutdown-and-fixture-reuse",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -441034,11 +441081,11 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
+              "sha256": "7aa85c44adae2f6a2a7fe052237c439287eee58904cf93ad757a5c7fa88ec41a"
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -441058,11 +441105,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "fa61b9af6fc7fd12490b5b6dd7c9dfcd0600f07a127b727f9246f42524294a85"
+              "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "packages/db/drizzle/0035_create_sms_provider_configs.sql",
@@ -441385,7 +441432,8 @@
           "release-0.5-route-census-closure",
           "release-0.6-private-api-monitoring",
           "release-0.6-api-worker-shutdown-and-fixture-reuse",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -441481,11 +441529,11 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
+              "sha256": "7aa85c44adae2f6a2a7fe052237c439287eee58904cf93ad757a5c7fa88ec41a"
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -441505,11 +441553,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "fa61b9af6fc7fd12490b5b6dd7c9dfcd0600f07a127b727f9246f42524294a85"
+              "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "packages/db/drizzle/0035_create_sms_provider_configs.sql",
@@ -441577,7 +441625,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "fe4219dfa5fcedd3b23cb774a08e6ae96d0567f77a383f679cca86e7fb27ff9a"
+              "sha256": "9d39742c4f3d5baa316b015c300bc612e2cc0241a9fa4d4fad74e6978348b12a"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -441918,7 +441966,8 @@
           "release-0.6-api-worker-shutdown-and-fixture-reuse",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -442042,11 +442091,11 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
+              "sha256": "7aa85c44adae2f6a2a7fe052237c439287eee58904cf93ad757a5c7fa88ec41a"
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -442066,11 +442115,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "fa61b9af6fc7fd12490b5b6dd7c9dfcd0600f07a127b727f9246f42524294a85"
+              "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "packages/db/drizzle/0035_create_sms_provider_configs.sql",
@@ -442868,7 +442917,8 @@
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -443092,11 +443142,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "fe4219dfa5fcedd3b23cb774a08e6ae96d0567f77a383f679cca86e7fb27ff9a"
+              "sha256": "9d39742c4f3d5baa316b015c300bc612e2cc0241a9fa4d4fad74e6978348b12a"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "docs/operations/ai-model-tests.md",
@@ -453613,7 +453663,8 @@
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-document-http-fixture-isolation"
+          "release-0.6-document-http-fixture-isolation",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -453629,7 +453680,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -453957,7 +454008,8 @@
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-document-http-fixture-isolation"
+          "release-0.6-document-http-fixture-isolation",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -453973,7 +454025,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -454303,7 +454355,8 @@
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-document-http-fixture-isolation"
+          "release-0.6-document-http-fixture-isolation",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -454319,7 +454372,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -454674,7 +454727,8 @@
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-document-http-fixture-isolation"
+          "release-0.6-document-http-fixture-isolation",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -454690,7 +454744,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -455018,7 +455072,8 @@
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-document-http-fixture-isolation"
+          "release-0.6-document-http-fixture-isolation",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -455034,7 +455089,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -455364,7 +455419,8 @@
           "release-0.5-staff-workspace-read-closure",
           "release-0.5-dependency-gate-closure",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -455480,7 +455536,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "packages/shared/src/ai-models/index.ts",
@@ -455612,11 +455668,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "fa61b9af6fc7fd12490b5b6dd7c9dfcd0600f07a127b727f9246f42524294a85"
+              "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
             }
           ],
           "checks": [
@@ -455847,7 +455903,8 @@
           "release-0.5-staff-workspace-read-closure",
           "release-0.5-dependency-gate-closure",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -455963,7 +456020,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "packages/shared/src/ai-models/index.ts",
@@ -456095,11 +456152,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "fa61b9af6fc7fd12490b5b6dd7c9dfcd0600f07a127b727f9246f42524294a85"
+              "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
             }
           ],
           "checks": [
@@ -456332,7 +456389,8 @@
           "release-0.5-staff-workspace-read-closure",
           "release-0.5-dependency-gate-closure",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -456448,7 +456506,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "packages/shared/src/ai-models/index.ts",
@@ -456580,11 +456638,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "fa61b9af6fc7fd12490b5b6dd7c9dfcd0600f07a127b727f9246f42524294a85"
+              "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
             }
           ],
           "checks": [
@@ -456815,7 +456873,8 @@
           "release-0.5-staff-workspace-read-closure",
           "release-0.5-dependency-gate-closure",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -456931,7 +456990,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "packages/shared/src/ai-models/index.ts",
@@ -457063,11 +457122,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "fa61b9af6fc7fd12490b5b6dd7c9dfcd0600f07a127b727f9246f42524294a85"
+              "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
             }
           ],
           "checks": [
@@ -457300,7 +457359,8 @@
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
           "release-0.5-staff-confirmation-fixtures",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -457460,7 +457520,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -457753,7 +457813,8 @@
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
           "release-0.5-staff-confirmation-fixtures",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -457913,7 +457974,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -458208,7 +458269,8 @@
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
           "release-0.5-staff-confirmation-fixtures",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -458368,7 +458430,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -458662,7 +458724,8 @@
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
           "release-0.5-staff-confirmation-fixtures",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -458822,7 +458885,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -470749,7 +470812,8 @@
           "release-0.5-responsive-width-acceptance",
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -470849,7 +470913,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
@@ -471102,7 +471166,8 @@
           "release-0.5-responsive-width-acceptance",
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -471202,7 +471267,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
@@ -471479,7 +471544,8 @@
           "release-0.5-responsive-width-acceptance",
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -471579,7 +471645,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
@@ -471833,7 +471899,8 @@
           "release-0.5-responsive-width-acceptance",
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -471933,7 +472000,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
@@ -472748,7 +472815,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -472780,7 +472848,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -472896,7 +472964,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -472940,7 +473009,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "docs/security/otp.md",
@@ -473118,7 +473187,8 @@
           "release-0.6-otp-issuance-expiry-and-delivery-acceptance",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -473162,7 +473232,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "packages/db/src/schema/auth-delivery-outbox.ts",
@@ -473246,7 +473316,8 @@
           "release-0.6-otp-issuance-expiry-and-delivery-acceptance",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -473302,7 +473373,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "docs/security/otp.md",
@@ -484708,7 +484779,8 @@
           "release-0.6-private-api-monitoring",
           "release-0.6-proxy-trust-and-request-limits",
           "release-0.6-browser-and-edge-privacy",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "verified-private-monitoring",
@@ -484724,7 +484796,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
@@ -484942,18 +485014,20 @@
         "story": "06-security-testing-observability.md#spec-ec4f15075ffa"
       },
       "requirement": "| T-06.14.01.06 | Instrument business safety metrics: unresolved refund count, reconciliation mismatch count, outbox backlog age | M |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Overdue mandatory refund count and eligible outbox age passed native worker and rule checks. Add and verify the reconciliation mismatch count. Live scope and alert delivery remain separate operational gates."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-mandatory-refund-overdue-alert"
+        ],
         "current_acceptance": null
       }
     },
@@ -485398,7 +485472,8 @@
         "batches": [
           "release-0.6-service-objectives-and-priorities",
           "release-0.6-incident-response-and-runbooks",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -485414,7 +485489,7 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -485554,7 +485629,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-staged-operations-alert-readback",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-deployed-alert-config-and-immutable-receipts",
@@ -485574,11 +485650,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "fe4219dfa5fcedd3b23cb774a08e6ae96d0567f77a383f679cca86e7fb27ff9a"
+              "sha256": "9d39742c4f3d5baa316b015c300bc612e2cc0241a9fa4d4fad74e6978348b12a"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "51a8aff0ca34a76ebe87c25802878f2c2a8c6987b1888c82cbcb559c12a71901"
+              "sha256": "72c9568bba4d88b47d0eec85649f7daf33cb6baa21b6ad2616de4fa59245d42e"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -485599,7 +485675,8 @@
           ],
           "checks": [
             "The prior live staging readback verified the deployed configuration at that time and 16 unique persisted inbox receipts. Its original configuration digest and readback remain recorded in the staging alert receipt batch.",
-            "The candidate preserves its group keys, timing and original inhibition. Exact isolated Alertmanager readback confirmed both inhibition rules and protection of unrelated environment/database alerts. All 13 candidate native receiver cases passed, including protected scope and occurrence replay."
+            "The candidate preserves its group keys, timing and original inhibition. Exact isolated Alertmanager readback confirmed both inhibition rules and protection of unrelated environment/database alerts. All 13 candidate native receiver cases passed, including protected scope and occurrence replay.",
+            "Current isolated Alertmanager and 15 native receiver cases reverified both inhibition rules and the independent refund P2. The earlier live deployed receipts remain tied to their recorded version."
           ]
         }
       }
@@ -485821,19 +485898,99 @@
         "story": "06-security-testing-observability.md#spec-a791d496e45e"
       },
       "requirement": "| T-06.15.03.01 | Configure unresolved refund obligation alert: count > 0 for > 1 hour → P2 | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "apps/worker/src/main-process.integration.test.ts",
+          "apps/worker/src/main.ts",
+          "apps/worker/src/operations/alerts.integration.test.ts",
+          "apps/worker/src/operations/alerts.ts",
+          "deploy/monitoring/notification-alerts.test.yml",
+          "deploy/monitoring/notification-alerts.yml",
+          "apps/worker/src/refunds/refund-metrics.ts",
+          "docs/operations/refund-monitoring.md"
+        ],
+        "batches": [
+          "release-0.6-mandatory-refund-overdue-alert"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-refund-overdue-alert-and-native-worker",
+          "base_commit": "efd830b75f720ada4b5be02543e75bb4027a6a07",
+          "source_evidence": [
+            {
+              "path": "apps/worker/src/main-process.integration.test.ts",
+              "sha256": "7aa85c44adae2f6a2a7fe052237c439287eee58904cf93ad757a5c7fa88ec41a"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
+            },
+            {
+              "path": "apps/worker/src/operations/alerts.integration.test.ts",
+              "sha256": "72c9568bba4d88b47d0eec85649f7daf33cb6baa21b6ad2616de4fa59245d42e"
+            },
+            {
+              "path": "apps/worker/src/operations/alerts.ts",
+              "sha256": "9d39742c4f3d5baa316b015c300bc612e2cc0241a9fa4d4fad74e6978348b12a"
+            },
+            {
+              "path": "deploy/monitoring/notification-alerts.test.yml",
+              "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
+            },
+            {
+              "path": "deploy/monitoring/notification-alerts.yml",
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
+            },
+            {
+              "path": "apps/worker/src/refunds/refund-metrics.ts",
+              "sha256": "fe862a3ae3dbda33e849f4ad05344e4c47843705f8001821eab5905b60f93c46"
+            },
+            {
+              "path": "docs/operations/refund-monitoring.md",
+              "sha256": "92da926a1824387c9eb6988f7828aa69ba767b917f194c1ba91d0e681c4124d3"
+            },
+            {
+              "path": "apps/worker/src/notifications/worker-metrics.ts",
+              "sha256": "5bbf0ec0251102a957189c846a6615fd9cfa7f59af36c1574edea71f560b908c"
+            },
+            {
+              "path": "deploy/monitoring/staging-alertmanager.yml",
+              "sha256": "baa720bcbbe818811a58183bb3d096d863e92dbd347f00bb25263b16dc40b0dd"
+            },
+            {
+              "path": "packages/db/src/schema/contract-cancellation.ts",
+              "sha256": "dcd7de877cbadb9b22b4325e29921539671f7fd844ca18bee2e385b1f7b8aa7b"
+            },
+            {
+              "path": "packages/db/src/schema/electricity-orders.ts",
+              "sha256": "1ddda191e298fa9a9d9a2c6d1d2b27db1c4ccc808b91808792641fc0ce92194e"
+            },
+            {
+              "path": "packages/db/src/schema/refunds.ts",
+              "sha256": "6a7369f7e9e9190d7e8e7f9a889d6aa04da4213507e1730112237a8e1035c569"
+            },
+            {
+              "path": "packages/db/drizzle/production/0257_electricity_legacy_refund_adoption.sql",
+              "sha256": "9850b50d8f0cf32016fabea5a2dbbfa5ecf7986302c4b8edd2cfc126c792597d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "The overdue gauge counts distinct mandatory refund IDs across both approved ledgers using each obligation's age and a strict one-hour boundary. The native collector test confirmed exclusion of completed, standalone and exactly-one-hour rows, deduplication across adoption and zero after settlement. The query does not modify either ledger.",
+            "Prometheus validated all nine rules and the new same-scope replica maximum, P2 firing and recovery. Isolated Alertmanager proved refund P2 stays independent of notification backlog suppression. The protected native receiver persisted the expected P2 and rejects mismatched priority.",
+            "All 21 worker metrics and receiver cases plus two compiled worker process cases passed. The actual /metrics route exposes both gauges, stays separate from liveness and returns a controlled error during database outage. Worker build, typecheck, lint and formatting passed.",
+            "The candidate rule, receiver and metrics proof used isolated test resources. Staging production-equivalent scrape, configured routing and real delivery remain separate operational gates."
+          ]
+        }
       }
     },
     {
@@ -485896,7 +486053,8 @@
           "docs/operations/notification-backlog.md"
         ],
         "batches": [
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-backlog-metrics-alert-rules-and-receipts",
@@ -485912,19 +486070,19 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "51a8aff0ca34a76ebe87c25802878f2c2a8c6987b1888c82cbcb559c12a71901"
+              "sha256": "72c9568bba4d88b47d0eec85649f7daf33cb6baa21b6ad2616de4fa59245d42e"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "fe4219dfa5fcedd3b23cb774a08e6ae96d0567f77a383f679cca86e7fb27ff9a"
+              "sha256": "9d39742c4f3d5baa316b015c300bc612e2cc0241a9fa4d4fad74e6978348b12a"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "fa61b9af6fc7fd12490b5b6dd7c9dfcd0600f07a127b727f9246f42524294a85"
+              "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -485968,7 +486126,8 @@
             "Prometheus validated all eight alert rules and rule cases, including exact 300/900-second boundaries, strict crossing, replica maximum, legacy all-pending independence and recovery. An isolated actual Alertmanager accepted the candidate configuration and demonstrated that backlog P1 inhibits P2 only in the same environment and database, while existing dead-letter inhibition still operates.",
             "All 19 worker and native receiver cases passed. The receiver accepts only the expected P1/P2 and severity labels for the new alerts, persists the exact priority, deduplicates replays and creates private in-app administrator intents. Existing provider and dead-letter behavior remains covered by its prior receipts and unchanged assertions.",
             "Drizzle snapshot changes only the receipt priority constraint and the journal appends 0283. A fresh native migration passed and an isolated upgrade of the previous exact receipt schema preserved old P2/NULL rows and the immutable trigger, allowed P1 and rejected P3. DB/worker build, typecheck, migration inventory, lint and formatting passed.",
-            "The rule and receiver proof used isolated test resources. Live staging still runs the previously recorded operations configuration. Production-equivalent firing/recovery and pager/team delivery readback remain separate."
+            "The rule and receiver proof used isolated test resources. Live staging still runs the previously recorded operations configuration. Production-equivalent firing/recovery and pager/team delivery readback remain separate.",
+            "Current combined nine-rule Prometheus and isolated Alertmanager checks passed the unchanged backlog behavior. The compiled worker readback exposed the backlog gauge."
           ]
         }
       }
@@ -722805,7 +722964,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -722937,11 +723097,11 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
+              "sha256": "7aa85c44adae2f6a2a7fe052237c439287eee58904cf93ad757a5c7fa88ec41a"
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -723517,7 +723677,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -723649,11 +723810,11 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
+              "sha256": "7aa85c44adae2f6a2a7fe052237c439287eee58904cf93ad757a5c7fa88ec41a"
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -727780,7 +727941,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -731420,7 +731581,8 @@
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-exception-correlation-and-sensitive-diagnostics",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ]
       }
     },
@@ -732588,7 +732750,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -736066,7 +736228,8 @@
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ]
       }
     },
@@ -738050,11 +738213,11 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
+              "sha256": "7aa85c44adae2f6a2a7fe052237c439287eee58904cf93ad757a5c7fa88ec41a"
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/channel-availability-loader.test.ts",
@@ -738242,11 +738405,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "fa61b9af6fc7fd12490b5b6dd7c9dfcd0600f07a127b727f9246f42524294a85"
+              "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "deploy/staging/README.md",
@@ -740006,7 +740169,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-versioned-config-cache-and-diagnostic-privacy",
           "release-0.6-assistant-display-maintenance-fixture",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -741975,11 +742139,11 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
+              "sha256": "7aa85c44adae2f6a2a7fe052237c439287eee58904cf93ad757a5c7fa88ec41a"
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+              "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
             },
             {
               "path": "apps/worker/src/notifications/channel-availability-loader.test.ts",
@@ -742167,11 +742331,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "fa61b9af6fc7fd12490b5b6dd7c9dfcd0600f07a127b727f9246f42524294a85"
+              "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "f3d65a009ca65c7a9b6b16d7f944abf42d49cb6fb05d00806b436dd327f895bc"
+              "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
             },
             {
               "path": "deploy/staging/README.md",
@@ -743837,7 +744001,8 @@
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-versioned-config-cache-and-diagnostic-privacy",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -747858,7 +748023,8 @@
           "release-0.6-incident-runbook-criteria",
           "release-0.6-stable-error-catalogue",
           "release-0.6-timezone-and-direction",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -747920,7 +748086,8 @@
           "release-0.6-runtime-readiness-and-staging-smoke",
           "release-0.6-proxy-security-headers",
           "release-0.6-staged-operations-alert-readback",
-          "release-0.6-notification-eligible-backlog-alerts"
+          "release-0.6-notification-eligible-backlog-alerts",
+          "release-0.6-mandatory-refund-overdue-alert"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -841310,6 +841477,168 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/notification-backlog",
       "source_scope_proof": "notification-backlog-proof.json",
       "source_scope_proof_sha256": "b1bc2d9b3cda5f110e62f282b6b072c35c22652563d69ca6acd1553e5ba45303"
+    },
+    "release-0.6-mandatory-refund-overdue-alert": {
+      "batch": "release-0.6-mandatory-refund-overdue-alert",
+      "base_commit": "efd830b75f720ada4b5be02543e75bb4027a6a07",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-03.03.02",
+        "02-auth-users-admin.md#T-05.04.02",
+        "05-notifications-documents-ai.md#T-05.01.01",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.05",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07",
+        "02-auth-users-admin.md#T-09.06.01",
+        "02-auth-users-admin.md#T-09.06.02",
+        "02-auth-users-admin.md#T-09.09.01",
+        "02-auth-users-admin.md#T-09.11.01",
+        "02-auth-users-admin.md#T-09.11.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06",
+        "04-invoices-wallet-contracts.md#T-04.1.05.02",
+        "04-invoices-wallet-contracts.md#T-04.1.05.03",
+        "04-invoices-wallet-contracts.md#T-04.1.05.04",
+        "04-invoices-wallet-contracts.md#T-04.2.01.08",
+        "04-invoices-wallet-contracts.md#T-04.2.02.07",
+        "03-core-business.md#T-03.07.01.02",
+        "03-core-business.md#T-03.07.01.03",
+        "03-core-business.md#T-03.07.01.04",
+        "03-core-business.md#T-03.07.02.01",
+        "03-core-business.md#T-03.07.02.02",
+        "03-core-business.md#T-03.07.02.03",
+        "03-core-business.md#T-03.07.02.04",
+        "03-core-business.md#T-03.07.02.05",
+        "03-core-business.md#T-03.07.04.01",
+        "03-core-business.md#T-03.07.04.02",
+        "03-core-business.md#T-03.07.04.03",
+        "05-notifications-documents-ai.md#T-05.07.01",
+        "05-notifications-documents-ai.md#T-05.07.02",
+        "05-notifications-documents-ai.md#T-05.07.03",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "05-notifications-documents-ai.md#T-05.07.05",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.14.01",
+        "05-notifications-documents-ai.md#T-05.14.02",
+        "05-notifications-documents-ai.md#T-05.14.03",
+        "05-notifications-documents-ai.md#T-05.15.01",
+        "05-notifications-documents-ai.md#T-05.15.02",
+        "05-notifications-documents-ai.md#T-05.16.01",
+        "05-notifications-documents-ai.md#T-05.16.02",
+        "05-notifications-documents-ai.md#T-05.16.03",
+        "05-notifications-documents-ai.md#T-05.16.04",
+        "05-notifications-documents-ai.md#T-05.17.01",
+        "05-notifications-documents-ai.md#T-05.17.02",
+        "05-notifications-documents-ai.md#T-05.17.03",
+        "05-notifications-documents-ai.md#T-05.17.04",
+        "05-notifications-documents-ai.md#T-05.24.01",
+        "05-notifications-documents-ai.md#T-05.24.02",
+        "05-notifications-documents-ai.md#T-05.24.03",
+        "05-notifications-documents-ai.md#T-05.24.04",
+        "06-security-testing-observability.md#T-06.01.02.02",
+        "06-security-testing-observability.md#T-06.01.02.04",
+        "06-security-testing-observability.md#T-06.01.02.07",
+        "06-security-testing-observability.md#T-06.01.02.09",
+        "06-security-testing-observability.md#T-06.14.01.01",
+        "06-security-testing-observability.md#T-06.14.01.06",
+        "06-security-testing-observability.md#T-06.15.01.01",
+        "06-security-testing-observability.md#T-06.15.01.06",
+        "06-security-testing-observability.md#T-06.15.03.01",
+        "06-security-testing-observability.md#T-06.15.03.03",
+        "07-ui-ux-design.md#T-07.30.02.15",
+        "07-ui-ux-design.md#T-07.30.02.17",
+        "release-readiness#R-02.01",
+        "release-readiness#R-02.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/main-process.integration.test.ts",
+          "sha256": "7aa85c44adae2f6a2a7fe052237c439287eee58904cf93ad757a5c7fa88ec41a"
+        },
+        {
+          "path": "apps/worker/src/main.ts",
+          "sha256": "1799c555a4a530b498004fc4705525308f80ac48dcc3913266fd2817dfeca8de"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.integration.test.ts",
+          "sha256": "72c9568bba4d88b47d0eec85649f7daf33cb6baa21b6ad2616de4fa59245d42e"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.ts",
+          "sha256": "9d39742c4f3d5baa316b015c300bc612e2cc0241a9fa4d4fad74e6978348b12a"
+        },
+        {
+          "path": "deploy/monitoring/notification-alerts.test.yml",
+          "sha256": "9d18d5aae7a871e484c2d4e094e0d55c0cc8f86fd3b1fa8427601ff445d318a9"
+        },
+        {
+          "path": "deploy/monitoring/notification-alerts.yml",
+          "sha256": "f9c1931df2f99f2c6507e47ad20e78cb364f5763c75cc029c308b1153631f9ae"
+        },
+        {
+          "path": "apps/worker/src/refunds/refund-metrics.ts",
+          "sha256": "fe862a3ae3dbda33e849f4ad05344e4c47843705f8001821eab5905b60f93c46"
+        },
+        {
+          "path": "docs/operations/refund-monitoring.md",
+          "sha256": "92da926a1824387c9eb6988f7828aa69ba767b917f194c1ba91d0e681c4124d3"
+        },
+        {
+          "path": "apps/worker/src/notifications/worker-metrics.ts",
+          "sha256": "5bbf0ec0251102a957189c846a6615fd9cfa7f59af36c1574edea71f560b908c"
+        },
+        {
+          "path": "deploy/monitoring/staging-alertmanager.yml",
+          "sha256": "baa720bcbbe818811a58183bb3d096d863e92dbd347f00bb25263b16dc40b0dd"
+        },
+        {
+          "path": "packages/db/src/schema/contract-cancellation.ts",
+          "sha256": "dcd7de877cbadb9b22b4325e29921539671f7fd844ca18bee2e385b1f7b8aa7b"
+        },
+        {
+          "path": "packages/db/src/schema/electricity-orders.ts",
+          "sha256": "1ddda191e298fa9a9d9a2c6d1d2b27db1c4ccc808b91808792641fc0ce92194e"
+        },
+        {
+          "path": "packages/db/src/schema/refunds.ts",
+          "sha256": "6a7369f7e9e9190d7e8e7f9a889d6aa04da4213507e1730112237a8e1035c569"
+        },
+        {
+          "path": "packages/db/drizzle/production/0257_electricity_legacy_refund_adoption.sql",
+          "sha256": "9850b50d8f0cf32016fabea5a2dbbfa5ecf7986302c4b8edd2cfc126c792597d"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "The overdue gauge counts distinct mandatory refund IDs across both approved ledgers using each obligation's age and a strict one-hour boundary. The native collector test confirmed exclusion of completed, standalone and exactly-one-hour rows, deduplication across adoption and zero after settlement. The query does not modify either ledger.",
+        "Prometheus validated all nine rules and the new same-scope replica maximum, P2 firing and recovery. Isolated Alertmanager proved refund P2 stays independent of notification backlog suppression. The protected native receiver persisted the expected P2 and rejects mismatched priority.",
+        "All 21 worker metrics and receiver cases plus two compiled worker process cases passed. The actual /metrics route exposes both gauges, stays separate from liveness and returns a controlled error during database outage. Worker build, typecheck, lint and formatting passed.",
+        "The candidate rule, receiver and metrics proof used isolated test resources. Staging production-equivalent scrape, configured routing and real delivery remain separate operational gates."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/refund-monitoring",
+      "source_scope_proof": "refund-monitoring-proof.json",
+      "source_scope_proof_sha256": "c4089845d95ebac1f9124b1f88cd7da765263ea4dce1a6ff7f21c43bf21b225d"
     }
   },
   "historical_improvements": [

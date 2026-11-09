@@ -14,6 +14,7 @@ import { EmailNotificationTransport } from '../notifications/email-transport.js'
 import { runOutboxPoll } from '../notifications/outbox-runner.js';
 import { loadNotificationRecipient } from '../notifications/channel-availability-loader.js';
 import { collectNotificationGauges, exportWorkerMetrics } from '../notifications/worker-metrics.js';
+import { collectRefundObligationMetrics } from '../refunds/refund-metrics.js';
 
 let ctx: { pool: Pool; connectionString: string; close: () => Promise<void> };
 let server: ReturnType<typeof createServer>, base: string;
@@ -241,7 +242,8 @@ it('measures due backlog separately from intentionally scheduled and terminal ro
 it.each([
   { alertname: 'NotificationOutboxBacklog', severity: 'warning', priority: 'P2' },
   { alertname: 'NotificationOutboxBacklogCritical', severity: 'critical', priority: 'P1' },
-])('records $priority backlog only with its matching severity and priority', async (labels) => {
+  { alertname: 'RefundObligationOverdue', severity: 'warning', priority: 'P2' },
+])('records $alertname only with its matching severity and priority', async (labels) => {
   const input = envelope();
   Object.assign(input.alerts[0]!.labels, labels);
   const malformed = structuredClone(input);
@@ -271,6 +273,59 @@ it.each([
     },
   ]);
 });
+it('counts distinct overdue mandatory refunds from both ledgers and clears after settlement', async () => {
+  const client = await ctx.pool.connect();
+  const legacy = randomUUID();
+  const overlap = randomUUID();
+  const contract = randomUUID();
+  const settled = randomUUID();
+  const boundary = randomUUID();
+  const unrelated = randomUUID();
+  try {
+    await client.query('BEGIN');
+    // Isolate the collector inputs from financial mutation triggers and existing receipts.
+    await client.query(`
+      CREATE TEMP TABLE refund_obligations (
+        refund_id uuid, status text, created_at timestamptz
+      ) ON COMMIT DROP;
+      CREATE TEMP TABLE contract_refund_obligations (
+        refund_id uuid, created_at timestamptz
+      ) ON COMMIT DROP;
+      CREATE TEMP TABLE refunds (id uuid, state refund_state) ON COMMIT DROP
+    `);
+    await client.query(
+      `INSERT INTO refund_obligations VALUES
+        ($1,'pending',NOW()-INTERVAL '2 hours'),
+        ($2,'processing',NOW()-INTERVAL '2 hours'),
+        ($3,'completed',NOW()-INTERVAL '3 hours'),
+        ($4,'pending',NOW()-INTERVAL '1 hour')`,
+      [legacy, overlap, settled, boundary]
+    );
+    await client.query(
+      `INSERT INTO contract_refund_obligations VALUES
+        ($1,NOW()-INTERVAL '2 hours'),($2,NOW()-INTERVAL '2 hours'),($3,NOW()-INTERVAL '3 hours')`,
+      [overlap, contract, settled]
+    );
+    await client.query(
+      "INSERT INTO refunds VALUES ($1,'Processing'),($2,'Failed'),($3,'Completed'),($4,'Requested')",
+      [overlap, contract, settled, unrelated]
+    );
+
+    await collectRefundObligationMetrics(client);
+    expect(await exportWorkerMetrics()).toContain('refund_obligations_overdue 3\n');
+
+    await client.query("UPDATE refund_obligations SET status='completed'");
+    await client.query("UPDATE refunds SET state='Completed' WHERE id = ANY($1::uuid[])", [
+      [overlap, contract],
+    ]);
+    await collectRefundObligationMetrics(client);
+    expect(await exportWorkerMetrics()).toContain('refund_obligations_overdue 0\n');
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+  }
+});
+
 const request = (input: unknown, headers: Record<string, string> = {}) =>
   fetch(base, {
     method: 'POST',

@@ -50,6 +50,7 @@ import { createServer } from 'node:http';
 import { runOutboxPoll } from './notifications/outbox-runner.js';
 import { evaluateWalletLowBalanceSignals } from './wallet/low-balance-notifications.js';
 import { collectNotificationGauges, exportWorkerMetrics } from './notifications/worker-metrics.js';
+import { collectRefundObligationMetrics } from './refunds/refund-metrics.js';
 import { InAppNotificationTransport } from './notifications/in-app-transport.js';
 import { scanServiceBreaches } from './service-targets/breach-scanner.js';
 import { scanServiceWorkflows } from './service-targets/workflow-scanner.js';
@@ -143,17 +144,18 @@ async function main(): Promise<void> {
 
   // Expose a health-check endpoint (`/health` and `/`) for container
   // orchestration plus a Prometheus `/metrics` endpoint carrying the
-  // notification observability gauges/counters (E-05, T-05.01.07).
+  // notification and business safety metrics.
   const server = createServer(async (req, res) => {
     const pathname = (req.url ?? '').split('?')[0];
     if (pathname === '/metrics') {
       try {
-        await collectNotificationGauges(getDbPool());
+        const pool = getDbPool();
+        await Promise.all([collectNotificationGauges(pool), collectRefundObligationMetrics(pool)]);
         const body = await exportWorkerMetrics();
         res.writeHead(200, { 'Content-Type': 'text/plain; version=0.0.4; charset=utf-8' });
         res.end(body);
-      } catch (err) {
-        logger.error(`Metrics scrape failed: ${(err as Error)?.message ?? String(err)}`);
+      } catch {
+        logger.error('Metrics scrape failed');
         res.writeHead(500, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ status: 'error', service: 'worker' }));
       }
