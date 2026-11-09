@@ -269,22 +269,24 @@ describe('OnlineTopUpCallbackService — real PostgreSQL (T-04.2.02.02)', () => 
     });
   }
 
-  it('credits the wallet once from a signed callback and releases the Pending intent', async () => {
-    const result = await service.handle(
-      signed(
-        {
-          merchantOrderId: pendingId,
-          merchantId: MERCHANT,
-          authority: AUTHORITY,
-          amountIrR: AMOUNT.toString(),
-          status: 'paid',
-        },
-        'evt-int-1'
-      )
+  it('credits the wallet once from concurrent signed callbacks and releases the Pending intent', async () => {
+    const callback = signed(
+      {
+        merchantOrderId: pendingId,
+        merchantId: MERCHANT,
+        authority: AUTHORITY,
+        amountIrR: AMOUNT.toString(),
+        status: 'paid',
+      },
+      'evt-int-1'
     );
+    const [first, second] = await Promise.all([service.handle(callback), service.handle(callback)]);
 
-    expect(result.credited).toBe(true);
-    expect(result.creditTransactionId).toBeTruthy();
+    expect([first.processed, second.processed].sort()).toEqual([false, true]);
+    expect(first.credited).toBe(true);
+    expect(second.credited).toBe(true);
+    expect(first.creditTransactionId).toBeTruthy();
+    expect(second.creditTransactionId).toBe(first.creditTransactionId);
 
     const wallet = await fetchWallet();
     expect(wallet.posted_balance).toBe(AMOUNT.toString());
@@ -301,12 +303,16 @@ describe('OnlineTopUpCallbackService — real PostgreSQL (T-04.2.02.02)', () => 
       [PROFILE_A]
     );
     const pending = ledger.rows.find((row) => row.id === pendingId);
-    const credit = ledger.rows.find(
+    const credits = ledger.rows.filter(
       (row) => row.idempotency_key === onlineTopUpCreditIdempotencyKey(pendingId)
     );
     expect(pending?.state).toBe('Released');
-    expect(credit?.state).toBe('Completed');
-    expect(credit?.amount).toBe(AMOUNT.toString());
+    expect(credits).toHaveLength(1);
+    expect(credits[0]).toMatchObject({
+      id: first.creditTransactionId,
+      state: 'Completed',
+      amount: AMOUNT.toString(),
+    });
   });
 
   it('does not credit a second time for the same event id', async () => {

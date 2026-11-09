@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T15:15:36+00:00",
+  "updated": "2026-11-09T15:21:50+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -4917,12 +4917,10 @@
         "story": "01-platform-infrastructure.md#spec-ad6901869722"
       },
       "requirement": "- **T-01.04.03:** Configure backend integration test setup with real PostgreSQL\n  - **Notes:** Each parallel worker receives an isolated database schema via `test.globalSetup` or a testcontainers-based PostgreSQL. Never use SQLite or in-memory substitutes — they do not reproduce PostgreSQL transactions, constraints, locking, or SQL behavior. Provider calls are replaced only at the adapter boundary with deterministic fake servers or signed webhook fixtures (nock, MSW, or custom fakes). Mandatory concurrency tests: simultaneous wallet payments, duplicate provider callbacks, duplicate bank confirmation, concurrent refund workers, repeated order submission.\n  - **Dependencies:** T-01.04.01, S-02.01\n  - **Complexity:** L",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Reconcile the historical limitations below with the linked later batches and current code; do not rebuild the former missing module."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -4967,9 +4965,92 @@
           "apps/api/src/test/http-fixture.ts"
         ],
         "batches": [
-          "2026-09-20-http-fixture-template"
+          "2026-09-20-http-fixture-template",
+          "release-0.6-native-integration-acceptance"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "native-postgresql-fixture-and-mandatory-financial-concurrency",
+          "base_commit": "cb0edbadea2d5347b4b7bc9f03759d8f9bef7186",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
+              "sha256": "224514f9f8c174ddc1320facc6d77ac99b1b9ac4cc1d4a48e4c9f4d69bc46756"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.integration.test.ts",
+              "sha256": "e93f7f13f67b5c64ec13604af9d421413dc5c9bb219f02276ad93b5729d81453"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
+              "sha256": "03ce3c9d81710e9e96f1a164bb7216e1ef9be3463f58667d52be4655282d974e"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "a45f415770196e8fd7129da867e018ba6fa2d881325da0b32567501ea41cff8e"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/api/src/test/postgres-setup.ts",
+              "sha256": "a6203929fcdfceb3371ea2660f15d85a1b13ef13ef75196ffa14c93ab040c793"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "b11b691680a16cfd244d5430449a7c91c918a09f5f3e5b5c09ed31299d80359c"
+            },
+            {
+              "path": "apps/api/src/test/build-http-app.ts",
+              "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+            },
+            {
+              "path": "apps/api/scripts/http-test-server.cjs",
+              "sha256": "4766868846c6ee2b43307d4434ba305b48a802c9d82d68209fcf52c7e5902f80"
+            },
+            {
+              "path": "packages/db/src/test/globalSetup.ts",
+              "sha256": "c31c22bd1337ca4ebfd914cfa1d5a3441aa2eca1b312f6f7488ab764ad0900a5"
+            },
+            {
+              "path": "packages/db/src/test/testDb.ts",
+              "sha256": "b8b540e8a83d140aaee61c78f74c59cc72111dc50529e1f0ca73b50ff9104111"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/_journal.json",
+              "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+              "sha256": "31e8f68411a3bc083817bf70b35a52225b9898bf0f93786451b7739900e52023"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+              "sha256": "e26f8952d5453615418dd3bace94dae60323f8337efce8088364efda7caf7a02"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+              "sha256": "7d0fdc3f45f6d70321b60b190c0c5870698e86b65dea5367a33259b278f28511"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "47bc00446b06d70cded63f1ef7acef1b60f0d1923a004d53620df37b43bbda26"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.ts",
+              "sha256": "55f13fe08dc4be7fc5d627279416824437db326682dbef81b247816abc8b58c0"
+            }
+          ],
+          "checks": [
+            "The normal API runner uses Testcontainers PostgreSQL 17 and creates a production-migrated template per test run. It denies template connections and gives every HTTP fixture its own UUID-named cloned database and compiled AppModule process, with cleanup. The DB fixture uses distinct schemas and a schema-bound search path. This provides the required isolation.",
+            "In the isolated PostgreSQL 16.15 run, five files passed 21 selected cases using migration 0282. The cases exercise simultaneous wallet payments, concurrent signed provider duplicates and subsequent replay, simultaneous bank confirmations and subsequent replay, concurrent refund workers after a committed crash, and repeated HTTP electricity order submission. The explicit selector left 175 unrelated cases outside this run.",
+            "The payment gateway is substituted only through its adapter, with signed callback fixtures. The two strengthened tests require identical receipt IDs and a single credit while preserving the original balance, release and replay assertions. Both builds, API typecheck, changed-file ESLint and Prettier passed; no application logic changed in this batch."
+          ]
+        }
       }
     },
     {
@@ -68166,7 +68247,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-native-integration-acceptance"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -68278,7 +68360,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
-              "sha256": "17f7139fafb25b1fe7c1971957dc9b229fbb8814f40a9a704885cc15faefaee4"
+              "sha256": "224514f9f8c174ddc1320facc6d77ac99b1b9ac4cc1d4a48e4c9f4d69bc46756"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.test.ts",
@@ -69421,7 +69503,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-private-api-monitoring",
-          "release-0.6-solar-replay-lock-order"
+          "release-0.6-solar-replay-lock-order",
+          "release-0.6-native-integration-acceptance"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -69457,7 +69540,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
-              "sha256": "17f7139fafb25b1fe7c1971957dc9b229fbb8814f40a9a704885cc15faefaee4"
+              "sha256": "224514f9f8c174ddc1320facc6d77ac99b1b9ac4cc1d4a48e4c9f4d69bc46756"
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
@@ -70065,7 +70148,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.integration.test.ts",
-              "sha256": "6cc2c62430c40d439e8abc8a25509d4459e83ff0c38776b2ed91ebdea75d72f0"
+              "sha256": "e93f7f13f67b5c64ec13604af9d421413dc5c9bb219f02276ad93b5729d81453"
             },
             {
               "path": "packages/db/drizzle/production/0267_invoice_outcome_notifications.sql",
@@ -71818,7 +71901,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-native-integration-acceptance"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -71934,7 +72018,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
-              "sha256": "17f7139fafb25b1fe7c1971957dc9b229fbb8814f40a9a704885cc15faefaee4"
+              "sha256": "224514f9f8c174ddc1320facc6d77ac99b1b9ac4cc1d4a48e4c9f4d69bc46756"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.test.ts",
@@ -73216,7 +73300,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-native-integration-acceptance"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -73348,7 +73433,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
-              "sha256": "17f7139fafb25b1fe7c1971957dc9b229fbb8814f40a9a704885cc15faefaee4"
+              "sha256": "224514f9f8c174ddc1320facc6d77ac99b1b9ac4cc1d4a48e4c9f4d69bc46756"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.test.ts",
@@ -141378,7 +141463,8 @@
           "release-0.3-wallet-ledger-topups",
           "release-0.3-provider-csrf-disposition",
           "release-0.5-route-fallback-and-announcement",
-          "release-0.6-browser-origin-security"
+          "release-0.6-browser-origin-security",
+          "release-0.6-native-integration-acceptance"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-provider-callbacks",
@@ -141422,7 +141508,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.integration.test.ts",
-              "sha256": "6cc2c62430c40d439e8abc8a25509d4459e83ff0c38776b2ed91ebdea75d72f0"
+              "sha256": "e93f7f13f67b5c64ec13604af9d421413dc5c9bb219f02276ad93b5729d81453"
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.service.test.ts",
@@ -142034,7 +142120,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-native-integration-acceptance"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -142074,7 +142161,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
-              "sha256": "17f7139fafb25b1fe7c1971957dc9b229fbb8814f40a9a704885cc15faefaee4"
+              "sha256": "224514f9f8c174ddc1320facc6d77ac99b1b9ac4cc1d4a48e4c9f4d69bc46756"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
@@ -142589,7 +142676,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.6-native-integration-acceptance"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -142629,7 +142717,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
-              "sha256": "17f7139fafb25b1fe7c1971957dc9b229fbb8814f40a9a704885cc15faefaee4"
+              "sha256": "224514f9f8c174ddc1320facc6d77ac99b1b9ac4cc1d4a48e4c9f4d69bc46756"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
@@ -146029,7 +146117,8 @@
           "release-0.3-wallet-payments-reversals",
           "release-0.3-provider-csrf-disposition",
           "release-0.5-route-fallback-and-announcement",
-          "release-0.6-browser-origin-security"
+          "release-0.6-browser-origin-security",
+          "release-0.6-native-integration-acceptance"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-provider-callbacks",
@@ -146073,7 +146162,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.integration.test.ts",
-              "sha256": "6cc2c62430c40d439e8abc8a25509d4459e83ff0c38776b2ed91ebdea75d72f0"
+              "sha256": "e93f7f13f67b5c64ec13604af9d421413dc5c9bb219f02276ad93b5729d81453"
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.service.test.ts",
@@ -718374,7 +718463,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
-              "sha256": "17f7139fafb25b1fe7c1971957dc9b229fbb8814f40a9a704885cc15faefaee4"
+              "sha256": "224514f9f8c174ddc1320facc6d77ac99b1b9ac4cc1d4a48e4c9f4d69bc46756"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
@@ -721566,7 +721655,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-web-fixture-typecheck-and-license-readback",
-          "release-0.6-solar-replay-lock-order"
+          "release-0.6-solar-replay-lock-order",
+          "release-0.6-native-integration-acceptance"
         ]
       }
     },
@@ -727307,7 +727397,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
-              "sha256": "17f7139fafb25b1fe7c1971957dc9b229fbb8814f40a9a704885cc15faefaee4"
+              "sha256": "224514f9f8c174ddc1320facc6d77ac99b1b9ac4cc1d4a48e4c9f4d69bc46756"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.service.test.ts",
@@ -727327,7 +727417,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.integration.test.ts",
-              "sha256": "6cc2c62430c40d439e8abc8a25509d4459e83ff0c38776b2ed91ebdea75d72f0"
+              "sha256": "e93f7f13f67b5c64ec13604af9d421413dc5c9bb219f02276ad93b5729d81453"
             },
             {
               "path": "apps/api/test/upload.controller.spec.ts",
@@ -730101,7 +730191,8 @@
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-web-fixture-typecheck-and-license-readback",
-          "release-0.6-solar-replay-lock-order"
+          "release-0.6-solar-replay-lock-order",
+          "release-0.6-native-integration-acceptance"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -731210,7 +731301,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
-              "sha256": "17f7139fafb25b1fe7c1971957dc9b229fbb8814f40a9a704885cc15faefaee4"
+              "sha256": "224514f9f8c174ddc1320facc6d77ac99b1b9ac4cc1d4a48e4c9f4d69bc46756"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.service.test.ts",
@@ -731230,7 +731321,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.integration.test.ts",
-              "sha256": "6cc2c62430c40d439e8abc8a25509d4459e83ff0c38776b2ed91ebdea75d72f0"
+              "sha256": "e93f7f13f67b5c64ec13604af9d421413dc5c9bb219f02276ad93b5729d81453"
             },
             {
               "path": "apps/api/test/upload.controller.spec.ts",
@@ -733891,7 +733982,8 @@
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-web-fixture-typecheck-and-license-readback",
-          "release-0.6-solar-replay-lock-order"
+          "release-0.6-solar-replay-lock-order",
+          "release-0.6-native-integration-acceptance"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -737817,7 +737909,8 @@
           "release-0.6-remove-runtime-package-managers",
           "release-0.6-alpine-clamav-candidate",
           "release-0.6-postgres-go-license-notices",
-          "release-0.6-staging-postgres-monitoring-readback"
+          "release-0.6-staging-postgres-monitoring-readback",
+          "release-0.6-native-integration-acceptance"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -825213,6 +825306,107 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "staging-postgres-monitoring-readback-proof.json",
       "source_scope_proof_sha256": "7cb43555b0aacebd0bbf421190ceabdd6f18a3be0e356ba810cc3e7d4d2a1691"
+    },
+    "release-0.6-native-integration-acceptance": {
+      "batch": "release-0.6-native-integration-acceptance",
+      "base_commit": "cb0edbadea2d5347b4b7bc9f03759d8f9bef7186",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.03",
+        "release-readiness#R-05.02",
+        "05-notifications-documents-ai.md#T-05.01.01",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.03",
+        "05-notifications-documents-ai.md#T-05.01.05",
+        "04-invoices-wallet-contracts.md#T-04.2.02.02",
+        "04-invoices-wallet-contracts.md#T-04.2.02.04",
+        "04-invoices-wallet-contracts.md#T-04.2.02.05",
+        "04-invoices-wallet-contracts.md#T-04.2.04.02",
+        "release-readiness#R-02.01",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
+          "sha256": "224514f9f8c174ddc1320facc6d77ac99b1b9ac4cc1d4a48e4c9f4d69bc46756"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.integration.test.ts",
+          "sha256": "e93f7f13f67b5c64ec13604af9d421413dc5c9bb219f02276ad93b5729d81453"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
+          "sha256": "03ce3c9d81710e9e96f1a164bb7216e1ef9be3463f58667d52be4655282d974e"
+        },
+        {
+          "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+          "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+          "sha256": "a45f415770196e8fd7129da867e018ba6fa2d881325da0b32567501ea41cff8e"
+        },
+        {
+          "path": "apps/api/vitest.config.ts",
+          "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+        },
+        {
+          "path": "apps/api/src/test/postgres-setup.ts",
+          "sha256": "a6203929fcdfceb3371ea2660f15d85a1b13ef13ef75196ffa14c93ab040c793"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "b11b691680a16cfd244d5430449a7c91c918a09f5f3e5b5c09ed31299d80359c"
+        },
+        {
+          "path": "apps/api/src/test/build-http-app.ts",
+          "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+        },
+        {
+          "path": "apps/api/scripts/http-test-server.cjs",
+          "sha256": "4766868846c6ee2b43307d4434ba305b48a802c9d82d68209fcf52c7e5902f80"
+        },
+        {
+          "path": "packages/db/src/test/globalSetup.ts",
+          "sha256": "c31c22bd1337ca4ebfd914cfa1d5a3441aa2eca1b312f6f7488ab764ad0900a5"
+        },
+        {
+          "path": "packages/db/src/test/testDb.ts",
+          "sha256": "b8b540e8a83d140aaee61c78f74c59cc72111dc50529e1f0ca73b50ff9104111"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+          "sha256": "31e8f68411a3bc083817bf70b35a52225b9898bf0f93786451b7739900e52023"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+          "sha256": "e26f8952d5453615418dd3bace94dae60323f8337efce8088364efda7caf7a02"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+          "sha256": "7d0fdc3f45f6d70321b60b190c0c5870698e86b65dea5367a33259b278f28511"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-order.service.ts",
+          "sha256": "47bc00446b06d70cded63f1ef7acef1b60f0d1923a004d53620df37b43bbda26"
+        },
+        {
+          "path": "apps/worker/src/refunds/retry-runner.ts",
+          "sha256": "55f13fe08dc4be7fc5d627279416824437db326682dbef81b247816abc8b58c0"
+        }
+      ],
+      "checks": [
+        "The normal API runner uses Testcontainers PostgreSQL 17 and creates a production-migrated template per test run. It denies template connections and gives every HTTP fixture its own UUID-named cloned database and compiled AppModule process, with cleanup. The DB fixture uses distinct schemas and a schema-bound search path. This provides the required isolation.",
+        "In the isolated PostgreSQL 16.15 run, five files passed 21 selected cases using migration 0282. The cases exercise simultaneous wallet payments, concurrent signed provider duplicates and subsequent replay, simultaneous bank confirmations and subsequent replay, concurrent refund workers after a committed crash, and repeated HTTP electricity order submission. The explicit selector left 175 unrelated cases outside this run.",
+        "The payment gateway is substituted only through its adapter, with signed callback fixtures. The two strengthened tests require identical receipt IDs and a single credit while preserving the original balance, release and replay assertions. Both builds, API typecheck, changed-file ESLint and Prettier passed; no application logic changed in this batch."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "native-five-concurrency-criteria-proof.json",
+      "source_scope_proof_sha256": "1e562738cd6f6f230fe18c924c791ebe16c3bf48e39d25f53ad29efe0ebea612"
     }
   },
   "historical_improvements": [
@@ -825252,17 +825446,18 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-native-integration-acceptance",
+    "id": "release-0.6-browser-test-configuration-and-quarantine",
     "release": "0.6.0",
     "task_keys": [
-      "01-platform-infrastructure.md#T-01.04.03",
+      "01-platform-infrastructure.md#T-01.04.04",
+      "01-platform-infrastructure.md#T-01.04.06",
       "release-readiness#R-05.02"
     ],
-    "goal": "Verify the existing PostgreSQL fixture isolation, provider adapter boundaries and five mandatory financial and order concurrency cases. Continue source-bound verification while external release gates remain open."
+    "goal": "Reconcile existing Playwright configuration and quarantine policy against their exact requirements. Reuse source-bound browser and CI proof where the current code matches."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",
-    "next_update_after": "v0.6.0 native integration verification, package license disposition and production-equivalent environment availability",
+    "next_update_after": "v0.6.0 browser test configuration, package license disposition and production-equivalent environment availability",
     "method": "v0.5.0 staging and Telegram receipts are confirmed. v0.6.0 owner policy is recorded. Local and disposable staging rehearsals do not satisfy the production-equivalent TLS, provider, off-server recovery, load or schedule gates; production access/provisioning timing is external."
   },
   "capabilities": [

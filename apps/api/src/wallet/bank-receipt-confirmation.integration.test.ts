@@ -618,26 +618,28 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     expect(result.notificationOutboxId).toBeTruthy();
   });
 
-  it('retries confirm without a second credit', async () => {
+  it('confirms concurrent attempts and a later retry without a second credit', async () => {
     const pendingId = await insertPending('retry');
-    const first = await service.confirm({
+    const confirmation = {
       transactionId: pendingId,
       actorUserId: ACTOR_USER_ID,
       ...receiptDecisionSession(ACTOR_USER_ID),
       ip: '10.0.0.9',
       now: NOW,
-    });
-    const balancesAfterFirst = await walletBalances();
-    const second = await service.confirm({
-      transactionId: pendingId,
-      actorUserId: ACTOR_USER_ID,
-      ...receiptDecisionSession(ACTOR_USER_ID),
-      ip: '10.0.0.9',
-      now: NOW,
-    });
-    expect(second.creditTransactionId).toBe(first.creditTransactionId);
-    const balancesAfterSecond = await walletBalances();
-    expect(balancesAfterSecond.posted).toBe(balancesAfterFirst.posted);
+    };
+    const before = await walletBalances();
+    const [first, concurrent] = await Promise.all([
+      service.confirm(confirmation),
+      service.confirm(confirmation),
+    ]);
+    expect(first.creditTransactionId).toBeTruthy();
+    expect(concurrent.creditTransactionId).toBe(first.creditTransactionId);
+    const balancesAfterConcurrent = await walletBalances();
+    expect(balancesAfterConcurrent.posted).toBe(before.posted + AMOUNT);
+    const retry = await service.confirm(confirmation);
+    expect(retry.creditTransactionId).toBe(first.creditTransactionId);
+    const balancesAfterRetry = await walletBalances();
+    expect(balancesAfterRetry.posted).toBe(balancesAfterConcurrent.posted);
 
     const credits = await ctx.pool.query(
       `SELECT id FROM wallet_transactions WHERE idempotency_key = $1`,

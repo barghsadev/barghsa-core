@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T15:15:36+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T15:21:50+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 908 | Accepted with unchanged source bindings. |
+| done | 909 | Accepted with unchanged source bindings. |
 | verify | 424 | Existing work may be complete; inspect evidence before building. |
-| partial | 30 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 29 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 3 | Named owner or external prerequisite. |
@@ -39,9 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify the existing PostgreSQL fixture isolation, provider adapter boundaries and five mandatory financial and order concurrency cases. Continue source-bound verification while external release gates remain open.
+Reconcile existing Playwright configuration and quarantine policy against their exact requirements. Reuse source-bound browser and CI proof where the current code matches.
 
-- `01-platform-infrastructure.md#T-01.04.03`: Configure backend integration test setup with real PostgreSQL
+- `01-platform-infrastructure.md#T-01.04.04`: Configure Playwright for E2E testing
+- `01-platform-infrastructure.md#T-01.04.06`: Configure flaky-test quarantine process
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -967,7 +968,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-01.03.05` | verify | Earlier acceptance_verified | Configure hashed filenames and CDN-ready public asset output |
 | `01-platform-infrastructure.md#T-01.04.01` | verify | Earlier acceptance_verified | Create root `vitest.workspace.ts` that includes all packages and apps |
 | `01-platform-infrastructure.md#T-01.04.02` | verify | Earlier acceptance_verified | Configure per-package Vitest with coverage thresholds |
-| `01-platform-infrastructure.md#T-01.04.03` | partial | Earlier partial | Configure backend integration test setup with real PostgreSQL |
+| `01-platform-infrastructure.md#T-01.04.03` | done | Earlier partial | Configure backend integration test setup with real PostgreSQL |
 | `01-platform-infrastructure.md#T-01.04.04` | partial | Earlier partial | Configure Playwright for E2E testing |
 | `01-platform-infrastructure.md#T-01.04.05` | verify | Earlier acceptance_verified | Wire `test` and `test:coverage` tasks in `turbo.json` |
 | `01-platform-infrastructure.md#T-01.04.06` | partial | Earlier partial | Configure flaky-test quarantine process |
