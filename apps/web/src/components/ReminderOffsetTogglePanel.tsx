@@ -1,7 +1,7 @@
 import { readWithDeadline, ServerQueryError } from '../lib/server-query-client.js';
 import { sendToast, toast } from '../lib/toast-api.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
-import { Button, LoadingStatus } from '@barghsa/ui';
+import { Button, Input, LoadingStatus } from '@barghsa/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -208,6 +208,7 @@ const TABBABLE_SELECTOR = [
 function getTabbable(root: HTMLElement): HTMLElement[] {
   return Array.from(root.querySelectorAll<HTMLElement>(TABBABLE_SELECTOR)).filter((el) => {
     if (el.tabIndex < 0) return false;
+    if (el.matches(':disabled, [aria-disabled="true"]')) return false;
     if (el.getAttribute('aria-hidden') === 'true') return false;
     return true;
   });
@@ -652,6 +653,7 @@ function OwnedReminderOffsetTogglePanel() {
           role="dialog"
           aria-modal="true"
           aria-labelledby="reminder-step-up-title"
+          aria-describedby="reminder-step-up-description"
           data-testid="reminder-step-up-dialog"
           tabIndex={-1}
           onClick={(event) => {
@@ -692,7 +694,7 @@ function OwnedReminderOffsetTogglePanel() {
               <h3 id="reminder-step-up-title" className="text-lg font-semibold text-foreground">
                 {t('admin.invoices.reminders.stepUp.title', locale)}
               </h3>
-              <p className="text-sm text-muted-foreground mt-1">
+              <p id="reminder-step-up-description" className="text-sm text-muted-foreground mt-1">
                 {t('admin.invoices.reminders.stepUp.description', locale)}
               </p>
             </div>
@@ -703,12 +705,14 @@ function OwnedReminderOffsetTogglePanel() {
               >
                 {t('admin.invoices.reminders.stepUp.passwordLabel', locale)}
               </label>
-              <input
+              <Input
                 ref={stepUpPasswordRef}
                 id="reminder-step-up-password"
                 data-testid="reminder-step-up-password"
                 type="password"
                 autoComplete="current-password"
+                aria-required="true"
+                aria-describedby={stepUpError ? 'reminder-step-up-error' : undefined}
                 value={stepUpPassword}
                 disabled={stepUpSubmitting}
                 placeholder={t('admin.invoices.reminders.stepUp.passwordPlaceholder', locale)}
@@ -716,34 +720,32 @@ function OwnedReminderOffsetTogglePanel() {
                   setStepUpPassword(event.target.value);
                   setStepUpError(null);
                 }}
-                className="w-full border border-input rounded px-3 py-2 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring outline-none"
               />
               {stepUpError && (
-                <p className="text-sm text-destructive" role="alert">
+                <p id="reminder-step-up-error" className="text-sm text-destructive" role="alert">
                   {stepUpError}
                 </p>
               )}
             </div>
-            <div className="flex gap-3 justify-end">
-              <button
+            <div className="flex flex-wrap justify-end gap-3">
+              <Button
                 type="button"
+                variant="secondary"
                 data-testid="reminder-step-up-cancel"
                 disabled={stepUpSubmitting}
                 onClick={cancelStepUp}
-                className="px-4 py-2 text-sm rounded bg-muted text-foreground hover:bg-accent transition-colors disabled:opacity-50"
               >
                 {t('admin.invoices.reminders.stepUp.cancel', locale)}
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
                 data-testid="reminder-step-up-submit"
                 disabled={stepUpSubmitting || unconfirmed || !stepUpPassword.trim()}
-                className="px-4 py-2 text-sm rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50"
               >
                 {stepUpSubmitting
                   ? t('admin.invoices.reminders.stepUp.verifying', locale)
                   : t('admin.invoices.reminders.stepUp.submit', locale)}
-              </button>
+              </Button>
             </div>
           </form>
         </div>

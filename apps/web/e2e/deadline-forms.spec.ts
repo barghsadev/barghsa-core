@@ -458,6 +458,73 @@ test('reminder recovery waits for overlapping writes and rejects a partial matri
   ]);
 });
 
+for (const locale of ['fa', 'en'] as const) {
+  test(`reminder verification keeps focus, touch targets and password feedback accessible (${locale})`, async ({
+    page,
+  }, info) => {
+    await setup(page, locale, locale === 'fa');
+    const word = (key: string) => staffText(`admin.invoices.reminders.stepUp.${key}`, locale);
+    const commands: unknown[] = [];
+    let verifications = 0;
+    await page.route('**/api/admin/config/invoice-reminder-offsets', (route) => {
+      if (route.request().method() === 'GET')
+        return route.fulfill({ json: defaultReminderOffsetToggles() });
+      commands.push(route.request().postDataJSON());
+      return route.fulfill({
+        status: 403,
+        json: { error: { code: 'AUTHZ:STEP_UP_REQUIRED' } },
+      });
+    });
+    await page.route('**/api/auth/step-up', (route) => {
+      verifications++;
+      return route.fulfill({
+        status: 422,
+        json: { error: { code: 'AUTH:LOGIN_INVALID_CREDENTIALS' } },
+      });
+    });
+    await page.goto('/admin/invoices');
+    const toggle = page.getByTestId('reminder-toggle-electricity--7');
+    await expect(toggle).toBeChecked();
+    await toggle.focus();
+    await toggle.press('Space');
+    const dialog = page.getByRole('dialog', { name: word('title'), exact: true });
+    const password = dialog.getByLabel(word('passwordLabel'), { exact: true });
+    const cancel = dialog.getByRole('button', { name: word('cancel'), exact: true });
+    const submit = dialog.getByRole('button', { name: word('submit'), exact: true });
+    await expect(password).toBeFocused();
+    await expect(password).toHaveAttribute('aria-required', 'true');
+    await expect(submit).toBeDisabled();
+    await expect(dialog).toHaveAccessibleDescription(word('description'));
+    for (const control of [password, cancel, submit]) {
+      const box = (await control.boundingBox())!;
+      expect(box.width).toBeGreaterThanOrEqual(44);
+      expect(box.height).toBeGreaterThanOrEqual(44);
+    }
+    await password.press('Shift+Tab');
+    await expect(cancel).toBeFocused();
+    await cancel.press('Tab');
+    await expect(password).toBeFocused();
+    expect(
+      (await new AxeBuilder({ page }).include('[data-testid="reminder-step-up-dialog"]').analyze())
+        .violations
+    ).toEqual([]);
+    if (locale === 'fa' && info.project.name === 'mobile-safari')
+      await dialog
+        .locator('form')
+        .screenshot({ path: info.outputPath('reminder-verification.png') });
+    await password.fill('invalid-fixture-password');
+    await password.press('Enter');
+    await expect(dialog.getByRole('alert')).toHaveText(word('failed'));
+    await expect(password).toHaveAccessibleDescription(word('failed'));
+    await password.press('Escape');
+    await expect(dialog).toHaveCount(0);
+    await expect(toggle).toBeChecked();
+    await expect(toggle).toBeFocused();
+    expect(verifications).toBe(1);
+    expect(commands).toEqual([{ serviceType: 'electricity', offset: -7, enabled: false }]);
+  });
+}
+
 for (const locale of ['fa', 'en'] as const)
   test(`deadline validators fail safely when their module is unavailable (${locale})`, async ({
     page,
