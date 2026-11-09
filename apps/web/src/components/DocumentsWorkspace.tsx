@@ -1,3 +1,4 @@
+import { validDocumentRow } from '../lib/document-records.js';
 import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useEffect, useRef, useState, type ComponentProps, type FormEvent } from 'react';
@@ -314,24 +315,6 @@ export function DocumentResults(props: ComponentProps<typeof Results>) {
   return <Results key={scope} {...props} />;
 }
 
-function validDocumentRow(item: BusinessDocument, profileId: string) {
-  return (
-    !!item &&
-    typeof item.id === 'string' &&
-    typeof item.profileId === 'string' &&
-    (!profileId || item.profileId === profileId) &&
-    documentKinds.includes(item.businessRecordType) &&
-    documentStates.includes(item.state) &&
-    typeof item.originalName === 'string' &&
-    Number.isSafeInteger(item.revision) &&
-    Number.isSafeInteger(item.sizeBytes) &&
-    item.sizeBytes >= 0 &&
-    typeof item.createdAt === 'string' &&
-    Number.isFinite(Date.parse(item.createdAt)) &&
-    (item.rejectionReason == null || typeof item.rejectionReason === 'string')
-  );
-}
-
 function Results({
   staff,
   showRetention = false,
@@ -563,6 +546,7 @@ function Results({
         <DocumentDetail
           key={selected}
           id={selected}
+          profileId={profileId}
           staff={staff}
           showRetention={showRetention}
           onClose={() => setSelected(null)}

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T01:08:16+00:00",
-  "source_commit": "223c3d1d9d0929c404f14994503411b253ed7790",
+  "updated": "2026-11-09T01:16:44+00:00",
+  "source_commit": "3e82186e3b9f5bfd9250ad57f6cb3cf2e87a23c2",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -177127,7 +177127,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -177171,11 +177171,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -177420,6 +177420,10 @@
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
               "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -177934,7 +177938,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -177978,11 +177982,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -178227,6 +178231,10 @@
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
               "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -178738,7 +178746,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -178782,11 +178790,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -179031,6 +179039,10 @@
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
               "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -179541,7 +179553,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -179585,11 +179597,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -179834,6 +179846,10 @@
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
               "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -180346,7 +180362,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -180390,11 +180406,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -180639,6 +180655,10 @@
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
               "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -380893,11 +380913,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/SavingOrderComments.tsx",
@@ -381182,6 +381202,10 @@
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
               "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -381857,11 +381881,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/SavingOrderComments.tsx",
@@ -382146,6 +382170,10 @@
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
               "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -382820,11 +382848,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/SavingOrderComments.tsx",
@@ -383109,6 +383137,10 @@
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
               "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -441398,7 +441430,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -441442,11 +441474,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -441691,6 +441723,10 @@
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
               "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -442270,7 +442306,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
@@ -442278,7 +442314,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
@@ -442298,7 +442334,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -442322,7 +442358,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -442359,6 +442395,10 @@
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
               "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -442758,7 +442798,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
@@ -442766,7 +442806,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
@@ -442786,7 +442826,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -442810,7 +442850,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -442847,6 +442887,10 @@
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
               "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -443110,11 +443154,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/FilePreview.tsx",
@@ -443134,7 +443178,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/lib/documents.ts",
@@ -443203,6 +443247,10 @@
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
               "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -443529,7 +443577,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
@@ -443537,7 +443585,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
@@ -443557,7 +443605,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -443581,7 +443629,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -443618,6 +443666,10 @@
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
               "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -443963,7 +444015,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -443983,7 +444035,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -444003,11 +444055,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/FilePreview.tsx",
@@ -444136,6 +444188,10 @@
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
               "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -444408,11 +444464,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/FilePreview.tsx",
@@ -444432,7 +444488,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/lib/documents.ts",
@@ -444501,6 +444557,10 @@
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
               "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -444825,7 +444885,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
@@ -444833,7 +444893,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
@@ -444853,7 +444913,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -444877,7 +444937,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -444914,6 +444974,10 @@
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
               "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -445307,7 +445371,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
@@ -445315,7 +445379,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
@@ -445335,7 +445399,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -445359,7 +445423,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -445400,6 +445464,10 @@
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
               "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -445813,7 +445881,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
@@ -445821,7 +445889,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
@@ -445841,7 +445909,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -445865,7 +445933,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -445906,6 +445974,10 @@
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
               "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -446319,7 +446391,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
@@ -446327,7 +446399,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
@@ -446347,7 +446419,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -446371,7 +446443,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -446412,6 +446484,10 @@
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
               "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -446825,7 +446901,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
@@ -446833,7 +446909,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
@@ -446853,7 +446929,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -446877,7 +446953,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -446918,6 +446994,10 @@
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
               "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -447330,7 +447410,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
@@ -447338,7 +447418,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
@@ -447358,7 +447438,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -447382,7 +447462,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -447419,6 +447499,10 @@
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
               "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -447682,11 +447766,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/FilePreview.tsx",
@@ -447706,7 +447790,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/lib/documents.ts",
@@ -447779,6 +447863,10 @@
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
               "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -448093,11 +448181,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -448436,11 +448524,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -448781,11 +448869,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -449151,11 +449239,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -449494,11 +449582,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -492762,7 +492850,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/EffectivePermissionsView.tsx",
@@ -493279,6 +493367,10 @@
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
               "sha256": "bb217dd08adde363c0496fe4f92efafcfb87f99c5bedb9bbf3850c192de9575f"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/server-state-foundation-current-acceptance",
@@ -494147,7 +494239,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -494171,7 +494263,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
@@ -494532,6 +494624,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -495030,7 +495126,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -495054,7 +495150,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
@@ -495415,6 +495511,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -495854,7 +495954,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -495878,7 +495978,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
@@ -496239,6 +496339,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -497584,7 +497688,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/EffectivePermissionsView.tsx",
@@ -498101,6 +498205,10 @@
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
               "sha256": "bb217dd08adde363c0496fe4f92efafcfb87f99c5bedb9bbf3850c192de9575f"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/server-state-foundation-current-acceptance",
@@ -516937,7 +517045,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -517445,7 +517553,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -517457,11 +517565,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -518242,6 +518350,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -518411,11 +518523,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/FilePreview.tsx",
@@ -518592,6 +518704,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -519851,11 +519967,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/FilePreview.tsx",
@@ -520032,6 +520148,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -522007,11 +522127,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/FilePreview.tsx",
@@ -522188,6 +522308,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -546452,7 +546576,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -546472,7 +546596,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -547689,6 +547813,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -548318,7 +548446,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -548338,7 +548466,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -549555,6 +549683,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -550185,7 +550317,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -550205,7 +550337,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -551422,6 +551554,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -552021,7 +552157,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -552041,7 +552177,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -553258,6 +553394,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -553883,7 +554023,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -553903,7 +554043,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -555120,6 +555260,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -555754,7 +555898,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -555774,7 +555918,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -556991,6 +557135,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -557598,7 +557746,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -557618,7 +557766,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -558835,6 +558983,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -559406,7 +559558,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -559426,7 +559578,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -560643,6 +560795,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -561214,7 +561370,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -561234,7 +561390,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -562451,6 +562607,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -563023,7 +563183,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -563043,7 +563203,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -564260,6 +564420,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -564831,7 +564995,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -564851,7 +565015,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -566068,6 +566232,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -566629,7 +566797,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -566645,7 +566813,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -567982,6 +568150,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -568524,7 +568696,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -568540,7 +568712,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -569877,6 +570049,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -570516,7 +570692,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -571156,7 +571332,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -571184,11 +571360,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -573081,6 +573257,10 @@
             {
               "path": "scripts/check-route-budgets.mjs",
               "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -573306,7 +573486,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -573322,7 +573502,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -574659,6 +574839,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -575201,7 +575385,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -575217,7 +575401,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -576554,6 +576738,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -577096,7 +577284,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -577112,7 +577300,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -578449,6 +578637,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -578991,7 +579183,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -579007,7 +579199,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -580344,6 +580536,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -580886,7 +581082,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -580902,7 +581098,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -582239,6 +582435,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -582781,7 +582981,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -582797,7 +582997,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -584134,6 +584334,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -584676,7 +584880,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -584692,7 +584896,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -586029,6 +586233,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -586571,7 +586779,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -586587,7 +586795,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -587924,6 +588132,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -588466,7 +588678,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -588482,7 +588694,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -589819,6 +590031,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -590361,7 +590577,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -590377,7 +590593,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -591714,6 +591930,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -592256,7 +592476,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -592272,7 +592492,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -593609,6 +593829,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -594891,7 +595115,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -594907,7 +595131,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -596244,6 +596468,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -596786,7 +597014,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -596802,7 +597030,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -598139,6 +598367,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -598486,7 +598718,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "All eleven dashboard widget primary read states and the admin first-read failure sweep have current scoped evidence. The 98-path route index separates verified states from older candidates. Resolve the remaining applicable customer and staff child-route empty, denied and stale states and route-specific interaction/layout criteria from named receipts."
+        "Customer and staff document lists and detail panels have current targeted error, retry and authority withdrawal receipts. Dashboard widget and admin first-read evidence remains indexed. Resolve the remaining contract child states and applicable account and staff child-route conditions from named evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -598621,7 +598853,8 @@
           "release-0.5-customer-consultation-denial",
           "release-0.5-electricity-owned-checkout-addresses",
           "release-0.5-electricity-catalogue-validation",
-          "release-0.5-dashboard-widget-acceptance"
+          "release-0.5-dashboard-widget-acceptance",
+          "release-0.5-document-detail-authority"
         ],
         "current_acceptance": null
       }
@@ -598875,7 +599108,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -598895,7 +599128,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -600112,6 +600345,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -600679,7 +600916,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -600699,7 +600936,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -601916,6 +602153,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -602483,7 +602724,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -602503,7 +602744,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -603720,6 +603961,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -604287,7 +604532,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -604307,7 +604552,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -605524,6 +605769,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -606091,7 +606340,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -606111,7 +606360,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -607328,6 +607577,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -607895,7 +608148,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -607915,7 +608168,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -609132,6 +609385,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -609699,7 +609956,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -609719,7 +609976,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -610936,6 +611193,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -637514,7 +637775,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -638143,6 +638404,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -638638,7 +638903,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -639267,6 +639532,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -639762,7 +640031,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -640391,6 +640660,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -640889,7 +641162,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -641518,6 +641791,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -642016,7 +642293,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -642645,6 +642922,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -643170,7 +643451,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -643799,6 +644080,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -644293,7 +644578,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -644922,6 +645207,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -645416,7 +645705,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -646045,6 +646334,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -646540,7 +646833,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -647169,6 +647462,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -647682,7 +647979,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -648311,6 +648608,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -648807,7 +649108,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -649436,6 +649737,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -680309,7 +680614,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -680938,6 +681243,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -681431,7 +681740,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -682060,6 +682369,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -682553,7 +682866,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -683182,6 +683495,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -683675,7 +683992,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -684304,6 +684621,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -684789,7 +685110,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -684821,11 +685142,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/FilePreview.test.tsx",
@@ -685018,6 +685339,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -685363,7 +685688,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -685395,11 +685720,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/FilePreview.test.tsx",
@@ -685592,6 +685917,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -685936,7 +686265,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -685968,11 +686297,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/FilePreview.test.tsx",
@@ -686165,6 +686494,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -686511,7 +686844,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -686543,11 +686876,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/FilePreview.test.tsx",
@@ -686740,6 +687073,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -687084,7 +687421,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -687116,11 +687453,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/FilePreview.test.tsx",
@@ -687313,6 +687650,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -687657,7 +687998,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -687689,11 +688030,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/FilePreview.test.tsx",
@@ -687886,6 +688227,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -713615,7 +713960,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -713647,11 +713992,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/contract-authoring-native.test.tsx",
@@ -714408,6 +714753,10 @@
             {
               "path": "apps/web/src/lib/theme.ts",
               "sha256": "3c0306beb7a232fe75781a1d4652d5677c088396ab907a6b598338acf0b33e5a"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -721635,7 +721984,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -721843,7 +722192,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -721871,11 +722220,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/FilePreview.test.tsx",
@@ -723496,6 +723845,10 @@
             {
               "path": "apps/web/src/lib/prompt-colors.ts",
               "sha256": "ff4bda3a9cfe84c77f7067c441052013d608abfbbb767f06716c86f7b51a17e7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -725517,7 +725870,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+              "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -725717,7 +726070,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -725745,11 +726098,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+              "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/FilePreview.test.tsx",
@@ -727382,6 +727735,10 @@
             {
               "path": "apps/web/src/lib/prompt-colors.ts",
               "sha256": "ff4bda3a9cfe84c77f7067c441052013d608abfbbb767f06716c86f7b51a17e7"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -728269,7 +728626,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "All eleven dashboard widget primary read states and the admin first-read failure sweep have current scoped evidence. The 98-path route index separates verified states from older candidates. Resolve the remaining applicable customer and staff child-route empty, denied and stale states and route-specific interaction/layout criteria from named receipts."
+        "Customer and staff document lists and detail panels have current targeted error, retry and authority withdrawal receipts. Dashboard widget and admin first-read evidence remains indexed. Resolve the remaining contract child states and applicable account and staff child-route conditions from named evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -728470,7 +728827,8 @@
           "release-0.5-customer-consultation-denial",
           "release-0.5-electricity-owned-checkout-addresses",
           "release-0.5-electricity-catalogue-validation",
-          "release-0.5-dashboard-widget-acceptance"
+          "release-0.5-dashboard-widget-acceptance",
+          "release-0.5-document-detail-authority"
         ]
       }
     },
@@ -728722,7 +729080,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
-              "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+              "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
             },
             {
               "path": "apps/web/src/components/DocumentLegalHolds.tsx",
@@ -728742,7 +729100,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+              "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.tsx",
@@ -730275,6 +730633,10 @@
             {
               "path": "apps/web/src/hooks/useCursorHistory.ts",
               "sha256": "f90b635accf0dbdcf971dfc1dcb688e9b827aa3348903eddd8c129add8763404"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             }
           ],
           "checks": [
@@ -730412,7 +730774,8 @@
             "All 101 transfer budgets and affected native invoice deadline and wallet receipt accessibility cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-safe-admin-read-errors/proof.json",
             "All 101 transfer budgets and affected native consultation accessibility and keyboard cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-consultation-denial/proof.json",
             "All 101 transfer budgets and affected native electricity delivery, accessibility and checkout cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-owned-checkout-addresses/proof.json",
-            "All 101 transfer budgets and native catalogue accessibility and checkout journey cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-catalogue-validation/proof.json"
+            "All 101 transfer budgets and native catalogue accessibility and checkout journey cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-catalogue-validation/proof.json",
+            "All 101 final transfer budgets and affected document/solar browser checks passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-detail-authority/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -809314,6 +809677,53 @@
       "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-widget-acceptance/proof.json",
       "source_scope_proof_sha256": "9371e1450425d5d177b9ceca41587c6bfd856eeeaab93e8b7946e2669b509a15",
       "release_disposition": "Verified local pending, failure, retry and empty states for all dashboard widgets and indexed current route evidence. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-document-detail-authority": {
+      "batch": "release-0.5-document-detail-authority",
+      "base_commit": "3e82186e3b9f5bfd9250ad57f6cb3cf2e87a23c2",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/document-list-recovery.spec.ts",
+          "sha256": "12e3496729b2664750c6eb13f141b37d5e8c28668774dc8c0a600facfc4cd102"
+        },
+        {
+          "path": "apps/web/src/components/DocumentDetail.tsx",
+          "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
+        },
+        {
+          "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
+          "sha256": "04f3277457a497348bfe472f7668303b9c3323a921fcc313965e841b77b29d01"
+        },
+        {
+          "path": "apps/web/src/components/DocumentsWorkspace.tsx",
+          "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
+        },
+        {
+          "path": "apps/web/src/lib/document-records.ts",
+          "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+        }
+      ],
+      "checks": [
+        "Nine baseline regressions reproduced local detail read failures, including malformed render fields, misleading unavailable copy, and retained signed links after read authority loss.",
+        "The detail validator reuses the existing row checks and verifies rendering fields, history, current resource ID and supplied profile scope. A transient or malformed response stays local and retryable. Confirmed 401, 403 or 404 metadata, preview and download responses clear private detail, signed links and review drafts and stop obsolete link reads.",
+        "Seventy-two final focused units and the changed-source coverage group passed with 30 of 30 lines and 70 of 73 branches. Eight final production browser cases verify customer and staff detail recovery and denial in Persian and English across both engines. Twelve unchanged list and solar companion cases carry forward across the verified validator relocation.",
+        "The first build exceeded the 500 KB staff wallet receipt limit. Moving the identical validators out of the shared transport reduced the route to 499.76 KB. All 101 final transfer budgets, web typechecking, lint and formatting passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-detail-authority",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-detail-authority/proof.json",
+      "source_scope_proof_sha256": "acb26c3555ec4c2176a9caa5ea50d6c56d115af5c63fb7839df372b96d63bf19",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-detail-authority/reviewed-final.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-detail-authority/renewed-bindings.json",
+      "release_disposition": "Closed document detail render recovery and signed-link withdrawal gaps. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [
@@ -809364,7 +809774,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Use the current route-state index to close the remaining primary and child read states. Start with the customer contracts and documents workspaces and account settings, then verify still-unmatched staff child states. GitHub required-check enforcement and staging Sentry delivery remain independent."
+    "goal": "Reproduce and close malformed contract detail, selected version and version-history read states. Preserve captured signature, lifecycle, financial and profile authority. Then reconcile remaining account and staff child states. GitHub required-check enforcement and staging Sentry delivery remain independent."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",

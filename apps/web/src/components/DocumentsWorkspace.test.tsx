@@ -13,6 +13,7 @@ import { refreshProfileContext } from '../lib/profile-context.js';
 import type { BusinessDocument } from '../lib/documents.js';
 import type { TeamAction } from './TeamActionDialog.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { documentText } from '@barghsa/i18n/documents';
 import DocumentsPage from '../pages/DocumentsPage.js';
 import AdminDocumentsPage from '../pages/AdminDocumentsPage.js';
 
@@ -785,6 +786,113 @@ it('replaces an inline staff document using its profile when the queue spans all
     true
   );
 });
+it.each([
+  [200, { originalName: { private: 'Invalid document name' } }],
+  [200, { reviewComment: { private: 'Invalid review comment' } }],
+  [200, { permissions: { download: 'false' } }],
+  [200, { profileId: '33333333-3333-4333-8333-333333333333' }],
+  [200, { history: [{ id: 'invalid-event', state: 'Available', createdAt: 'yesterday' }] }],
+  [503, { message: 'Private upstream diagnostic' }],
+] as const)(
+  'keeps malformed or unavailable document details inside local retry %#',
+  async (status, fields) => {
+    const fetcher = vi
+      .fn()
+      .mockResolvedValueOnce(response({ ...row(), history: [], ...fields }, status))
+      .mockResolvedValueOnce(response({ ...row(), history: [] }));
+    vi.stubGlobal('fetch', fetcher);
+    await render(
+      <DocumentDetail
+        id={DOCUMENT}
+        profileId={PROFILE}
+        staff={false}
+        onClose={vi.fn()}
+        onChanged={vi.fn()}
+        onReplace={vi.fn()}
+        onPrevious={vi.fn()}
+      />
+    );
+
+    expect(container.querySelector('[role="alert"]')?.textContent).toContain(
+      documentText('error', 'en')
+    );
+    expect(container.textContent).not.toContain('Proof.pdf');
+    expect(container.textContent).not.toMatch(
+      /Private upstream|Invalid document name|Invalid review comment/
+    );
+    expect(container.textContent).not.toContain(documentText('download', 'en'));
+    await click(documentText('refresh', 'en'));
+    expect(container.textContent).toContain('Proof.pdf');
+    expect(container.querySelector('[role="alert"]')).toBeNull();
+    expect(fetcher).toHaveBeenCalledTimes(2);
+  }
+);
+
+it.each([401, 403, 404])(
+  'withdraws document detail on a terminal read response %s',
+  async (status) => {
+    const fetcher = vi
+      .fn()
+      .mockResolvedValue(response({ message: 'Private upstream diagnostic' }, status));
+    vi.stubGlobal('fetch', fetcher);
+    await render(
+      <DocumentDetail
+        id={DOCUMENT}
+        staff={false}
+        onClose={vi.fn()}
+        onChanged={vi.fn()}
+        onReplace={vi.fn()}
+        onPrevious={vi.fn()}
+      />
+    );
+    expect(container.querySelector('[role="alert"]')?.textContent).toContain(
+      documentText('denied', 'en')
+    );
+    expect(container.textContent).not.toContain(documentText('refresh', 'en'));
+    expect(container.textContent).not.toContain('Private upstream');
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  }
+);
+
+it.each(['download', 'preview'] as const)(
+  'clears both signed links when a %s read loses authority',
+  async (operation) => {
+    let denied = false;
+    const fetcher = vi.fn(async (path: string) => {
+      if (path.endsWith('/download') || path.endsWith('/preview'))
+        return denied && path.endsWith(`/${operation}`)
+          ? response({ message: 'Private denial' }, 403)
+          : response({ url: 'https://storage.test/private.png' });
+      return response({ ...row({ state: 'SubmittedForReview' }), history: [] });
+    });
+    vi.stubGlobal('fetch', fetcher);
+    await render(
+      <DocumentDetail
+        id={DOCUMENT}
+        staff
+        onClose={vi.fn()}
+        onChanged={vi.fn()}
+        onReplace={vi.fn()}
+        onPrevious={vi.fn()}
+      />
+    );
+    await value('#document-review-reason', 'Private review draft');
+    await click(documentText('download', 'en'));
+    await click(documentText('preview', 'en'));
+    expect(container.querySelector('a[href="https://storage.test/private.png"]')).not.toBeNull();
+    expect(container.querySelector('img[src="https://storage.test/private.png"]')).not.toBeNull();
+    denied = true;
+    await click(documentText(operation, 'en'));
+    expect(container.querySelector('[role="alert"]')?.textContent).toContain(
+      documentText('denied', 'en')
+    );
+    expect(container.querySelector('a[href="https://storage.test/private.png"], img')).toBeNull();
+    expect(container.querySelector('#document-review-reason')).toBeNull();
+    expect(container.textContent).not.toMatch(/Proof\.pdf|Private denial|Private review draft/);
+    expect(fetcher.mock.calls).toHaveLength(4);
+  }
+);
+
 it('suppresses detail file and mutation actions when the current server projection denies them', async () => {
   vi.stubGlobal(
     'fetch',

@@ -218,6 +218,89 @@ for (const staff of [false, true])
       );
     });
   }
+for (const staff of [false, true])
+  for (const locale of ['en', 'fa'] as const) {
+    test(`${staff ? 'staff' : 'customer'} document details recover locally and discard signed links on denial (${locale})`, async ({
+      page,
+    }) => {
+      await shell(page, locale, staff);
+      const word = (key: string) => documentText(key, locale);
+      const base = staff ? '/api/admin/documents' : '/api/documents';
+      const diagnostic = 'Private upstream document diagnostic';
+      const reads: string[] = [];
+      const errors: string[] = [];
+      page.on('pageerror', (error) => errors.push(error.message));
+      await page.route(
+        (url) => url.pathname === base,
+        (route) => {
+          reads.push('list');
+          return route.fulfill({ json: { documents: [documentRow], nextBefore: null } });
+        }
+      );
+      let resume!: () => void;
+      const held = new Promise<void>((resolve) => {
+        resume = resolve;
+      });
+      let detailReads = 0;
+      await page.route(`**${base}/${documentRow.id}`, async (route) => {
+        reads.push('detail');
+        if (++detailReads === 1) {
+          await held;
+          return route.fulfill({ status: 503, json: { message: diagnostic } });
+        }
+        return route.fulfill({
+          json:
+            detailReads === 2
+              ? { ...documentDetail, originalName: { title: diagnostic } }
+              : documentDetail,
+        });
+      });
+      const url = 'https://storage.example.test/private.pdf';
+      await page.route(`**${base}/${documentRow.id}/download`, (route) => {
+        reads.push('download');
+        return route.fulfill(
+          reads.filter((read) => read === 'download').length === 1
+            ? { json: { url } }
+            : { status: 403, json: { message: diagnostic } }
+        );
+      });
+      await page.goto(staff ? '/admin/documents' : '/documents');
+      const list = page.getByRole('region', { name: word('listTitle'), exact: true });
+      const row = list.getByRole('button', { name: documentRow.originalName, exact: true });
+      await row.press('Enter');
+      const detail = list.getByRole('region', { name: word('details'), exact: true });
+      try {
+        await expect(detail.getByRole('status', { name: word('loading') })).toBeVisible();
+      } finally {
+        resume();
+      }
+      const retry = detail.getByRole('button', { name: word('refresh'), exact: true });
+      for (const attempt of [1, 2]) {
+        await expect.poll(() => detailReads).toBe(attempt);
+        await expect(detail.getByRole('alert')).toContainText(word('error'));
+        await expect(row).toBeVisible();
+        await expect(detail.getByText(diagnostic)).toHaveCount(0);
+        await retry.press('Enter');
+      }
+      await expect(detail.getByRole('heading', { name: documentRow.originalName })).toBeVisible();
+      const download = detail.getByRole('button', { name: word('download'), exact: true });
+      await download.press('Enter');
+      await expect(
+        detail.getByRole('link', { name: word('openFile'), exact: true })
+      ).toHaveAttribute('href', url);
+      await download.press('Enter');
+      await expect(detail.getByRole('alert')).toContainText(word('denied'));
+      await expect(detail.getByRole('link', { name: word('openFile'), exact: true })).toHaveCount(
+        0
+      );
+      await expect(detail.getByRole('heading', { name: documentRow.originalName })).toHaveCount(0);
+      await expect(retry).toHaveCount(0);
+      await expect(row).toBeVisible();
+      expect(reads).toEqual(['list', 'detail', 'detail', 'detail', 'download', 'download']);
+      expect(errors).toEqual([]);
+    });
+  }
+
 for (const locale of ['en', 'fa'] as const) {
   test(`template queue and detail recover separately while metadata and version drafts remain (${locale})`, async ({
     page,

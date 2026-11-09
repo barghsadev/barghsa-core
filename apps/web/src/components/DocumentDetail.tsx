@@ -1,3 +1,4 @@
+import { validDocumentDetail } from '../lib/document-records.js';
 import { feedbackText } from '@barghsa/i18n/feedback';
 import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
@@ -27,7 +28,7 @@ import { DocumentStatusBadge } from './DocumentStatusBadge.js';
 import { FilePreview } from './FilePreview.js';
 import {
   documentBase,
-  documentStates,
+  DocumentRequestError,
   isQuarantinedDocument,
   documentUrl,
   type BusinessDocument,
@@ -49,18 +50,23 @@ type Transition = TeamAction & {
   body: { expectedRevision: number; idempotencyKey: string; reason?: string };
 };
 
+function unavailable(failure: unknown) {
+  return failure instanceof DocumentRequestError && [401, 403, 404].includes(failure.status);
+}
+
 export function DocumentDetail(props: Parameters<typeof OwnedDocumentDetail>[0]) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
   return (
     <OwnedDocumentDetail
-      key={JSON.stringify([actor, revision, props.id, props.staff])}
+      key={JSON.stringify([actor, revision, props.id, props.profileId, props.staff])}
       {...props}
     />
   );
 }
 function OwnedDocumentDetail({
   id,
+  profileId = '',
   staff,
   onClose,
   onChanged,
@@ -72,6 +78,7 @@ function OwnedDocumentDetail({
   showRetention = false,
 }: {
   id: string;
+  profileId?: string;
   staff: boolean;
   onClose: () => void;
   onChanged: () => void;
@@ -89,14 +96,14 @@ function OwnedDocumentDetail({
     actor,
     revision,
     staff,
-    undefined,
+    profileId,
     JSON.stringify([id, staff])
   );
   const word = (key: string) => documentText(key, locale);
   const time = useAccountTime();
   const numbers = useNumberFormatting(locale);
   const [document, setDocument] = useState<Detail | null>(null);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<'retry' | 'denied' | null>(null);
   const [reload, setReload] = useState(0);
   const [reason, setReason] = useState('');
   const [reasonMissing, setReasonMissing] = useState(false);
@@ -122,49 +129,39 @@ function OwnedDocumentDetail({
     setPreview(null);
     setPreviewing(false);
     setPreviewError(false);
-    setError(false);
-    void readDocument<Detail>(`${documentBase(staff)}/${encodeURIComponent(id)}`, {
+    setError(null);
+    void readDocument<unknown>(`${documentBase(staff)}/${encodeURIComponent(id)}`, {
       signal: controller.signal,
     })
       .then((data) => {
         if (controller.signal.aborted) return;
         const pending = unconfirmed.current;
         if (
-          data.id !== id ||
-          typeof data.profileId !== 'string' ||
-          !data.profileId ||
-          (pending && data.profileId !== pending.target.profileId) ||
-          !Number.isSafeInteger(data.revision) ||
-          !documentStates.includes(data.state) ||
-          !Array.isArray(data.history) ||
-          !data.history.every(
-            (event) =>
-              event &&
-              typeof event.id === 'string' &&
-              documentStates.includes(event.state) &&
-              typeof event.createdAt === 'string' &&
-              (event.reason == null || typeof event.reason === 'string')
-          )
+          !validDocumentDetail(data, id, profileId) ||
+          (pending && data.profileId !== pending.target.profileId)
         )
           throw new Error('Invalid document detail');
         if (pending?.body.expectedRevision !== data.revision || data.permissions?.write === false)
           unconfirmed.current = null;
         setDocument(data);
       })
-      .catch(() => {
-        if (!controller.signal.aborted) setError(true);
+      .catch((failure: unknown) => {
+        if (controller.signal.aborted) return;
+        if (unavailable(failure)) withdrawDenied();
+        else setError('retry');
       });
     return () => {
       controller.abort();
       previewController.current?.abort();
       downloadController.current?.abort();
     };
-  }, [id, staff, reload, readDocument]);
+  }, [id, staff, profileId, reload, readDocument]);
 
   async function getDownload() {
     downloadController.current?.abort();
     const controller = new AbortController();
     downloadController.current = controller;
+    setDownload(null);
     setDownloading(true);
     setDownloadError(false);
     try {
@@ -173,15 +170,19 @@ function OwnedDocumentDetail({
         { signal: controller.signal }
       );
       if (!controller.signal.aborted) setDownload(documentUrl(data.url));
-    } catch {
-      if (!controller.signal.aborted) setDownloadError(true);
+    } catch (failure) {
+      if (controller.signal.aborted) return;
+      if (unavailable(failure)) withdrawDenied();
+      else setDownloadError(true);
     } finally {
       if (!controller.signal.aborted) setDownloading(false);
     }
   }
   async function getPreview() {
+    previewController.current?.abort();
     const controller = new AbortController();
     previewController.current = controller;
+    setPreview(null);
     setPreviewing(true);
     setPreviewError(false);
     try {
@@ -190,8 +191,10 @@ function OwnedDocumentDetail({
         { signal: controller.signal }
       );
       if (!controller.signal.aborted) setPreview(documentUrl(data.url));
-    } catch {
-      if (!controller.signal.aborted) setPreviewError(true);
+    } catch (failure) {
+      if (controller.signal.aborted) return;
+      if (unavailable(failure)) withdrawDenied();
+      else setPreviewError(true);
     } finally {
       if (!controller.signal.aborted) setPreviewing(false);
     }
@@ -240,6 +243,14 @@ function OwnedDocumentDetail({
     setPreview(null);
     setDownload(null);
     setAction(null);
+  }
+  function withdrawDenied() {
+    withdraw();
+    unconfirmed.current = null;
+    setNeedsRead(false);
+    setReason('');
+    setReasonMissing(false);
+    setError('denied');
   }
   const readable =
     document &&
@@ -307,10 +318,12 @@ function OwnedDocumentDetail({
         </Alert>
       ) : error ? (
         <Alert variant="destructive">
-          <AlertDescription>{word('denied')}</AlertDescription>
-          <Button variant="outline" onClick={() => setReload((value) => value + 1)}>
-            {word('refresh')}
-          </Button>
+          <AlertDescription>{word(error === 'denied' ? 'denied' : 'error')}</AlertDescription>
+          {error === 'retry' && (
+            <Button variant="outline" onClick={() => setReload((value) => value + 1)}>
+              {word('refresh')}
+            </Button>
+          )}
         </Alert>
       ) : !document ? (
         <PageLoading label={word('loading')} />
@@ -503,11 +516,7 @@ function OwnedDocumentDetail({
         <TeamActionDialog
           action={action}
           onClose={() => setAction(null)}
-          onDenied={() => {
-            withdraw();
-            unconfirmed.current = null;
-            setError(true);
-          }}
+          onDenied={withdrawDenied}
           onUnconfirmed={() => {
             withdraw();
             unconfirmed.current = action;
