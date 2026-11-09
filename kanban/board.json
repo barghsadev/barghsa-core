@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T19:27:31+00:00",
+  "updated": "2026-11-09T19:32:54+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -471285,19 +471285,67 @@
         "story": "06-security-testing-observability.md#spec-de165c31f6f5"
       },
       "requirement": "| T-06.01.03.01 | Design MFA enforcement engine: risk rules for customers, mandatory for staff/admins | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-mfa-device-and-financial-authorization"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-mfa-and-device-verification",
+          "base_commit": "48ebfdfe5d52ad12612dd36a07554b6daea52ab1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
+              "sha256": "f330a066e669f91829017499bf3d4bc50057cb6b8286a3be83c9e350c50e15e8"
+            },
+            {
+              "path": "apps/api/src/session/cookie.helper.ts",
+              "sha256": "e7df184920fe77f1b06cd760893792ec5945be026967eba39b2acd894888d8a3"
+            },
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
+            },
+            {
+              "path": "apps/api/src/session/trusted-devices-http.integration.test.ts",
+              "sha256": "91faa62e6ecca511e41ea5cd4dee3bf4fd6b1869a88e41dbf60e4000899c553b"
+            },
+            {
+              "path": "apps/api/src/session/trusted-devices.controller.ts",
+              "sha256": "bcc609aecdeaa52b6d40f877692eb325fffdc8a8be810f805c90e5298759905e"
+            },
+            {
+              "path": "docs/security/session-location.md",
+              "sha256": "8c9e0f38ad77ec685486025a5f8e2c9cd2e0a18523991d3668614cd4343c6469"
+            },
+            {
+              "path": "packages/db/src/schema/device-trust.ts",
+              "sha256": "c96fc16b26dc20076f48050894ce9d95a796c361f97beadf01010818b4e42351"
+            }
+          ],
+          "checks": [
+            "The API uses verified browser possession, a current trust record and the exact normalized IP for the known-device decision. Native staff sign-in required OTP on an untrusted browser. Native customer, staff and administrator variants exercised first proof, matching-device login and forced OTP after expiry, imitation or revocation."
+          ]
+        }
       }
     },
     {
@@ -471311,19 +471359,79 @@
         "story": "06-security-testing-observability.md#spec-de165c31f6f5"
       },
       "requirement": "| T-06.01.03.02 | Implement step-up authentication gate for sensitive actions (payment confirmation, refunds, role changes, credential changes, session revocation) | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-mfa-device-and-financial-authorization"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-mfa-and-device-verification",
+          "base_commit": "48ebfdfe5d52ad12612dd36a07554b6daea52ab1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
+              "sha256": "f330a066e669f91829017499bf3d4bc50057cb6b8286a3be83c9e350c50e15e8"
+            },
+            {
+              "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
+              "sha256": "d3317bca524349d995b84ac1fa33155cf4d141d4a406b2896e8d5df2a23d6d1e"
+            },
+            {
+              "path": "apps/api/src/auth/otp-step-up.service.ts",
+              "sha256": "44168c1da43b87679cbda10a313b9c7f86c0d51e5b2327f8b88ee90da274cdff"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
+              "sha256": "387e46584bacea315ed3ebfe249e9b79d76b151145e7ce0acca7ce5a72e56bdb"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+            },
+            {
+              "path": "apps/api/src/session/cookie.helper.ts",
+              "sha256": "e7df184920fe77f1b06cd760893792ec5945be026967eba39b2acd894888d8a3"
+            },
+            {
+              "path": "apps/api/src/session/session-http.integration.test.ts",
+              "sha256": "d23f3230379767dda10939f46422fc03121ba1ec3c2d3833665dbd50de49c707"
+            },
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
+            },
+            {
+              "path": "apps/api/src/session/step-up.guard.ts",
+              "sha256": "76029f6a03f054c4020efa7a56c26433b26f00e50fd9a7c315031003081b7309"
+            },
+            {
+              "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
+              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+            }
+          ],
+          "checks": [
+            "Current native authorization checks passed for customer wallet invoice payment, Finance refunds and both invoice correction variants. Prior current native cases verified session revocation, forced credential replacement and OTP-specific provider, threshold and role changes. Scope includes current session, CSRF, recent proof and resource authority at the applicable command boundaries."
+          ]
+        }
       }
     },
     {
@@ -471337,19 +471445,67 @@
         "story": "06-security-testing-observability.md#spec-de165c31f6f5"
       },
       "requirement": "| T-06.01.03.03 | Implement device fingerprinting and trust scoring (cookie-based device ID, user-agent, IP geo, known device list) | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-mfa-device-and-financial-authorization"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-mfa-and-device-verification",
+          "base_commit": "48ebfdfe5d52ad12612dd36a07554b6daea52ab1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
+              "sha256": "f330a066e669f91829017499bf3d4bc50057cb6b8286a3be83c9e350c50e15e8"
+            },
+            {
+              "path": "apps/api/src/session/cookie.helper.ts",
+              "sha256": "e7df184920fe77f1b06cd760893792ec5945be026967eba39b2acd894888d8a3"
+            },
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
+            },
+            {
+              "path": "apps/api/src/session/trusted-devices-http.integration.test.ts",
+              "sha256": "91faa62e6ecca511e41ea5cd4dee3bf4fd6b1869a88e41dbf60e4000899c553b"
+            },
+            {
+              "path": "apps/api/src/session/trusted-devices.controller.ts",
+              "sha256": "bcc609aecdeaa52b6d40f877692eb325fffdc8a8be810f805c90e5298759905e"
+            },
+            {
+              "path": "docs/security/session-location.md",
+              "sha256": "8c9e0f38ad77ec685486025a5f8e2c9cd2e0a18523991d3668614cd4343c6469"
+            },
+            {
+              "path": "packages/db/src/schema/device-trust.ts",
+              "sha256": "c96fc16b26dc20076f48050894ce9d95a796c361f97beadf01010818b4e42351"
+            }
+          ],
+          "checks": [
+            "The server derives the stored fingerprint from an opaque cookie, checks the normalized IP and exposes only permitted user-agent/IP hints in the owner device list. Native cases reject imitation and changed networks. Under the approved GeoLite2 fallback, country display is unavailable and country data has no role in authorization."
+          ]
+        }
       }
     },
     {
@@ -471363,19 +471519,91 @@
         "story": "06-security-testing-observability.md#spec-de165c31f6f5"
       },
       "requirement": "| T-06.01.03.04 | Build \"trust this device for N days\" flow with visible trust management UI | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-mfa-device-and-financial-authorization"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-mfa-and-device-verification",
+          "base_commit": "48ebfdfe5d52ad12612dd36a07554b6daea52ab1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
+              "sha256": "f330a066e669f91829017499bf3d4bc50057cb6b8286a3be83c9e350c50e15e8"
+            },
+            {
+              "path": "apps/api/src/session/cookie.helper.ts",
+              "sha256": "e7df184920fe77f1b06cd760893792ec5945be026967eba39b2acd894888d8a3"
+            },
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
+            },
+            {
+              "path": "apps/api/src/session/trusted-devices-http.integration.test.ts",
+              "sha256": "91faa62e6ecca511e41ea5cd4dee3bf4fd6b1869a88e41dbf60e4000899c553b"
+            },
+            {
+              "path": "apps/api/src/session/trusted-devices.controller.ts",
+              "sha256": "bcc609aecdeaa52b6d40f877692eb325fffdc8a8be810f805c90e5298759905e"
+            },
+            {
+              "path": "apps/web/src/hooks/useSecuritySettings.test.tsx",
+              "sha256": "d87ff177a15f326528d4cba9bf6a52a00df84599bf25ae1422cafca3ca4dadf7"
+            },
+            {
+              "path": "apps/web/src/hooks/useSecuritySettings.ts",
+              "sha256": "b147234e1376089f842f94f1a6969c0336715489441a8b0f922b8411af54005b"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
+              "sha256": "403701b65008da169705b2f0ed8ae10322bfa975ec7fad951776a639d2a2d297"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/security.tsx",
+              "sha256": "9d3e0a0c517b93f7d4eefd6cc2120e4c3d45025d2e1e3c59bf7efb78e57e0765"
+            },
+            {
+              "path": "apps/web/src/routes/login-native-forms.test.tsx",
+              "sha256": "4d5fca907f39cd8b8f9b8f40c568683ebd30efb203ff5e3b6548f24d83e972e9"
+            },
+            {
+              "path": "apps/web/src/routes/login.tsx",
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
+            },
+            {
+              "path": "docs/security/session-location.md",
+              "sha256": "8c9e0f38ad77ec685486025a5f8e2c9cd2e0a18523991d3668614cd4343c6469"
+            },
+            {
+              "path": "packages/db/src/schema/device-trust.ts",
+              "sha256": "c96fc16b26dc20076f48050894ce9d95a796c361f97beadf01010818b4e42351"
+            }
+          ],
+          "checks": [
+            "The sign-in form captures explicit trust consent with the OTP. The verified browser receives a 30-day trust record, and Security settings show its owner-scoped expiry and revocation action. Current native device and targeted web tests passed."
+          ]
+        }
       }
     },
     {
@@ -471389,19 +471617,93 @@
         "story": "06-security-testing-observability.md#spec-de165c31f6f5"
       },
       "requirement": "| T-06.01.03.05 | Build device management UI: list active devices, trust status, last seen, revoke individual device or all devices | M |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Implement an owner-scoped bulk device trust removal command and confirmed UI. Preserve current authorization, audit and transaction lock checks and distinguish trust removal from session revocation."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-mfa-device-and-financial-authorization"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-mfa-and-device-verification",
+          "base_commit": "48ebfdfe5d52ad12612dd36a07554b6daea52ab1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
+              "sha256": "f330a066e669f91829017499bf3d4bc50057cb6b8286a3be83c9e350c50e15e8"
+            },
+            {
+              "path": "apps/api/src/session/cookie.helper.ts",
+              "sha256": "e7df184920fe77f1b06cd760893792ec5945be026967eba39b2acd894888d8a3"
+            },
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
+            },
+            {
+              "path": "apps/api/src/session/trusted-devices-http.integration.test.ts",
+              "sha256": "91faa62e6ecca511e41ea5cd4dee3bf4fd6b1869a88e41dbf60e4000899c553b"
+            },
+            {
+              "path": "apps/api/src/session/trusted-devices.controller.ts",
+              "sha256": "bcc609aecdeaa52b6d40f877692eb325fffdc8a8be810f805c90e5298759905e"
+            },
+            {
+              "path": "apps/web/src/hooks/useSecuritySettings.test.tsx",
+              "sha256": "d87ff177a15f326528d4cba9bf6a52a00df84599bf25ae1422cafca3ca4dadf7"
+            },
+            {
+              "path": "apps/web/src/hooks/useSecuritySettings.ts",
+              "sha256": "b147234e1376089f842f94f1a6969c0336715489441a8b0f922b8411af54005b"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
+              "sha256": "403701b65008da169705b2f0ed8ae10322bfa975ec7fad951776a639d2a2d297"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/security.tsx",
+              "sha256": "9d3e0a0c517b93f7d4eefd6cc2120e4c3d45025d2e1e3c59bf7efb78e57e0765"
+            },
+            {
+              "path": "apps/web/src/routes/login-native-forms.test.tsx",
+              "sha256": "4d5fca907f39cd8b8f9b8f40c568683ebd30efb203ff5e3b6548f24d83e972e9"
+            },
+            {
+              "path": "apps/web/src/routes/login.tsx",
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
+            },
+            {
+              "path": "docs/security/session-location.md",
+              "sha256": "8c9e0f38ad77ec685486025a5f8e2c9cd2e0a18523991d3668614cd4343c6469"
+            },
+            {
+              "path": "packages/db/src/schema/device-trust.ts",
+              "sha256": "c96fc16b26dc20076f48050894ce9d95a796c361f97beadf01010818b4e42351"
+            }
+          ],
+          "checks": [
+            "The current UI and API list the account owner’s active trust records and remove an individual device under step-up. The separate other-session revocation flow is present. The trusted-device API currently has only a per-device removal route."
+          ]
+        }
       }
     },
     {
@@ -471415,19 +471717,67 @@
         "story": "06-security-testing-observability.md#spec-de165c31f6f5"
       },
       "requirement": "| T-06.01.03.06 | Ensure OTP is re-requested when step-up is triggered | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-mfa-device-and-financial-authorization"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-mfa-and-device-verification",
+          "base_commit": "48ebfdfe5d52ad12612dd36a07554b6daea52ab1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
+              "sha256": "f330a066e669f91829017499bf3d4bc50057cb6b8286a3be83c9e350c50e15e8"
+            },
+            {
+              "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
+              "sha256": "d3317bca524349d995b84ac1fa33155cf4d141d4a406b2896e8d5df2a23d6d1e"
+            },
+            {
+              "path": "apps/api/src/auth/otp-step-up.service.ts",
+              "sha256": "44168c1da43b87679cbda10a313b9c7f86c0d51e5b2327f8b88ee90da274cdff"
+            },
+            {
+              "path": "apps/api/src/session/cookie.helper.ts",
+              "sha256": "e7df184920fe77f1b06cd760893792ec5945be026967eba39b2acd894888d8a3"
+            },
+            {
+              "path": "apps/api/src/session/session-http.integration.test.ts",
+              "sha256": "d23f3230379767dda10939f46422fc03121ba1ec3c2d3833665dbd50de49c707"
+            },
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
+            },
+            {
+              "path": "apps/api/src/session/step-up.guard.ts",
+              "sha256": "76029f6a03f054c4020efa7a56c26433b26f00e50fd9a7c315031003081b7309"
+            }
+          ],
+          "checks": [
+            "OTP-specific step-up requires fresh bound code proof. Native HTTP tests reject password-only proof for providers, thresholds and roles, and exercise code/session/account binding, expiry, concurrent reuse, rotation and audit rollback. Standard step-up continues to use the proof types specified for its route."
+          ]
+        }
       }
     },
     {
@@ -471441,19 +471791,95 @@
         "story": "06-security-testing-observability.md#spec-de165c31f6f5"
       },
       "requirement": "| T-06.01.03.07 | Write integration tests: customer MFA only on new device, staff MFA always, step-up for sensitive ops, device trust expiry | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-mfa-device-and-financial-authorization"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-mfa-and-device-verification",
+          "base_commit": "48ebfdfe5d52ad12612dd36a07554b6daea52ab1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
+              "sha256": "f330a066e669f91829017499bf3d4bc50057cb6b8286a3be83c9e350c50e15e8"
+            },
+            {
+              "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
+              "sha256": "d3317bca524349d995b84ac1fa33155cf4d141d4a406b2896e8d5df2a23d6d1e"
+            },
+            {
+              "path": "apps/api/src/auth/otp-step-up.service.ts",
+              "sha256": "44168c1da43b87679cbda10a313b9c7f86c0d51e5b2327f8b88ee90da274cdff"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
+              "sha256": "387e46584bacea315ed3ebfe249e9b79d76b151145e7ce0acca7ce5a72e56bdb"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+            },
+            {
+              "path": "apps/api/src/session/cookie.helper.ts",
+              "sha256": "e7df184920fe77f1b06cd760893792ec5945be026967eba39b2acd894888d8a3"
+            },
+            {
+              "path": "apps/api/src/session/session-http.integration.test.ts",
+              "sha256": "d23f3230379767dda10939f46422fc03121ba1ec3c2d3833665dbd50de49c707"
+            },
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
+            },
+            {
+              "path": "apps/api/src/session/step-up.guard.ts",
+              "sha256": "76029f6a03f054c4020efa7a56c26433b26f00e50fd9a7c315031003081b7309"
+            },
+            {
+              "path": "apps/api/src/session/trusted-devices-http.integration.test.ts",
+              "sha256": "91faa62e6ecca511e41ea5cd4dee3bf4fd6b1869a88e41dbf60e4000899c553b"
+            },
+            {
+              "path": "apps/api/src/session/trusted-devices.controller.ts",
+              "sha256": "bcc609aecdeaa52b6d40f877692eb325fffdc8a8be810f805c90e5298759905e"
+            },
+            {
+              "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
+              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+            },
+            {
+              "path": "docs/security/session-location.md",
+              "sha256": "8c9e0f38ad77ec685486025a5f8e2c9cd2e0a18523991d3668614cd4343c6469"
+            },
+            {
+              "path": "packages/db/src/schema/device-trust.ts",
+              "sha256": "c96fc16b26dc20076f48050894ce9d95a796c361f97beadf01010818b4e42351"
+            }
+          ],
+          "checks": [
+            "Current compiled tests cover mandatory staff OTP on an untrusted browser, valid trust for each account type, forced OTP on imitation, expiry and revocation, plus current step-up on sensitive settings and financial commands. The targeted web tests verify the sign-in choice and device management actions."
+          ]
+        }
       }
     },
     {
@@ -471765,19 +472191,107 @@
         "story": "06-security-testing-observability.md#spec-eaadff652fdc"
       },
       "requirement": "| T-06.01.04.06 | Build session/device management UI: list active sessions, device info, last activity, revoke action | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-mfa-device-and-financial-authorization"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-mfa-and-device-verification",
+          "base_commit": "48ebfdfe5d52ad12612dd36a07554b6daea52ab1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
+              "sha256": "f330a066e669f91829017499bf3d4bc50057cb6b8286a3be83c9e350c50e15e8"
+            },
+            {
+              "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
+              "sha256": "d3317bca524349d995b84ac1fa33155cf4d141d4a406b2896e8d5df2a23d6d1e"
+            },
+            {
+              "path": "apps/api/src/auth/otp-step-up.service.ts",
+              "sha256": "44168c1da43b87679cbda10a313b9c7f86c0d51e5b2327f8b88ee90da274cdff"
+            },
+            {
+              "path": "apps/api/src/session/cookie.helper.ts",
+              "sha256": "e7df184920fe77f1b06cd760893792ec5945be026967eba39b2acd894888d8a3"
+            },
+            {
+              "path": "apps/api/src/session/session-http.integration.test.ts",
+              "sha256": "d23f3230379767dda10939f46422fc03121ba1ec3c2d3833665dbd50de49c707"
+            },
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
+            },
+            {
+              "path": "apps/api/src/session/step-up.guard.ts",
+              "sha256": "76029f6a03f054c4020efa7a56c26433b26f00e50fd9a7c315031003081b7309"
+            },
+            {
+              "path": "apps/api/src/session/trusted-devices-http.integration.test.ts",
+              "sha256": "91faa62e6ecca511e41ea5cd4dee3bf4fd6b1869a88e41dbf60e4000899c553b"
+            },
+            {
+              "path": "apps/api/src/session/trusted-devices.controller.ts",
+              "sha256": "bcc609aecdeaa52b6d40f877692eb325fffdc8a8be810f805c90e5298759905e"
+            },
+            {
+              "path": "apps/web/src/hooks/useSecuritySettings.test.tsx",
+              "sha256": "d87ff177a15f326528d4cba9bf6a52a00df84599bf25ae1422cafca3ca4dadf7"
+            },
+            {
+              "path": "apps/web/src/hooks/useSecuritySettings.ts",
+              "sha256": "b147234e1376089f842f94f1a6969c0336715489441a8b0f922b8411af54005b"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
+              "sha256": "403701b65008da169705b2f0ed8ae10322bfa975ec7fad951776a639d2a2d297"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/security.tsx",
+              "sha256": "9d3e0a0c517b93f7d4eefd6cc2120e4c3d45025d2e1e3c59bf7efb78e57e0765"
+            },
+            {
+              "path": "apps/web/src/routes/login-native-forms.test.tsx",
+              "sha256": "4d5fca907f39cd8b8f9b8f40c568683ebd30efb203ff5e3b6548f24d83e972e9"
+            },
+            {
+              "path": "apps/web/src/routes/login.tsx",
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
+            },
+            {
+              "path": "docs/security/session-location.md",
+              "sha256": "8c9e0f38ad77ec685486025a5f8e2c9cd2e0a18523991d3668614cd4343c6469"
+            },
+            {
+              "path": "packages/db/src/schema/device-trust.ts",
+              "sha256": "c96fc16b26dc20076f48050894ce9d95a796c361f97beadf01010818b4e42351"
+            }
+          ],
+          "checks": [
+            "Security settings show owned sessions and devices and expose their supported revocation actions. Current native read and revoke cases enforce current session, proof and account ownership and keep raw device proof private. Thirty-six affected web cases passed for login and security settings."
+          ]
+        }
       }
     },
     {
@@ -741983,7 +742497,8 @@
           "release-0.6-password-hash-calibration",
           "release-0.6-reconciliation-fixture-document-boundary",
           "release-0.6-otp-issuance-expiry-and-delivery-acceptance",
-          "release-0.6-session-lifetimes-cookies-and-refresh"
+          "release-0.6-session-lifetimes-cookies-and-refresh",
+          "release-0.6-mfa-device-and-financial-authorization"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -832742,6 +833257,128 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime",
       "source_scope_proof": "release-0.6-session-lifetimes-cookies-and-refresh.json",
       "source_scope_proof_sha256": "a765d89f0446e35d82096aafcd6339b8213fac19365cb851d15a23309f33bb5d"
+    },
+    "release-0.6-mfa-device-and-financial-authorization": {
+      "batch": "release-0.6-mfa-device-and-financial-authorization",
+      "base_commit": "48ebfdfe5d52ad12612dd36a07554b6daea52ab1",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.01.03.01",
+        "06-security-testing-observability.md#T-06.01.03.02",
+        "06-security-testing-observability.md#T-06.01.03.03",
+        "06-security-testing-observability.md#T-06.01.03.04",
+        "06-security-testing-observability.md#T-06.01.03.05",
+        "06-security-testing-observability.md#T-06.01.03.06",
+        "06-security-testing-observability.md#T-06.01.03.07",
+        "06-security-testing-observability.md#T-06.01.04.06",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+        },
+        {
+          "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+          "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+        },
+        {
+          "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
+          "sha256": "f330a066e669f91829017499bf3d4bc50057cb6b8286a3be83c9e350c50e15e8"
+        },
+        {
+          "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
+          "sha256": "d3317bca524349d995b84ac1fa33155cf4d141d4a406b2896e8d5df2a23d6d1e"
+        },
+        {
+          "path": "apps/api/src/auth/otp-step-up.service.ts",
+          "sha256": "44168c1da43b87679cbda10a313b9c7f86c0d51e5b2327f8b88ee90da274cdff"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
+          "sha256": "387e46584bacea315ed3ebfe249e9b79d76b151145e7ce0acca7ce5a72e56bdb"
+        },
+        {
+          "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+          "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+        },
+        {
+          "path": "apps/api/src/session/cookie.helper.ts",
+          "sha256": "e7df184920fe77f1b06cd760893792ec5945be026967eba39b2acd894888d8a3"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "d23f3230379767dda10939f46422fc03121ba1ec3c2d3833665dbd50de49c707"
+        },
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
+        },
+        {
+          "path": "apps/api/src/session/step-up.guard.ts",
+          "sha256": "76029f6a03f054c4020efa7a56c26433b26f00e50fd9a7c315031003081b7309"
+        },
+        {
+          "path": "apps/api/src/session/trusted-devices-http.integration.test.ts",
+          "sha256": "91faa62e6ecca511e41ea5cd4dee3bf4fd6b1869a88e41dbf60e4000899c553b"
+        },
+        {
+          "path": "apps/api/src/session/trusted-devices.controller.ts",
+          "sha256": "bcc609aecdeaa52b6d40f877692eb325fffdc8a8be810f805c90e5298759905e"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
+          "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+        },
+        {
+          "path": "apps/web/src/hooks/useSecuritySettings.test.tsx",
+          "sha256": "d87ff177a15f326528d4cba9bf6a52a00df84599bf25ae1422cafca3ca4dadf7"
+        },
+        {
+          "path": "apps/web/src/hooks/useSecuritySettings.ts",
+          "sha256": "b147234e1376089f842f94f1a6969c0336715489441a8b0f922b8411af54005b"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
+          "sha256": "403701b65008da169705b2f0ed8ae10322bfa975ec7fad951776a639d2a2d297"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/security.tsx",
+          "sha256": "9d3e0a0c517b93f7d4eefd6cc2120e4c3d45025d2e1e3c59bf7efb78e57e0765"
+        },
+        {
+          "path": "apps/web/src/routes/login-native-forms.test.tsx",
+          "sha256": "4d5fca907f39cd8b8f9b8f40c568683ebd30efb203ff5e3b6548f24d83e972e9"
+        },
+        {
+          "path": "apps/web/src/routes/login.tsx",
+          "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
+        },
+        {
+          "path": "docs/security/session-location.md",
+          "sha256": "8c9e0f38ad77ec685486025a5f8e2c9cd2e0a18523991d3668614cd4343c6469"
+        },
+        {
+          "path": "packages/db/src/schema/device-trust.ts",
+          "sha256": "c96fc16b26dc20076f48050894ce9d95a796c361f97beadf01010818b4e42351"
+        }
+      ],
+      "checks": [
+        "The API uses verified browser possession, a current trust record and the exact normalized IP for the known-device decision. Native staff sign-in required OTP on an untrusted browser. Native customer, staff and administrator variants exercised first proof, matching-device login and forced OTP after expiry, imitation or revocation.",
+        "Current native authorization checks passed for customer wallet invoice payment, Finance refunds and both invoice correction variants. Prior current native cases verified session revocation, forced credential replacement and OTP-specific provider, threshold and role changes. Scope includes current session, CSRF, recent proof and resource authority at the applicable command boundaries.",
+        "The server derives the stored fingerprint from an opaque cookie, checks the normalized IP and exposes only permitted user-agent/IP hints in the owner device list. Native cases reject imitation and changed networks. Under the approved GeoLite2 fallback, country display is unavailable and country data has no role in authorization.",
+        "The sign-in form captures explicit trust consent with the OTP. The verified browser receives a 30-day trust record, and Security settings show its owner-scoped expiry and revocation action. Current native device and targeted web tests passed.",
+        "The current UI and API list the account owner’s active trust records and remove an individual device under step-up. The separate other-session revocation flow is present. The trusted-device API currently has only a per-device removal route.",
+        "OTP-specific step-up requires fresh bound code proof. Native HTTP tests reject password-only proof for providers, thresholds and roles, and exercise code/session/account binding, expiry, concurrent reuse, rotation and audit rollback. Standard step-up continues to use the proof types specified for its route.",
+        "Current compiled tests cover mandatory staff OTP on an untrusted browser, valid trust for each account type, forced OTP on imitation, expiry and revocation, plus current step-up on sensitive settings and financial commands. The targeted web tests verify the sign-in choice and device management actions.",
+        "Security settings show owned sessions and devices and expose their supported revocation actions. Current native read and revoke cases enforce current session, proof and account ownership and keep raw device proof private. Thirty-six affected web cases passed for login and security settings."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/mfa-device-and-financial-authorization",
+      "source_scope_proof": "release-0.6-mfa-device-and-financial-authorization.json",
+      "source_scope_proof_sha256": "e94a55c6670947d50628d2d9582eb7acba3417c57a34104fbddb139f4cea104a"
     }
   },
   "historical_improvements": [

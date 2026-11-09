@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T19:27:31+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T19:32:54+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 974 | Accepted with unchanged source bindings. |
-| verify | 357 | Existing work may be complete; inspect evidence before building. |
-| partial | 31 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 981 | Accepted with unchanged source bindings. |
+| verify | 349 | Existing work may be complete; inspect evidence before building. |
+| partial | 32 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 3 | Named owner or external prerequisite. |
@@ -1100,19 +1100,19 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.01.02.07` | done | Recorded batch work | Invalidate OTP after: successful verification, replacement request, expiry, or account compromise |
 | `06-security-testing-observability.md#T-06.01.02.08` | done | Recorded batch work | Print OTP to console in DEV environment only; never in production logs |
 | `06-security-testing-observability.md#T-06.01.02.09` | done | Recorded batch work | Write integration tests: OTP create, verify, consume, expire, exceed attempts, rate limit |
-| `06-security-testing-observability.md#T-06.01.03.01` | verify | Inventory needed | Design MFA enforcement engine: risk rules for customers, mandatory for staff/admins |
-| `06-security-testing-observability.md#T-06.01.03.02` | verify | Inventory needed | Implement step-up authentication gate for sensitive actions (payment confirmation, refunds, role changes, credential changes, session revocation) |
-| `06-security-testing-observability.md#T-06.01.03.03` | verify | Inventory needed | Implement device fingerprinting and trust scoring (cookie-based device ID, user-agent, IP geo, known device list) |
-| `06-security-testing-observability.md#T-06.01.03.04` | verify | Inventory needed | Build "trust this device for N days" flow with visible trust management UI |
-| `06-security-testing-observability.md#T-06.01.03.05` | verify | Inventory needed | Build device management UI: list active devices, trust status, last seen, revoke individual device or all devices |
-| `06-security-testing-observability.md#T-06.01.03.06` | verify | Inventory needed | Ensure OTP is re-requested when step-up is triggered |
-| `06-security-testing-observability.md#T-06.01.03.07` | verify | Inventory needed | Write integration tests: customer MFA only on new device, staff MFA always, step-up for sensitive ops, device trust expiry |
+| `06-security-testing-observability.md#T-06.01.03.01` | done | Recorded batch work | Design MFA enforcement engine: risk rules for customers, mandatory for staff/admins |
+| `06-security-testing-observability.md#T-06.01.03.02` | done | Recorded batch work | Implement step-up authentication gate for sensitive actions (payment confirmation, refunds, role changes, credential changes, session revocation) |
+| `06-security-testing-observability.md#T-06.01.03.03` | done | Recorded batch work | Implement device fingerprinting and trust scoring (cookie-based device ID, user-agent, IP geo, known device list) |
+| `06-security-testing-observability.md#T-06.01.03.04` | done | Recorded batch work | Build "trust this device for N days" flow with visible trust management UI |
+| `06-security-testing-observability.md#T-06.01.03.05` | partial | Recorded batch work | Build device management UI: list active devices, trust status, last seen, revoke individual device or all devices |
+| `06-security-testing-observability.md#T-06.01.03.06` | done | Recorded batch work | Ensure OTP is re-requested when step-up is triggered |
+| `06-security-testing-observability.md#T-06.01.03.07` | done | Recorded batch work | Write integration tests: customer MFA only on new device, staff MFA always, step-up for sensitive ops, device trust expiry |
 | `06-security-testing-observability.md#T-06.01.04.01` | done | Recorded batch work | Implement opaque session token generation and cookie management (HttpOnly, Secure in prod, SameSite policy per T-06.02.01.04, Path) |
 | `06-security-testing-observability.md#T-06.01.04.02` | done | Recorded batch work | Implement session store in PostgreSQL (not Redis; Redis is optional, auth must work without it) |
 | `06-security-testing-observability.md#T-06.01.04.03` | verify | Inventory needed | Implement session rotation: login, MFA step-up, password change, privilege change, account recovery |
 | `06-security-testing-observability.md#T-06.01.04.04` | done | Recorded batch work | Implement refresh token rotation with reuse detection (stealing detection + user alert + revoke token family) |
 | `06-security-testing-observability.md#T-06.01.04.05` | done | Recorded batch work | Implement absolute session expiry (configurable, e.g. 7 days) + idle expiry (configurable, e.g. 30 min) |
-| `06-security-testing-observability.md#T-06.01.04.06` | verify | Inventory needed | Build session/device management UI: list active sessions, device info, last activity, revoke action |
+| `06-security-testing-observability.md#T-06.01.04.06` | done | Recorded batch work | Build session/device management UI: list active sessions, device info, last activity, revoke action |
 | `06-security-testing-observability.md#T-06.01.04.07` | verify | Inventory needed | Implement session revocation triggers: password reset, staff disablement, ownership transfer, compromise detection |
 | `06-security-testing-observability.md#T-06.01.04.08` | verify | Inventory needed | Ensure tokens, refresh tokens, OTPs, passwords, national IDs never in localStorage, URLs, analytics, or client logs |
 | `06-security-testing-observability.md#T-06.01.04.09` | verify | Inventory needed | Write concurrency tests: session fixation prevention, refresh token reuse, simultaneous session mutations |
