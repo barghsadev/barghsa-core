@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T01:57:56+00:00",
-  "source_commit": "a80769511558932a4388cdefc3db4735ba9d79c4",
+  "updated": "2026-11-09T02:07:37+00:00",
+  "source_commit": "eb24c1cdbda563d80bf009ca68233ac4dc7b04eb",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35508,7 +35508,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -42770,7 +42770,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-directory-query.test.tsx",
-              "sha256": "366dd732a39d2a90847f2931926968f11cd18f4acba14680de21a812e365767d"
+              "sha256": "6a08f83b1a16210bcaaad69c7366fe1da064b15781e2d0c7b3cffa28f2bbb10c"
             }
           ],
           "checks": [
@@ -43163,7 +43163,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-directory-query.test.tsx",
-              "sha256": "366dd732a39d2a90847f2931926968f11cd18f4acba14680de21a812e365767d"
+              "sha256": "6a08f83b1a16210bcaaad69c7366fe1da064b15781e2d0c7b3cffa28f2bbb10c"
             }
           ],
           "checks": [
@@ -43509,7 +43509,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "748849bd1dc0db5b440782a15a9d7ba2b80cbd471a250f310d3b3bcbf985b3f2"
+              "sha256": "d63bd8d7e96ccba415ecb8b54d3d48d5cf00da7518d5928af7abc1e187eee226"
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
@@ -43529,7 +43529,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/hooks/useListQuery.ts",
@@ -43541,7 +43541,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/routeTree.gen.ts",
@@ -43593,7 +43593,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-directory-query.test.tsx",
-              "sha256": "366dd732a39d2a90847f2931926968f11cd18f4acba14680de21a812e365767d"
+              "sha256": "6a08f83b1a16210bcaaad69c7366fe1da064b15781e2d0c7b3cffa28f2bbb10c"
             },
             {
               "path": "apps/web/src/hooks/useOwnedStaffServiceRead.ts",
@@ -44360,7 +44360,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "748849bd1dc0db5b440782a15a9d7ba2b80cbd471a250f310d3b3bcbf985b3f2"
+              "sha256": "d63bd8d7e96ccba415ecb8b54d3d48d5cf00da7518d5928af7abc1e187eee226"
             },
             {
               "path": "apps/web/e2e/crm-legal-edit.spec.ts",
@@ -44408,7 +44408,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "kanban/epics/02-auth-users-admin.md",
@@ -45611,7 +45611,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "748849bd1dc0db5b440782a15a9d7ba2b80cbd471a250f310d3b3bcbf985b3f2"
+              "sha256": "d63bd8d7e96ccba415ecb8b54d3d48d5cf00da7518d5928af7abc1e187eee226"
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
@@ -45639,7 +45639,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "packages/i18n/src/crm.ts",
@@ -46780,7 +46780,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "748849bd1dc0db5b440782a15a9d7ba2b80cbd471a250f310d3b3bcbf985b3f2"
+              "sha256": "d63bd8d7e96ccba415ecb8b54d3d48d5cf00da7518d5928af7abc1e187eee226"
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
@@ -46808,7 +46808,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "packages/i18n/src/crm.ts",
@@ -47928,7 +47928,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "748849bd1dc0db5b440782a15a9d7ba2b80cbd471a250f310d3b3bcbf985b3f2"
+              "sha256": "d63bd8d7e96ccba415ecb8b54d3d48d5cf00da7518d5928af7abc1e187eee226"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -47952,7 +47952,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/routes/admin/crm/corrections.tsx",
@@ -63204,7 +63204,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -491551,7 +491551,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -492974,7 +492974,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/Currency.tsx",
@@ -493426,7 +493426,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-directory-query.test.tsx",
-              "sha256": "366dd732a39d2a90847f2931926968f11cd18f4acba14680de21a812e365767d"
+              "sha256": "6a08f83b1a16210bcaaad69c7366fe1da064b15781e2d0c7b3cffa28f2bbb10c"
             },
             {
               "path": "apps/web/src/hooks/useOwnedStaffServiceRead.ts",
@@ -494387,7 +494387,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -494679,7 +494679,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -495278,7 +495278,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -495570,7 +495570,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -496110,7 +496110,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -496402,7 +496402,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -497267,7 +497267,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/notification-inbox-recovery.test.tsx",
@@ -497828,7 +497828,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/Currency.tsx",
@@ -498280,7 +498280,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-directory-query.test.tsx",
-              "sha256": "366dd732a39d2a90847f2931926968f11cd18f4acba14680de21a812e365767d"
+              "sha256": "6a08f83b1a16210bcaaad69c7366fe1da064b15781e2d0c7b3cffa28f2bbb10c"
             },
             {
               "path": "apps/web/src/hooks/useOwnedStaffServiceRead.ts",
@@ -508585,7 +508585,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -511694,7 +511694,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -511898,7 +511898,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -512588,7 +512588,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -512963,7 +512963,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/CustomerProfileWorkspace.tsx",
@@ -513762,7 +513762,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/CustomerProfileWorkspace.tsx",
@@ -514560,7 +514560,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/CustomerProfileWorkspace.tsx",
@@ -515211,11 +515211,11 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "748849bd1dc0db5b440782a15a9d7ba2b80cbd471a250f310d3b3bcbf985b3f2"
+              "sha256": "d63bd8d7e96ccba415ecb8b54d3d48d5cf00da7518d5928af7abc1e187eee226"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -517209,7 +517209,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "748849bd1dc0db5b440782a15a9d7ba2b80cbd471a250f310d3b3bcbf985b3f2"
+              "sha256": "d63bd8d7e96ccba415ecb8b54d3d48d5cf00da7518d5928af7abc1e187eee226"
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
@@ -518261,7 +518261,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/ElectricityIncreasePanel.tsx",
@@ -518631,7 +518631,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "748849bd1dc0db5b440782a15a9d7ba2b80cbd471a250f310d3b3bcbf985b3f2"
+              "sha256": "d63bd8d7e96ccba415ecb8b54d3d48d5cf00da7518d5928af7abc1e187eee226"
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
@@ -518795,7 +518795,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
@@ -519285,7 +519285,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -520075,7 +520075,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "748849bd1dc0db5b440782a15a9d7ba2b80cbd471a250f310d3b3bcbf985b3f2"
+              "sha256": "d63bd8d7e96ccba415ecb8b54d3d48d5cf00da7518d5928af7abc1e187eee226"
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
@@ -520239,7 +520239,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
@@ -520657,7 +520657,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "748849bd1dc0db5b440782a15a9d7ba2b80cbd471a250f310d3b3bcbf985b3f2"
+              "sha256": "d63bd8d7e96ccba415ecb8b54d3d48d5cf00da7518d5928af7abc1e187eee226"
             },
             {
               "path": "apps/web/e2e/crm-list.spec.ts",
@@ -521485,7 +521485,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "748849bd1dc0db5b440782a15a9d7ba2b80cbd471a250f310d3b3bcbf985b3f2"
+              "sha256": "d63bd8d7e96ccba415ecb8b54d3d48d5cf00da7518d5928af7abc1e187eee226"
             },
             {
               "path": "apps/web/e2e/crm-list.spec.ts",
@@ -522235,7 +522235,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "748849bd1dc0db5b440782a15a9d7ba2b80cbd471a250f310d3b3bcbf985b3f2"
+              "sha256": "d63bd8d7e96ccba415ecb8b54d3d48d5cf00da7518d5928af7abc1e187eee226"
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
@@ -522399,7 +522399,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
@@ -522817,7 +522817,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "748849bd1dc0db5b440782a15a9d7ba2b80cbd471a250f310d3b3bcbf985b3f2"
+              "sha256": "d63bd8d7e96ccba415ecb8b54d3d48d5cf00da7518d5928af7abc1e187eee226"
             },
             {
               "path": "apps/web/e2e/crm-list.spec.ts",
@@ -547192,7 +547192,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -547320,7 +547320,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -549062,7 +549062,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -549190,7 +549190,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -550933,7 +550933,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -551061,7 +551061,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -552773,7 +552773,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -552901,7 +552901,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -554639,7 +554639,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -554767,7 +554767,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -556514,7 +556514,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -556642,7 +556642,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -558362,7 +558362,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -558490,7 +558490,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -560174,7 +560174,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -560302,7 +560302,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -561986,7 +561986,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -562114,7 +562114,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -563799,7 +563799,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -563927,7 +563927,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -565611,7 +565611,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -565739,7 +565739,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -567437,7 +567437,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -567609,7 +567609,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -569340,7 +569340,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -569512,7 +569512,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -570844,7 +570844,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "748849bd1dc0db5b440782a15a9d7ba2b80cbd471a250f310d3b3bcbf985b3f2"
+              "sha256": "d63bd8d7e96ccba415ecb8b54d3d48d5cf00da7518d5928af7abc1e187eee226"
             },
             {
               "path": "apps/web/e2e/crm-recovery.spec.ts",
@@ -571488,7 +571488,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.test.tsx",
@@ -572836,7 +572836,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -573052,7 +573052,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -574138,7 +574138,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -574310,7 +574310,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -576041,7 +576041,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -576213,7 +576213,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -577944,7 +577944,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -578116,7 +578116,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -579847,7 +579847,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -580019,7 +580019,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -581750,7 +581750,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -581922,7 +581922,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -583653,7 +583653,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -583825,7 +583825,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -585556,7 +585556,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -585728,7 +585728,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -587459,7 +587459,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -587631,7 +587631,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -589362,7 +589362,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -589534,7 +589534,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -591265,7 +591265,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -591437,7 +591437,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -593168,7 +593168,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -593340,7 +593340,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -594824,7 +594824,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/notification-inbox-recovery.test.tsx",
@@ -595811,7 +595811,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -595983,7 +595983,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -597714,7 +597714,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -597886,7 +597886,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -598962,7 +598962,8 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The staff primary-read inventory has loading/error receipts for all 48 data routes, and 40 authorized empty or unset cases in both languages. Eight primary surfaces are configuration or record lookups. Reconcile still-unverified child states and applicable interactions with the original route criteria before full acceptance."
+        "The staff primary-read inventory covers loading and error on all 48 data routes, plus 40 authorized empty or unset cases in both languages. CRM profile records have current production-browser evidence for transient recovery, pagination, empty data and parent withdrawal on denial. Reconcile the remaining original child states and applicable interactions before full acceptance.",
+        "A CRM verification-history read can return HTTP 200 after the verification:read grant changes while crm:read remains valid. Reconcile retained correction rows and the embedded first page with the new scope on refresh, paging and tab re-entry."
       ],
       "owner": null,
       "depends_on": [],
@@ -599103,7 +599104,8 @@
           "release-0.5-account-child-read-recovery",
           "release-0.5-staff-child-pending",
           "release-0.5-staff-loading-labels",
-          "release-0.5-staff-empty-acceptance"
+          "release-0.5-staff-empty-acceptance",
+          "release-0.5-crm-records-revocation"
         ],
         "current_acceptance": null
       }
@@ -599793,7 +599795,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -599921,7 +599923,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -601601,7 +601603,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -601729,7 +601731,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -603409,7 +603411,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -603537,7 +603539,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -605217,7 +605219,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -605345,7 +605347,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -607025,7 +607027,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -607153,7 +607155,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -608833,7 +608835,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -608961,7 +608963,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -610641,7 +610643,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -610769,7 +610771,7 @@
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -616155,7 +616157,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/CustomerProfileWorkspace.tsx",
@@ -616953,7 +616955,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/CustomerProfileWorkspace.tsx",
@@ -617751,7 +617753,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/CustomerProfileWorkspace.tsx",
@@ -618549,7 +618551,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/CustomerProfileWorkspace.tsx",
@@ -619351,7 +619353,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/CustomerProfileWorkspace.tsx",
@@ -620149,7 +620151,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/CustomerProfileWorkspace.tsx",
@@ -620947,7 +620949,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/CustomerProfileWorkspace.tsx",
@@ -621746,7 +621748,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/CustomerProfileWorkspace.tsx",
@@ -622545,7 +622547,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/CustomerProfileWorkspace.tsx",
@@ -623344,7 +623346,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/CustomerProfileWorkspace.tsx",
@@ -624143,7 +624145,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/CustomerProfileWorkspace.tsx",
@@ -624942,7 +624944,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/CustomerProfileWorkspace.tsx",
@@ -625741,7 +625743,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/CustomerProfileWorkspace.tsx",
@@ -626540,7 +626542,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/CustomerProfileWorkspace.tsx",
@@ -627339,7 +627341,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/CustomerProfileWorkspace.tsx",
@@ -707603,7 +707605,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "748849bd1dc0db5b440782a15a9d7ba2b80cbd471a250f310d3b3bcbf985b3f2"
+              "sha256": "d63bd8d7e96ccba415ecb8b54d3d48d5cf00da7518d5928af7abc1e187eee226"
             },
             {
               "path": "apps/web/e2e/verification-policy-settings.spec.ts",
@@ -707651,11 +707653,11 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
-              "sha256": "960fcda5ca699656992ed2f3998ee0c96528fbe6cab24d4dcc6b520559717fc5"
+              "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
             },
             {
               "path": "apps/web/src/pages/crm-recovery.test.tsx",
@@ -728963,7 +728965,8 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The staff primary-read inventory has loading/error receipts for all 48 data routes, and 40 authorized empty or unset cases in both languages. Eight primary surfaces are configuration or record lookups. Reconcile still-unverified child states and applicable interactions with the original route criteria before full acceptance."
+        "The staff primary-read inventory covers loading and error on all 48 data routes, plus 40 authorized empty or unset cases in both languages. CRM profile records have current production-browser evidence for transient recovery, pagination, empty data and parent withdrawal on denial. Reconcile the remaining original child states and applicable interactions before full acceptance.",
+        "A CRM verification-history read can return HTTP 200 after the verification:read grant changes while crm:read remains valid. Reconcile retained correction rows and the embedded first page with the new scope on refresh, paging and tab re-entry."
       ],
       "owner": null,
       "depends_on": [],
@@ -729170,7 +729173,8 @@
           "release-0.5-account-child-read-recovery",
           "release-0.5-staff-child-pending",
           "release-0.5-staff-loading-labels",
-          "release-0.5-staff-empty-acceptance"
+          "release-0.5-staff-empty-acceptance",
+          "release-0.5-crm-records-revocation"
         ]
       }
     },
@@ -729390,7 +729394,7 @@
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
-              "sha256": "19f110326c4f72d8fdbf7fac18a528d268340f0aa05614bf8d6323f6859f9568"
+              "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
@@ -730250,7 +730254,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "43e87712997aa4639d3a1e89149909d6e12df35815eb1126affc1d838798d36e"
+              "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -731125,7 +731129,8 @@
             "All 101 transfer budgets and affected contract journeys passed against the reviewed final runtime. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-snapshot-states/proof.json",
             "All 101 transfer budgets and affected profile/security journeys passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-account-child-read-recovery/proof.json",
             "All 101 transfer budgets and affected staff directory and delivery history journeys passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-child-pending/proof.json",
-            "All 101 transfer budgets and the affected roles and notification browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-loading-labels/proof.json"
+            "All 101 transfer budgets and the affected roles and notification browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-loading-labels/proof.json",
+            "All 101 transfer budgets and the CRM profile browser suite passed on the changed source. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-records-revocation/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -810514,6 +810519,54 @@
       "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-empty-acceptance/staff-empty-receipts.json",
       "source_scope_proof_sha256": "878fc8807df8fe56e884dcfe77191b64af08422a8d5e86e5ece2e8aa119c1bd1",
       "release_disposition": "Recorded 80 staff route empty or unset cases and classified remaining primary surfaces. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-crm-records-revocation": {
+      "batch": "release-0.5-crm-records-revocation",
+      "base_commit": "eb24c1cdbda563d80bf009ca68233ac4dc7b04eb",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+          "sha256": "d63bd8d7e96ccba415ecb8b54d3d48d5cf00da7518d5928af7abc1e187eee226"
+        },
+        {
+          "path": "apps/web/src/components/CrmProfileRecords.tsx",
+          "sha256": "58005072be238ccdf3bff170720c139e136fd84692a5be6b5a9c032bc51162a9"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "0d78c22fe9a304f41fb1bb0796290acdda552432756a8d1ace75129865846d94"
+        },
+        {
+          "path": "apps/web/src/pages/crm-directory-query.test.tsx",
+          "sha256": "6a08f83b1a16210bcaaad69c7366fe1da064b15781e2d0c7b3cffa28f2bbb10c"
+        },
+        {
+          "path": "apps/web/src/pages/crm-profile-query.test.tsx",
+          "sha256": "148ee207a410aa7ae477b140f4ccf3f0dcd4aea019fc47476c68121eb09f5cf3"
+        }
+      ],
+      "checks": [
+        "Persian and English baseline browser cases reproduced the CRM profile retaining the source of stale record rows after a child denial or missing-profile response.",
+        "CRM agent and verification records now invalidate the parent profile on HTTP 401, 403 or 404 and cancel an in-flight parent request. Recovery starts with a fresh profile read. Existing retry, pagination and retained rows on transient errors were verified.",
+        "The first production browser run stopped when its temporary volume filled and produced no final report. The rerun moved temporary artifacts to the main volume and kept all test and accessibility assertions.",
+        "The complete production browser run recorded 80 passes and four mobile Safari archive checks measured during the opening zoom animation. Waited for the existing animation before measuring. The focused rerun passed all four with the unchanged 44px and edge-tap assertions. The two reports cover all 84 cases across Chromium and mobile Safari. All 19 focused query tests passed, including late parent response isolation. Changed-source coverage passed at 9/9 lines and 10/11 branches.",
+        "Web production build and typecheck, targeted lint and formatting, and all 101 transfer budgets passed. No API or staff permission changed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-records-revocation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-records-revocation/proof.json",
+      "source_scope_proof_sha256": "46eb60114a6c69560c0a5eb3b153d03ccfedabd22c516d15b0d02d7da5adebe4",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-records-revocation/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-records-revocation/renewed-bindings.json",
+      "release_disposition": "Resolved CRM record denial withdrawal and recovery. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [
@@ -810564,7 +810617,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Resolve remaining original child-panel route criteria using the staff primary-state and account indexes. Preserve complete customer and staff adoption requirements. GitHub required checks and staging Sentry remain independent."
+    "goal": "Resolve narrowed verification-record visibility and reconcile remaining original child-panel criteria against named route evidence. GitHub required checks and staging Sentry remain independent."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",

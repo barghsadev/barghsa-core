@@ -195,7 +195,18 @@ for (const locale of ['fa', 'en'] as const) {
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
     );
-    await page.route(`**/api/crm/profiles/${id}`, (route) => route.fulfill({ json: current }));
+    const unavailableStatus = locale === 'fa' ? 403 : 404;
+    let profileReads = 0;
+    let recordsUnavailable = false;
+    await page.route(`**/api/crm/profiles/${id}`, (route) => {
+      profileReads += 1;
+      return route.fulfill({
+        json:
+          profileReads === 1
+            ? current
+            : { ...current, verificationHistory: { items: [], nextCursor: null } },
+      });
+    });
     let agentAttempts = 0,
       historyAttempts = 0;
     const requests: string[] = [];
@@ -227,6 +238,7 @@ for (const locale of ['fa', 'en'] as const) {
     });
     await page.route(`**/api/crm/profiles/${id}/records/verification*`, (route) => {
       const cursor = new URL(route.request().url()).searchParams.get('cursor');
+      if (recordsUnavailable) return route.fulfill({ status: unavailableStatus, json: {} });
       if (!cursor) return route.fulfill({ json: { items: [], nextCursor: null } });
       requests.push(cursor);
       if (++historyAttempts === 1)
@@ -321,6 +333,22 @@ for (const locale of ['fa', 'en'] as const) {
     await expect(panel.getByRole('table')).toHaveCount(0);
     await page.getByRole('tab', { selected: true }).press('Home');
     await expect(first).toBeFocused();
+    await tabs
+      .getByRole('tab', { name: t('crm.profile.tab.verificationHistory', locale), exact: true })
+      .click();
+    await expect(panel).toContainText('Initial evidence checked');
+    recordsUnavailable = true;
+    await page.getByRole('button', { name: t('crm.records.refresh', locale), exact: true }).click();
+    const unavailableKey =
+      unavailableStatus === 403 ? 'crm.profile.error.accessDenied' : 'crm.profile.error.notFound';
+    await expect(page.getByRole('alert')).toContainText(t(unavailableKey, locale));
+    await expect(tabs).toHaveCount(0);
+    await expect(page.getByText('Initial evidence checked')).toHaveCount(0);
+    expect(profileReads).toBe(1);
+    await retry.click();
+    await expect(panel).toContainText(t('crm.records.empty', locale));
+    await expect(panel.getByRole('table')).toHaveCount(0);
+    expect(profileReads).toBe(2);
   });
 }
 for (const locale of ['fa', 'en'] as const) {
@@ -1063,6 +1091,9 @@ for (const locale of ['fa', 'en'] as const)
         const viewport = page.viewportSize()!;
         await page.setViewportSize({ width: 320, height: 568 });
         await expect(dialog).toHaveCSS('opacity', '1');
+        await dialog.evaluate(async (element) => {
+          await Promise.all(element.getAnimations().map((animation) => animation.finished));
+        });
         const position = await dialog.evaluate((node) => {
           const { top, bottom } = node.getBoundingClientRect();
           return { top, bottom, viewportHeight: innerHeight };

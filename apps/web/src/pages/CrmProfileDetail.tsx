@@ -28,7 +28,7 @@ import {
   Button,
   Label,
 } from '@barghsa/ui';
-import { useState, useEffect, useId, useRef, type ComponentProps } from 'react';
+import { useState, useCallback, useEffect, useId, useRef, type ComponentProps } from 'react';
 import { useParams, Link } from '@tanstack/react-router';
 import { Lock } from 'lucide-react';
 import { t, type Locale } from '@barghsa/i18n/crm';
@@ -288,6 +288,17 @@ function CrmProfileDetailContent() {
   const [data, setData] = useState<ProfileDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const withdrawProfile = useCallback(
+    (status: 401 | 403 | 404) => {
+      activeRead.current?.cancel();
+      setData(null);
+      setError(
+        t(status === 404 ? 'crm.profile.error.notFound' : 'crm.profile.error.accessDenied', locale)
+      );
+      setLoading(false);
+    },
+    [locale]
+  );
   const [reloadKey, setReloadKey] = useState(0);
   const [activeTab, setActiveTab] = useState('overview');
   const [editingAddress, setEditingAddress] = useState<string | null>(null);
@@ -1373,6 +1384,7 @@ function CrmProfileDetailContent() {
             profileId={profileId}
             kind="agents"
             initial={data.agentRelationships}
+            onProfileUnavailable={withdrawProfile}
           />
         </div>
       )}
@@ -1388,6 +1400,7 @@ function CrmProfileDetailContent() {
             profileId={profileId}
             kind="verification"
             initial={data.verificationHistory}
+            onProfileUnavailable={withdrawProfile}
           />
         </div>
       )}

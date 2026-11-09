@@ -35,6 +35,7 @@ const record = {
 };
 const oldRecords = { items: [record], nextCursor: null };
 type Owner = 'directory' | 'records' | 'documents';
+const onProfileUnavailable = vi.fn();
 let host: HTMLDivElement, root: Root;
 beforeEach(() => {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
@@ -45,6 +46,7 @@ beforeEach(() => {
 afterEach(async () => {
   await act(async () => root.unmount());
   host.remove();
+  onProfileUnavailable.mockClear();
   vi.unstubAllGlobals();
 });
 async function render(
@@ -66,6 +68,7 @@ async function render(
         profileId={profile}
         kind="verification"
         initial={options.initial ?? null}
+        onProfileUnavailable={onProfileUnavailable}
       />
     ) : (
       <CrmLegalDocuments profileId={profile} canRead={options.canRead ?? true} />
@@ -183,25 +186,30 @@ it.each(['directory', 'records', 'documents'] as const)(
     );
   }
 );
-it('withdraws private record rows on current denial and only restores them from a healthy explicit read', async () => {
-  let status = 403;
-  vi.stubGlobal(
-    'fetch',
-    vi.fn(async () => Response.json(payload('records', true), { status }))
-  );
-  await render('records', { initial: oldRecords });
-  expect(host.textContent).toContain('Old private actor');
-  await click(t('crm.records.refresh', 'en'));
-  expect(host.textContent).not.toContain('Old private actor');
-  expect(host.querySelector('table')).toBeNull();
-  expect(host.querySelector('[role=alert]')).not.toBeNull();
-  status = 503;
-  await click(t('crm.records.retry', 'en'));
-  expect(host.querySelector('table')).toBeNull();
-  status = 200;
-  await click(t('crm.records.retry', 'en'));
-  expect(host.textContent).toContain('New permitted actor');
-});
+it.each([401, 403, 404])(
+  'withdraws private record rows on HTTP %s until a healthy explicit read',
+  async (unavailable) => {
+    let status = unavailable;
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => Response.json(payload('records', true), { status }))
+    );
+    await render('records', { initial: oldRecords });
+    expect(host.textContent).toContain('Old private actor');
+    await click(t('crm.records.refresh', 'en'));
+    expect(onProfileUnavailable).toHaveBeenCalledExactlyOnceWith(unavailable);
+    expect(host.textContent).not.toContain('Old private actor');
+    expect(host.querySelector('table')).toBeNull();
+    expect(host.querySelector('[role=alert]')).not.toBeNull();
+    status = 503;
+    await click(t('crm.records.retry', 'en'));
+    expect(onProfileUnavailable).toHaveBeenCalledTimes(1);
+    expect(host.querySelector('table')).toBeNull();
+    status = 200;
+    await click(t('crm.records.retry', 'en'));
+    expect(host.textContent).toContain('New permitted actor');
+  }
+);
 it.each(['profile', 'permission'] as const)(
   'cancels signed-document bytes on %s replacement and requires a new manual read',
   async (replacement) => {

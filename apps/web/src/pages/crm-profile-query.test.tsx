@@ -22,7 +22,6 @@ vi.mock('../hooks/useAccountTime.js', () => ({
 vi.mock('../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ irrDigits: String, money: String, number: String }),
 }));
-vi.mock('../components/CrmProfileRecords.js', () => ({ CrmProfileRecords: () => null }));
 vi.mock('../components/TeamActionDialog.js', () => ({
   TeamActionDialog: (props: ComponentProps<typeof TeamActionDialog>) => {
     pending.props = props;
@@ -212,6 +211,47 @@ it('retains committed CRM success through a failed post-action read and healthy 
     await view.close();
   }
 });
+it.each([401, 404])(
+  'withdraws the CRM profile on a records HTTP %s during a parent read',
+  async (status) => {
+    let profileReads = 0;
+    let signal!: AbortSignal;
+    let finish!: (response: Response) => void;
+    const view = await mount(async (url, init) => {
+      if (url.endsWith('/records/verification')) return new Response('{}', { status });
+      if (++profileReads === 1) {
+        return Response.json({
+          ...detail(),
+          verificationHistory: { items: [], nextCursor: null },
+        });
+      }
+      signal = init!.signal as AbortSignal;
+      return new Promise<Response>((resolve) => {
+        finish = resolve;
+      });
+    });
+    try {
+      const { props, ack } = await queued(view);
+      let settled!: ReturnType<typeof props.onSuccess>;
+      await act(async () => {
+        settled = props.onSuccess(ack);
+      });
+      await act(async () =>
+        button(view.host, t('crm.profile.tab.verificationHistory', 'en')).click()
+      );
+      await act(async () => button(view.host, t('crm.records.refresh', 'en')).click());
+      expect(signal.aborted).toBe(true);
+      await act(async () => finish(Response.json(detail('Late private title'))));
+      await settled;
+      expect(view.host.querySelector('[role=tablist]')).toBeNull();
+      expect(view.host.textContent).not.toContain('Late private title');
+      const key = status === 404 ? 'crm.profile.error.notFound' : 'crm.profile.error.accessDenied';
+      expect(view.host.textContent).toContain(t(key, 'en'));
+    } finally {
+      await view.close();
+    }
+  }
+);
 it('cancels an old post-action CRM read without changing the replacement staff view', async () => {
   let phase = 'initial',
     signal!: AbortSignal,
