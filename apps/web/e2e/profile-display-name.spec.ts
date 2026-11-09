@@ -77,15 +77,25 @@ for (const locale of ['en', 'fa'] as const) {
         await expect(dialog).toHaveCount(0);
       }
       const menu = page.locator('button[aria-controls="dashboard-navigation"]');
+      await expect(menu).toBeAttached();
       if ((await menu.isVisible()) && (await menu.getAttribute('aria-expanded')) === 'false')
         await menu.click();
-      await expect(page.locator('label[for="profile-switcher"]')).toContainText(legalName);
-      await expect(page.locator(`#profile-switcher option[value="${legalId}"]`)).toHaveText(
-        `${legalName} (${t('dashboard.profile.typeLegal', locale)})`
-      );
-      await expect(page.locator(`#profile-switcher option[value="${individualId}"]`)).toHaveText(
-        `Mina Example (${t('dashboard.profile.typeIndividual', locale)})`
-      );
+      const switchLabel = t('dashboard.profile.switchLabel', locale);
+      const switcher = page.getByRole('button', { name: switchLabel, exact: true });
+      await expect(switcher).toBeVisible();
+      await expect(switcher).toContainText(legalName);
+      await switcher.click();
+      const choices = page.getByRole('radiogroup', { name: switchLabel, exact: true });
+      await expect(
+        choices.getByRole('radio', {
+          name: new RegExp(`${legalName}.*${t('dashboard.profile.typeLegal', locale)}`),
+        })
+      ).toBeChecked();
+      await expect(
+        choices.getByRole('radio', {
+          name: new RegExp(`Mina Example.*${t('dashboard.profile.typeIndividual', locale)}`),
+        })
+      ).not.toBeChecked();
     });
   }
 }

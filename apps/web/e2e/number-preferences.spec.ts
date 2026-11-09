@@ -1,4 +1,5 @@
 import { test, expect } from './coverage-fixture';
+import { brandSettings } from '../src/test/branding-settings-fixtures';
 
 const id = '11111111-1111-4111-8111-111111111111';
 const amount = '10000000000000001';
@@ -8,12 +9,7 @@ for (const locale of ['en', 'fa']) {
   test(`published number preference reaches finance without changing submitted values (${locale})`, async ({
     page,
   }) => {
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     let numberStyle = locale === 'fa' ? 'western' : 'persian';
     let walletAmount: string | number = amount;
     let isStaff = false;
@@ -21,17 +17,7 @@ for (const locale of ['en', 'fa']) {
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/public/branding/config', (route) =>
       route.fulfill({
-        json: {
-          appTitle: 'Number preference test',
-          slogan: '',
-          primaryColor: '#2563eb',
-          secondaryColor: '#64748b',
-          accentColor: '#f59e0b',
-          logoUrl: null,
-          faviconUrl: null,
-          darkMode: false,
-          numberStyle,
-        },
+        json: { ...brandSettings, numberStyle },
       })
     );
     await page.route('**/api/auth/user', (route) =>

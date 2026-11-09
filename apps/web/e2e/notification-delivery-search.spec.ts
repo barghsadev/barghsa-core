@@ -1,5 +1,6 @@
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
+import { t } from '@barghsa/i18n/admin-ui';
 import { crmShell } from './crm-shell-fixture';
 import { notificationTemplate } from '../src/test/content-catalogue-fixtures';
 
@@ -143,20 +144,26 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(cards.getByRole('listitem')).toContainText(text!);
       expect(queries.at(-1)?.get('status')).toBe(status);
     }
-    mode = 'denied';
-    await search.click();
-    await expect(error).toBeVisible();
-    await expect(
-      dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
-    ).toHaveCount(0);
     mode = 'empty';
-    await error.getByRole('button').click();
-    await expect(dialog).toContainText(
-      fa ? 'هیچ تلاش ارسالی ثبت نشده است.' : 'No delivery attempts have been recorded.'
-    );
+    const emptyMessage = fa
+      ? 'هیچ تلاش ارسالی ثبت نشده است.'
+      : 'No delivery attempts have been recorded.';
+    await search.click();
+    await expect(dialog).toContainText(emptyMessage);
     await page.keyboard.press('Escape');
     await expect(browse).toBeFocused();
+    await browse.click();
+    await expect(dialog).toContainText(emptyMessage);
     canView = false;
+    mode = 'denied';
+    const beforeDenial = queries.length;
+    await search.click();
+    await expect(dialog).toHaveCount(0);
+    await expect(browse).toHaveCount(0);
+    await expect(
+      page.getByText(t('admin.notifications.deadLetter.accessDenied', locale), { exact: true })
+    ).toBeVisible();
+    expect(queries).toHaveLength(beforeDenial + 1);
     const reads = queries.length;
     await page.reload();
     await expect(
