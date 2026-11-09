@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T19:32:54+00:00",
+  "updated": "2026-11-09T19:33:45+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -472876,19 +472876,63 @@
         "story": "06-security-testing-observability.md#spec-b5054edd43c6"
       },
       "requirement": "| T-06.02.01.05 | Rotate CSRF token on session rotation (login, MFA, password change, privilege change) | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-csrf-rotation-and-dynamic-injection"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-dynamic-csrf-verification",
+          "base_commit": "4f64a8be087d5135d706cf22b3fb91c9fb1a385f",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/staff-http.integration.test.ts",
+              "sha256": "2d3d4ebd18fc96b64eda5a022a7a4e9191b50a919dfb5866919ef38518f6ad5e"
+            },
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
+              "sha256": "d3317bca524349d995b84ac1fa33155cf4d141d4a406b2896e8d5df2a23d6d1e"
+            },
+            {
+              "path": "apps/api/src/auth/otp-step-up.service.ts",
+              "sha256": "44168c1da43b87679cbda10a313b9c7f86c0d51e5b2327f8b88ee90da274cdff"
+            },
+            {
+              "path": "apps/api/src/session/csrf.guard.ts",
+              "sha256": "31569dad48816ef435efd1074cf2657da2eee90f090bd8d1fb800c5d6204bca6"
+            },
+            {
+              "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
+              "sha256": "80249bdfbadeb9de44d02e25e8bbad64440f42799636c333c294c4aae170f18d"
+            },
+            {
+              "path": "apps/api/src/session/session-http.integration.test.ts",
+              "sha256": "d23f3230379767dda10939f46422fc03121ba1ec3c2d3833665dbd50de49c707"
+            },
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
+            },
+            {
+              "path": "docs/security/cookies.md",
+              "sha256": "f0d516fc6d1504f76d3d624f482658ec4d876e1022fb8bede5c1f652ad16a013"
+            }
+          ],
+          "checks": [
+            "Compiled HTTP sign-in replaces anonymous proof with an authenticated session-bound token. Current OTP step-up rotates credentials, forced password change revokes old families, and role changes revoke affected sessions immediately. The next authentication issues fresh proof under current authority."
+          ]
+        }
       }
     },
     {
@@ -473118,19 +473162,59 @@
         "story": "06-security-testing-observability.md#spec-b5054edd43c6"
       },
       "requirement": "| T-06.02.01.08 | DAST security test: automated CSRF injection attempts | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-csrf-rotation-and-dynamic-injection"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-dynamic-csrf-verification",
+          "base_commit": "4f64a8be087d5135d706cf22b3fb91c9fb1a385f",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/session/csrf.guard.ts",
+              "sha256": "31569dad48816ef435efd1074cf2657da2eee90f090bd8d1fb800c5d6204bca6"
+            },
+            {
+              "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
+              "sha256": "80249bdfbadeb9de44d02e25e8bbad64440f42799636c333c294c4aae170f18d"
+            },
+            {
+              "path": "apps/api/src/session/preauth-csrf.service.ts",
+              "sha256": "1dc595906412d0f67cc576bce7560e9b463fb615a402f87c3eea9a01bc0c7db9"
+            },
+            {
+              "path": "apps/api/src/session/session-csrf-race-http.integration.test.ts",
+              "sha256": "d6b757d79648f55f20f9176bf2b33b9f0146d4051e471ba9c30a0935c6f5c8d4"
+            },
+            {
+              "path": "apps/api/src/session/session-http.integration.test.ts",
+              "sha256": "d23f3230379767dda10939f46422fc03121ba1ec3c2d3833665dbd50de49c707"
+            },
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
+            },
+            {
+              "path": "docs/security/cookies.md",
+              "sha256": "f0d516fc6d1504f76d3d624f482658ec4d876e1022fb8bede5c1f652ad16a013"
+            }
+          ],
+          "checks": [
+            "Eleven automated cases probed the running compiled application over HTTP. They rejected form-encoded and cross-origin auth, missing cookies, cross-browser tokens and expired or concurrently consumed anonymous proof. A distinct current lock-wait case rejected a stale submitted token before touching or mutating the session."
+          ]
+        }
       }
     },
     {
@@ -742498,7 +742582,8 @@
           "release-0.6-reconciliation-fixture-document-boundary",
           "release-0.6-otp-issuance-expiry-and-delivery-acceptance",
           "release-0.6-session-lifetimes-cookies-and-refresh",
-          "release-0.6-mfa-device-and-financial-authorization"
+          "release-0.6-mfa-device-and-financial-authorization",
+          "release-0.6-csrf-rotation-and-dynamic-injection"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -833379,6 +833464,68 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/mfa-device-and-financial-authorization",
       "source_scope_proof": "release-0.6-mfa-device-and-financial-authorization.json",
       "source_scope_proof_sha256": "e94a55c6670947d50628d2d9582eb7acba3417c57a34104fbddb139f4cea104a"
+    },
+    "release-0.6-csrf-rotation-and-dynamic-injection": {
+      "batch": "release-0.6-csrf-rotation-and-dynamic-injection",
+      "base_commit": "4f64a8be087d5135d706cf22b3fb91c9fb1a385f",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.02.01.05",
+        "06-security-testing-observability.md#T-06.02.01.08",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/staff-http.integration.test.ts",
+          "sha256": "2d3d4ebd18fc96b64eda5a022a7a4e9191b50a919dfb5866919ef38518f6ad5e"
+        },
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+        },
+        {
+          "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
+          "sha256": "d3317bca524349d995b84ac1fa33155cf4d141d4a406b2896e8d5df2a23d6d1e"
+        },
+        {
+          "path": "apps/api/src/auth/otp-step-up.service.ts",
+          "sha256": "44168c1da43b87679cbda10a313b9c7f86c0d51e5b2327f8b88ee90da274cdff"
+        },
+        {
+          "path": "apps/api/src/session/csrf.guard.ts",
+          "sha256": "31569dad48816ef435efd1074cf2657da2eee90f090bd8d1fb800c5d6204bca6"
+        },
+        {
+          "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
+          "sha256": "80249bdfbadeb9de44d02e25e8bbad64440f42799636c333c294c4aae170f18d"
+        },
+        {
+          "path": "apps/api/src/session/preauth-csrf.service.ts",
+          "sha256": "1dc595906412d0f67cc576bce7560e9b463fb615a402f87c3eea9a01bc0c7db9"
+        },
+        {
+          "path": "apps/api/src/session/session-csrf-race-http.integration.test.ts",
+          "sha256": "d6b757d79648f55f20f9176bf2b33b9f0146d4051e471ba9c30a0935c6f5c8d4"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "d23f3230379767dda10939f46422fc03121ba1ec3c2d3833665dbd50de49c707"
+        },
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
+        },
+        {
+          "path": "docs/security/cookies.md",
+          "sha256": "f0d516fc6d1504f76d3d624f482658ec4d876e1022fb8bede5c1f652ad16a013"
+        }
+      ],
+      "checks": [
+        "Compiled HTTP sign-in replaces anonymous proof with an authenticated session-bound token. Current OTP step-up rotates credentials, forced password change revokes old families, and role changes revoke affected sessions immediately. The next authentication issues fresh proof under current authority.",
+        "Eleven automated cases probed the running compiled application over HTTP. They rejected form-encoded and cross-origin auth, missing cookies, cross-browser tokens and expired or concurrently consumed anonymous proof. A distinct current lock-wait case rejected a stale submitted token before touching or mutating the session."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/csrf-rotation-and-dynamic-injection",
+      "source_scope_proof": "release-0.6-csrf-rotation-and-dynamic-injection.json",
+      "source_scope_proof_sha256": "22c446eada7bd0b64e0ef743cb2b15e995c96968b4094da32245b7e833509c8a"
     }
   },
   "historical_improvements": [

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T19:32:54+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T19:33:45+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 981 | Accepted with unchanged source bindings. |
-| verify | 349 | Existing work may be complete; inspect evidence before building. |
+| done | 983 | Accepted with unchanged source bindings. |
+| verify | 347 | Existing work may be complete; inspect evidence before building. |
 | partial | 32 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1121,10 +1121,10 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.02.01.02` | done | Recorded batch work | Implement NestJS CSRF guard/ interceptor for state-changing routes |
 | `06-security-testing-observability.md#T-06.02.01.03` | done | Recorded batch work | Implement Origin validation against allowlist (configurable via admin settings or env) |
 | `06-security-testing-observability.md#T-06.02.01.04` | done | Recorded batch work | Implement centralized SameSite cookie policy (security-owned): evaluate cross-origin needs, set appropriate policy per route/topology, document in security policy, supersedes all per-module SameSite decisions |
-| `06-security-testing-observability.md#T-06.02.01.05` | verify | Inventory needed | Rotate CSRF token on session rotation (login, MFA, password change, privilege change) |
+| `06-security-testing-observability.md#T-06.02.01.05` | done | Recorded batch work | Rotate CSRF token on session rotation (login, MFA, password change, privilege change) |
 | `06-security-testing-observability.md#T-06.02.01.06` | done | Recorded batch work | Ensure CSRF failures return safe error + correlation ID; log as security event |
 | `06-security-testing-observability.md#T-06.02.01.07` | done | Recorded batch work | Write integration tests: valid CSRF token, missing token, expired token, rotated token, origin mismatch, same-site bypass |
-| `06-security-testing-observability.md#T-06.02.01.08` | verify | Inventory needed | DAST security test: automated CSRF injection attempts |
+| `06-security-testing-observability.md#T-06.02.01.08` | done | Recorded batch work | DAST security test: automated CSRF injection attempts |
 | `06-security-testing-observability.md#T-06.02.02.01` | done | Recorded batch work | Design CSP directive set for web app (nonce-based scripts, hashed styles where needed) |
 | `06-security-testing-observability.md#T-06.02.02.02` | done | Recorded batch work | Implement CSP middleware in web process; support Report-Only mode toggle via config |
 | `06-security-testing-observability.md#T-06.02.02.03` | done | Recorded batch work | Configure CSP reporting endpoint (e.g. `csp-reports` route or external `report-uri`) |
