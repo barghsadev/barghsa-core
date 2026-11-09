@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T23:04:01+00:00",
-  "source_commit": "bfcfe6b483b7b7699caf4c3f55989c7741510f8d",
+  "updated": "2026-11-09T23:07:10+00:00",
+  "source_commit": "e900d5b51e0dde33e1b3b2cfdeb8570269d0a4d9",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -13114,7 +13114,8 @@
         ],
         "batches": [
           "2026-09-24-ci-main-concurrency",
-          "release-0.6-current-ci-definition-contract-and-coverage-controls"
+          "release-0.6-current-ci-definition-contract-and-coverage-controls",
+          "release-0.6-backend-test-fixture-reconciliation"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -13126,7 +13127,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "ef51213c1a574bbb6b11ed66824cf031d9d104fcbaa6bc46c369d5f2cd28161f"
+              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
             },
             {
               "path": "AGENTS.md",
@@ -481984,20 +481985,90 @@
         "story": "06-security-testing-observability.md#spec-dd69de0e23f0"
       },
       "requirement": "| T-06.09.01.01 | Configure Vitest across all packages with shared config, coverage thresholds, and reporter | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-backend-test-fixture-reconciliation"
+        ],
+        "current_acceptance": {
+          "kind": "verified-shared-vitest-configuration-and-reporters",
+          "base_commit": "e900d5b51e0dde33e1b3b2cfdeb8570269d0a4d9",
+          "source_evidence": [
+            {
+              "path": "docs/development/ci.md",
+              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
+            },
+            {
+              "path": "vitest.config.ts",
+              "sha256": "25274bef7df785431bbf7f3ab348a604399716e280813dd70aa786ffc17c7f30"
+            },
+            {
+              "path": "packages/tsconfig/vitest.base.config.ts",
+              "sha256": "cacf7cba1dc965375f314e932ca0bbdc4f3884def06980f3d191b19f0bc58f99"
+            },
+            {
+              "path": "packages/tsconfig/vitest.base.config.test.ts",
+              "sha256": "ac6041e0aadb0dfa3097287cbbe4ccf094d065ba2f71a3560a06beecaeb3e25d"
+            },
+            {
+              "path": "packages/tsconfig/vitest.config.ts",
+              "sha256": "5798a9f4efac02d6d6e061624525a7fd065a0e299acfa64877cd040300e1af8d"
+            },
+            {
+              "path": "packages/i18n/vitest.config.ts",
+              "sha256": "dab27d0e9af3a25d85362106a8606f08000864262064cbf65df6449f9e94af76"
+            },
+            {
+              "path": "packages/ui/vitest.config.ts",
+              "sha256": "218f949e03ed8bf5fa01c4fbf03b54e8cd71ad3ac93a7e24cd44cd697c18b0d2"
+            },
+            {
+              "path": "packages/shared/vitest.config.ts",
+              "sha256": "b2bf47a797ffcf142d0e6ea7310b05b80252160ddda02d52ecce54f9ecb8935c"
+            },
+            {
+              "path": "packages/db/vitest.config.ts",
+              "sha256": "58b0adf9cde19568d2a87c9298b2936f24622cd1d2a192d4d298e8b92d8d77f0"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "apps/worker/vitest.config.ts",
+              "sha256": "40ac4ece12f113e26e9713ac3e0e8e3bad09b14b5b11f4f50f311a64f87d939a"
+            },
+            {
+              "path": "scripts/check-changed-coverage.py",
+              "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "All eight tested workspaces extend the shared Vitest configuration. The checked configuration preserves text, JSON, LCOV and HTML reporting and the package plus CI changed-source/critical-file coverage gates.",
+            "Exact fa7d7416 full test job passed all 17,055 tests, including the three Vitest base config assertions, and uploaded the coverage artifact. Runner configuration and lockfile match current source. The separate merged browser/coverage result is pending."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.09.01.02",
@@ -482530,20 +482601,67 @@
         "story": "06-security-testing-observability.md#spec-6d621a69af5e"
       },
       "requirement": "| T-06.10.01.01 | Set up test PostgreSQL instance in CI and local dev (Docker Compose service) | S |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Verify the dedicated Docker Compose test service required by the criterion or record an approved equivalence for the isolated Testcontainers harness."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-backend-test-fixture-reconciliation"
+        ],
+        "current_acceptance": {
+          "kind": "verified-disposable-postgresql-pending-compose-criterion",
+          "base_commit": "e900d5b51e0dde33e1b3b2cfdeb8570269d0a4d9",
+          "source_evidence": [
+            {
+              "path": "docs/development/ci.md",
+              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
+            },
+            {
+              "path": "apps/api/src/test/build-http-app.ts",
+              "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+            },
+            {
+              "path": "apps/api/src/test/postgres-setup.ts",
+              "sha256": "a6203929fcdfceb3371ea2660f15d85a1b13ef13ef75196ffa14c93ab040c793"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "b11b691680a16cfd244d5430449a7c91c918a09f5f3e5b5c09ed31299d80359c"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture-template.integration.test.ts",
+              "sha256": "78d48a7eead96fae0eb2d8f6558bd1700f8d62e4538582573690b2b967b4e4f9"
+            },
+            {
+              "path": "packages/db/src/test/globalSetup.ts",
+              "sha256": "c31c22bd1337ca4ebfd914cfa1d5a3441aa2eca1b312f6f7488ab764ad0900a5"
+            },
+            {
+              "path": "packages/db/src/test/testDb.ts",
+              "sha256": "b8b540e8a83d140aaee61c78f74c59cc72111dc50529e1f0ca73b50ff9104111"
+            },
+            {
+              "path": "apps/api/scripts/http-test-server.cjs",
+              "sha256": "4766868846c6ee2b43307d4434ba305b48a802c9d82d68209fcf52c7e5902f80"
+            },
+            {
+              "path": "docker-compose.yml",
+              "sha256": "e1988b13aa6671f943136b593b44e1b828d689e8db5e5359a41302c577baf462"
+            }
+          ],
+          "checks": [
+            "CI and local Vitest use the existing disposable PostgreSQL Testcontainers setup with pgvector and btree_gist. The hosted and isolated PostgreSQL receipts cover that path. The Compose-specific test service remains unresolved."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.10.01.02",
@@ -482556,20 +482674,62 @@
         "story": "06-security-testing-observability.md#spec-6d621a69af5e"
       },
       "requirement": "| T-06.10.01.02 | Configure NestJS testing module: bootstrap real app with test DB, apply migrations before each suite | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-backend-test-fixture-reconciliation"
+        ],
+        "current_acceptance": {
+          "kind": "verified-real-nestjs-and-migrated-test-fixture",
+          "base_commit": "e900d5b51e0dde33e1b3b2cfdeb8570269d0a4d9",
+          "source_evidence": [
+            {
+              "path": "docs/development/ci.md",
+              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
+            },
+            {
+              "path": "apps/api/src/test/build-http-app.ts",
+              "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+            },
+            {
+              "path": "apps/api/src/test/postgres-setup.ts",
+              "sha256": "a6203929fcdfceb3371ea2660f15d85a1b13ef13ef75196ffa14c93ab040c793"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "b11b691680a16cfd244d5430449a7c91c918a09f5f3e5b5c09ed31299d80359c"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture-template.integration.test.ts",
+              "sha256": "78d48a7eead96fae0eb2d8f6558bd1700f8d62e4538582573690b2b967b4e4f9"
+            },
+            {
+              "path": "packages/db/src/test/globalSetup.ts",
+              "sha256": "c31c22bd1337ca4ebfd914cfa1d5a3441aa2eca1b312f6f7488ab764ad0900a5"
+            },
+            {
+              "path": "packages/db/src/test/testDb.ts",
+              "sha256": "b8b540e8a83d140aaee61c78f74c59cc72111dc50529e1f0ca73b50ff9104111"
+            },
+            {
+              "path": "apps/api/scripts/http-test-server.cjs",
+              "sha256": "4766868846c6ee2b43307d4434ba305b48a802c9d82d68209fcf52c7e5902f80"
+            }
+          ],
+          "checks": [
+            "The global setup migrates a fresh disposable PostgreSQL template with the production migrations. The HTTP fixture creates an isolated migrated database before each suite and boots the compiled NestJS application. Fresh per-fixture migration remains available for migration checks.",
+            "The exact hosted fixture test passed on the source-matching compiled path and verified expected production triggers and seeded staff roles in both cloned databases."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.10.01.03",
@@ -482582,20 +482742,62 @@
         "story": "06-security-testing-observability.md#spec-6d621a69af5e"
       },
       "requirement": "| T-06.10.01.03 | Implement test DB lifecycle: per-worker isolated schema or database for parallel runs | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-backend-test-fixture-reconciliation"
+        ],
+        "current_acceptance": {
+          "kind": "verified-parallel-postgres-isolation",
+          "base_commit": "e900d5b51e0dde33e1b3b2cfdeb8570269d0a4d9",
+          "source_evidence": [
+            {
+              "path": "docs/development/ci.md",
+              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
+            },
+            {
+              "path": "apps/api/src/test/build-http-app.ts",
+              "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+            },
+            {
+              "path": "apps/api/src/test/postgres-setup.ts",
+              "sha256": "a6203929fcdfceb3371ea2660f15d85a1b13ef13ef75196ffa14c93ab040c793"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "b11b691680a16cfd244d5430449a7c91c918a09f5f3e5b5c09ed31299d80359c"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture-template.integration.test.ts",
+              "sha256": "78d48a7eead96fae0eb2d8f6558bd1700f8d62e4538582573690b2b967b4e4f9"
+            },
+            {
+              "path": "packages/db/src/test/globalSetup.ts",
+              "sha256": "c31c22bd1337ca4ebfd914cfa1d5a3441aa2eca1b312f6f7488ab764ad0900a5"
+            },
+            {
+              "path": "packages/db/src/test/testDb.ts",
+              "sha256": "b8b540e8a83d140aaee61c78f74c59cc72111dc50529e1f0ca73b50ff9104111"
+            },
+            {
+              "path": "apps/api/scripts/http-test-server.cjs",
+              "sha256": "4766868846c6ee2b43307d4434ba305b48a802c9d82d68209fcf52c7e5902f80"
+            }
+          ],
+          "checks": [
+            "Two concurrent hosted HTTP fixtures cloned the same unwritable migrated baseline into separate databases. The test verified that a new row and table in one fixture stayed absent from the other and that the baseline refused connection.",
+            "Lower-level tests retain random isolated schemas and explicit cleanup. No changes to the database or application harness were required."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.10.01.04",
@@ -714474,7 +714676,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy",
+          "release-0.6-backend-test-fixture-reconciliation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -714838,7 +715041,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "ef51213c1a574bbb6b11ed66824cf031d9d104fcbaa6bc46c369d5f2cd28161f"
+              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -715112,7 +715315,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy",
+          "release-0.6-backend-test-fixture-reconciliation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -715476,7 +715680,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "ef51213c1a574bbb6b11ed66824cf031d9d104fcbaa6bc46c369d5f2cd28161f"
+              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -715750,7 +715954,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy",
+          "release-0.6-backend-test-fixture-reconciliation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -716114,7 +716319,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "ef51213c1a574bbb6b11ed66824cf031d9d104fcbaa6bc46c369d5f2cd28161f"
+              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -716389,7 +716594,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy",
+          "release-0.6-backend-test-fixture-reconciliation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -716753,7 +716959,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "ef51213c1a574bbb6b11ed66824cf031d9d104fcbaa6bc46c369d5f2cd28161f"
+              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -717027,7 +717233,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy",
+          "release-0.6-backend-test-fixture-reconciliation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -717391,7 +717598,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "ef51213c1a574bbb6b11ed66824cf031d9d104fcbaa6bc46c369d5f2cd28161f"
+              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -717665,7 +717872,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy",
+          "release-0.6-backend-test-fixture-reconciliation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -718029,7 +718237,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "ef51213c1a574bbb6b11ed66824cf031d9d104fcbaa6bc46c369d5f2cd28161f"
+              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -718303,7 +718511,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy",
+          "release-0.6-backend-test-fixture-reconciliation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -718667,7 +718876,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "ef51213c1a574bbb6b11ed66824cf031d9d104fcbaa6bc46c369d5f2cd28161f"
+              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -718942,7 +719151,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy",
+          "release-0.6-backend-test-fixture-reconciliation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -719306,7 +719516,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "ef51213c1a574bbb6b11ed66824cf031d9d104fcbaa6bc46c369d5f2cd28161f"
+              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -719580,7 +719790,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy",
+          "release-0.6-backend-test-fixture-reconciliation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -719944,7 +720155,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "ef51213c1a574bbb6b11ed66824cf031d9d104fcbaa6bc46c369d5f2cd28161f"
+              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -720218,7 +720429,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy",
+          "release-0.6-backend-test-fixture-reconciliation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -720582,7 +720794,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "ef51213c1a574bbb6b11ed66824cf031d9d104fcbaa6bc46c369d5f2cd28161f"
+              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -749573,7 +749785,8 @@
           "release-0.6-security-scenario-and-signed-fixture-reconciliation",
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-ai-inference-metrics",
-          "release-0.6-external-provider-metrics-reconciliation"
+          "release-0.6-external-provider-metrics-reconciliation",
+          "release-0.6-backend-test-fixture-reconciliation"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -844897,6 +845110,134 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/external-provider-metrics",
       "source_scope_proof": "external-provider-source-proof.json",
       "source_scope_proof_sha256": "8201d22d5b2d17b447948e1d20cf443d0ad12a007f77d6c61d22cdd3d1283ef0"
+    },
+    "release-0.6-backend-test-fixture-reconciliation": {
+      "batch": "release-0.6-backend-test-fixture-reconciliation",
+      "base_commit": "e900d5b51e0dde33e1b3b2cfdeb8570269d0a4d9",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.01",
+        "06-security-testing-observability.md#T-06.09.01.01",
+        "06-security-testing-observability.md#T-06.10.01.01",
+        "06-security-testing-observability.md#T-06.10.01.02",
+        "06-security-testing-observability.md#T-06.10.01.03",
+        "07-ui-ux-design.md#T-07.28.01.01",
+        "07-ui-ux-design.md#T-07.28.01.02",
+        "07-ui-ux-design.md#T-07.28.01.03",
+        "07-ui-ux-design.md#T-07.28.01.04",
+        "07-ui-ux-design.md#T-07.28.01.05",
+        "07-ui-ux-design.md#T-07.29.01.01",
+        "07-ui-ux-design.md#T-07.29.01.02",
+        "07-ui-ux-design.md#T-07.29.01.03",
+        "07-ui-ux-design.md#T-07.29.01.04",
+        "07-ui-ux-design.md#T-07.29.01.05",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/development/ci.md",
+          "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
+        },
+        {
+          "path": "vitest.config.ts",
+          "sha256": "25274bef7df785431bbf7f3ab348a604399716e280813dd70aa786ffc17c7f30"
+        },
+        {
+          "path": "packages/tsconfig/vitest.base.config.ts",
+          "sha256": "cacf7cba1dc965375f314e932ca0bbdc4f3884def06980f3d191b19f0bc58f99"
+        },
+        {
+          "path": "packages/tsconfig/vitest.base.config.test.ts",
+          "sha256": "ac6041e0aadb0dfa3097287cbbe4ccf094d065ba2f71a3560a06beecaeb3e25d"
+        },
+        {
+          "path": "packages/tsconfig/vitest.config.ts",
+          "sha256": "5798a9f4efac02d6d6e061624525a7fd065a0e299acfa64877cd040300e1af8d"
+        },
+        {
+          "path": "packages/i18n/vitest.config.ts",
+          "sha256": "dab27d0e9af3a25d85362106a8606f08000864262064cbf65df6449f9e94af76"
+        },
+        {
+          "path": "packages/ui/vitest.config.ts",
+          "sha256": "218f949e03ed8bf5fa01c4fbf03b54e8cd71ad3ac93a7e24cd44cd697c18b0d2"
+        },
+        {
+          "path": "packages/shared/vitest.config.ts",
+          "sha256": "b2bf47a797ffcf142d0e6ea7310b05b80252160ddda02d52ecce54f9ecb8935c"
+        },
+        {
+          "path": "packages/db/vitest.config.ts",
+          "sha256": "58b0adf9cde19568d2a87c9298b2936f24622cd1d2a192d4d298e8b92d8d77f0"
+        },
+        {
+          "path": "apps/api/vitest.config.ts",
+          "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+        },
+        {
+          "path": "apps/web/vitest.config.ts",
+          "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+        },
+        {
+          "path": "apps/worker/vitest.config.ts",
+          "sha256": "40ac4ece12f113e26e9713ac3e0e8e3bad09b14b5b11f4f50f311a64f87d939a"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        },
+        {
+          "path": "apps/api/src/test/build-http-app.ts",
+          "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+        },
+        {
+          "path": "apps/api/src/test/postgres-setup.ts",
+          "sha256": "a6203929fcdfceb3371ea2660f15d85a1b13ef13ef75196ffa14c93ab040c793"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "b11b691680a16cfd244d5430449a7c91c918a09f5f3e5b5c09ed31299d80359c"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture-template.integration.test.ts",
+          "sha256": "78d48a7eead96fae0eb2d8f6558bd1700f8d62e4538582573690b2b967b4e4f9"
+        },
+        {
+          "path": "packages/db/src/test/globalSetup.ts",
+          "sha256": "c31c22bd1337ca4ebfd914cfa1d5a3441aa2eca1b312f6f7488ab764ad0900a5"
+        },
+        {
+          "path": "packages/db/src/test/testDb.ts",
+          "sha256": "b8b540e8a83d140aaee61c78f74c59cc72111dc50529e1f0ca73b50ff9104111"
+        },
+        {
+          "path": "apps/api/scripts/http-test-server.cjs",
+          "sha256": "4766868846c6ee2b43307d4434ba305b48a802c9d82d68209fcf52c7e5902f80"
+        },
+        {
+          "path": "docker-compose.yml",
+          "sha256": "e1988b13aa6671f943136b593b44e1b828d689e8db5e5359a41302c577baf462"
+        }
+      ],
+      "checks": [
+        "All eight tested workspaces extend the shared Vitest configuration. The checked configuration preserves text, JSON, LCOV and HTML reporting and the package plus CI changed-source/critical-file coverage gates.",
+        "Exact fa7d7416 full test job passed all 17,055 tests, including the three Vitest base config assertions, and uploaded the coverage artifact. Runner configuration and lockfile match current source. The separate merged browser/coverage result is pending.",
+        "The global setup migrates a fresh disposable PostgreSQL template with the production migrations. The HTTP fixture creates an isolated migrated database before each suite and boots the compiled NestJS application. Fresh per-fixture migration remains available for migration checks.",
+        "The exact hosted fixture test passed on the source-matching compiled path and verified expected production triggers and seeded staff roles in both cloned databases.",
+        "Two concurrent hosted HTTP fixtures cloned the same unwritable migrated baseline into separate databases. The test verified that a new row and table in one fixture stayed absent from the other and that the baseline refused connection.",
+        "Lower-level tests retain random isolated schemas and explicit cleanup. No changes to the database or application harness were required.",
+        "CI and local Vitest use the existing disposable PostgreSQL Testcontainers setup with pgvector and btree_gist. The hosted and isolated PostgreSQL receipts cover that path. The Compose-specific test service remains unresolved."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/backend-test-infrastructure",
+      "source_scope_proof": "backend-test-infrastructure-source-proof.json",
+      "source_scope_proof_sha256": "cd6cccf3c87d0e351a2b83ad0110a5b2eeed26cea44cabfa668c20cc87d0af59"
     }
   },
   "historical_improvements": [

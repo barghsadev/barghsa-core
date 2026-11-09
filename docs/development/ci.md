@@ -8,6 +8,24 @@ Direct pushes to `main` require **Verify monorepo integrity** on the exact candi
 
 Nightly jobs are separate from the integrity check. The release workflow in `kanban/WORKFLOW.md` governs when to enqueue staging after the verified release push.
 
+## Backend test databases
+
+The same Vitest configurations drive CI and local runs. Every tested workspace
+extends the shared runner and coverage reporters. The full workflow also checks
+changed-source coverage and modified critical files from the previous release.
+
+The API test setup starts disposable PostgreSQL with Testcontainers and
+applies the production migrations to a fresh baseline. The setup disables
+connections to that baseline after migration. Each HTTP suite gets its own
+database cloned from it, starts the compiled NestJS app, and drops its
+database on cleanup. The fixture test starts two clones concurrently and
+checks both migration state and isolation of schema and data writes.
+
+For a migration rehearsal, use `BARGHSA_HTTP_FIXTURE_FRESH_MIGRATIONS=1` to
+apply migrations to each fresh HTTP fixture database. Lower-level PostgreSQL
+tests can use the schema fixture with a unique search path and managed
+cleanup. Keep the database URL scoped to a disposable test instance.
+
 ## Reusing local builds
 
 Build the required shared, API, worker and web outputs once before their

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T23:04:01+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T23:07:10+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1048 | Accepted with unchanged source bindings. |
-| verify | 280 | Existing work may be complete; inspect evidence before building. |
-| partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 1051 | Accepted with unchanged source bindings. |
+| verify | 276 | Existing work may be complete; inspect evidence before building. |
+| partial | 35 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 3 | Named owner or external prerequisite. |
@@ -1250,7 +1250,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.08.03.03` | verify | Inventory needed | Create customer communication templates: breach notification, service disruption, credential rotation |
 | `06-security-testing-observability.md#T-06.08.03.04` | verify | Inventory needed | Set up security event channel separate from ordinary error queues (e.g. dedicated Slack/alert channel) |
 | `06-security-testing-observability.md#T-06.08.03.05` | verify | Inventory needed | Define post-incident review process: timeline, root cause, corrective actions, documentation update |
-| `06-security-testing-observability.md#T-06.09.01.01` | verify | Inventory needed | Configure Vitest across all packages with shared config, coverage thresholds, and reporter |
+| `06-security-testing-observability.md#T-06.09.01.01` | done | Recorded batch work | Configure Vitest across all packages with shared config, coverage thresholds, and reporter |
 | `06-security-testing-observability.md#T-06.09.01.02` | verify | Inventory needed | Implement test utilities: controllable clock, fixed UUIDs, deterministic random, fake provider factories |
 | `06-security-testing-observability.md#T-06.09.01.03` | verify | Inventory needed | Implement table-driven test helper for financial examples (inputs → expected outputs) |
 | `06-security-testing-observability.md#T-06.09.01.04` | verify | Inventory needed | Add `vitest --related` for affected-only test runs in CI |
@@ -1271,9 +1271,9 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.09.03.08` | verify | Inventory needed | Write RTL tests for admin pages: configuration, role management, product/settings CRUD |
 | `06-security-testing-observability.md#T-06.09.03.09` | verify | Inventory needed | Ensure every critical form preserves valid input after server validation/provider error |
 | `06-security-testing-observability.md#T-06.09.03.10` | verify | Inventory needed | Write RTL tests for permission-dependent UI: elements hidden/disabled per role |
-| `06-security-testing-observability.md#T-06.10.01.01` | verify | Inventory needed | Set up test PostgreSQL instance in CI and local dev (Docker Compose service) |
-| `06-security-testing-observability.md#T-06.10.01.02` | verify | Inventory needed | Configure NestJS testing module: bootstrap real app with test DB, apply migrations before each suite |
-| `06-security-testing-observability.md#T-06.10.01.03` | verify | Inventory needed | Implement test DB lifecycle: per-worker isolated schema or database for parallel runs |
+| `06-security-testing-observability.md#T-06.10.01.01` | partial | Recorded batch work | Set up test PostgreSQL instance in CI and local dev (Docker Compose service) |
+| `06-security-testing-observability.md#T-06.10.01.02` | done | Recorded batch work | Configure NestJS testing module: bootstrap real app with test DB, apply migrations before each suite |
+| `06-security-testing-observability.md#T-06.10.01.03` | done | Recorded batch work | Implement test DB lifecycle: per-worker isolated schema or database for parallel runs |
 | `06-security-testing-observability.md#T-06.10.01.04` | verify | Inventory needed | Build fake adapter servers: SMTP fake, SMS.ir fake, payment gateway fake, document storage fake |
 | `06-security-testing-observability.md#T-06.10.01.05` | done | Recorded batch work | Implement deterministic signed webhook fixture builder |
 | `06-security-testing-observability.md#T-06.10.01.06` | verify | Inventory needed | Write helper utilities: create user, create profile, authenticate, create order, create invoice, add wallet funds |
