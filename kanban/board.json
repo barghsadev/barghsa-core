@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T10:27:38+00:00",
-  "source_commit": "8e64519d06262a253a9f54dc511d1c7fc8265fb4",
+  "updated": "2026-11-09T10:32:57+00:00",
+  "source_commit": "8b105fcdcd49c4825415e6a211f3a54ba57f16ae",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -600334,7 +600334,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The route reporter and exact Sentry receipt validation passed the local production browser, HTTP and synthetic HTTPS checks. Protected staging runtime has no Sentry setting. Configure the staging project's ROUTE_ERROR_SENTRY_DSN, then capture a controlled candidate error and verify its matching event in the actual project. Any alternate receiver needs owner approval."
+        "Protected staging configuration is installed. The isolated candidate route returned 204 after Sentry acknowledged the exact event ID cebc05c1abbf4811aa118e0812018764. Read the matching event and its support reference back from the configured staging project before acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -600347,7 +600347,8 @@
           "release-0.5-stale-route-recovery",
           "release-0.5-conditional-form-closure",
           "release-0.5-route-error-delivery",
-          "release-0.5-intake-response-recovery"
+          "release-0.5-intake-response-recovery",
+          "release-0.5-staging-sentry-ingest"
         ],
         "current_acceptance": null
       }
@@ -817828,6 +817829,60 @@
       "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-check-activation/proof.json",
       "source_scope_proof_sha256": "1b2ec884b3849117da4270523063031e4b2dad8e84132033453fd4a23784f9c5",
       "release_disposition": "The required accessibility check is active. The staging Sentry receipt remains open."
+    },
+    "release-0.5-staging-sentry-ingest": {
+      "batch": "release-0.5-staging-sentry-ingest",
+      "base_commit": "8b105fcdcd49c4825415e6a211f3a54ba57f16ae",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.09"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.09"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/route-errors/route-errors.controller.ts",
+          "sha256": "0e16a8a12e48adc346e7be9829475247b4e87aa14c0ad99676edbe0c07a66093"
+        },
+        {
+          "path": "apps/api/src/route-errors/route-errors.controller.test.ts",
+          "sha256": "e59f2ac8db69247aaca5bbbe9f8a6c31dcdab91a0d60adf2a658d9adf49b492b"
+        },
+        {
+          "path": "apps/api/src/route-errors/route-errors-http.integration.test.ts",
+          "sha256": "9d545527d6fb140dbb1b0cb352fa49677d5e83a336a76a6ea68338060dda81ad"
+        },
+        {
+          "path": "apps/api/src/rate-limit/rate-limit.decorator.ts",
+          "sha256": "5a78714dfd36a80dc0225fc98ec2156cbaf35e2d8d8856c2749cb8d0cfdb7485"
+        },
+        {
+          "path": "apps/web/src/hooks/useRouteErrorReport.ts",
+          "sha256": "b64d5f6932d0a07a373d8cde4ef3a6fb455ce748b8de277ed7cf2fcd0ec40fb0"
+        },
+        {
+          "path": "apps/web/src/components/RouteErrorBoundary.tsx",
+          "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
+        },
+        {
+          "path": "apps/web/e2e/feedback.spec.ts",
+          "sha256": "ab6d9df3611e658b73445618dabaebf8b8d8ac3337f5319e0cc884feec07623c"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "aab5a31e236ab70a7c588c676e3a0a2cf0bb8250e8d96ecdc469c9be175dcfa2"
+        }
+      ],
+      "checks": [
+        "The protected Sentry setting is present in the live staging host’s root-owned 0600 runtime file.",
+        "One controlled HTTP request exercised the compiled candidate Nest route in an isolated container on the staging network. Sentry returned HTTP 200 and the matching event ID. The candidate route returned 204.",
+        "The public staging deployment remains v0.4.0. The stored event still needs independent lookup in the configured Sentry project.",
+        "GitHub rejected the board-only direct push with GH013 because the required GitHub Actions check is expected on the new SHA. The reviewed change is preserved locally."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-check-activation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-check-activation/sentry-ingest-proof.json",
+      "source_scope_proof_sha256": "0bffdb5091de00e9eb0f923b8549c3bdb3f7cc62687f68b183b9eed14f74d044",
+      "release_disposition": "Sentry ingestion acknowledged. Project lookup and an authorized direct-push path remain before v0.5.0 publication."
     }
   },
   "historical_improvements": [
@@ -817878,7 +817933,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Verify the configured staging Sentry project with a controlled candidate event, then accept and publish the v0.5.0 staging milestone."
+    "goal": "Read the matching staging Sentry event from its project and publish through an authorized direct-push account or app. Then accept and enqueue v0.5.0."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
