@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T18:29:35+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T18:36:20+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 941 | Accepted with unchanged source bindings. |
-| verify | 394 | Existing work may be complete; inspect evidence before building. |
+| done | 944 | Accepted with unchanged source bindings. |
+| verify | 391 | Existing work may be complete; inspect evidence before building. |
 | partial | 27 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -980,12 +980,12 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-02.01.04` | done | Earlier acceptance_verified | Set up database health check endpoint for readiness probes |
 | `01-platform-infrastructure.md#T-02.02.01` | done | Earlier acceptance_verified | Create `packages/db/src/types.ts` with custom Drizzle type definitions |
 | `01-platform-infrastructure.md#T-02.02.02` | done | Earlier partial | Create base table factory with `id`, `createdAt`, `updatedAt` columns |
-| `01-platform-infrastructure.md#T-02.02.03` | verify | Earlier acceptance_verified | Create UUIDv7 generation function migration |
+| `01-platform-infrastructure.md#T-02.02.03` | done | Earlier acceptance_verified | Create UUIDv7 generation function migration |
 | `01-platform-infrastructure.md#T-02.02.04` | done | Earlier acceptance_verified | Document and enforce column conventions in ADR |
 | `01-platform-infrastructure.md#T-02.03.01` | done | Earlier acceptance_verified | Configure `drizzle.config.ts` in `packages/db` |
 | `01-platform-infrastructure.md#T-02.03.02` | partial | Earlier partial | Create migration runner script for production deployments |
-| `01-platform-infrastructure.md#T-02.03.03` | verify | Earlier acceptance_verified | Create migration validation test (clean + upgrade path) |
-| `01-platform-infrastructure.md#T-02.03.04` | verify | Earlier acceptance_verified | Implement expand/migrate/contract documentation and PR checklist |
+| `01-platform-infrastructure.md#T-02.03.03` | done | Earlier acceptance_verified | Create migration validation test (clean + upgrade path) |
+| `01-platform-infrastructure.md#T-02.03.04` | done | Earlier acceptance_verified | Implement expand/migrate/contract documentation and PR checklist |
 | `01-platform-infrastructure.md#T-02.04.01` | verify | Earlier acceptance_verified | Create seed script `packages/db/src/seed/index.ts` |
 | `01-platform-infrastructure.md#T-02.04.02` | verify | Earlier acceptance_verified | Create four default electricity products in seed |
 | `01-platform-infrastructure.md#T-02.04.03` | verify | Earlier acceptance_verified | Create admin bootstrap mechanism |

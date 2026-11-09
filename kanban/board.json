@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T18:29:35+00:00",
+  "updated": "2026-11-09T18:36:20+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -7123,12 +7123,10 @@
         "story": "01-platform-infrastructure.md#spec-4bf5c971e08f"
       },
       "requirement": "- **T-02.02.03:** Create UUIDv7 generation function migration\n  - **Notes:** A SQL migration that creates `uuid_generate_v7()` function using `uuid_extensions` or a custom pl/pgSQL implementation. The function encodes the current Unix timestamp in milliseconds (48 bits) followed by random bits (74 bits) for monotonic ordering and index locality. Must handle concurrent calls safely.\n  - **Dependencies:** T-02.02.01, S-02.03\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -7287,8 +7285,30 @@
           "packages/db/src/migrate.snapshot.test.ts",
           "packages/db/src/migrate.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-database-migration-baseline-and-upgrade"
+        ],
+        "current_acceptance": {
+          "kind": "current-migration-source-and-native-postgresql-receipts",
+          "base_commit": "6625d4a6b3bdfaac65caa7bd608ad52ebced7667",
+          "source_evidence": [
+            {
+              "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+              "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+            },
+            {
+              "path": "packages/db/src/database-foundations.integration.test.ts",
+              "sha256": "707f3f776b7065815471ea6dc0c853a4eef99a5b7803edf24d15aa62c9317b77"
+            },
+            {
+              "path": "docs/adr/001-data-types-and-conventions.md",
+              "sha256": "51dfaed7c88b0e07d748b39af6581d85c0d0ae28a4b1137c66c358466900795e"
+            }
+          ],
+          "checks": [
+            "The production baseline installs the UUIDv7 function with a 48-bit wall-clock timestamp and random payload. The exact native foundation test verified uniqueness, version, variant and valid timestamp bits for 1,000 values across four concurrent database queries."
+          ]
+        }
       }
     },
     {
@@ -7696,7 +7716,7 @@
             },
             {
               "path": "docs/development/database-migrations.md",
-              "sha256": "3f0518d287407a1e648e054803b3f57696691db3477aaa82252b71577e122b3a"
+              "sha256": "cfc8499dcdbdf364a9c86ff1abfd52ebe92357349d2912b0d09bf0abb8dab6cc"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -7888,7 +7908,8 @@
           "packages/db/src/migrate.ts"
         ],
         "batches": [
-          "release-0.6-packaged-production-seed"
+          "release-0.6-packaged-production-seed",
+          "release-0.6-database-migration-baseline-and-upgrade"
         ],
         "current_acceptance": null
       }
@@ -7904,12 +7925,10 @@
         "story": "01-platform-infrastructure.md#spec-80eda7c7402b"
       },
       "requirement": "- **T-02.03.03:** Create migration validation test (clean + upgrade path)\n  - **Notes:** Two Vitest tests: (1) Apply all migrations to a clean database, verify schema matches Drizzle schema definition. (2) Apply migrations sequentially from a known base state (simulating an existing deployment), verify each migration runs without error and produces the final schema. Test runs in CI for every PR.\n  - **Dependencies:** T-02.03.01\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -8066,8 +8085,50 @@
           "packages/db/src/migrate.snapshot.test.ts",
           "packages/db/src/migrate.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-database-migration-baseline-and-upgrade"
+        ],
+        "current_acceptance": {
+          "kind": "current-migration-source-and-native-postgresql-receipts",
+          "base_commit": "6625d4a6b3bdfaac65caa7bd608ad52ebced7667",
+          "source_evidence": [
+            {
+              "path": "packages/db/src/migrate.ts",
+              "sha256": "ee35ac3d9e1350e828edc37e6a972a4ed04f91d3c079ed53b219ecc1adb09fb8"
+            },
+            {
+              "path": "packages/db/src/database-foundations.integration.test.ts",
+              "sha256": "707f3f776b7065815471ea6dc0c853a4eef99a5b7803edf24d15aa62c9317b77"
+            },
+            {
+              "path": "packages/db/src/migrate.baseline.test.ts",
+              "sha256": "2a98668f852097818bb1aa52af3254baa1861c2f05a4be6cb9afd8038ac8eca0"
+            },
+            {
+              "path": "packages/db/src/migrate.runner.test.ts",
+              "sha256": "2d8b02ccaf502e17f7aa134dcac1b9cfab6006684d74d12d548fd35c1f8cb6f2"
+            },
+            {
+              "path": "packages/db/src/migrate.snapshot.test.ts",
+              "sha256": "6091f8c61af0ad12b340dbb0bc7381c56265f172fb854e3349b75a2b67f93dda"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/0281_snapshot.json",
+              "sha256": "b61cff85a2b77508fabe770936f7e9cc10c350f264a9cb31847b88fa05533b61"
+            },
+            {
+              "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+              "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/_journal.json",
+              "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+            }
+          ],
+          "checks": [
+            "Native Linux executed the clean PostgreSQL schema snapshot comparison for 181 tables, both populated legacy upgrade fixtures, and the production runner and foundation suites. The journal, migration SQL and snapshot digests matched the current source. The checks cover preserved financial and historical data, checksum/history mismatches, safe retry, concurrency and migration-gated readiness."
+          ]
+        }
       }
     },
     {
@@ -8081,12 +8142,10 @@
         "story": "01-platform-infrastructure.md#spec-80eda7c7402b"
       },
       "requirement": "- **T-02.03.04:** Implement expand/migrate/contract documentation and PR checklist\n  - **Notes:** Add a PR template guideline: schema changes must explain which phase (expand/migrate/contract) each change belongs to. Destructive changes must reference verified backup proof and have a separate follow-up PR for the contract phase. Archive deleted column data before removal where legally required.\n  - **Dependencies:** T-02.03.01\n  - **Complexity:** S\n  - **UI/UX:** N/A\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -8243,8 +8302,34 @@
           "packages/db/src/migrate.snapshot.test.ts",
           "packages/db/src/migrate.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-database-migration-baseline-and-upgrade"
+        ],
+        "current_acceptance": {
+          "kind": "current-migration-source-and-native-postgresql-receipts",
+          "base_commit": "6625d4a6b3bdfaac65caa7bd608ad52ebced7667",
+          "source_evidence": [
+            {
+              "path": "docs/development/database-migrations.md",
+              "sha256": "cfc8499dcdbdf364a9c86ff1abfd52ebe92357349d2912b0d09bf0abb8dab6cc"
+            },
+            {
+              "path": "AGENTS.md",
+              "sha256": "e8902831bc0943720f4bf0f7f8cf10c8f05d3671689f0d111256040a841c93bf"
+            },
+            {
+              "path": "kanban/WORKFLOW.md",
+              "sha256": "37b50b9e6dda85071fa55389c65480d4951437ece6bd3e210cec715a5424dbe9"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+            }
+          ],
+          "checks": [
+            "The reviewed-batch checklist uses the owner-authorized direct-main flow. It requires phase identification, migration evidence, a separate contraction batch after old writers are retired, tested backup/restore proof and retention-aware archival. Existing migration and startup checks remain in the checklist."
+          ]
+        }
       }
     },
     {
@@ -740014,7 +740099,8 @@
           "release-0.6-nightly-documents-timeout-repeat",
           "release-0.6-nightly-critical-browser-journeys",
           "release-0.6-runtime-node-options",
-          "release-0.6-database-pool-deadlines-and-log-privacy"
+          "release-0.6-database-pool-deadlines-and-log-privacy",
+          "release-0.6-database-migration-baseline-and-upgrade"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -829921,6 +830007,80 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-pool-acceptance",
       "source_scope_proof": "release-0.6-database-pool-deadlines-and-log-privacy.json",
       "source_scope_proof_sha256": "8dfb6522dacd5238dac452af284e62fe16db533fe47c4d06f969cd1729e3ba3d"
+    },
+    "release-0.6-database-migration-baseline-and-upgrade": {
+      "batch": "release-0.6-database-migration-baseline-and-upgrade",
+      "base_commit": "6625d4a6b3bdfaac65caa7bd608ad52ebced7667",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.02.03",
+        "01-platform-infrastructure.md#T-02.03.03",
+        "01-platform-infrastructure.md#T-02.03.04",
+        "01-platform-infrastructure.md#T-02.03.02",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "e8902831bc0943720f4bf0f7f8cf10c8f05d3671689f0d111256040a841c93bf"
+        },
+        {
+          "path": "docs/adr/001-data-types-and-conventions.md",
+          "sha256": "51dfaed7c88b0e07d748b39af6581d85c0d0ae28a4b1137c66c358466900795e"
+        },
+        {
+          "path": "docs/development/database-migrations.md",
+          "sha256": "cfc8499dcdbdf364a9c86ff1abfd52ebe92357349d2912b0d09bf0abb8dab6cc"
+        },
+        {
+          "path": "kanban/WORKFLOW.md",
+          "sha256": "37b50b9e6dda85071fa55389c65480d4951437ece6bd3e210cec715a5424dbe9"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/0281_snapshot.json",
+          "sha256": "b61cff85a2b77508fabe770936f7e9cc10c350f264a9cb31847b88fa05533b61"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+        },
+        {
+          "path": "packages/db/src/database-foundations.integration.test.ts",
+          "sha256": "707f3f776b7065815471ea6dc0c853a4eef99a5b7803edf24d15aa62c9317b77"
+        },
+        {
+          "path": "packages/db/src/migrate.baseline.test.ts",
+          "sha256": "2a98668f852097818bb1aa52af3254baa1861c2f05a4be6cb9afd8038ac8eca0"
+        },
+        {
+          "path": "packages/db/src/migrate.runner.test.ts",
+          "sha256": "2d8b02ccaf502e17f7aa134dcac1b9cfab6006684d74d12d548fd35c1f8cb6f2"
+        },
+        {
+          "path": "packages/db/src/migrate.snapshot.test.ts",
+          "sha256": "6091f8c61af0ad12b340dbb0bc7381c56265f172fb854e3349b75a2b67f93dda"
+        },
+        {
+          "path": "packages/db/src/migrate.ts",
+          "sha256": "ee35ac3d9e1350e828edc37e6a972a4ed04f91d3c079ed53b219ecc1adb09fb8"
+        }
+      ],
+      "checks": [
+        "The production baseline installs the UUIDv7 function with a 48-bit wall-clock timestamp and random payload. The exact native foundation test verified uniqueness, version, variant and valid timestamp bits for 1,000 values across four concurrent database queries.",
+        "Native Linux executed the clean PostgreSQL schema snapshot comparison for 181 tables, both populated legacy upgrade fixtures, and the production runner and foundation suites. The journal, migration SQL and snapshot digests matched the current source. The checks cover preserved financial and historical data, checksum/history mismatches, safe retry, concurrency and migration-gated readiness.",
+        "The reviewed-batch checklist uses the owner-authorized direct-main flow. It requires phase identification, migration evidence, a separate contraction batch after old writers are retired, tested backup/restore proof and retention-aware archival. Existing migration and startup checks remain in the checklist.",
+        "Four exact native test files passed 195 cases in a disposable PostgreSQL network and the resources were removed. The scope covers current migration behavior and is separate from candidate staging or production-equivalent recovery acceptance. The documentation passed formatting and diff checks."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-migration-acceptance",
+      "source_scope_proof": "release-0.6-database-migration-baseline-and-upgrade.json",
+      "source_scope_proof_sha256": "5aa5dfff603efb48630bd8ea6035b21070fb20e810e0c54490a454c232cca702"
     }
   },
   "historical_improvements": [
