@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T23:07:10+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T23:12:44+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1051 | Accepted with unchanged source bindings. |
-| verify | 276 | Existing work may be complete; inspect evidence before building. |
+| done | 1055 | Accepted with unchanged source bindings. |
+| verify | 272 | Existing work may be complete; inspect evidence before building. |
 | partial | 35 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1279,12 +1279,12 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.10.01.06` | verify | Inventory needed | Write helper utilities: create user, create profile, authenticate, create order, create invoice, add wallet funds |
 | `06-security-testing-observability.md#T-06.10.02.01` | verify | Inventory needed | Write migration integration tests: clean database apply, upgrade-path apply, rollback, data preservation |
 | `06-security-testing-observability.md#T-06.10.02.02` | verify | Inventory needed | Write constraint tests: unique indexes, foreign keys, NOT NULL, CHECK constraints, exclusion constraints |
-| `06-security-testing-observability.md#T-06.10.02.03` | verify | Inventory needed | Write transaction tests: atomic wallet debit + invoice settlement, atomic order+contract+invoice creation |
-| `06-security-testing-observability.md#T-06.10.02.04` | verify | Inventory needed | Write locking tests: row-level lock for wallet mutations, optimistic version for concurrent state changes |
+| `06-security-testing-observability.md#T-06.10.02.03` | done | Recorded batch work | Write transaction tests: atomic wallet debit + invoice settlement, atomic order+contract+invoice creation |
+| `06-security-testing-observability.md#T-06.10.02.04` | done | Recorded batch work | Write locking tests: row-level lock for wallet mutations, optimistic version for concurrent state changes |
 | `06-security-testing-observability.md#T-06.10.02.05` | verify | Inventory needed | Write profile-scoped data isolation tests: customer A cannot access customer B's data |
 | `06-security-testing-observability.md#T-06.10.02.06` | verify | Inventory needed | Write audit log tests: every state transition recorded, append-only, no edit/delete via API |
-| `06-security-testing-observability.md#T-06.10.02.07` | verify | Inventory needed | Write outbox tests: transactional outbox write + commit, worker read + idempotent processing + dead letter |
-| `06-security-testing-observability.md#T-06.10.02.08` | verify | Inventory needed | Write idempotency tests: duplicate request returns original result, same idempotency key different payload rejected |
+| `06-security-testing-observability.md#T-06.10.02.07` | done | Recorded batch work | Write outbox tests: transactional outbox write + commit, worker read + idempotent processing + dead letter |
+| `06-security-testing-observability.md#T-06.10.02.08` | done | Recorded batch work | Write idempotency tests: duplicate request returns original result, same idempotency key different payload rejected |
 | `06-security-testing-observability.md#T-06.10.02.09` | verify | Inventory needed | Mandatory concurrency tests: simultaneous wallet payments, duplicate provider callbacks, duplicate bank confirmation, concurrent refund workers, repeated order submission, ownership/role changes during requests, competing state transitions |
 | `06-security-testing-observability.md#T-06.10.02.10` | verify | Inventory needed | Write provider adapter integration tests: fake SMTP, fake SMS.ir, fake payment gateway with all error modes |
 | `06-security-testing-observability.md#T-06.10.03.01` | verify | Inventory needed | Configure Playwright: project structure, environment, auth helpers, seed data, parallel workers with isolated DB schemas |

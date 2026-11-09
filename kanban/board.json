@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T23:07:10+00:00",
-  "source_commit": "e900d5b51e0dde33e1b3b2cfdeb8570269d0a4d9",
+  "updated": "2026-11-09T23:12:44+00:00",
+  "source_commit": "4b30f032b1281dc52bc00afcaf5a03c59e7b4151",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -482965,20 +482965,58 @@
         "story": "06-security-testing-observability.md#spec-7665a6370b00"
       },
       "requirement": "| T-06.10.02.03 | Write transaction tests: atomic wallet debit + invoice settlement, atomic order+contract+invoice creation | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-postgresql-finance-outbox-test-evidence"
+        ],
+        "current_acceptance": {
+          "kind": "verified-source-matching-native-postgresql-tests",
+          "base_commit": "4b30f032b1281dc52bc00afcaf5a03c59e7b4151",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "a45f415770196e8fd7129da867e018ba6fa2d881325da0b32567501ea41cff8e"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "47bc00446b06d70cded63f1ef7acef1b60f0d1923a004d53620df37b43bbda26"
+            },
+            {
+              "path": "apps/api/src/test/order-submission-notifications.ts",
+              "sha256": "22e2e826688124e674463e89847da58026f6b4862de616fc11aef8731c1572e3"
+            },
+            {
+              "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
+              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.integration.test.ts",
+              "sha256": "362e0b62d729883fece53034a143da8c58ec2104a283f72f341714757ebc55c8"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Isolated native PostgreSQL finance run passed all 78 cases, including 17 wallet settlement and 16 compiled customer HTTP cases. A final audit write failure rolls back the already attempted debit, invoice, ledger, audit and idempotency claim. The original key can succeed once after recovery.",
+            "Hosted full-test job 129476154430 passed all 100 electricity-order cases. The compiled HTTP case forces failure and suppression of transactional outbox writes, verifies complete order-side rollback, then commits an order, contract, lines and payable invoice together exactly once."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.10.02.04",
@@ -482991,20 +483029,50 @@
         "story": "06-security-testing-observability.md#spec-7665a6370b00"
       },
       "requirement": "| T-06.10.02.04 | Write locking tests: row-level lock for wallet mutations, optimistic version for concurrent state changes | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-postgresql-finance-outbox-test-evidence"
+        ],
+        "current_acceptance": {
+          "kind": "verified-source-matching-native-postgresql-tests",
+          "base_commit": "4b30f032b1281dc52bc00afcaf5a03c59e7b4151",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
+              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.integration.test.ts",
+              "sha256": "362e0b62d729883fece53034a143da8c58ec2104a283f72f341714757ebc55c8"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
+              "sha256": "c3f64a805d2da578a1d0fc42084baecfcd6f45e7f2584062fece2d9dc2d8109a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Native wallet settlement cases verify both wallet and invoice row locks are held before the debit by checking them from a second PostgreSQL connection using NOWAIT.",
+            "Hosted full-test job 129476154430 passed all five source-matching wallet version cases. Stale and competing updates leave one version advance and one committed balance change."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.10.02.05",
@@ -483069,20 +483137,71 @@
         "story": "06-security-testing-observability.md#spec-7665a6370b00"
       },
       "requirement": "| T-06.10.02.07 | Write outbox tests: transactional outbox write + commit, worker read + idempotent processing + dead letter | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-postgresql-finance-outbox-test-evidence"
+        ],
+        "current_acceptance": {
+          "kind": "verified-source-matching-native-postgresql-tests",
+          "base_commit": "4b30f032b1281dc52bc00afcaf5a03c59e7b4151",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "a45f415770196e8fd7129da867e018ba6fa2d881325da0b32567501ea41cff8e"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "47bc00446b06d70cded63f1ef7acef1b60f0d1923a004d53620df37b43bbda26"
+            },
+            {
+              "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
+              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+            },
+            {
+              "path": "apps/api/src/test/order-submission-notifications.ts",
+              "sha256": "22e2e826688124e674463e89847da58026f6b4862de616fc11aef8731c1572e3"
+            },
+            {
+              "path": "apps/worker/src/notifications/delivery-identity.integration.test.ts",
+              "sha256": "b9a8d13884ef102eda8b11ff4a6f1663f904768f34a3023e1a3223bacd4dc5d2"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-runner.ts",
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-writer.ts",
+              "sha256": "12ee525da161401e0ab04d1adbefea10a69e3522a8fccb880373fefa366c1136"
+            },
+            {
+              "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
+              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+            },
+            {
+              "path": "apps/worker/src/notifications/send-receipt.ts",
+              "sha256": "4c63b2247d0c93d52fed53332769ffab9b1530f473fddd5886b25632af10b421"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "The source-matching hosted electricity order suite verifies outbox publication commits with the order and cannot survive rollback.",
+            "Hosted full-test job 129476154430 passed all 20 delivery identity and 15 durable send-receipt PostgreSQL cases, including terminal channel and provider rejection dead letters and uncertain-send holds.",
+            "The current compiled worker and migrated HTTP fixture passed the selected concurrent dead-letter replay case after metrics changes. Two confirmations and repeat polling produced one accepted controlled-provider delivery. The preceding exact recovery-route suite passed all 53 cases."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.10.02.08",
@@ -483095,20 +483214,62 @@
         "story": "06-security-testing-observability.md#spec-7665a6370b00"
       },
       "requirement": "| T-06.10.02.08 | Write idempotency tests: duplicate request returns original result, same idempotency key different payload rejected | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-postgresql-finance-outbox-test-evidence"
+        ],
+        "current_acceptance": {
+          "kind": "verified-source-matching-native-postgresql-tests",
+          "base_commit": "4b30f032b1281dc52bc00afcaf5a03c59e7b4151",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "a45f415770196e8fd7129da867e018ba6fa2d881325da0b32567501ea41cff8e"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "47bc00446b06d70cded63f1ef7acef1b60f0d1923a004d53620df37b43bbda26"
+            },
+            {
+              "path": "apps/api/src/test/order-submission-notifications.ts",
+              "sha256": "22e2e826688124e674463e89847da58026f6b4862de616fc11aef8731c1572e3"
+            },
+            {
+              "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
+              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
+              "sha256": "03ce3c9d81710e9e96f1a164bb7216e1ef9be3463f58667d52be4655282d974e"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.integration.test.ts",
+              "sha256": "362e0b62d729883fece53034a143da8c58ec2104a283f72f341714757ebc55c8"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "The native finance run passed 78 cases, including 16 wallet concurrency cases. Concurrent or sequential reuse returns the original result without a second debit. A different invoice or changed payment binding with the same key is rejected.",
+            "The source-matching hosted electricity order suite verifies equivalent repeated submission returns the original persisted result. This record does not certify the broader mandatory concurrency matrix."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.10.02.09",
@@ -845238,6 +845399,93 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/backend-test-infrastructure",
       "source_scope_proof": "backend-test-infrastructure-source-proof.json",
       "source_scope_proof_sha256": "cd6cccf3c87d0e351a2b83ad0110a5b2eeed26cea44cabfa668c20cc87d0af59"
+    },
+    "release-0.6-postgresql-finance-outbox-test-evidence": {
+      "batch": "release-0.6-postgresql-finance-outbox-test-evidence",
+      "base_commit": "4b30f032b1281dc52bc00afcaf5a03c59e7b4151",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.10.02.03",
+        "06-security-testing-observability.md#T-06.10.02.04",
+        "06-security-testing-observability.md#T-06.10.02.07",
+        "06-security-testing-observability.md#T-06.10.02.08"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+          "sha256": "a45f415770196e8fd7129da867e018ba6fa2d881325da0b32567501ea41cff8e"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-order.service.ts",
+          "sha256": "47bc00446b06d70cded63f1ef7acef1b60f0d1923a004d53620df37b43bbda26"
+        },
+        {
+          "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
+          "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+        },
+        {
+          "path": "apps/api/src/test/order-submission-notifications.ts",
+          "sha256": "22e2e826688124e674463e89847da58026f6b4862de616fc11aef8731c1572e3"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
+          "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
+          "sha256": "03ce3c9d81710e9e96f1a164bb7216e1ef9be3463f58667d52be4655282d974e"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.integration.test.ts",
+          "sha256": "362e0b62d729883fece53034a143da8c58ec2104a283f72f341714757ebc55c8"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+          "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
+          "sha256": "c3f64a805d2da578a1d0fc42084baecfcd6f45e7f2584062fece2d9dc2d8109a"
+        },
+        {
+          "path": "apps/worker/src/notifications/delivery-identity.integration.test.ts",
+          "sha256": "b9a8d13884ef102eda8b11ff4a6f1663f904768f34a3023e1a3223bacd4dc5d2"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-runner.ts",
+          "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-writer.ts",
+          "sha256": "12ee525da161401e0ab04d1adbefea10a69e3522a8fccb880373fefa366c1136"
+        },
+        {
+          "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
+          "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+        },
+        {
+          "path": "apps/worker/src/notifications/send-receipt.ts",
+          "sha256": "4c63b2247d0c93d52fed53332769ffab9b1530f473fddd5886b25632af10b421"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "Isolated native PostgreSQL finance run passed all 78 cases, including 17 wallet settlement and 16 compiled customer HTTP cases. A final audit write failure rolls back the already attempted debit, invoice, ledger, audit and idempotency claim. The original key can succeed once after recovery.",
+        "Hosted full-test job 129476154430 passed all 100 electricity-order cases. The compiled HTTP case forces failure and suppression of transactional outbox writes, verifies complete order-side rollback, then commits an order, contract, lines and payable invoice together exactly once.",
+        "Native wallet settlement cases verify both wallet and invoice row locks are held before the debit by checking them from a second PostgreSQL connection using NOWAIT.",
+        "Hosted full-test job 129476154430 passed all five source-matching wallet version cases. Stale and competing updates leave one version advance and one committed balance change.",
+        "The source-matching hosted electricity order suite verifies outbox publication commits with the order and cannot survive rollback.",
+        "Hosted full-test job 129476154430 passed all 20 delivery identity and 15 durable send-receipt PostgreSQL cases, including terminal channel and provider rejection dead letters and uncertain-send holds.",
+        "The current compiled worker and migrated HTTP fixture passed the selected concurrent dead-letter replay case after metrics changes. Two confirmations and repeat polling produced one accepted controlled-provider delivery. The preceding exact recovery-route suite passed all 53 cases.",
+        "The native finance run passed 78 cases, including 16 wallet concurrency cases. Concurrent or sequential reuse returns the original result without a second debit. A different invoice or changed payment binding with the same key is rejected.",
+        "The source-matching hosted electricity order suite verifies equivalent repeated submission returns the original persisted result. This record does not certify the broader mandatory concurrency matrix."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/transaction-fixture-reconciliation",
+      "source_scope_proof": "transaction-source-scope.json",
+      "source_scope_proof_sha256": "a1d4ca24956a3bc2892b6fba759815ad733c2247cca73f9d2b962c2dbc63727e"
     }
   },
   "historical_improvements": [
