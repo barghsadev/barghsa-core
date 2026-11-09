@@ -211,6 +211,9 @@ jobs:
         run: pnpm --filter @barghsa/web build
         env:
           BARGHSA_BROWSER_COVERAGE: '1'
+      - name: Build component stories for Playwright
+        if: env.FULL_CI == 'true'
+        run: pnpm --filter @barghsa/ui stories:build
       - name: Verify clean checkout before browser coverage
         if: env.FULL_CI == 'true'
         run: |

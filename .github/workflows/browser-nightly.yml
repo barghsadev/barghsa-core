@@ -37,6 +37,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
+      - name: Build component stories for Playwright
+        run: pnpm --filter @barghsa/ui stories:build
       - name: Install browser runtimes
         run: pnpm --filter @barghsa/web exec playwright install --with-deps chromium firefox webkit
       - name: Verify browser selection and result handling

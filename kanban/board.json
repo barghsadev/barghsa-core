@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T15:21:50+00:00",
+  "updated": "2026-11-09T15:27:32+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -5068,8 +5068,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Nightly Firefox/WebKit/mobile workflow is now configured and local full/focused cross-browser evidence exists; remote scheduled execution is not certified.",
-        "Saving-plan, solar-construction and full commercial-ordering flows remain future implementations. Preserve their unmet acceptance instead of inventing end-to-end passes."
+        "Verify every job in the exact repaired hosted nightly matrix, including the next scheduled outcome. The previous scheduled run started all six jobs and failed before tests because the catalogue metadata was missing.",
+        "Bind current critical registration, MFA, legal onboarding, electricity and wallet, saving, solar construction and admin browser journeys to the accepted release source. Local discovery and targeted catalogue passes do not establish complete hosted journey results."
       ],
       "owner": null,
       "depends_on": [],
@@ -5113,7 +5113,9 @@
           "apps/web/playwright.config.ts",
           ".github/workflows/ci.yml"
         ],
-        "batches": [],
+        "batches": [
+          "release-0.6-browser-story-build-prerequisite"
+        ],
         "current_acceptance": null
       }
     },
@@ -5237,7 +5239,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Nightly outcome and quarantine checks are now wired locally. Production-promotion enforcement remains dependent on future T-05.04.01 and has no executed release-gate evidence."
+        "Verify hosted nightly outcomes and quarantine receipts after the component build prerequisite is fixed.",
+        "Prove the production promotion guard refuses unresolved quarantined critical coverage through the authorized promotion procedure."
       ],
       "owner": null,
       "depends_on": [],
@@ -5287,7 +5290,9 @@
         "changed_paths": [
           ".github/workflows/ci.yml"
         ],
-        "batches": [],
+        "batches": [
+          "release-0.6-browser-story-build-prerequisite"
+        ],
         "current_acceptance": null
       }
     },
@@ -438619,7 +438624,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-runtime-image-scan-gate",
-          "release-0.6-combined-runtime-image-candidate"
+          "release-0.6-combined-runtime-image-candidate",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "current_acceptance": {
           "status": "done",
@@ -438627,7 +438633,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -439010,7 +439016,8 @@
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "current_acceptance": {
           "status": "done",
@@ -439018,7 +439025,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -439554,7 +439561,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-runtime-image-scan-gate",
-          "release-0.6-combined-runtime-image-candidate"
+          "release-0.6-combined-runtime-image-candidate",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "current_acceptance": {
           "status": "done",
@@ -439562,7 +439570,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -439925,7 +439933,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-runtime-image-scan-gate",
-          "release-0.6-combined-runtime-image-candidate"
+          "release-0.6-combined-runtime-image-candidate",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "current_acceptance": {
           "status": "done",
@@ -439933,7 +439942,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -440296,7 +440305,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-runtime-image-scan-gate",
-          "release-0.6-combined-runtime-image-candidate"
+          "release-0.6-combined-runtime-image-candidate",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "current_acceptance": {
           "status": "done",
@@ -440304,7 +440314,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -469642,7 +469652,8 @@
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-remove-runtime-package-managers",
           "release-0.6-alpine-node-runtime-candidate",
-          "release-0.6-combined-runtime-image-candidate"
+          "release-0.6-combined-runtime-image-candidate",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -469650,7 +469661,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
             },
             {
               "path": "Dockerfile.web",
@@ -469868,7 +469879,8 @@
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-remove-runtime-package-managers",
           "release-0.6-alpine-node-runtime-candidate",
-          "release-0.6-combined-runtime-image-candidate"
+          "release-0.6-combined-runtime-image-candidate",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -469876,7 +469888,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
             },
             {
               "path": "Dockerfile.web",
@@ -471206,7 +471218,8 @@
         "batches": [
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-runtime-image-scan-gate",
-          "release-0.6-combined-runtime-image-candidate"
+          "release-0.6-combined-runtime-image-candidate",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -471214,7 +471227,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -472514,7 +472527,8 @@
           "release-0.6-preflight-reconciliation",
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-runtime-sbom-provenance"
+          "release-0.6-runtime-sbom-provenance",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -472526,7 +472540,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
             },
             {
               "path": ".gitignore",
@@ -472591,7 +472605,8 @@
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-preflight-reconciliation",
           "release-0.6-runtime-image-scan-gate",
-          "release-0.6-combined-runtime-image-candidate"
+          "release-0.6-combined-runtime-image-candidate",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -472603,7 +472618,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
             },
             {
               "path": ".gitignore",
@@ -472721,7 +472736,8 @@
         "batches": [
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-runtime-image-scan-gate",
-          "release-0.6-combined-runtime-image-candidate"
+          "release-0.6-combined-runtime-image-candidate",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -472729,7 +472745,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -472822,7 +472838,8 @@
         "batches": [
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-runtime-image-scan-gate",
-          "release-0.6-combined-runtime-image-candidate"
+          "release-0.6-combined-runtime-image-candidate",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -472830,7 +472847,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -472885,7 +472902,8 @@
           "release-0.6-postgres-image-candidate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-runtime-sbom-provenance",
-          "release-0.6-postgres-go-license-notices"
+          "release-0.6-postgres-go-license-notices",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "current_acceptance": {
           "kind": "pinned_trivy_and_exact_image_inventory",
@@ -472893,7 +472911,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
             },
             {
               "path": "Dockerfile.base",
@@ -472957,7 +472975,8 @@
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-preflight-reconciliation",
           "release-0.6-runtime-image-scan-gate",
-          "release-0.6-combined-runtime-image-candidate"
+          "release-0.6-combined-runtime-image-candidate",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -472969,7 +472988,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
             },
             {
               "path": ".gitignore",
@@ -473074,7 +473093,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-shipped-component-license-gate"
+          "release-0.6-shipped-component-license-gate",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "current_acceptance": {
           "kind": "current-supply-chain-triage-policy",
@@ -473086,7 +473106,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -473449,7 +473469,8 @@
           "release-0.6-postgres-image-candidate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-runtime-sbom-provenance",
-          "release-0.6-postgres-go-license-notices"
+          "release-0.6-postgres-go-license-notices",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "current_acceptance": {
           "kind": "actual_hosted_image_blocking_evidence",
@@ -473473,7 +473494,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -475516,7 +475537,8 @@
         "batches": [
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-runtime-image-scan-gate",
-          "release-0.6-combined-runtime-image-candidate"
+          "release-0.6-combined-runtime-image-candidate",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -475524,7 +475546,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -475575,7 +475597,8 @@
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-runtime-sbom-provenance"
+          "release-0.6-runtime-sbom-provenance",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -475583,7 +475606,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -476202,7 +476225,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The hosted preflight at 133576f3 passed 5,501 affected tests in 419 files and all four image scans with SBOMs. Run and verify the required full unit, PostgreSQL, browser, accessibility and combined coverage gates on the final release candidate."
+        "The full browser workflow now builds the catalogue before clean-checkout Playwright discovery. Run and verify the required full unit, real PostgreSQL, browser, accessibility and combined coverage gates on the final release candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -476211,7 +476234,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-runtime-sbom-provenance",
-          "release-0.6-private-api-monitoring"
+          "release-0.6-private-api-monitoring",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -523896,7 +523920,8 @@
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-browser-font-notices",
           "release-0.6-runtime-image-scan-gate",
-          "release-0.6-combined-runtime-image-candidate"
+          "release-0.6-combined-runtime-image-candidate",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -523904,7 +523929,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
             },
             {
               "path": ".size-limit.json",
@@ -524734,7 +524759,8 @@
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-browser-font-notices",
           "release-0.6-runtime-image-scan-gate",
-          "release-0.6-combined-runtime-image-candidate"
+          "release-0.6-combined-runtime-image-candidate",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -524742,7 +524768,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
             },
             {
               "path": ".size-limit.json",
@@ -526081,7 +526107,8 @@
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-browser-font-notices",
           "release-0.6-runtime-image-scan-gate",
-          "release-0.6-combined-runtime-image-candidate"
+          "release-0.6-combined-runtime-image-candidate",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -526089,7 +526116,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
             },
             {
               "path": ".size-limit.json",
@@ -526881,7 +526908,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-runtime-image-scan-gate",
-          "release-0.6-combined-runtime-image-candidate"
+          "release-0.6-combined-runtime-image-candidate",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "current_acceptance": {
           "kind": "active_github_required_check",
@@ -526896,7 +526924,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -726321,7 +726349,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
             },
             {
               "path": "apps/api/openapi.json",
@@ -730192,7 +730220,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-web-fixture-typecheck-and-license-readback",
           "release-0.6-solar-replay-lock-order",
-          "release-0.6-native-integration-acceptance"
+          "release-0.6-native-integration-acceptance",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -730245,7 +730274,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
             },
             {
               "path": "apps/api/openapi.json",
@@ -733983,7 +734012,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-web-fixture-typecheck-and-license-readback",
           "release-0.6-solar-replay-lock-order",
-          "release-0.6-native-integration-acceptance"
+          "release-0.6-native-integration-acceptance",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -735722,7 +735752,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80abce35dba83544e23304be4d06effcd17051cad951d376d6639100b0749132"
+              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
             },
             {
               "path": ".size-limit.json",
@@ -737793,7 +737823,8 @@
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-private-api-monitoring",
-          "release-0.6-solar-replay-lock-order"
+          "release-0.6-solar-replay-lock-order",
+          "release-0.6-browser-story-build-prerequisite"
         ]
       }
     },
@@ -737910,7 +737941,8 @@
           "release-0.6-alpine-clamav-candidate",
           "release-0.6-postgres-go-license-notices",
           "release-0.6-staging-postgres-monitoring-readback",
-          "release-0.6-native-integration-acceptance"
+          "release-0.6-native-integration-acceptance",
+          "release-0.6-browser-story-build-prerequisite"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -825407,6 +825439,84 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "native-five-concurrency-criteria-proof.json",
       "source_scope_proof_sha256": "1e562738cd6f6f230fe18c924c791ebe16c3bf48e39d25f53ad29efe0ebea612"
+    },
+    "release-0.6-browser-story-build-prerequisite": {
+      "batch": "release-0.6-browser-story-build-prerequisite",
+      "base_commit": "5656a6d15bf234fb802c7d6e56430053824bf17d",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "release-readiness#R-05.02",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.04.02.04",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.01",
+        "06-security-testing-observability.md#T-06.07.02.02",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.07.02.05",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "06-security-testing-observability.md#T-06.11.02.03",
+        "06-security-testing-observability.md#T-06.11.02.04",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "158f8e541c261191408c5e0a8c078ddad3eaa677ba70b1f7e7a8d4485861458e"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+        },
+        {
+          "path": "docs/flaky-test-quarantine.md",
+          "sha256": "26584c82ae3289f85b45ddaaa16bd8fa92ee713ee34c0beb7d153b90ce375dba"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "sha256": "983d68c353e36a19275c5a6184c63f65ec551bb6ccec8f32d419edeeea84a1af"
+        },
+        {
+          "path": "packages/ui/.ladle/config.mjs",
+          "sha256": "2bdbd6a2a75a876ba3b7819dbee5f1432a672ab12003db66c371e7587acc630f"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/e2e/ladle-components.spec.ts",
+          "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "GitHub scheduled run 42596392131 failed across all six jobs. Three inspected job logs showed the same missing packages/ui/story-build/meta.json discovery error. Removing the local generated catalogue reproduced it.",
+        "The exact existing package command built the catalogue under Node 24 in a fresh Linux container. A clean catalogue restored discovery of 11,624 tests across 325 files. All eight selected keyboard and accessibility cases passed in Firefox, WebKit, Android Chromium and iPhone WebKit using that generated output.",
+        "The only workflow changes build the catalogue in the nightly and full main-browser paths. The required integrity check, fast CI path, release floors, browser assertions, job matrix, quarantine rules and result checks are unchanged. Workflow syntax, four browser tooling tests and eight quarantine tests passed.",
+        "Hosted matrix completion and full release coverage remain separate from the local prerequisite and browser smoke evidence."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "browser-nightly-story-prerequisite-proof.json",
+      "source_scope_proof_sha256": "59332ca6c6f07a648f4238ac24f267e629e3629fb04ece8dd841da734ce52e37"
     }
   },
   "historical_improvements": [
