@@ -4,7 +4,7 @@ import { DEFAULT_SERVICE_WORKFLOWS, SERVICE_WORKFLOW_CONFIG_KEY } from '@barghsa
 import { resolve } from 'node:path';
 import { Pool } from 'pg';
 import { createServer, type ServerResponse } from 'node:http';
-import { expect, it } from 'vitest';
+import { afterAll, beforeAll, expect, it } from 'vitest';
 
 const intervals = [
   'SERVICE_BREACH_SCAN_MS',
@@ -20,7 +20,35 @@ const intervals = [
   'INVITATION_EXPIRY_SCAN_MS',
 ];
 
-/** Own a fresh migrated database and the actual compiled worker process. */
+const template = `worker_template_${randomUUID().replaceAll('-', '')}`;
+
+beforeAll(async () => {
+  const management = new Pool({ connectionString: process.env.TEST_DATABASE_URL! });
+  try {
+    await management.query(`CREATE DATABASE "${template}"`);
+    const url = new URL(process.env.TEST_DATABASE_URL!);
+    url.pathname = `/${template}`;
+    execFileSync(process.execPath, [resolve(__dirname, '../../../packages/db/dist/migrate.js')], {
+      env: { ...process.env, DATABASE_URL: url.toString(), PGDIRECT_URL: url.toString() },
+      stdio: 'pipe',
+    });
+    // Clone a baseline that no individual test can connect to and mutate.
+    await management.query(`ALTER DATABASE "${template}" ALLOW_CONNECTIONS false`);
+  } finally {
+    await management.end();
+  }
+}, 120_000);
+
+afterAll(async () => {
+  const management = new Pool({ connectionString: process.env.TEST_DATABASE_URL! });
+  try {
+    await management.query(`DROP DATABASE IF EXISTS "${template}"`);
+  } finally {
+    await management.end();
+  }
+});
+
+/** Own a fresh clone and the actual compiled worker process. */
 async function startWorker(overrides: Record<string, string> = {}) {
   const database = `test_worker_${randomUUID().replaceAll('-', '')}`;
   const management = new Pool({ connectionString: process.env.TEST_DATABASE_URL! });
@@ -66,7 +94,7 @@ async function startWorker(overrides: Record<string, string> = {}) {
     }
   }
   try {
-    await management.query(`CREATE DATABASE "${database}"`);
+    await management.query(`CREATE DATABASE "${database}" TEMPLATE "${template}"`);
     created = true;
     const url = new URL(process.env.TEST_DATABASE_URL!);
     url.pathname = `/${database}`;
@@ -93,10 +121,6 @@ async function startWorker(overrides: Record<string, string> = {}) {
       ...Object.fromEntries(intervals.map((key) => [key, '1000'])),
       ...overrides,
     };
-    execFileSync(process.execPath, [resolve(__dirname, '../../../packages/db/dist/migrate.js')], {
-      env,
-      stdio: 'pipe',
-    });
     pool = new Pool({
       connectionString: url.toString(),
       application_name: 'worker-process-fixture',

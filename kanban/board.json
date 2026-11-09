@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T18:57:06+00:00",
+  "updated": "2026-11-09T19:04:21+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -9385,12 +9385,10 @@
         "story": "01-platform-infrastructure.md#spec-57b9aa15b310"
       },
       "requirement": "- **T-03.02.02:** Create `.env.example` with all required development variables\n  - **Notes:** Required vars: `DATABASE_URL=postgresql://barghsa:password@localhost:5432/barghsa`, `REDIS_URL=redis://localhost:6379/0`, `MINIO_ENDPOINT=localhost`, `MINIO_PORT=9000`, `MINIO_ACCESS_KEY`, `MINIO_SECRET_KEY`, `MINIO_BUCKET`, `MINIO_USE_SSL=false` (dev), `SESSION_SECRET`, `CSRF_SECRET`, `NODE_ENV=development`. Optional: `ADMIN_BOOTSTRAP_SECRET`, `ADMIN_BOOTSTRAP_EMAIL`, `ADMIN_BOOTSTRAP_PASSWORD`. Dev-only: `OTP_CONSOLE=true` to print OTPs to console. Document each variable with a comment.\n  - **Dependencies:** T-03.02.01\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -9431,8 +9429,51 @@
           ".env.example",
           "apps/api/src/auth/otp.service.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-development-env-and-watcher-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-development-configuration-and-behavior",
+          "base_commit": "f150b822fa0eeda5d3c1b6b9c9ad4910dec6dfc2",
+          "source_evidence": [
+            {
+              "path": ".env.example",
+              "sha256": "596f78ae3d2a24f7834fcbb46e315011011ccc47b087e25b58e14933e9e0b239"
+            },
+            {
+              "path": "docker-compose.yml",
+              "sha256": "e1988b13aa6671f943136b593b44e1b828d689e8db5e5359a41302c577baf462"
+            },
+            {
+              "path": "README.md",
+              "sha256": "ea3994d7966764d9cf70d693eb3a69aded9850e39beddbeaf745cfc90022bcc3"
+            },
+            {
+              "path": "package.json",
+              "sha256": "0d38ca16dff0d91baf910710ab6f0e82f44fb03b09a2d42796e34de9cfd6b5ee"
+            },
+            {
+              "path": "nodemon.json",
+              "sha256": "51f82a2278fda20f28060049944afacafacefb45a17830f8c1b2d2f36fee32b8"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.spec.ts",
+              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+            }
+          ],
+          "checks": [
+            "Compose validates with the tracked example. The installed dotenv CLI resolves the template from a clean shell, aligns PostgreSQL, Redis and MinIO/S3 settings, leaves authentication secrets empty for explicit local provisioning, and preserves a supplied shell override.",
+            "Thirty-three current OTP unit cases passed. Registration, login and resend keep the encrypted outbox and suppress OTP output in production, staging and tests even when the flag is true. Development printing requires the explicit flag."
+          ]
+        }
       }
     },
     {
@@ -9532,12 +9573,10 @@
         "story": "01-platform-infrastructure.md#spec-57b9aa15b310"
       },
       "requirement": "- **T-03.02.04:** Configure file-watch with proper polling for Docker-for-Mac compatibility\n  - **Notes:** Turborepo's `daemon` polling, or use `CHOKIDAR_USEPOLLING=true` for file watchers inside Docker bind mounts. Document that macOS users may need polling for reliable hot reload.\n  - **Dependencies:** T-03.02.03\n  - **Complexity:** S\n  - **UI/UX:** N/A\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -9578,8 +9617,46 @@
           "package.json",
           "apps/web/vite.config.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-development-env-and-watcher-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-development-configuration-and-behavior",
+          "base_commit": "f150b822fa0eeda5d3c1b6b9c9ad4910dec6dfc2",
+          "source_evidence": [
+            {
+              "path": "README.md",
+              "sha256": "ea3994d7966764d9cf70d693eb3a69aded9850e39beddbeaf745cfc90022bcc3"
+            },
+            {
+              "path": "package.json",
+              "sha256": "0d38ca16dff0d91baf910710ab6f0e82f44fb03b09a2d42796e34de9cfd6b5ee"
+            },
+            {
+              "path": "nodemon.json",
+              "sha256": "51f82a2278fda20f28060049944afacafacefb45a17830f8c1b2d2f36fee32b8"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "patches/nodemon@3.1.14.patch",
+              "sha256": "b2939beef73b52c91982aea76a7e7742fe6341b2780bca270c50d761a3dba87f"
+            },
+            {
+              "path": "scripts/nodemon-watch.test.mjs",
+              "sha256": "6ceda076bdaa7214b21082186d84a0aa5530b96273bcda538213d32a5de8f28e"
+            },
+            {
+              "path": "apps/web/vite.config.ts",
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
+            }
+          ],
+          "checks": [
+            "Both existing watcher cases passed. Native and polling modes detect nested source additions and source/environment edits while ignoring generated output. The documented pnpm dev:docker entrypoint enables Nodemon polling and the Vite bind-mount polling flag."
+          ]
+        }
       }
     },
     {
@@ -9695,12 +9772,10 @@
         "story": "01-platform-infrastructure.md#spec-fa9c8259e872"
       },
       "requirement": "- **T-03.03.02:** Implement graceful `SIGTERM` handler for NestJS API and worker\n  - **Notes:** Use NestJS `@nestjs/platform-express` shutdown hooks. `app.enableShutdownHooks()`. Register handler: signal → start grace period (30s). Stop accepting requests (close HTTP server). For worker: stop job leasing, await current job with timeout. Close all connections. Use `httpServer.close()` and await `pool.end()`. If grace period expires, `process.exit(1)`.\n  - **Dependencies:** T-03.03.01\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -9750,8 +9825,84 @@
           "packages/shared/src/storage/runtime-config.ts",
           "packages/shared/src/storage/runtime-config.test.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-api-worker-shutdown-and-fixture-reuse"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-compiled-api-and-worker-process-verification",
+          "base_commit": "f150b822fa0eeda5d3c1b6b9c9ad4910dec6dfc2",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/app.factory.ts",
+              "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
+            },
+            {
+              "path": "apps/api/src/common/shutdown.service.ts",
+              "sha256": "6af804062fc2fa6b2b8533c06802488cdca37eda02cbdeb91329a306a1475492"
+            },
+            {
+              "path": "apps/api/src/common/shutdown.service.spec.ts",
+              "sha256": "80cdf1ff3e7051ffc7d59b92b7229fde8e2eb22fbd549b20bab4bb55617438b7"
+            },
+            {
+              "path": "apps/api/src/common/shutdown-http.integration.test.ts",
+              "sha256": "872e63df6df29666eac2b2a9d377a0279b091d1929ea43dda63407d8c765b08e"
+            },
+            {
+              "path": "apps/api/scripts/http-test-server.cjs",
+              "sha256": "4766868846c6ee2b43307d4434ba305b48a802c9d82d68209fcf52c7e5902f80"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "b11b691680a16cfd244d5430449a7c91c918a09f5f3e5b5c09ed31299d80359c"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+            },
+            {
+              "path": "apps/worker/src/jobs/poller-group.ts",
+              "sha256": "d22697ce850bd8adcb7b0496781a84743d26df556126fb9032cb159d84bb5d8b"
+            },
+            {
+              "path": "apps/worker/vitest.config.ts",
+              "sha256": "40ac4ece12f113e26e9713ac3e0e8e3bad09b14b5b11f4f50f311a64f87d939a"
+            },
+            {
+              "path": "apps/worker/scripts/build-test-worker.mjs",
+              "sha256": "48b10432dc3cbe015ba1af569dc279a6c28c1ec2b7959e7d82ff88e2f750d289"
+            },
+            {
+              "path": "apps/worker/src/main-process.integration.test.ts",
+              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
+            },
+            {
+              "path": "packages/db/src/index.ts",
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
+            },
+            {
+              "path": "packages/db/src/migrate.ts",
+              "sha256": "ee35ac3d9e1350e828edc37e6a972a4ed04f91d3c079ed53b219ecc1adb09fb8"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/_journal.json",
+              "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+            },
+            {
+              "path": "packages/shared/src/storage/runtime-config.ts",
+              "sha256": "7e35bb12545ebe9f932fa671d47c4f0d855ed9ebd6a2cd20008e6b659fb663db"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Both compiled NestJS HTTP shutdown cases passed with real PostgreSQL. The listener refused new work while an accepted response drained and the process exited 0. An unfinished request crossed the configured deadline and exited 1. Both shutdown unit cases passed, including independently closing shared resources when one close fails.",
+            "All 16 compiled worker cases passed with PostgreSQL. This includes SIGTERM/SIGINT drain, health and metrics, in-flight work, deadline exit 1, queued work preserved, no duplicate provider request after graceful/forced/bookkeeping-failure shutdown, reconciliation, service workflow, contract and notification callers.",
+            "The compiled migration now runs once per process suite. The uniquely named, disconnected template is cloned to an independently owned database per test. Only fixture setup changed. The bytes of every test body are identical, as are all runtime sources. The initial disk-backed run exceeded its test limit during the repeated migrations; the new full disk-backed run passed."
+          ]
+        }
       }
     },
     {
@@ -53698,7 +53849,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-api-worker-shutdown-and-fixture-reuse"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -53778,7 +53930,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "7717d790bdd2b4dcd4b391b2ee3950ec5bbc017f4bf4817b24b3cc752c29011e"
+              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -54457,6 +54609,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-api-worker-shutdown-and-fixture-reuse",
+              "base_commit": "f150b822fa0eeda5d3c1b6b9c9ad4910dec6dfc2",
+              "paths": [
+                "apps/worker/src/main-process.integration.test.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown/release-0.6-api-worker-shutdown-and-fixture-reuse.json",
+              "scope": "Fixture-only renewal. All sixteen compiled worker process cases passed with identical test bodies and independent databases cloned from the same production migration chain. Existing runtime, live provider and release receipt evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -69575,7 +69736,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-native-integration-acceptance"
+          "release-0.6-native-integration-acceptance",
+          "release-0.6-api-worker-shutdown-and-fixture-reuse"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -69595,7 +69757,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "7717d790bdd2b4dcd4b391b2ee3950ec5bbc017f4bf4817b24b3cc752c29011e"
+              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
             },
             {
               "path": "apps/worker/src/notifications/outbox-lease.ts",
@@ -70621,6 +70783,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-api-worker-shutdown-and-fixture-reuse",
+              "base_commit": "f150b822fa0eeda5d3c1b6b9c9ad4910dec6dfc2",
+              "paths": [
+                "apps/worker/src/main-process.integration.test.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown/release-0.6-api-worker-shutdown-and-fixture-reuse.json",
+              "scope": "Fixture-only renewal. All sixteen compiled worker process cases passed with identical test bodies and independent databases cloned from the same production migration chain. Existing runtime, live provider and release receipt evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -70832,7 +71003,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-private-api-monitoring",
           "release-0.6-solar-replay-lock-order",
-          "release-0.6-native-integration-acceptance"
+          "release-0.6-native-integration-acceptance",
+          "release-0.6-api-worker-shutdown-and-fixture-reuse"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -71560,7 +71732,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "7717d790bdd2b4dcd4b391b2ee3950ec5bbc017f4bf4817b24b3cc752c29011e"
+              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -73051,6 +73223,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-api-worker-shutdown-and-fixture-reuse",
+              "base_commit": "f150b822fa0eeda5d3c1b6b9c9ad4910dec6dfc2",
+              "paths": [
+                "apps/worker/src/main-process.integration.test.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown/release-0.6-api-worker-shutdown-and-fixture-reuse.json",
+              "scope": "Fixture-only renewal. All sixteen compiled worker process cases passed with identical test bodies and independent databases cloned from the same production migration chain. Existing runtime, live provider and release receipt evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -74631,7 +74812,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-native-integration-acceptance"
+          "release-0.6-native-integration-acceptance",
+          "release-0.6-api-worker-shutdown-and-fixture-reuse"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -74679,7 +74861,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "7717d790bdd2b4dcd4b391b2ee3950ec5bbc017f4bf4817b24b3cc752c29011e"
+              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
@@ -75695,6 +75877,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-api-worker-shutdown-and-fixture-reuse",
+              "base_commit": "f150b822fa0eeda5d3c1b6b9c9ad4910dec6dfc2",
+              "paths": [
+                "apps/worker/src/main-process.integration.test.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown/release-0.6-api-worker-shutdown-and-fixture-reuse.json",
+              "scope": "Fixture-only renewal. All sixteen compiled worker process cases passed with identical test bodies and independent databases cloned from the same production migration chain. Existing runtime, live provider and release receipt evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -91151,7 +91342,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-protected-staff-browser-closure",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.6-api-worker-shutdown-and-fixture-reuse"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -91247,7 +91439,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "7717d790bdd2b4dcd4b391b2ee3950ec5bbc017f4bf4817b24b3cc752c29011e"
+              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -91506,6 +91698,15 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-api-worker-shutdown-and-fixture-reuse",
+              "base_commit": "f150b822fa0eeda5d3c1b6b9c9ad4910dec6dfc2",
+              "paths": [
+                "apps/worker/src/main-process.integration.test.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown/release-0.6-api-worker-shutdown-and-fixture-reuse.json",
+              "scope": "Fixture-only renewal. All sixteen compiled worker process cases passed with identical test bodies and independent databases cloned from the same production migration chain. Existing runtime, live provider and release receipt evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -98119,7 +98320,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-api-worker-shutdown-and-fixture-reuse"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -98603,7 +98805,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "7717d790bdd2b4dcd4b391b2ee3950ec5bbc017f4bf4817b24b3cc752c29011e"
+              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -98930,6 +99132,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-api-worker-shutdown-and-fixture-reuse",
+              "base_commit": "f150b822fa0eeda5d3c1b6b9c9ad4910dec6dfc2",
+              "paths": [
+                "apps/worker/src/main-process.integration.test.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown/release-0.6-api-worker-shutdown-and-fixture-reuse.json",
+              "scope": "Fixture-only renewal. All sixteen compiled worker process cases passed with identical test bodies and independent databases cloned from the same production migration chain. Existing runtime, live provider and release receipt evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -437649,7 +437860,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-protected-staff-browser-closure",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.6-api-worker-shutdown-and-fixture-reuse"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -437745,7 +437957,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "7717d790bdd2b4dcd4b391b2ee3950ec5bbc017f4bf4817b24b3cc752c29011e"
+              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -438002,6 +438214,15 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-api-worker-shutdown-and-fixture-reuse",
+              "base_commit": "f150b822fa0eeda5d3c1b6b9c9ad4910dec6dfc2",
+              "paths": [
+                "apps/worker/src/main-process.integration.test.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown/release-0.6-api-worker-shutdown-and-fixture-reuse.json",
+              "scope": "Fixture-only renewal. All sixteen compiled worker process cases passed with identical test bodies and independent databases cloned from the same production migration chain. Existing runtime, live provider and release receipt evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -438086,7 +438307,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-protected-staff-browser-closure",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.6-api-worker-shutdown-and-fixture-reuse"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -438182,7 +438404,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "7717d790bdd2b4dcd4b391b2ee3950ec5bbc017f4bf4817b24b3cc752c29011e"
+              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -438439,6 +438661,15 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-api-worker-shutdown-and-fixture-reuse",
+              "base_commit": "f150b822fa0eeda5d3c1b6b9c9ad4910dec6dfc2",
+              "paths": [
+                "apps/worker/src/main-process.integration.test.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown/release-0.6-api-worker-shutdown-and-fixture-reuse.json",
+              "scope": "Fixture-only renewal. All sixteen compiled worker process cases passed with identical test bodies and independent databases cloned from the same production migration chain. Existing runtime, live provider and release receipt evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -438522,7 +438753,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-protected-staff-browser-closure",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.6-api-worker-shutdown-and-fixture-reuse"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -438618,7 +438850,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "7717d790bdd2b4dcd4b391b2ee3950ec5bbc017f4bf4817b24b3cc752c29011e"
+              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -438877,6 +439109,15 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-api-worker-shutdown-and-fixture-reuse",
+              "base_commit": "f150b822fa0eeda5d3c1b6b9c9ad4910dec6dfc2",
+              "paths": [
+                "apps/worker/src/main-process.integration.test.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown/release-0.6-api-worker-shutdown-and-fixture-reuse.json",
+              "scope": "Fixture-only renewal. All sixteen compiled worker process cases passed with identical test bodies and independent databases cloned from the same production migration chain. Existing runtime, live provider and release receipt evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -438958,7 +439199,8 @@
           "release-0.5-protected-staff-browser-closure",
           "release-0.5-dependency-gate-closure",
           "release-0.5-route-census-closure",
-          "release-0.6-private-api-monitoring"
+          "release-0.6-private-api-monitoring",
+          "release-0.6-api-worker-shutdown-and-fixture-reuse"
         ],
         "current_acceptance": {
           "status": "done",
@@ -439054,7 +439296,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "7717d790bdd2b4dcd4b391b2ee3950ec5bbc017f4bf4817b24b3cc752c29011e"
+              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -439375,6 +439617,15 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-api-worker-shutdown-and-fixture-reuse",
+              "base_commit": "f150b822fa0eeda5d3c1b6b9c9ad4910dec6dfc2",
+              "paths": [
+                "apps/worker/src/main-process.integration.test.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown/release-0.6-api-worker-shutdown-and-fixture-reuse.json",
+              "scope": "Fixture-only renewal. All sixteen compiled worker process cases passed with identical test bodies and independent databases cloned from the same production migration chain. Existing runtime, live provider and release receipt evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -439478,7 +439729,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-protected-staff-browser-closure",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.6-api-worker-shutdown-and-fixture-reuse"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -439602,7 +439854,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "7717d790bdd2b4dcd4b391b2ee3950ec5bbc017f4bf4817b24b3cc752c29011e"
+              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -439920,6 +440172,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-api-worker-shutdown-and-fixture-reuse",
+              "base_commit": "f150b822fa0eeda5d3c1b6b9c9ad4910dec6dfc2",
+              "paths": [
+                "apps/worker/src/main-process.integration.test.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown/release-0.6-api-worker-shutdown-and-fixture-reuse.json",
+              "scope": "Fixture-only renewal. All sixteen compiled worker process cases passed with identical test bodies and independent databases cloned from the same production migration chain. Existing runtime, live provider and release receipt evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -715454,7 +715715,8 @@
           "release-0.6-alpine-node-runtime-candidate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-packaged-production-seed"
+          "release-0.6-packaged-production-seed",
+          "release-0.6-api-worker-shutdown-and-fixture-reuse"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -715586,7 +715848,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "7717d790bdd2b4dcd4b391b2ee3950ec5bbc017f4bf4817b24b3cc752c29011e"
+              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -715801,6 +716063,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-api-worker-shutdown-and-fixture-reuse",
+              "base_commit": "f150b822fa0eeda5d3c1b6b9c9ad4910dec6dfc2",
+              "paths": [
+                "apps/worker/src/main-process.integration.test.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown/release-0.6-api-worker-shutdown-and-fixture-reuse.json",
+              "scope": "Fixture-only renewal. All sixteen compiled worker process cases passed with identical test bodies and independent databases cloned from the same production migration chain. Existing runtime, live provider and release receipt evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -716151,7 +716422,8 @@
           "release-0.6-alpine-node-runtime-candidate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-packaged-production-seed"
+          "release-0.6-packaged-production-seed",
+          "release-0.6-api-worker-shutdown-and-fixture-reuse"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -716283,7 +716555,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "7717d790bdd2b4dcd4b391b2ee3950ec5bbc017f4bf4817b24b3cc752c29011e"
+              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -716498,6 +716770,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-api-worker-shutdown-and-fixture-reuse",
+              "base_commit": "f150b822fa0eeda5d3c1b6b9c9ad4910dec6dfc2",
+              "paths": [
+                "apps/worker/src/main-process.integration.test.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown/release-0.6-api-worker-shutdown-and-fixture-reuse.json",
+              "scope": "Fixture-only renewal. All sixteen compiled worker process cases passed with identical test bodies and independent databases cloned from the same production migration chain. Existing runtime, live provider and release receipt evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -730655,7 +730936,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "7717d790bdd2b4dcd4b391b2ee3950ec5bbc017f4bf4817b24b3cc752c29011e"
+              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -732308,6 +732589,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-api-worker-shutdown-and-fixture-reuse",
+              "base_commit": "f150b822fa0eeda5d3c1b6b9c9ad4910dec6dfc2",
+              "paths": [
+                "apps/worker/src/main-process.integration.test.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown/release-0.6-api-worker-shutdown-and-fixture-reuse.json",
+              "scope": "Fixture-only renewal. All sixteen compiled worker process cases passed with identical test bodies and independent databases cloned from the same production migration chain. Existing runtime, live provider and release receipt evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -732579,7 +732869,8 @@
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-production-image-recipes-and-distribution",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-proxy-trust-and-request-limits"
+          "release-0.6-proxy-trust-and-request-limits",
+          "release-0.6-api-worker-shutdown-and-fixture-reuse"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -734548,7 +734839,7 @@
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
-              "sha256": "7717d790bdd2b4dcd4b391b2ee3950ec5bbc017f4bf4817b24b3cc752c29011e"
+              "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -736091,6 +736382,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-api-worker-shutdown-and-fixture-reuse",
+              "base_commit": "f150b822fa0eeda5d3c1b6b9c9ad4910dec6dfc2",
+              "paths": [
+                "apps/worker/src/main-process.integration.test.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown/release-0.6-api-worker-shutdown-and-fixture-reuse.json",
+              "scope": "Fixture-only renewal. All sixteen compiled worker process cases passed with identical test bodies and independent databases cloned from the same production migration chain. Existing runtime, live provider and release receipt evidence retains its original scope."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -736380,7 +736680,8 @@
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-production-image-recipes-and-distribution",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-proxy-trust-and-request-limits"
+          "release-0.6-proxy-trust-and-request-limits",
+          "release-0.6-api-worker-shutdown-and-fixture-reuse"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -740360,7 +740661,9 @@
           "release-0.6-database-migration-baseline-and-upgrade",
           "release-0.6-native-seed-and-bootstrap-acceptance",
           "release-0.6-current-ci-definition-contract-and-coverage-controls",
-          "release-0.6-static-server-shutdown-acceptance"
+          "release-0.6-static-server-shutdown-acceptance",
+          "release-0.6-development-env-and-watcher-acceptance",
+          "release-0.6-api-worker-shutdown-and-fixture-reuse"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -830560,6 +830863,166 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/static-server-shutdown",
       "source_scope_proof": "release-0.6-static-server-shutdown-acceptance.json",
       "source_scope_proof_sha256": "5e253bbd4845b932cf5b61480f14107f3ceec8d13984b53200d2461a2aac7d0a"
+    },
+    "release-0.6-development-env-and-watcher-acceptance": {
+      "batch": "release-0.6-development-env-and-watcher-acceptance",
+      "base_commit": "f150b822fa0eeda5d3c1b6b9c9ad4910dec6dfc2",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-03.02.02",
+        "01-platform-infrastructure.md#T-03.02.04",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".env.example",
+          "sha256": "596f78ae3d2a24f7834fcbb46e315011011ccc47b087e25b58e14933e9e0b239"
+        },
+        {
+          "path": "README.md",
+          "sha256": "ea3994d7966764d9cf70d693eb3a69aded9850e39beddbeaf745cfc90022bcc3"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.spec.ts",
+          "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "445421877b6b3a44a940a4f4f34313bd40b71fa5a187b9b12bae8704ad177e31"
+        },
+        {
+          "path": "apps/web/vite.config.ts",
+          "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
+        },
+        {
+          "path": "docker-compose.yml",
+          "sha256": "e1988b13aa6671f943136b593b44e1b828d689e8db5e5359a41302c577baf462"
+        },
+        {
+          "path": "nodemon.json",
+          "sha256": "51f82a2278fda20f28060049944afacafacefb45a17830f8c1b2d2f36fee32b8"
+        },
+        {
+          "path": "package.json",
+          "sha256": "0d38ca16dff0d91baf910710ab6f0e82f44fb03b09a2d42796e34de9cfd6b5ee"
+        },
+        {
+          "path": "patches/nodemon@3.1.14.patch",
+          "sha256": "b2939beef73b52c91982aea76a7e7742fe6341b2780bca270c50d761a3dba87f"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        },
+        {
+          "path": "scripts/nodemon-watch.test.mjs",
+          "sha256": "6ceda076bdaa7214b21082186d84a0aa5530b96273bcda538213d32a5de8f28e"
+        }
+      ],
+      "checks": [
+        "Compose validates with the tracked example. The installed dotenv CLI resolves the template from a clean shell, aligns PostgreSQL, Redis and MinIO/S3 settings, leaves authentication secrets empty for explicit local provisioning, and preserves a supplied shell override.",
+        "Thirty-three current OTP unit cases passed. Registration, login and resend keep the encrypted outbox and suppress OTP output in production, staging and tests even when the flag is true. Development printing requires the explicit flag.",
+        "Both existing watcher cases passed. Native and polling modes detect nested source additions and source/environment edits while ignoring generated output. The documented pnpm dev:docker entrypoint enables Nodemon polling and the Vite bind-mount polling flag."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/development-env-and-watcher",
+      "source_scope_proof": "release-0.6-development-env-and-watcher-acceptance.json",
+      "source_scope_proof_sha256": "d8af5f9fd9e4a2cf40e62bf210491090304673d053c4a86d039ed8ca49a95946"
+    },
+    "release-0.6-api-worker-shutdown-and-fixture-reuse": {
+      "batch": "release-0.6-api-worker-shutdown-and-fixture-reuse",
+      "base_commit": "f150b822fa0eeda5d3c1b6b9c9ad4910dec6dfc2",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-03.03.02",
+        "release-readiness#R-05.02",
+        "02-auth-users-admin.md#T-05.04.02",
+        "05-notifications-documents-ai.md#T-05.01.01",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.05",
+        "02-auth-users-admin.md#T-09.06.02",
+        "02-auth-users-admin.md#T-09.09.01",
+        "05-notifications-documents-ai.md#T-05.07.01",
+        "05-notifications-documents-ai.md#T-05.07.02",
+        "05-notifications-documents-ai.md#T-05.07.03",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "05-notifications-documents-ai.md#T-05.07.05",
+        "07-ui-ux-design.md#T-07.30.02.15",
+        "07-ui-ux-design.md#T-07.30.02.17",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/app.factory.ts",
+          "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
+        },
+        {
+          "path": "apps/api/src/common/shutdown.service.ts",
+          "sha256": "6af804062fc2fa6b2b8533c06802488cdca37eda02cbdeb91329a306a1475492"
+        },
+        {
+          "path": "apps/api/src/common/shutdown.service.spec.ts",
+          "sha256": "80cdf1ff3e7051ffc7d59b92b7229fde8e2eb22fbd549b20bab4bb55617438b7"
+        },
+        {
+          "path": "apps/api/src/common/shutdown-http.integration.test.ts",
+          "sha256": "872e63df6df29666eac2b2a9d377a0279b091d1929ea43dda63407d8c765b08e"
+        },
+        {
+          "path": "apps/api/scripts/http-test-server.cjs",
+          "sha256": "4766868846c6ee2b43307d4434ba305b48a802c9d82d68209fcf52c7e5902f80"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "b11b691680a16cfd244d5430449a7c91c918a09f5f3e5b5c09ed31299d80359c"
+        },
+        {
+          "path": "apps/worker/src/main.ts",
+          "sha256": "f31f627117d3e184fdece3793103afffd1283ea505be0cdb01cfc897f05922db"
+        },
+        {
+          "path": "apps/worker/src/jobs/poller-group.ts",
+          "sha256": "d22697ce850bd8adcb7b0496781a84743d26df556126fb9032cb159d84bb5d8b"
+        },
+        {
+          "path": "apps/worker/vitest.config.ts",
+          "sha256": "40ac4ece12f113e26e9713ac3e0e8e3bad09b14b5b11f4f50f311a64f87d939a"
+        },
+        {
+          "path": "apps/worker/scripts/build-test-worker.mjs",
+          "sha256": "48b10432dc3cbe015ba1af569dc279a6c28c1ec2b7959e7d82ff88e2f750d289"
+        },
+        {
+          "path": "apps/worker/src/main-process.integration.test.ts",
+          "sha256": "e55097a3bd73dd088060b918ca34f371bdf8ef3c4a717a9316063829487884a2"
+        },
+        {
+          "path": "packages/db/src/index.ts",
+          "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
+        },
+        {
+          "path": "packages/db/src/migrate.ts",
+          "sha256": "ee35ac3d9e1350e828edc37e6a972a4ed04f91d3c079ed53b219ecc1adb09fb8"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+        },
+        {
+          "path": "packages/shared/src/storage/runtime-config.ts",
+          "sha256": "7e35bb12545ebe9f932fa671d47c4f0d855ed9ebd6a2cd20008e6b659fb663db"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "Both compiled NestJS HTTP shutdown cases passed with real PostgreSQL. The listener refused new work while an accepted response drained and the process exited 0. An unfinished request crossed the configured deadline and exited 1. Both shutdown unit cases passed, including independently closing shared resources when one close fails.",
+        "All 16 compiled worker cases passed with PostgreSQL. This includes SIGTERM/SIGINT drain, health and metrics, in-flight work, deadline exit 1, queued work preserved, no duplicate provider request after graceful/forced/bookkeeping-failure shutdown, reconciliation, service workflow, contract and notification callers.",
+        "The compiled migration now runs once per process suite. The uniquely named, disconnected template is cloned to an independently owned database per test. Only fixture setup changed. The bytes of every test body are identical, as are all runtime sources. The initial disk-backed run exceeded its test limit during the repeated migrations; the new full disk-backed run passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown",
+      "source_scope_proof": "release-0.6-api-worker-shutdown-and-fixture-reuse.json",
+      "source_scope_proof_sha256": "76c3974a629b6b2e79e79a45a84699f97587c9a013dca768985b63ff78fc3c31"
     }
   },
   "historical_improvements": [
