@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T03:16:11+00:00",
-  "source_commit": "a172391461f53642f996e78c92d0af4d4940dc27",
+  "updated": "2026-11-09T03:23:42+00:00",
+  "source_commit": "d6363227bda5e6ad2bf5fd2e7363bf17fcc031ed",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -598962,7 +598962,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The staff inventory covers loading and error on 48 primary data routes and authorized empty or unset states on 40 routes. Ten customer collections have held first-read and authorized-empty receipts in both languages on Chromium and mobile Safari. Exact current cases cover temporary and unavailable responses for five customer detail routes plus saving fulfillment, and the independent gift-code statistics and contract-template history states. Prior route-specific receipts remain scoped. Reconcile remaining independent children and original route interactions before full acceptance."
+        "All ten customer collections have named first-failure and recovery receipts on both native engines. Four more customer read owners cover electricity/saving catalogues, consultation products and wallet transactions, including unavailable or authorized empty results. The staff inventory covers 48 primary pending/error routes and 40 authorized empty or unset routes. Both staff routes with changed direct empty-state sources have new notification and provider receipts. Reconcile original route interactions and independent conditional reads still outside the scoped receipts before full acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -599112,7 +599112,8 @@
           "release-0.5-service-workflow-grant-revocation",
           "release-0.5-notification-settings-session",
           "release-0.5-staff-configuration-adoption",
-          "release-0.5-saving-detail-denied-read"
+          "release-0.5-saving-detail-denied-read",
+          "release-0.5-customer-collection-first-retry"
         ],
         "current_acceptance": null
       }
@@ -728976,7 +728977,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The staff inventory covers loading and error on 48 primary data routes and authorized empty or unset states on 40 routes. Ten customer collections have held first-read and authorized-empty receipts in both languages on Chromium and mobile Safari. Exact current cases cover temporary and unavailable responses for five customer detail routes plus saving fulfillment, and the independent gift-code statistics and contract-template history states. Prior route-specific receipts remain scoped. Reconcile remaining independent children and original route interactions before full acceptance."
+        "All ten customer collections have named first-failure and recovery receipts on both native engines. Four more customer read owners cover electricity/saving catalogues, consultation products and wallet transactions, including unavailable or authorized empty results. The staff inventory covers 48 primary pending/error routes and 40 authorized empty or unset routes. Both staff routes with changed direct empty-state sources have new notification and provider receipts. Reconcile original route interactions and independent conditional reads still outside the scoped receipts before full acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -729192,7 +729193,8 @@
           "release-0.5-service-workflow-grant-revocation",
           "release-0.5-notification-settings-session",
           "release-0.5-staff-configuration-adoption",
-          "release-0.5-saving-detail-denied-read"
+          "release-0.5-saving-detail-denied-read",
+          "release-0.5-customer-collection-first-retry"
         ]
       }
     },
@@ -811051,6 +811053,142 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-detail-denied-read/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-detail-denied-read/renewed-bindings.json",
       "release_disposition": "Closed saving detail denial feedback and verified independent staff catalogue reads. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-customer-collection-first-retry": {
+      "batch": "release-0.5-customer-collection-first-retry",
+      "base_commit": "d6363227bda5e6ad2bf5fd2e7363bf17fcc031ed",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/customer-list-recovery.spec.ts",
+          "sha256": "7d22c8ead3716ab533c87c0cb082054a7fd13cb24c48b50d295bbc4becd56f7a"
+        },
+        {
+          "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
+          "sha256": "211030ae04807bc9147ad939498ce614074cd30693dfe079ec434a2118d9bf0a"
+        },
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "07949862684b86d6ff241d5f71e59e6c71a5cc1ddc70655b0d508beb53865dac"
+        },
+        {
+          "path": "apps/web/e2e/crm-shell-fixture.ts",
+          "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+        },
+        {
+          "path": "apps/web/e2e/navigation-fixture.ts",
+          "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
+        },
+        {
+          "path": "apps/web/src/test/customer-browse-fixtures.ts",
+          "sha256": "251acc5e3d33f2b8afe2d86b16693b7683c9b0dbeafcc12ca7746999fe060c7d"
+        },
+        {
+          "path": "apps/web/src/test/document-list-fixtures.ts",
+          "sha256": "3f3cc032408858b5f9299f26a4f12fb6fb37d0acbfc9f5b5d6865fe10e40656b"
+        },
+        {
+          "path": "apps/web/src/routeTree.gen.ts",
+          "sha256": "c1524622f37c4dc26c3fc7f5746d3a9a2d962c8397db0ab77e61efa0422be658"
+        },
+        {
+          "path": "apps/web/src/hooks/useCustomerServiceHistory.ts",
+          "sha256": "fc70f03965a95ddb72f468edd7aeeed573b0004925200f569b7293cbf28f0400"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/index.tsx",
+          "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
+        },
+        {
+          "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
+          "sha256": "8e2c4277fc0ce52f91e9a3961b2b3664d5ccb26524044e304223d1e2eaef9f5b"
+        },
+        {
+          "path": "apps/web/src/pages/SavingOrdersPage.tsx",
+          "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+        },
+        {
+          "path": "apps/web/src/pages/SolarRequestsPage.tsx",
+          "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+        },
+        {
+          "path": "apps/web/src/pages/ConsultationsPage.tsx",
+          "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
+        },
+        {
+          "path": "apps/web/src/pages/InvoicesPage.tsx",
+          "sha256": "3ceed241a39c1cee1fa6ce6cd63bc9144d85d1b0a49fcb1a81f90e1785e3b2c0"
+        },
+        {
+          "path": "apps/web/src/pages/ContractsPage.tsx",
+          "sha256": "2cec44911feeb1a68e3c10999adba67118a7ffd8caf6c1f71c6d980f77f91e15"
+        },
+        {
+          "path": "apps/web/src/pages/BankReceiptsPage.tsx",
+          "sha256": "ab3ee41520c0ecee9eac2f9df6de50eca72fffeef2cda809f709715e16264ca7"
+        },
+        {
+          "path": "apps/web/src/pages/NotificationCenterPage.tsx",
+          "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
+        },
+        {
+          "path": "apps/web/src/pages/TicketsPage.tsx",
+          "sha256": "957cdaefba5bb88d77ef2ec2062ed9ad3a87379a3b34dbd09416629d6b20b98e"
+        },
+        {
+          "path": "apps/web/src/pages/SavingsPage.tsx",
+          "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.tsx",
+          "sha256": "44ee2de825c64b4a53473aaf8a022175959f36ed543fa97f6d582949c89be630"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
+        },
+        {
+          "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "sha256": "a72f4e37a56dd99540aeb5a9ecfe69126db05f322e971061614e9f11f0ab33b0"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
+          "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDeliveryProvidersPage.tsx",
+          "sha256": "23fb5f4467d4b2482b0ea61d390657af674d0cd7cd0bdefbde269faa998405b1"
+        },
+        {
+          "path": "apps/web/src/components/DocumentsWorkspace.tsx",
+          "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
+        },
+        {
+          "path": "apps/web/src/components/WalletTransactionList.tsx",
+          "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
+        },
+        {
+          "path": "apps/web/src/components/DeadLetterPanel.tsx",
+          "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+        }
+      ],
+      "checks": [
+        "All seven customer histories passed existing first-page failure, captured retry, filtering, exact cursor failure/retry and retained-row cases on Chromium and mobile Safari in Persian and English. Documents, inbox and tickets independently passed a held first read, localized HTTP 503, keyboard retry of the exact query and authorized empty response without any writes.",
+        "Electricity catalogue, saving catalogue, consultation products and wallet transactions passed 16 scoped cases from held read through localized error and authorized empty or unavailable result. The electricity API's four canonical unavailable slots show no simple order action. Consultation has no submit action with zero products. Wallet and consultation retry leave their sibling reads alone.",
+        "The earlier authorized-empty staff receipt has 38 unchanged direct source rows. Notification templates and email/SMS providers were the two changed routes. Twelve current cases confirmed their empty states, including the independent dead-letter and SMS panels. Four mobile checks initially found a hidden desktop cell first. Selecting the visible instance verified the same localized copy without a product change.",
+        "Sixty-eight distinct native cases passed. The only consultation fixture change requires removal of the submit button. The staff fixture change scopes the exact existing empty label to visible presentation. The normal application and auth builds match main product source; only one unrelated test fixture and board metadata differ from the emitted snapshot."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-collection-first-retry",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-collection-first-retry/proof.json",
+      "source_scope_proof_sha256": "42d0d0cd166cfac6a14e800c7ae49737d919637f66e9ec1d87404d0080a1e469",
+      "release_disposition": "Verified customer first-read and recovery coverage and renewed affected staff empty observations. Four v0.5.0 items remain."
     }
   },
   "historical_improvements": [
@@ -811101,7 +811239,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Finish the route-specific acceptance reconciliation using the current named detail, list, and layout cases. Verify any still-unproven conditional scope. GitHub required checks and staging Sentry remain independent."
+    "goal": "Reconcile remaining route-specific interactions using the named customer and staff receipts. Preserve the independently verified dashboard, detail and catalogue scenarios. GitHub required-check enforcement and staging Sentry remain independent."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
