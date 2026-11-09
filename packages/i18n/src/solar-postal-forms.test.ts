@@ -11,6 +11,8 @@ it('localizes postal limits, UTC dates and owned recovery without claiming guida
     'postalSendDateHelp',
     'postalReceiptHelp',
     'postalShipmentUnconfirmed',
+    'postalReceiptLoading',
+    'postalReceiptEmpty',
     'postalReceiptLoadError',
     'postalReasonInvalid',
     'postalReasonHelp',

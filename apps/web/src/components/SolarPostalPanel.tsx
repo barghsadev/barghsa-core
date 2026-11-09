@@ -145,7 +145,7 @@ function OwnedSolarPostalPanel({ requestId, profileId }: { requestId: string; pr
   dirty.current = form.formState.isDirty;
   const editGeneration = useRef(0);
   const [unconfirmed, setUnconfirmed] = useState(false);
-  const [imageError, setImageError] = useState(false);
+  const [imageStatus, setImageStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const pendingShipment = useRef<{ scope: string; body: ShipmentBody } | null>(null);
   const [upload, setUpload] = useState(false);
   const [revision, setRevision] = useState(0);
@@ -251,7 +251,7 @@ function OwnedSolarPostalPanel({ requestId, profileId }: { requestId: string; pr
   useEffect(() => {
     const controller = new AbortController();
     setImages([]);
-    setImageError(false);
+    setImageStatus('loading');
     const capturedGeneration = generation.current;
     const params = new URLSearchParams({
       businessRecordType: 'solar_request',
@@ -283,16 +283,18 @@ function OwnedSolarPostalPanel({ requestId, profileId }: { requestId: string; pr
           !controller.signal.aborted &&
           capturedGeneration === generation.current &&
           !postalUnavailable.current
-        )
+        ) {
           setImages(
             value.documents.filter(
               (document) => document.state === 'Available' && document.uploadedByType === 'customer'
             )
           );
+          setImageStatus('ready');
+        }
       })
       .catch(() => {
         if (!controller.signal.aborted && capturedGeneration === generation.current)
-          setImageError(true);
+          setImageStatus('error');
       });
     return () => {
       controller.abort();
@@ -532,6 +534,27 @@ function OwnedSolarPostalPanel({ requestId, profileId }: { requestId: string; pr
                   )}
                 />
               ))}
+              {imageStatus === 'loading' && (
+                <LoadingStatus>{copy('postalReceiptLoading')}</LoadingStatus>
+              )}
+              {imageStatus === 'ready' && images.length === 0 && (
+                <p role="status" className="text-sm text-muted-foreground">
+                  {copy('postalReceiptEmpty')}
+                </p>
+              )}
+              {imageStatus === 'error' && (
+                <Alert variant="destructive">
+                  <AlertDescription>{copy('postalReceiptLoadError')}</AlertDescription>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={sending}
+                    onClick={() => setImageRevision((value) => value + 1)}
+                  >
+                    {copy('retry')}
+                  </Button>
+                </Alert>
+              )}
               <Button
                 type="button"
                 variant="link"
@@ -574,19 +597,6 @@ function OwnedSolarPostalPanel({ requestId, profileId }: { requestId: string; pr
           <AlertDescription>
             {copy(unconfirmed ? 'postalShipmentUnconfirmed' : 'postalError')}
           </AlertDescription>
-        </Alert>
-      )}
-      {imageError && (
-        <Alert variant="destructive">
-          <AlertDescription>{copy('postalReceiptLoadError')}</AlertDescription>
-          <Button
-            type="button"
-            variant="outline"
-            disabled={sending}
-            onClick={() => setImageRevision((value) => value + 1)}
-          >
-            {copy('retry')}
-          </Button>
         </Alert>
       )}
       {loadError && <p role="alert">{copy('postalLoadError')}</p>}

@@ -1,4 +1,4 @@
-import type { Locator, Page } from '@playwright/test';
+import type { Locator, Page, Route } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 import { t } from '@barghsa/i18n/app';
@@ -32,6 +32,51 @@ async function inspectForm(page: Page, scope: Locator, selector: string) {
 
 for (const [locale, theme] of settings) {
   const copy = (key: string) => tSolar(key, locale);
+  test(`solar postal receipt images announce loading, failure and an empty retry (${locale}, ${theme})`, async ({
+    page,
+  }, info) => {
+    const { state, firstSolar } = await setupSolarPostalForms(page, locale, theme === 'dark', true);
+    let firstRead: Route | undefined;
+    let reads = 0;
+    await page.route(
+      (url) =>
+        url.pathname === '/api/documents' &&
+        url.searchParams.get('businessRecordId') === firstSolar &&
+        url.searchParams.get('category') === 'image',
+      async (route) => {
+        if (++reads === 1) firstRead = route;
+        else await route.fulfill({ json: { documents: [], nextBefore: null } });
+      }
+    );
+    await page.goto(`/solar/requests/${firstSolar}`);
+    const form = page.getByRole('group', { name: copy('postalShipment'), exact: true });
+    const loading = form.getByText(copy('postalReceiptLoading'), { exact: true });
+    const empty = form.getByText(copy('postalReceiptEmpty'), { exact: true });
+    const courier = form.getByLabel(copy('postalCourier'), { exact: true });
+    await expect(loading).toBeVisible();
+    await expect(empty).toHaveCount(0);
+    await courier.fill('  Unsent postal draft  ');
+    await expect.poll(() => Boolean(firstRead)).toBe(true);
+    if (locale === 'fa' && info.project.name === 'mobile-safari') {
+      await form.screenshot({ path: info.outputPath('solar-receipt-images-loading.png') });
+    }
+    await firstRead!.fulfill({ status: 503, json: {} });
+    const error = form.getByRole('alert').filter({ hasText: copy('postalReceiptLoadError') });
+    await expect(error).toBeVisible();
+    await expect(loading).toHaveCount(0);
+    await expect(empty).toHaveCount(0);
+    const postalReads = state.customerReads.length;
+    const retry = error.getByRole('button', { name: copy('retry'), exact: true });
+    await retry.focus();
+    await retry.press('Enter');
+    await expect(empty).toBeVisible();
+    await expect(error).toHaveCount(0);
+    await expect(courier).toHaveValue('  Unsent postal draft  ');
+    expect(reads).toBe(2);
+    expect(state.customerReads).toHaveLength(postalReads);
+    expect(state.shipmentWrites).toEqual([]);
+  });
+
   test(`solar postal customer form retains captured shipment and recovers by fresh read (${locale}, ${theme})`, async ({
     page,
   }, info) => {

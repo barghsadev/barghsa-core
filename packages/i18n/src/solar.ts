@@ -29,6 +29,8 @@ const en: Record<string, string> = {
   postalReceiptHelp: 'Optional. Select a receipt image uploaded for this request.',
   postalShipmentUnconfirmed:
     'The shipment save could not be confirmed. Your draft is still here. Reload shipment tracking before trying again.',
+  postalReceiptLoading: 'Loading receipt images…',
+  postalReceiptEmpty: 'No receipt images have been uploaded for this request.',
   postalReceiptLoadError: 'Could not load receipt images. Your shipment details are still here.',
   postalReasonInvalid: 'Enter a reason of 1–1,000 characters.',
   postalReasonHelp:
@@ -411,6 +413,8 @@ const fa: Record<string, string> = {
   postalReceiptHelp: 'اختیاری؛ تصویر رسید بارگذاری\u200cشده برای همین درخواست را انتخاب کنید.',
   postalShipmentUnconfirmed:
     'ذخیرهٔ اطلاعات ارسال تأیید نشد. پیش\u200cنویس شما حفظ شده است. پیش از تلاش مجدد، اطلاعات رهگیری را بازخوانی کنید.',
+  postalReceiptLoading: 'در حال دریافت تصاویر رسید…',
+  postalReceiptEmpty: 'برای این درخواست هنوز تصویری از رسید بارگذاری نشده است.',
   postalReceiptLoadError: 'تصاویر رسید دریافت نشد. اطلاعات ارسال شما حفظ شده است.',
   postalReasonInvalid: 'دلیل را با ۱ تا ۱٬۰۰۰ نویسه وارد کنید.',
   postalReasonHelp:
