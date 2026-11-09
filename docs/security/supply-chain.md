@@ -1,10 +1,12 @@
 # Supply-chain checks
 
-The required GitHub check is `Verify monorepo integrity`. It fails if the source or secret scan fails, is cancelled, or is skipped. It also validates the dependency audit report and refuses high or critical advisories. Keep the lockfile frozen and use the source and secret scan artifacts when diagnosing a failure.
+The required GitHub check is `Verify monorepo integrity`. It fails if the build and application checks, source scan, secret scan, or runtime image scan fail, are cancelled, or are skipped. The application checks also validate the dependency audit report and refuse high or critical advisories. Keep the lockfile frozen and use the scan artifacts when diagnosing a failure.
 
 Semgrep checks production app, worker and shared source for direct request data in SQL text, outbound URLs and redirects, unsafe HTML, and literal credentials. The SQL rule includes typed Nest request parameters and Drizzle `sql.raw`. Keep values bound through Drizzle's SQL templates or driver placeholders. The rules do not replace review of cross-file data flows or dynamically chosen identifiers.
 
 Gitleaks scans all Git history and verifies its own redaction with a synthetic credential. Its reports must never contain recovered secrets. When changing web build inputs, scan the built frontend separately for unintentionally embedded credentials.
+
+Trivy scans the actual API/worker, web, ClamAV, and PostgreSQL backup images built from the checked source. The reports retain all severities and record the exact local image ID. Scanner errors, missing inventory and high or critical vulnerabilities fail the check. Before promoting a release, scan the exact immutable images that will be deployed; a rebuild from the same commit can resolve different base layers.
 
 Triage medium findings within the current sprint. Record the affected component, production reachability, owner and remediation date. Resolve high and critical findings with a credible production path before release. An accepted risk needs explicit approval with a reason, a compensating control and an expiry.
 

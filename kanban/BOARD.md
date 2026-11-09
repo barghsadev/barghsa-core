@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T13:31:43+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T13:34:38+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 899 | Accepted with unchanged source bindings. |
-| verify | 437 | Existing work may be complete; inspect evidence before building. |
+| done | 901 | Accepted with unchanged source bindings. |
+| verify | 435 | Existing work may be complete; inspect evidence before building. |
 | partial | 27 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -39,13 +39,12 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Add the missing container image scan gate for runtime images and bind scan reports to the exact built images. Continue production license scope review without changing its allowlist.
+Verify the exact combined runtime build. Close package license decisions and required deployment, provider and recovery evidence before release.
 
-- `release-readiness#R-05.02`: Renew security and operational task acceptance
-- `06-security-testing-observability.md#T-06.07.02.03`: Configure container vulnerability scanning (e.g. Trivy, Grype) on Docker images
-- `06-security-testing-observability.md#T-06.07.03.05`: Add container security scanning to CI (Trivy, etc.)
 - `06-security-testing-observability.md#T-06.07.02.08`: Create CI gate config: SCA/SAST/secret/container scans on every PR, full scan on main
 - `01-platform-infrastructure.md#T-05.03.04`: Configure security scans in PR gate
+- `release-readiness#R-05.03`: Prove production deployment, backup and recovery prerequisites
+- `release-readiness#R-05.02`: Renew security and operational task acceptance
 
 ## v0.2.0: Complete customer journeys
 
@@ -1223,7 +1222,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.07.01.06` | done | Recorded batch work | Add CI secret scan (e.g. truffleHog, gitLeaks) to block commits with secrets |
 | `06-security-testing-observability.md#T-06.07.02.01` | done | Recorded batch work | Configure SCA tool (e.g. Snyk, npm audit, OWASP Dependency-Check) in CI |
 | `06-security-testing-observability.md#T-06.07.02.02` | done | Recorded batch work | Configure SAST tool (e.g. CodeQL, Semgrep) with custom rules for NestJS/Drizzle security patterns |
-| `06-security-testing-observability.md#T-06.07.02.03` | verify | Inventory needed | Configure container vulnerability scanning (e.g. Trivy, Grype) on Docker images |
+| `06-security-testing-observability.md#T-06.07.02.03` | done | Recorded batch work | Configure container vulnerability scanning (e.g. Trivy, Grype) on Docker images |
 | `06-security-testing-observability.md#T-06.07.02.04` | done | Recorded batch work | Configure secret scanning on every PR (e.g. gitLeaks, truffleHog) |
 | `06-security-testing-observability.md#T-06.07.02.05` | verify | Inventory needed | Define triage policy: critical/high with credible production path → block release |
 | `06-security-testing-observability.md#T-06.07.02.06` | verify | Inventory needed | Set up license compliance check (e.g. license-checker) for dependency licenses |
@@ -1233,7 +1232,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.07.03.02` | verify | Inventory needed | Disable `insecureHTTPParser`; set explicit request/body/header/time limits at proxy and application level |
 | `06-security-testing-observability.md#T-06.07.03.03` | verify | Inventory needed | Configure TLS at reverse proxy: modern protocols (TLS 1.2+), secure ciphers, HSTS |
 | `06-security-testing-observability.md#T-06.07.03.04` | verify | Inventory needed | Ensure proxy trust configured to exact hop topology (not `trust proxy` globally) |
-| `06-security-testing-observability.md#T-06.07.03.05` | verify | Inventory needed | Add container security scanning to CI (Trivy, etc.) |
+| `06-security-testing-observability.md#T-06.07.03.05` | done | Recorded batch work | Add container security scanning to CI (Trivy, etc.) |
 | `06-security-testing-observability.md#T-06.07.03.06` | verify | Inventory needed | Write container smoke test: non-root user, inspector not available, no unsafe parser |
 | `06-security-testing-observability.md#T-06.08.01.01` | verify | Inventory needed | Create initial threat model document (`docs/threat-model.md`) covering all critical flows |
 | `06-security-testing-observability.md#T-06.08.01.02` | verify | Inventory needed | Map trust boundaries, data flows, assets, threat actors (customer, staff, admin, external attacker, provider) |

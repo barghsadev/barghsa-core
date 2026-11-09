@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T13:31:43+00:00",
+  "updated": "2026-11-09T13:34:38+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -7919,7 +7919,8 @@
           "docker-compose.prod.yml"
         ],
         "batches": [
-          "release-0.6-owner-policy-reconciliation"
+          "release-0.6-owner-policy-reconciliation",
+          "release-0.6-remove-runtime-package-managers"
         ],
         "current_acceptance": null
       }
@@ -8000,7 +8001,8 @@
           "docker-compose.prod.yml"
         ],
         "batches": [
-          "release-0.6-owner-policy-reconciliation"
+          "release-0.6-owner-policy-reconciliation",
+          "release-0.6-remove-runtime-package-managers"
         ],
         "current_acceptance": null
       }
@@ -11130,7 +11132,8 @@
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-remove-unapproved-session-location-data",
           "release-0.6-browser-font-notices",
-          "release-0.6-immutable-location-and-signature-feed"
+          "release-0.6-immutable-location-and-signature-feed",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": null
       },
@@ -24095,7 +24098,8 @@
           "release-0.6-browser-origin-security",
           "release-0.6-remove-unapproved-session-location-data",
           "release-0.6-browser-font-notices",
-          "release-0.6-immutable-location-and-signature-feed"
+          "release-0.6-immutable-location-and-signature-feed",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -24251,7 +24255,7 @@
             },
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "0ff52276c96f8eaea26fce3574dfc947f89e2469af64bde3e1b2a73eb3a6ba5a"
+              "sha256": "798be8f78490c35ca1c6a44159ac78501623facbc15e7e07f915dd34a9805752"
             }
           ],
           "checks": [
@@ -24289,7 +24293,8 @@
             "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
             "The exact compiled API and source-bound session HTTP suite passed 17 cases on isolated PostgreSQL 16, including the owner-approved null location even for a public IP and legacy country metadata. Existing authentication, CSRF, expiry, step-up, revoke-all and forced-change assertions passed.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "The isolated immutable app and worker image contained no GeoIP package or dataset files; the packaged API did not resolve the retired dependency. The final promoted image must repeat this check."
+            "The isolated immutable app and worker image contained no GeoIP package or dataset files; the packaged API did not resolve the retired dependency. The final promoted image must repeat this check.",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/login-session-acceptance",
           "limitations": [
@@ -104857,7 +104862,10 @@
           "release-0.5-staging-image-package-source",
           "release-0.5-protected-publication",
           "release-0.6-browser-response-policy",
-          "release-0.6-staging-image-rollback"
+          "release-0.6-staging-image-rollback",
+          "release-0.6-remove-runtime-package-managers",
+          "release-0.6-alpine-node-runtime-candidate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -104865,7 +104873,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "97efa77ecd5503f1eb3507c54f2a4b9167949829e306440252ded401477d34ed"
+              "sha256": "c2974d2b6f0fb704d4797b88e7c5175b2aa150d93b8eebb0538ab9be6bfe412a"
             },
             {
               "path": "apps/api/openapi.json",
@@ -105472,7 +105480,8 @@
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed."
+            "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ],
           "limitations": [
             "Provision protected CUSTOMER_TELEGRAM credentials after identifying the existing ngrok webhook owner/secret location (already asked once); hand off the callback without disturbing unrelated integration. At the accepted staging release, verify actual customer/profile linking, private Telegram reply/root version, exact provider message receipts and live slot/authority isolation. Local implementation and 127 related cases are accepted; live operations are not certified."
@@ -437882,7 +437891,9 @@
           "release-0.5-route-census-closure",
           "release-0.5-direct-push-preflight",
           "release-0.6-browser-response-policy",
-          "release-0.6-required-source-and-secret-gates"
+          "release-0.6-required-source-and-secret-gates",
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -437890,7 +437901,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -438091,7 +438102,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/provider-preflight-classification",
@@ -438269,7 +438281,9 @@
           "release-0.5-action-contrast",
           "release-0.5-direct-push-preflight",
           "release-0.6-browser-response-policy",
-          "release-0.6-required-source-and-secret-gates"
+          "release-0.6-required-source-and-secret-gates",
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -438277,7 +438291,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -438561,7 +438575,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/provider-operations-current-acceptance",
@@ -438810,7 +438825,9 @@
           "release-0.5-route-census-closure",
           "release-0.5-direct-push-preflight",
           "release-0.6-browser-response-policy",
-          "release-0.6-required-source-and-secret-gates"
+          "release-0.6-required-source-and-secret-gates",
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -438818,7 +438835,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -438992,7 +439009,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/provider-operations-current-acceptance",
@@ -439178,7 +439196,9 @@
           "release-0.5-route-census-closure",
           "release-0.5-direct-push-preflight",
           "release-0.6-browser-response-policy",
-          "release-0.6-required-source-and-secret-gates"
+          "release-0.6-required-source-and-secret-gates",
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -439186,7 +439206,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -439360,7 +439380,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/provider-operations-current-acceptance",
@@ -439546,7 +439567,9 @@
           "release-0.5-route-census-closure",
           "release-0.5-direct-push-preflight",
           "release-0.6-browser-response-policy",
-          "release-0.6-required-source-and-secret-gates"
+          "release-0.6-required-source-and-secret-gates",
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -439554,7 +439577,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -439728,7 +439751,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/provider-operations-current-acceptance",
@@ -461369,7 +461393,10 @@
           "release-0.5-staging-image-package-source",
           "release-0.5-protected-publication",
           "release-0.6-browser-response-policy",
-          "release-0.6-staging-image-rollback"
+          "release-0.6-staging-image-rollback",
+          "release-0.6-remove-runtime-package-managers",
+          "release-0.6-alpine-node-runtime-candidate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -461377,7 +461404,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "97efa77ecd5503f1eb3507c54f2a4b9167949829e306440252ded401477d34ed"
+              "sha256": "c2974d2b6f0fb704d4797b88e7c5175b2aa150d93b8eebb0538ab9be6bfe412a"
             },
             {
               "path": "apps/api/openapi.json",
@@ -462000,7 +462027,8 @@
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed."
+            "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ],
           "limitations": [
             "Provision protected CUSTOMER_TELEGRAM credentials after identifying the existing ngrok webhook owner/secret location (already asked once); hand off the callback without disturbing unrelated integration. At the accepted staging release, verify actual customer/profile linking, private Telegram reply/root version, exact provider message receipts and live slot/authority isolation. Local implementation and 127 related cases are accepted; live operations are not certified."
@@ -468787,7 +468815,11 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-browser-response-policy",
-          "release-0.6-required-source-and-secret-gates"
+          "release-0.6-required-source-and-secret-gates",
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-remove-runtime-package-managers",
+          "release-0.6-alpine-node-runtime-candidate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -468795,11 +468827,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "76dc081c98bc771f47c20ef045ae59f75406e8270f0a930913c153912b75d3ff"
+              "sha256": "1d6843e8f9eeb1779c446fc7080a97b229a1db739942f81ff77579dda1064e0c"
             },
             {
               "path": "apps/web/build.mjs",
@@ -468833,7 +468865,8 @@
           "checks": [
             "Nonce design and safe directives documented; both compiled shells have no inline style elements requiring a hash. Dynamic style attribute policy is explicit.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ]
         }
       }
@@ -469000,7 +469033,11 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-browser-response-policy",
-          "release-0.6-required-source-and-secret-gates"
+          "release-0.6-required-source-and-secret-gates",
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-remove-runtime-package-managers",
+          "release-0.6-alpine-node-runtime-candidate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -469008,11 +469045,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "76dc081c98bc771f47c20ef045ae59f75406e8270f0a930913c153912b75d3ff"
+              "sha256": "1d6843e8f9eeb1779c446fc7080a97b229a1db739942f81ff77579dda1064e0c"
             },
             {
               "path": "apps/web/build.mjs",
@@ -469046,7 +469083,8 @@
           "checks": [
             "Required integrity workflow checks actual built web HTML and security headers. Exact local built-shell smoke passed.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ]
         }
       }
@@ -470295,7 +470333,9 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-required-source-and-secret-gates"
+          "release-0.6-required-source-and-secret-gates",
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -470303,7 +470343,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -470324,7 +470364,8 @@
           ],
           "checks": [
             "SQL injection fixtures reject Express and Nest-controlled text in direct driver SQL or Drizzle sql.raw, and accept parameterized driver and Drizzle templates.",
-            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ]
         }
       }
@@ -471599,7 +471640,9 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-required-source-and-secret-gates",
-          "release-0.6-preflight-reconciliation"
+          "release-0.6-preflight-reconciliation",
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -471611,7 +471654,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
             },
             {
               "path": ".gitignore",
@@ -471627,7 +471670,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "d25526e76ba994872bb948f3c5c787af8eda2ae2d6acce3f60a0bf475020ea8c"
+              "sha256": "3377756b589761454c7d71ff5bacc41416baf433f214cb5cfa6cc5bfc4baada4"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -471645,7 +471688,8 @@
           "checks": [
             "Audited complete Git history, tracked environment paths and exact built frontend separately. No committed or bundled credentials detected.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
-            "Gitleaks flagged a specification SHA-256 on the exact preflight commit. Verified the digest against the committed public file. Only the exact historical fingerprint is excluded. Synthetic credential detection, redaction, and a full 3,018-commit scan with zero leaks passed locally."
+            "Gitleaks flagged a specification SHA-256 on the exact preflight commit. Verified the digest against the committed public file. Only the exact historical fingerprint is excluded. Synthetic credential detection, redaction, and a full 3,018-commit scan with zero leaks passed locally.",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ]
         }
       }
@@ -471672,7 +471716,9 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-required-source-and-secret-gates",
-          "release-0.6-preflight-reconciliation"
+          "release-0.6-preflight-reconciliation",
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -471684,7 +471730,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
             },
             {
               "path": ".gitignore",
@@ -471706,7 +471752,8 @@
           "checks": [
             "Required GitHub check now depends on full-history redacted secret scan and fails on any non-success. Actual base secret receipt and negative status matrix verified.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
-            "Gitleaks flagged a specification SHA-256 on the exact preflight commit. Verified the digest against the committed public file. Only the exact historical fingerprint is excluded. Synthetic credential detection, redaction, and a full 3,018-commit scan with zero leaks passed locally."
+            "Gitleaks flagged a specification SHA-256 on the exact preflight commit. Verified the digest against the committed public file. Only the exact historical fingerprint is excluded. Synthetic credential detection, redaction, and a full 3,018-commit scan with zero leaks passed locally.",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ]
         },
         "ci_checkpoint": {
@@ -471799,7 +471846,9 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-required-source-and-secret-gates"
+          "release-0.6-required-source-and-secret-gates",
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -471807,7 +471856,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -471816,7 +471865,8 @@
           ],
           "checks": [
             "CI always runs a frozen-lockfile dependency audit and fails invalid reports or high/critical advisories. Hosted zero high/critical readback; moderate and low counts retained.",
-            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ]
         },
         "ci_checkpoint": {
@@ -471897,7 +471947,9 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-required-source-and-secret-gates"
+          "release-0.6-required-source-and-secret-gates",
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -471905,7 +471957,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -471926,7 +471978,8 @@
           ],
           "checks": [
             "Pinned Semgrep CI uses tested Nest/Drizzle rules and checks application, worker and shared source; exact strict run passed.",
-            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ]
         }
       }
@@ -471942,19 +471995,66 @@
         "story": "06-security-testing-observability.md#spec-78eef3232c99"
       },
       "requirement": "| T-06.07.02.03 | Configure container vulnerability scanning (e.g. Trivy, Grype) on Docker images | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-remove-runtime-package-managers",
+          "release-0.6-alpine-node-runtime-candidate",
+          "release-0.6-alpine-clamav-candidate",
+          "release-0.6-postgres-image-candidate",
+          "release-0.6-combined-runtime-image-candidate"
+        ],
+        "current_acceptance": {
+          "kind": "pinned_trivy_and_exact_image_inventory",
+          "reviewed_sha": "56d07048bd08d962cf11bcfd852525b86fdaaa12",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+            },
+            {
+              "path": "Dockerfile.base",
+              "sha256": "c2974d2b6f0fb704d4797b88e7c5175b2aa150d93b8eebb0538ab9be6bfe412a"
+            },
+            {
+              "path": "Dockerfile.web",
+              "sha256": "1d6843e8f9eeb1779c446fc7080a97b229a1db739942f81ff77579dda1064e0c"
+            },
+            {
+              "path": "deploy/clamav/Dockerfile",
+              "sha256": "bff95b69fc3b17e1431334e7947f38a885647f49d18d65b1fe5f9945e4e145f5"
+            },
+            {
+              "path": "docs/security/supply-chain.md",
+              "sha256": "3377756b589761454c7d71ff5bacc41416baf433f214cb5cfa6cc5bfc4baada4"
+            },
+            {
+              "path": "packages/db/scripts/backup/Dockerfile",
+              "sha256": "09bc84f3342da18716a7331f065079f91c74f49d6664d4426188b9948ad04b57"
+            },
+            {
+              "path": "scripts/check-runtime-images.sh",
+              "sha256": "1eec2f0af48372387db325c9ccc0a046e6e7038f2baa6354e981c1887f4f6126"
+            }
+          ],
+          "checks": [
+            "Checksum-pinned Trivy 0.76.2 scanned all four exact live v0.5 staging images with no ignore file; OS package inventories, exact image IDs, all severities and raw report digests were retained.",
+            "Four live image scans intentionally exited nonzero on findings: web 41, app 58, ClamAV 69, PostgreSQL 223 high/critical entries. Counts are scanner findings, not independently confirmed exploit paths or current candidate findings.",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/runtime-image-scan-gate-receipt.json",
+            "Only unused build package managers were removed from the same runtime bases. Web, packaged migration, API/worker readiness and Poppler checks passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/runtime-package-manager-removal-receipt.json",
+            "Runtime image renewal: the pinned Node 24 Alpine images built and ran; packaged migration, nonroot native Argon2/Sharp/Poppler, API/worker/AI/web readiness and built login CSP passed. Trivy found no high or critical findings in either isolated image.",
+            "Exact isolated PostgreSQL 16.15/PostGIS/pgvector Alpine image, with Go 1.27.3 rebuilt gosu, scanned at zero high or critical findings. Final repository build and deployment proof remain separate.",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
+          ]
+        }
       }
     },
     {
@@ -471979,7 +472079,9 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-required-source-and-secret-gates",
-          "release-0.6-preflight-reconciliation"
+          "release-0.6-preflight-reconciliation",
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -471991,7 +472093,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
             },
             {
               "path": ".gitignore",
@@ -472013,7 +472115,8 @@
           "checks": [
             "PR, main and preflight all run Gitleaks with complete history and verified redaction. Required check rejects missing/failed scan outcomes.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
-            "Gitleaks flagged a specification SHA-256 on the exact preflight commit. Verified the digest against the committed public file. Only the exact historical fingerprint is excluded. Synthetic credential detection, redaction, and a full 3,018-commit scan with zero leaks passed locally."
+            "Gitleaks flagged a specification SHA-256 on the exact preflight commit. Verified the digest against the committed public file. Only the exact historical fingerprint is excluded. Synthetic credential detection, redaction, and a full 3,018-commit scan with zero leaks passed locally.",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ]
         },
         "current_scan_checkpoint": {
@@ -472167,7 +472270,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Add and verify runtime image scans for PR/main and exact release image digests. Required SCA/SAST/secret admission and hosted results are already recorded."
+        "All four separate isolated candidates scanned at zero high/critical findings. The required hosted scan must pass on the combined source. Final exact live image, PostgreSQL logical cutover, current ClamAV signature feed and health remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -472175,7 +472278,13 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-required-source-and-secret-gates"
+          "release-0.6-required-source-and-secret-gates",
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-remove-runtime-package-managers",
+          "release-0.6-alpine-node-runtime-candidate",
+          "release-0.6-alpine-clamav-candidate",
+          "release-0.6-postgres-image-candidate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": null,
         "current_dependency_checkpoint": {
@@ -472339,19 +472448,60 @@
         "story": "06-security-testing-observability.md#spec-2b24cec414cb"
       },
       "requirement": "| T-06.07.03.05 | Add container security scanning to CI (Trivy, etc.) | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-remove-runtime-package-managers",
+          "release-0.6-alpine-node-runtime-candidate",
+          "release-0.6-alpine-clamav-candidate",
+          "release-0.6-postgres-image-candidate",
+          "release-0.6-combined-runtime-image-candidate"
+        ],
+        "current_acceptance": {
+          "kind": "actual_hosted_image_blocking_evidence",
+          "reviewed_sha": "bc9ae5f778c06de69968233af5b9fcd7a9206933",
+          "source_evidence": [
+            {
+              "path": "Dockerfile.base",
+              "sha256": "c2974d2b6f0fb704d4797b88e7c5175b2aa150d93b8eebb0538ab9be6bfe412a"
+            },
+            {
+              "path": "Dockerfile.web",
+              "sha256": "1d6843e8f9eeb1779c446fc7080a97b229a1db739942f81ff77579dda1064e0c"
+            },
+            {
+              "path": "deploy/clamav/Dockerfile",
+              "sha256": "bff95b69fc3b17e1431334e7947f38a885647f49d18d65b1fe5f9945e4e145f5"
+            },
+            {
+              "path": "packages/db/scripts/backup/Dockerfile",
+              "sha256": "09bc84f3342da18716a7331f065079f91c74f49d6664d4426188b9948ad04b57"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+            },
+            {
+              "path": "scripts/check-runtime-images.sh",
+              "sha256": "1eec2f0af48372387db325c9ccc0a046e6e7038f2baa6354e981c1887f4f6126"
+            }
+          ],
+          "checks": [
+            "Exact hosted candidate bc9ae5f7 completed application integrity successfully. All four image scans produced current bound results and failed on findings; the required GitHub check failed as designed.",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/runtime-package-manager-removal-receipt.json",
+            "Runtime image renewal: the pinned Node 24 Alpine images built and ran; packaged migration, nonroot native Argon2/Sharp/Poppler, API/worker/AI/web readiness and built login CSP passed. Trivy found no high or critical findings in either isolated image.",
+            "Exact isolated PostgreSQL 16.15/PostGIS/pgvector Alpine image, with Go 1.27.3 rebuilt gosu, scanned at zero high or critical findings. Final repository build and deployment proof remain separate.",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
+          ]
+        }
       }
     },
     {
@@ -474377,7 +474527,9 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-required-source-and-secret-gates"
+          "release-0.6-required-source-and-secret-gates",
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -474385,7 +474537,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -474406,7 +474558,8 @@
           ],
           "checks": [
             "Local rule fixtures prove Nest and Drizzle flows along with SQL/XSS/SSRF/open redirect and literal credentials; exact application scan passed.",
-            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ]
         }
       }
@@ -474432,7 +474585,9 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-required-source-and-secret-gates"
+          "release-0.6-required-source-and-secret-gates",
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -474440,7 +474595,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -474452,7 +474607,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "d25526e76ba994872bb948f3c5c787af8eda2ae2d6acce3f60a0bf475020ea8c"
+              "sha256": "3377756b589761454c7d71ff5bacc41416baf433f214cb5cfa6cc5bfc4baada4"
             },
             {
               "path": "scripts/check-sast.py",
@@ -474465,7 +474620,8 @@
           ],
           "checks": [
             "Existing required ruleset check now fails closed on the SAST outcome; medium triage and credible high/critical remediation are documented.",
-            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ]
         }
       }
@@ -522530,7 +522686,9 @@
           "release-0.5-direct-push-preflight",
           "release-0.6-browser-response-policy",
           "release-0.6-required-source-and-secret-gates",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -522538,7 +522696,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
             },
             {
               "path": ".size-limit.json",
@@ -523035,7 +523193,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -523365,7 +523524,9 @@
           "release-0.5-direct-push-preflight",
           "release-0.6-browser-response-policy",
           "release-0.6-required-source-and-secret-gates",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -523373,7 +523534,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
             },
             {
               "path": ".size-limit.json",
@@ -523870,7 +524031,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -524709,7 +524871,9 @@
           "release-0.5-direct-push-preflight",
           "release-0.6-browser-response-policy",
           "release-0.6-required-source-and-secret-gates",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -524717,7 +524881,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
             },
             {
               "path": ".size-limit.json",
@@ -525214,7 +525378,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -525506,7 +525671,9 @@
           "release-0.5-required-check-activation",
           "release-0.5-direct-push-preflight",
           "release-0.6-browser-response-policy",
-          "release-0.6-required-source-and-secret-gates"
+          "release-0.6-required-source-and-secret-gates",
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": {
           "kind": "active_github_required_check",
@@ -525515,12 +525682,13 @@
             "GitHub returned active repository ruleset 26844024 for the default branch and the effective required check on main is Verify monorepo integrity from GitHub Actions integration 15368.",
             "GitHub Actions job 129001187379 passed on the inspected main SHA. Its critical accessibility, non-critical advisory and advisory artifact steps all succeeded.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ],
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -711562,7 +711730,10 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
-          "release-0.5-staging-image-package-source"
+          "release-0.5-staging-image-package-source",
+          "release-0.6-remove-runtime-package-managers",
+          "release-0.6-alpine-node-runtime-candidate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -711570,7 +711741,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "97efa77ecd5503f1eb3507c54f2a4b9167949829e306440252ded401477d34ed"
+              "sha256": "c2974d2b6f0fb704d4797b88e7c5175b2aa150d93b8eebb0538ab9be6bfe412a"
             },
             {
               "path": "apps/api/openapi.json",
@@ -711859,7 +712030,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json"
+            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ],
           "criterion_result": "All four ticket-priority targets plus verification, consultation, electricity/saving/solar fulfillment and per-service contract-review targets configure whole hours/days, notification trigger and timed escalation. Actual migrated workflow rows, persisted episodes, source clocks, disabled/terminal waits, current readers, durable inbox/email jobs and the scheduled compiled worker enforce them. Bilingual responsive, keyboard, stale/unknown receipt and permission recovery verified.",
           "limitations": [
@@ -712249,7 +712421,10 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
-          "release-0.5-staging-image-package-source"
+          "release-0.5-staging-image-package-source",
+          "release-0.6-remove-runtime-package-managers",
+          "release-0.6-alpine-node-runtime-candidate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -712257,7 +712432,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "97efa77ecd5503f1eb3507c54f2a4b9167949829e306440252ded401477d34ed"
+              "sha256": "c2974d2b6f0fb704d4797b88e7c5175b2aa150d93b8eebb0538ab9be6bfe412a"
             },
             {
               "path": "apps/api/openapi.json",
@@ -712546,7 +712721,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json"
+            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ],
           "criterion_result": "Typed breach/priority conditions, source role/team/any queue, destination role/team/administrators, current membership and read permission, timeout and inbox/optional email are configurable and enforced in ticket, verification, order and contract workflows. Native role-to-team/team-to-role, assigned-only access, unavailable recipients, audit rollback, concurrency, precise deadlines and no duplicate delivery verified. Escalation routes alerts without granting access or transferring ownership.",
           "limitations": [
@@ -724780,7 +724956,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
             },
             {
               "path": "apps/api/openapi.json",
@@ -727882,7 +728058,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
-            "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed."
+            "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ],
           "limitations": [],
           "operational_limits": [
@@ -728641,7 +728818,9 @@
           "release-0.5-protected-publication",
           "release-0.6-browser-response-policy",
           "release-0.6-required-source-and-secret-gates",
-          "release-0.6-staging-image-rollback"
+          "release-0.6-staging-image-rollback",
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -728694,7 +728873,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
             },
             {
               "path": "apps/api/openapi.json",
@@ -731773,7 +731952,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
-            "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed."
+            "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ],
           "limitations": [
             "Current staging is v0.3.0/2ac708c11225a1239156787cddfdd3ab094fb8f8, API/web/worker healthy and Redis/object storage readiness verified. After effective v0.4.0 criteria are accepted, deploy its immutable candidate and verify actual AI routing, slot isolation and notification/storage operations. Earlier v0.1.29/forced-TLS warning description is stale and does not dispatch a rebuild.",
@@ -732422,7 +732602,9 @@
           "release-0.5-protected-publication",
           "release-0.6-browser-response-policy",
           "release-0.6-required-source-and-secret-gates",
-          "release-0.6-staging-image-rollback"
+          "release-0.6-staging-image-rollback",
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -734161,7 +734343,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+              "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
             },
             {
               "path": ".size-limit.json",
@@ -736117,7 +736299,8 @@
             "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -736220,7 +736403,9 @@
           "release-0.6-browser-origin-security",
           "release-0.6-browser-response-policy",
           "release-0.6-required-source-and-secret-gates",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-combined-runtime-image-candidate"
         ]
       }
     },
@@ -736266,11 +736451,11 @@
             },
             {
               "path": "Dockerfile.base",
-              "sha256": "97efa77ecd5503f1eb3507c54f2a4b9167949829e306440252ded401477d34ed"
+              "sha256": "c2974d2b6f0fb704d4797b88e7c5175b2aa150d93b8eebb0538ab9be6bfe412a"
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "76dc081c98bc771f47c20ef045ae59f75406e8270f0a930913c153912b75d3ff"
+              "sha256": "1d6843e8f9eeb1779c446fc7080a97b229a1db739942f81ff77579dda1064e0c"
             },
             {
               "path": "docs/design/design-system.md",
@@ -736294,11 +736479,15 @@
             "Compared all 181 deployed Drizzle definitions with live staging metadata for the three standard columns; the two SQL-managed configuration tables have all three. Listed all 96 exceptions exactly once, with scope and reasons.",
             "Verified Node 24.22.2 on the actual staging API, web and worker; Node 24 is maintained LTS and Node 20 is end of life per the official Node release schedule.",
             "Five existing base-table factory unit assertions passed in an isolated Node test configuration; the normal package fixture startup was stopped after the workstation Docker daemon hung, and no integration pass is inferred.",
-            "Only policy, documentation and board source changed. The four prior task bindings to the image review guide were renewed for the additive runtime decision."
+            "Only policy, documentation and board source changed. The four prior task bindings to the image review guide were renewed for the additive runtime decision.",
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
           ]
         },
         "batches": [
-          "release-0.6-owner-policy-reconciliation"
+          "release-0.6-owner-policy-reconciliation",
+          "release-0.6-remove-runtime-package-managers",
+          "release-0.6-alpine-node-runtime-candidate",
+          "release-0.6-combined-runtime-image-candidate"
         ]
       }
     },
@@ -736327,7 +736516,10 @@
         "batches": [
           "release-0.6-browser-origin-security",
           "release-0.6-browser-response-policy",
-          "release-0.6-required-source-and-secret-gates"
+          "release-0.6-required-source-and-secret-gates",
+          "release-0.6-runtime-image-scan-gate",
+          "release-0.6-remove-runtime-package-managers",
+          "release-0.6-alpine-clamav-candidate"
         ]
       }
     },
@@ -736360,7 +736552,9 @@
         "batches": [
           "release-0.6-database-clocks-and-recovery-rehearsal",
           "release-0.6-hybrid-rehearsal-manifest",
-          "release-0.6-immutable-location-and-signature-feed"
+          "release-0.6-immutable-location-and-signature-feed",
+          "release-0.6-postgres-image-candidate",
+          "release-0.6-combined-runtime-image-candidate"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -822355,6 +822549,355 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/v06-geoip-absence-and-scanner-feed.json",
       "source_scope_proof_sha256": "b5d814166c1b686cc29e4d361f50179bac70e0cbe96f6816996e08b1d82f1619"
+    },
+    "release-0.6-runtime-image-scan-gate": {
+      "batch": "release-0.6-runtime-image-scan-gate",
+      "base_commit": "56d07048bd08d962cf11bcfd852525b86fdaaa12",
+      "task_keys": [
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.04.02.04",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.01",
+        "06-security-testing-observability.md#T-06.07.02.02",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.07.02.08",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "06-security-testing-observability.md#T-06.11.02.03",
+        "06-security-testing-observability.md#T-06.11.02.04",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+        },
+        {
+          "path": "Dockerfile.base",
+          "sha256": "97efa77ecd5503f1eb3507c54f2a4b9167949829e306440252ded401477d34ed"
+        },
+        {
+          "path": "Dockerfile.web",
+          "sha256": "76dc081c98bc771f47c20ef045ae59f75406e8270f0a930913c153912b75d3ff"
+        },
+        {
+          "path": "deploy/clamav/Dockerfile",
+          "sha256": "f7a433fe132141452384622c365819c3c888c78cc0044db191fec23418f1556b"
+        },
+        {
+          "path": "docs/security/supply-chain.md",
+          "sha256": "441ef77a6a33c6d7b3a033113d9f4617a96c6c0d97aa02baa6e22bdca87b12ed"
+        },
+        {
+          "path": "packages/db/scripts/backup/Dockerfile",
+          "sha256": "d3fffd72b79e492882c907af0bf3ac397066fa349a974250ca30d6377537f4e6"
+        },
+        {
+          "path": "scripts/check-runtime-images.sh",
+          "sha256": "1eec2f0af48372387db325c9ccc0a046e6e7038f2baa6354e981c1887f4f6126"
+        }
+      ],
+      "checks": [
+        "Checksum-pinned Trivy 0.76.2 scanned all four exact live v0.5 staging images with no ignore file; OS package inventories, exact image IDs, all severities and raw report digests were retained.",
+        "The original public vulnerability database mirror rejected staging with HTTP 403; explicit official GHCR database succeeded. No result was recorded for the first failed probe.",
+        "Four live image scans intentionally exited nonzero on findings: web 41, app 58, ClamAV 69, PostgreSQL 223 high/critical entries. Counts are scanner findings, not independently confirmed exploit paths or current candidate findings.",
+        "256 workflow status combinations prove only all-success admits main. Seven report cases verified high/critical blocking, exact image binding, complete OS inventory and retained lower-severity counts. All prior app test, coverage, source and secret job steps are unchanged."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/runtime-image-scan-gate-receipt.json",
+      "source_scope_proof_sha256": "e637ad6c520498be047d972d4bfd0b0775d44f0ebb20030e9433bad264a7e3ce",
+      "release_disposition": "Scanner produced and blocked real findings on older images. Hosted candidate and actionable vulnerability remediation remain open."
+    },
+    "release-0.6-remove-runtime-package-managers": {
+      "batch": "release-0.6-remove-runtime-package-managers",
+      "base_commit": "bc9ae5f778c06de69968233af5b9fcd7a9206933",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-03.01.01",
+        "01-platform-infrastructure.md#T-03.01.02",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.08",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "07-ui-ux-design.md#T-07.30.02.15",
+        "07-ui-ux-design.md#T-07.30.02.17",
+        "release-readiness#R-05.01",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "Dockerfile.base",
+          "sha256": "e79fadd7ae141ca77635400ec8ce1ce1b06cde6046a81a82a688a52c4b848305"
+        },
+        {
+          "path": "Dockerfile.web",
+          "sha256": "c8ee6bdab6e7f14670f9cd7ac204b969bc737d89ea171249dca83e2e3f7a5a95"
+        },
+        {
+          "path": "deploy/clamav/Dockerfile",
+          "sha256": "f7a433fe132141452384622c365819c3c888c78cc0044db191fec23418f1556b"
+        },
+        {
+          "path": "packages/db/scripts/backup/Dockerfile",
+          "sha256": "d3fffd72b79e492882c907af0bf3ac397066fa349a974250ca30d6377537f4e6"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+        },
+        {
+          "path": "scripts/check-runtime-images.sh",
+          "sha256": "1eec2f0af48372387db325c9ccc0a046e6e7038f2baa6354e981c1887f4f6126"
+        }
+      ],
+      "checks": [
+        "Exact hosted candidate bc9ae5f7 completed application integrity successfully. All four image scans produced current bound results and failed on findings; the required GitHub check failed as designed.",
+        "The exact removal layer was exercised on disposable copies of the live v0.5 app and web images. Node 24.22.2 and non-root execution were retained; npm, npx, Corepack and Yarn were absent; web readiness passed.",
+        "The first API fixture lacked a required merchant setting, reproduced on the unchanged production image. With isolated synthetic merchant, secrets, Redis and PostgreSQL, packaged migrations and API/worker readiness passed; pdftoppm remained present.",
+        "Fresh scans removed exactly six npm-path high findings per image without introducing a finding; 35 web and 52 app OS high/critical entries remained. No new release image or deployment accepted."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/runtime-package-manager-removal-receipt.json",
+      "source_scope_proof_sha256": "7aae5229c59e8e09efde9739b315ecec1fea4e80b8bb79492629fc5a635b625e",
+      "release_disposition": "Image CI blocking verified; runtime package managers removed. Exact clean release images and stateful safeguards remain open."
+    },
+    "release-0.6-alpine-node-runtime-candidate": {
+      "batch": "release-0.6-alpine-node-runtime-candidate",
+      "base_commit": "d85227164b1288789af25de174f2ffa324de6d78",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.08",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "07-ui-ux-design.md#T-07.30.02.15",
+        "07-ui-ux-design.md#T-07.30.02.17",
+        "release-readiness#R-05.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "Dockerfile.base",
+          "sha256": "2e5e09820ec090c2d70357bea13d988bbec9d8b654f7fe8f1cbc03f1e74f5bbe"
+        },
+        {
+          "path": "Dockerfile.web",
+          "sha256": "1d6843e8f9eeb1779c446fc7080a97b229a1db739942f81ff77579dda1064e0c"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "aab5a31e236ab70a7c588c676e3a0a2cf0bb8250e8d96ecdc469c9be175dcfa2"
+        },
+        {
+          "path": "scripts/check-runtime-images.sh",
+          "sha256": "1eec2f0af48372387db325c9ccc0a046e6e7038f2baa6354e981c1887f4f6126"
+        },
+        {
+          "path": "scripts/healthcheck-runtime.cjs",
+          "sha256": "024fe14b3e5888ba77b25a39a014ec3b9bba24007872d5dc306c3a3543b7042e"
+        }
+      ],
+      "checks": [
+        "Pinned Node 24 Alpine app and web built with the same musl build/runtime ABI; started as nonroot with read-only roots in the isolated fixture.",
+        "Packaged migrations, API, worker, AI inference, web readiness and built login CSP passed.",
+        "Exact nonroot Node 24 image: Argon2 correct and incorrect verification, Sharp PNG encode and metadata, and PDFKit PDF to PNG through Poppler.",
+        "Trivy 0.76.2: zero high/critical in each exact image (app 13 medium, web 1 medium). Reports include inventories and image IDs.",
+        "The pre-removal lockfile was used; rebuild and scan the final release. Live staging was not changed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/node-alpine-runtime-candidate-receipt.json",
+      "source_scope_proof_sha256": "342bf68041e9254d03d0bd0688ac335d5e54c2fc4054f4238615f137a226afa0"
+    },
+    "release-0.6-alpine-clamav-candidate": {
+      "batch": "release-0.6-alpine-clamav-candidate",
+      "base_commit": "d85227164b1288789af25de174f2ffa324de6d78",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.08",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/clamav/Dockerfile",
+          "sha256": "bff95b69fc3b17e1431334e7947f38a885647f49d18d65b1fe5f9945e4e145f5"
+        },
+        {
+          "path": "deploy/clamav/healthcheck.sh",
+          "sha256": "23bf1005115c965d5584ce4cd4aee7b7e645e0e71f334141109c5c8a00760229"
+        }
+      ],
+      "checks": [
+        "Built exact digest-pinned Alpine ClamAV on Linux/amd64. The scanner daemon returned PONG, accepted clean input and detected an isolated custom test signature over its streaming interface.",
+        "Retained the50MiB input limit, archive-limit alerts and reload settings. Trivy verified the finished image ID and found zero high/critical entries.",
+        "No live staging image, signature volume or scanner policy changed. The current release worker preserves existing stateful tags; candidate selection and live scanner readback remain required."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/clamav-alpine-candidate-receipt.json",
+      "source_scope_proof_sha256": "a49b442e2497f902b726f47b4e6b2d07e7b5ac4c03b7d7fded2c68f1022632dd",
+      "release_disposition": "Clean isolated scanner candidate only; live release and existing signature volume remain untouched."
+    },
+    "release-0.6-postgres-image-candidate": {
+      "batch": "release-0.6-postgres-image-candidate",
+      "base_commit": "e948da3c9497e47eaa1e577fe7a0e6aeffccdaf1",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.08",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "release-readiness#R-05.03"
+      ],
+      "source_evidence": [
+        {
+          "path": "packages/db/scripts/backup/Dockerfile",
+          "sha256": "09bc84f3342da18716a7331f065079f91c74f49d6664d4426188b9948ad04b57"
+        },
+        {
+          "path": "packages/db/scripts/backup/requirements.txt",
+          "sha256": "567d9945ba9211aa142388fa2522a07bb16721c1a99cc4e8df107a6283507e9e"
+        },
+        {
+          "path": "docs/operations/backup/postgresql-image-upgrade.md",
+          "sha256": "20056ada5d06dd5483bc2f2ae1c3e84eaa60a2327c19e8a8a8bc84193ad29b53"
+        },
+        {
+          "path": "packages/db/scripts/backup/test_config_backup.py",
+          "sha256": "dbced641c40dfba1d0469c87a9ad2e126445ad540366023241d9dfdd79f1d9a1"
+        },
+        {
+          "path": "packages/db/scripts/backup/test_physical_backup.py",
+          "sha256": "9078ec88a5c59780d1a768dcb8e0b2788ebe281c8e1fef78fdef3eded5bc831d"
+        }
+      ],
+      "checks": [
+        "Exact isolated PostgreSQL 16.15/PostGIS/pgvector Alpine image, with Go 1.27.3 rebuilt gosu, scanned at zero high or critical findings. Final repository build and deployment proof remain separate.",
+        "The same recovery runtime passed 18 physical/safety cases. All 16 config cases passed across the two targeted runs; the only rerun supplied the exact missing shell script. Hash-pinned Python wheel inventory verified.",
+        "Real logical dump and restore passed with synthetic Persian profile, exact >2^53 invoice and wallet amounts, immutable ledger, configuration, vector index, and migration history. The old libc collation is versioned and Alpine is unversioned; retain old volume and use logical migration. No live stage database changed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/postgres-alpine-runtime-receipt.json",
+      "source_scope_proof_sha256": "39794ea105f4b4dc6b5783f5a2ab5aaca34d11cba53dc6dac26cb1cbffee54d3"
+    },
+    "release-0.6-combined-runtime-image-candidate": {
+      "batch": "release-0.6-combined-runtime-image-candidate",
+      "base_commit": "fbaa3aac5bf7bf77438d48590507ac280620c6ac",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "02-auth-users-admin.md#T-02.02.02",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.04.02.04",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.01",
+        "06-security-testing-observability.md#T-06.07.02.02",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.07.02.08",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "06-security-testing-observability.md#T-06.11.02.03",
+        "06-security-testing-observability.md#T-06.11.02.04",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "07-ui-ux-design.md#T-07.30.02.15",
+        "07-ui-ux-design.md#T-07.30.02.17",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02",
+        "release-readiness#R-05.01",
+        "release-readiness#R-05.03"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "aab9803c99a19778d0e8dee78065f1a615b9f40cdef2472fb2017bdeb11c4f83"
+        },
+        {
+          "path": "Dockerfile.base",
+          "sha256": "c2974d2b6f0fb704d4797b88e7c5175b2aa150d93b8eebb0538ab9be6bfe412a"
+        },
+        {
+          "path": "Dockerfile.web",
+          "sha256": "1d6843e8f9eeb1779c446fc7080a97b229a1db739942f81ff77579dda1064e0c"
+        },
+        {
+          "path": "deploy/clamav/Dockerfile",
+          "sha256": "bff95b69fc3b17e1431334e7947f38a885647f49d18d65b1fe5f9945e4e145f5"
+        },
+        {
+          "path": "deploy/clamav/healthcheck.sh",
+          "sha256": "23bf1005115c965d5584ce4cd4aee7b7e645e0e71f334141109c5c8a00760229"
+        },
+        {
+          "path": "deploy/licenses/sharp-libvips/1.3.4/LICENSE.txt",
+          "sha256": "b40930bbcf80744c86c46a12bc9da056641d722716c378f5659b9e555ef833e1"
+        },
+        {
+          "path": "deploy/licenses/sharp-libvips/1.3.4/THIRD-PARTY-NOTICES.txt",
+          "sha256": "6f0d5086e3bcbee12bcdacf5878b31d1104002aeecaeb241d3fff466108082fe"
+        },
+        {
+          "path": "docs/operations/backup/postgresql-image-upgrade.md",
+          "sha256": "20056ada5d06dd5483bc2f2ae1c3e84eaa60a2327c19e8a8a8bc84193ad29b53"
+        },
+        {
+          "path": "docs/security/release-license-review.md",
+          "sha256": "798be8f78490c35ca1c6a44159ac78501623facbc15e7e07f915dd34a9805752"
+        },
+        {
+          "path": "docs/security/supply-chain.md",
+          "sha256": "3377756b589761454c7d71ff5bacc41416baf433f214cb5cfa6cc5bfc4baada4"
+        },
+        {
+          "path": "packages/db/scripts/backup/Dockerfile",
+          "sha256": "09bc84f3342da18716a7331f065079f91c74f49d6664d4426188b9948ad04b57"
+        },
+        {
+          "path": "packages/db/scripts/backup/requirements.txt",
+          "sha256": "567d9945ba9211aa142388fa2522a07bb16721c1a99cc4e8df107a6283507e9e"
+        },
+        {
+          "path": "scripts/check-runtime-images.sh",
+          "sha256": "1eec2f0af48372387db325c9ccc0a046e6e7038f2baa6354e981c1887f4f6126"
+        }
+      ],
+      "checks": [
+        "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
+        "The exact Sharp upstream license and third-party notice hashes matched inside the isolated nonroot app image. No package exception was approved.",
+        "Actual first hosted gate rejected 58 app, 41 web, 57 ClamAV and 158 PostgreSQL high/critical findings; no scanner exception was introduced. Combined hosted candidate and live stage receipts are still required."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/combined-runtime-image-candidate-receipt.json",
+      "source_scope_proof_sha256": "3e2d0c8cb631c2567bbd1593971d97f799bf40f15226edeeaa090437da6ff38f"
     }
   },
   "historical_improvements": [
@@ -822394,16 +822937,15 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-runtime-image-scans",
+    "id": "release-0.6-finish-image-and-operational-gates",
     "release": "0.6.0",
     "task_keys": [
-      "release-readiness#R-05.02",
-      "06-security-testing-observability.md#T-06.07.02.03",
-      "06-security-testing-observability.md#T-06.07.03.05",
       "06-security-testing-observability.md#T-06.07.02.08",
-      "01-platform-infrastructure.md#T-05.03.04"
+      "01-platform-infrastructure.md#T-05.03.04",
+      "release-readiness#R-05.03",
+      "release-readiness#R-05.02"
     ],
-    "goal": "Add the missing container image scan gate for runtime images and bind scan reports to the exact built images. Continue production license scope review without changing its allowlist."
+    "goal": "Verify the exact combined runtime build. Close package license decisions and required deployment, provider and recovery evidence before release."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",

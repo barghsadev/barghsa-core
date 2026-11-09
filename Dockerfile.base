@@ -1,5 +1,5 @@
 # Build once with the complete workspace dependency graph.
-FROM node:24-bookworm-slim AS deps
+FROM node:24-alpine@sha256:a34ab6d7f6f4813f4d0c5469d74685604b962fbdbf5793a7bc7b4998ecb867c8 AS deps
 WORKDIR /app
 RUN corepack enable
 COPY . .
@@ -10,20 +10,16 @@ RUN pnpm -r --filter @barghsa/api... --filter @barghsa/worker... build
 RUN pnpm --filter @barghsa/api deploy --prod /out/api
 RUN pnpm --filter @barghsa/worker deploy --prod /out/worker
 
-FROM node:24-bookworm-slim AS runtime
+FROM node:24-alpine@sha256:a34ab6d7f6f4813f4d0c5469d74685604b962fbdbf5793a7bc7b4998ecb867c8 AS runtime
 WORKDIR /app
-# The slim image has Node's CA bundle but no system bundle for APT.
-RUN node -e 'process.stdout.write(require("node:tls").rootCertificates.join("\n") + "\n")' > /tmp/apt-root-cas.pem \
-  && sed -i \
-    -e 's|http://deb.debian.org/debian-security|https://security.debian.org/debian-security|' \
-    -e 's|http://deb.debian.org/debian|https://ftp.debian.org/debian|' \
-    /etc/apt/sources.list.d/debian.sources \
-  && apt-get -o Acquire::https::CaInfo=/tmp/apt-root-cas.pem -o APT::Update::Error-Mode=any -o Acquire::Retries=2 -o Acquire::https::Timeout=20 update \
-  && apt-get -o Acquire::https::CaInfo=/tmp/apt-root-cas.pem -o Acquire::Retries=2 -o Acquire::https::Timeout=20 install -y --no-install-recommends poppler-utils \
-  && rm -rf /var/lib/apt/lists/* /tmp/apt-root-cas.pem
+RUN apk add --no-cache poppler-utils font-dejavu
+# Package managers are needed only in the build stage.
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack /opt/yarn-* \
+  && rm -f /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack /usr/local/bin/yarn /usr/local/bin/yarnpkg
 COPY --from=build /out/api ./
 COPY package.json ./root-package.json
 COPY --from=build /out/worker ./worker/
+COPY deploy/licenses/sharp-libvips/1.3.4/ ./licenses/sharp-libvips/1.3.4/
 COPY scripts/healthcheck-runtime.cjs ./healthcheck-runtime.cjs
 COPY scripts/run-packaged-migrations.cjs ./run-packaged-migrations.cjs
 ENV NODE_ENV=production NODE_OPTIONS="--max-old-space-size=512"
