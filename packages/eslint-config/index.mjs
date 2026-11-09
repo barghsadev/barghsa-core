@@ -17,6 +17,7 @@ export default tseslint.config(
       '**/test-results/**',
       '**/playwright-report/**',
       '**/.tanstack/**',
+      'packages/ui/story-build/**',
       'apps/web/src/routeTree.gen.ts',
       'audit/**',
       // Intentionally unsafe examples are validated by the Semgrep rule test runner.
@@ -45,6 +46,28 @@ export default tseslint.config(
   {
     files: ['apps/web/**/*.{js,jsx,ts,tsx}', 'packages/ui/**/*.{js,jsx,ts,tsx}'],
     languageOptions: { globals: { ...globals.browser } },
+  },
+  {
+    files: [
+      'apps/*/src/**/*.{js,jsx,ts,tsx,mjs,cjs,mts,cts}',
+      'packages/*/src/**/*.{js,jsx,ts,tsx,mjs,cjs,mts,cts}',
+      'apps/web/server.js',
+    ],
+    ignores: ['**/*.{test,spec}.{js,jsx,ts,tsx,mjs,cjs,mts,cts}', '**/src/test/**'],
+    rules: {
+      'no-eval': 'error',
+      'no-new-func': 'error',
+      'no-implied-eval': 'error',
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            'MemberExpression:matches([object.name="document"], [object.property.name="document"], [object.property.value="document"])' +
+            ':matches([property.name=/^write(ln)?$/], [property.value=/^write(ln)?$/])',
+          message: 'Use safe DOM APIs instead of document.write or document.writeln.',
+        },
+      ],
+    },
   },
   {
     files: ['apps/web/src/**/*.{jsx,tsx}', 'packages/ui/src/**/*.{jsx,tsx}'],

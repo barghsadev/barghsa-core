@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T21:23:38+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T21:26:44+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1011 | Accepted with unchanged source bindings. |
-| verify | 318 | Existing work may be complete; inspect evidence before building. |
+| done | 1014 | Accepted with unchanged source bindings. |
+| verify | 315 | Existing work may be complete; inspect evidence before building. |
 | partial | 33 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1170,9 +1170,9 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.04.02.02` | verify | Inventory needed | Implement allowlist-based field mapping for dynamic `ORDER BY` / `WHERE` fields |
 | `06-security-testing-observability.md#T-06.04.02.03` | verify | Inventory needed | Add lint rule: forbid raw SQL interpolation of non-literal strings |
 | `06-security-testing-observability.md#T-06.04.02.04` | done | Recorded batch work | Write SAST scan configuration targeting SQL injection patterns |
-| `06-security-testing-observability.md#T-06.04.03.01` | verify | Inventory needed | Implement or integrate DOM purify / allowlist HTML sanitizer for rich text content |
-| `06-security-testing-observability.md#T-06.04.03.02` | verify | Inventory needed | Audit all `dangerouslySetInnerHTML` usage; replace with sanitizer or remove |
-| `06-security-testing-observability.md#T-06.04.03.03` | verify | Inventory needed | Add lint rule: ban `eval`, `new Function`, string `setTimeout`/`setInterval`, `document.write` |
+| `06-security-testing-observability.md#T-06.04.03.01` | done | Recorded batch work | Implement or integrate DOM purify / allowlist HTML sanitizer for rich text content |
+| `06-security-testing-observability.md#T-06.04.03.02` | done | Recorded batch work | Audit all `dangerouslySetInnerHTML` usage; replace with sanitizer or remove |
+| `06-security-testing-observability.md#T-06.04.03.03` | done | Recorded batch work | Add lint rule: ban `eval`, `new Function`, string `setTimeout`/`setInterval`, `document.write` |
 | `06-security-testing-observability.md#T-06.04.03.04` | verify | Inventory needed | Ensure all user-provided data in React is rendered as text (not HTML) by default |
 | `06-security-testing-observability.md#T-06.04.03.05` | verify | Inventory needed | Write unit tests: XSS vectors through sanitizer, URL params, user display names, rich text fields |
 | `06-security-testing-observability.md#T-06.04.04.01` | verify | Inventory needed | Implement SSRF guard middleware: intercept all outbound HTTP requests from the application |

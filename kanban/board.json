@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T21:23:38+00:00",
+  "updated": "2026-11-09T21:26:44+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -476951,19 +476951,47 @@
         "story": "06-security-testing-observability.md#spec-7fcfecab2097"
       },
       "requirement": "| T-06.04.03.01 | Implement or integrate DOM purify / allowlist HTML sanitizer for rich text content | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-dynamic-js-lint-and-sanitized-html-boundary"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-lint-and-rich-text-proof",
+          "base_commit": "25ae069d06ec14188a3049be5bc309611cc502e2",
+          "source_evidence": [
+            {
+              "path": ".semgrep/security.yml",
+              "sha256": "af9b672e13e3aefb76bb878b4b7eb4a528197856b82fd009907a77862370167c"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "5a3332374e37d4a7d9eb5165a34156172d191be2dc1c3e77b1068eca5ab3818a"
+            },
+            {
+              "path": "apps/web/src/components/TosContent.test.tsx",
+              "sha256": "591ef5f465e1c1ffa0f6d94fca7c9fd4dd660ea984f7ed1a5f5391ba03071204"
+            },
+            {
+              "path": "apps/web/src/components/TosContent.tsx",
+              "sha256": "4a04ed74640a531a6f59921dabbc7705b0bec6df3fa421dbd9b5892779c65769"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Audited authored application and shared production source for raw HTML sinks. The sole sink is TosContent, which escapes raw Markdown HTML and images before applying the DOMPurify tag and attribute allowlist. The two matching EN/FA sanitizer tests passed in run 42689595374."
+          ]
+        }
       }
     },
     {
@@ -476977,19 +477005,47 @@
         "story": "06-security-testing-observability.md#spec-7fcfecab2097"
       },
       "requirement": "| T-06.04.03.02 | Audit all `dangerouslySetInnerHTML` usage; replace with sanitizer or remove | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-dynamic-js-lint-and-sanitized-html-boundary"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-lint-and-rich-text-proof",
+          "base_commit": "25ae069d06ec14188a3049be5bc309611cc502e2",
+          "source_evidence": [
+            {
+              "path": ".semgrep/security.yml",
+              "sha256": "af9b672e13e3aefb76bb878b4b7eb4a528197856b82fd009907a77862370167c"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "5a3332374e37d4a7d9eb5165a34156172d191be2dc1c3e77b1068eca5ab3818a"
+            },
+            {
+              "path": "apps/web/src/components/TosContent.test.tsx",
+              "sha256": "591ef5f465e1c1ffa0f6d94fca7c9fd4dd660ea984f7ed1a5f5391ba03071204"
+            },
+            {
+              "path": "apps/web/src/components/TosContent.tsx",
+              "sha256": "4a04ed74640a531a6f59921dabbc7705b0bec6df3fa421dbd9b5892779c65769"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Audited authored application and shared production source for raw HTML sinks. The sole sink is TosContent, which escapes raw Markdown HTML and images before applying the DOMPurify tag and attribute allowlist. The two matching EN/FA sanitizer tests passed in run 42689595374."
+          ]
+        }
       }
     },
     {
@@ -477003,19 +477059,48 @@
         "story": "06-security-testing-observability.md#spec-7fcfecab2097"
       },
       "requirement": "| T-06.04.03.03 | Add lint rule: ban `eval`, `new Function`, string `setTimeout`/`setInterval`, `document.write` | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-dynamic-js-lint-and-sanitized-html-boundary"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-lint-and-rich-text-proof",
+          "base_commit": "25ae069d06ec14188a3049be5bc309611cc502e2",
+          "source_evidence": [
+            {
+              "path": ".gitignore",
+              "sha256": "6c8ed51041f1a44643c8242c418730dadeb60a95814f8818813e45e6f523f0ac"
+            },
+            {
+              "path": "eslint.config.mjs",
+              "sha256": "2b09dd7fc63ebe8e3965d7e41f63c8214107e773e336b48f4b9f66a07c89096a"
+            },
+            {
+              "path": "package.json",
+              "sha256": "0d38ca16dff0d91baf910710ab6f0e82f44fb03b09a2d42796e34de9cfd6b5ee"
+            },
+            {
+              "path": "packages/eslint-config/index.mjs",
+              "sha256": "52d0ea4bbc1ce57ce8c64246b9c826450198f8180fb7baf55ee9eeb36007d3da"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Production lint rejects JavaScript eval, dynamic Function construction, string timer code and document.write/writeln. The real lint configuration rejected eight unsafe examples, including bracket access, while allowing function callbacks, Redis Lua calls and the controlled browser fixture scope.",
+            "Full repository lint and changed-file formatting passed. The only new global ignore is the generated UI story-build directory already excluded from Git. Authored production code remains linted and the browser's intentional CSP regression control remains executable."
+          ]
+        }
       }
     },
     {
@@ -509428,7 +509513,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-dynamic-js-lint-and-sanitized-html-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -509636,7 +509722,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "2f33fbc1b96a0eb35dc3e6434920dab9f2fa3520eeb6594400c9de39f061ffbd"
+              "sha256": "52d0ea4bbc1ce57ce8c64246b9c826450198f8180fb7baf55ee9eeb36007d3da"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -509986,7 +510072,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-dynamic-js-lint-and-sanitized-html-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -510194,7 +510281,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "2f33fbc1b96a0eb35dc3e6434920dab9f2fa3520eeb6594400c9de39f061ffbd"
+              "sha256": "52d0ea4bbc1ce57ce8c64246b9c826450198f8180fb7baf55ee9eeb36007d3da"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -510544,7 +510631,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-dynamic-js-lint-and-sanitized-html-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -510752,7 +510840,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "2f33fbc1b96a0eb35dc3e6434920dab9f2fa3520eeb6594400c9de39f061ffbd"
+              "sha256": "52d0ea4bbc1ce57ce8c64246b9c826450198f8180fb7baf55ee9eeb36007d3da"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -511102,7 +511190,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-dynamic-js-lint-and-sanitized-html-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -511310,7 +511399,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "2f33fbc1b96a0eb35dc3e6434920dab9f2fa3520eeb6594400c9de39f061ffbd"
+              "sha256": "52d0ea4bbc1ce57ce8c64246b9c826450198f8180fb7baf55ee9eeb36007d3da"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -511660,7 +511749,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-dynamic-js-lint-and-sanitized-html-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -511868,7 +511958,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "2f33fbc1b96a0eb35dc3e6434920dab9f2fa3520eeb6594400c9de39f061ffbd"
+              "sha256": "52d0ea4bbc1ce57ce8c64246b9c826450198f8180fb7baf55ee9eeb36007d3da"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -512218,7 +512308,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-dynamic-js-lint-and-sanitized-html-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -512426,7 +512517,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "2f33fbc1b96a0eb35dc3e6434920dab9f2fa3520eeb6594400c9de39f061ffbd"
+              "sha256": "52d0ea4bbc1ce57ce8c64246b9c826450198f8180fb7baf55ee9eeb36007d3da"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -512776,7 +512867,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-dynamic-js-lint-and-sanitized-html-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -512984,7 +513076,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "2f33fbc1b96a0eb35dc3e6434920dab9f2fa3520eeb6594400c9de39f061ffbd"
+              "sha256": "52d0ea4bbc1ce57ce8c64246b9c826450198f8180fb7baf55ee9eeb36007d3da"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -513334,7 +513426,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-dynamic-js-lint-and-sanitized-html-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -513542,7 +513635,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "2f33fbc1b96a0eb35dc3e6434920dab9f2fa3520eeb6594400c9de39f061ffbd"
+              "sha256": "52d0ea4bbc1ce57ce8c64246b9c826450198f8180fb7baf55ee9eeb36007d3da"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -513892,7 +513985,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-dynamic-js-lint-and-sanitized-html-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -514100,7 +514194,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "2f33fbc1b96a0eb35dc3e6434920dab9f2fa3520eeb6594400c9de39f061ffbd"
+              "sha256": "52d0ea4bbc1ce57ce8c64246b9c826450198f8180fb7baf55ee9eeb36007d3da"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -514450,7 +514544,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-dynamic-js-lint-and-sanitized-html-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -514658,7 +514753,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "2f33fbc1b96a0eb35dc3e6434920dab9f2fa3520eeb6594400c9de39f061ffbd"
+              "sha256": "52d0ea4bbc1ce57ce8c64246b9c826450198f8180fb7baf55ee9eeb36007d3da"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -515008,7 +515103,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-dynamic-js-lint-and-sanitized-html-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -515216,7 +515312,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "2f33fbc1b96a0eb35dc3e6434920dab9f2fa3520eeb6594400c9de39f061ffbd"
+              "sha256": "52d0ea4bbc1ce57ce8c64246b9c826450198f8180fb7baf55ee9eeb36007d3da"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -515566,7 +515662,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-dynamic-js-lint-and-sanitized-html-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -515774,7 +515871,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "2f33fbc1b96a0eb35dc3e6434920dab9f2fa3520eeb6594400c9de39f061ffbd"
+              "sha256": "52d0ea4bbc1ce57ce8c64246b9c826450198f8180fb7baf55ee9eeb36007d3da"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -516124,7 +516221,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-dynamic-js-lint-and-sanitized-html-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -516332,7 +516430,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "2f33fbc1b96a0eb35dc3e6434920dab9f2fa3520eeb6594400c9de39f061ffbd"
+              "sha256": "52d0ea4bbc1ce57ce8c64246b9c826450198f8180fb7baf55ee9eeb36007d3da"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -516682,7 +516780,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-dynamic-js-lint-and-sanitized-html-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -516890,7 +516989,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "2f33fbc1b96a0eb35dc3e6434920dab9f2fa3520eeb6594400c9de39f061ffbd"
+              "sha256": "52d0ea4bbc1ce57ce8c64246b9c826450198f8180fb7baf55ee9eeb36007d3da"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -746236,7 +746335,8 @@
           "release-0.6-private-session-cutover-and-health-probes",
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-storage-abstraction-direct-transfer-and-admin",
-          "release-0.6-versioned-config-cache-and-diagnostic-privacy"
+          "release-0.6-versioned-config-cache-and-diagnostic-privacy",
+          "release-0.6-dynamic-js-lint-and-sanitized-html-boundary"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -838361,6 +838461,62 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/versioned-config-cache",
       "source_scope_proof": "release-0.6-versioned-config-cache-and-diagnostic-privacy.json",
       "source_scope_proof_sha256": "46a36f180ccc9c5f79f1f1a85b305214a4aeb83b3f2fcc41dd61d33f08bca028"
+    },
+    "release-0.6-dynamic-js-lint-and-sanitized-html-boundary": {
+      "batch": "release-0.6-dynamic-js-lint-and-sanitized-html-boundary",
+      "base_commit": "25ae069d06ec14188a3049be5bc309611cc502e2",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.04.03.01",
+        "06-security-testing-observability.md#T-06.04.03.02",
+        "06-security-testing-observability.md#T-06.04.03.03",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".gitignore",
+          "sha256": "6c8ed51041f1a44643c8242c418730dadeb60a95814f8818813e45e6f523f0ac"
+        },
+        {
+          "path": ".semgrep/security.yml",
+          "sha256": "af9b672e13e3aefb76bb878b4b7eb4a528197856b82fd009907a77862370167c"
+        },
+        {
+          "path": "apps/web/package.json",
+          "sha256": "5a3332374e37d4a7d9eb5165a34156172d191be2dc1c3e77b1068eca5ab3818a"
+        },
+        {
+          "path": "apps/web/src/components/TosContent.test.tsx",
+          "sha256": "591ef5f465e1c1ffa0f6d94fca7c9fd4dd660ea984f7ed1a5f5391ba03071204"
+        },
+        {
+          "path": "apps/web/src/components/TosContent.tsx",
+          "sha256": "4a04ed74640a531a6f59921dabbc7705b0bec6df3fa421dbd9b5892779c65769"
+        },
+        {
+          "path": "eslint.config.mjs",
+          "sha256": "2b09dd7fc63ebe8e3965d7e41f63c8214107e773e336b48f4b9f66a07c89096a"
+        },
+        {
+          "path": "package.json",
+          "sha256": "0d38ca16dff0d91baf910710ab6f0e82f44fb03b09a2d42796e34de9cfd6b5ee"
+        },
+        {
+          "path": "packages/eslint-config/index.mjs",
+          "sha256": "52d0ea4bbc1ce57ce8c64246b9c826450198f8180fb7baf55ee9eeb36007d3da"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "Audited authored application and shared production source for raw HTML sinks. The sole sink is TosContent, which escapes raw Markdown HTML and images before applying the DOMPurify tag and attribute allowlist. The two matching EN/FA sanitizer tests passed in run 42689595374.",
+        "Production lint rejects JavaScript eval, dynamic Function construction, string timer code and document.write/writeln. The real lint configuration rejected eight unsafe examples, including bracket access, while allowing function callbacks, Redis Lua calls and the controlled browser fixture scope.",
+        "Full repository lint and changed-file formatting passed. The only new global ignore is the generated UI story-build directory already excluded from Git. Authored production code remains linted and the browser's intentional CSP regression control remains executable."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/dynamic-js-lint",
+      "source_scope_proof": "release-0.6-dynamic-js-lint-and-sanitized-html-boundary.json",
+      "source_scope_proof_sha256": "8bd43246cb8964d4c706f23aa24511c369ddd64a396a422ef83213b09806de4b"
     }
   },
   "historical_improvements": [
