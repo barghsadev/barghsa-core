@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T10:32:57+00:00",
-  "source_commit": "8b105fcdcd49c4825415e6a211f3a54ba57f16ae",
+  "updated": "2026-11-09T10:35:49+00:00",
+  "source_commit": "de1771f77087e3fa169a72e5e1726f90a63799eb",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -600330,12 +600330,10 @@
         "story": "07-ui-ux-design.md#spec-2ef79ad05a25"
       },
       "requirement": "| **T-07.12.01.09** | ⚠️ Error boundaries per route: React Error Boundary catches unhandled render errors. Shows `ErrorState` with \"Something went wrong\" + reload button. Logs error to Sentry. | M |\n\n---",
-      "status": "partial",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Protected staging configuration is installed. The isolated candidate route returned 204 after Sentry acknowledged the exact event ID cebc05c1abbf4811aa118e0812018764. Read the matching event and its support reference back from the configured staging project before acceptance."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -600348,9 +600346,52 @@
           "release-0.5-conditional-form-closure",
           "release-0.5-route-error-delivery",
           "release-0.5-intake-response-recovery",
-          "release-0.5-staging-sentry-ingest"
+          "release-0.5-staging-sentry-ingest",
+          "release-0.5-staging-sentry-readback"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current_route_error_boundary_and_live_sentry",
+          "reviewed_sha": "8e64519d06262a253a9f54dc511d1c7fc8265fb4",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/route-errors/route-errors.controller.ts",
+              "sha256": "0e16a8a12e48adc346e7be9829475247b4e87aa14c0ad99676edbe0c07a66093"
+            },
+            {
+              "path": "apps/api/src/route-errors/route-errors.controller.test.ts",
+              "sha256": "e59f2ac8db69247aaca5bbbe9f8a6c31dcdab91a0d60adf2a658d9adf49b492b"
+            },
+            {
+              "path": "apps/api/src/route-errors/route-errors-http.integration.test.ts",
+              "sha256": "9d545527d6fb140dbb1b0cb352fa49677d5e83a336a76a6ea68338060dda81ad"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.decorator.ts",
+              "sha256": "5a78714dfd36a80dc0225fc98ec2156cbaf35e2d8d8856c2749cb8d0cfdb7485"
+            },
+            {
+              "path": "apps/web/src/hooks/useRouteErrorReport.ts",
+              "sha256": "b64d5f6932d0a07a373d8cde4ef3a6fb455ce748b8de277ed7cf2fcd0ec40fb0"
+            },
+            {
+              "path": "apps/web/src/components/RouteErrorBoundary.tsx",
+              "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
+            },
+            {
+              "path": "apps/web/e2e/feedback.spec.ts",
+              "sha256": "ab6d9df3611e658b73445618dabaebf8b8d8ac3337f5319e0cc884feec07623c"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "aab5a31e236ab70a7c588c676e3a0a2cf0bb8250e8d96ecdc469c9be175dcfa2"
+            }
+          ],
+          "checks": [
+            "Retained source-bound browser coverage for route render fallback, retry, and support references; controller and HTTP integration cover validated redacted payloads and provider delivery failures.",
+            "One controlled compiled candidate request returned HTTP 204 after Sentry acknowledged the exact event on the staging host network.",
+            "Authenticated staging Sentry project readback matched event cebc05c1abbf4811aa118e0812018764, support reference cebc05c1-abbf-4811-aa11-8e0812018764 and issue https://barghsa.sentry.io/issues/159740379/?project=4512401311596624."
+          ]
+        }
       }
     },
     {
@@ -817883,6 +817924,59 @@
       "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-check-activation/sentry-ingest-proof.json",
       "source_scope_proof_sha256": "0bffdb5091de00e9eb0f923b8549c3bdb3f7cc62687f68b183b9eed14f74d044",
       "release_disposition": "Sentry ingestion acknowledged. Project lookup and an authorized direct-push path remain before v0.5.0 publication."
+    },
+    "release-0.5-staging-sentry-readback": {
+      "batch": "release-0.5-staging-sentry-readback",
+      "base_commit": "de1771f77087e3fa169a72e5e1726f90a63799eb",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.09"
+      ],
+      "accepted_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.09"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/route-errors/route-errors.controller.ts",
+          "sha256": "0e16a8a12e48adc346e7be9829475247b4e87aa14c0ad99676edbe0c07a66093"
+        },
+        {
+          "path": "apps/api/src/route-errors/route-errors.controller.test.ts",
+          "sha256": "e59f2ac8db69247aaca5bbbe9f8a6c31dcdab91a0d60adf2a658d9adf49b492b"
+        },
+        {
+          "path": "apps/api/src/route-errors/route-errors-http.integration.test.ts",
+          "sha256": "9d545527d6fb140dbb1b0cb352fa49677d5e83a336a76a6ea68338060dda81ad"
+        },
+        {
+          "path": "apps/api/src/rate-limit/rate-limit.decorator.ts",
+          "sha256": "5a78714dfd36a80dc0225fc98ec2156cbaf35e2d8d8856c2749cb8d0cfdb7485"
+        },
+        {
+          "path": "apps/web/src/hooks/useRouteErrorReport.ts",
+          "sha256": "b64d5f6932d0a07a373d8cde4ef3a6fb455ce748b8de277ed7cf2fcd0ec40fb0"
+        },
+        {
+          "path": "apps/web/src/components/RouteErrorBoundary.tsx",
+          "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
+        },
+        {
+          "path": "apps/web/e2e/feedback.spec.ts",
+          "sha256": "ab6d9df3611e658b73445618dabaebf8b8d8ac3337f5319e0cc884feec07623c"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "aab5a31e236ab70a7c588c676e3a0a2cf0bb8250e8d96ecdc469c9be175dcfa2"
+        }
+      ],
+      "checks": [
+        "Retained source-bound browser coverage for route render fallback, retry, and support references; controller and HTTP integration cover validated redacted payloads and provider delivery failures.",
+        "One controlled compiled candidate request returned HTTP 204 after Sentry acknowledged the exact event on the staging host network.",
+        "Authenticated staging Sentry project readback matched event cebc05c1abbf4811aa118e0812018764, support reference cebc05c1-abbf-4811-aa11-8e0812018764 and issue https://barghsa.sentry.io/issues/159740379/?project=4512401311596624."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-check-activation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-check-activation/sentry-project-receipt.json",
+      "source_scope_proof_sha256": "cb14edc595543662f75f06cd6ae3d8fb7c15de16d7e6af50dda1d3ef7d572472",
+      "release_disposition": "Route error gate accepted. No public deployment performed by this controlled probe."
     }
   },
   "historical_improvements": [
@@ -817933,7 +818027,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Read the matching staging Sentry event from its project and publish through an authorized direct-push account or app. Then accept and enqueue v0.5.0."
+    "goal": "Prepare the verified v0.5.0 version and release assets, then publish through an authorized direct-push path and enqueue staging."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",

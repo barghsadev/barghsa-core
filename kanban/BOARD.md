@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T10:32:57+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T10:35:49+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 872 | Accepted with unchanged source bindings. |
+| done | 873 | Accepted with unchanged source bindings. |
 | verify | 470 | Existing work may be complete; inspect evidence before building. |
-| partial | 21 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 20 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 5 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Read the matching staging Sentry event from its project and publish through an authorized direct-push account or app. Then accept and enqueue v0.5.0.
+Prepare the verified v0.5.0 version and release assets, then publish through an authorized direct-push path and enqueue staging.
 
 - `07-ui-ux-design.md#T-07.05.01.08`: Ensure all color combinations pass WCAG AA contrast ratios: normal text ≥ 4.5:1, large text ≥ 3:1, UI components ≥ 3:1. Verify with automated tools. Provide a "high contrast" mode toggle that strengthens all contrast ratios.
 - `07-ui-ux-design.md#T-07.05.02.04`: Add CI gate: a11y violations on critical pages block PR merge. Non-critical pages warn but do not block. Violations must be triaged with reason or exemption.
@@ -795,7 +795,7 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.12.01.06` | done | Recorded batch work | Build `WaitingForBarghsa` state component: shown when an action is awaiting Barghsa staff. Displays: "Waiting for Barghsa", submission timestamp, latest update/status, expected response time, related ticket/comment link. Used on: order pages awaiting review, verification pending, contract awaiting signature, document awaiting review. See README no-dead-end principle. |
 | `07-ui-ux-design.md#T-07.12.01.07` | done | Recorded batch work | Build `NoDeadEndBanner` component: appears on any page whose underlying data cannot be loaded or written due to dependency/service failure. Shows: current state, what happened, next available action (Retry / Contact support), responsible team, help link. Applied to: external-provider outages, missing prerequisite data, admin-disabled features. Never leaves a customer on a disabled screen without explanation. |
 | `07-ui-ux-design.md#T-07.12.01.08` | done | Recorded batch work | Every list page, detail page, dashboard widget, and admin page must implement the loading/empty/error pattern. No view renders a blank white page or infinite spinner. |
-| `07-ui-ux-design.md#T-07.12.01.09` | partial | Recorded batch work | Error boundaries per route: React Error Boundary catches unhandled render errors. Shows `ErrorState` with "Something went wrong" + reload button. Logs error to Sentry. |
+| `07-ui-ux-design.md#T-07.12.01.09` | done | Recorded batch work | Error boundaries per route: React Error Boundary catches unhandled render errors. Shows `ErrorState` with "Something went wrong" + reload button. Logs error to Sentry. |
 | `07-ui-ux-design.md#T-07.13.01.01` | done | Recorded batch work | Build `ConfirmDialog` component: configurable title, description, confirm button text + variant (`primary` for info, `destructive` for delete/cancel, `warning` for financial), cancel button text. Props: `open`, `onConfirm`, `onCancel`, `loading` (spinner on confirm button). Variants: |
 | `07-ui-ux-design.md#T-07.13.01.02` | done | Recorded batch work | Build `DestructiveConfirmDialog`: confirm button is red/destructive. User must type a confirmation phrase (e.g. "DELETE") to enable the button. Used for: deleting resources, removing agents, cancelling contracts. |
 | `07-ui-ux-design.md#T-07.13.01.03` | done | Recorded batch work | Build `FinancialConfirmDialog`: shows structured financial preview before user can confirm. Displays: amounts in IRR and toman, what will happen, what the consequences are, refund policy. User must check "I understand" checkbox to enable confirm button. Used for: wallet payments, order submissions, contract acceptance, gift code redemption. |
