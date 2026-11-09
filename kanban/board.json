@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T05:41:40+00:00",
-  "source_commit": "2f5aa7619f84e140fb4856cb2ec0592487fcf81d",
+  "updated": "2026-11-09T10:27:38+00:00",
+  "source_commit": "8e64519d06262a253a9f54dc511d1c7fc8265fb4",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -523500,12 +523500,10 @@
         "story": "07-ui-ux-design.md#spec-27e7d7f89abe"
       },
       "requirement": "| **T-07.05.02.04** | ⚠️ Add CI gate: a11y violations on critical pages block PR merge. Non-critical pages warn but do not block. Violations must be triaged with reason or exemption. | S |\n\n---",
-      "status": "partial",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Critical accessibility passed in GitHub Actions and both workflow changes are on main. A repository administrator must require the Verify monorepo integrity check for merges while preserving the authorized direct-push path, then verify effective enforcement. The current CLI account has workflow scope and push access but lacks repository admin access."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -523523,9 +523521,54 @@
           "release-0.5-hosted-ci-repairs",
           "release-0.5-address-states-and-route-reconciliation",
           "release-0.5-intake-response-recovery",
-          "release-0.5-dashboard-profile-conflict"
+          "release-0.5-dashboard-profile-conflict",
+          "release-0.5-required-check-activation"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "active_github_required_check",
+          "reviewed_sha": "8e64519d06262a253a9f54dc511d1c7fc8265fb4",
+          "checks": [
+            "GitHub returned active repository ruleset 26844024 for the default branch and the effective required check on main is Verify monorepo integrity from GitHub Actions integration 15368.",
+            "GitHub Actions job 129001187379 passed on the inspected main SHA. Its critical accessibility, non-critical advisory and advisory artifact steps all succeeded."
+          ],
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
+            },
+            {
+              "path": "apps/web/e2e/critical-accessibility.ts",
+              "sha256": "26c1eec14dcc0819954be255d1529b895382787d12a0510ebf7114aee5498392"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/e2e/login-ui.spec.ts",
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
+            },
+            {
+              "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+            },
+            {
+              "path": "apps/web/e2e/customer-service-history-views.spec.ts",
+              "sha256": "1aaea8e0a7ba394e68df54ea5fe621b99cc7b4d7fe04037eb734441cb21a6f85"
+            },
+            {
+              "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
+              "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
+            },
+            {
+              "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
+              "sha256": "e426afca86cd4123d0e4a9ee77ad67f6496ecc60ba1e4df8e96c0c70bb2b6d15"
+            }
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-check-activation",
+          "rule_id": 26844024,
+          "job_id": 129001187379
+        }
       }
     },
     {
@@ -817733,6 +817776,58 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-verification-controls/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-verification-controls/renewed-bindings.json",
       "release_disposition": "UI adoption accepted. Required GitHub merge check and live staging Sentry receipt remain release gates."
+    },
+    "release-0.5-required-check-activation": {
+      "batch": "release-0.5-required-check-activation",
+      "base_commit": "8e64519d06262a253a9f54dc511d1c7fc8265fb4",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.02.04"
+      ],
+      "accepted_task_keys": [
+        "07-ui-ux-design.md#T-07.05.02.04"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
+        },
+        {
+          "path": "apps/web/e2e/critical-accessibility.ts",
+          "sha256": "26c1eec14dcc0819954be255d1529b895382787d12a0510ebf7114aee5498392"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        },
+        {
+          "path": "apps/web/e2e/login-ui.spec.ts",
+          "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
+        },
+        {
+          "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
+          "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+        },
+        {
+          "path": "apps/web/e2e/customer-service-history-views.spec.ts",
+          "sha256": "1aaea8e0a7ba394e68df54ea5fe621b99cc7b4d7fe04037eb734441cb21a6f85"
+        },
+        {
+          "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
+          "sha256": "8190e3dbcc73d3ac06238902eeb24bfbc9e8d1e59aa44ad4fef52080ac2e9ba8"
+        },
+        {
+          "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
+          "sha256": "e426afca86cd4123d0e4a9ee77ad67f6496ecc60ba1e4df8e96c0c70bb2b6d15"
+        }
+      ],
+      "checks": [
+        "GitHub returned active repository ruleset 26844024 for the default branch and the effective required check on main is Verify monorepo integrity from GitHub Actions integration 15368.",
+        "GitHub Actions job 129001187379 passed on the inspected main SHA. Its critical accessibility, non-critical advisory and advisory artifact steps all succeeded."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-check-activation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-check-activation/proof.json",
+      "source_scope_proof_sha256": "1b2ec884b3849117da4270523063031e4b2dad8e84132033453fd4a23784f9c5",
+      "release_disposition": "The required accessibility check is active. The staging Sentry receipt remains open."
     }
   },
   "historical_improvements": [
@@ -817783,7 +817878,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Close required GitHub merge-check enforcement and live staging Sentry delivery, then accept and publish the v0.5.0 staging milestone."
+    "goal": "Verify the configured staging Sentry project with a controlled candidate event, then accept and publish the v0.5.0 staging milestone."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",

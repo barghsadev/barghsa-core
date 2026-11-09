@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T05:41:40+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T10:27:38+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 871 | Accepted with unchanged source bindings. |
+| done | 872 | Accepted with unchanged source bindings. |
 | verify | 470 | Existing work may be complete; inspect evidence before building. |
-| partial | 22 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 21 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 5 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Close required GitHub merge-check enforcement and live staging Sentry delivery, then accept and publish the v0.5.0 staging milestone.
+Verify the configured staging Sentry project with a controlled candidate event, then accept and publish the v0.5.0 staging milestone.
 
 - `07-ui-ux-design.md#T-07.05.01.08`: Ensure all color combinations pass WCAG AA contrast ratios: normal text ≥ 4.5:1, large text ≥ 3:1, UI components ≥ 3:1. Verify with automated tools. Provide a "high contrast" mode toggle that strengthens all contrast ratios.
 - `07-ui-ux-design.md#T-07.05.02.04`: Add CI gate: a11y violations on critical pages block PR merge. Non-critical pages warn but do not block. Violations must be triaged with reason or exemption.
@@ -733,7 +733,7 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.05.02.01` | done | Recorded batch work | Install `@axe-core/playwright` and configure in Playwright test suite. Add `AxeBuilder` to critical page E2E tests (login, dashboard, order list, wallet, contract detail). Verify zero violations for WCAG AA. |
 | `07-ui-ux-design.md#T-07.05.02.02` | done | Recorded batch work | Add component-level a11y tests in React Testing Library using `jest-axe` or testing-library's `toBeInTheDocument` + role queries. Every component must pass basic role/name/value checks. |
 | `07-ui-ux-design.md#T-07.05.02.03` | done | Recorded batch work | Write keyboard-navigation E2E tests for critical flows: Tab through login form, navigate dashboard with arrow keys, open/close modal with Escape, select from combobox with keyboard. |
-| `07-ui-ux-design.md#T-07.05.02.04` | partial | Recorded batch work | Add CI gate: a11y violations on critical pages block PR merge. Non-critical pages warn but do not block. Violations must be triaged with reason or exemption. |
+| `07-ui-ux-design.md#T-07.05.02.04` | done | Recorded batch work | Add CI gate: a11y violations on critical pages block PR merge. Non-critical pages warn but do not block. Violations must be triaged with reason or exemption. |
 | `07-ui-ux-design.md#T-07.06.01.01` | done | Recorded batch work | Retain the native `ThemeSwitcher` selector in the topbar account menu, offering light, dark and device modes with a sun/moon icon for the resolved theme. Keep server-confirmed preference writes and published administrator policy precedence. |
 | `07-ui-ux-design.md#T-07.06.01.02` | done | Recorded batch work | Persist through the existing account preference and `barghsa.theme.v1` browser key. Retain `barghsa.theme-policy.v1` and the nonce-bound blocking head script for the approved Vite SPA, establishing appearance before React without a flash. |
 | `07-ui-ux-design.md#T-07.06.01.03` | done | Recorded batch work | Verify dark mode colors pass contrast checks. Default dark backgrounds must not be pure `#000` and default dark foregrounds must not be pure `#fff`. Validated custom brand choices retain their configured colors and enforced readable foregrounds. All surface colors appropriate for their role. |
