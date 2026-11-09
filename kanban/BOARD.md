@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T23:23:55+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T23:25:12+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1058 | Accepted with unchanged source bindings. |
-| verify | 269 | Existing work may be complete; inspect evidence before building. |
+| done | 1060 | Accepted with unchanged source bindings. |
+| verify | 267 | Existing work may be complete; inspect evidence before building. |
 | partial | 35 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1277,8 +1277,8 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.10.01.04` | verify | Inventory needed | Build fake adapter servers: SMTP fake, SMS.ir fake, payment gateway fake, document storage fake |
 | `06-security-testing-observability.md#T-06.10.01.05` | done | Recorded batch work | Implement deterministic signed webhook fixture builder |
 | `06-security-testing-observability.md#T-06.10.01.06` | verify | Inventory needed | Write helper utilities: create user, create profile, authenticate, create order, create invoice, add wallet funds |
-| `06-security-testing-observability.md#T-06.10.02.01` | verify | Inventory needed | Write migration integration tests: clean database apply, upgrade-path apply, rollback, data preservation |
-| `06-security-testing-observability.md#T-06.10.02.02` | verify | Inventory needed | Write constraint tests: unique indexes, foreign keys, NOT NULL, CHECK constraints, exclusion constraints |
+| `06-security-testing-observability.md#T-06.10.02.01` | done | Recorded batch work | Write migration integration tests: clean database apply, upgrade-path apply, rollback, data preservation |
+| `06-security-testing-observability.md#T-06.10.02.02` | done | Recorded batch work | Write constraint tests: unique indexes, foreign keys, NOT NULL, CHECK constraints, exclusion constraints |
 | `06-security-testing-observability.md#T-06.10.02.03` | done | Recorded batch work | Write transaction tests: atomic wallet debit + invoice settlement, atomic order+contract+invoice creation |
 | `06-security-testing-observability.md#T-06.10.02.04` | done | Recorded batch work | Write locking tests: row-level lock for wallet mutations, optimistic version for concurrent state changes |
 | `06-security-testing-observability.md#T-06.10.02.05` | done | Recorded batch work | Write profile-scoped data isolation tests: customer A cannot access customer B's data |

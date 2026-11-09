@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T23:23:55+00:00",
-  "source_commit": "e8670535078881dd6c191f5b4792aafdae478cf6",
+  "updated": "2026-11-09T23:25:12+00:00",
+  "source_commit": "ce3a2dfaa7d1c5c788a6128248479d202fb0b778",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -482915,20 +482915,63 @@
         "story": "06-security-testing-observability.md#spec-7665a6370b00"
       },
       "requirement": "| T-06.10.02.01 | Write migration integration tests: clean database apply, upgrade-path apply, rollback, data preservation | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-migration-and-native-constraint-tests"
+        ],
+        "current_acceptance": {
+          "kind": "verified-migrated-postgresql-suites",
+          "base_commit": "ce3a2dfaa7d1c5c788a6128248479d202fb0b778",
+          "source_evidence": [
+            {
+              "path": "audit/legacy-inline-constraints.json",
+              "sha256": "a903d06d7f795341a8f9eda12b698b050917c697340de99319b81a582c077f0b"
+            },
+            {
+              "path": "packages/db/drizzle/production/0283_operations_outbox_backlog_priority.sql",
+              "sha256": "39135fae29951df9164ecca62361b272555bc1d0a63acf208e09f1a9e6204ac4"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/_journal.json",
+              "sha256": "274888724a588fcaf663617f57daddd4f8c0d819b9a2a9a90c7caf2d6678bdd3"
+            },
+            {
+              "path": "packages/db/src/audit-log-immutability-upgrade.migrated.test.ts",
+              "sha256": "936f585bac64c2c14ae8d18b47b13ef12546e881b4cba09eaf6e177f13b6fe0e"
+            },
+            {
+              "path": "packages/db/src/audit-log-immutability.migrated.test.ts",
+              "sha256": "59a78ede329576b622f72fb772880268fae0838f686bd6425d5c2a92573c663c"
+            },
+            {
+              "path": "packages/db/src/migrate.domain-constraints.test.ts",
+              "sha256": "92aadd31e871b063a254ddf990775c7207ea143a19cf5dada6ad61b20fc4475b"
+            },
+            {
+              "path": "packages/db/src/migrate.ts",
+              "sha256": "ee35ac3d9e1350e828edc37e6a972a4ed04f91d3c079ed53b219ecc1adb09fb8"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Hosted full-test job 129476154430 passed the five source-matching domain migration cases and the existing audit-history upgrade case. The tests apply the production journal from a clean database and upgrade populated predecessor data.",
+            "The failing upgrade leaves the historical row and old schema intact. After the fixture data is corrected, the full pending sequence applies exactly once. The audit upgrade also verifies historical rows remain unchanged and replay is a no-op.",
+            "Migration 0283 changes only the allowed operations-alert priority values. The current isolated migrated audit fixture passed all ten cases against that journal. These are migration test receipts. Volume rehearsal and deployed restore remain separate gates."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.10.02.02",
@@ -482941,20 +482984,54 @@
         "story": "06-security-testing-observability.md#spec-7665a6370b00"
       },
       "requirement": "| T-06.10.02.02 | Write constraint tests: unique indexes, foreign keys, NOT NULL, CHECK constraints, exclusion constraints | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-migration-and-native-constraint-tests"
+        ],
+        "current_acceptance": {
+          "kind": "verified-migrated-postgresql-suites",
+          "base_commit": "ce3a2dfaa7d1c5c788a6128248479d202fb0b778",
+          "source_evidence": [
+            {
+              "path": "audit/legacy-inline-constraints.json",
+              "sha256": "a903d06d7f795341a8f9eda12b698b050917c697340de99319b81a582c077f0b"
+            },
+            {
+              "path": "packages/db/src/contract-cancellation-requests.migrated.test.ts",
+              "sha256": "28aa7c9a61e23d39b02e9c30c506d5879acf0707216d3f9b8d50c1efb4482731"
+            },
+            {
+              "path": "packages/db/src/invoice-outcome-notifications-upgrade.migrated.test.ts",
+              "sha256": "951ff67495e4c96b7a4bb3535688e00795378591d4f40448b74f288bc1c3c974"
+            },
+            {
+              "path": "packages/db/src/migrate.domain-constraints.test.ts",
+              "sha256": "92aadd31e871b063a254ddf990775c7207ea143a19cf5dada6ad61b20fc4475b"
+            },
+            {
+              "path": "packages/db/src/migrate.ts",
+              "sha256": "ee35ac3d9e1350e828edc37e6a972a4ed04f91d3c079ed53b219ecc1adb09fb8"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "The real PostgreSQL domain migration suite verifies persisted catalog entries and rejects invalid CHECK and foreign-key values. Overlapping upload policy and service target periods fail with 23P01 while adjacent versions remain valid.",
+            "Source-matching migrated contract cancellation and invoice outcome suites passed all six and 25 cases. An additional pending cancellation fails the unique index with 23505 and an invoice with a null profile binding fails with 23502."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.10.02.03",
@@ -845964,6 +846041,67 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/audit-immutability",
       "source_scope_proof": "audit-isolation-source-proof.json",
       "source_scope_proof_sha256": "2661aac58384820595d3e0c4ed927846c9d76f9e176f2424a79bfde188796d0b"
+    },
+    "release-0.6-migration-and-native-constraint-tests": {
+      "batch": "release-0.6-migration-and-native-constraint-tests",
+      "base_commit": "ce3a2dfaa7d1c5c788a6128248479d202fb0b778",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.10.02.01",
+        "06-security-testing-observability.md#T-06.10.02.02"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "audit/legacy-inline-constraints.json",
+          "sha256": "a903d06d7f795341a8f9eda12b698b050917c697340de99319b81a582c077f0b"
+        },
+        {
+          "path": "packages/db/drizzle/production/0283_operations_outbox_backlog_priority.sql",
+          "sha256": "39135fae29951df9164ecca62361b272555bc1d0a63acf208e09f1a9e6204ac4"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "274888724a588fcaf663617f57daddd4f8c0d819b9a2a9a90c7caf2d6678bdd3"
+        },
+        {
+          "path": "packages/db/src/audit-log-immutability-upgrade.migrated.test.ts",
+          "sha256": "936f585bac64c2c14ae8d18b47b13ef12546e881b4cba09eaf6e177f13b6fe0e"
+        },
+        {
+          "path": "packages/db/src/audit-log-immutability.migrated.test.ts",
+          "sha256": "59a78ede329576b622f72fb772880268fae0838f686bd6425d5c2a92573c663c"
+        },
+        {
+          "path": "packages/db/src/contract-cancellation-requests.migrated.test.ts",
+          "sha256": "28aa7c9a61e23d39b02e9c30c506d5879acf0707216d3f9b8d50c1efb4482731"
+        },
+        {
+          "path": "packages/db/src/invoice-outcome-notifications-upgrade.migrated.test.ts",
+          "sha256": "951ff67495e4c96b7a4bb3535688e00795378591d4f40448b74f288bc1c3c974"
+        },
+        {
+          "path": "packages/db/src/migrate.domain-constraints.test.ts",
+          "sha256": "92aadd31e871b063a254ddf990775c7207ea143a19cf5dada6ad61b20fc4475b"
+        },
+        {
+          "path": "packages/db/src/migrate.ts",
+          "sha256": "ee35ac3d9e1350e828edc37e6a972a4ed04f91d3c079ed53b219ecc1adb09fb8"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "Hosted full-test job 129476154430 passed the five source-matching domain migration cases and the existing audit-history upgrade case. The tests apply the production journal from a clean database and upgrade populated predecessor data.",
+        "The failing upgrade leaves the historical row and old schema intact. After the fixture data is corrected, the full pending sequence applies exactly once. The audit upgrade also verifies historical rows remain unchanged and replay is a no-op.",
+        "Migration 0283 changes only the allowed operations-alert priority values. The current isolated migrated audit fixture passed all ten cases against that journal. These are migration test receipts. Volume rehearsal and deployed restore remain separate gates.",
+        "The real PostgreSQL domain migration suite verifies persisted catalog entries and rejects invalid CHECK and foreign-key values. Overlapping upload policy and service target periods fail with 23P01 while adjacent versions remain valid.",
+        "Source-matching migrated contract cancellation and invoice outcome suites passed all six and 25 cases. An additional pending cancellation fails the unique index with 23505 and an invoice with a null profile binding fails with 23502."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/transaction-fixture-reconciliation",
+      "source_scope_proof": "migration-constraint-source-proof.json",
+      "source_scope_proof_sha256": "e9d8ad265b59a4f7d750643c7e24dcafb91961d2cd2a6c6b9218509064b7ee76"
     }
   },
   "historical_improvements": [
