@@ -1,6 +1,7 @@
 import { afterAll, afterEach, beforeAll, beforeEach, expect, it, vi } from 'vitest';
 import { once } from 'node:events';
 import { createServer, type Server } from 'node:http';
+import promClient from 'prom-client';
 import { closeDbPools, createDbPool } from '@barghsa/db';
 import { aiModelTestPrompt, type ChatCompletionInput } from '@barghsa/shared/ai-models';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -36,6 +37,7 @@ beforeAll(async () => {
   ).rows[0]!.id;
 }, 30_000);
 beforeEach(async () => {
+  promClient.register.resetMetrics();
   await http.pool.query('DELETE FROM ai_model_budgets WHERE model_id=$1', [modelId]);
   await http.pool.query(
     `UPDATE ai_model_circuit_states SET degraded=true,
@@ -117,6 +119,18 @@ it('probes with the connection-test prompt, charges both calls and returns only 
       )
     ).rows[0]
   ).toMatchObject({ used_input_tokens: '21', used_output_tokens: '9' });
+  const metrics = await promClient.register.metrics();
+  expect(metrics).toContain(
+    `ai_model_completion_duration_seconds_count{model_id="${modelId}",outcome="success"} 2\n`
+  );
+  expect(metrics).toContain(
+    `ai_model_reported_tokens_total{model_id="${modelId}",direction="input"} 21\n`
+  );
+  expect(metrics).toContain(
+    `ai_model_reported_tokens_total{model_id="${modelId}",direction="output"} 9\n`
+  );
+  expect(metrics).not.toContain(input.messages[0]!.content);
+  expect(metrics).not.toContain('provider-secret');
 });
 
 it('allows one recovery probe across concurrent callers and refuses open circuits without provider I/O', async () => {
@@ -163,6 +177,11 @@ it('keeps the circuit open on a failed probe and never sends customer messages',
   expect(bodies[0]!.request.messages).toEqual([
     { role: 'user', content: aiModelTestPrompt(input.modelName) },
   ]);
+  const metrics = await promClient.register.metrics();
+  expect(metrics).toContain(
+    `ai_model_completion_duration_seconds_count{model_id="${modelId}",outcome="error"} 1\n`
+  );
+  expect(metrics).not.toContain('ai_model_reported_tokens_total{');
   expect(await state()).toMatchObject({ degraded: true, consecutive_failures: 6 });
 });
 

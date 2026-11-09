@@ -92,3 +92,19 @@ it('shares one in-flight database snapshot between concurrent scrapes', async ()
   expect(collector.performance).toHaveBeenCalledOnce();
   expect(collector.replication).toHaveBeenCalledOnce();
 });
+
+it('clears an unavailable model budget view while retaining circuit and database samples', async () => {
+  let budgetAvailable = true;
+  collector.pool.query.mockImplementation(async (sql: string) => {
+    if (sql.includes('ai_model_circuit_states'))
+      return { rows: [{ id: 'model', degraded: false }] };
+    if (!budgetAvailable) throw new Error('budget view unavailable');
+    return { rows: [{ model_id: 'model', usd: 1.234 }] };
+  });
+  expect(await service.collect()).toContain('ai_model_monthly_spend_usd{model_id="model"} 1.234\n');
+  budgetAvailable = false;
+  const unavailable = await service.collect();
+  expect(unavailable).not.toContain('ai_model_monthly_spend_usd{');
+  expect(unavailable).toContain('ai_model_health{model_id="model"} 1\n');
+  expect(unavailable).toMatch(/^pg_metrics_collection_success 1$/m);
+});

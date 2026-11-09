@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T22:54:44+00:00",
-  "source_commit": "5bbb37f0b002c333256c70a34ad40cb903ba5278",
+  "updated": "2026-11-09T22:59:26+00:00",
+  "source_commit": "dcd410b54961230abd17cbc1181d3294966fcf96",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -10148,7 +10148,8 @@
         "batches": [
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-runtime-sbom-provenance",
-          "release-0.6-runtime-readiness-and-staging-smoke"
+          "release-0.6-runtime-readiness-and-staging-smoke",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "kind": "source-bound-readiness-and-capability-degradation",
@@ -10164,7 +10165,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
@@ -10180,7 +10181,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
@@ -12936,7 +12937,8 @@
           "audit/skipped-work-handoff.md"
         ],
         "batches": [
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -13004,7 +13006,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
             },
             {
               "path": "apps/api/src/maintenance/maintenance.controller.ts",
@@ -105881,7 +105883,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -105889,7 +105892,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat-http.integration.test.ts",
@@ -105901,7 +105904,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-models/ai-models.controller.ts",
@@ -105965,11 +105968,11 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "a06d5f3b446efaff6353bdc34ea47e96fbc1a361c6b19324da1542c75ee26601"
+              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
-              "sha256": "a80bdd2a905e231cfaff2166aa3db64d0cf8b94bf9dacefecb3828e6938aefed"
+              "sha256": "c975715a0e2b4f49dcbb56a6251edb8c270691e6ecc67ed8a48e331784208e43"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -108402,7 +108405,8 @@
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-notification-eligible-backlog-alerts",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -108514,11 +108518,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -108794,7 +108798,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
             },
             {
               "path": "packages/db/drizzle/production/0273_telegram_profile_linkage.sql",
@@ -442822,7 +442826,8 @@
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -442834,7 +442839,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
@@ -443224,7 +443229,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-payment-idempotency-conflict-alert",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -443236,7 +443242,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/provider-config/email-circuit-breaker.service.test.ts",
@@ -443774,7 +443780,8 @@
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -443786,7 +443793,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/provider-config/email-circuit-breaker.service.test.ts",
@@ -444151,7 +444158,8 @@
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -444163,7 +444171,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/provider-config/email-circuit-breaker.service.test.ts",
@@ -444528,7 +444536,8 @@
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -444540,7 +444549,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/provider-config/email-circuit-breaker.service.test.ts",
@@ -455737,7 +455746,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -455745,7 +455755,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat-http.integration.test.ts",
@@ -455757,7 +455767,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-models/ai-models.controller.ts",
@@ -455821,11 +455831,11 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "a06d5f3b446efaff6353bdc34ea47e96fbc1a361c6b19324da1542c75ee26601"
+              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
-              "sha256": "a80bdd2a905e231cfaff2166aa3db64d0cf8b94bf9dacefecb3828e6938aefed"
+              "sha256": "c975715a0e2b4f49dcbb56a6251edb8c270691e6ecc67ed8a48e331784208e43"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -456224,7 +456234,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -456232,7 +456243,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat-http.integration.test.ts",
@@ -456244,7 +456255,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-models/ai-models.controller.ts",
@@ -456308,11 +456319,11 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "a06d5f3b446efaff6353bdc34ea47e96fbc1a361c6b19324da1542c75ee26601"
+              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
-              "sha256": "a80bdd2a905e231cfaff2166aa3db64d0cf8b94bf9dacefecb3828e6938aefed"
+              "sha256": "c975715a0e2b4f49dcbb56a6251edb8c270691e6ecc67ed8a48e331784208e43"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -456713,7 +456724,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -456721,7 +456733,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat-http.integration.test.ts",
@@ -456733,7 +456745,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-models/ai-models.controller.ts",
@@ -456797,11 +456809,11 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "a06d5f3b446efaff6353bdc34ea47e96fbc1a361c6b19324da1542c75ee26601"
+              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
-              "sha256": "a80bdd2a905e231cfaff2166aa3db64d0cf8b94bf9dacefecb3828e6938aefed"
+              "sha256": "c975715a0e2b4f49dcbb56a6251edb8c270691e6ecc67ed8a48e331784208e43"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -457200,7 +457212,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -457208,7 +457221,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat-http.integration.test.ts",
@@ -457220,7 +457233,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-models/ai-models.controller.ts",
@@ -457284,11 +457297,11 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "a06d5f3b446efaff6353bdc34ea47e96fbc1a361c6b19324da1542c75ee26601"
+              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
-              "sha256": "a80bdd2a905e231cfaff2166aa3db64d0cf8b94bf9dacefecb3828e6938aefed"
+              "sha256": "c975715a0e2b4f49dcbb56a6251edb8c270691e6ecc67ed8a48e331784208e43"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -463126,7 +463139,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-production-image-recipes-and-distribution",
           "release-0.6-capability-and-assistant-maintenance",
-          "release-0.6-assistant-display-maintenance-fixture"
+          "release-0.6-assistant-display-maintenance-fixture",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -463226,11 +463240,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -463374,7 +463388,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -463701,7 +463715,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-production-image-recipes-and-distribution",
           "release-0.6-capability-and-assistant-maintenance",
-          "release-0.6-assistant-display-maintenance-fixture"
+          "release-0.6-assistant-display-maintenance-fixture",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -463801,11 +463816,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -463949,7 +463964,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -464274,7 +464289,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-production-image-recipes-and-distribution",
           "release-0.6-capability-and-assistant-maintenance",
-          "release-0.6-assistant-display-maintenance-fixture"
+          "release-0.6-assistant-display-maintenance-fixture",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -464374,11 +464390,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -464522,7 +464538,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -464847,7 +464863,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-production-image-recipes-and-distribution",
           "release-0.6-capability-and-assistant-maintenance",
-          "release-0.6-assistant-display-maintenance-fixture"
+          "release-0.6-assistant-display-maintenance-fixture",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -464947,11 +464964,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -465095,7 +465112,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -465919,7 +465936,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-production-image-recipes-and-distribution",
           "release-0.6-capability-and-assistant-maintenance",
-          "release-0.6-assistant-display-maintenance-fixture"
+          "release-0.6-assistant-display-maintenance-fixture",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -466019,11 +466037,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -466167,7 +466185,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -466531,7 +466549,8 @@
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-notification-eligible-backlog-alerts",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -466643,11 +466662,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -466923,7 +466942,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -467687,7 +467706,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-production-image-recipes-and-distribution",
           "release-0.6-capability-and-assistant-maintenance",
-          "release-0.6-assistant-display-maintenance-fixture"
+          "release-0.6-assistant-display-maintenance-fixture",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -467787,11 +467807,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -467935,7 +467955,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -468259,7 +468279,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-production-image-recipes-and-distribution",
           "release-0.6-capability-and-assistant-maintenance",
-          "release-0.6-assistant-display-maintenance-fixture"
+          "release-0.6-assistant-display-maintenance-fixture",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -468359,11 +468380,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -468507,7 +468528,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -468832,7 +468853,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-production-image-recipes-and-distribution",
           "release-0.6-capability-and-assistant-maintenance",
-          "release-0.6-assistant-display-maintenance-fixture"
+          "release-0.6-assistant-display-maintenance-fixture",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -468932,11 +468954,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -469080,7 +469102,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -469406,7 +469428,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-production-image-recipes-and-distribution",
           "release-0.6-capability-and-assistant-maintenance",
-          "release-0.6-assistant-display-maintenance-fixture"
+          "release-0.6-assistant-display-maintenance-fixture",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -469506,11 +469529,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -469654,7 +469677,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -470002,7 +470025,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-production-image-recipes-and-distribution",
           "release-0.6-capability-and-assistant-maintenance",
-          "release-0.6-assistant-display-maintenance-fixture"
+          "release-0.6-assistant-display-maintenance-fixture",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -470102,11 +470126,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -470250,7 +470274,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -470574,7 +470598,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-production-image-recipes-and-distribution",
           "release-0.6-capability-and-assistant-maintenance",
-          "release-0.6-assistant-display-maintenance-fixture"
+          "release-0.6-assistant-display-maintenance-fixture",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "status": "done",
@@ -470674,11 +470699,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -470822,7 +470847,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -485353,7 +485378,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "kind": "verified-private-monitoring",
@@ -485365,7 +485391,7 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "a06d5f3b446efaff6353bdc34ea47e96fbc1a361c6b19324da1542c75ee26601"
+              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -485483,7 +485509,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-database-client-pool-metrics",
-          "release-0.6-private-session-cutover-and-health-probes"
+          "release-0.6-private-session-cutover-and-health-probes",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "kind": "native-database-client-pool-and-query-metrics",
@@ -485491,15 +485518,15 @@
           "source_evidence": [
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "a06d5f3b446efaff6353bdc34ea47e96fbc1a361c6b19324da1542c75ee26601"
+              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
             },
             {
               "path": "apps/api/src/metrics/metrics.service.test.ts",
-              "sha256": "55803cb0f48c74c21bba55f766953296c572ec90ce037689b6c1659eab86cfdf"
+              "sha256": "0a7e1fcd85d098b8af97183e3f20aebeb21798d2ef82532a5eba5142c3d5e372"
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
-              "sha256": "a80bdd2a905e231cfaff2166aa3db64d0cf8b94bf9dacefecb3828e6938aefed"
+              "sha256": "c975715a0e2b4f49dcbb56a6251edb8c270691e6ecc67ed8a48e331784208e43"
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
@@ -485861,20 +485888,104 @@
         "story": "06-security-testing-observability.md#spec-ec4f15075ffa"
       },
       "requirement": "| T-06.14.01.08 | Instrument AI metrics: request count, token usage, latency, cost per model, concurrency | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-ai-inference-metrics"
+        ],
+        "current_acceptance": {
+          "kind": "verified-ai-provider-attempts-and-durable-budget-metrics",
+          "base_commit": "dcd410b54961230abd17cbc1181d3294966fcf96",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/metrics/ai-inference-metrics.ts",
+              "sha256": "eca447ca827b1b483051ff5bad0041948389212cadb271121ac4943b27f8294c"
+            },
+            {
+              "path": "apps/api/src/metrics/metrics.service.ts",
+              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
+            },
+            {
+              "path": "apps/api/src/metrics/metrics.service.test.ts",
+              "sha256": "0a7e1fcd85d098b8af97183e3f20aebeb21798d2ef82532a5eba5142c3d5e372"
+            },
+            {
+              "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
+              "sha256": "c975715a0e2b4f49dcbb56a6251edb8c270691e6ecc67ed8a48e331784208e43"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
+            },
+            {
+              "path": "docs/operations/ai-inference.md",
+              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-inference-client.ts",
+              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
+              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-inference-queue.ts",
+              "sha256": "3f73ec24553b66f34220f0c85f9a825f4c282bf7887dfebb020eda0e51e19cb2"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
+              "sha256": "379645f5a7033f6e8845cb2814f6a33c963b0abac36d65a18b4d3cebbce30ae7"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-model-budget.ts",
+              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-worker-process-http.integration.test.ts",
+              "sha256": "e2133e95e2239fee21fd5aa6e9d3cbb552400d6e69174209d43956eb24487f1b"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-test-chat.service.ts",
+              "sha256": "64f1e21c7208b0922720908f060797ab1b5b51b84af01d2d206278c7620d9071"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
+              "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
+            },
+            {
+              "path": "apps/api/src/metrics/metrics.controller.ts",
+              "sha256": "c2b33dda5b151adea21984a1d82e5269ec058d553073319ff0fc18d02e9f934d"
+            }
+          ],
+          "checks": [
+            "The shared admitted completion path exposes model-scoped duration and counts by outcome and provider-reported input/output token counters. Existing queue active, pending, saturation and rejection metrics retain concurrency visibility.",
+            "Current UTC monthly cost is read from the durable configured model budget. An older month is read as zero without mutating it. Optional budget query failure clears its old samples while retaining circuit and core PostgreSQL telemetry.",
+            "12 focused unit cases and 15 isolated PostgreSQL/API cases passed. Native checks preserve failure and probe boundaries, actual charging, no secrets or prompts in labels, and the compiled scrape across a controlled database outage.",
+            "API build, generated contract check, typecheck, targeted lint and formatting passed. Metered counts use fixed outcome/direction labels and internal model IDs. Model pricing and provider fallback behavior keep their approved budget semantics."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.14.02.01",
@@ -487058,7 +487169,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-payment-idempotency-conflict-alert",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "kind": "verified-payment-idempotency-conflict-p1",
@@ -487126,7 +487238,7 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "a06d5f3b446efaff6353bdc34ea47e96fbc1a361c6b19324da1542c75ee26601"
+              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
@@ -487174,7 +487286,8 @@
         "batches": [
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-payment-idempotency-conflict-alert",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "kind": "verified-signed-payment-anomaly-rules-and-isolated-receipts",
@@ -487238,7 +487351,7 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "a06d5f3b446efaff6353bdc34ea47e96fbc1a361c6b19324da1542c75ee26601"
+              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
             },
             {
               "path": "apps/api/src/metrics/metrics.controller.ts",
@@ -488101,7 +488214,8 @@
         "changed_paths": [],
         "batches": [
           "2026-09-24-capability-maintenance",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -488169,7 +488283,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
             },
             {
               "path": "apps/api/src/maintenance/maintenance.controller.ts",
@@ -488253,7 +488367,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -488321,7 +488436,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
             },
             {
               "path": "apps/api/src/maintenance/maintenance.controller.ts",
@@ -488406,7 +488521,8 @@
         "changed_paths": [],
         "batches": [
           "2026-10-05-maintenance-settings-forms",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -488474,7 +488590,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
             },
             {
               "path": "apps/api/src/maintenance/maintenance.controller.ts",
@@ -488585,7 +488701,8 @@
         "changed_paths": [],
         "batches": [
           "2026-09-24-capability-maintenance",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -488653,7 +488770,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
             },
             {
               "path": "apps/api/src/maintenance/maintenance.controller.ts",
@@ -678262,7 +678379,8 @@
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-assistant-display-maintenance-fixture",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -678370,11 +678488,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -678951,7 +679069,8 @@
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-assistant-display-maintenance-fixture",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -679059,11 +679178,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -679642,7 +679761,8 @@
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-assistant-display-maintenance-fixture",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -679750,11 +679870,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -680331,7 +680451,8 @@
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-assistant-display-maintenance-fixture",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -680439,11 +680560,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -681019,7 +681140,8 @@
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-assistant-display-maintenance-fixture",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -681127,11 +681249,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -682206,7 +682328,8 @@
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-assistant-display-maintenance-fixture",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -682314,11 +682437,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -682895,7 +683018,8 @@
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-assistant-display-maintenance-fixture",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -683003,11 +683127,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -683585,7 +683709,8 @@
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-assistant-display-maintenance-fixture",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -683693,11 +683818,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -684274,7 +684399,8 @@
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-assistant-display-maintenance-fixture",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -684382,11 +684508,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -684961,7 +685087,8 @@
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-assistant-display-maintenance-fixture",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -685069,11 +685196,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -685648,7 +685775,8 @@
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-assistant-display-maintenance-fixture",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -685756,11 +685884,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -686335,7 +686463,8 @@
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-assistant-display-maintenance-fixture",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -686443,11 +686572,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -737712,11 +737841,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -738156,11 +738285,11 @@
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
-              "sha256": "a80bdd2a905e231cfaff2166aa3db64d0cf8b94bf9dacefecb3828e6938aefed"
+              "sha256": "c975715a0e2b4f49dcbb56a6251edb8c270691e6ecc67ed8a48e331784208e43"
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "a06d5f3b446efaff6353bdc34ea47e96fbc1a361c6b19324da1542c75ee26601"
+              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
             },
             {
               "path": "apps/api/src/notifications/customer-business-notifications.integration.test.ts",
@@ -739752,7 +739881,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
             },
             {
               "path": "docs/operations/async-jobs.md",
@@ -741478,7 +741607,8 @@
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-payment-idempotency-conflict-alert",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-ai-inference-metrics"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -741683,11 +741813,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
-              "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
-              "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
@@ -742111,11 +742241,11 @@
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
-              "sha256": "a80bdd2a905e231cfaff2166aa3db64d0cf8b94bf9dacefecb3828e6938aefed"
+              "sha256": "c975715a0e2b4f49dcbb56a6251edb8c270691e6ecc67ed8a48e331784208e43"
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "a06d5f3b446efaff6353bdc34ea47e96fbc1a361c6b19324da1542c75ee26601"
+              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
             },
             {
               "path": "apps/api/src/notifications/customer-business-notifications.integration.test.ts",
@@ -743683,7 +743813,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
             },
             {
               "path": "docs/operations/async-jobs.md",
@@ -745315,7 +745445,8 @@
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-payment-idempotency-conflict-alert",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-ai-inference-metrics"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -749344,7 +749475,8 @@
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-security-scenario-and-signed-fixture-reconciliation",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-ai-inference-metrics"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -844427,6 +844559,144 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/outbox-worker-metrics",
       "source_scope_proof": "outbox-worker-metrics-source-proof.json",
       "source_scope_proof_sha256": "4e4f90d661f4b7558f16f3af50df1fd9e319a0f14e6add4204f9e07c586b7fa2"
+    },
+    "release-0.6-ai-inference-metrics": {
+      "batch": "release-0.6-ai-inference-metrics",
+      "base_commit": "dcd410b54961230abd17cbc1181d3294966fcf96",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-03.03.04",
+        "01-platform-infrastructure.md#T-05.02.04",
+        "02-auth-users-admin.md#T-09.11.01",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "05-notifications-documents-ai.md#T-05.16.01",
+        "05-notifications-documents-ai.md#T-05.16.02",
+        "05-notifications-documents-ai.md#T-05.16.03",
+        "05-notifications-documents-ai.md#T-05.16.04",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.14.01.01",
+        "06-security-testing-observability.md#T-06.14.01.03",
+        "06-security-testing-observability.md#T-06.14.01.08",
+        "06-security-testing-observability.md#T-06.15.03.04",
+        "06-security-testing-observability.md#T-06.15.03.05",
+        "06-security-testing-observability.md#T-06.17.02.01",
+        "06-security-testing-observability.md#T-06.17.02.02",
+        "06-security-testing-observability.md#T-06.17.02.03",
+        "06-security-testing-observability.md#T-06.17.02.05",
+        "07-ui-ux-design.md#T-07.20.01.01",
+        "07-ui-ux-design.md#T-07.20.01.02",
+        "07-ui-ux-design.md#T-07.20.01.03",
+        "07-ui-ux-design.md#T-07.20.01.04",
+        "07-ui-ux-design.md#T-07.20.01.05",
+        "07-ui-ux-design.md#T-07.20.01.07",
+        "07-ui-ux-design.md#T-07.20.01.08",
+        "07-ui-ux-design.md#T-07.21.01.01",
+        "07-ui-ux-design.md#T-07.21.01.02",
+        "07-ui-ux-design.md#T-07.21.01.03",
+        "07-ui-ux-design.md#T-07.21.01.04",
+        "07-ui-ux-design.md#T-07.21.01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/metrics/ai-inference-metrics.ts",
+          "sha256": "eca447ca827b1b483051ff5bad0041948389212cadb271121ac4943b27f8294c"
+        },
+        {
+          "path": "apps/api/src/metrics/metrics.service.ts",
+          "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
+        },
+        {
+          "path": "apps/api/src/metrics/metrics.service.test.ts",
+          "sha256": "0a7e1fcd85d098b8af97183e3f20aebeb21798d2ef82532a5eba5142c3d5e372"
+        },
+        {
+          "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
+          "sha256": "c975715a0e2b4f49dcbb56a6251edb8c270691e6ecc67ed8a48e331784208e43"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
+          "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
+          "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
+        },
+        {
+          "path": "docs/operations/ai-inference.md",
+          "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-inference-client.ts",
+          "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
+          "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-inference-queue.ts",
+          "sha256": "3f73ec24553b66f34220f0c85f9a825f4c282bf7887dfebb020eda0e51e19cb2"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
+          "sha256": "379645f5a7033f6e8845cb2814f6a33c963b0abac36d65a18b4d3cebbce30ae7"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-model-budget.ts",
+          "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+          "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-worker-process-http.integration.test.ts",
+          "sha256": "e2133e95e2239fee21fd5aa6e9d3cbb552400d6e69174209d43956eb24487f1b"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-test-chat.service.ts",
+          "sha256": "64f1e21c7208b0922720908f060797ab1b5b51b84af01d2d206278c7620d9071"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
+          "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
+          "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
+        },
+        {
+          "path": "apps/api/src/metrics/metrics.controller.ts",
+          "sha256": "c2b33dda5b151adea21984a1d82e5269ec058d553073319ff0fc18d02e9f934d"
+        }
+      ],
+      "checks": [
+        "The shared admitted completion path exposes model-scoped duration and counts by outcome and provider-reported input/output token counters. Existing queue active, pending, saturation and rejection metrics retain concurrency visibility.",
+        "Current UTC monthly cost is read from the durable configured model budget. An older month is read as zero without mutating it. Optional budget query failure clears its old samples while retaining circuit and core PostgreSQL telemetry.",
+        "12 focused unit cases and 15 isolated PostgreSQL/API cases passed. Native checks preserve failure and probe boundaries, actual charging, no secrets or prompts in labels, and the compiled scrape across a controlled database outage.",
+        "API build, generated contract check, typecheck, targeted lint and formatting passed. Metered counts use fixed outcome/direction labels and internal model IDs. Model pricing and provider fallback behavior keep their approved budget semantics."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/ai-inference-metrics",
+      "source_scope_proof": "ai-inference-metrics-source-proof.json",
+      "source_scope_proof_sha256": "eab77a76432117aaacdeca33111cc5c00789e9f4fac3e7a65e5df263261d99bb"
     }
   },
   "historical_improvements": [

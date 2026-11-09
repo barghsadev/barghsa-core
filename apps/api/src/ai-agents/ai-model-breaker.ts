@@ -5,6 +5,7 @@ import { AiModelCircuitBreaker } from '@barghsa/shared/notification-delivery';
 import { completeWithinModelBudget } from './ai-model-budget.js';
 import { aiInferenceQueue } from './ai-inference-queue.js';
 import { completeViaAiWorker, isAiInfrastructureError } from './ai-inference-client.js';
+import { observeAiModelCompletion } from '../metrics/ai-inference-metrics.js';
 
 /** Gate provider calls across API replicas and the separate model-test worker. */
 export async function completeChatWithBreaker(modelId: string, input: ChatCompletionInput) {
@@ -34,9 +35,18 @@ export async function completeChatWithBreaker(modelId: string, input: ChatComple
           const admission = await breaker.decision(modelId);
           if (!admission.allow || admission.kind !== 'closed') throw circuitOpen();
         }
+        const started = performance.now();
         try {
-          return await completeViaAiWorker(modelId, request);
+          const completion = await completeViaAiWorker(modelId, request);
+          observeAiModelCompletion(
+            modelId,
+            (performance.now() - started) / 1000,
+            'success',
+            completion.tokenUsage
+          );
+          return completion;
         } catch (error) {
+          observeAiModelCompletion(modelId, (performance.now() - started) / 1000, 'error');
           if (!isAiInfrastructureError(error)) await record(false, probeToken);
           if (probeToken && !isAiInfrastructureError(error)) throw circuitOpen();
           throw error;

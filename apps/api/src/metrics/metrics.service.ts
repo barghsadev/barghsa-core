@@ -55,6 +55,11 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
     help: 'AI model circuit health (1=closed, 0=open)',
     labelNames: ['model_id'] as const,
   });
+  private readonly aiModelMonthlySpend = new promClient.Gauge({
+    name: 'ai_model_monthly_spend_usd',
+    help: 'Current UTC month charged model budget usage in USD',
+    labelNames: ['model_id'] as const,
+  });
   private readonly aiInferenceActive = new promClient.Gauge({
     name: 'ai_inference_active_requests',
     help: 'AI inference requests currently admitted in this API process',
@@ -245,6 +250,7 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
     this.viewAvailable.reset();
     this.collectionSuccess.set(0);
     this.aiModelHealth.reset();
+    this.aiModelMonthlySpend.reset();
   }
 
   constructor() {
@@ -384,16 +390,31 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
       }
       this.lastMetrics = m;
       this.collectionSuccess.set(1);
+      this.aiModelHealth.reset();
+      this.aiModelMonthlySpend.reset();
       try {
-        const models = await getDbPool().query<{ id: string; degraded: boolean }>(
-          'SELECT id,degraded FROM ai_model_circuit_states'
-        );
-        this.aiModelHealth.reset();
-        for (const model of models.rows)
-          this.aiModelHealth.set({ model_id: model.id }, model.degraded ? 0 : 1);
+        const pool = getDbPool();
+        const [models, budgets] = await Promise.allSettled([
+          pool.query<{ id: string; degraded: boolean }>(
+            'SELECT id,degraded FROM ai_model_circuit_states'
+          ),
+          pool.query<{ model_id: string; usd: number }>(
+            `SELECT model_id,
+               CASE WHEN period_start < (date_trunc('month',now() AT TIME ZONE 'UTC') AT TIME ZONE 'UTC')
+                    THEN 0 ELSE used_cost_micros::double precision / 1000000 END AS usd
+               FROM ai_model_budgets`
+          ),
+        ]);
+        if (models.status === 'fulfilled')
+          for (const model of models.value.rows)
+            this.aiModelHealth.set({ model_id: model.id }, model.degraded ? 0 : 1);
+        if (budgets.status === 'fulfilled')
+          for (const budget of budgets.value.rows)
+            this.aiModelMonthlySpend.set({ model_id: budget.model_id }, budget.usd);
       } catch {
-        // Core database metrics must remain available during schema rollout.
+        // Optional AI telemetry must leave core database samples available.
         this.aiModelHealth.reset();
+        this.aiModelMonthlySpend.reset();
       }
     } catch (err) {
       this.clearDatabaseMetrics();

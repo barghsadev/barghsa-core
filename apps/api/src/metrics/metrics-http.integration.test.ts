@@ -14,7 +14,7 @@ afterAll(async () => {
   await fixture?.close();
 });
 
-it('reports each AI model circuit independently', async () => {
+it('reports each AI model circuit and current UTC month spend independently', async () => {
   await fixture.pool.query(
     "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES ('metrics-ai-admin','metrics-ai-admin@example.test','test-only',true)"
   );
@@ -25,6 +25,25 @@ it('reports each AI model circuit independently', async () => {
   ).rows[0]!.id;
   const scrape = async () => (await fetch(`${fixture.base}/metrics`)).text();
   expect(await scrape()).toContain(`ai_model_health{model_id="${modelId}"} 1`);
+  await fixture.pool.query(
+    'INSERT INTO ai_model_budgets(model_id,monthly_token_limit,used_cost_micros) VALUES ($1,10000,1234000)',
+    [modelId]
+  );
+  expect(await scrape()).toContain(`ai_model_monthly_spend_usd{model_id="${modelId}"} 1.234\n`);
+  await fixture.pool.query(
+    `UPDATE ai_model_budgets SET period_start=
+       ((date_trunc('month',now() AT TIME ZONE 'UTC') - interval '1 month') AT TIME ZONE 'UTC')
+       WHERE model_id=$1`,
+    [modelId]
+  );
+  expect(await scrape()).toContain(`ai_model_monthly_spend_usd{model_id="${modelId}"} 0\n`);
+  expect(
+    (
+      await fixture.pool.query('SELECT used_cost_micros FROM ai_model_budgets WHERE model_id=$1', [
+        modelId,
+      ])
+    ).rows[0]
+  ).toEqual({ used_cost_micros: '1234000' });
   await fixture.pool.query('UPDATE ai_model_circuit_states SET degraded=true WHERE id=$1', [
     modelId,
   ]);
@@ -69,6 +88,7 @@ it('serves unavailable metrics through a database outage and recovers without st
     expect(failed).toMatch(/^pg_metrics_collection_success 0$/m);
     expect(failed).not.toMatch(/^pg_cache_hit_ratio /m);
     expect(failed).not.toMatch(/^pg_checkpoints_timed_total /m);
+    expect(failed).not.toMatch(/^ai_model_monthly_spend_usd\{/m);
     expect(failed).toMatch(/^pg_pool_capacity 7$/m);
   } finally {
     try {

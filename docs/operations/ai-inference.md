@@ -10,6 +10,15 @@ The API's FIFO gate admits 10 AI requests per process and waits up to 30 seconds
 
 Check `GET /health/ready` on the private AI port for its database connectivity and active-call saturation. Staff with `admin:ai:models` can use `GET /api/ai/health` for queue and circuit state. Core `/api/health/ready` stays independent of the AI process. If the AI process is unavailable, agent chat returns `AI_INFERENCE_UNAVAILABLE` (503); budget and circuit state are not charged as a provider failure.
 
+The private API scrape exposes completion duration and count by model and
+outcome. It counts each admitted inference-worker attempt, including recovery
+probes. The token counter uses only usage reported by a completion provider.
+The monthly spend gauge uses the current UTC month's charges for models with
+configured budgets. An older ledger period reads as zero until the existing
+lazy reset runs on inference. Read concurrency, queue depth, saturation and
+admission rejections alongside those metrics. The labels contain model IDs
+and fixed categories. Keep billing reconciliation on the durable ledger.
+
 Use the AI chat switch in `/admin/maintenance` to pause new customer, public, staff and Telegram questions before inference. The customer AI page shows the configured notice and support link. Telegram linking stays available. A paused Telegram question records `maintenance_active` without generating or sending an answer. Core readiness, support and the isolated admin model test stay available.
 
 The public `/support` guide uses the assigned `website_chatbot` agent through `GET /api/public/knowledge/availability` and `POST /api/public/knowledge/questions`. It omits cookies and sends only the question. It stores no conversation, uses no customer profile or business tools, and retrieves only published public knowledge. Authenticated requests that include cookies still require the normal CSRF protection. The durable quota allows five questions per minute per HMAC of the trusted request IP; each API process admits at most two concurrent public questions. This process-local cap does not reserve global capacity across replicas. Public questions use the existing policy, budget and private inference boundaries, recheck the assignment and source publication before returning, and audit with null account, profile and session identifiers. Refreshing availability never replays a question; a failed question requires an explicit retry.
