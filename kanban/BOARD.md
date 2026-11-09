@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T15:32:18+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T15:43:55+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 909 | Accepted with unchanged source bindings. |
+| done | 910 | Accepted with unchanged source bindings. |
 | verify | 424 | Existing work may be complete; inspect evidence before building. |
-| partial | 29 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 28 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 3 | Named owner or external prerequisite. |
@@ -39,10 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Reconcile the current packaged migration and production seed entry points with the deployment order and safe rehearsal evidence.
+Verify actual readiness dependencies and migration-before-traffic checks in the packaged staging smoke path. Retain the external topology prerequisites.
 
-- `01-platform-infrastructure.md#T-02.03.02`: Create migration runner script for production deployments
-- `01-platform-infrastructure.md#T-02.04.04`: Wire `pnpm db:seed` script in `packages/db/package.json`
+- `01-platform-infrastructure.md#T-03.03.04`: Add readiness check that excludes non-critical dependencies
+- `06-security-testing-observability.md#T-06.12.03.02`: Build staging smoke deployment: readiness/liveness verification, migration rehearsal
 - `release-readiness#R-05.03`: Prove production deployment, backup and recovery prerequisites
 
 ## v0.2.0: Complete customer journeys
@@ -988,7 +988,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-02.04.01` | verify | Earlier acceptance_verified | Create seed script `packages/db/src/seed/index.ts` |
 | `01-platform-infrastructure.md#T-02.04.02` | verify | Earlier acceptance_verified | Create four default electricity products in seed |
 | `01-platform-infrastructure.md#T-02.04.03` | verify | Earlier acceptance_verified | Create admin bootstrap mechanism |
-| `01-platform-infrastructure.md#T-02.04.04` | partial | Earlier partial | Wire `pnpm db:seed` script in `packages/db/package.json` |
+| `01-platform-infrastructure.md#T-02.04.04` | done | Earlier partial | Wire `pnpm db:seed` script in `packages/db/package.json` |
 | `01-platform-infrastructure.md#T-02.04.05` | verify | Earlier acceptance_verified | Add seed verification test |
 | `01-platform-infrastructure.md#T-02.04.06` | verify | Earlier acceptance_verified | Configure database constraint to prevent deletion of system electricity products and creation of additional electricity-product types |
 | `01-platform-infrastructure.md#T-03.01.01` | partial | Earlier partial | Create `Dockerfile.web` with multi-stage build |

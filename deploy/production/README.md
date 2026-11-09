@@ -7,7 +7,7 @@ Prepare an operator-owned Compose environment with the repository and digest of 
 Use two protected files on the app host:
 
 - `BARGHSA_RUNTIME_ENV_FILE` supplies the runtime pooler and direct database URLs, app and API public URLs, provider and encryption settings, and external Redis and object-store configuration. Use only the runtime roles. Keep the application endpoints on loopback behind the TLS proxy, route `/api/` to port 4000, and configure `API_TRUSTED_PROXY_IPS` for the proxy addresses actually seen by the API.
-- `BARGHSA_MIGRATION_ENV_FILE` supplies a direct `PGDIRECT_URL` with a separate migration principal. It does not contain application session, storage, or provider secrets. The one-shot migration service uses this file and the same immutable app image as the API and worker. The app starts only after migrations succeed.
+- `BARGHSA_MIGRATION_ENV_FILE` supplies a direct `PGDIRECT_URL` with a separate migration principal. Set `EXPECTED_MIGRATION_ID` to the final migration tag in the candidate's packaged journal. The migration file contains no application session, storage, or provider secrets. The one-shot migration service uses this file and the same immutable app image as the API and worker. The app starts only after migrations succeed.
 
 Validate the manifest without starting or changing services:
 
@@ -22,6 +22,20 @@ From the exact candidate checkout, run the strict quarantine check before seekin
 scripts/check-flaky-tests.sh --promotion \
   --report /protected/release-evidence/flaky-test-report.json
 ```
+
+## Initial database seed
+
+After the owner approves initial provisioning, use the pinned app image and separate migration principal to migrate and seed a new database before starting the app services. Put only `ADMIN_BOOTSTRAP_SECRET`, `ADMIN_BOOTSTRAP_KEY`, `ADMIN_BOOTSTRAP_EMAIL` and `ADMIN_BOOTSTRAP_PASSWORD` in a root-owned `0600` bootstrap environment file. Keep the direct connection and CA in the existing migration configuration.
+
+```sh
+docker compose --env-file /protected/rehearsal-compose.env \
+  -f deploy/production/compose.yml run --rm --no-deps -T migrate &&
+docker compose --env-file /protected/rehearsal-compose.env \
+  -f deploy/production/compose.yml run --rm --no-deps -T \
+  --env-from-file /protected/bootstrap.env migrate node run-packaged-seed.cjs
+```
+
+Retain the migration and seed results, verify one audited administrator bootstrap, then retire the bootstrap credentials. Ordinary deployments use the migration service. A retry during initial setup preserves an administrator who was already created.
 
 Keep `BARGHSA_WEB_CSP_MODE=report-only` during the required reporting window. Follow the [browser CSP policy](../../docs/security/content-security-policy.md). Switch to `enforce` only after checking sanitized reports and exercising the real customer and staff routes. Return to `report-only` to roll back policy enforcement without disabling collection.
 

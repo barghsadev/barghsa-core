@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T15:32:18+00:00",
+  "updated": "2026-11-09T15:43:55+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -7101,7 +7101,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "External production migration-before-start, compatible rollout/rollback and backup/restore execution remain unverified. Full per-migration down/roll-forward acceptance from the parent story is not established by the current runbook."
+        "Repeat migration-before-start, compatible rollout and rollback, and backup/restore verification on the designated production-equivalent topology. The isolated production Compose migration service has verified the canonical journal and rejects a mismatched expected version.",
+        "Full per-migration down and roll-forward acceptance from the parent story still requires its own evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -7263,7 +7264,9 @@
           "packages/db/src/migrate.snapshot.test.ts",
           "packages/db/src/migrate.ts"
         ],
-        "batches": [],
+        "batches": [
+          "release-0.6-packaged-production-seed"
+        ],
         "current_acceptance": null
       }
     },
@@ -7809,12 +7812,10 @@
         "story": "01-platform-infrastructure.md#spec-0e51f9dffa1e"
       },
       "requirement": "- **T-02.04.04:** Wire `pnpm db:seed` script in `packages/db/package.json`\n  - **Notes:** Script: `\"db:seed\": \"tsx src/seed/index.ts\"`. Document in root README. Seed runs automatically in local dev setup (`pnpm dev` may trigger it). In production, seed is run as part of deployment only once.\n  - **Dependencies:** T-02.04.01\n  - **Complexity:** S",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Production initial-seed execution and release sequencing are not proven by local script/documentation checks."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -7851,8 +7852,57 @@
           "package.json",
           "packages/db/package.json"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-packaged-production-seed"
+        ],
+        "current_acceptance": {
+          "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
+          "base_commit": "f4eeea9d4452316a7d776ea7c3820a7301d644e7",
+          "source_evidence": [
+            {
+              "path": "Dockerfile.base",
+              "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
+            },
+            {
+              "path": "deploy/production/README.md",
+              "sha256": "df0954295e4a008f008d499986077cb989fef297db62bb1e4312b29f3dd27810"
+            },
+            {
+              "path": "packages/db/src/seed/index.ts",
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
+            },
+            {
+              "path": "scripts/run-packaged-seed.cjs",
+              "sha256": "8b06c60f19dc368056ca612c6e8202bd523e6d5a22122572d40363cf0079d226"
+            },
+            {
+              "path": "scripts/run-packaged-migrations.cjs",
+              "sha256": "692b4a45a4a4a560a2372d7c2d2cbd128b44ea0c9a120ec929e7e3ff61238a8c"
+            },
+            {
+              "path": "packages/db/src/migrate.ts",
+              "sha256": "ee35ac3d9e1350e828edc37e6a972a4ed04f91d3c079ed53b219ecc1adb09fb8"
+            },
+            {
+              "path": "packages/db/package.json",
+              "sha256": "f50a797717d37728081e84710f49e96cf22681e314a28da2239296ede40efe88"
+            },
+            {
+              "path": "deploy/production/compose.yml",
+              "sha256": "7b5699f7b41e9b8966764eb9482155c17bcbb3aab1e9ea4084b93984d062bd19"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/_journal.json",
+              "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+            }
+          ],
+          "checks": [
+            "The original compiled seed process exited zero without executing the seed. The source and compiled entry points now use the migration runner's direct-entry check. Importing the module remains side-effect-free, and the development pnpm db:seed command reached the database and failed correctly on a refused test connection.",
+            "The actual production Compose migration and one-off seed commands ran as the non-root user against an isolated PostgreSQL 16.15 database with verified TLS. The clean journal applied and reported expected 0282. An intentionally wrong expected version exited nonzero. Missing bootstrap inputs were refused before any administrator was created.",
+            "The compiled first seed created one administrator with the required password change. A repeat skipped the existing administrator. Independent SQL verified one administrator and one bootstrap audit event. None of the four synthetic credentials appeared in the seed receipts.",
+            "The application Docker recipe includes the new launcher. The procedure uses the existing isolated migration environment and explicit protected bootstrap inputs. Production-equivalent host roles, external migration and seed receipts, and release and backup gates remain separate."
+          ]
+        }
       }
     },
     {
@@ -8280,7 +8330,8 @@
           "docker-compose.prod.yml"
         ],
         "batches": [
-          "release-0.6-shipped-component-license-gate"
+          "release-0.6-shipped-component-license-gate",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "current-application-image-healthchecks",
@@ -8288,7 +8339,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "c2974d2b6f0fb704d4797b88e7c5175b2aa150d93b8eebb0538ab9be6bfe412a"
+              "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
             },
             {
               "path": "Dockerfile.web",
@@ -64708,7 +64759,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -64920,7 +64972,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/i18n/src/geography.ts",
@@ -65369,7 +65421,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -65581,7 +65634,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/i18n/src/geography.ts",
@@ -66029,7 +66082,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -66241,7 +66295,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/i18n/src/geography.ts",
@@ -66688,7 +66742,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -66900,7 +66955,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/i18n/src/geography.ts",
@@ -67393,7 +67448,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-essential-control-contrast",
           "release-0.5-action-contrast",
-          "release-0.5-conditional-heading-acceptance"
+          "release-0.5-conditional-heading-acceptance",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -67537,7 +67593,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/notification-templates.ts",
@@ -78132,7 +78188,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-essential-control-contrast",
           "release-0.5-action-contrast",
-          "release-0.5-conditional-heading-acceptance"
+          "release-0.5-conditional-heading-acceptance",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -78276,7 +78333,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/notification-templates.ts",
@@ -78717,7 +78774,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-essential-control-contrast",
           "release-0.5-action-contrast",
-          "release-0.5-conditional-heading-acceptance"
+          "release-0.5-conditional-heading-acceptance",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -78861,7 +78919,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/notification-templates.ts",
@@ -79469,7 +79527,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-essential-control-contrast",
           "release-0.5-action-contrast",
-          "release-0.5-conditional-heading-acceptance"
+          "release-0.5-conditional-heading-acceptance",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -79613,7 +79672,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/notification-templates.ts",
@@ -80051,7 +80110,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-essential-control-contrast",
           "release-0.5-action-contrast",
-          "release-0.5-conditional-heading-acceptance"
+          "release-0.5-conditional-heading-acceptance",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -80195,7 +80255,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/notification-templates.ts",
@@ -80636,7 +80696,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-essential-control-contrast",
           "release-0.5-action-contrast",
-          "release-0.5-conditional-heading-acceptance"
+          "release-0.5-conditional-heading-acceptance",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -80780,7 +80841,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/notification-templates.ts",
@@ -105193,7 +105254,8 @@
           "release-0.6-remove-runtime-package-managers",
           "release-0.6-alpine-node-runtime-candidate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -105201,7 +105263,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "c2974d2b6f0fb704d4797b88e7c5175b2aa150d93b8eebb0538ab9be6bfe412a"
+              "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
             },
             {
               "path": "apps/api/openapi.json",
@@ -201188,7 +201250,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -201380,7 +201443,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -202541,7 +202604,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -202733,7 +202797,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -203894,7 +203958,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -204086,7 +204151,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -205248,7 +205313,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -205440,7 +205506,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -206561,7 +206627,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -206753,7 +206820,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -207874,7 +207941,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -208066,7 +208134,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -209187,7 +209255,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -209379,7 +209448,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -210500,7 +210569,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -210692,7 +210762,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -211813,7 +211883,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -212005,7 +212076,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -213126,7 +213197,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -213318,7 +213390,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -214440,7 +214512,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -214632,7 +214705,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -215753,7 +215826,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -215945,7 +216019,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -217067,7 +217141,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -217259,7 +217334,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -218380,7 +218455,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -218572,7 +218648,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -219693,7 +219769,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -219885,7 +219962,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -221006,7 +221083,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -221198,7 +221276,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -222319,7 +222397,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -222511,7 +222590,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -223632,7 +223711,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -223824,7 +223904,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -224946,7 +225026,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -225138,7 +225219,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -226259,7 +226340,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -226451,7 +226533,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -227572,7 +227654,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -227764,7 +227847,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -228885,7 +228968,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -229077,7 +229161,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -230198,7 +230282,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -230390,7 +230475,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -231511,7 +231596,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -231703,7 +231789,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -232825,7 +232911,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -233017,7 +233104,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -234139,7 +234226,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -234331,7 +234419,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -235453,7 +235541,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -235645,7 +235734,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -236766,7 +236855,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -236958,7 +237048,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -238079,7 +238169,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -238271,7 +238362,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -239392,7 +239483,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -239584,7 +239676,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/seed.test.ts",
@@ -462184,7 +462276,8 @@
           "release-0.6-remove-runtime-package-managers",
           "release-0.6-alpine-node-runtime-candidate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -462192,7 +462285,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "c2974d2b6f0fb704d4797b88e7c5175b2aa150d93b8eebb0538ab9be6bfe412a"
+              "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
             },
             {
               "path": "apps/api/openapi.json",
@@ -472919,7 +473012,8 @@
           "release-0.6-runtime-sbom-provenance",
           "release-0.6-postgres-go-license-notices",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "pinned_trivy_and_exact_image_inventory",
@@ -472931,7 +473025,7 @@
             },
             {
               "path": "Dockerfile.base",
-              "sha256": "c2974d2b6f0fb704d4797b88e7c5175b2aa150d93b8eebb0538ab9be6bfe412a"
+              "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
             },
             {
               "path": "Dockerfile.web",
@@ -473489,7 +473583,8 @@
           "release-0.6-runtime-sbom-provenance",
           "release-0.6-postgres-go-license-notices",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "actual_hosted_image_blocking_evidence",
@@ -473497,7 +473592,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "c2974d2b6f0fb704d4797b88e7c5175b2aa150d93b8eebb0538ab9be6bfe412a"
+              "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
             },
             {
               "path": "Dockerfile.web",
@@ -713134,7 +713229,8 @@
           "release-0.6-remove-runtime-package-managers",
           "release-0.6-alpine-node-runtime-candidate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -713142,7 +713238,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "c2974d2b6f0fb704d4797b88e7c5175b2aa150d93b8eebb0538ab9be6bfe412a"
+              "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
             },
             {
               "path": "apps/api/openapi.json",
@@ -713830,7 +713926,8 @@
           "release-0.6-remove-runtime-package-managers",
           "release-0.6-alpine-node-runtime-candidate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-packaged-production-seed"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -713838,7 +713935,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "c2974d2b6f0fb704d4797b88e7c5175b2aa150d93b8eebb0538ab9be6bfe412a"
+              "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
             },
             {
               "path": "apps/api/openapi.json",
@@ -728974,7 +729071,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/notification-templates.ts",
@@ -730247,7 +730344,8 @@
           "release-0.6-solar-replay-lock-order",
           "release-0.6-native-integration-acceptance",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-packaged-production-seed"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -732860,7 +732958,7 @@
             },
             {
               "path": "packages/db/src/seed/index.ts",
-              "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
             },
             {
               "path": "packages/db/src/seed/notification-templates.ts",
@@ -734040,7 +734138,8 @@
           "release-0.6-solar-replay-lock-order",
           "release-0.6-native-integration-acceptance",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-packaged-production-seed"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -737898,7 +737997,7 @@
             },
             {
               "path": "Dockerfile.base",
-              "sha256": "c2974d2b6f0fb704d4797b88e7c5175b2aa150d93b8eebb0538ab9be6bfe412a"
+              "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
             },
             {
               "path": "Dockerfile.web",
@@ -737934,7 +738033,8 @@
           "release-0.6-owner-policy-reconciliation",
           "release-0.6-remove-runtime-package-managers",
           "release-0.6-alpine-node-runtime-candidate",
-          "release-0.6-combined-runtime-image-candidate"
+          "release-0.6-combined-runtime-image-candidate",
+          "release-0.6-packaged-production-seed"
         ]
       }
     },
@@ -738028,7 +738128,8 @@
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-shipped-component-license-gate",
           "release-0.6-database-client-pool-metrics",
-          "release-0.6-staging-postgres-monitoring-readback"
+          "release-0.6-staging-postgres-monitoring-readback",
+          "release-0.6-packaged-production-seed"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -825618,6 +825719,112 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "production-quarantine-guard-proof.json",
       "source_scope_proof_sha256": "2fa5d44bb121ba7322d49f31355511d2ec4b633895182379f3103f3f68d80b58"
+    },
+    "release-0.6-packaged-production-seed": {
+      "batch": "release-0.6-packaged-production-seed",
+      "base_commit": "f4eeea9d4452316a7d776ea7c3820a7301d644e7",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.03.02",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "release-readiness#R-05.03",
+        "01-platform-infrastructure.md#T-03.01.04",
+        "02-auth-users-admin.md#T-09.02.01",
+        "02-auth-users-admin.md#T-09.02.02",
+        "02-auth-users-admin.md#T-09.03.01",
+        "02-auth-users-admin.md#T-09.03.02",
+        "02-auth-users-admin.md#T-09.04.01",
+        "05-notifications-documents-ai.md#T-05.04.01",
+        "05-notifications-documents-ai.md#T-05.04.02",
+        "05-notifications-documents-ai.md#T-05.04.03",
+        "05-notifications-documents-ai.md#T-05.04.04",
+        "05-notifications-documents-ai.md#T-05.04.05",
+        "02-auth-users-admin.md#T-09.11.05",
+        "03-core-business.md#T-03.01.01.01",
+        "03-core-business.md#T-03.01.01.02",
+        "03-core-business.md#T-03.01.01.03",
+        "03-core-business.md#T-03.01.01.04",
+        "03-core-business.md#T-03.01.01.05",
+        "03-core-business.md#T-03.01.01.06",
+        "03-core-business.md#T-03.01.01.07",
+        "03-core-business.md#T-03.01.02.01",
+        "03-core-business.md#T-03.01.02.02",
+        "03-core-business.md#T-03.01.02.03",
+        "03-core-business.md#T-03.01.02.04",
+        "03-core-business.md#T-03.01.03.01",
+        "03-core-business.md#T-03.01.03.02",
+        "03-core-business.md#T-03.01.03.03",
+        "03-core-business.md#T-03.01.03.04",
+        "03-core-business.md#T-03.01.03.05",
+        "03-core-business.md#T-03.01.03.06",
+        "03-core-business.md#T-03.01.03.07",
+        "03-core-business.md#T-03.01.04.01",
+        "03-core-business.md#T-03.01.04.02",
+        "03-core-business.md#T-03.01.04.03",
+        "03-core-business.md#T-03.01.04.04",
+        "03-core-business.md#T-03.01.04.05",
+        "03-core-business.md#T-03.01.04.06",
+        "03-core-business.md#T-03.01.04.07",
+        "03-core-business.md#T-03.01.04.08",
+        "03-core-business.md#T-03.01.05.01",
+        "03-core-business.md#T-03.01.05.02",
+        "03-core-business.md#T-03.01.05.03",
+        "03-core-business.md#T-03.01.05.04",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "07-ui-ux-design.md#T-07.30.02.15",
+        "07-ui-ux-design.md#T-07.30.02.17",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "Dockerfile.base",
+          "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
+        },
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "df0954295e4a008f008d499986077cb989fef297db62bb1e4312b29f3dd27810"
+        },
+        {
+          "path": "packages/db/src/seed/index.ts",
+          "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
+        },
+        {
+          "path": "scripts/run-packaged-seed.cjs",
+          "sha256": "8b06c60f19dc368056ca612c6e8202bd523e6d5a22122572d40363cf0079d226"
+        },
+        {
+          "path": "scripts/run-packaged-migrations.cjs",
+          "sha256": "692b4a45a4a4a560a2372d7c2d2cbd128b44ea0c9a120ec929e7e3ff61238a8c"
+        },
+        {
+          "path": "packages/db/src/migrate.ts",
+          "sha256": "ee35ac3d9e1350e828edc37e6a972a4ed04f91d3c079ed53b219ecc1adb09fb8"
+        },
+        {
+          "path": "packages/db/package.json",
+          "sha256": "f50a797717d37728081e84710f49e96cf22681e314a28da2239296ede40efe88"
+        },
+        {
+          "path": "deploy/production/compose.yml",
+          "sha256": "7b5699f7b41e9b8966764eb9482155c17bcbb3aab1e9ea4084b93984d062bd19"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+        }
+      ],
+      "checks": [
+        "The original compiled seed process exited zero without executing the seed. The source and compiled entry points now use the migration runner's direct-entry check. Importing the module remains side-effect-free, and the development pnpm db:seed command reached the database and failed correctly on a refused test connection.",
+        "The actual production Compose migration and one-off seed commands ran as the non-root user against an isolated PostgreSQL 16.15 database with verified TLS. The clean journal applied and reported expected 0282. An intentionally wrong expected version exited nonzero. Missing bootstrap inputs were refused before any administrator was created.",
+        "The compiled first seed created one administrator with the required password change. A repeat skipped the existing administrator. Independent SQL verified one administrator and one bootstrap audit event. None of the four synthetic credentials appeared in the seed receipts.",
+        "The application Docker recipe includes the new launcher. The procedure uses the existing isolated migration environment and explicit protected bootstrap inputs. Production-equivalent host roles, external migration and seed receipts, and release and backup gates remain separate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "packaged-production-seed-proof.json",
+      "source_scope_proof_sha256": "5e40738fd79c42baed54a2fdd638c4d9c4217eb441ba138e1f7c12ae9984e550"
     }
   },
   "historical_improvements": [
@@ -825657,18 +825864,18 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-production-migration-entry-point",
+    "id": "release-0.6-runtime-readiness-and-staging-smoke",
     "release": "0.6.0",
     "task_keys": [
-      "01-platform-infrastructure.md#T-02.03.02",
-      "01-platform-infrastructure.md#T-02.04.04",
+      "01-platform-infrastructure.md#T-03.03.04",
+      "06-security-testing-observability.md#T-06.12.03.02",
       "release-readiness#R-05.03"
     ],
-    "goal": "Reconcile the current packaged migration and production seed entry points with the deployment order and safe rehearsal evidence."
+    "goal": "Verify actual readiness dependencies and migration-before-traffic checks in the packaged staging smoke path. Retain the external topology prerequisites."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",
-    "next_update_after": "v0.6.0 hosted browser and migration verification, package license disposition and production-equivalent environment availability",
+    "next_update_after": "v0.6.0 hosted browser and staging smoke verification, package license disposition and production-equivalent environment availability",
     "method": "v0.5.0 staging and Telegram receipts are confirmed. v0.6.0 owner policy is recorded. Local and disposable staging rehearsals do not satisfy the production-equivalent TLS, provider, off-server recovery, load or schedule gates; production access/provisioning timing is external."
   },
   "capabilities": [

@@ -1,3 +1,4 @@
+import { resolve } from 'node:path';
 import { and, eq, sql } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { v7 as uuidv7 } from 'uuid';
@@ -479,10 +480,8 @@ async function main(): Promise<void> {
   process.exit(0);
 }
 
-// Allow direct invocation: `tsx src/seed/index.ts`
-const isDirectRun =
-  process.argv[1] != null &&
-  (process.argv[1].endsWith('/seed/index.ts') || process.argv[1].endsWith('\\seed\\index.ts'));
+// Allow the development source command and the compiled production command.
+const isDirectRun = process.argv[1] != null && __filename === resolve(process.argv[1]);
 if (isDirectRun) {
   main();
 }
