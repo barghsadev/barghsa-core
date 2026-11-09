@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T22:45:43+00:00",
-  "source_commit": "e3ebc635bd82744b977d32a1ed947e45b5c69fcb",
+  "updated": "2026-11-09T22:49:42+00:00",
+  "source_commit": "5c9ab1d5198c752863ba38f747830ab55a81e662",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -479854,20 +479854,66 @@
         "story": "06-security-testing-observability.md#spec-24c716b06081"
       },
       "requirement": "| T-06.06.02.02 | Build payment provider callback adapter: verify provider signature, merchant context, server-side status check; browser redirect ignored | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-security-scenario-and-signed-fixture-reconciliation"
+        ],
+        "current_acceptance": {
+          "kind": "verified-payment-signature-merchant-and-server-settlement",
+          "base_commit": "5c9ab1d5198c752863ba38f747830ab55a81e662",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/wallet/payment-callback-verifier.ts",
+              "sha256": "62ece3578d507ac231449b8058a44fa9e08facfe46347f5b7bdb1e1036ed9be6"
+            },
+            {
+              "path": "apps/api/src/wallet/payment-callback-verifier.test.ts",
+              "sha256": "405dfe53be4e1d1d149c320fa5991ebaa2da4dd5513868949ec39c9602dc5155"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.controller.ts",
+              "sha256": "86bcd985f89f752ac881e69f93e9c359233cf93e8ad8cad2e385b5ac7da5245f"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.controller.test.ts",
+              "sha256": "ba912491867d307e113f9525614249daaac6531e22d500fccec10a735071bbfb"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+              "sha256": "7607f7044224fdc8410a1cd368131198f0cf42986e4ac94de1babbd78951aa30"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.service.test.ts",
+              "sha256": "461d26d584bb628fb4d61abf67de432bebf58f1f1dac07288a2d193b795ff492"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.integration.test.ts",
+              "sha256": "e93f7f13f67b5c64ec13604af9d421413dc5c9bb219f02276ad93b5729d81453"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback-recovery.test.ts",
+              "sha256": "3444386194784e0983f7f658d97885796dae6fcaddcf25828d500d189e0288ff"
+            },
+            {
+              "path": "apps/api/src/wallet/payment-gateway.ts",
+              "sha256": "c8945b247aeca252651eef7514d06c0280e51061e160359710f34f649401a67b"
+            }
+          ],
+          "checks": [
+            "The signed payment POST uses the exact raw body, event ID and timestamp with bounded HMAC verification. It matches merchant context, order, authority and amount and checks provider status server-side before credit.",
+            "The browser return GET only redirects. The explicit authenticated POST rechecks current profile authority and gets server-side status. The focused signature/controller cases and the source-matching 50 native callback, chargeback and durable recovery cases passed. Live merchant activation and provider receipts remain separate."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.06.02.03",
@@ -481557,20 +481603,37 @@
         "story": "06-security-testing-observability.md#spec-821e9747085a"
       },
       "requirement": "| T-06.08.02.01 | Define pen test scope: auth, session, MFA, CSRF, CSP, BOLA/IDOR, rate limits, SSRF, file upload, webhooks, wallet/payment, AI tools | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-security-scenario-and-signed-fixture-reconciliation"
+        ],
+        "current_acceptance": {
+          "kind": "defined-staging-penetration-review-scope",
+          "base_commit": "5c9ab1d5198c752863ba38f747830ab55a81e662",
+          "source_evidence": [
+            {
+              "path": "docs/security/security-verification.md",
+              "sha256": "16433e8f8b6050e62bbeee5e142d777846bda0459c89ca0ae9140b833a452473"
+            },
+            {
+              "path": "docs/security/supply-chain.md",
+              "sha256": "cea098b450ca07840fdd3bd27b48ef55bb5e0773bc6d452a79004d61bc2111c1"
+            }
+          ],
+          "checks": [
+            "The checked scope enumerates auth, sessions, MFA, CSRF, CSP, BOLA/IDOR, rate limits, SSRF, uploads, webhooks, wallet/payment and the owner-approved read-only AI boundary. It specifies test accounts, isolated providers, evidence, cleanup and repeat triggers. Live scanning and independent execution remain separate."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.08.02.02",
@@ -481609,20 +481672,37 @@
         "story": "06-security-testing-observability.md#spec-821e9747085a"
       },
       "requirement": "| T-06.08.02.03 | Define criteria: critical/high with credible production path → fix before release; accepted risk requires owner+expiry | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-security-scenario-and-signed-fixture-reconciliation"
+        ],
+        "current_acceptance": {
+          "kind": "defined-penetration-risk-disposition",
+          "base_commit": "5c9ab1d5198c752863ba38f747830ab55a81e662",
+          "source_evidence": [
+            {
+              "path": "docs/security/security-verification.md",
+              "sha256": "16433e8f8b6050e62bbeee5e142d777846bda0459c89ca0ae9140b833a452473"
+            },
+            {
+              "path": "docs/security/supply-chain.md",
+              "sha256": "cea098b450ca07840fdd3bd27b48ef55bb5e0773bc6d452a79004d61bc2111c1"
+            }
+          ],
+          "checks": [
+            "Critical and high findings with a credible production path block release. A permitted risk disposition must identify its owner, evidence, compensating control, expiry and retest. The policy is source-bound. Live review and individual dispositions require separate evidence."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.08.02.04",
@@ -482467,20 +482547,45 @@
         "story": "06-security-testing-observability.md#spec-6d621a69af5e"
       },
       "requirement": "| T-06.10.01.05 | Implement deterministic signed webhook fixture builder | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-security-scenario-and-signed-fixture-reconciliation"
+        ],
+        "current_acceptance": {
+          "kind": "verified-deterministic-signed-webhook-fixtures",
+          "base_commit": "5c9ab1d5198c752863ba38f747830ab55a81e662",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/wallet/payment-callback-verifier.ts",
+              "sha256": "62ece3578d507ac231449b8058a44fa9e08facfe46347f5b7bdb1e1036ed9be6"
+            },
+            {
+              "path": "apps/api/src/wallet/payment-callback-verifier.test.ts",
+              "sha256": "405dfe53be4e1d1d149c320fa5991ebaa2da4dd5513868949ec39c9602dc5155"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.integration.test.ts",
+              "sha256": "e93f7f13f67b5c64ec13604af9d421413dc5c9bb219f02276ad93b5729d81453"
+            },
+            {
+              "path": "apps/api/src/email-webhook/svix-verifier.test.ts",
+              "sha256": "370134a511d301e701f5006c7f27db057ec658045f7a638d6ab9727e0ddf51d4"
+            }
+          ],
+          "checks": [
+            "The fixture builder takes explicit raw bytes, event ID, timestamp and test secret and produces the expected HMAC signature without clock or random inputs. Unit tests exercise valid, missing, bad and stale signatures. Native fixtures exercise committed duplicate delivery and one ledger effect. The Svix verifier has fixed-input signature fixtures for the separately authenticated email channel."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.10.01.06",
@@ -483351,20 +483456,138 @@
         "story": "06-security-testing-observability.md#spec-09a11474dca9"
       },
       "requirement": "| T-06.11.02.02 | Write targeted security test scenarios: CSRF, CORS misconfiguration, BOLA/IDOR, rate limit bypass, upload abuse, open redirect, SSRF, webhook replay, session rotation corner cases | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-security-scenario-and-signed-fixture-reconciliation"
+        ],
+        "current_acceptance": {
+          "kind": "verified-targeted-security-regression-matrix",
+          "base_commit": "5c9ab1d5198c752863ba38f747830ab55a81e662",
+          "source_evidence": [
+            {
+              "path": "docs/security/security-verification.md",
+              "sha256": "16433e8f8b6050e62bbeee5e142d777846bda0459c89ca0ae9140b833a452473"
+            },
+            {
+              "path": "apps/api/src/common/browser-origin.test.ts",
+              "sha256": "a329736f3127d035481cbe372c5c8c8a9819218c8c66a99732096c04e893d93c"
+            },
+            {
+              "path": "apps/api/src/session/csrf.guard.test.ts",
+              "sha256": "284d0156c91689a216e20499c341f5edb9d1e55724c8c5638e83dcd14f16c434"
+            },
+            {
+              "path": "apps/api/src/session/refresh-csrf.guard.test.ts",
+              "sha256": "83a88e47225833a2e17b679b22f6cd7587b74b0ff6a4d84da7e5fdb0028d0ea5"
+            },
+            {
+              "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
+              "sha256": "541ed2143a9cfe79975efaba91efe3c38c84ec6499adf0c3da454a6b5152228d"
+            },
+            {
+              "path": "apps/api/src/session/session-csrf-race-http.integration.test.ts",
+              "sha256": "d6b757d79648f55f20f9176bf2b33b9f0146d4051e471ba9c30a0935c6f5c8d4"
+            },
+            {
+              "path": "apps/api/src/session/session-http.integration.test.ts",
+              "sha256": "e3eda2262818e847102592749bf6c2714fb0dd85162db8568c0b18f2cf5980b3"
+            },
+            {
+              "path": "apps/api/src/session/operating-context-http.integration.test.ts",
+              "sha256": "5aecdd3fac66f055b07a65b30e3231abd771c2d3b827a2923f221e5a1256ab89"
+            },
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "f476f711dfda6f7101010a9e35dbe9191b41fe44e4aea0858e702d23ef8de31e"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.guard.ts",
+              "sha256": "16d5b866af2df85e3f0a57c030011a52e676e50c6beb08a0fa83225eb8e6984d"
+            },
+            {
+              "path": "apps/api/src/documents/document-http.integration.test.ts",
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
+            },
+            {
+              "path": "apps/api/src/upload/file-policy.test.ts",
+              "sha256": "419c5bd942efe9d73f8c5098098c931df0f0fad2db5dc3e97b884c53d7910cd7"
+            },
+            {
+              "path": "packages/shared/src/notifications/navigation.ts",
+              "sha256": "9c9421c69f56be8a7de6d88427c600d3c4cf3f4cb7d113346b3df7977b4b6eed"
+            },
+            {
+              "path": "packages/shared/src/notifications/inbox-content.test.ts",
+              "sha256": "a5e1e1ae80e8599be40d14a096d83c282ce96904b7b09fdba39c44dc32e41247"
+            },
+            {
+              "path": "packages/shared/src/ai-models/tester.test.ts",
+              "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/smtp.test.ts",
+              "sha256": "8903e89d932a5a0fcafa2f0f2dfcdb42743700f49a2f4c4886b482d7fea93255"
+            },
+            {
+              "path": "apps/api/src/provider-config/smtp-network-guard.test.ts",
+              "sha256": "25b3beb916ef08e17168f360a0758aa31590054f06b7b962b8aa40a6b7cb5356"
+            },
+            {
+              "path": "apps/api/src/email-webhook/svix-verifier.test.ts",
+              "sha256": "370134a511d301e701f5006c7f27db057ec658045f7a638d6ab9727e0ddf51d4"
+            },
+            {
+              "path": "apps/api/src/wallet/payment-callback-verifier.ts",
+              "sha256": "62ece3578d507ac231449b8058a44fa9e08facfe46347f5b7bdb1e1036ed9be6"
+            },
+            {
+              "path": "apps/api/src/wallet/payment-callback-verifier.test.ts",
+              "sha256": "405dfe53be4e1d1d149c320fa5991ebaa2da4dd5513868949ec39c9602dc5155"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.controller.ts",
+              "sha256": "86bcd985f89f752ac881e69f93e9c359233cf93e8ad8cad2e385b5ac7da5245f"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.controller.test.ts",
+              "sha256": "ba912491867d307e113f9525614249daaac6531e22d500fccec10a735071bbfb"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+              "sha256": "7607f7044224fdc8410a1cd368131198f0cf42986e4ac94de1babbd78951aa30"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.service.test.ts",
+              "sha256": "461d26d584bb628fb4d61abf67de432bebf58f1f1dac07288a2d193b795ff492"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.integration.test.ts",
+              "sha256": "e93f7f13f67b5c64ec13604af9d421413dc5c9bb219f02276ad93b5729d81453"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback-recovery.test.ts",
+              "sha256": "3444386194784e0983f7f658d97885796dae6fcaddcf25828d500d189e0288ff"
+            },
+            {
+              "path": "apps/api/src/wallet/payment-gateway.ts",
+              "sha256": "c8945b247aeca252651eef7514d06c0280e51061e160359710f34f649401a67b"
+            }
+          ],
+          "checks": [
+            "81 API and 39 shared focused cases passed across CSRF/CORS, unsafe navigation, provider SSRF, and signed callback verification. Current source-bound native evidence covers financial BOLA across four HTTP surfaces, trusted-proxy and forged-IP rate-limit behavior, reserved-file and actual-byte upload attacks, and session credential rotation/revocation.",
+            "The source-matching 50 native payment cases include stale, invalid and repeated callback inputs, durable retries and duplicate settlement protection. The matrix separates authored regression cases from authenticated staging DAST and the independent review."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.11.02.03",
@@ -748927,7 +749150,8 @@
           "release-0.6-migration-journal-formatting",
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-security-scenario-and-signed-fixture-reconciliation"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -843736,6 +843960,144 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/payment-key-conflict-monitoring",
       "source_scope_proof": "payment-key-conflict-source-proof.json",
       "source_scope_proof_sha256": "644dc7f3ef12954796823073c7973e99f6b4fc520c30d3b22d6be35c090898fe"
+    },
+    "release-0.6-security-scenario-and-signed-fixture-reconciliation": {
+      "batch": "release-0.6-security-scenario-and-signed-fixture-reconciliation",
+      "base_commit": "5c9ab1d5198c752863ba38f747830ab55a81e662",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.06.02.02",
+        "06-security-testing-observability.md#T-06.08.02.01",
+        "06-security-testing-observability.md#T-06.08.02.03",
+        "06-security-testing-observability.md#T-06.10.01.05",
+        "06-security-testing-observability.md#T-06.11.02.02",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "16433e8f8b6050e62bbeee5e142d777846bda0459c89ca0ae9140b833a452473"
+        },
+        {
+          "path": "docs/security/supply-chain.md",
+          "sha256": "cea098b450ca07840fdd3bd27b48ef55bb5e0773bc6d452a79004d61bc2111c1"
+        },
+        {
+          "path": "apps/api/src/common/browser-origin.test.ts",
+          "sha256": "a329736f3127d035481cbe372c5c8c8a9819218c8c66a99732096c04e893d93c"
+        },
+        {
+          "path": "apps/api/src/session/csrf.guard.test.ts",
+          "sha256": "284d0156c91689a216e20499c341f5edb9d1e55724c8c5638e83dcd14f16c434"
+        },
+        {
+          "path": "apps/api/src/session/refresh-csrf.guard.test.ts",
+          "sha256": "83a88e47225833a2e17b679b22f6cd7587b74b0ff6a4d84da7e5fdb0028d0ea5"
+        },
+        {
+          "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
+          "sha256": "541ed2143a9cfe79975efaba91efe3c38c84ec6499adf0c3da454a6b5152228d"
+        },
+        {
+          "path": "apps/api/src/session/session-csrf-race-http.integration.test.ts",
+          "sha256": "d6b757d79648f55f20f9176bf2b33b9f0146d4051e471ba9c30a0935c6f5c8d4"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "e3eda2262818e847102592749bf6c2714fb0dd85162db8568c0b18f2cf5980b3"
+        },
+        {
+          "path": "apps/api/src/session/operating-context-http.integration.test.ts",
+          "sha256": "5aecdd3fac66f055b07a65b30e3231abd771c2d3b827a2923f221e5a1256ab89"
+        },
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "f476f711dfda6f7101010a9e35dbe9191b41fe44e4aea0858e702d23ef8de31e"
+        },
+        {
+          "path": "apps/api/src/rate-limit/rate-limit.guard.ts",
+          "sha256": "16d5b866af2df85e3f0a57c030011a52e676e50c6beb08a0fa83225eb8e6984d"
+        },
+        {
+          "path": "apps/api/src/documents/document-http.integration.test.ts",
+          "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
+        },
+        {
+          "path": "apps/api/src/upload/file-policy.test.ts",
+          "sha256": "419c5bd942efe9d73f8c5098098c931df0f0fad2db5dc3e97b884c53d7910cd7"
+        },
+        {
+          "path": "packages/shared/src/notifications/navigation.ts",
+          "sha256": "9c9421c69f56be8a7de6d88427c600d3c4cf3f4cb7d113346b3df7977b4b6eed"
+        },
+        {
+          "path": "packages/shared/src/notifications/inbox-content.test.ts",
+          "sha256": "a5e1e1ae80e8599be40d14a096d83c282ce96904b7b09fdba39c44dc32e41247"
+        },
+        {
+          "path": "packages/shared/src/ai-models/tester.test.ts",
+          "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/smtp.test.ts",
+          "sha256": "8903e89d932a5a0fcafa2f0f2dfcdb42743700f49a2f4c4886b482d7fea93255"
+        },
+        {
+          "path": "apps/api/src/provider-config/smtp-network-guard.test.ts",
+          "sha256": "25b3beb916ef08e17168f360a0758aa31590054f06b7b962b8aa40a6b7cb5356"
+        },
+        {
+          "path": "apps/api/src/email-webhook/svix-verifier.test.ts",
+          "sha256": "370134a511d301e701f5006c7f27db057ec658045f7a638d6ab9727e0ddf51d4"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-callback-verifier.ts",
+          "sha256": "62ece3578d507ac231449b8058a44fa9e08facfe46347f5b7bdb1e1036ed9be6"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-callback-verifier.test.ts",
+          "sha256": "405dfe53be4e1d1d149c320fa5991ebaa2da4dd5513868949ec39c9602dc5155"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.controller.ts",
+          "sha256": "86bcd985f89f752ac881e69f93e9c359233cf93e8ad8cad2e385b5ac7da5245f"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.controller.test.ts",
+          "sha256": "ba912491867d307e113f9525614249daaac6531e22d500fccec10a735071bbfb"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+          "sha256": "7607f7044224fdc8410a1cd368131198f0cf42986e4ac94de1babbd78951aa30"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.service.test.ts",
+          "sha256": "461d26d584bb628fb4d61abf67de432bebf58f1f1dac07288a2d193b795ff492"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.integration.test.ts",
+          "sha256": "e93f7f13f67b5c64ec13604af9d421413dc5c9bb219f02276ad93b5729d81453"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback-recovery.test.ts",
+          "sha256": "3444386194784e0983f7f658d97885796dae6fcaddcf25828d500d189e0288ff"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-gateway.ts",
+          "sha256": "c8945b247aeca252651eef7514d06c0280e51061e160359710f34f649401a67b"
+        }
+      ],
+      "checks": [
+        "The checked scope enumerates auth, sessions, MFA, CSRF, CSP, BOLA/IDOR, rate limits, SSRF, uploads, webhooks, wallet/payment and the owner-approved read-only AI boundary. It specifies test accounts, isolated providers, evidence, cleanup and repeat triggers. Live scanning and independent execution remain separate.",
+        "Critical and high findings with a credible production path block release. A permitted risk disposition must identify its owner, evidence, compensating control, expiry and retest. The policy is source-bound. Live review and individual dispositions require separate evidence.",
+        "The signed payment POST uses the exact raw body, event ID and timestamp with bounded HMAC verification. It matches merchant context, order, authority and amount and checks provider status server-side before credit.",
+        "The browser return GET only redirects. The explicit authenticated POST rechecks current profile authority and gets server-side status. The focused signature/controller cases and the source-matching 50 native callback, chargeback and durable recovery cases passed. Live merchant activation and provider receipts remain separate.",
+        "The fixture builder takes explicit raw bytes, event ID, timestamp and test secret and produces the expected HMAC signature without clock or random inputs. Unit tests exercise valid, missing, bad and stale signatures. Native fixtures exercise committed duplicate delivery and one ledger effect. The Svix verifier has fixed-input signature fixtures for the separately authenticated email channel.",
+        "81 API and 39 shared focused cases passed across CSRF/CORS, unsafe navigation, provider SSRF, and signed callback verification. Current source-bound native evidence covers financial BOLA across four HTTP surfaces, trusted-proxy and forged-IP rate-limit behavior, reserved-file and actual-byte upload attacks, and session credential rotation/revocation.",
+        "The source-matching 50 native payment cases include stale, invalid and repeated callback inputs, durable retries and duplicate settlement protection. The matrix separates authored regression cases from authenticated staging DAST and the independent review."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/security-scenario-matrix",
+      "source_scope_proof": "security-scenario-source-proof.json",
+      "source_scope_proof_sha256": "0a39ee9e0ba92337b2590845773cc6cae615ac59d9ba90f746ad07ab26060ddb"
     }
   },
   "historical_improvements": [

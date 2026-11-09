@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T22:45:43+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T22:49:42+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1039 | Accepted with unchanged source bindings. |
-| verify | 289 | Existing work may be complete; inspect evidence before building. |
+| done | 1044 | Accepted with unchanged source bindings. |
+| verify | 284 | Existing work may be complete; inspect evidence before building. |
 | partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1208,7 +1208,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.06.01.07` | verify | Inventory needed | Write tests: valid upload, invalid extension, mismatched MIME, oversized, malware detected, quarantine alert |
 | `06-security-testing-observability.md#T-06.06.01.08` | verify | Inventory needed | Security review: file path traversal, double extension, magic byte manipulation, zip bombs |
 | `06-security-testing-observability.md#T-06.06.02.01` | verify | Inventory needed | Implement generic webhook verification service: signature/HMAC verification, replay window (e.g. ±5 min), event ID dedup |
-| `06-security-testing-observability.md#T-06.06.02.02` | verify | Inventory needed | Build payment provider callback adapter: verify provider signature, merchant context, server-side status check; browser redirect ignored |
+| `06-security-testing-observability.md#T-06.06.02.02` | done | Recorded batch work | Build payment provider callback adapter: verify provider signature, merchant context, server-side status check; browser redirect ignored |
 | `06-security-testing-observability.md#T-06.06.02.03` | verify | Inventory needed | Build SMS provider callback adapter: verify authenticity, replay-safe delivery status |
 | `06-security-testing-observability.md#T-06.06.02.04` | verify | Inventory needed | Build storage provider callback: verify signature, replay-safe, idempotent status update |
 | `06-security-testing-observability.md#T-06.06.02.05` | verify | Inventory needed | Implement webhook idempotency: store webhook event hash + processed flag; reject duplicates |
@@ -1240,9 +1240,9 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.08.01.04` | verify | Inventory needed | Document accepted risks with owner, justification, compensating controls, expiry, approval |
 | `06-security-testing-observability.md#T-06.08.01.05` | verify | Inventory needed | Define review cadence: quarterly full review + review on material flow changes |
 | `06-security-testing-observability.md#T-06.08.01.06` | verify | Inventory needed | Create PR checklist item: threat model update required when trust boundary, sensitive data, provider, permission, or financial flow changes |
-| `06-security-testing-observability.md#T-06.08.02.01` | verify | Inventory needed | Define pen test scope: auth, session, MFA, CSRF, CSP, BOLA/IDOR, rate limits, SSRF, file upload, webhooks, wallet/payment, AI tools |
+| `06-security-testing-observability.md#T-06.08.02.01` | done | Recorded batch work | Define pen test scope: auth, session, MFA, CSRF, CSP, BOLA/IDOR, rate limits, SSRF, file upload, webhooks, wallet/payment, AI tools |
 | `06-security-testing-observability.md#T-06.08.02.02` | verify | Inventory needed | Schedule pre-launch independent penetration test; budget and vendor selection |
-| `06-security-testing-observability.md#T-06.08.02.03` | verify | Inventory needed | Define criteria: critical/high with credible production path → fix before release; accepted risk requires owner+expiry |
+| `06-security-testing-observability.md#T-06.08.02.03` | done | Recorded batch work | Define criteria: critical/high with credible production path → fix before release; accepted risk requires owner+expiry |
 | `06-security-testing-observability.md#T-06.08.02.04` | verify | Inventory needed | Implement automated authenticated DAST in staging (e.g. OWASP ZAP API scan) |
 | `06-security-testing-observability.md#T-06.08.02.05` | verify | Inventory needed | Write custom security E2E suite for targeted API test cases CSRF, CORS, session rotation, rate limits, BOLA, SSRF, open redirect |
 | `06-security-testing-observability.md#T-06.08.03.01` | verify | Inventory needed | Create incident response runbook (`docs/runbooks/security-incident.md`): detection, containment, eradication, recovery, post-mortem |
@@ -1275,7 +1275,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.10.01.02` | verify | Inventory needed | Configure NestJS testing module: bootstrap real app with test DB, apply migrations before each suite |
 | `06-security-testing-observability.md#T-06.10.01.03` | verify | Inventory needed | Implement test DB lifecycle: per-worker isolated schema or database for parallel runs |
 | `06-security-testing-observability.md#T-06.10.01.04` | verify | Inventory needed | Build fake adapter servers: SMTP fake, SMS.ir fake, payment gateway fake, document storage fake |
-| `06-security-testing-observability.md#T-06.10.01.05` | verify | Inventory needed | Implement deterministic signed webhook fixture builder |
+| `06-security-testing-observability.md#T-06.10.01.05` | done | Recorded batch work | Implement deterministic signed webhook fixture builder |
 | `06-security-testing-observability.md#T-06.10.01.06` | verify | Inventory needed | Write helper utilities: create user, create profile, authenticate, create order, create invoice, add wallet funds |
 | `06-security-testing-observability.md#T-06.10.02.01` | verify | Inventory needed | Write migration integration tests: clean database apply, upgrade-path apply, rollback, data preservation |
 | `06-security-testing-observability.md#T-06.10.02.02` | verify | Inventory needed | Write constraint tests: unique indexes, foreign keys, NOT NULL, CHECK constraints, exclusion constraints |
@@ -1309,7 +1309,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.11.01.03` | verify | Inventory needed | Add CI gate: axe violations block PR; track severity |
 | `06-security-testing-observability.md#T-06.11.01.04` | verify | Inventory needed | Document manual testing checklist for screen readers (NVDA/JAWS, VoiceOver) and keyboard-only |
 | `06-security-testing-observability.md#T-06.11.02.01` | verify | Inventory needed | Integrate OWASP ZAP for authenticated API scanning in staging environment |
-| `06-security-testing-observability.md#T-06.11.02.02` | verify | Inventory needed | Write targeted security test scenarios: CSRF, CORS misconfiguration, BOLA/IDOR, rate limit bypass, upload abuse, open redirect, SSRF, webhook replay, session rotation corner cases |
+| `06-security-testing-observability.md#T-06.11.02.02` | done | Recorded batch work | Write targeted security test scenarios: CSRF, CORS misconfiguration, BOLA/IDOR, rate limit bypass, upload abuse, open redirect, SSRF, webhook replay, session rotation corner cases |
 | `06-security-testing-observability.md#T-06.11.02.03` | done | Recorded batch work | Configure Semgrep/CodeQL with security-focused rules for NestJS/Drizzle patterns |
 | `06-security-testing-observability.md#T-06.11.02.04` | done | Recorded batch work | Add CI gate: critical/high SAST findings block merge; medium triaged within sprint |
 | `06-security-testing-observability.md#T-06.11.03.01` | verify | Inventory needed | Establish query and route latency budgets (p50/p95/p99) before load testing |
