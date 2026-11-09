@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T19:04:21+00:00",
+  "updated": "2026-11-09T19:13:46+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -21870,7 +21870,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-review-preview-deadlines",
           "release-0.5-required-input-semantics",
-          "release-0.6-browser-origin-security"
+          "release-0.6-browser-origin-security",
+          "release-0.6-password-hash-calibration"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -21934,7 +21935,7 @@
             },
             {
               "path": "packages/shared/src/password-hash.ts",
-              "sha256": "0ff8fc030743bad069afb3deefdc851748761c23986c4963676ba2a9c7b14e42"
+              "sha256": "73e31fe78a62a42186780db76d27794444d555ec649638350acb9801e089575e"
             },
             {
               "path": "packages/ui/src/fonts/fonts.css",
@@ -22345,6 +22346,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-password-hash-calibration",
+              "base_commit": "7ecbbc2efc87acd7703d50d5de42d5723c1dd6a0",
+              "paths": [
+                "packages/shared/src/password-hash.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/password-hash-calibration/release-0.6-password-hash-calibration.json",
+              "scope": "Only the shared hashing policy binding changes. Its default is identical to the preceding explicit Argon2id profile. Bounded override tests, native legacy verification and current compiled HTTP and bootstrap cases renew this binding. Existing caller/session/UI code and prior independent evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -22670,7 +22680,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-review-preview-deadlines",
           "release-0.5-required-input-semantics",
-          "release-0.6-browser-origin-security"
+          "release-0.6-browser-origin-security",
+          "release-0.6-password-hash-calibration"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -22766,7 +22777,7 @@
             },
             {
               "path": "packages/shared/src/password-hash.ts",
-              "sha256": "0ff8fc030743bad069afb3deefdc851748761c23986c4963676ba2a9c7b14e42"
+              "sha256": "73e31fe78a62a42186780db76d27794444d555ec649638350acb9801e089575e"
             },
             {
               "path": "packages/ui/src/fonts/fonts.css",
@@ -23246,6 +23257,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-password-hash-calibration",
+              "base_commit": "7ecbbc2efc87acd7703d50d5de42d5723c1dd6a0",
+              "paths": [
+                "packages/shared/src/password-hash.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/password-hash-calibration/release-0.6-password-hash-calibration.json",
+              "scope": "Only the shared hashing policy binding changes. Its default is identical to the preceding explicit Argon2id profile. Bounded override tests, native legacy verification and current compiled HTTP and bootstrap cases renew this binding. Existing caller/session/UI code and prior independent evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -23561,7 +23581,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-review-preview-deadlines",
           "release-0.5-required-input-semantics",
-          "release-0.6-browser-origin-security"
+          "release-0.6-browser-origin-security",
+          "release-0.6-password-hash-calibration"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -23641,7 +23662,7 @@
             },
             {
               "path": "packages/shared/src/password-hash.ts",
-              "sha256": "0ff8fc030743bad069afb3deefdc851748761c23986c4963676ba2a9c7b14e42"
+              "sha256": "73e31fe78a62a42186780db76d27794444d555ec649638350acb9801e089575e"
             },
             {
               "path": "packages/ui/src/fonts/fonts.css",
@@ -24049,6 +24070,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-password-hash-calibration",
+              "base_commit": "7ecbbc2efc87acd7703d50d5de42d5723c1dd6a0",
+              "paths": [
+                "packages/shared/src/password-hash.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/password-hash-calibration/release-0.6-password-hash-calibration.json",
+              "scope": "Only the shared hashing policy binding changes. Its default is identical to the preceding explicit Argon2id profile. Bounded override tests, native legacy verification and current compiled HTTP and bootstrap cases renew this binding. Existing caller/session/UI code and prior independent evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -24352,7 +24382,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.5-required-input-semantics",
           "release-0.6-browser-origin-security",
-          "release-0.6-remove-unapproved-session-location-data"
+          "release-0.6-remove-unapproved-session-location-data",
+          "release-0.6-password-hash-calibration"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -24440,7 +24471,7 @@
             },
             {
               "path": "packages/shared/src/password-hash.ts",
-              "sha256": "0ff8fc030743bad069afb3deefdc851748761c23986c4963676ba2a9c7b14e42"
+              "sha256": "73e31fe78a62a42186780db76d27794444d555ec649638350acb9801e089575e"
             },
             {
               "path": "packages/ui/src/fonts/fonts.css",
@@ -24862,6 +24893,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-password-hash-calibration",
+              "base_commit": "7ecbbc2efc87acd7703d50d5de42d5723c1dd6a0",
+              "paths": [
+                "packages/shared/src/password-hash.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/password-hash-calibration/release-0.6-password-hash-calibration.json",
+              "scope": "Only the shared hashing policy binding changes. Its default is identical to the preceding explicit Argon2id profile. Bounded override tests, native legacy verification and current compiled HTTP and bootstrap cases renew this binding. Existing caller/session/UI code and prior independent evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -25117,7 +25157,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-review-preview-deadlines",
           "release-0.6-browser-origin-security",
-          "release-0.6-remove-unapproved-session-location-data"
+          "release-0.6-remove-unapproved-session-location-data",
+          "release-0.6-password-hash-calibration"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -25189,7 +25230,7 @@
             },
             {
               "path": "packages/shared/src/password-hash.ts",
-              "sha256": "0ff8fc030743bad069afb3deefdc851748761c23986c4963676ba2a9c7b14e42"
+              "sha256": "73e31fe78a62a42186780db76d27794444d555ec649638350acb9801e089575e"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -25572,6 +25613,15 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-authentication-journeys/acceptance-proof.json"
               ],
               "scope": "Only changed bindings renewed: additive anonymous published-terms metadata/OpenAPI with all existing methods/tests exact; auth-entry-only current-session gate with all other root gates exact; local informational meter/predictable-password minimum preserved; ten UI-only copy values and two additive i18n exports; test fixture/required meter assertions updated without weakening critical assertions. Exact scope proofs,121 native,101 UI,118 i18n,78 distinct browser and all89 original budgets apply. Task/release status, unmet criteria, financial/business routes and independent live gates unchanged."
+            },
+            {
+              "batch": "release-0.6-password-hash-calibration",
+              "base_commit": "7ecbbc2efc87acd7703d50d5de42d5723c1dd6a0",
+              "paths": [
+                "packages/shared/src/password-hash.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/password-hash-calibration/release-0.6-password-hash-calibration.json",
+              "scope": "Only the shared hashing policy binding changes. Its default is identical to the preceding explicit Argon2id profile. Bounded override tests, native legacy verification and current compiled HTTP and bootstrap cases renew this binding. Existing caller/session/UI code and prior independent evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -25775,7 +25825,8 @@
           "release-0.6-web-fixture-typecheck-and-license-readback",
           "release-0.6-font-source-provenance",
           "release-0.6-postgres-go-license-notices",
-          "release-0.6-package-metadata-review"
+          "release-0.6-package-metadata-review",
+          "release-0.6-password-hash-calibration"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -25847,7 +25898,7 @@
             },
             {
               "path": "packages/shared/src/password-hash.ts",
-              "sha256": "0ff8fc030743bad069afb3deefdc851748761c23986c4963676ba2a9c7b14e42"
+              "sha256": "73e31fe78a62a42186780db76d27794444d555ec649638350acb9801e089575e"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -26237,6 +26288,15 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-authentication-journeys/acceptance-proof.json"
               ],
               "scope": "Only changed bindings renewed: additive anonymous published-terms metadata/OpenAPI with all existing methods/tests exact; auth-entry-only current-session gate with all other root gates exact; local informational meter/predictable-password minimum preserved; ten UI-only copy values and two additive i18n exports; test fixture/required meter assertions updated without weakening critical assertions. Exact scope proofs,121 native,101 UI,118 i18n,78 distinct browser and all89 original budgets apply. Task/release status, unmet criteria, financial/business routes and independent live gates unchanged."
+            },
+            {
+              "batch": "release-0.6-password-hash-calibration",
+              "base_commit": "7ecbbc2efc87acd7703d50d5de42d5723c1dd6a0",
+              "paths": [
+                "packages/shared/src/password-hash.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/password-hash-calibration/release-0.6-password-hash-calibration.json",
+              "scope": "Only the shared hashing policy binding changes. Its default is identical to the preceding explicit Argon2id profile. Bounded override tests, native legacy verification and current compiled HTTP and bootstrap cases renew this binding. Existing caller/session/UI code and prior independent evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -29000,7 +29060,8 @@
           "release-0.5-candidate-acceptance",
           "release-0.5-final-gates",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-browser-origin-security"
+          "release-0.6-browser-origin-security",
+          "release-0.6-password-hash-calibration"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -29056,7 +29117,7 @@
             },
             {
               "path": "packages/shared/src/password-hash.ts",
-              "sha256": "0ff8fc030743bad069afb3deefdc851748761c23986c4963676ba2a9c7b14e42"
+              "sha256": "73e31fe78a62a42186780db76d27794444d555ec649638350acb9801e089575e"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -29438,6 +29499,15 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-authentication-journeys/acceptance-proof.json"
               ],
               "scope": "Only changed bindings renewed: additive anonymous published-terms metadata/OpenAPI with all existing methods/tests exact; auth-entry-only current-session gate with all other root gates exact; local informational meter/predictable-password minimum preserved; ten UI-only copy values and two additive i18n exports; test fixture/required meter assertions updated without weakening critical assertions. Exact scope proofs,121 native,101 UI,118 i18n,78 distinct browser and all89 original budgets apply. Task/release status, unmet criteria, financial/business routes and independent live gates unchanged."
+            },
+            {
+              "batch": "release-0.6-password-hash-calibration",
+              "base_commit": "7ecbbc2efc87acd7703d50d5de42d5723c1dd6a0",
+              "paths": [
+                "packages/shared/src/password-hash.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/password-hash-calibration/release-0.6-password-hash-calibration.json",
+              "scope": "Only the shared hashing policy binding changes. Its default is identical to the preceding explicit Argon2id profile. Bounded override tests, native legacy verification and current compiled HTTP and bootstrap cases renew this binding. Existing caller/session/UI code and prior independent evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -29668,7 +29738,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-browser-origin-security",
           "release-0.6-remove-unapproved-session-location-data",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-password-hash-calibration"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -29772,7 +29843,7 @@
             },
             {
               "path": "packages/shared/src/password-hash.ts",
-              "sha256": "0ff8fc030743bad069afb3deefdc851748761c23986c4963676ba2a9c7b14e42"
+              "sha256": "73e31fe78a62a42186780db76d27794444d555ec649638350acb9801e089575e"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -30670,6 +30741,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-password-hash-calibration",
+              "base_commit": "7ecbbc2efc87acd7703d50d5de42d5723c1dd6a0",
+              "paths": [
+                "packages/shared/src/password-hash.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/password-hash-calibration/release-0.6-password-hash-calibration.json",
+              "scope": "Only the shared hashing policy binding changes. Its default is identical to the preceding explicit Argon2id profile. Bounded override tests, native legacy verification and current compiled HTTP and bootstrap cases renew this binding. Existing caller/session/UI code and prior independent evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -31465,7 +31545,8 @@
           "release-0.5-required-input-semantics",
           "release-0.6-browser-origin-security",
           "release-0.6-browser-response-policy",
-          "release-0.6-proxy-trust-and-request-limits"
+          "release-0.6-proxy-trust-and-request-limits",
+          "release-0.6-password-hash-calibration"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -31569,7 +31650,7 @@
             },
             {
               "path": "packages/shared/src/password-hash.ts",
-              "sha256": "0ff8fc030743bad069afb3deefdc851748761c23986c4963676ba2a9c7b14e42"
+              "sha256": "73e31fe78a62a42186780db76d27794444d555ec649638350acb9801e089575e"
             },
             {
               "path": "packages/shared/src/rate-limit/composite-rate-limiter.ts",
@@ -32008,6 +32089,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-password-hash-calibration",
+              "base_commit": "7ecbbc2efc87acd7703d50d5de42d5723c1dd6a0",
+              "paths": [
+                "packages/shared/src/password-hash.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/password-hash-calibration/release-0.6-password-hash-calibration.json",
+              "scope": "Only the shared hashing policy binding changes. Its default is identical to the preceding explicit Argon2id profile. Bounded override tests, native legacy verification and current compiled HTTP and bootstrap cases renew this binding. Existing caller/session/UI code and prior independent evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -469845,19 +469935,63 @@
         "story": "06-security-testing-observability.md#spec-8fb11116935a"
       },
       "requirement": "| T-06.01.01.01 | Implement `PasswordService` with Argon2id via Node.js crypto bindings (e.g. `argon2` npm package) | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-password-hash-calibration"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-native-password-creation-verification",
+          "base_commit": "7ecbbc2efc87acd7703d50d5de42d5723c1dd6a0",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "3824ec29da0f99cf604f6b7234591bdbfbbd2ddedd8dbae29d37e1f2bbf30d10"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/test/auth.service.spec.ts",
+              "sha256": "bc626693fce29ce46b24d8dac9d99922f2ff1bb44730787ae055f61594342ffd"
+            },
+            {
+              "path": "packages/db/src/seed/admin-bootstrap.integration.test.ts",
+              "sha256": "546f42596c2767a18df8ae03295330f47117f9d97f16aeb9bfdb5bfd9dfca43c"
+            },
+            {
+              "path": "packages/db/src/seed/index.ts",
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
+            },
+            {
+              "path": "packages/shared/src/password-hash.test.ts",
+              "sha256": "f33e2f0107290b15bae09dd944d80b260d1560c3d16d631cbd35d4687c14eee2"
+            },
+            {
+              "path": "packages/shared/src/password-hash.ts",
+              "sha256": "73e31fe78a62a42186780db76d27794444d555ec649638350acb9801e089575e"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Existing AuthService, staff creation and bootstrap call the pinned native Argon2id bindings with the same creation policy. Four compiled HTTP cases and one real database bootstrap case exercised these normal entrypoints. The shared policy avoids duplicating credential logic in a new service."
+          ]
+        }
       }
     },
     {
@@ -469871,19 +470005,55 @@
         "story": "06-security-testing-observability.md#spec-8fb11116935a"
       },
       "requirement": "| T-06.01.01.02 | Create benchmark script to determine optimal cost/time/memory/parallelism parameters for target hardware | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-password-hash-calibration"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-native-password-creation-verification",
+          "base_commit": "7ecbbc2efc87acd7703d50d5de42d5723c1dd6a0",
+          "source_evidence": [
+            {
+              "path": "Dockerfile.base",
+              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
+            },
+            {
+              "path": "apps/api/scripts/benchmark-password-hash.mjs",
+              "sha256": "0e433c8caec8c07580d2acc0f634e36a1a0457649fc612f857fb6032d4c04a75"
+            },
+            {
+              "path": "deploy/staging/compose.yml",
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+            },
+            {
+              "path": "docs/security/password-hashing.md",
+              "sha256": "bda8cc38fcb6b90abd6edab26d32cd12ac4f8a38b51c5cc583340f60c3cb08ac"
+            },
+            {
+              "path": "packages/shared/src/password-hash.test.ts",
+              "sha256": "f33e2f0107290b15bae09dd944d80b260d1560c3d16d631cbd35d4687c14eee2"
+            },
+            {
+              "path": "packages/shared/src/password-hash.ts",
+              "sha256": "73e31fe78a62a42186780db76d27794444d555ec649638350acb9801e089575e"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "A reusable synthetic benchmark ran in the isolated Node 24.22.2 Linux x64 staging app image under the API memory limit. Default verification was 365 ms p95, upper-bound verification was 663 ms p95. Four-way wall time was 391 ms versus 767 ms, and peak RSS was 183484 KiB versus 315000 KiB. Exact production load calibration remains separate."
+          ]
+        }
       }
     },
     {
@@ -469897,19 +470067,79 @@
         "story": "06-security-testing-observability.md#spec-8fb11116935a"
       },
       "requirement": "| T-06.01.01.03 | Store benchmarked parameters in configuration (env vars / admin settings); allow overriding per env | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-password-hash-calibration"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-native-password-creation-verification",
+          "base_commit": "7ecbbc2efc87acd7703d50d5de42d5723c1dd6a0",
+          "source_evidence": [
+            {
+              "path": "Dockerfile.base",
+              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
+            },
+            {
+              "path": "apps/api/scripts/benchmark-password-hash.mjs",
+              "sha256": "0e433c8caec8c07580d2acc0f634e36a1a0457649fc612f857fb6032d4c04a75"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "3824ec29da0f99cf604f6b7234591bdbfbbd2ddedd8dbae29d37e1f2bbf30d10"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/test/auth.service.spec.ts",
+              "sha256": "bc626693fce29ce46b24d8dac9d99922f2ff1bb44730787ae055f61594342ffd"
+            },
+            {
+              "path": "deploy/staging/compose.yml",
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+            },
+            {
+              "path": "docs/security/password-hashing.md",
+              "sha256": "bda8cc38fcb6b90abd6edab26d32cd12ac4f8a38b51c5cc583340f60c3cb08ac"
+            },
+            {
+              "path": "packages/db/src/seed/admin-bootstrap.integration.test.ts",
+              "sha256": "546f42596c2767a18df8ae03295330f47117f9d97f16aeb9bfdb5bfd9dfca43c"
+            },
+            {
+              "path": "packages/db/src/seed/index.ts",
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
+            },
+            {
+              "path": "packages/shared/src/password-hash.test.ts",
+              "sha256": "f33e2f0107290b15bae09dd944d80b260d1560c3d16d631cbd35d4687c14eee2"
+            },
+            {
+              "path": "packages/shared/src/password-hash.ts",
+              "sha256": "73e31fe78a62a42186780db76d27794444d555ec649638350acb9801e089575e"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Three environment overrides validate the allowed integer ranges at policy load. Ten option cases cover unchanged defaults, permitted stronger settings and invalid bounds. New hashes preserve the baseline minimum, algorithm, version and output size. Neither live configuration nor any coverage/performance gate changed."
+          ]
+        }
       }
     },
     {
@@ -469923,19 +470153,43 @@
         "story": "06-security-testing-observability.md#spec-8fb11116935a"
       },
       "requirement": "| T-06.01.01.04 | Ensure passwords are hashed with a per-password cryptographically random salt (16+ bytes) | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-password-hash-calibration"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-native-password-creation-verification",
+          "base_commit": "7ecbbc2efc87acd7703d50d5de42d5723c1dd6a0",
+          "source_evidence": [
+            {
+              "path": "apps/api/test/password-hash-policy.spec.ts",
+              "sha256": "afd78f19d4e33a08f67596a113a512355e982dfbb82779c867cea6fd61a95b32"
+            },
+            {
+              "path": "packages/shared/src/password-hash.test.ts",
+              "sha256": "f33e2f0107290b15bae09dd944d80b260d1560c3d16d631cbd35d4687c14eee2"
+            },
+            {
+              "path": "packages/shared/src/password-hash.ts",
+              "sha256": "73e31fe78a62a42186780db76d27794444d555ec649638350acb9801e089575e"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Real native Argon2 calls produced distinct 16-byte salts for the same synthetic password and verified only the correct input. The Linux packaged-image control confirmed the same properties at the maximum configured cost."
+          ]
+        }
       }
     },
     {
@@ -469949,19 +470203,69 @@
         "story": "06-security-testing-observability.md#spec-8fb11116935a"
       },
       "requirement": "| T-06.01.01.05 | Add migration for existing plain/hash migration if any; ensure seamless upgrade | M |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Confirm the inventory of any production import. Encoded compatible Argon2 hashes verify in place. Any other imported credential format needs an explicit conversion or forced-reset plan with populated upgrade evidence."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-password-hash-calibration"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-native-password-creation-verification",
+          "base_commit": "7ecbbc2efc87acd7703d50d5de42d5723c1dd6a0",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "3824ec29da0f99cf604f6b7234591bdbfbbd2ddedd8dbae29d37e1f2bbf30d10"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/test/auth.service.spec.ts",
+              "sha256": "bc626693fce29ce46b24d8dac9d99922f2ff1bb44730787ae055f61594342ffd"
+            },
+            {
+              "path": "apps/api/test/password-hash-policy.spec.ts",
+              "sha256": "afd78f19d4e33a08f67596a113a512355e982dfbb82779c867cea6fd61a95b32"
+            },
+            {
+              "path": "packages/db/src/seed/admin-bootstrap.integration.test.ts",
+              "sha256": "546f42596c2767a18df8ae03295330f47117f9d97f16aeb9bfdb5bfd9dfca43c"
+            },
+            {
+              "path": "packages/db/src/seed/index.ts",
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
+            },
+            {
+              "path": "packages/shared/src/password-hash.test.ts",
+              "sha256": "f33e2f0107290b15bae09dd944d80b260d1560c3d16d631cbd35d4687c14eee2"
+            },
+            {
+              "path": "packages/shared/src/password-hash.ts",
+              "sha256": "73e31fe78a62a42186780db76d27794444d555ec649638350acb9801e089575e"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Native tests verify previously encoded Argon2 hashes with different costs. The compiled forced-password-change journey reissued an older credential under the current policy without weakening mandatory replacement or session rules."
+          ]
+        }
       }
     },
     {
@@ -469975,19 +470279,43 @@
         "story": "06-security-testing-observability.md#spec-8fb11116935a"
       },
       "requirement": "| T-06.01.01.06 | Write unit tests: hash verification, salt uniqueness, cost parameter changes, timing-safe comparison | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-password-hash-calibration"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-native-password-creation-verification",
+          "base_commit": "7ecbbc2efc87acd7703d50d5de42d5723c1dd6a0",
+          "source_evidence": [
+            {
+              "path": "apps/api/test/password-hash-policy.spec.ts",
+              "sha256": "afd78f19d4e33a08f67596a113a512355e982dfbb82779c867cea6fd61a95b32"
+            },
+            {
+              "path": "packages/shared/src/password-hash.test.ts",
+              "sha256": "f33e2f0107290b15bae09dd944d80b260d1560c3d16d631cbd35d4687c14eee2"
+            },
+            {
+              "path": "packages/shared/src/password-hash.ts",
+              "sha256": "73e31fe78a62a42186780db76d27794444d555ec649638350acb9801e089575e"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Ten policy cases and two native unit cases passed. They cover default and changed costs, malformed or unsafe values, random salts, valid and invalid password checks, and verification of older parameters. The pinned Argon2 implementations compare digests with node:crypto timingSafeEqual. Wall-clock timing is a benchmark rather than a correctness assertion."
+          ]
+        }
       }
     },
     {
@@ -470001,19 +470329,97 @@
         "story": "06-security-testing-observability.md#spec-8fb11116935a"
       },
       "requirement": "| T-06.01.01.07 | Security review: confirm no plaintext password leaks via error paths, logs, analytics, or serialization | S |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Verify the final production-equivalent logging and telemetry pipeline with synthetic password markers and explicit log/sink readback. Preserve the specified one-time private temporary-password response, authorized staff step-up, and exclusion from later readback."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-password-hash-calibration"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-native-password-creation-verification",
+          "base_commit": "7ecbbc2efc87acd7703d50d5de42d5723c1dd6a0",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "3824ec29da0f99cf604f6b7234591bdbfbbd2ddedd8dbae29d37e1f2bbf30d10"
+            },
+            {
+              "path": "apps/api/src/admin/staff-http.integration.test.ts",
+              "sha256": "2d3d4ebd18fc96b64eda5a022a7a4e9191b50a919dfb5866919ef38518f6ad5e"
+            },
+            {
+              "path": "apps/api/src/app.factory.ts",
+              "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
+            },
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/common/cache-control.interceptor.ts",
+              "sha256": "d04d986e3f07a4df60513a3fe0c453d724860731981f03f92b25fc0ce3fc6c0b"
+            },
+            {
+              "path": "apps/api/src/common/http-exception.filter.ts",
+              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+            },
+            {
+              "path": "apps/api/test/auth.service.spec.ts",
+              "sha256": "bc626693fce29ce46b24d8dac9d99922f2ff1bb44730787ae055f61594342ffd"
+            },
+            {
+              "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
+            },
+            {
+              "path": "docs/security/password-hashing.md",
+              "sha256": "bda8cc38fcb6b90abd6edab26d32cd12ac4f8a38b51c5cc583340f60c3cb08ac"
+            },
+            {
+              "path": "packages/db/src/seed/admin-bootstrap.integration.test.ts",
+              "sha256": "546f42596c2767a18df8ae03295330f47117f9d97f16aeb9bfdb5bfd9dfca43c"
+            },
+            {
+              "path": "packages/db/src/seed/index.ts",
+              "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
+            },
+            {
+              "path": "packages/shared/src/password-hash.test.ts",
+              "sha256": "f33e2f0107290b15bae09dd944d80b260d1560c3d16d631cbd35d4687c14eee2"
+            },
+            {
+              "path": "packages/shared/src/password-hash.ts",
+              "sha256": "73e31fe78a62a42186780db76d27794444d555ec649638350acb9801e089575e"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Reviewed password creation and verification, controller response assembly, private response caching and the staff temporary-password exception. Native bootstrap explicitly asserted that the password and activation secrets do not reach logs or audit results. Link activation, registration, reset and forced-change cases passed with current compiled bindings."
+          ]
+        }
       }
     },
     {
@@ -740663,7 +741069,8 @@
           "release-0.6-current-ci-definition-contract-and-coverage-controls",
           "release-0.6-static-server-shutdown-acceptance",
           "release-0.6-development-env-and-watcher-acceptance",
-          "release-0.6-api-worker-shutdown-and-fixture-reuse"
+          "release-0.6-api-worker-shutdown-and-fixture-reuse",
+          "release-0.6-password-hash-calibration"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -831023,6 +831430,127 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown",
       "source_scope_proof": "release-0.6-api-worker-shutdown-and-fixture-reuse.json",
       "source_scope_proof_sha256": "76c3974a629b6b2e79e79a45a84699f97587c9a013dca768985b63ff78fc3c31"
+    },
+    "release-0.6-password-hash-calibration": {
+      "batch": "release-0.6-password-hash-calibration",
+      "base_commit": "7ecbbc2efc87acd7703d50d5de42d5723c1dd6a0",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.01.01.01",
+        "06-security-testing-observability.md#T-06.01.01.02",
+        "06-security-testing-observability.md#T-06.01.01.03",
+        "06-security-testing-observability.md#T-06.01.01.04",
+        "06-security-testing-observability.md#T-06.01.01.05",
+        "06-security-testing-observability.md#T-06.01.01.06",
+        "06-security-testing-observability.md#T-06.01.01.07",
+        "release-readiness#R-05.02",
+        "02-auth-users-admin.md#T-02.01.01",
+        "02-auth-users-admin.md#T-02.01.02",
+        "02-auth-users-admin.md#T-02.01.03",
+        "02-auth-users-admin.md#T-02.01.04",
+        "02-auth-users-admin.md#T-02.02.01",
+        "02-auth-users-admin.md#T-02.02.02",
+        "02-auth-users-admin.md#T-02.03.01",
+        "02-auth-users-admin.md#T-02.03.02",
+        "02-auth-users-admin.md#T-02.04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "Dockerfile.base",
+          "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
+        },
+        {
+          "path": "apps/api/scripts/benchmark-password-hash.mjs",
+          "sha256": "0e433c8caec8c07580d2acc0f634e36a1a0457649fc612f857fb6032d4c04a75"
+        },
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "3824ec29da0f99cf604f6b7234591bdbfbbd2ddedd8dbae29d37e1f2bbf30d10"
+        },
+        {
+          "path": "apps/api/src/admin/staff-http.integration.test.ts",
+          "sha256": "2d3d4ebd18fc96b64eda5a022a7a4e9191b50a919dfb5866919ef38518f6ad5e"
+        },
+        {
+          "path": "apps/api/src/app.factory.ts",
+          "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
+        },
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "ba464aeb60ed1d2654b8347faf2cd96cc2f0e87fc94ec6d2099f75eadb994855"
+        },
+        {
+          "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+          "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+        },
+        {
+          "path": "apps/api/src/common/cache-control.interceptor.ts",
+          "sha256": "d04d986e3f07a4df60513a3fe0c453d724860731981f03f92b25fc0ce3fc6c0b"
+        },
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+        },
+        {
+          "path": "apps/api/test/auth.service.spec.ts",
+          "sha256": "bc626693fce29ce46b24d8dac9d99922f2ff1bb44730787ae055f61594342ffd"
+        },
+        {
+          "path": "apps/api/test/password-hash-policy.spec.ts",
+          "sha256": "afd78f19d4e33a08f67596a113a512355e982dfbb82779c867cea6fd61a95b32"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
+          "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+        },
+        {
+          "path": "docs/security/password-hashing.md",
+          "sha256": "bda8cc38fcb6b90abd6edab26d32cd12ac4f8a38b51c5cc583340f60c3cb08ac"
+        },
+        {
+          "path": "packages/db/src/seed/admin-bootstrap.integration.test.ts",
+          "sha256": "546f42596c2767a18df8ae03295330f47117f9d97f16aeb9bfdb5bfd9dfca43c"
+        },
+        {
+          "path": "packages/db/src/seed/index.ts",
+          "sha256": "045500ca725cb8f4394184940979c16e2aaf92b4a542a9a07376c2b2a6c4d9ba"
+        },
+        {
+          "path": "packages/shared/src/password-hash.test.ts",
+          "sha256": "f33e2f0107290b15bae09dd944d80b260d1560c3d16d631cbd35d4687c14eee2"
+        },
+        {
+          "path": "packages/shared/src/password-hash.ts",
+          "sha256": "73e31fe78a62a42186780db76d27794444d555ec649638350acb9801e089575e"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "Existing AuthService, staff creation and bootstrap call the pinned native Argon2id bindings with the same creation policy. Four compiled HTTP cases and one real database bootstrap case exercised these normal entrypoints. The shared policy avoids duplicating credential logic in a new service.",
+        "A reusable synthetic benchmark ran in the isolated Node 24.22.2 Linux x64 staging app image under the API memory limit. Default verification was 365 ms p95, upper-bound verification was 663 ms p95. Four-way wall time was 391 ms versus 767 ms, and peak RSS was 183484 KiB versus 315000 KiB. Exact production load calibration remains separate.",
+        "Three environment overrides validate the allowed integer ranges at policy load. Ten option cases cover unchanged defaults, permitted stronger settings and invalid bounds. New hashes preserve the baseline minimum, algorithm, version and output size. Neither live configuration nor any coverage/performance gate changed.",
+        "Real native Argon2 calls produced distinct 16-byte salts for the same synthetic password and verified only the correct input. The Linux packaged-image control confirmed the same properties at the maximum configured cost.",
+        "Native tests verify previously encoded Argon2 hashes with different costs. The compiled forced-password-change journey reissued an older credential under the current policy without weakening mandatory replacement or session rules.",
+        "Ten policy cases and two native unit cases passed. They cover default and changed costs, malformed or unsafe values, random salts, valid and invalid password checks, and verification of older parameters. The pinned Argon2 implementations compare digests with node:crypto timingSafeEqual. Wall-clock timing is a benchmark rather than a correctness assertion.",
+        "Reviewed password creation and verification, controller response assembly, private response caching and the staff temporary-password exception. Native bootstrap explicitly asserted that the password and activation secrets do not reach logs or audit results. Link activation, registration, reset and forced-change cases passed with current compiled bindings."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/password-hash-calibration",
+      "source_scope_proof": "release-0.6-password-hash-calibration.json",
+      "source_scope_proof_sha256": "ef12ac881b6e46a162435e295525cdef2f19f9ae62caf8ceb2b6880b88942f24"
     }
   },
   "historical_improvements": [

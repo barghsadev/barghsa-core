@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T19:04:21+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T19:13:46+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 956 | Accepted with unchanged source bindings. |
-| verify | 378 | Existing work may be complete; inspect evidence before building. |
-| partial | 28 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 961 | Accepted with unchanged source bindings. |
+| verify | 371 | Existing work may be complete; inspect evidence before building. |
+| partial | 30 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 3 | Named owner or external prerequisite. |
@@ -1084,13 +1084,13 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-07.05.02` | verify | Earlier deferred | Generate and verify TypeScript API client contracts from OpenAPI |
 | `01-platform-infrastructure.md#T-07.05.03` | verify | Earlier deferred | Verify health-endpoint middleware exclusions |
 | `01-platform-infrastructure.md#T-07.05.04` | verify | Earlier deferred | Document and gate module extraction criteria |
-| `06-security-testing-observability.md#T-06.01.01.01` | verify | Inventory needed | Implement `PasswordService` with Argon2id via Node.js crypto bindings (e.g. `argon2` npm package) |
-| `06-security-testing-observability.md#T-06.01.01.02` | verify | Inventory needed | Create benchmark script to determine optimal cost/time/memory/parallelism parameters for target hardware |
-| `06-security-testing-observability.md#T-06.01.01.03` | verify | Inventory needed | Store benchmarked parameters in configuration (env vars / admin settings); allow overriding per env |
-| `06-security-testing-observability.md#T-06.01.01.04` | verify | Inventory needed | Ensure passwords are hashed with a per-password cryptographically random salt (16+ bytes) |
-| `06-security-testing-observability.md#T-06.01.01.05` | verify | Inventory needed | Add migration for existing plain/hash migration if any; ensure seamless upgrade |
-| `06-security-testing-observability.md#T-06.01.01.06` | verify | Inventory needed | Write unit tests: hash verification, salt uniqueness, cost parameter changes, timing-safe comparison |
-| `06-security-testing-observability.md#T-06.01.01.07` | verify | Inventory needed | Security review: confirm no plaintext password leaks via error paths, logs, analytics, or serialization |
+| `06-security-testing-observability.md#T-06.01.01.01` | done | Recorded batch work | Implement `PasswordService` with Argon2id via Node.js crypto bindings (e.g. `argon2` npm package) |
+| `06-security-testing-observability.md#T-06.01.01.02` | done | Recorded batch work | Create benchmark script to determine optimal cost/time/memory/parallelism parameters for target hardware |
+| `06-security-testing-observability.md#T-06.01.01.03` | done | Recorded batch work | Store benchmarked parameters in configuration (env vars / admin settings); allow overriding per env |
+| `06-security-testing-observability.md#T-06.01.01.04` | done | Recorded batch work | Ensure passwords are hashed with a per-password cryptographically random salt (16+ bytes) |
+| `06-security-testing-observability.md#T-06.01.01.05` | partial | Recorded batch work | Add migration for existing plain/hash migration if any; ensure seamless upgrade |
+| `06-security-testing-observability.md#T-06.01.01.06` | done | Recorded batch work | Write unit tests: hash verification, salt uniqueness, cost parameter changes, timing-safe comparison |
+| `06-security-testing-observability.md#T-06.01.01.07` | partial | Recorded batch work | Security review: confirm no plaintext password leaks via error paths, logs, analytics, or serialization |
 | `06-security-testing-observability.md#T-06.01.02.01` | verify | Inventory needed | Implement `OtpService` with cryptographically random OTP generation (6-digit numeric) |
 | `06-security-testing-observability.md#T-06.01.02.02` | verify | Inventory needed | Store OTPs as SHA-256/Argonid hashes; never store plaintext |
 | `06-security-testing-observability.md#T-06.01.02.03` | verify | Inventory needed | Implement attempt counter (max 5 per challenge → auto-invalidate) |
