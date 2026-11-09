@@ -1,15 +1,17 @@
-import { fetchWithPreauth } from '../test/public-auth.js';
+import { authCookieValue, fetchWithPreauth } from '../test/public-auth.js';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { createHash, randomUUID } from 'node:crypto';
 import type { Pool } from 'pg';
 import * as argon2 from 'argon2';
 import { startHttpFixture } from '../test/http-fixture.js';
+import { sessionReference } from './session-reference.js';
 
 let fixture: Awaited<ReturnType<typeof startHttpFixture>> | undefined;
 let pool: Pool;
 let base: string;
 const password = 'Http-test-only-password-123!';
 const fingerprint = 'd'.repeat(64);
+const legacySessionId = '01954f78-86b0-7000-8000-0123456789ab';
 
 beforeAll(async () => {
   if (!process.env.TEST_DATABASE_URL) throw new Error('PostgreSQL setup did not run');
@@ -30,10 +32,13 @@ afterAll(async () => {
   await fixture?.close();
 }, 15000);
 
-async function login(username = 'http@example.test') {
+async function login(username = 'http@example.test', staleCookies?: string) {
   const response = await fetchWithPreauth(`${base}/api/auth/login`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Cookie: `barghsa_device=${fingerprint}` },
+    headers: {
+      'Content-Type': 'application/json',
+      Cookie: `barghsa_device=${fingerprint}${staleCookies ? `; ${staleCookies}` : ''}`,
+    },
     body: JSON.stringify({ username, password, deviceInfo: { fingerprint } }),
   });
   const data = (await response.json()) as {
@@ -44,11 +49,20 @@ async function login(username = 'http@example.test') {
   expect(response.status, JSON.stringify(data) + fixture!.logs()).toBe(200);
   expect(data.requiresOtp).toBe(false);
   const cookies = response.headers.getSetCookie();
+  const sessionId = authCookieValue(response, 'barghsa_session');
+  expect(sessionId).toMatch(
+    /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/
+  );
+  const refreshToken = authCookieValue(response, 'barghsa_refresh');
+  expect(data.sessionId).toBe(sessionReference(sessionId));
+  expect(data).not.toHaveProperty('refreshToken');
+  expect(JSON.stringify(data)).not.toContain(sessionId);
+  expect(JSON.stringify(data)).not.toContain(refreshToken);
   expect(cookies.find((cookie) => cookie.startsWith('barghsa_csrf='))).toContain('Max-Age=86400');
   return {
     cookie: cookies.map((cookie) => cookie.split(';')[0]).join('; '),
     token: data.csrfToken as string,
-    sessionId: data.sessionId as string,
+    sessionId,
   };
 }
 
@@ -108,17 +122,24 @@ it('authenticates parsed cookies and rejects unsafe requests before extending or
   const listed = await fetch(`${base}/api/auth/sessions`, { headers: { Cookie: auth.cookie } });
   expect(listed.status).toBe(200);
   const display = await listed.text();
+  expect(display).not.toContain(auth.sessionId);
+  const reference = sessionReference(auth.sessionId);
+  expect(
+    (
+      await fetch(`${base}/api/auth/sessions`, {
+        headers: { Cookie: `barghsa_session=${encodeURIComponent(reference)}` },
+      })
+    ).status
+  ).toBe(401);
   for (const id of inactive) expect(display).not.toContain(id);
   expect(
-    JSON.parse(display).find((row: { sessionId: string }) => row.sessionId === auth.sessionId)
-      .location
+    JSON.parse(display).find((row: { sessionId: string }) => row.sessionId === reference).location
   ).toBeNull();
   await pool.query('DELETE FROM sessions WHERE session_id=ANY($1::text[])', [inactive]);
   expect(display).not.toContain(fingerprint);
   expect(display).not.toContain('private-field');
   expect(
-    JSON.parse(display).find((row: { sessionId: string }) => row.sessionId === auth.sessionId)
-      .deviceInfo
+    JSON.parse(display).find((row: { sessionId: string }) => row.sessionId === reference).deviceInfo
   ).toEqual({ ip: '8.8.8.8', userAgent: 'Fixture browser' });
   const before = (
     await pool!.query('SELECT idle_deadline FROM sessions WHERE session_id=$1', [auth.sessionId])
@@ -245,7 +266,14 @@ it('requires CSRF for refresh, rejects idle expiry, and retains refresh reuse re
   const fresh = await login();
   const headers = { Cookie: fresh.cookie, 'X-CSRF-Token': fresh.token };
   const refreshed = await fetch(`${base}/api/auth/refresh`, { method: 'POST', headers });
-  expect(refreshed.status, await refreshed.text()).toBe(200);
+  expect(refreshed.status, await refreshed.clone().text()).toBe(200);
+  const refreshReceipt = await refreshed.json();
+  expect(refreshReceipt).toMatchObject({ sessionId: sessionReference(fresh.sessionId) });
+  expect(refreshReceipt).not.toHaveProperty('refreshToken');
+  expect(JSON.stringify(refreshReceipt)).not.toContain(fresh.sessionId);
+  expect(JSON.stringify(refreshReceipt)).not.toContain(
+    authCookieValue(refreshed, 'barghsa_refresh')
+  );
   expect(
     (await fetch(`${base}/api/auth/sessions`, { headers: { Cookie: fresh.cookie } })).status
   ).toBe(200);
@@ -256,6 +284,42 @@ it('requires CSRF for refresh, rejects idle expiry, and retains refresh reuse re
   ).not.toBeNull();
 }, 15000);
 
+it('rejects legacy bearer cookies and refresh even when the original session is still live', async () => {
+  const csrfToken = 'synthetic-legacy-csrf';
+  const refreshToken = 'synthetic-legacy-refresh';
+  const familyId = randomUUID();
+  await pool.query(
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
+     VALUES($1,'http-user',$2,$3,NOW()+INTERVAL '1 hour',NOW()+INTERVAL '30 minutes')`,
+    [legacySessionId, csrfToken, familyId]
+  );
+  await pool.query(
+    `INSERT INTO refresh_tokens(id,family_id,token_hash,user_id,session_id)
+     VALUES($1,$2,$3,'http-user',$4)`,
+    [
+      randomUUID(),
+      familyId,
+      createHash('sha256').update(refreshToken).digest('hex'),
+      legacySessionId,
+    ]
+  );
+  const headers = {
+    Cookie: `barghsa_session=${legacySessionId}; barghsa_refresh=${refreshToken}`,
+    'X-CSRF-Token': csrfToken,
+  };
+  expect((await fetch(`${base}/api/auth/sessions`, { headers })).status).toBe(401);
+  expect((await fetch(`${base}/api/auth/refresh`, { method: 'POST', headers })).status).toBe(403);
+  const current = await login('http@example.test', headers.Cookie);
+  const listed = await fetch(`${base}/api/auth/sessions`, { headers: { Cookie: current.cookie } });
+  expect(listed.status).toBe(200);
+  expect(await listed.text()).not.toContain(sessionReference(legacySessionId));
+  expect(
+    (await pool.query('SELECT consumed_at FROM refresh_tokens WHERE family_id=$1', [familyId])).rows
+  ).toEqual([{ consumed_at: null }]);
+  await pool.query('DELETE FROM refresh_tokens WHERE family_id=$1', [familyId]);
+  await pool.query('DELETE FROM sessions WHERE session_id=$1', [legacySessionId]);
+});
+
 it('requires recent step-up to revoke a session and retains the ownership boundary', async () => {
   const auth = await login();
   const target = await login();
@@ -264,8 +328,11 @@ it('requires recent step-up to revoke a session and retains the ownership bounda
     'Content-Type': 'application/json',
     'X-CSRF-Token': auth.token,
   };
-  const revoke = () =>
-    fetch(`${base}/api/auth/sessions/${target.sessionId}`, { method: 'DELETE', headers });
+  const revoke = (reference = sessionReference(target.sessionId)) =>
+    fetch(`${base}/api/auth/sessions/${encodeURIComponent(reference)}`, {
+      method: 'DELETE',
+      headers,
+    });
   for (const verifiedAt of [null, new Date(Date.now() - 16 * 60_000)]) {
     await pool.query('UPDATE sessions SET step_up_verified_at=$1 WHERE session_id=$2', [
       verifiedAt,
@@ -308,6 +375,7 @@ it('requires recent step-up to revoke a session and retains the ownership bounda
   });
   expect(audit.correlation_id).toBe(verified.headers.get('x-correlation-id'));
   expect(audit.created_at.toISOString()).toBe(acknowledgement.stepUpVerifiedAt);
+  expect((await revoke(target.sessionId)).status).toBe(404);
   const outsider = randomUUID();
   await pool.query('INSERT INTO users(user_id,username,password_hash) VALUES ($1,$2,$3)', [
     outsider,

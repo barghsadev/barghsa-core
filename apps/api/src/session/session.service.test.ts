@@ -15,6 +15,8 @@ const mockPool = {
   connect: mockConnect,
 };
 
+const fixtureSessionId = '3ea3f414-1798-48eb-b92f-455315871ed0';
+
 vi.mock('@barghsa/db', () => ({
   getDbPool: vi.fn(() => mockPool),
 }));
@@ -24,7 +26,7 @@ vi.mock('@barghsa/db', () => ({
  */
 function makeSessionRow(overrides: Record<string, unknown> = {}) {
   return {
-    session_id: 'session-001',
+    session_id: fixtureSessionId,
     user_id: 'user-001',
     csrf_token: 'csrf-token-001',
     is_admin: false,
@@ -48,7 +50,7 @@ function makeTokenRow(overrides: Record<string, unknown> = {}) {
     family_id: 'family-001',
     token_hash: createHash('sha256').update('test-refresh-token').digest('hex'),
     user_id: 'user-001',
-    session_id: 'session-001',
+    session_id: fixtureSessionId,
     version: 1,
     consumed_at: null,
     created_at: new Date(Date.now() - 60 * 1000),
@@ -77,7 +79,7 @@ describe('SessionService', () => {
   it.each(['validateSession', 'getSessionById', 'revokeSession'] as const)(
     '%s keeps session IDs and database error values out of correlated logs',
     async (method) => {
-      const credential = 'private-session-value';
+      const credential = fixtureSessionId;
       const failure = new Error('query failed: password=private-password-value');
       mockQuery.mockRejectedValueOnce(failure);
       mockClient.query.mockRejectedValueOnce(failure);
@@ -106,7 +108,7 @@ describe('SessionService', () => {
           vi.setSystemTime(Date.now() + 1000);
           return { rows: [row] };
         });
-        expect(await service.validateSession('session-001', false)).toBeNull();
+        expect(await service.validateSession(fixtureSessionId, false)).toBeNull();
         expect(mockConnect).not.toHaveBeenCalled();
         expect(mockQuery).toHaveBeenCalledTimes(1);
       } finally {
@@ -117,10 +119,10 @@ describe('SessionService', () => {
       const row = makeSessionRow();
       mockQuery.mockResolvedValueOnce({ rows: [row] });
 
-      const result = await service.validateSession('session-001', false);
+      const result = await service.validateSession(fixtureSessionId, false);
 
       expect(result).not.toBeNull();
-      expect(result!.sessionId).toBe('session-001');
+      expect(result!.sessionId).toBe(fixtureSessionId);
       expect(result!.userId).toBe('user-001');
       expect(result!.csrfToken).toBe('csrf-token-001');
     });
@@ -128,7 +130,7 @@ describe('SessionService', () => {
     it('returns null when session does not exist', async () => {
       mockQuery.mockResolvedValueOnce({ rows: [] });
 
-      const result = await service.validateSession('nonexistent', false);
+      const result = await service.validateSession('e3e41d2d-8828-4ce6-b8b9-fb7b3c7c9093', false);
       expect(result).toBeNull();
     });
 
@@ -137,7 +139,7 @@ describe('SessionService', () => {
         rows: [makeSessionRow({ revoked_at: new Date() })],
       });
 
-      const result = await service.validateSession('session-001', false);
+      const result = await service.validateSession(fixtureSessionId, false);
       expect(result).toBeNull();
     });
 
@@ -146,7 +148,7 @@ describe('SessionService', () => {
         rows: [makeSessionRow({ expires_at: new Date(Date.now() - 60_000) })],
       });
 
-      const result = await service.validateSession('session-001', false);
+      const result = await service.validateSession(fixtureSessionId, false);
       expect(result).toBeNull();
     });
 
@@ -155,7 +157,7 @@ describe('SessionService', () => {
         rows: [makeSessionRow({ idle_deadline: new Date(Date.now() - 60_000) })],
       });
 
-      const result = await service.validateSession('session-001', false);
+      const result = await service.validateSession(fixtureSessionId, false);
       expect(result).toBeNull();
     });
 
@@ -166,7 +168,7 @@ describe('SessionService', () => {
         if (sql.includes('FROM sessions') || sql.includes('FROM users')) return { rows: [row] };
         return { rows: [] };
       });
-      const result = await service.validateSession('session-001', true);
+      const result = await service.validateSession(fixtureSessionId, true);
       expect(result).not.toBeNull();
       const update = mockClient.query.mock.calls.find(([sql]) => sql.includes('UPDATE sessions'))!;
       expect(update[1][0].getTime()).toBeGreaterThanOrEqual(row.idle_deadline.getTime());
@@ -178,7 +180,7 @@ describe('SessionService', () => {
     it('returns null on transient DB error (conservative failure mode)', async () => {
       mockQuery.mockRejectedValueOnce(new Error('Connection lost'));
 
-      const result = await service.validateSession('session-001', false);
+      const result = await service.validateSession(fixtureSessionId, false);
       expect(result).toBeNull();
     });
   });
@@ -325,7 +327,7 @@ describe('SessionService', () => {
       const result = await service.redeemRefreshToken(validToken);
 
       expect(result.refreshToken).toBeDefined();
-      expect(result.sessionId).toBe('session-001');
+      expect(result.sessionId).toBe(fixtureSessionId);
       // New refresh token should differ from input
       expect(result.refreshToken).not.toBe(validToken);
     });
@@ -470,7 +472,7 @@ describe('SessionService', () => {
         return { rows: [] };
       });
 
-      await service.revokeSession('session-001');
+      await service.revokeSession(fixtureSessionId);
 
       const calls = mockClient.query.mock.calls.map((c: any[]) => c[0]);
       expect(calls).toContain('BEGIN');
@@ -532,7 +534,7 @@ describe('SessionService', () => {
         return { rows: [] };
       });
 
-      await service.revokeAllUserSessions('user-001', 'session-001');
+      await service.revokeAllUserSessions('user-001', fixtureSessionId);
 
       const calls = mockClient.query.mock.calls.map((c: any[]) => c[0]);
       const excludeCall = calls.find((s: any) => s.includes('session_id !='));
@@ -541,7 +543,7 @@ describe('SessionService', () => {
       const excludeCallParams = mockClient.query.mock.calls.find((c: any[]) =>
         c[0].includes('session_id !=')
       )?.[1];
-      expect(excludeCallParams).toContain('session-001');
+      expect(excludeCallParams).toContain(fixtureSessionId);
     });
   });
 
@@ -574,15 +576,15 @@ describe('SessionService', () => {
         return { rows: [] };
       });
 
-      const result = await service.rotateSession('session-001', 'test');
+      const result = await service.rotateSession(fixtureSessionId, 'test');
 
       expect(result).not.toBeNull();
-      expect(result!.sessionId).not.toBe('session-001');
+      expect(result!.sessionId).not.toBe(fixtureSessionId);
       expect(result!.csrfToken).toBeDefined();
       expect(result!.refreshToken).toBeDefined();
       const logs = JSON.stringify(vi.mocked(Logger.prototype.log).mock.calls);
       for (const credential of [
-        'session-001',
+        fixtureSessionId,
         result!.sessionId,
         result!.csrfToken,
         result!.refreshToken,

@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, expect, it } from 'vitest';
 import { createHash, randomUUID } from 'node:crypto';
-import { fetchWithPreauth } from '../test/public-auth.js';
+import { authCookieValue, fetchWithPreauth } from '../test/public-auth.js';
+import { sessionReference } from '../session/session-reference.js';
 import { startHttpFixture } from '../test/http-fixture.js';
 import {
   sessionNoticeState,
@@ -57,15 +58,21 @@ it.each(failures)('rolls back OTP,session,trust and $table on $mode', async ({ t
   const result = (await response.json()) as {
     sessionId: string;
     csrfToken: string;
-    refreshToken: string;
   };
+  const sessionId = authCookieValue(response, 'barghsa_session');
+  const refreshToken = authCookieValue(response, 'barghsa_refresh');
+  expect(result.sessionId).toBe(sessionReference(sessionId));
+  expect(result).not.toHaveProperty('refreshToken');
+  expect(JSON.stringify(result)).not.toContain(sessionId);
+  expect(JSON.stringify(result)).not.toContain(refreshToken);
   await expectNewDeviceNotice(http.pool, user, 'new_device_login', [
     id,
     device,
     fingerprint,
     result.sessionId,
+    sessionId,
     result.csrfToken,
-    result.refreshToken,
+    refreshToken,
     '123456',
   ]);
   expect(

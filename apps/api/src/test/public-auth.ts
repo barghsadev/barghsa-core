@@ -1,3 +1,12 @@
+export function authCookieValue(response: Response, name: string): string {
+  const prefix = `${name}=`;
+  for (const cookie of response.headers.getSetCookie()) {
+    const value = cookie.split(';')[0]!;
+    if (value.startsWith(prefix) && value.length > prefix.length) return value.slice(prefix.length);
+  }
+  throw new Error(`Expected ${name} cookie in fixture response`);
+}
+
 /** HTTP test client using the same bootstrap contract as the browser. Security tests use raw fetch. */
 export async function fetchWithPreauth(url: string, init: RequestInit): Promise<Response> {
   const target = new URL(url);

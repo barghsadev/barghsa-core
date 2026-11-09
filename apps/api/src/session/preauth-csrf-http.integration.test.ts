@@ -3,6 +3,8 @@ import { createHash } from 'node:crypto';
 import * as argon2 from 'argon2';
 import { rateLimitKey } from '@barghsa/shared/rate-limit';
 import { startHttpFixture } from '../test/http-fixture.js';
+import { authCookieValue } from '../test/public-auth.js';
+import { sessionReference } from './session-reference.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const password = 'Preauth-fixture-password-123!';
@@ -47,7 +49,6 @@ async function bootstrap(cookie = '') {
     csrfToken: string;
     requiresOtp: boolean;
     sessionId: string;
-    refreshToken: string;
   };
   return {
     response,
@@ -177,12 +178,13 @@ it('replaces anonymous CSRF with the authenticated token and never logs credenti
   };
   expect(body.requiresOtp).toBe(false);
   expect(body.csrfToken).not.toBe(anonymous.token);
-  const sessionCookie = response.headers
-    .getSetCookie()
-    .find(
-      (value) => value.startsWith('barghsa_session=') && !value.startsWith('barghsa_session=;')
-    )!
-    .split(';')[0]!;
+  const sessionId = authCookieValue(response, 'barghsa_session');
+  const refreshToken = authCookieValue(response, 'barghsa_refresh');
+  expect(body.sessionId).toBe(sessionReference(sessionId));
+  expect(body).not.toHaveProperty('refreshToken');
+  expect(JSON.stringify(body)).not.toContain(sessionId);
+  expect(JSON.stringify(body)).not.toContain(refreshToken);
+  const sessionCookie = `barghsa_session=${sessionId}`;
   expect((await bootstrap(sessionCookie)).token).toBe(body.csrfToken);
   expect((await post('login', sessionCookie, anonymous.token)).status).toBe(403);
   expect((await post('login', anonymous.cookie, anonymous.token)).status).toBe(403);
@@ -190,8 +192,9 @@ it('replaces anonymous CSRF with the authenticated token and never logs credenti
   const log = http.logs();
   for (const token of [
     body.sessionId,
+    sessionId,
     body.csrfToken,
-    body.refreshToken,
+    refreshToken,
     anonymous.token,
     password,
   ]) {

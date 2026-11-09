@@ -9,13 +9,13 @@ import { InputFieldException } from '../common/input-field.exception.js';
 import { editCrmLegalInfo, readCrmLegalInfo } from './crm-profile-legal.js';
 import { editCrmAddress } from './crm-profile-address.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
-import { createHash } from 'node:crypto';
 import { BadRequestException, HttpException, Injectable, Logger } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
 import type { CreateNotificationParams } from '../notifications/notifications.service.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
 import { SessionService, type ValidatedSession } from '../session/session.service.js';
+import { sessionReference } from '../session/session-reference.js';
 import { requireSessionStepUp } from '../session/session-step-up.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import type { PoolClient } from 'pg';
@@ -340,7 +340,7 @@ export class CrmV2Service {
     const sessionsList: CrmProfileSession[] = sessionResult.rows.map(
       (row: Record<string, unknown>) => ({
         // Never expose the bearer cookie used to authenticate this session.
-        sessionId: `session-ref:${createHash('sha256').update(String(row.session_id)).digest('hex')}`,
+        sessionId: sessionReference(String(row.session_id)),
         createdAt: (row.created_at as string) ?? '',
         lastActive: (row.updated_at as string) ?? '',
         deviceInfo: (row.device_info as Record<string, unknown>) ?? null,

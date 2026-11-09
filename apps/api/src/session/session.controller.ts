@@ -13,7 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import type { Response } from 'express';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { SessionService } from './session.service.js';
@@ -22,6 +22,7 @@ import type { AuthenticatedRequest } from './session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { RequiresStepUp, StepUpGuard } from './step-up.guard.js';
 import { setCsrfCookie, setRefreshCookie, setSessionCookie } from './cookie.helper.js';
+import { SESSION_REFERENCE_PATTERN, sessionReference } from './session-reference.js';
 
 // ─── Zod schemas ──────────────────────────────────────────────────────
 
@@ -89,7 +90,11 @@ export class SessionController {
       items: {
         type: 'object',
         properties: {
-          sessionId: { type: 'string' },
+          sessionId: {
+            type: 'string',
+            pattern: SESSION_REFERENCE_PATTERN.source,
+            description: 'Non-authenticating session reference for session management.',
+          },
           deviceInfo: {
             type: 'object',
             properties: {
@@ -124,7 +129,7 @@ export class SessionController {
 
     // Map sessions to a clean format for the frontend
     return sessions.map((s: Record<string, unknown>) => ({
-      sessionId: s.session_id,
+      sessionId: sessionReference(s.session_id as string),
       deviceInfo: s.device_info ?? null,
       location: null,
       createdAt: s.created_at,
@@ -147,16 +152,21 @@ export class SessionController {
   @HttpCode(200)
   @RateLimit({ namespace: 'sessions:revoke:user', limit: 20, windowMs: 60_000 })
   @ApiOperation({ summary: 'Revoke a specific session' })
+  @ApiParam({
+    name: 'id',
+    description: 'Non-authenticating reference returned by the session list.',
+    schema: { type: 'string', pattern: SESSION_REFERENCE_PATTERN.source },
+  })
   @ApiResponse({ status: 200, description: 'Session revoked.' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Session not found' })
   async revokeSession(
-    @Param('id') sessionId: string,
+    @Param('id') sessionRef: string,
     @Req() req: AuthenticatedRequest
   ): Promise<{ message: string }> {
     await this.sessionService.revokeOwnSessions(
       req.session,
-      { targetSessionId: sessionId },
+      { targetSessionRef: sessionRef },
       req.ip ?? null
     );
 

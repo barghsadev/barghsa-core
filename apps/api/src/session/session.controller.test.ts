@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { HttpException } from '@nestjs/common';
 import { SessionController } from './session.controller.js';
 import { SessionService } from './session.service.js';
+import { sessionReference } from './session-reference.js';
 
 describe('SessionController', () => {
   let controller: SessionController;
@@ -52,12 +53,12 @@ describe('SessionController', () => {
       expect(mockSessionService.getUserSessions).toHaveBeenCalledWith('user-001');
       expect(result).toHaveLength(2);
       expect(result[0]).toMatchObject({
-        sessionId: 'session-001',
+        sessionId: sessionReference('session-001'),
         deviceInfo: { ip: '1.2.3.4', userAgent: 'Mozilla/5.0' },
         isCurrentSession: true,
       });
       expect(result[1]).toMatchObject({
-        sessionId: 'session-002',
+        sessionId: sessionReference('session-002'),
         deviceInfo: null,
         isCurrentSession: false,
       });
@@ -82,12 +83,13 @@ describe('SessionController', () => {
         ip: '127.0.0.1',
         session: { userId: 'user-001', sessionId: 'actor', csrfToken: 'csrf' },
       } as any;
-      await expect(controller.revokeSession('target', req)).resolves.toEqual({
+      const reference = sessionReference('target');
+      await expect(controller.revokeSession(reference, req)).resolves.toEqual({
         message: 'Session revoked.',
       });
       expect(mockSessionService.revokeOwnSessions).toHaveBeenCalledWith(
         req.session,
-        { targetSessionId: 'target' },
+        { targetSessionRef: reference },
         '127.0.0.1'
       );
     });

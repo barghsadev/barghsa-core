@@ -1,4 +1,5 @@
-import { fetchWithPreauth } from '../test/public-auth.js';
+import { authCookieValue, fetchWithPreauth } from '../test/public-auth.js';
+import { sessionReference } from '../session/session-reference.js';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { createHash, randomUUID } from 'node:crypto';
 import { createRequire } from 'node:module';
@@ -189,7 +190,17 @@ it('cancels an unsent replaced code and recovers an expired worker lease', async
   expect(received).toHaveLength(1);
   const otp = received[0]!.text.match(/\d{6}/)?.[0];
   const verified = await post('auth/register/verify', { challengeId, otp });
-  expect(verified.status, await verified.text()).toBe(200);
+  expect(verified.status, await verified.clone().text()).toBe(200);
+  const result = await verified.json();
+  const sessionId = authCookieValue(verified, 'barghsa_session');
+  const refreshToken = authCookieValue(verified, 'barghsa_refresh');
+  expect(result).toMatchObject({ sessionId: sessionReference(sessionId) });
+  expect(result).not.toHaveProperty('refreshToken');
+  expect(JSON.stringify(result)).not.toContain(sessionId);
+  expect(JSON.stringify(result)).not.toContain(refreshToken);
+  expect(verified.headers.get('cache-control')).toBe(
+    'private, no-cache, no-store, must-revalidate'
+  );
 });
 
 it('ends failed delivery after five attempts and erases the secret', async () => {
@@ -847,7 +858,13 @@ it.each(['customer', 'staff', 'admin'] as const)(
     );
     expect(verified.status, await verified.clone().text()).toBe(200);
     const receipt = (await verified.clone().json()) as { sessionId: string; csrfToken: string };
-    expect(await verified.text()).not.toContain(token);
+    const sessionId = authCookieValue(verified, 'barghsa_session');
+    const refreshToken = authCookieValue(verified, 'barghsa_refresh');
+    const responseBody = await verified.text();
+    expect(receipt.sessionId).toBe(sessionReference(sessionId));
+    expect(receipt).not.toHaveProperty('refreshToken');
+    for (const secret of [token, sessionId, refreshToken])
+      expect(responseBody).not.toContain(secret);
     const trustedHash = createHash('sha256').update(token).digest('hex');
     const grants = (
       await fixture.pool.query(
@@ -881,7 +898,7 @@ it.each(['customer', 'staff', 'admin'] as const)(
       'auth/logout',
       {},
       {
-        Cookie: `${cookie}; barghsa_session=${receipt.sessionId}`,
+        Cookie: `${cookie}; barghsa_session=${sessionId}`,
         'X-CSRF-Token': receipt.csrfToken,
       }
     );

@@ -50,6 +50,7 @@ import {
 import type { AddContactSendOtpResponse, AddContactVerifyResponse } from './dto/add-contact.dto.js';
 import { AddContactSendOtpSchema, AddContactVerifySchema } from './dto/add-contact.dto.js';
 import { SessionService } from '../session/session.service.js';
+import { SESSION_REFERENCE_PATTERN, sessionReference } from '../session/session-reference.js';
 import { resolveNavigation, type NavigationConfiguration } from './navigation.js';
 import {
   SESSION_COOKIE_NAME,
@@ -66,6 +67,10 @@ import { SkipCsrf, RequirePreauthCsrf } from '../session/csrf.guard.js';
 import { RefreshCsrfGuard } from '../session/refresh-csrf.guard.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
+
+function sessionAcknowledgement(sessionId: string, csrfToken: string, expiresAt: string) {
+  return { sessionId: sessionReference(sessionId), csrfToken, expiresAt };
+}
 
 @ApiTags('Auth')
 @Controller('api/auth')
@@ -164,7 +169,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Authenticate a user' })
   @ApiResponse({
     status: 200,
-    description: 'Login result. May return session credentials or require OTP step-up.',
+    description: 'Login result. May establish HttpOnly session cookies or require OTP step-up.',
     schema: {
       type: 'object',
       properties: {
@@ -176,7 +181,8 @@ export class AuthController {
         userId: { type: 'string', description: 'User UUID (when requiresOtp is false)' },
         sessionId: {
           type: 'string',
-          description: 'Session identifier (when requiresOtp is false)',
+          pattern: SESSION_REFERENCE_PATTERN.source,
+          description: 'Non-authenticating session reference (when a session is established)',
         },
         csrfToken: { type: 'string', description: 'CSRF token (when requiresOtp is false)' },
         expiresAt: {
@@ -192,7 +198,7 @@ export class AuthController {
     @Body() rawBody: unknown,
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response
-  ): Promise<LoginResponse> {
+  ): Promise<Omit<LoginResponse, 'refreshToken'>> {
     // ── Validate with Zod ───────────────────────────────────────────
     const parsed = LoginSchema.safeParse(rawBody);
 
@@ -221,7 +227,11 @@ export class AuthController {
     // If password change is required, return the token without setting a session
     if (result.mustChangePassword) {
       this.logger.log(`Password change required for user — no session established`);
-      return result;
+      return {
+        requiresOtp: false,
+        mustChangePassword: true,
+        ...(result.passwordChangeToken ? { passwordChangeToken: result.passwordChangeToken } : {}),
+      };
     }
 
     // If OTP is not required, set the session and refresh cookies
@@ -237,9 +247,18 @@ export class AuthController {
       }
 
       this.logger.log(`Session established for user ${result.userId}`);
+      return {
+        requiresOtp: false,
+        ...(result.userId ? { userId: result.userId } : {}),
+        ...sessionAcknowledgement(result.sessionId!, result.csrfToken!, result.expiresAt!),
+      };
     }
 
-    return result;
+    return {
+      requiresOtp: true,
+      ...(result.challengeId ? { challengeId: result.challengeId } : {}),
+      ...(result.userIsStaff === undefined ? {} : { userIsStaff: result.userIsStaff }),
+    };
   }
 
   /**
@@ -267,7 +286,7 @@ export class AuthController {
     @Body() rawBody: unknown,
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response
-  ): Promise<LoginVerifyResponse> {
+  ): Promise<Omit<LoginVerifyResponse, 'refreshToken'>> {
     const parsed = LoginVerifySchema.safeParse(rawBody);
 
     if (!parsed.success) {
@@ -303,7 +322,10 @@ export class AuthController {
 
     this.logger.log(`Session established for user ${result.userId} via login OTP`);
 
-    return result;
+    return {
+      userId: result.userId,
+      ...sessionAcknowledgement(result.sessionId, result.csrfToken, result.expiresAt),
+    };
   }
 
   /**
@@ -581,7 +603,7 @@ export class AuthController {
    * POST /api/auth/register/verify
    *
    * Verifies the OTP for a registration challenge, creates the user record,
-   * creates a session, and returns session credentials.
+   * creates a session, and sets HttpOnly session and refresh cookies.
    *
    * Rate limits:
    * - 5 verification attempts per IP per 60s
@@ -602,7 +624,7 @@ export class AuthController {
     @Body() rawBody: unknown,
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response
-  ): Promise<RegisterVerifyResponse> {
+  ): Promise<Omit<RegisterVerifyResponse, 'refreshToken'>> {
     const parsed = VerifyOtpSchema.safeParse(rawBody);
 
     if (!parsed.success) {
@@ -633,7 +655,10 @@ export class AuthController {
 
     this.logger.log(`Session established for user ${result.userId}`);
 
-    return result;
+    return {
+      userId: result.userId,
+      ...sessionAcknowledgement(result.sessionId, result.csrfToken, result.expiresAt),
+    };
   }
 
   /**
@@ -696,7 +721,7 @@ export class AuthController {
     schema: {
       type: 'object',
       properties: {
-        sessionId: { type: 'string' },
+        sessionId: { type: 'string', pattern: SESSION_REFERENCE_PATTERN.source },
         csrfToken: { type: 'string' },
         expiresAt: { type: 'string' },
       },
@@ -743,11 +768,7 @@ export class AuthController {
 
     this.logger.log(`Session refreshed for user ${session.user_id}`);
 
-    return {
-      sessionId,
-      csrfToken: session.csrf_token ?? '',
-      expiresAt: expiresAt.toISOString(),
-    };
+    return sessionAcknowledgement(sessionId, session.csrf_token ?? '', expiresAt.toISOString());
   }
 
   /**

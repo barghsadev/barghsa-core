@@ -11,6 +11,7 @@ import { hash } from 'argon2';
 import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db';
 import { SessionService } from './session.service.js';
 import { SessionController } from './session.controller.js';
+import { sessionReference } from './session-reference.js';
 import type { AuthenticatedRequest } from './session.guard.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 
@@ -86,7 +87,7 @@ for (const mode of ['one', 'all'] as const) {
       const pid = (await lock.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
       result = (
         mode === 'one'
-          ? controller.revokeSession(other.sessionId, request)
+          ? controller.revokeSession(sessionReference(other.sessionId), request)
           : controller.revokeAllSessions({ password }, request)
       ).catch((error) => error);
       await expect
@@ -185,11 +186,15 @@ it('single revocation protects foreign targets and supports deliberately revokin
     "INSERT INTO users(user_id,username,password_hash) VALUES ('foreign-user','foreign@example.test','unused')"
   );
   const foreign = await service.createSession('foreign-user', false);
-  await expect(controller.revokeSession(foreign.sessionId, request)).rejects.toMatchObject({
+  await expect(
+    controller.revokeSession(sessionReference(foreign.sessionId), request)
+  ).rejects.toMatchObject({
     status: 404,
   });
   expect(await service.validateSession(foreign.sessionId, false)).not.toBeNull();
-  await expect(controller.revokeSession(actor.sessionId, request)).resolves.toEqual({
+  await expect(
+    controller.revokeSession(sessionReference(actor.sessionId), request)
+  ).resolves.toEqual({
     message: 'Session revoked.',
   });
   expect(await service.validateSession(actor.sessionId, false)).toBeNull();
@@ -209,7 +214,9 @@ it.each(['expired', 'future', 'missing'] as const)(
       verifiedAt,
       actor.sessionId,
     ]);
-    await expect(controller.revokeSession(other.sessionId, request)).rejects.toMatchObject({
+    await expect(
+      controller.revokeSession(sessionReference(other.sessionId), request)
+    ).rejects.toMatchObject({
       status: 403,
     });
     await unchangedTarget();
@@ -243,7 +250,9 @@ it('single revocation rolls back if the step-up window expires during audit pers
     .query(`CREATE SEQUENCE self_revoke_audit_calls; CREATE FUNCTION delay_self_revoke_step_up() RETURNS trigger LANGUAGE plpgsql AS $$
     BEGIN IF NEW.event='sessions_revoked' THEN PERFORM nextval('self_revoke_audit_calls'); PERFORM pg_sleep(1.2); END IF; RETURN NEW; END $$;
     CREATE TRIGGER delay_self_revoke_step_up BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION delay_self_revoke_step_up()`);
-  await expect(controller.revokeSession(other.sessionId, request)).rejects.toMatchObject({
+  await expect(
+    controller.revokeSession(sessionReference(other.sessionId), request)
+  ).rejects.toMatchObject({
     status: 403,
   });
   await unchangedTarget();
@@ -260,7 +269,7 @@ for (const mode of ['one', 'all'] as const) {
       CREATE TRIGGER reject_self_revoke_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION reject_self_revoke_audit()`);
     const result =
       mode === 'one'
-        ? controller.revokeSession(other.sessionId, request)
+        ? controller.revokeSession(sessionReference(other.sessionId), request)
         : controller.revokeAllSessions({ password }, request);
     await expect(result).rejects.toMatchObject({ status: 500 });
     await unchangedTarget();
@@ -284,7 +293,7 @@ for (const mode of ['one', 'all'] as const) {
       CREATE TRIGGER delay_self_revoke_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION delay_self_revoke_audit()`);
     const result =
       mode === 'one'
-        ? controller.revokeSession(other.sessionId, request)
+        ? controller.revokeSession(sessionReference(other.sessionId), request)
         : controller.revokeAllSessions({ password }, request);
     await expect(result).rejects.toMatchObject({ status: 401 });
     await unchangedTarget();
@@ -309,7 +318,7 @@ for (const scope of ['one', 'all'] as const)
         drop = await failSessionSink(db.pool, table, mode),
         work = () =>
           scope === 'one'
-            ? controller.revokeSession(other.sessionId, request)
+            ? controller.revokeSession(sessionReference(other.sessionId), request)
             : controller.revokeAllSessions({ password }, request);
       try {
         await expect(work()).rejects.toMatchObject({ status: 500 });
@@ -346,7 +355,7 @@ for (const scope of ['one', 'all'] as const)
     }
   );
 it('self sign-out records its own private confirmation while preserving no-op/concurrent counts', async () => {
-  await controller.revokeSession(actor.sessionId, request);
+  await controller.revokeSession(sessionReference(actor.sessionId), request);
   await expectSessionNotice(db.pool, 'self-revoke', [
     password,
     actor.sessionId,

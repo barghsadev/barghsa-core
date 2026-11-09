@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T19:41:16+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T19:58:58+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 984 | Accepted with unchanged source bindings. |
-| verify | 347 | Existing work may be complete; inspect evidence before building. |
-| partial | 31 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 987 | Accepted with unchanged source bindings. |
+| verify | 343 | Existing work may be complete; inspect evidence before building. |
+| partial | 32 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 3 | Named owner or external prerequisite. |
@@ -1109,13 +1109,13 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.01.03.07` | done | Recorded batch work | Write integration tests: customer MFA only on new device, staff MFA always, step-up for sensitive ops, device trust expiry |
 | `06-security-testing-observability.md#T-06.01.04.01` | done | Recorded batch work | Implement opaque session token generation and cookie management (HttpOnly, Secure in prod, SameSite policy per T-06.02.01.04, Path) |
 | `06-security-testing-observability.md#T-06.01.04.02` | done | Recorded batch work | Implement session store in PostgreSQL (not Redis; Redis is optional, auth must work without it) |
-| `06-security-testing-observability.md#T-06.01.04.03` | verify | Inventory needed | Implement session rotation: login, MFA step-up, password change, privilege change, account recovery |
+| `06-security-testing-observability.md#T-06.01.04.03` | done | Recorded batch work | Implement session rotation: login, MFA step-up, password change, privilege change, account recovery |
 | `06-security-testing-observability.md#T-06.01.04.04` | done | Recorded batch work | Implement refresh token rotation with reuse detection (stealing detection + user alert + revoke token family) |
 | `06-security-testing-observability.md#T-06.01.04.05` | done | Recorded batch work | Implement absolute session expiry (configurable, e.g. 7 days) + idle expiry (configurable, e.g. 30 min) |
 | `06-security-testing-observability.md#T-06.01.04.06` | done | Recorded batch work | Build session/device management UI: list active sessions, device info, last activity, revoke action |
-| `06-security-testing-observability.md#T-06.01.04.07` | verify | Inventory needed | Implement session revocation triggers: password reset, staff disablement, ownership transfer, compromise detection |
-| `06-security-testing-observability.md#T-06.01.04.08` | verify | Inventory needed | Ensure tokens, refresh tokens, OTPs, passwords, national IDs never in localStorage, URLs, analytics, or client logs |
-| `06-security-testing-observability.md#T-06.01.04.09` | verify | Inventory needed | Write concurrency tests: session fixation prevention, refresh token reuse, simultaneous session mutations |
+| `06-security-testing-observability.md#T-06.01.04.07` | done | Recorded batch work | Implement session revocation triggers: password reset, staff disablement, ownership transfer, compromise detection |
+| `06-security-testing-observability.md#T-06.01.04.08` | partial | Recorded batch work | Ensure tokens, refresh tokens, OTPs, passwords, national IDs never in localStorage, URLs, analytics, or client logs |
+| `06-security-testing-observability.md#T-06.01.04.09` | done | Recorded batch work | Write concurrency tests: session fixation prevention, refresh token reuse, simultaneous session mutations |
 | `06-security-testing-observability.md#T-06.01.04.10` | done | Recorded batch work | Security review: verify no cookie leakage, no fixation vectors, proper SameSite/Path/Domain/HostOnly |
 | `06-security-testing-observability.md#T-06.02.01.01` | done | Recorded batch work | Implement CSRF token service: generate per-session token, store in session store, validate custom header |
 | `06-security-testing-observability.md#T-06.02.01.02` | done | Recorded batch work | Implement NestJS CSRF guard/ interceptor for state-changing routes |

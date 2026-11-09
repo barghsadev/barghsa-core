@@ -25545,7 +25545,8 @@
                       "type": "boolean"
                     },
                     "sessionId": {
-                      "description": "Session identifier (when requiresOtp is false)",
+                      "description": "Non-authenticating session reference (when a session is established)",
+                      "pattern": "^session-ref:([a-f0-9]{64})$",
                       "type": "string"
                     },
                     "userId": {
@@ -25557,7 +25558,7 @@
                 }
               }
             },
-            "description": "Login result. May return session credentials or require OTP step-up."
+            "description": "Login result. May establish HttpOnly session cookies or require OTP step-up."
           },
           "401": {
             "description": "Invalid username or password (generic)"
@@ -25741,6 +25742,7 @@
                       "type": "string"
                     },
                     "sessionId": {
+                      "pattern": "^session-ref:([a-f0-9]{64})$",
                       "type": "string"
                     }
                   },
@@ -26195,6 +26197,8 @@
                         "type": "object"
                       },
                       "sessionId": {
+                        "description": "Non-authenticating session reference for session management.",
+                        "pattern": "^session-ref:([a-f0-9]{64})$",
                         "type": "string"
                       },
                       "updatedAt": {
@@ -26264,10 +26268,12 @@
         "operationId": "SessionController_revokeSession",
         "parameters": [
           {
+            "description": "Non-authenticating reference returned by the session list.",
             "in": "path",
             "name": "id",
             "required": true,
             "schema": {
+              "pattern": "^session-ref:([a-f0-9]{64})$",
               "type": "string"
             }
           }

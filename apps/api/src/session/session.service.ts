@@ -4,7 +4,7 @@ import {
   notifySessionLifecycleRevocation,
 } from '../auth/session-notifications.js';
 import { Injectable, Logger, HttpException, UnauthorizedException } from '@nestjs/common';
-import { randomBytes, createHash } from 'node:crypto';
+import { randomBytes, randomUUID, createHash } from 'node:crypto';
 import type { PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
@@ -13,6 +13,7 @@ import { defaultInboxContent, defaultInboxLink } from '@barghsa/shared/notificat
 import { resolveStaffPermissions } from './staff-permissions.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { SESSION_ABSOLUTE_TIMEOUT_MS, SESSION_IDLE_TIMEOUT_MS } from './session-lifetime.js';
+import { SESSION_REFERENCE_PATTERN } from './session-reference.js';
 
 export { SESSION_ABSOLUTE_TIMEOUT_MS, SESSION_IDLE_TIMEOUT_MS } from './session-lifetime.js';
 /** Refresh token length (bytes before hex encoding) */
@@ -21,6 +22,9 @@ const REFRESH_TOKEN_BYTES = 32;
 const CSRF_TOKEN_BYTES = 32;
 /** Max sessions per user to prevent resource abuse */
 const MAX_SESSIONS_PER_USER = 50;
+// Earlier builds used UUIDv7 and exposed bearer values in JSON and revocation URLs.
+const SESSION_CREDENTIAL_PATTERN =
+  /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/;
 
 export type OperatingContext = 'staff' | 'customer';
 
@@ -95,7 +99,7 @@ export class SessionService {
    * and the caller must commit or roll back and release it.
    *
    * Generates:
-   * - An opaque UUIDv7 session identifier (stored in HttpOnly cookie).
+   * - An opaque random UUIDv4 session identifier (stored in HttpOnly cookie).
    * - A CSRF token (32 random bytes hex).
    * - A refresh token (32 random bytes hex).
    * - A token family ID (UUIDv7).
@@ -117,7 +121,7 @@ export class SessionService {
   ): Promise<CreatedSession> {
     const pool = getDbPool();
 
-    const sessionId = uuidv7();
+    const sessionId = randomUUID();
     const csrfToken = randomBytes(CSRF_TOKEN_BYTES).toString('hex');
     const refreshToken = randomBytes(REFRESH_TOKEN_BYTES).toString('hex');
     const refreshTokenHash = createHash('sha256').update(refreshToken).digest('hex');
@@ -294,6 +298,7 @@ export class SessionService {
     touchOnValidate = true,
     csrfProof?: { token: string; method: string }
   ): Promise<ValidatedSession | null> {
+    if (!SESSION_CREDENTIAL_PATTERN.test(sessionId)) return null;
     const pool = getDbPool();
     let client: PoolClient | undefined;
     try {
@@ -466,7 +471,7 @@ export class SessionService {
       );
 
       // 3. Create a new session with fresh identifier and CSRF token
-      const newSessionId = uuidv7();
+      const newSessionId = randomUUID();
       const newCsrfToken = randomBytes(CSRF_TOKEN_BYTES).toString('hex');
       const newRefreshToken = randomBytes(REFRESH_TOKEN_BYTES).toString('hex');
       const newRefreshTokenHash = createHash('sha256').update(newRefreshToken).digest('hex');
@@ -616,13 +621,18 @@ export class SessionService {
   /** Check the session token without consuming the refresh credential or extending idle time. */
   async validateRefreshCsrf(token: string, csrfToken: string): Promise<boolean> {
     const tokenHash = createHash('sha256').update(token).digest('hex');
-    const result = await getDbPool().query<{ csrf_token: string }>(
-      `SELECT s.csrf_token FROM refresh_tokens r
+    const result = await getDbPool().query<{ csrf_token: string; session_id: string }>(
+      `SELECT s.csrf_token, s.session_id FROM refresh_tokens r
        JOIN sessions s ON s.session_id = r.session_id
        WHERE r.token_hash = $1 AND s.revoked_at IS NULL AND s.expires_at > NOW() AND s.idle_deadline > NOW()`,
       [tokenHash]
     );
-    return result.rows.length === 1 && result.rows[0]!.csrf_token === csrfToken;
+    const session = result.rows[0];
+    return (
+      result.rows.length === 1 &&
+      session?.csrf_token === csrfToken &&
+      SESSION_CREDENTIAL_PATTERN.test(session.session_id)
+    );
   }
 
   /**
@@ -677,15 +687,14 @@ export class SessionService {
         [tokenHash]
       );
 
-      if (tokenResult.rows.length === 0) {
+      const tokenRow = tokenResult.rows[0];
+      if (!tokenRow || !SESSION_CREDENTIAL_PATTERN.test(tokenRow.session_id)) {
         await client.query('ROLLBACK');
         throw new UnauthorizedException({
           statusCode: 401,
           error: ErrorCodes.AUTH_TOKEN_INVALID.code,
         });
       }
-
-      const tokenRow = tokenResult.rows[0];
 
       const now = new Date();
 
@@ -1024,12 +1033,12 @@ export class SessionService {
   /** Self-service revocation keeps the acting session and confirmation locked through commit. */
   async revokeOwnSessions(
     actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
-    operation: { targetSessionId: string } | { password: string },
+    operation: { targetSessionRef: string } | { password: string },
     ip: string | null = null
   ): Promise<number> {
     const client = await getDbPool().connect();
-    const requiresStepUp = 'targetSessionId' in operation;
-    const targetId = requiresStepUp ? operation.targetSessionId : null;
+    const requiresStepUp = 'targetSessionRef' in operation;
+    let targetId: string | null = null;
     try {
       await client.query('BEGIN');
       const account = await client.query(
@@ -1071,12 +1080,17 @@ export class SessionService {
         if (!(await verify(account.rows[0].password_hash, operation.password).catch(() => false)))
           throw new HttpException({ error: ErrorCodes.AUTH_LOGIN_INVALID_CREDENTIALS.code }, 422);
       } else {
-        const target = await client.query(
-          'SELECT session_id FROM sessions WHERE session_id=$1 AND user_id=$2 FOR UPDATE',
-          [targetId, actor.userId]
+        const digest = SESSION_REFERENCE_PATTERN.exec(operation.targetSessionRef)?.[1];
+        if (!digest) throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+        const target = await client.query<{ session_id: string }>(
+          `SELECT session_id FROM sessions
+           WHERE user_id=$1 AND sha256(convert_to(session_id, 'UTF8'))=decode($2, 'hex')
+           FOR UPDATE`,
+          [actor.userId, digest]
         );
         if (!target.rows.length)
           throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+        targetId = target.rows[0]!.session_id;
       }
       const revoked = await client.query<{ active: boolean }>(
         `UPDATE sessions SET revoked_at=clock_timestamp(),updated_at=clock_timestamp()
@@ -1469,9 +1483,10 @@ export class SessionService {
                 expires_at, idle_deadline, created_at, updated_at
          FROM sessions
          WHERE user_id = $1 AND revoked_at IS NULL
+           AND session_id ~ $2
            AND expires_at > clock_timestamp() AND idle_deadline > clock_timestamp()
          ORDER BY created_at DESC`,
-        [userId]
+        [userId, SESSION_CREDENTIAL_PATTERN.source]
       );
 
       return result.rows;

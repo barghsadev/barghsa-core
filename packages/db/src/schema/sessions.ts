@@ -7,7 +7,7 @@ import { pgTable, text, timestamp, jsonb } from 'drizzle-orm/pg-core';
  * Created on successful authentication (registration OTP verify, login).
  * Stores server-side session state with refresh token support.
  *
- * - `session_id` — opaque UUIDv7, stored in an HttpOnly cookie.
+ * - `session_id` — opaque random UUIDv4, stored in an HttpOnly cookie. Historical UUIDv7 rows are retained for audit.
  * - `user_id` — FK to users.user_id.
  * - `csrf_token` — CSRF token bound to this session, rotated on auth events.
  * - `refresh_token_hash` — SHA-256 hash of the current refresh token (rotation on use).
@@ -21,7 +21,7 @@ import { pgTable, text, timestamp, jsonb } from 'drizzle-orm/pg-core';
  * - `updated_at` — last activity update timestamp.
  */
 export const sessions = pgTable('sessions', {
-  /** Opaque session identifier (UUIDv7). Stored in HttpOnly cookie. */
+  /** Opaque bearer identifier stored in an HttpOnly cookie. */
   sessionId: text('session_id').primaryKey(),
 
   /** The user this session belongs to. */

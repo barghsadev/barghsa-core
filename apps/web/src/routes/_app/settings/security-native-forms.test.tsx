@@ -166,8 +166,12 @@ async function submit() {
 async function click(key: string) {
   await act(async () => button(copy(key, 'en')).click());
 }
-it('revokes the captured other session with encoded ID and current CSRF, leaving device trust intact', async () => {
+it.each([
+  ['other/opaque', 'other%2Fopaque'],
+  [`session-ref:${'a'.repeat(64)}`, `session-ref%3A${'a'.repeat(64)}`],
+])('revokes a captured session with an encoded ID and current CSRF (%s)', async (id, encoded) => {
   const state = fixture();
+  state.sessions[1] = row(id, false);
   document.cookie = 'barghsa_csrf=security-current';
   await mount();
   await open('session');
@@ -180,7 +184,7 @@ it('revokes the captured other session with encoded ID and current CSRF, leaving
   await submit();
   expect(state.requests.filter((v) => v.method !== 'GET')).toEqual([
     {
-      path: '/api/auth/sessions/other%2Fopaque',
+      path: '/api/auth/sessions/' + encoded,
       method: 'DELETE',
       body: null,
       csrf: 'security-current',
