@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T16:28:30+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T16:30:50+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 919 | Accepted with unchanged source bindings. |
-| verify | 417 | Existing work may be complete; inspect evidence before building. |
+| done | 925 | Accepted with unchanged source bindings. |
+| verify | 411 | Existing work may be complete; inspect evidence before building. |
 | partial | 26 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -39,14 +39,13 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify current root workspace, dependency strictness, package builds and TypeScript references using exact hosted integrity evidence and scoped local probes.
+Verify existing Vite and NestJS builds, lazy route boundaries, asset hashes and mandatory bundle budgets against current build evidence.
 
-- `01-platform-infrastructure.md#T-01.01.02`: Create root `turbo.json` pipeline definition
-- `01-platform-infrastructure.md#T-01.01.03`: Create root `.npmrc` with strict peer dependencies and no shameful hoisting
-- `01-platform-infrastructure.md#T-01.01.04`: Create root `package.json` with `packageManager`, scripts, and engines constraint
-- `01-platform-infrastructure.md#T-01.01.05`: Verify monorepo integrity: install deps, run `turbo build` across all packages, confirm no cross-package resolution errors
-- `01-platform-infrastructure.md#T-01.02.02`: Configure per-package tsconfig with project references in each of: `packages/db`, `packages/shared`, `packages/i18n`, `packages/ui`, `apps/web`, `apps/api`
-- `01-platform-infrastructure.md#T-01.02.04`: Wire `turbo.json` `typecheck` task and CI step to run `turbo typecheck`
+- `01-platform-infrastructure.md#T-01.03.01`: Configure Vite SPA build pipeline in `apps/web`
+- `01-platform-infrastructure.md#T-01.03.02`: Configure NestJS build pipeline in `apps/api`
+- `01-platform-infrastructure.md#T-01.03.03`: Implement route-level code splitting and lazy loading for heavy modules
+- `01-platform-infrastructure.md#T-01.03.04`: Implement bundle budget checking in CI
+- `01-platform-infrastructure.md#T-01.03.05`: Configure hashed filenames and CDN-ready public asset output
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -957,14 +956,14 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `release-readiness#R-05.02` | in_progress | Recorded batch work | Renew security and operational task acceptance |
 | `release-readiness#R-05.03` | blocked | Recorded batch work | Prove production deployment, backup and recovery prerequisites |
 | `01-platform-infrastructure.md#T-01.01.01` | done | Earlier acceptance_verified | Create `pnpm-workspace.yaml` with `packages: ['apps/*', 'packages/*']` and verify `pnpm install` resolves correctly |
-| `01-platform-infrastructure.md#T-01.01.02` | verify | Earlier acceptance_verified | Create root `turbo.json` pipeline definition |
-| `01-platform-infrastructure.md#T-01.01.03` | verify | Earlier acceptance_verified | Create root `.npmrc` with strict peer dependencies and no shameful hoisting |
-| `01-platform-infrastructure.md#T-01.01.04` | verify | Earlier acceptance_verified | Create root `package.json` with `packageManager`, scripts, and engines constraint |
-| `01-platform-infrastructure.md#T-01.01.05` | verify | Earlier acceptance_verified | Verify monorepo integrity: install deps, run `turbo build` across all packages, confirm no cross-package resolution errors |
+| `01-platform-infrastructure.md#T-01.01.02` | done | Earlier acceptance_verified | Create root `turbo.json` pipeline definition |
+| `01-platform-infrastructure.md#T-01.01.03` | done | Earlier acceptance_verified | Create root `.npmrc` with strict peer dependencies and no shameful hoisting |
+| `01-platform-infrastructure.md#T-01.01.04` | done | Earlier acceptance_verified | Create root `package.json` with `packageManager`, scripts, and engines constraint |
+| `01-platform-infrastructure.md#T-01.01.05` | done | Earlier acceptance_verified | Verify monorepo integrity: install deps, run `turbo build` across all packages, confirm no cross-package resolution errors |
 | `01-platform-infrastructure.md#T-01.02.01` | done | Earlier acceptance_verified | Create `packages/tsconfig/base.json` with strict shared settings |
-| `01-platform-infrastructure.md#T-01.02.02` | verify | Earlier acceptance_verified | Configure per-package tsconfig with project references in each of: `packages/db`, `packages/shared`, `packages/i18n`, `packages/ui`, `apps/web`, `apps/api` |
+| `01-platform-infrastructure.md#T-01.02.02` | done | Earlier acceptance_verified | Configure per-package tsconfig with project references in each of: `packages/db`, `packages/shared`, `packages/i18n`, `packages/ui`, `apps/web`, `apps/api` |
 | `01-platform-infrastructure.md#T-01.02.03` | done | Earlier acceptance_verified | Create root-level `tsconfig.json` that references all sub-projects with `files: []` so IDE picks up project references |
-| `01-platform-infrastructure.md#T-01.02.04` | verify | Earlier acceptance_verified | Wire `turbo.json` `typecheck` task and CI step to run `turbo typecheck` |
+| `01-platform-infrastructure.md#T-01.02.04` | done | Earlier acceptance_verified | Wire `turbo.json` `typecheck` task and CI step to run `turbo typecheck` |
 | `01-platform-infrastructure.md#T-01.03.01` | verify | Earlier acceptance_verified | Configure Vite SPA build pipeline in `apps/web` |
 | `01-platform-infrastructure.md#T-01.03.02` | verify | Earlier acceptance_verified | Configure NestJS build pipeline in `apps/api` |
 | `01-platform-infrastructure.md#T-01.03.03` | verify | Earlier acceptance_verified | Implement route-level code splitting and lazy loading for heavy modules |

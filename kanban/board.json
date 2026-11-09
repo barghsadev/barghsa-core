@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T16:28:30+00:00",
+  "updated": "2026-11-09T16:30:50+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -3782,12 +3782,10 @@
         "story": "01-platform-infrastructure.md#spec-72c646d44b73"
       },
       "requirement": "- **T-01.01.02:** Create root `turbo.json` pipeline definition\n  - **Notes:** Define outputs (`.next/`, `dist/`, `.turbo`), cache strategy, and dependency graph. Use `dependsOn: ['^build']` for build so upstream packages build first. `persistent: true` for `dev` task. Set `outputLogs: 'new-only'` to reduce noise.\n  - **Dependencies:** T-01.01.01\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -3815,8 +3813,30 @@
         "changed_paths": [
           "turbo.json"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-monorepo-build-and-typecheck"
+        ],
+        "current_acceptance": {
+          "kind": "root-workspace-production-build-and-typecheck",
+          "base_commit": "8dd3e8e7fa5dcb4dbc98b692ab0f8df9c49a4a8b",
+          "source_evidence": [
+            {
+              "path": "turbo.json",
+              "sha256": "d81d554260edd9a3e22854a220fd0e6dd95b2c7db7035de015e37a58c8279741"
+            },
+            {
+              "path": "package.json",
+              "sha256": "0d38ca16dff0d91baf910710ab6f0e82f44fb03b09a2d42796e34de9cfd6b5ee"
+            },
+            {
+              "path": "pnpm-workspace.yaml",
+              "sha256": "c17b9018054e89549a7f07be9839d2d9226378651153c7111d31979a3a7103b2"
+            }
+          ],
+          "checks": [
+            "The exact Turbo plan has seven buildable packages and upstream build ordering. Declared build outputs include dist, coverage-build assets, .next and .turbo. Development is persistent and uncached. Build logs use new-only."
+          ]
+        }
       }
     },
     {
@@ -3830,12 +3850,10 @@
         "story": "01-platform-infrastructure.md#spec-72c646d44b73"
       },
       "requirement": "- **T-01.01.03:** Create root `.npmrc` with strict peer dependencies and no shameful hoisting\n  - **Notes:** Set `save-exact=true` to pin dependency versions. Set `auto-install-peers=false` so peer deps are explicit. Set `resolution-mode=highest` to get latest compatible.\n  - **Dependencies:** T-01.01.01\n  - **Complexity:** S",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -3867,8 +3885,30 @@
         "changed_paths": [
           "pnpm-lock.yaml"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-monorepo-build-and-typecheck"
+        ],
+        "current_acceptance": {
+          "kind": "root-workspace-production-build-and-typecheck",
+          "base_commit": "8dd3e8e7fa5dcb4dbc98b692ab0f8df9c49a4a8b",
+          "source_evidence": [
+            {
+              "path": ".npmrc",
+              "sha256": "865983cbb3a1462253f4ee27032c775c8c4ec92234328f6c525de42d54f4d37c"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "pnpm-workspace.yaml",
+              "sha256": "c17b9018054e89549a7f07be9839d2d9226378651153c7111d31979a3a7103b2"
+            }
+          ],
+          "checks": [
+            "The actual pnpm CLI resolved save-exact, explicit peers, highest compatible resolution, strict engines and peers, and disabled shameful hoisting. The exact clean hosted frozen install passed."
+          ]
+        }
       }
     },
     {
@@ -3882,12 +3922,10 @@
         "story": "01-platform-infrastructure.md#spec-72c646d44b73"
       },
       "requirement": "- **T-01.01.04:** Create root `package.json` with `packageManager`, scripts, and engines constraint\n  - **Notes:** Scripts: `dev`, `build`, `test`, `lint`, `typecheck`, `format:check`, `format:write`. Set `engines.node >=20`, `engines.pnpm >=10`. Add corepack instructions in README.\n  - **Dependencies:** T-01.01.01\n  - **Complexity:** S",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -3923,8 +3961,30 @@
           "package.json",
           ".github/workflows/ci.yml"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-monorepo-build-and-typecheck"
+        ],
+        "current_acceptance": {
+          "kind": "root-workspace-production-build-and-typecheck",
+          "base_commit": "8dd3e8e7fa5dcb4dbc98b692ab0f8df9c49a4a8b",
+          "source_evidence": [
+            {
+              "path": "package.json",
+              "sha256": "0d38ca16dff0d91baf910710ab6f0e82f44fb03b09a2d42796e34de9cfd6b5ee"
+            },
+            {
+              "path": "README.md",
+              "sha256": "ea3994d7966764d9cf70d693eb3a69aded9850e39beddbeaf745cfc90022bcc3"
+            },
+            {
+              "path": "pnpm-workspace.yaml",
+              "sha256": "c17b9018054e89549a7f07be9839d2d9226378651153c7111d31979a3a7103b2"
+            }
+          ],
+          "checks": [
+            "The root pins pnpm 10.11.1, declares Node >=20 and pnpm >=10, provides all seven required commands and documents Corepack. Hosted and deployed runtime evidence uses Node 24 LTS."
+          ]
+        }
       }
     },
     {
@@ -3938,12 +3998,10 @@
         "story": "01-platform-infrastructure.md#spec-72c646d44b73"
       },
       "requirement": "- **T-01.01.05:** Verify monorepo integrity: install deps, run `turbo build` across all packages, confirm no cross-package resolution errors\n  - **Notes:** CI must also run `pnpm install --frozen-lockfile` to detect lockfile drift. Validate that `pnpm build` exits 0 and produces correct `dist/` outputs.\n  - **Dependencies:** T-01.01.02, T-01.01.03, T-01.01.04\n  - **Complexity:** M\n  - **UI/UX:** N/A\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -3981,8 +4039,42 @@
           "turbo.json",
           ".github/workflows/ci.yml"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-monorepo-build-and-typecheck"
+        ],
+        "current_acceptance": {
+          "kind": "root-workspace-production-build-and-typecheck",
+          "base_commit": "8dd3e8e7fa5dcb4dbc98b692ab0f8df9c49a4a8b",
+          "source_evidence": [
+            {
+              "path": "turbo.json",
+              "sha256": "d81d554260edd9a3e22854a220fd0e6dd95b2c7db7035de015e37a58c8279741"
+            },
+            {
+              "path": ".npmrc",
+              "sha256": "865983cbb3a1462253f4ee27032c775c8c4ec92234328f6c525de42d54f4d37c"
+            },
+            {
+              "path": "package.json",
+              "sha256": "0d38ca16dff0d91baf910710ab6f0e82f44fb03b09a2d42796e34de9cfd6b5ee"
+            },
+            {
+              "path": "pnpm-workspace.yaml",
+              "sha256": "c17b9018054e89549a7f07be9839d2d9226378651153c7111d31979a3a7103b2"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
+            }
+          ],
+          "checks": [
+            "GitHub quality job 129286725191 passed the exact frozen install and workspace build at fe665002. Current app, package, lock, workspace and CI build inputs match. Local Turbo discovery verified seven executable build tasks."
+          ]
+        }
       }
     },
     {
@@ -4053,12 +4145,10 @@
         "story": "01-platform-infrastructure.md#spec-420d28e40407"
       },
       "requirement": "- **T-01.02.02:** Configure per-package tsconfig with project references in each of: `packages/db`, `packages/shared`, `packages/i18n`, `packages/ui`, `apps/web`, `apps/api`\n  - **Notes:** Each extends `../../tsconfig/base.json` (or `../tsconfig/base.json` from packages). Set `rootDir: src`, `outDir: dist`. Add `references` to upstream dependencies. For `apps/web`, extend with JSX config. For `apps/api`, set `emitDecoratorMetadata: true`, `experimentalDecorators: true` for NestJS compatibility.\n  - **Dependencies:** T-01.02.01\n  - **Complexity:** L",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -4172,8 +4262,50 @@
           "package.json",
           "pnpm-lock.yaml"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-monorepo-build-and-typecheck"
+        ],
+        "current_acceptance": {
+          "kind": "root-workspace-production-build-and-typecheck",
+          "base_commit": "8dd3e8e7fa5dcb4dbc98b692ab0f8df9c49a4a8b",
+          "source_evidence": [
+            {
+              "path": "packages/db/tsconfig.json",
+              "sha256": "ea2f25b744dc0819879b01cba066f83680236227fb38737598684f25006df13e"
+            },
+            {
+              "path": "packages/shared/tsconfig.json",
+              "sha256": "5a181058c61029d3d9fd4ac7e701a2d542062ccda75dca6ec6e900e98841b3ea"
+            },
+            {
+              "path": "packages/i18n/tsconfig.json",
+              "sha256": "5a181058c61029d3d9fd4ac7e701a2d542062ccda75dca6ec6e900e98841b3ea"
+            },
+            {
+              "path": "packages/ui/tsconfig.json",
+              "sha256": "4067448168bab52a2405dc11ed35a4ce2be5a85488b5a019b697f316bce62b24"
+            },
+            {
+              "path": "apps/web/tsconfig.json",
+              "sha256": "c27285180ceab373a4eb73aae0fe667ddb69d7fafabecfdf9b81a6eadd9d6433"
+            },
+            {
+              "path": "apps/api/tsconfig.json",
+              "sha256": "6b97f6906bc116547651b6ba7282ea2af7e0e8f01ab56e426aa37c5938ab55d4"
+            },
+            {
+              "path": "packages/tsconfig/base.json",
+              "sha256": "6097ef4fb31ac5f9c3909d607f67a76322e7cfbbf7c1e1c2f6cd5c0dd6ce3e9a"
+            },
+            {
+              "path": "pnpm-workspace.yaml",
+              "sha256": "c17b9018054e89549a7f07be9839d2d9226378651153c7111d31979a3a7103b2"
+            }
+          ],
+          "checks": [
+            "All six configs extend the strict composite base, map src to dist and explicitly declare upstream project references. Web enables React JSX. API enables decorators and metadata. Exact hosted build and typecheck passed."
+          ]
+        }
       }
     },
     {
@@ -4242,12 +4374,10 @@
         "story": "01-platform-infrastructure.md#spec-420d28e40407"
       },
       "requirement": "- **T-01.02.04:** Wire `turbo.json` `typecheck` task and CI step to run `turbo typecheck`\n  - **Notes:** `turbo.json` gets a `typecheck` task that depends on `^build` (upstream compsited builds emit declarations). CI enforces zero new suppressed errors via a custom check. Any `// @ts-expect-error` or `// @ts-ignore` in production source must be approved in PR review.\n  - **Dependencies:** T-01.01.02, T-01.02.01\n  - **Complexity:** S\n  - **UI/UX:** N/A\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -4294,8 +4424,42 @@
           "package.json",
           ".github/workflows/ci.yml"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-monorepo-build-and-typecheck"
+        ],
+        "current_acceptance": {
+          "kind": "root-workspace-production-build-and-typecheck",
+          "base_commit": "8dd3e8e7fa5dcb4dbc98b692ab0f8df9c49a4a8b",
+          "source_evidence": [
+            {
+              "path": "turbo.json",
+              "sha256": "d81d554260edd9a3e22854a220fd0e6dd95b2c7db7035de015e37a58c8279741"
+            },
+            {
+              "path": "package.json",
+              "sha256": "0d38ca16dff0d91baf910710ab6f0e82f44fb03b09a2d42796e34de9cfd6b5ee"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
+            },
+            {
+              "path": "scripts/check-suppressed-errors.sh",
+              "sha256": "5ea35de1294fe1a8a92ea0cfe4ad8ad0347435229dbc94ec322402752a83aa36"
+            },
+            {
+              "path": "scripts/check-suppressed-errors.mjs",
+              "sha256": "94cb8818a9c5b25abdb2f17fd313ac9114bb121bc555a908f8cda8f3d5dcdcce"
+            },
+            {
+              "path": "scripts/check-suppressed-errors.test.mjs",
+              "sha256": "992e2c40b4725ecdb4b05a22c992109934322d301169c979ca07a5e6cdef0a26"
+            }
+          ],
+          "checks": [
+            "The actual Turbo plan runs seven typechecks with upstream builds. GitHub quality job 129286725191 passed typecheck and the suppression gate. The current local suppression gate passed eight unit cases and found no unapproved production suppressions."
+          ]
+        }
       }
     },
     {
@@ -738844,7 +739008,8 @@
           "release-0.6-production-image-recipes-and-distribution",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-package-metadata-review",
-          "release-0.6-container-runtime-hardening"
+          "release-0.6-container-runtime-hardening",
+          "release-0.6-monorepo-build-and-typecheck"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -827235,6 +827400,100 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "container-runtime-hardening-proof.json",
       "source_scope_proof_sha256": "44bd11ce04152221b6b824c0fbf631b47d6f0ae64b53d85a7c7ec90959f738cb"
+    },
+    "release-0.6-monorepo-build-and-typecheck": {
+      "batch": "release-0.6-monorepo-build-and-typecheck",
+      "base_commit": "8dd3e8e7fa5dcb4dbc98b692ab0f8df9c49a4a8b",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.01.02",
+        "01-platform-infrastructure.md#T-01.01.03",
+        "01-platform-infrastructure.md#T-01.01.04",
+        "01-platform-infrastructure.md#T-01.01.05",
+        "01-platform-infrastructure.md#T-01.02.02",
+        "01-platform-infrastructure.md#T-01.02.04",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "b66e3a36be3bd9489f7be6bb2e1409a2bd7bac5889666aea52efe73581e2ce7a"
+        },
+        {
+          "path": ".npmrc",
+          "sha256": "865983cbb3a1462253f4ee27032c775c8c4ec92234328f6c525de42d54f4d37c"
+        },
+        {
+          "path": "README.md",
+          "sha256": "ea3994d7966764d9cf70d693eb3a69aded9850e39beddbeaf745cfc90022bcc3"
+        },
+        {
+          "path": "apps/api/tsconfig.json",
+          "sha256": "6b97f6906bc116547651b6ba7282ea2af7e0e8f01ab56e426aa37c5938ab55d4"
+        },
+        {
+          "path": "apps/web/tsconfig.json",
+          "sha256": "c27285180ceab373a4eb73aae0fe667ddb69d7fafabecfdf9b81a6eadd9d6433"
+        },
+        {
+          "path": "package.json",
+          "sha256": "0d38ca16dff0d91baf910710ab6f0e82f44fb03b09a2d42796e34de9cfd6b5ee"
+        },
+        {
+          "path": "packages/db/tsconfig.json",
+          "sha256": "ea2f25b744dc0819879b01cba066f83680236227fb38737598684f25006df13e"
+        },
+        {
+          "path": "packages/i18n/tsconfig.json",
+          "sha256": "5a181058c61029d3d9fd4ac7e701a2d542062ccda75dca6ec6e900e98841b3ea"
+        },
+        {
+          "path": "packages/shared/tsconfig.json",
+          "sha256": "5a181058c61029d3d9fd4ac7e701a2d542062ccda75dca6ec6e900e98841b3ea"
+        },
+        {
+          "path": "packages/tsconfig/base.json",
+          "sha256": "6097ef4fb31ac5f9c3909d607f67a76322e7cfbbf7c1e1c2f6cd5c0dd6ce3e9a"
+        },
+        {
+          "path": "packages/ui/tsconfig.json",
+          "sha256": "4067448168bab52a2405dc11ed35a4ce2be5a85488b5a019b697f316bce62b24"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        },
+        {
+          "path": "pnpm-workspace.yaml",
+          "sha256": "c17b9018054e89549a7f07be9839d2d9226378651153c7111d31979a3a7103b2"
+        },
+        {
+          "path": "scripts/check-suppressed-errors.mjs",
+          "sha256": "94cb8818a9c5b25abdb2f17fd313ac9114bb121bc555a908f8cda8f3d5dcdcce"
+        },
+        {
+          "path": "scripts/check-suppressed-errors.sh",
+          "sha256": "5ea35de1294fe1a8a92ea0cfe4ad8ad0347435229dbc94ec322402752a83aa36"
+        },
+        {
+          "path": "scripts/check-suppressed-errors.test.mjs",
+          "sha256": "992e2c40b4725ecdb4b05a22c992109934322d301169c979ca07a5e6cdef0a26"
+        },
+        {
+          "path": "turbo.json",
+          "sha256": "d81d554260edd9a3e22854a220fd0e6dd95b2c7db7035de015e37a58c8279741"
+        }
+      ],
+      "checks": [
+        "The exact Turbo plan has seven buildable packages and upstream build ordering. Declared build outputs include dist, coverage-build assets, .next and .turbo. Development is persistent and uncached. Build logs use new-only.",
+        "The actual pnpm CLI resolved save-exact, explicit peers, highest compatible resolution, strict engines and peers, and disabled shameful hoisting. The exact clean hosted frozen install passed.",
+        "The root pins pnpm 10.11.1, declares Node >=20 and pnpm >=10, provides all seven required commands and documents Corepack. Hosted and deployed runtime evidence uses Node 24 LTS.",
+        "GitHub quality job 129286725191 passed the exact frozen install and workspace build at fe665002. Current app, package, lock, workspace and CI build inputs match. Local Turbo discovery verified seven executable build tasks.",
+        "All six configs extend the strict composite base, map src to dist and explicitly declare upstream project references. Web enables React JSX. API enables decorators and metadata. Exact hosted build and typecheck passed.",
+        "The actual Turbo plan runs seven typechecks with upstream builds. GitHub quality job 129286725191 passed typecheck and the suppression gate. The current local suppression gate passed eight unit cases and found no unapproved production suppressions."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "workspace-root-verification.json",
+      "source_scope_proof_sha256": "297995a60ab1ca8bc69ef362e3a2eebe5836ae4837908c2882df302643f54157"
     }
   },
   "historical_improvements": [
@@ -827274,18 +827533,17 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-monorepo-build-and-typecheck",
+    "id": "release-0.6-app-builds-and-asset-budgets",
     "release": "0.6.0",
     "task_keys": [
-      "01-platform-infrastructure.md#T-01.01.02",
-      "01-platform-infrastructure.md#T-01.01.03",
-      "01-platform-infrastructure.md#T-01.01.04",
-      "01-platform-infrastructure.md#T-01.01.05",
-      "01-platform-infrastructure.md#T-01.02.02",
-      "01-platform-infrastructure.md#T-01.02.04",
+      "01-platform-infrastructure.md#T-01.03.01",
+      "01-platform-infrastructure.md#T-01.03.02",
+      "01-platform-infrastructure.md#T-01.03.03",
+      "01-platform-infrastructure.md#T-01.03.04",
+      "01-platform-infrastructure.md#T-01.03.05",
       "release-readiness#R-05.02"
     ],
-    "goal": "Verify current root workspace, dependency strictness, package builds and TypeScript references using exact hosted integrity evidence and scoped local probes."
+    "goal": "Verify existing Vite and NestJS builds, lazy route boundaries, asset hashes and mandatory bundle budgets against current build evidence."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",
