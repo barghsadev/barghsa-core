@@ -9175,7 +9175,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "No managed/separate deployment, production TLS/hostname rejection test, firewall denial or encrypted off-server deployment is verified. ADR explicitly records these external prerequisites and single-host availability limitations."
+        "Use the checked standalone rehearsal manifest on the separate app host with protected configuration. Verify production-equivalent pooler and direct database TLS, rejected wrong hostname or untrusted CA, firewall denial from an unauthorized network, and encrypted off-server backups. No production deployment is authorized."
       ],
       "owner": null,
       "depends_on": [],
@@ -9220,7 +9220,9 @@
         "changed_paths": [
           "packages/db/src/index.ts"
         ],
-        "batches": [],
+        "batches": [
+          "release-0.6-hybrid-rehearsal-manifest"
+        ],
         "current_acceptance": null
       }
     },
@@ -734550,7 +734552,8 @@
       "evidence": {
         "current_acceptance": null,
         "batches": [
-          "release-0.6-database-clocks-and-recovery-rehearsal"
+          "release-0.6-database-clocks-and-recovery-rehearsal",
+          "release-0.6-hybrid-rehearsal-manifest"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -819638,6 +819641,33 @@
       "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json",
       "source_scope_proof_sha256": "361683f5d5455152ed5ebbf7d5a48c77573e097a65948579a3536515df5fc7a9",
       "release_disposition": "Table convention accepted. Isolated recovery passed; no production certification."
+    },
+    "release-0.6-hybrid-rehearsal-manifest": {
+      "batch": "release-0.6-hybrid-rehearsal-manifest",
+      "base_commit": "59d3dad5ca1ee712a79d95169b523c9c88c29584",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.01.06",
+        "release-readiness#R-05.03"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/compose.yml",
+          "sha256": "ef66bb0af8da6983652640c92592cf0021db210a5eaea487b4e64bee1f72baea"
+        },
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "f6780a44d3a9d96704953079c71ab730be5fe03ec09053677f280d217760715f"
+        }
+      ],
+      "checks": [
+        "Resolved standalone Compose model with synthetic inputs: six digest-pinned services, only loopback web/API bindings, certificate validation overrides, separate direct migration credentials and migration-success startup gate.",
+        "Missing immutable app digest, CA bundle path or separate migration environment refused configuration.",
+        "18 existing targeted database connection/security cases passed; no runtime code or TLS behavior changed in this batch."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/hybrid-compose-static-receipt.json",
+      "source_scope_proof_sha256": "3cb8e41caf5a02388f480c519b16ac03a9106f31a3772fd7bdbb257e9e85ebcb",
+      "release_disposition": "Standalone rehearsal manifest verified statically. No host, database, pooler, firewall, off-server storage or providers certified."
     }
   },
   "historical_improvements": [
