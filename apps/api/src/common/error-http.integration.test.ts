@@ -36,6 +36,20 @@ it.each([
   expect(response.headers.get('x-correlation-id')).toBe(body.error.correlationId);
 });
 
+it.each([
+  ['application/json', JSON.stringify('a'.repeat(100 * 1024))],
+  ['application/x-www-form-urlencoded', 'value=' + 'a'.repeat(100 * 1024)],
+])('rejects oversized ordinary %s bodies before routing', async (contentType, body) => {
+  const response = await fetch(fixture.base + '/api/missing-body-limit-test', {
+    method: 'POST',
+    headers: { 'Content-Type': contentType },
+    body,
+  });
+  expect(response.status).toBe(413);
+  expect(response.headers.get('cache-control')).toContain('no-store');
+  await response.arrayBuffer();
+});
+
 it.each(
   [
     '/api/auth/login',

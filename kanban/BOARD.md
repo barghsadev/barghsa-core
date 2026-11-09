@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T16:36:45+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T16:43:00+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 929 | Accepted with unchanged source bindings. |
-| verify | 406 | Existing work may be complete; inspect evidence before building. |
+| done | 932 | Accepted with unchanged source bindings. |
+| verify | 403 | Existing work may be complete; inspect evidence before building. |
 | partial | 27 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -39,11 +39,11 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify bounded request parsing, explicit proxy-hop trust and edge rate controls from existing fixtures and the current staging ingress. Keep production TLS and rollout gates separate.
+Reconcile pilot routing, public asset cache policy and safe ETag behavior with current NGINX, compiled output and native HTTP evidence.
 
-- `06-security-testing-observability.md#T-06.07.03.02`: Disable `insecureHTTPParser`; set explicit request/body/header/time limits at proxy and application level
-- `06-security-testing-observability.md#T-06.07.03.04`: Ensure proxy trust configured to exact hop topology (not `trust proxy` globally)
-- `01-platform-infrastructure.md#T-04.04.03`: Configure edge rate limiting for auth, upload, and AI endpoints
+- `01-platform-infrastructure.md#T-04.04.01`: Create NGINX/Caddy configuration for pilot (single-node) topology
+- `01-platform-infrastructure.md#T-04.04.04`: Configure static asset caching and CDN readiness
+- `01-platform-infrastructure.md#T-04.04.05`: Implement ETag support for safe metadata endpoints
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -1023,7 +1023,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-04.03.05` | partial | Earlier partial | Enforce immutability for signed contracts and critical records |
 | `01-platform-infrastructure.md#T-04.04.01` | verify | Earlier acceptance_verified | Create NGINX/Caddy configuration for pilot (single-node) topology |
 | `01-platform-infrastructure.md#T-04.04.02` | partial | Earlier partial | Configure security headers in reverse proxy |
-| `01-platform-infrastructure.md#T-04.04.03` | verify | Earlier acceptance_verified | Configure edge rate limiting for auth, upload, and AI endpoints |
+| `01-platform-infrastructure.md#T-04.04.03` | done | Earlier acceptance_verified | Configure edge rate limiting for auth, upload, and AI endpoints |
 | `01-platform-infrastructure.md#T-04.04.04` | verify | Earlier acceptance_verified | Configure static asset caching and CDN readiness |
 | `01-platform-infrastructure.md#T-04.04.05` | verify | Earlier acceptance_verified | Implement ETag support for safe metadata endpoints |
 | `01-platform-infrastructure.md#T-05.01.01` | verify | Earlier deferred | Create Ansible playbook or deploy script for pilot topology |
@@ -1229,9 +1229,9 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.07.02.07` | partial | Recorded batch work | Generate SBOM (Software Bill of Materials) for each production build |
 | `06-security-testing-observability.md#T-06.07.02.08` | partial | Recorded batch work | Create CI gate config: SCA/SAST/secret/container scans on every PR, full scan on main |
 | `06-security-testing-observability.md#T-06.07.03.01` | partial | Recorded batch work | Harden Dockerfile: non-root user, read-only rootfs where practical, no inspector, `NODE_OPTIONS=--no-deprecation` |
-| `06-security-testing-observability.md#T-06.07.03.02` | verify | Inventory needed | Disable `insecureHTTPParser`; set explicit request/body/header/time limits at proxy and application level |
+| `06-security-testing-observability.md#T-06.07.03.02` | done | Recorded batch work | Disable `insecureHTTPParser`; set explicit request/body/header/time limits at proxy and application level |
 | `06-security-testing-observability.md#T-06.07.03.03` | verify | Inventory needed | Configure TLS at reverse proxy: modern protocols (TLS 1.2+), secure ciphers, HSTS |
-| `06-security-testing-observability.md#T-06.07.03.04` | verify | Inventory needed | Ensure proxy trust configured to exact hop topology (not `trust proxy` globally) |
+| `06-security-testing-observability.md#T-06.07.03.04` | done | Recorded batch work | Ensure proxy trust configured to exact hop topology (not `trust proxy` globally) |
 | `06-security-testing-observability.md#T-06.07.03.05` | done | Recorded batch work | Add container security scanning to CI (Trivy, etc.) |
 | `06-security-testing-observability.md#T-06.07.03.06` | done | Recorded batch work | Write container smoke test: non-root user, inspector not available, no unsafe parser |
 | `06-security-testing-observability.md#T-06.08.01.01` | verify | Inventory needed | Create initial threat model document (`docs/threat-model.md`) covering all critical flows |

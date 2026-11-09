@@ -11,6 +11,7 @@ import { Reflector } from '@nestjs/core';
 import { sanitizeBodyParserErrors } from './common/body-parser-errors.js';
 import { browserCorsOptions } from './common/browser-origin.js';
 import { observeHttpRequest } from './metrics/http-request-metrics.js';
+import type { Server } from 'node:http';
 
 export async function createApplication() {
   const proxies = trustedProxyIps();
@@ -18,6 +19,10 @@ export async function createApplication() {
     rawBody: true,
     logger: new CorrelationLogger(),
   });
+  const server = app.getHttpServer() as Server;
+  server.headersTimeout = 60_000;
+  server.requestTimeout = 300_000;
+  server.maxHeadersCount = 2_000;
   app
     .getHttpAdapter()
     .getInstance()
@@ -55,7 +60,8 @@ export async function createApplication() {
       /^\/api\/route-errors\/?(?:\?|$)/.test(request.url ?? '') &&
       /^application\/json(?:\s*;|$)/i.test(request.headers['content-type'] ?? ''),
   });
-  app.useBodyParser('json');
+  app.useBodyParser('json', { limit: 100 * 1024 });
+  app.useBodyParser('urlencoded', { extended: true, limit: 100 * 1024 });
   app.use(sanitizeBodyParserErrors);
 
   // Enable shutdown hooks for graceful SIGTERM/SIGINT handling.

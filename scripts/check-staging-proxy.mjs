@@ -38,18 +38,21 @@ assert.equal(upstreamLimit.status, 429);
 assert.equal(upstreamLimit.headers['retry-after'], '60');
 assert.equal(upstreamLimit.headers['permissions-policy'], permissions);
 assert.equal(JSON.parse(upstreamLimit.body).error.code, 'FIXTURE:APPLICATION_LIMIT');
-for (const language of ['fa', 'en']) {
+const limitedPaths = ['/api/auth/login', '/api/upload/file', '/api/ai/stream'];
+for (const [path, language] of limitedPaths.flatMap((path) =>
+  ['fa', 'en'].map((language) => [path, language])
+)) {
   // Let the same client's quota refill before exercising the next language.
   await new Promise((resolve) => setTimeout(resolve, 1000));
   const responses = await Promise.all(
     Array.from({ length: 60 }, (_, i) =>
-      request('/api/auth/login', {
+      request(path, {
         headers: { 'Accept-Language': language, 'X-Forwarded-For': `203.0.113.${i + 1}` },
       })
     )
   );
   const limited = responses.filter((response) => response.status === 429);
-  assert.ok(limited.length > 0, `${language}: forged forwarding bypassed the edge quota`);
+  assert.ok(limited.length > 0, `${path} ${language}: forged forwarding bypassed the edge quota`);
   assert.ok(responses.some((response) => response.status === 200));
   assert.ok(responses.every((response) => response.status === 200 || response.status === 429));
   for (const response of limited) {
@@ -65,23 +68,35 @@ for (const language of ['fa', 'en']) {
     assert.equal(error.retryAfterSeconds, 1);
     assert.ok(error.message.includes(language === 'fa' ? 'ثانیه' : '1 second'));
   }
-  // An exhausted auth quota must not throttle health or unrelated API routes.
+  // An exhausted quota must not throttle health or unrelated API routes.
   const ping = await request('/api/ping');
   assert.equal(ping.status, 200);
   assert.equal(ping.headers['permissions-policy'], permissions);
   assert.equal(JSON.parse(ping.body).headers['x-forwarded-for'], '127.0.0.1');
-  console.log(`PASS ${language}: ${limited.length} localized edge rejections; health unaffected`);
+  console.log(
+    `PASS ${path} ${language}: ${limited.length} localized edge rejections; health unaffected`
+  );
 }
 const upload = await request('/api/admin/contract-templates/fixture/versions', {
   body: Buffer.alloc(11 * 1024 * 1024),
 });
 assert.equal(upload.status, 200);
 assert.equal(JSON.parse(upload.body).receivedBytes, 11 * 1024 * 1024);
+assert.equal(
+  (await request('/api/upload/file', { body: Buffer.alloc(61 * 1024 * 1024 + 1) })).status,
+  413
+);
+assert.equal(
+  (await request('/api/ping', { headers: { 'X-Size-Probe': 'a'.repeat(9 * 1024) } })).status,
+  400
+);
 const stream = await request('/api/stream');
 assert.ok(stream.chunks.length >= 2);
 assert.ok(
   stream.chunks[0].toString().includes('first') && !stream.chunks[0].toString().includes('last')
 );
+// Refill the AI quota before testing an allowed WebSocket upgrade.
+await new Promise((resolve) => setTimeout(resolve, 1000));
 await new Promise((resolve, reject) => {
   const req = https.request({
     host: '127.0.0.1',

@@ -164,6 +164,13 @@ Redis and object-store images are pinned by digest. Already installed exact
 images are reused with Compose's `--policy missing`; missing images are still
 pulled and a failed pull blocks the release.
 
+The NGINX configuration gives auth, upload and AI separate per-IP quotas.
+The edge returns a localized JSON `429` and `Retry-After` while the API keeps
+its own account and destination limits. NGINX replaces forwarded addresses
+with the actual client address. The API trusts only the configured immediate
+Docker bridge gateway. The same API proxy settings preserve upload bodies,
+streaming responses and WebSocket upgrades on the limited paths.
+
 On the server, view status and logs with:
 
 ```sh

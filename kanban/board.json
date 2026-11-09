@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T16:36:45+00:00",
+  "updated": "2026-11-09T16:43:00+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -5031,7 +5031,8 @@
           "apps/api/src/common/http-exception.filter.ts"
         ],
         "batches": [
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-proxy-trust-and-request-limits"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -5051,7 +5052,7 @@
             },
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
+              "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
             },
             {
               "path": "apps/api/src/common/cache-control.interceptor.ts",
@@ -11162,12 +11163,10 @@
         "story": "01-platform-infrastructure.md#spec-0b7751905d67"
       },
       "requirement": "- **T-04.04.03:** Configure edge rate limiting for auth, upload, and AI endpoints\n  - **Notes:** NGINX `limit_req_zone` per IP for: `/api/auth/*` (burst=5, rate=10r/s), `/api/upload/*` (burst=3, rate=5r/s), `/api/ai/*` (burst=2, rate=5r/s). Return `429` with `Retry-After` header and JSON error body. These are defense-in-depth — application rate limits remain the primary control.\n  - **Dependencies:** T-04.04.01\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -11226,8 +11225,42 @@
           "scripts/check-pilot-proxy.mjs",
           "scripts/proxy-fixture.mjs"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-proxy-trust-and-request-limits"
+        ],
+        "current_acceptance": {
+          "kind": "compiled-api-and-isolated-native-nginx-boundaries",
+          "base_commit": "90c7d1b09b8ac37218d5a92c4d92d0cbf5da8a63",
+          "source_evidence": [
+            {
+              "path": "deploy/pilot/nginx.conf",
+              "sha256": "f63afa980950f6ff6936737ae4080fb5dd1af90db79e57539acc58782102d14a"
+            },
+            {
+              "path": "deploy/staging/nginx.conf",
+              "sha256": "6be8c28e11255e44e22921cde7c0b65cd7a2800875a3d1ae152901e567dfe5e2"
+            },
+            {
+              "path": "scripts/check-staging-proxy.mjs",
+              "sha256": "b6c301584b799bf501023998d2ff00a2adef99a538b11bd786ff727ad1093c9b"
+            },
+            {
+              "path": "deploy/staging/README.md",
+              "sha256": "5e2d57359df082a0e58c92af947ccf451c4dfa25727477ec67c58ea40bacf58f"
+            },
+            {
+              "path": "scripts/check-pilot-proxy.mjs",
+              "sha256": "3d1d3d7004acbcae9f2013b11540545919f0377bd4c90826399115c97bbcbc58"
+            },
+            {
+              "path": "scripts/proxy-fixture.mjs",
+              "sha256": "44b10444a8c51c2afd401002712ab72abf537e259934c128679c9e22b86795dd"
+            }
+          ],
+          "checks": [
+            "Both NGINX profiles enforce separate auth 10/s burst 5, upload 5/s burst 3 and AI 5/s burst 2 quotas. The isolated stage exercised both languages on all three paths, including forwarded-IP forgery, localized 429 and Retry-After, security headers, preserved application cooldown and unaffected health. Live candidate rollout remains a separate receipt."
+          ]
+        }
       }
     },
     {
@@ -26567,7 +26600,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-browser-origin-security",
           "release-0.6-remove-unapproved-session-location-data",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-proxy-trust-and-request-limits"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -26603,7 +26637,7 @@
             },
             {
               "path": "apps/api/src/common/error-http.integration.test.ts",
-              "sha256": "e4419dd63b812492a33517716212749e9023ae90331a5c7ee3118524f2be255c"
+              "sha256": "f28c37a438edcca316f73ffb2e5ef1b5c4d16f7bfcefddcfe791f876f179ca00"
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
@@ -30627,7 +30661,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.5-required-input-semantics",
           "release-0.6-browser-origin-security",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-proxy-trust-and-request-limits"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -30699,7 +30734,7 @@
             },
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "02ab8c9038c53188a0b676201ea9421f72046a0882b44df36552ad8ea9c14980"
+              "sha256": "f63afa980950f6ff6936737ae4080fb5dd1af90db79e57539acc58782102d14a"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -30711,7 +30746,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "20e7e8fae329e1a336b428174540596ac8ee7cad88001583259ea96ab0b117f1"
+              "sha256": "6be8c28e11255e44e22921cde7c0b65cd7a2800875a3d1ae152901e567dfe5e2"
             },
             {
               "path": "packages/db/drizzle/production/0082_restore_foundation_constraints.sql",
@@ -30759,7 +30794,7 @@
             },
             {
               "path": "scripts/check-staging-proxy.mjs",
-              "sha256": "67e055b23efc99012e21006d76cefeb63bff5086e6f8f0e1d39ccbc1123ea384"
+              "sha256": "b6c301584b799bf501023998d2ff00a2adef99a538b11bd786ff727ad1093c9b"
             },
             {
               "path": "scripts/proxy-fixture.mjs",
@@ -105820,7 +105855,8 @@
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-packaged-production-seed",
-          "release-0.6-production-image-recipes-and-distribution"
+          "release-0.6-production-image-recipes-and-distribution",
+          "release-0.6-proxy-trust-and-request-limits"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -106192,7 +106228,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d76ca456f32ce8366832b3ba1c58e7c961bc20a62c26bf8000b41203df56e3b6"
+              "sha256": "5e2d57359df082a0e58c92af947ccf451c4dfa25727477ec67c58ea40bacf58f"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -462873,7 +462909,8 @@
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-packaged-production-seed",
-          "release-0.6-production-image-recipes-and-distribution"
+          "release-0.6-production-image-recipes-and-distribution",
+          "release-0.6-proxy-trust-and-request-limits"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -463245,7 +463282,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d76ca456f32ce8366832b3ba1c58e7c961bc20a62c26bf8000b41203df56e3b6"
+              "sha256": "5e2d57359df082a0e58c92af947ccf451c4dfa25727477ec67c58ea40bacf58f"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -469726,7 +469763,8 @@
         "batches": [
           "release-0.6-browser-origin-security",
           "release-0.6-remove-unapproved-session-location-data",
-          "release-0.6-private-api-monitoring"
+          "release-0.6-private-api-monitoring",
+          "release-0.6-proxy-trust-and-request-limits"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -469734,7 +469772,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
+              "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -469831,7 +469869,8 @@
         "batches": [
           "release-0.6-browser-origin-security",
           "release-0.6-remove-unapproved-session-location-data",
-          "release-0.6-private-api-monitoring"
+          "release-0.6-private-api-monitoring",
+          "release-0.6-proxy-trust-and-request-limits"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -469839,7 +469878,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
+              "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -469936,7 +469975,8 @@
         "batches": [
           "release-0.6-browser-origin-security",
           "release-0.6-remove-unapproved-session-location-data",
-          "release-0.6-private-api-monitoring"
+          "release-0.6-private-api-monitoring",
+          "release-0.6-proxy-trust-and-request-limits"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -469944,7 +469984,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
+              "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -470124,7 +470164,8 @@
         "batches": [
           "release-0.6-browser-origin-security",
           "release-0.6-remove-unapproved-session-location-data",
-          "release-0.6-private-api-monitoring"
+          "release-0.6-private-api-monitoring",
+          "release-0.6-proxy-trust-and-request-limits"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -470132,7 +470173,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
+              "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -470221,7 +470262,8 @@
         "batches": [
           "release-0.6-browser-origin-security",
           "release-0.6-remove-unapproved-session-location-data",
-          "release-0.6-private-api-monitoring"
+          "release-0.6-private-api-monitoring",
+          "release-0.6-proxy-trust-and-request-limits"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -470229,7 +470271,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
+              "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -470495,7 +470537,8 @@
           "release-0.6-browser-origin-security",
           "release-0.6-browser-response-policy",
           "release-0.6-private-api-monitoring",
-          "release-0.6-security-header-ci-and-nonce-evidence"
+          "release-0.6-security-header-ci-and-nonce-evidence",
+          "release-0.6-proxy-trust-and-request-limits"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -470503,7 +470546,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
+              "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
             },
             {
               "path": "apps/api/src/csp-report/csp-report-http.integration.test.ts",
@@ -470787,7 +470830,8 @@
         "batches": [
           "release-0.6-browser-response-policy",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-container-runtime-hardening"
+          "release-0.6-container-runtime-hardening",
+          "release-0.6-proxy-trust-and-request-limits"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -470819,7 +470863,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "20e7e8fae329e1a336b428174540596ac8ee7cad88001583259ea96ab0b117f1"
+              "sha256": "6be8c28e11255e44e22921cde7c0b65cd7a2800875a3d1ae152901e567dfe5e2"
             },
             {
               "path": "docs/security/content-security-policy.md",
@@ -470827,7 +470871,7 @@
             },
             {
               "path": "scripts/check-staging-proxy.mjs",
-              "sha256": "67e055b23efc99012e21006d76cefeb63bff5086e6f8f0e1d39ccbc1123ea384"
+              "sha256": "b6c301584b799bf501023998d2ff00a2adef99a538b11bd786ff727ad1093c9b"
             },
             {
               "path": "scripts/proxy-fixture.mjs",
@@ -470899,7 +470943,8 @@
           "release-0.6-proxy-security-headers",
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-proxy-trust-and-request-limits"
         ],
         "current_acceptance": {
           "kind": "production-csp-cross-origin-browser-and-first-party-control",
@@ -470919,7 +470964,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "20e7e8fae329e1a336b428174540596ac8ee7cad88001583259ea96ab0b117f1"
+              "sha256": "6be8c28e11255e44e22921cde7c0b65cd7a2800875a3d1ae152901e567dfe5e2"
             },
             {
               "path": "docs/security/content-security-policy.md",
@@ -471022,7 +471067,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-browser-origin-security",
-          "release-0.6-private-api-monitoring"
+          "release-0.6-private-api-monitoring",
+          "release-0.6-proxy-trust-and-request-limits"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -471030,7 +471076,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
+              "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -471085,7 +471131,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-browser-origin-security",
-          "release-0.6-private-api-monitoring"
+          "release-0.6-private-api-monitoring",
+          "release-0.6-proxy-trust-and-request-limits"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -471093,7 +471140,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
+              "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -471148,7 +471195,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-browser-origin-security",
-          "release-0.6-private-api-monitoring"
+          "release-0.6-private-api-monitoring",
+          "release-0.6-proxy-trust-and-request-limits"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -471156,7 +471204,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
+              "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -471211,7 +471259,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-browser-origin-security",
-          "release-0.6-private-api-monitoring"
+          "release-0.6-private-api-monitoring",
+          "release-0.6-proxy-trust-and-request-limits"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -471219,7 +471268,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
+              "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -471274,7 +471323,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-browser-origin-security",
-          "release-0.6-private-api-monitoring"
+          "release-0.6-private-api-monitoring",
+          "release-0.6-proxy-trust-and-request-limits"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -471282,7 +471332,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
+              "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -474225,19 +474275,55 @@
         "story": "06-security-testing-observability.md#spec-2b24cec414cb"
       },
       "requirement": "| T-06.07.03.02 | Disable `insecureHTTPParser`; set explicit request/body/header/time limits at proxy and application level | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-proxy-trust-and-request-limits"
+        ],
+        "current_acceptance": {
+          "kind": "compiled-api-and-isolated-native-nginx-boundaries",
+          "base_commit": "90c7d1b09b8ac37218d5a92c4d92d0cbf5da8a63",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/app.factory.ts",
+              "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
+            },
+            {
+              "path": "apps/api/src/common/error-http.integration.test.ts",
+              "sha256": "f28c37a438edcca316f73ffb2e5ef1b5c4d16f7bfcefddcfe791f876f179ca00"
+            },
+            {
+              "path": "deploy/pilot/nginx.conf",
+              "sha256": "f63afa980950f6ff6936737ae4080fb5dd1af90db79e57539acc58782102d14a"
+            },
+            {
+              "path": "deploy/staging/nginx.conf",
+              "sha256": "6be8c28e11255e44e22921cde7c0b65cd7a2800875a3d1ae152901e567dfe5e2"
+            },
+            {
+              "path": "scripts/check-staging-proxy.mjs",
+              "sha256": "b6c301584b799bf501023998d2ff00a2adef99a538b11bd786ff727ad1093c9b"
+            },
+            {
+              "path": "scripts/test-container-packaging.py",
+              "sha256": "a2d4f9ef8615da96df7795e62218ddf1a4a76eb5bd5a9a44d95d1734c8c7f7b9"
+            },
+            {
+              "path": "deploy/production/compose.yml",
+              "sha256": "14b6c1865d6a6df6bb7b9e59bc37a824c1353b28e5269da54c6c69311e407e35"
+            }
+          ],
+          "checks": [
+            "Node startup pins the existing header and request timeouts and maximum header count. JSON and form limits are explicit at 100 KiB, with the existing endpoint-specific limits preserved. Native migrated HTTP cases reject both oversized ordinary encodings before routing and preserve private parser errors. Pilot and staging templates validate header/body limits, the large permitted upload, SSE and WebSocket behavior. Existing strict raw HTTP parser controls and production Node options remain enforced."
+          ]
+        }
       }
     },
     {
@@ -474277,19 +474363,59 @@
         "story": "06-security-testing-observability.md#spec-2b24cec414cb"
       },
       "requirement": "| T-06.07.03.04 | Ensure proxy trust configured to exact hop topology (not `trust proxy` globally) | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-proxy-trust-and-request-limits"
+        ],
+        "current_acceptance": {
+          "kind": "compiled-api-and-isolated-native-nginx-boundaries",
+          "base_commit": "90c7d1b09b8ac37218d5a92c4d92d0cbf5da8a63",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/app.factory.ts",
+              "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
+            },
+            {
+              "path": "apps/api/src/common/proxy-trust.ts",
+              "sha256": "45c37bb5fe7e603a9b4478b6ab904bd7e19b899447668aa0c6721fb0caad1a57"
+            },
+            {
+              "path": "apps/api/src/common/proxy-trust.test.ts",
+              "sha256": "6f9b4abdce2bcccf29d857fbac64dd4f5a1e361a7adee7dc403f5e960df464d6"
+            },
+            {
+              "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
+              "sha256": "5d13bd853ccb666821867bbf41a2c5873c8a0a97ab8776d8d00c2f5d706bb0cd"
+            },
+            {
+              "path": "deploy/pilot/nginx.conf",
+              "sha256": "f63afa980950f6ff6936737ae4080fb5dd1af90db79e57539acc58782102d14a"
+            },
+            {
+              "path": "deploy/staging/nginx.conf",
+              "sha256": "6be8c28e11255e44e22921cde7c0b65cd7a2800875a3d1ae152901e567dfe5e2"
+            },
+            {
+              "path": "deploy/staging/nginx-api-proxy.conf",
+              "sha256": "ffc79d8f52d6dd3628d7b0feee4aca07a172f3f33547ff02abe9238244dd5f09"
+            },
+            {
+              "path": "scripts/check-staging-proxy.mjs",
+              "sha256": "b6c301584b799bf501023998d2ff00a2adef99a538b11bd786ff727ad1093c9b"
+            }
+          ],
+          "checks": [
+            "Three compiled API proxy cases cover untrusted, trusted and invalid configuration. Both isolated NGINX profiles overwrite forged forwarded addresses. Live v0.5 staging reads back only the Docker bridge gateway as the trusted hop and binds API port 4000 to loopback."
+          ]
+        }
       }
     },
     {
@@ -477932,7 +478058,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-private-api-monitoring"
+          "release-0.6-private-api-monitoring",
+          "release-0.6-proxy-trust-and-request-limits"
         ],
         "current_acceptance": {
           "kind": "verified-private-monitoring",
@@ -477964,7 +478091,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "20e7e8fae329e1a336b428174540596ac8ee7cad88001583259ea96ab0b117f1"
+              "sha256": "6be8c28e11255e44e22921cde7c0b65cd7a2800875a3d1ae152901e567dfe5e2"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
@@ -478000,7 +478127,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-private-api-monitoring"
+          "release-0.6-private-api-monitoring",
+          "release-0.6-proxy-trust-and-request-limits"
         ],
         "current_acceptance": {
           "kind": "verified-private-monitoring",
@@ -478008,7 +478136,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
+              "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
             },
             {
               "path": "apps/api/src/metrics/http-request-metrics.ts",
@@ -729881,7 +730009,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d76ca456f32ce8366832b3ba1c58e7c961bc20a62c26bf8000b41203df56e3b6"
+              "sha256": "5e2d57359df082a0e58c92af947ccf451c4dfa25727477ec67c58ea40bacf58f"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -731602,7 +731730,8 @@
           "release-0.6-packaged-production-seed",
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-production-image-recipes-and-distribution",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-proxy-trust-and-request-limits"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -733771,7 +733900,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d76ca456f32ce8366832b3ba1c58e7c961bc20a62c26bf8000b41203df56e3b6"
+              "sha256": "5e2d57359df082a0e58c92af947ccf451c4dfa25727477ec67c58ea40bacf58f"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -735399,7 +735528,8 @@
           "release-0.6-packaged-production-seed",
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-production-image-recipes-and-distribution",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-proxy-trust-and-request-limits"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -738759,7 +738889,7 @@
             },
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "6629778cb3f69a6fa88e4cc74beb9da10c5307a332471adb60284d79a5e19730"
+              "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
             },
             {
               "path": "apps/api/src/app.module.ts",
@@ -739223,7 +739353,8 @@
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-proxy-trust-and-request-limits"
         ]
       }
     },
@@ -739351,7 +739482,8 @@
           "release-0.6-package-metadata-review",
           "release-0.6-container-runtime-hardening",
           "release-0.6-monorepo-build-and-typecheck",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-proxy-trust-and-request-limits"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -828172,6 +828304,105 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "app-builds-and-asset-budgets-proof.json",
       "source_scope_proof_sha256": "f5201f8ca1f49bb4ccdd759fbb28152e26ad3f247dd83f2a1d3af728e3230068"
+    },
+    "release-0.6-proxy-trust-and-request-limits": {
+      "batch": "release-0.6-proxy-trust-and-request-limits",
+      "base_commit": "90c7d1b09b8ac37218d5a92c4d92d0cbf5da8a63",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.03.05",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-02.04.01",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.02.01.01",
+        "06-security-testing-observability.md#T-06.02.01.02",
+        "06-security-testing-observability.md#T-06.02.01.03",
+        "06-security-testing-observability.md#T-06.02.01.06",
+        "06-security-testing-observability.md#T-06.02.01.07",
+        "06-security-testing-observability.md#T-06.02.02.03",
+        "06-security-testing-observability.md#T-06.02.03.01",
+        "06-security-testing-observability.md#T-06.02.03.03",
+        "06-security-testing-observability.md#T-06.02.04.01",
+        "06-security-testing-observability.md#T-06.02.04.02",
+        "06-security-testing-observability.md#T-06.02.04.03",
+        "06-security-testing-observability.md#T-06.02.04.04",
+        "06-security-testing-observability.md#T-06.02.04.05",
+        "06-security-testing-observability.md#T-06.07.03.02",
+        "06-security-testing-observability.md#T-06.07.03.04",
+        "06-security-testing-observability.md#T-06.14.01.01",
+        "06-security-testing-observability.md#T-06.14.01.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/app.factory.ts",
+          "sha256": "8703755e44b1d0bdfc9f33e57bedc41718f89e36e99e30f120b2a8266e265574"
+        },
+        {
+          "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
+          "sha256": "5d13bd853ccb666821867bbf41a2c5873c8a0a97ab8776d8d00c2f5d706bb0cd"
+        },
+        {
+          "path": "apps/api/src/common/error-http.integration.test.ts",
+          "sha256": "f28c37a438edcca316f73ffb2e5ef1b5c4d16f7bfcefddcfe791f876f179ca00"
+        },
+        {
+          "path": "apps/api/src/common/proxy-trust.test.ts",
+          "sha256": "6f9b4abdce2bcccf29d857fbac64dd4f5a1e361a7adee7dc403f5e960df464d6"
+        },
+        {
+          "path": "apps/api/src/common/proxy-trust.ts",
+          "sha256": "45c37bb5fe7e603a9b4478b6ab904bd7e19b899447668aa0c6721fb0caad1a57"
+        },
+        {
+          "path": "deploy/pilot/nginx.conf",
+          "sha256": "f63afa980950f6ff6936737ae4080fb5dd1af90db79e57539acc58782102d14a"
+        },
+        {
+          "path": "deploy/production/compose.yml",
+          "sha256": "14b6c1865d6a6df6bb7b9e59bc37a824c1353b28e5269da54c6c69311e407e35"
+        },
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "5e2d57359df082a0e58c92af947ccf451c4dfa25727477ec67c58ea40bacf58f"
+        },
+        {
+          "path": "deploy/staging/nginx-api-proxy.conf",
+          "sha256": "ffc79d8f52d6dd3628d7b0feee4aca07a172f3f33547ff02abe9238244dd5f09"
+        },
+        {
+          "path": "deploy/staging/nginx.conf",
+          "sha256": "6be8c28e11255e44e22921cde7c0b65cd7a2800875a3d1ae152901e567dfe5e2"
+        },
+        {
+          "path": "scripts/check-pilot-proxy.mjs",
+          "sha256": "3d1d3d7004acbcae9f2013b11540545919f0377bd4c90826399115c97bbcbc58"
+        },
+        {
+          "path": "scripts/check-staging-proxy.mjs",
+          "sha256": "b6c301584b799bf501023998d2ff00a2adef99a538b11bd786ff727ad1093c9b"
+        },
+        {
+          "path": "scripts/proxy-fixture.mjs",
+          "sha256": "44b10444a8c51c2afd401002712ab72abf537e259934c128679c9e22b86795dd"
+        },
+        {
+          "path": "scripts/test-container-packaging.py",
+          "sha256": "a2d4f9ef8615da96df7795e62218ddf1a4a76eb5bd5a9a44d95d1734c8c7f7b9"
+        }
+      ],
+      "checks": [
+        "Node startup pins the existing header and request timeouts and maximum header count. JSON and form limits are explicit at 100 KiB, with the existing endpoint-specific limits preserved. Native migrated HTTP cases reject both oversized ordinary encodings before routing and preserve private parser errors. Pilot and staging templates validate header/body limits, the large permitted upload, SSE and WebSocket behavior. Existing strict raw HTTP parser controls and production Node options remain enforced.",
+        "Three compiled API proxy cases cover untrusted, trusted and invalid configuration. Both isolated NGINX profiles overwrite forged forwarded addresses. Live v0.5 staging reads back only the Docker bridge gateway as the trusted hop and binds API port 4000 to loopback.",
+        "Both NGINX profiles enforce separate auth 10/s burst 5, upload 5/s burst 3 and AI 5/s burst 2 quotas. The isolated stage exercised both languages on all three paths, including forwarded-IP forgery, localized 429 and Retry-After, security headers, preserved application cooldown and unaffected health. Live candidate rollout remains a separate receipt."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "proxy-request-limits-proof.json",
+      "source_scope_proof_sha256": "a0557bec1e4447c99f078f8888d1b3959221d5eb5b8296586f1e9ebe872e1679"
     }
   },
   "historical_improvements": [
@@ -828211,15 +828442,15 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-proxy-trust-and-request-limits",
+    "id": "release-0.6-pilot-proxy-and-cache-policy",
     "release": "0.6.0",
     "task_keys": [
-      "06-security-testing-observability.md#T-06.07.03.02",
-      "06-security-testing-observability.md#T-06.07.03.04",
-      "01-platform-infrastructure.md#T-04.04.03",
+      "01-platform-infrastructure.md#T-04.04.01",
+      "01-platform-infrastructure.md#T-04.04.04",
+      "01-platform-infrastructure.md#T-04.04.05",
       "release-readiness#R-05.02"
     ],
-    "goal": "Verify bounded request parsing, explicit proxy-hop trust and edge rate controls from existing fixtures and the current staging ingress. Keep production TLS and rollout gates separate."
+    "goal": "Reconcile pilot routing, public asset cache policy and safe ETag behavior with current NGINX, compiled output and native HTTP evidence."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",
