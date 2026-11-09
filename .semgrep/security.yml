@@ -6,8 +6,9 @@ rules:
     metadata:
       cwe: CWE-89
     mode: taint
-    pattern-sources: &request_sources
-      - patterns:
+    pattern-sources:
+      - &express_request_source
+        patterns:
           - pattern-either:
               - pattern: $REQ.query
               - pattern: $REQ.body
@@ -17,9 +18,24 @@ rules:
               metavariable: $REQ
               regex: ^(req|request)$
         exact: true
+      - patterns:
+          - pattern-inside: |
+              class $CONTROLLER {
+                ...
+                $METHOD(..., @$DECORATOR(...) $INPUT: $TYPE, ...) {
+                  ...
+                }
+                ...
+              }
+          - metavariable-regex:
+              metavariable: $DECORATOR
+              regex: ^(Body|Query|Param|Headers)$
+          - focus-metavariable: $INPUT
     pattern-sinks:
       - patterns:
-          - pattern: $DB.query($SQL, ...)
+          - pattern-either:
+              - pattern: $DB.query($SQL, ...)
+              - pattern: sql.raw($SQL)
           - focus-metavariable: $SQL
 
   - id: request-data-in-outbound-url
@@ -29,7 +45,8 @@ rules:
     metadata:
       cwe: CWE-918
     mode: taint
-    pattern-sources: *request_sources
+    pattern-sources:
+      - *express_request_source
     pattern-sinks:
       - patterns:
           - pattern-either:
@@ -50,7 +67,8 @@ rules:
     metadata:
       cwe: CWE-601
     mode: taint
-    pattern-sources: *request_sources
+    pattern-sources:
+      - *express_request_source
     pattern-sinks:
       - patterns:
           - pattern-either:

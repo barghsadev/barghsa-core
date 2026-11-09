@@ -67,8 +67,17 @@ jobs:
 
   integrity:
     name: Verify monorepo integrity
+    needs: [sast, secrets]
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
+      - name: Require successful source and secret scans
+        env:
+          SAST_RESULT: ${{ needs.sast.result }}
+          SECRET_SCAN_RESULT: ${{ needs.secrets.result }}
+        run: |
+          test "$SAST_RESULT" = success
+          test "$SECRET_SCAN_RESULT" = success
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
         with:

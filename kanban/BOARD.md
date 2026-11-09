@@ -10,12 +10,12 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 891 | Accepted with unchanged source bindings. |
-| verify | 448 | Existing work may be complete; inspect evidence before building. |
-| partial | 25 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 899 | Accepted with unchanged source bindings. |
+| verify | 438 | Existing work may be complete; inspect evidence before building. |
+| partial | 26 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
-| blocked | 1 | Named owner or external prerequisite. |
+| blocked | 2 | Named owner or external prerequisite. |
 | superseded | 3 | Explicit approved scope disposition. |
 
 The earlier audit accepted 219 tasks, found 54 partial claims and deferred 49. Changed source bindings require renewal. All original 1,355 tasks are retained. No evidence means unknown, not unbuilt.
@@ -39,21 +39,13 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify existing static analysis, dependency and secret scans, and image gates against current evidence. Build only demonstrated gaps.
+Add the missing container image scan gate for runtime images and bind scan reports to the exact built images. Continue production license scope review without changing its allowlist.
 
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
-- `01-platform-infrastructure.md#T-05.03.04`: Configure security scans in PR gate
-- `06-security-testing-observability.md#T-06.04.02.04`: Write SAST scan configuration targeting SQL injection patterns
-- `06-security-testing-observability.md#T-06.07.01.05`: Audit codebase for hardcoded secrets, .env committed, frontend-bundled secrets
-- `06-security-testing-observability.md#T-06.07.01.06`: Add CI secret scan (e.g. truffleHog, gitLeaks) to block commits with secrets
-- `06-security-testing-observability.md#T-06.07.02.01`: Configure SCA tool (e.g. Snyk, npm audit, OWASP Dependency-Check) in CI
-- `06-security-testing-observability.md#T-06.07.02.02`: Configure SAST tool (e.g. CodeQL, Semgrep) with custom rules for NestJS/Drizzle security patterns
 - `06-security-testing-observability.md#T-06.07.02.03`: Configure container vulnerability scanning (e.g. Trivy, Grype) on Docker images
-- `06-security-testing-observability.md#T-06.07.02.04`: Configure secret scanning on every PR (e.g. gitLeaks, truffleHog)
-- `06-security-testing-observability.md#T-06.07.02.08`: Create CI gate config: SCA/SAST/secret/container scans on every PR, full scan on main
 - `06-security-testing-observability.md#T-06.07.03.05`: Add container security scanning to CI (Trivy, etc.)
-- `06-security-testing-observability.md#T-06.11.02.03`: Configure Semgrep/CodeQL with security-focused rules for NestJS/Drizzle patterns
-- `06-security-testing-observability.md#T-06.11.02.04`: Add CI gate: critical/high SAST findings block merge; medium triaged within sprint
+- `06-security-testing-observability.md#T-06.07.02.08`: Create CI gate config: SCA/SAST/secret/container scans on every PR, full scan on main
+- `01-platform-infrastructure.md#T-05.03.04`: Configure security scans in PR gate
 
 ## v0.2.0: Complete customer journeys
 
@@ -1045,7 +1037,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-05.03.01` | verify | Earlier deferred | Create CI workflow definition (GitHub Actions, GitLab CI, or equivalent) |
 | `01-platform-infrastructure.md#T-05.03.02` | verify | Earlier deferred | Implement migration validation step (two environments) |
 | `01-platform-infrastructure.md#T-05.03.03` | verify | Earlier deferred | Implement OpenAPI generation and drift check |
-| `01-platform-infrastructure.md#T-05.03.04` | verify | Earlier deferred | Configure security scans in PR gate |
+| `01-platform-infrastructure.md#T-05.03.04` | blocked | Earlier deferred | Configure security scans in PR gate |
 | `01-platform-infrastructure.md#T-05.03.05` | verify | Earlier deferred | Implement coverage threshold enforcement |
 | `01-platform-infrastructure.md#T-05.04.01` | verify | Earlier deferred | Create staging gate CI workflow |
 | `01-platform-infrastructure.md#T-05.04.02` | verify | Earlier deferred | Create production promotion workflow with canary/gradual rollout |
@@ -1178,7 +1170,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.04.02.01` | verify | Inventory needed | Audit all database access for raw SQL; flag any untrusted interpolation |
 | `06-security-testing-observability.md#T-06.04.02.02` | verify | Inventory needed | Implement allowlist-based field mapping for dynamic `ORDER BY` / `WHERE` fields |
 | `06-security-testing-observability.md#T-06.04.02.03` | verify | Inventory needed | Add lint rule: forbid raw SQL interpolation of non-literal strings |
-| `06-security-testing-observability.md#T-06.04.02.04` | verify | Inventory needed | Write SAST scan configuration targeting SQL injection patterns |
+| `06-security-testing-observability.md#T-06.04.02.04` | done | Recorded batch work | Write SAST scan configuration targeting SQL injection patterns |
 | `06-security-testing-observability.md#T-06.04.03.01` | verify | Inventory needed | Implement or integrate DOM purify / allowlist HTML sanitizer for rich text content |
 | `06-security-testing-observability.md#T-06.04.03.02` | verify | Inventory needed | Audit all `dangerouslySetInnerHTML` usage; replace with sanitizer or remove |
 | `06-security-testing-observability.md#T-06.04.03.03` | verify | Inventory needed | Add lint rule: ban `eval`, `new Function`, string `setTimeout`/`setInterval`, `document.write` |
@@ -1227,16 +1219,16 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.07.01.02` | verify | Inventory needed | Ensure secrets are encrypted at rest and masked in every API response and admin UI display |
 | `06-security-testing-observability.md#T-06.07.01.03` | verify | Inventory needed | Exclude secrets from logs, analytics, error tracking, telemetry, and support exports |
 | `06-security-testing-observability.md#T-06.07.01.04` | verify | Inventory needed | Implement rotation support: overlapping active/previous key period; key versioning |
-| `06-security-testing-observability.md#T-06.07.01.05` | verify | Inventory needed | Audit codebase for hardcoded secrets, .env committed, frontend-bundled secrets |
-| `06-security-testing-observability.md#T-06.07.01.06` | verify | Inventory needed | Add CI secret scan (e.g. truffleHog, gitLeaks) to block commits with secrets |
-| `06-security-testing-observability.md#T-06.07.02.01` | verify | Inventory needed | Configure SCA tool (e.g. Snyk, npm audit, OWASP Dependency-Check) in CI |
-| `06-security-testing-observability.md#T-06.07.02.02` | verify | Inventory needed | Configure SAST tool (e.g. CodeQL, Semgrep) with custom rules for NestJS/Drizzle security patterns |
+| `06-security-testing-observability.md#T-06.07.01.05` | done | Recorded batch work | Audit codebase for hardcoded secrets, .env committed, frontend-bundled secrets |
+| `06-security-testing-observability.md#T-06.07.01.06` | done | Recorded batch work | Add CI secret scan (e.g. truffleHog, gitLeaks) to block commits with secrets |
+| `06-security-testing-observability.md#T-06.07.02.01` | done | Recorded batch work | Configure SCA tool (e.g. Snyk, npm audit, OWASP Dependency-Check) in CI |
+| `06-security-testing-observability.md#T-06.07.02.02` | done | Recorded batch work | Configure SAST tool (e.g. CodeQL, Semgrep) with custom rules for NestJS/Drizzle security patterns |
 | `06-security-testing-observability.md#T-06.07.02.03` | verify | Inventory needed | Configure container vulnerability scanning (e.g. Trivy, Grype) on Docker images |
-| `06-security-testing-observability.md#T-06.07.02.04` | verify | Inventory needed | Configure secret scanning on every PR (e.g. gitLeaks, truffleHog) |
+| `06-security-testing-observability.md#T-06.07.02.04` | done | Recorded batch work | Configure secret scanning on every PR (e.g. gitLeaks, truffleHog) |
 | `06-security-testing-observability.md#T-06.07.02.05` | verify | Inventory needed | Define triage policy: critical/high with credible production path → block release |
 | `06-security-testing-observability.md#T-06.07.02.06` | verify | Inventory needed | Set up license compliance check (e.g. license-checker) for dependency licenses |
 | `06-security-testing-observability.md#T-06.07.02.07` | verify | Inventory needed | Generate SBOM (Software Bill of Materials) for each production build |
-| `06-security-testing-observability.md#T-06.07.02.08` | verify | Inventory needed | Create CI gate config: SCA/SAST/secret/container scans on every PR, full scan on main |
+| `06-security-testing-observability.md#T-06.07.02.08` | partial | Recorded batch work | Create CI gate config: SCA/SAST/secret/container scans on every PR, full scan on main |
 | `06-security-testing-observability.md#T-06.07.03.01` | verify | Inventory needed | Harden Dockerfile: non-root user, read-only rootfs where practical, no inspector, `NODE_OPTIONS=--no-deprecation` |
 | `06-security-testing-observability.md#T-06.07.03.02` | verify | Inventory needed | Disable `insecureHTTPParser`; set explicit request/body/header/time limits at proxy and application level |
 | `06-security-testing-observability.md#T-06.07.03.03` | verify | Inventory needed | Configure TLS at reverse proxy: modern protocols (TLS 1.2+), secure ciphers, HSTS |
@@ -1319,8 +1311,8 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.11.01.04` | verify | Inventory needed | Document manual testing checklist for screen readers (NVDA/JAWS, VoiceOver) and keyboard-only |
 | `06-security-testing-observability.md#T-06.11.02.01` | verify | Inventory needed | Integrate OWASP ZAP for authenticated API scanning in staging environment |
 | `06-security-testing-observability.md#T-06.11.02.02` | verify | Inventory needed | Write targeted security test scenarios: CSRF, CORS misconfiguration, BOLA/IDOR, rate limit bypass, upload abuse, open redirect, SSRF, webhook replay, session rotation corner cases |
-| `06-security-testing-observability.md#T-06.11.02.03` | verify | Inventory needed | Configure Semgrep/CodeQL with security-focused rules for NestJS/Drizzle patterns |
-| `06-security-testing-observability.md#T-06.11.02.04` | verify | Inventory needed | Add CI gate: critical/high SAST findings block merge; medium triaged within sprint |
+| `06-security-testing-observability.md#T-06.11.02.03` | done | Recorded batch work | Configure Semgrep/CodeQL with security-focused rules for NestJS/Drizzle patterns |
+| `06-security-testing-observability.md#T-06.11.02.04` | done | Recorded batch work | Add CI gate: critical/high SAST findings block merge; medium triaged within sprint |
 | `06-security-testing-observability.md#T-06.11.03.01` | verify | Inventory needed | Establish query and route latency budgets (p50/p95/p99) before load testing |
 | `06-security-testing-observability.md#T-06.11.03.02` | verify | Inventory needed | Write performance test scenarios: electricity price preview, order submission, wallet payment, invoice lists, CRM search, file upload auth, notification fan-out |
 | `06-security-testing-observability.md#T-06.11.03.03` | verify | Inventory needed | Run load test with realistic Persian/English payloads and production-like indexes |

@@ -1,4 +1,6 @@
 import DOMPurify from 'dompurify';
+import { Param } from '@nestjs/common';
+import { sql } from 'drizzle-orm';
 
 function sqlExamples(req, db) {
   const query = `SELECT * FROM users WHERE name = '${req.query.name}'`;
@@ -9,6 +11,25 @@ function sqlExamples(req, db) {
   const row = db.query('SELECT name FROM users');
   // ok: request-data-in-sql
   db.query(row.name);
+  // ruleid: request-data-in-sql
+  db.execute(sql.raw(query));
+  // ok: request-data-in-sql
+  db.execute(sql`SELECT * FROM users WHERE name = ${req.query.name}`);
+  // ok: request-data-in-sql
+  db.execute(sql.raw('SELECT 1'));
+}
+
+class NestSqlExamples {
+  select(@Param('name') name: string) {
+    const statement = `SELECT * FROM users WHERE name = '${name}'`;
+    // ruleid: request-data-in-sql
+    return sql.raw(statement);
+  }
+
+  selectBound(@Param('name') name: string) {
+    // ok: request-data-in-sql
+    return sql`SELECT * FROM users WHERE name = ${name}`;
+  }
 }
 
 function outboundExamples(req, https) {

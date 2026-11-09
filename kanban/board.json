@@ -11085,11 +11085,12 @@
         "story": "01-platform-infrastructure.md#spec-86d8c16eda1f"
       },
       "requirement": "- **T-05.03.04:** Configure security scans in PR gate\n  - **Notes:** Secret scan: `trufflehog` or `gitleaks` — scan entire repo for secrets/keys. Dependency/SCA: `pnpm audit` or `snyk` (or `npm audit` for root). SAST: `semgrep` or `codeql` — custom rules for SQL injection, XSS, SSRF, hardcoded credentials, open redirects. License: `license-checker` or `fossa` — enforce allowlist (MIT, Apache-2.0, ISC, BSD-2/3). Security findings: block PR on Critical/High with credible production path; accepted risk requires owner, justification, compensating control, expiry.\n  - **Dependencies:** T-05.03.01\n  - **Complexity:** L",
-      "status": "verify",
+      "status": "blocked",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Select and document package-specific dispositions for Vazirmatn/Inter, Sharp libvips, MaxMind GeoLite2, nodemailer, tslib, isexe 3.x and argparse. Review the exact shipped Linux packages and required notices; resolve approved disjunctive terms such as DOMPurify via Apache-2.0.",
+        "Implement and run the allowlist gate against the actual production images and frontend after the package dispositions. Existing SCA, SAST and secret gates passed related checks."
       ],
       "owner": null,
       "depends_on": [],
@@ -11119,9 +11120,12 @@
         "changed_paths": [
           "audit/skipped-work-handoff.md"
         ],
-        "batches": [],
+        "batches": [
+          "release-0.6-required-source-and-secret-gates"
+        ],
         "current_acceptance": null
-      }
+      },
+      "blocker": "The required MIT/Apache-2.0/ISC/BSD-2/3 allowlist excludes packages proven present in the deployed v0.5 app/worker image and built web frontend. Owner direction requested for package-specific license review or replacement; no exception has been accepted."
     },
     {
       "key": "01-platform-infrastructure.md#T-05.03.05",
@@ -437854,7 +437858,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-route-census-closure",
           "release-0.5-direct-push-preflight",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-required-source-and-secret-gates"
         ],
         "current_acceptance": {
           "status": "done",
@@ -437862,7 +437867,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "264a03c7d3c086c309c70992b30367b67ff4effabe0948ec1801ba5bd4644238"
+              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -438062,7 +438067,8 @@
             "Bindings renewed by release-0.5-protected-staff-browser-closure: one validated OTP toast and bounded geography dialog. 32 distinct native cases and 61 related unit tests passed, retaining current staff confirmation, authority, focus and exact response assertions.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/provider-preflight-classification",
@@ -438239,7 +438245,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-action-contrast",
           "release-0.5-direct-push-preflight",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-required-source-and-secret-gates"
         ],
         "current_acceptance": {
           "status": "done",
@@ -438247,7 +438254,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "264a03c7d3c086c309c70992b30367b67ff4effabe0948ec1801ba5bd4644238"
+              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -438530,7 +438537,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/provider-operations-current-acceptance",
@@ -438778,7 +438786,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-route-census-closure",
           "release-0.5-direct-push-preflight",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-required-source-and-secret-gates"
         ],
         "current_acceptance": {
           "status": "done",
@@ -438786,7 +438795,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "264a03c7d3c086c309c70992b30367b67ff4effabe0948ec1801ba5bd4644238"
+              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -438959,7 +438968,8 @@
             "Bindings renewed by release-0.5-protected-staff-browser-closure: one validated OTP toast and bounded geography dialog. 32 distinct native cases and 61 related unit tests passed, retaining current staff confirmation, authority, focus and exact response assertions.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/provider-operations-current-acceptance",
@@ -439144,7 +439154,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-route-census-closure",
           "release-0.5-direct-push-preflight",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-required-source-and-secret-gates"
         ],
         "current_acceptance": {
           "status": "done",
@@ -439152,7 +439163,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "264a03c7d3c086c309c70992b30367b67ff4effabe0948ec1801ba5bd4644238"
+              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -439325,7 +439336,8 @@
             "Bindings renewed by release-0.5-protected-staff-browser-closure: one validated OTP toast and bounded geography dialog. 32 distinct native cases and 61 related unit tests passed, retaining current staff confirmation, authority, focus and exact response assertions.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/provider-operations-current-acceptance",
@@ -439510,7 +439522,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-route-census-closure",
           "release-0.5-direct-push-preflight",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-required-source-and-secret-gates"
         ],
         "current_acceptance": {
           "status": "done",
@@ -439518,7 +439531,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "264a03c7d3c086c309c70992b30367b67ff4effabe0948ec1801ba5bd4644238"
+              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -439691,7 +439704,8 @@
             "Bindings renewed by release-0.5-protected-staff-browser-closure: one validated OTP toast and bounded geography dialog. 32 distinct native cases and 61 related unit tests passed, retaining current staff confirmation, authority, focus and exact response assertions.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/provider-operations-current-acceptance",
@@ -468711,7 +468725,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-required-source-and-secret-gates"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -468719,7 +468734,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "264a03c7d3c086c309c70992b30367b67ff4effabe0948ec1801ba5bd4644238"
+              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
             },
             {
               "path": "Dockerfile.web",
@@ -468756,7 +468771,8 @@
           ],
           "checks": [
             "Nonce design and safe directives documented; both compiled shells have no inline style elements requiring a hash. Dynamic style attribute policy is explicit.",
-            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
           ]
         }
       }
@@ -468922,7 +468938,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-required-source-and-secret-gates"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -468930,7 +468947,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "264a03c7d3c086c309c70992b30367b67ff4effabe0948ec1801ba5bd4644238"
+              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
             },
             {
               "path": "Dockerfile.web",
@@ -468967,7 +468984,8 @@
           ],
           "checks": [
             "Required integrity workflow checks actual built web HTML and security headers. Exact local built-shell smoke passed.",
-            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
           ]
         }
       }
@@ -469204,7 +469222,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Required CI now checks built web security headers and staging TLS proxy behavior. Verify the hosted check and the separate production ingress TLS/HSTS gate."
+        "Exact required hosted integrity run 42615851185 passed built web security header and staging TLS proxy checks. Verify the production-ingress TLS/HSTS gate after the selected topology is available."
       ],
       "owner": null,
       "depends_on": [],
@@ -469212,7 +469230,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-required-source-and-secret-gates"
         ],
         "current_acceptance": null
       }
@@ -470205,19 +470224,48 @@
         "story": "06-security-testing-observability.md#spec-2bcfd5883d56"
       },
       "requirement": "| T-06.04.02.04 | Write SAST scan configuration targeting SQL injection patterns | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-required-source-and-secret-gates"
+        ],
+        "current_acceptance": {
+          "kind": "exact_security_scanners_and_fail_closed_status_gate",
+          "reviewed_sha": "5d23662c6a55798fb206b839cfa79b827763cca3",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+            },
+            {
+              "path": ".semgrep/security.tsx",
+              "sha256": "ecca0563d48aa97f1c83ef062c8255857d484de29178ae37b464be6eb8539587"
+            },
+            {
+              "path": ".semgrep/security.yml",
+              "sha256": "af9b672e13e3aefb76bb878b4b7eb4a528197856b82fd009907a77862370167c"
+            },
+            {
+              "path": "scripts/check-sast.py",
+              "sha256": "908882d6c0753db25cf839c17ec3dc8d619d2f39e2ccabb35e4dd24f5f4f9361"
+            },
+            {
+              "path": "scripts/test_check_sast.py",
+              "sha256": "d1677e994a2e46763efdeac4f414a6b2c91def515283e88ed8e285af76529d57"
+            }
+          ],
+          "checks": [
+            "SQL injection fixtures reject Express and Nest-controlled text in direct driver SQL or Drizzle sql.raw, and accept parameterized driver and Drizzle templates.",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+          ]
+        }
       }
     },
     {
@@ -471479,19 +471527,64 @@
         "story": "06-security-testing-observability.md#spec-71227c352238"
       },
       "requirement": "| T-06.07.01.05 | Audit codebase for hardcoded secrets, .env committed, frontend-bundled secrets | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-required-source-and-secret-gates"
+        ],
+        "current_acceptance": {
+          "kind": "exact_security_scanners_and_fail_closed_status_gate",
+          "reviewed_sha": "5d23662c6a55798fb206b839cfa79b827763cca3",
+          "source_evidence": [
+            {
+              "path": ".env.example",
+              "sha256": "596f78ae3d2a24f7834fcbb46e315011011ccc47b087e25b58e14933e9e0b239"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+            },
+            {
+              "path": ".gitignore",
+              "sha256": "6c8ed51041f1a44643c8242c418730dadeb60a95814f8818813e45e6f523f0ac"
+            },
+            {
+              "path": ".gitleaksignore",
+              "sha256": "ab2ed1d286fec78d38cf86535014aadef1ef24b18cba981bc7eb0d5f0411ecba"
+            },
+            {
+              "path": "apps/web/build.mjs",
+              "sha256": "20432f55d9d3090f592a28e79064d99f0066108a3cda87aeebf023583d55c35f"
+            },
+            {
+              "path": "docs/security/supply-chain.md",
+              "sha256": "5e0e55d7d02e7d7cb0caa2bf26f4bee3fed7875bf84960b849e95fb416ba9119"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "aab5a31e236ab70a7c588c676e3a0a2cf0bb8250e8d96ecdc469c9be175dcfa2"
+            },
+            {
+              "path": "scripts/check-secrets.py",
+              "sha256": "48f9666ec7e7e97a97d79efd05886d7df1a0e2f8c793dcd998a27eef337ca4aa"
+            },
+            {
+              "path": "scripts/test_check_secrets.py",
+              "sha256": "340475480e6455a18f7731f34b2e298e37f2259dbc97234353a0f9ad931a16fe"
+            }
+          ],
+          "checks": [
+            "Audited complete Git history, tracked environment paths and exact built frontend separately. No committed or bundled credentials detected.",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+          ]
+        }
       }
     },
     {
@@ -471505,19 +471598,52 @@
         "story": "06-security-testing-observability.md#spec-71227c352238"
       },
       "requirement": "| T-06.07.01.06 | Add CI secret scan (e.g. truffleHog, gitLeaks) to block commits with secrets | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null,
+        "batches": [
+          "release-0.6-required-source-and-secret-gates"
+        ],
+        "current_acceptance": {
+          "kind": "exact_security_scanners_and_fail_closed_status_gate",
+          "reviewed_sha": "5d23662c6a55798fb206b839cfa79b827763cca3",
+          "source_evidence": [
+            {
+              "path": ".env.example",
+              "sha256": "596f78ae3d2a24f7834fcbb46e315011011ccc47b087e25b58e14933e9e0b239"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+            },
+            {
+              "path": ".gitignore",
+              "sha256": "6c8ed51041f1a44643c8242c418730dadeb60a95814f8818813e45e6f523f0ac"
+            },
+            {
+              "path": ".gitleaksignore",
+              "sha256": "ab2ed1d286fec78d38cf86535014aadef1ef24b18cba981bc7eb0d5f0411ecba"
+            },
+            {
+              "path": "scripts/check-secrets.py",
+              "sha256": "48f9666ec7e7e97a97d79efd05886d7df1a0e2f8c793dcd998a27eef337ca4aa"
+            },
+            {
+              "path": "scripts/test_check_secrets.py",
+              "sha256": "340475480e6455a18f7731f34b2e298e37f2259dbc97234353a0f9ad931a16fe"
+            }
+          ],
+          "checks": [
+            "Required GitHub check now depends on full-history redacted secret scan and fails on any non-success. Actual base secret receipt and negative status matrix verified.",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+          ]
+        },
         "ci_checkpoint": {
           "reviewed_sha": "dd3abb2400f5ca2804384f33e9f2bc9c2be3c6f4",
           "run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/37452402620",
@@ -471598,19 +471724,36 @@
         "story": "06-security-testing-observability.md#spec-78eef3232c99"
       },
       "requirement": "| T-06.07.02.01 | Configure SCA tool (e.g. Snyk, npm audit, OWASP Dependency-Check) in CI | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null,
+        "batches": [
+          "release-0.6-required-source-and-secret-gates"
+        ],
+        "current_acceptance": {
+          "kind": "exact_security_scanners_and_fail_closed_status_gate",
+          "reviewed_sha": "5d23662c6a55798fb206b839cfa79b827763cca3",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "aab5a31e236ab70a7c588c676e3a0a2cf0bb8250e8d96ecdc469c9be175dcfa2"
+            }
+          ],
+          "checks": [
+            "CI always runs a frozen-lockfile dependency audit and fails invalid reports or high/critical advisories. Hosted zero high/critical readback; moderate and low counts retained.",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+          ]
+        },
         "ci_checkpoint": {
           "reviewed_sha": "dd3abb2400f5ca2804384f33e9f2bc9c2be3c6f4",
           "run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/37452402620",
@@ -471679,19 +471822,48 @@
         "story": "06-security-testing-observability.md#spec-78eef3232c99"
       },
       "requirement": "| T-06.07.02.02 | Configure SAST tool (e.g. CodeQL, Semgrep) with custom rules for NestJS/Drizzle security patterns | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-required-source-and-secret-gates"
+        ],
+        "current_acceptance": {
+          "kind": "exact_security_scanners_and_fail_closed_status_gate",
+          "reviewed_sha": "5d23662c6a55798fb206b839cfa79b827763cca3",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+            },
+            {
+              "path": ".semgrep/security.tsx",
+              "sha256": "ecca0563d48aa97f1c83ef062c8255857d484de29178ae37b464be6eb8539587"
+            },
+            {
+              "path": ".semgrep/security.yml",
+              "sha256": "af9b672e13e3aefb76bb878b4b7eb4a528197856b82fd009907a77862370167c"
+            },
+            {
+              "path": "scripts/check-sast.py",
+              "sha256": "908882d6c0753db25cf839c17ec3dc8d619d2f39e2ccabb35e4dd24f5f4f9361"
+            },
+            {
+              "path": "scripts/test_check_sast.py",
+              "sha256": "d1677e994a2e46763efdeac4f414a6b2c91def515283e88ed8e285af76529d57"
+            }
+          ],
+          "checks": [
+            "Pinned Semgrep CI uses tested Nest/Drizzle rules and checks application, worker and shared source; exact strict run passed.",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+          ]
+        }
       }
     },
     {
@@ -471731,19 +471903,52 @@
         "story": "06-security-testing-observability.md#spec-78eef3232c99"
       },
       "requirement": "| T-06.07.02.04 | Configure secret scanning on every PR (e.g. gitLeaks, truffleHog) | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null,
+        "batches": [
+          "release-0.6-required-source-and-secret-gates"
+        ],
+        "current_acceptance": {
+          "kind": "exact_security_scanners_and_fail_closed_status_gate",
+          "reviewed_sha": "5d23662c6a55798fb206b839cfa79b827763cca3",
+          "source_evidence": [
+            {
+              "path": ".env.example",
+              "sha256": "596f78ae3d2a24f7834fcbb46e315011011ccc47b087e25b58e14933e9e0b239"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+            },
+            {
+              "path": ".gitignore",
+              "sha256": "6c8ed51041f1a44643c8242c418730dadeb60a95814f8818813e45e6f523f0ac"
+            },
+            {
+              "path": ".gitleaksignore",
+              "sha256": "ab2ed1d286fec78d38cf86535014aadef1ef24b18cba981bc7eb0d5f0411ecba"
+            },
+            {
+              "path": "scripts/check-secrets.py",
+              "sha256": "48f9666ec7e7e97a97d79efd05886d7df1a0e2f8c793dcd998a27eef337ca4aa"
+            },
+            {
+              "path": "scripts/test_check_secrets.py",
+              "sha256": "340475480e6455a18f7731f34b2e298e37f2259dbc97234353a0f9ad931a16fe"
+            }
+          ],
+          "checks": [
+            "PR, main and preflight all run Gitleaks with complete history and verified redaction. Required check rejects missing/failed scan outcomes.",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+          ]
+        },
         "current_scan_checkpoint": {
           "reviewed_sha": "9362a74fae15f69af4f4f8713f78bbcd110fe363",
           "source_evidence": [
@@ -471891,18 +472096,20 @@
         "story": "06-security-testing-observability.md#spec-78eef3232c99"
       },
       "requirement": "| T-06.07.02.08 | Create CI gate config: SCA/SAST/secret/container scans on every PR, full scan on main | M |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Add and verify runtime image scans for PR/main and exact release image digests. Required SCA/SAST/secret admission and hosted results are already recorded."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-required-source-and-secret-gates"
+        ],
         "current_acceptance": null,
         "current_dependency_checkpoint": {
           "reviewed_sha": "ba890a55b9f1ef6fcc9be6a9cafeb13ed7d120b6",
@@ -474093,19 +474300,48 @@
         "story": "06-security-testing-observability.md#spec-09a11474dca9"
       },
       "requirement": "| T-06.11.02.03 | Configure Semgrep/CodeQL with security-focused rules for NestJS/Drizzle patterns | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-required-source-and-secret-gates"
+        ],
+        "current_acceptance": {
+          "kind": "exact_security_scanners_and_fail_closed_status_gate",
+          "reviewed_sha": "5d23662c6a55798fb206b839cfa79b827763cca3",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+            },
+            {
+              "path": ".semgrep/security.tsx",
+              "sha256": "ecca0563d48aa97f1c83ef062c8255857d484de29178ae37b464be6eb8539587"
+            },
+            {
+              "path": ".semgrep/security.yml",
+              "sha256": "af9b672e13e3aefb76bb878b4b7eb4a528197856b82fd009907a77862370167c"
+            },
+            {
+              "path": "scripts/check-sast.py",
+              "sha256": "908882d6c0753db25cf839c17ec3dc8d619d2f39e2ccabb35e4dd24f5f4f9361"
+            },
+            {
+              "path": "scripts/test_check_sast.py",
+              "sha256": "d1677e994a2e46763efdeac4f414a6b2c91def515283e88ed8e285af76529d57"
+            }
+          ],
+          "checks": [
+            "Local rule fixtures prove Nest and Drizzle flows along with SQL/XSS/SSRF/open redirect and literal credentials; exact application scan passed.",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+          ]
+        }
       }
     },
     {
@@ -474119,19 +474355,52 @@
         "story": "06-security-testing-observability.md#spec-09a11474dca9"
       },
       "requirement": "| T-06.11.02.04 | Add CI gate: critical/high SAST findings block merge; medium triaged within sprint | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-required-source-and-secret-gates"
+        ],
+        "current_acceptance": {
+          "kind": "exact_security_scanners_and_fail_closed_status_gate",
+          "reviewed_sha": "5d23662c6a55798fb206b839cfa79b827763cca3",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+            },
+            {
+              "path": ".semgrep/security.tsx",
+              "sha256": "ecca0563d48aa97f1c83ef062c8255857d484de29178ae37b464be6eb8539587"
+            },
+            {
+              "path": ".semgrep/security.yml",
+              "sha256": "af9b672e13e3aefb76bb878b4b7eb4a528197856b82fd009907a77862370167c"
+            },
+            {
+              "path": "docs/security/supply-chain.md",
+              "sha256": "5e0e55d7d02e7d7cb0caa2bf26f4bee3fed7875bf84960b849e95fb416ba9119"
+            },
+            {
+              "path": "scripts/check-sast.py",
+              "sha256": "908882d6c0753db25cf839c17ec3dc8d619d2f39e2ccabb35e4dd24f5f4f9361"
+            },
+            {
+              "path": "scripts/test_check_sast.py",
+              "sha256": "d1677e994a2e46763efdeac4f414a6b2c91def515283e88ed8e285af76529d57"
+            }
+          ],
+          "checks": [
+            "Existing required ruleset check now fails closed on the SAST outcome; medium triage and credible high/critical remediation are documented.",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+          ]
+        }
       }
     },
     {
@@ -477804,7 +478073,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-component-direction-matrix"
+          "release-0.5-component-direction-matrix",
+          "release-0.6-required-source-and-secret-gates"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -477816,7 +478086,7 @@
             },
             {
               "path": ".semgrep/security.yml",
-              "sha256": "b8460ffc18b3d7b2e07607f10ce5a685b8fc968fd26d9939a7110a05374403ad"
+              "sha256": "af9b672e13e3aefb76bb878b4b7eb4a528197856b82fd009907a77862370167c"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -478332,7 +478602,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-journey-evidence: narrow calendar sizing only; 58 native calendar/localization cases, 12 coarse-input measurements, the original bundle budgets and exact financial/date values are preserved.",
-            "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained."
+            "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ui-foundation-current-acceptance",
@@ -480490,7 +480761,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-component-direction-matrix"
+          "release-0.5-component-direction-matrix",
+          "release-0.6-required-source-and-secret-gates"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -480502,7 +480774,7 @@
             },
             {
               "path": ".semgrep/security.yml",
-              "sha256": "b8460ffc18b3d7b2e07607f10ce5a685b8fc968fd26d9939a7110a05374403ad"
+              "sha256": "af9b672e13e3aefb76bb878b4b7eb4a528197856b82fd009907a77862370167c"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -481018,7 +481290,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-journey-evidence: narrow calendar sizing only; 58 native calendar/localization cases, 12 coarse-input measurements, the original bundle budgets and exact financial/date values are preserved.",
-            "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained."
+            "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ui-foundation-current-acceptance",
@@ -482103,7 +482376,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-component-direction-matrix"
+          "release-0.5-component-direction-matrix",
+          "release-0.6-required-source-and-secret-gates"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -482115,7 +482389,7 @@
             },
             {
               "path": ".semgrep/security.yml",
-              "sha256": "b8460ffc18b3d7b2e07607f10ce5a685b8fc968fd26d9939a7110a05374403ad"
+              "sha256": "af9b672e13e3aefb76bb878b4b7eb4a528197856b82fd009907a77862370167c"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -482631,7 +482905,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-journey-evidence: narrow calendar sizing only; 58 native calendar/localization cases, 12 coarse-input measurements, the original bundle budgets and exact financial/date values are preserved.",
-            "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained."
+            "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ui-foundation-current-acceptance",
@@ -494338,7 +494613,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-required-source-and-secret-gates"
         ],
         "current_acceptance": {
           "kind": "source-bound-query-provider-and-devtools",
@@ -494846,7 +495122,7 @@
             },
             {
               "path": ".semgrep/security.yml",
-              "sha256": "b8460ffc18b3d7b2e07607f10ce5a685b8fc968fd26d9939a7110a05374403ad"
+              "sha256": "af9b672e13e3aefb76bb878b4b7eb4a528197856b82fd009907a77862370167c"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -495011,7 +495287,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json"
+            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
           ],
           "limitations": [
             "No query-key/read/mutation page adoption, all-page cancellation, complete milestone, live providers, deployment or production acceptance is certified."
@@ -499200,7 +499477,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-required-source-and-secret-gates"
         ],
         "current_acceptance": {
           "kind": "source-bound-query-provider-and-devtools",
@@ -499708,7 +499986,7 @@
             },
             {
               "path": ".semgrep/security.yml",
-              "sha256": "b8460ffc18b3d7b2e07607f10ce5a685b8fc968fd26d9939a7110a05374403ad"
+              "sha256": "af9b672e13e3aefb76bb878b4b7eb4a528197856b82fd009907a77862370167c"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -499873,7 +500151,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json"
+            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
           ],
           "limitations": [
             "No query-key/read/mutation page adoption, all-page cancellation, complete milestone, live providers, deployment or production acceptance is certified."
@@ -522090,7 +522369,8 @@
           "release-0.5-geography-retry-feedback",
           "release-0.5-consultation-offer-layout",
           "release-0.5-direct-push-preflight",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-required-source-and-secret-gates"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -522098,7 +522378,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "264a03c7d3c086c309c70992b30367b67ff4effabe0948ec1801ba5bd4644238"
+              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
             },
             {
               "path": ".size-limit.json",
@@ -522593,7 +522873,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -522921,7 +523202,8 @@
           "release-0.5-geography-retry-feedback",
           "release-0.5-consultation-offer-layout",
           "release-0.5-direct-push-preflight",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-required-source-and-secret-gates"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -522929,7 +523211,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "264a03c7d3c086c309c70992b30367b67ff4effabe0948ec1801ba5bd4644238"
+              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
             },
             {
               "path": ".size-limit.json",
@@ -523424,7 +523706,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -524259,7 +524542,8 @@
           "release-0.5-geography-retry-feedback",
           "release-0.5-consultation-offer-layout",
           "release-0.5-direct-push-preflight",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-required-source-and-secret-gates"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -524267,7 +524551,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "264a03c7d3c086c309c70992b30367b67ff4effabe0948ec1801ba5bd4644238"
+              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
             },
             {
               "path": ".size-limit.json",
@@ -524762,7 +525046,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -525053,7 +525338,8 @@
           "release-0.5-dashboard-profile-conflict",
           "release-0.5-required-check-activation",
           "release-0.5-direct-push-preflight",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-required-source-and-secret-gates"
         ],
         "current_acceptance": {
           "kind": "active_github_required_check",
@@ -525061,12 +525347,13 @@
           "checks": [
             "GitHub returned active repository ruleset 26844024 for the default branch and the effective required check on main is Verify monorepo integrity from GitHub Actions integration 15368.",
             "GitHub Actions job 129001187379 passed on the inspected main SHA. Its critical accessibility, non-critical advisory and advisory artifact steps all succeeded.",
-            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
           ],
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "264a03c7d3c086c309c70992b30367b67ff4effabe0948ec1801ba5bd4644238"
+              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -724086,7 +724373,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "264a03c7d3c086c309c70992b30367b67ff4effabe0948ec1801ba5bd4644238"
+              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
             },
             {
               "path": "apps/api/openapi.json",
@@ -727186,7 +727473,8 @@
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
-            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
           ],
           "limitations": [],
           "operational_limits": [
@@ -727943,7 +728231,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.5-direct-push-preflight",
           "release-0.5-protected-publication",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-required-source-and-secret-gates"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -727996,7 +728285,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "264a03c7d3c086c309c70992b30367b67ff4effabe0948ec1801ba5bd4644238"
+              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
             },
             {
               "path": "apps/api/openapi.json",
@@ -731073,7 +731362,8 @@
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
-            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
           ],
           "limitations": [
             "Current staging is v0.3.0/2ac708c11225a1239156787cddfdd3ab094fb8f8, API/web/worker healthy and Redis/object storage readiness verified. After effective v0.4.0 criteria are accepted, deploy its immutable candidate and verify actual AI routing, slot isolation and notification/storage operations. Earlier v0.1.29/forced-TLS warning description is stale and does not dispatch a rebuild.",
@@ -731720,7 +732010,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.5-direct-push-preflight",
           "release-0.5-protected-publication",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-required-source-and-secret-gates"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -733459,7 +733750,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "264a03c7d3c086c309c70992b30367b67ff4effabe0948ec1801ba5bd4644238"
+              "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
             },
             {
               "path": ".size-limit.json",
@@ -735413,7 +735704,8 @@
             "Reminder step-up keyboard and 44px control checks, affected route cases and all 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-original-ui-closure/proof.json",
             "Wallet verification UI and unchanged read/confirmation paths rechecked on current source. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-verification-controls/proof.json",
             "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
-            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -735514,7 +735806,8 @@
           "release-0.5-wallet-verification-controls",
           "release-0.5-direct-push-preflight",
           "release-0.6-browser-origin-security",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-required-source-and-secret-gates"
         ]
       }
     },
@@ -735620,7 +735913,8 @@
         "current_acceptance": null,
         "batches": [
           "release-0.6-browser-origin-security",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-required-source-and-secret-gates"
         ]
       }
     },
@@ -821157,6 +821451,104 @@
       "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
       "source_scope_proof_sha256": "c14788a7fb6a65b7c78f673d51e85b801e9020fe04cc53412e673b938f87182b",
       "release_disposition": "Response policy source verified. Production HSTS, report review and actual enforcement remain open."
+    },
+    "release-0.6-required-source-and-secret-gates": {
+      "batch": "release-0.6-required-source-and-secret-gates",
+      "base_commit": "5d23662c6a55798fb206b839cfa79b827763cca3",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.03.05",
+        "06-security-testing-observability.md#T-06.04.02.04",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.01",
+        "06-security-testing-observability.md#T-06.07.02.02",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.07.02.08",
+        "06-security-testing-observability.md#T-06.11.02.03",
+        "06-security-testing-observability.md#T-06.11.02.04",
+        "07-ui-ux-design.md#T-07.01.01.01",
+        "07-ui-ux-design.md#T-07.01.01.04",
+        "07-ui-ux-design.md#T-07.01.01.06",
+        "07-ui-ux-design.md#T-07.01.04.01",
+        "07-ui-ux-design.md#T-07.01.04.06",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".env.example",
+          "sha256": "596f78ae3d2a24f7834fcbb46e315011011ccc47b087e25b58e14933e9e0b239"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "fd779196f6d67a07453144e6a55b628c51662e8811e5755843f7b9b3a0314623"
+        },
+        {
+          "path": ".gitignore",
+          "sha256": "6c8ed51041f1a44643c8242c418730dadeb60a95814f8818813e45e6f523f0ac"
+        },
+        {
+          "path": ".gitleaksignore",
+          "sha256": "ab2ed1d286fec78d38cf86535014aadef1ef24b18cba981bc7eb0d5f0411ecba"
+        },
+        {
+          "path": ".semgrep/security.tsx",
+          "sha256": "ecca0563d48aa97f1c83ef062c8255857d484de29178ae37b464be6eb8539587"
+        },
+        {
+          "path": ".semgrep/security.yml",
+          "sha256": "af9b672e13e3aefb76bb878b4b7eb4a528197856b82fd009907a77862370167c"
+        },
+        {
+          "path": "docs/security/supply-chain.md",
+          "sha256": "5e0e55d7d02e7d7cb0caa2bf26f4bee3fed7875bf84960b849e95fb416ba9119"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "aab5a31e236ab70a7c588c676e3a0a2cf0bb8250e8d96ecdc469c9be175dcfa2"
+        },
+        {
+          "path": "scripts/check-sast.py",
+          "sha256": "908882d6c0753db25cf839c17ec3dc8d619d2f39e2ccabb35e4dd24f5f4f9361"
+        },
+        {
+          "path": "scripts/check-secrets.py",
+          "sha256": "48f9666ec7e7e97a97d79efd05886d7df1a0e2f8c793dcd998a27eef337ca4aa"
+        },
+        {
+          "path": "scripts/test_check_sast.py",
+          "sha256": "d1677e994a2e46763efdeac4f414a6b2c91def515283e88ed8e285af76529d57"
+        },
+        {
+          "path": "scripts/test_check_secrets.py",
+          "sha256": "340475480e6455a18f7731f34b2e298e37f2259dbc97234353a0f9ad931a16fe"
+        }
+      ],
+      "checks": [
+        "Semgrep 1.176.1: five rule fixtures with raw Nest/Drizzle rejects and safe binding controls, 2,090 source paths including 60 worker files, zero findings and scanner errors. The first concurrent run had two warnings; both files passed a narrow diagnostic, then the strict full scan passed with four jobs and a 15-second rule timeout. Scanner errors still fail.",
+        "Four SAST and five Gitleaks failure/redaction tests passed. The exact required check status matrix rejects failure, cancellation and skipped statuses; only success/success passes. Active Protect main ruleset requires Verify monorepo integrity from GitHub Actions.",
+        "Hosted Gitleaks full history succeeded on the base SHA and the existing checksum-verified scanner found zero in the unchanged compiled frontend. Only .env.example is tracked.",
+        "Hosted dependency audit with unchanged lockfile: 0 high, 0 critical, 20 moderate, 3 low. The required job validates report structure; lower-severity findings remain available for triage.",
+        "License inventory and exact staged image manifest readback establish existing non-allowlisted packages. No license exception is approved and image scanning is a separate remaining gate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
+      "source_scope_proof_sha256": "07c341f2cd2e2d5d31c56accf8fd9b04f61e14343d788e4dcad84046a044544f",
+      "release_disposition": "Source, secret and SCA checks verified. Image scan, licensing decision and operational gates remain open."
     }
   },
   "historical_improvements": [
@@ -821196,28 +821588,20 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-supply-chain-gates",
+    "id": "release-0.6-runtime-image-scans",
     "release": "0.6.0",
     "task_keys": [
       "release-readiness#R-05.02",
-      "01-platform-infrastructure.md#T-05.03.04",
-      "06-security-testing-observability.md#T-06.04.02.04",
-      "06-security-testing-observability.md#T-06.07.01.05",
-      "06-security-testing-observability.md#T-06.07.01.06",
-      "06-security-testing-observability.md#T-06.07.02.01",
-      "06-security-testing-observability.md#T-06.07.02.02",
       "06-security-testing-observability.md#T-06.07.02.03",
-      "06-security-testing-observability.md#T-06.07.02.04",
-      "06-security-testing-observability.md#T-06.07.02.08",
       "06-security-testing-observability.md#T-06.07.03.05",
-      "06-security-testing-observability.md#T-06.11.02.03",
-      "06-security-testing-observability.md#T-06.11.02.04"
+      "06-security-testing-observability.md#T-06.07.02.08",
+      "01-platform-infrastructure.md#T-05.03.04"
     ],
-    "goal": "Verify existing static analysis, dependency and secret scans, and image gates against current evidence. Build only demonstrated gaps."
+    "goal": "Add the missing container image scan gate for runtime images and bind scan reports to the exact built images. Continue production license scope review without changing its allowlist."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",
-    "next_update_after": "v0.6.0 supply-chain checks and production-equivalent environment availability",
+    "next_update_after": "v0.6.0 runtime-image checks, package license disposition and production-equivalent environment availability",
     "method": "v0.5.0 staging and Telegram receipts are confirmed. v0.6.0 owner policy is recorded. Local and disposable staging rehearsals do not satisfy the production-equivalent TLS, provider, off-server recovery, load or schedule gates; production access/provisioning timing is external."
   },
   "capabilities": [

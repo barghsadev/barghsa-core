@@ -11,7 +11,7 @@ import tempfile
 VERSION = "1.176.1"
 ROOT = Path(__file__).resolve().parent.parent
 TARGETS = [
-    "apps/api/src", "apps/web/src", "packages/db/src", "packages/shared/src", "packages/ui/src",
+    "apps/api/src", "apps/web/src", "apps/worker/src", "packages/db/src", "packages/shared/src", "packages/ui/src",
     "packages/i18n/src", "apps/web/server.js", "apps/api/healthcheck.js",
 ]
 
@@ -67,6 +67,7 @@ def main() -> int:
             [
                 "semgrep", "scan", "--config", ".semgrep/security.yml",
                 "--metrics=off", "--disable-version-check", "--strict", "--error",
+                "--jobs", "4", "--timeout", "15",
                 "--exclude", "*.test.ts", "--exclude", "*.spec.ts",
                 "--json", "--output", str(raw_path), *TARGETS,
             ],
