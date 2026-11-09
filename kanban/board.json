@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T11:24:27+00:00",
-  "source_commit": "dae51e34b4e54625dfe8b5d2b9747bc23e5c5b3c",
+  "updated": "2026-11-09T11:42:06+00:00",
+  "source_commit": "f9e064782a43efe5cafb78d1942d0f53e36dd6f0",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -92,23 +92,35 @@
       {
         "task_key": "01-platform-infrastructure.md#T-02.02.02",
         "question": "Preserve the38 named/composite/immutable table designs with explicit base-column exceptions, or plan compatibility migrations?",
-        "status": "awaiting_owner",
+        "status": "approved",
         "asked_once": "2026-09-13 via request_user_input_async; do not repeat.",
-        "independent_work": "Remaining V01 saved PR reviews"
+        "independent_work": "Remaining V01 saved PR reviews",
+        "approved_by": "owner",
+        "approved_at": "2026-11-09",
+        "source": "Owner instruction in this goal chat: use the recommended decisions and document the important ones.",
+        "decision": "Retain the exact 96 listed identity/lifecycle exceptions with existing audit and financial controls; verify standard and business-sensitive clocks separately."
       },
       {
         "task_key": "01-platform-infrastructure.md#T-03.01.01",
         "question": "Keep the existing tested Node24 production images and update the old Node20 requirement?",
-        "status": "awaiting_owner",
+        "status": "approved",
         "asked_once": "2026-09-18 via request_user_input_async; do not repeat.",
-        "independent_work": "Continue container/context/runtime checks and remaining feature batches."
+        "independent_work": "Continue container/context/runtime checks and remaining feature batches.",
+        "approved_by": "owner",
+        "approved_at": "2026-11-09",
+        "source": "Owner instruction in this goal chat: use the recommended decisions and document the important ones.",
+        "decision": "Retain the tested Node 24 LTS production base. Image publishing and external rollout remain separate."
       },
       {
         "task_key": "07-ui-ux-design.md#T-07.01.01.02",
         "question": "Retain tested Base UI/base-nova and update literal Radix/new-york requirement, or migrate preserving behavior?",
-        "status": "awaiting_owner",
+        "status": "approved",
         "asked_once": "2026-09-18 via request_user_input_async; do not repeat.",
-        "independent_work": "UI font/build configuration and complex widget acceptance."
+        "independent_work": "UI font/build configuration and complex widget acceptance.",
+        "approved_by": "owner",
+        "approved_at": "2026-11-09",
+        "source": "Owner instruction in this goal chat: use the recommended decisions and document the important ones.",
+        "decision": "Retain the already accepted Base UI/base-nova implementation and original accessibility criteria."
       },
       {
         "task_key": "03-core-business.md#T-03.05.03.02",
@@ -954,7 +966,7 @@
     }
   },
   "specification_sources": {
-    "kanban/epics/01-platform-infrastructure.md": "f45ed1b8915980f47c092bf68c9857f45786f0c08d0a06ecc29eb681e07c352c",
+    "kanban/epics/01-platform-infrastructure.md": "218fc5ee7b31ba3d5d2c6e0b31e9da15a5357b67318cbc11a517194471f42429",
     "kanban/epics/02-auth-users-admin.md": "7108cbf05edb9f93c9edfdf2a1db8c261d30f135af7748145c8fe2b6cbd56049",
     "kanban/epics/03-core-business.md": "3d1306e5a9443b63e23c9a2b50e646549a88b0ba8d3e7385452f43b49e42c8f8",
     "kanban/epics/04-invoices-wallet-contracts.md": "bc76f87142cad06f9d0feb3ab8d42728403a3bfa9f3f931a8636393cf1f85fb0",
@@ -2359,7 +2371,7 @@
     },
     "01-platform-infrastructure.md#spec-4bf5c971e08f": {
       "source": "kanban/epics/01-platform-infrastructure.md",
-      "context": "#### S-02.02: Core data types and schema conventions\n\n**Description:** As a developer, I want a centrally defined set of PostgreSQL column types and conventions used across all domain schemas so that UUIDv7, timestamptz, half-open dateranges, integer IRR, fixed-precision decimals, and enum fields are consistently implemented.\n\n**Acceptance Criteria:**\n- Custom Drizzle types for: UUIDv7 generation, `timestamptz` (UTC), half-open `tstzrange`, `integer` for IRR amounts, `numeric` for rates/quantities\n- UUIDv7 columns use `gen_random_uuid()` or a custom function that preserves monotonic ordering — no sequential UUID libraries\n- Timestamps stored as `timestamptz` (always UTC); business timezone metadata stored separately per record where needed\n- Half-open ranges represented as PostgreSQL `tstzrange` with `[start, end)` semantics enforced at schema level\n- IRR amounts stored as `bigint` (64-bit signed integer) — max value 9.22e18, sufficient for large IRR amounts\n- Rates/quantities stored as `numeric(20, 6)` for fixed-precision arithmetic\n- No `float4`/`float8` used in any financial, contractual, or quantity column\n- Enum-like status fields use `varchar` or custom PostgreSQL enums with explicit Drizzle `pgEnum`\n- Every table has `createdAt` (`timestamptz`, default `now()`), `updatedAt` (`timestamptz`, auto-updated via trigger), and `id` (UUIDv7, primary key default)\n\n**Tasks:**"
+      "context": "#### S-02.02: Core data types and schema conventions\n\n**Description:** As a developer, I want a centrally defined set of PostgreSQL column types and conventions used across all domain schemas so that UUIDv7, timestamptz, half-open dateranges, integer IRR, fixed-precision decimals, and enum fields are consistently implemented.\n\n**Acceptance Criteria:**\n- Custom Drizzle types for: UUIDv7 generation, `timestamptz` (UTC), half-open `tstzrange`, `integer` for IRR amounts, `numeric` for rates/quantities\n- UUIDv7 columns use `gen_random_uuid()` or a custom function that preserves monotonic ordering — no sequential UUID libraries\n- Timestamps stored as `timestamptz` (always UTC); business timezone metadata stored separately per record where needed\n- Half-open ranges represented as PostgreSQL `tstzrange` with `[start, end)` semantics enforced at schema level\n- IRR amounts stored as `bigint` (64-bit signed integer) — max value 9.22e18, sufficient for large IRR amounts\n- Rates/quantities stored as `numeric(20, 6)` for fixed-precision arithmetic\n- No `float4`/`float8` used in any financial, contractual, or quantity column\n- Enum-like status fields use `varchar` or custom PostgreSQL enums with explicit Drizzle `pgEnum`\n- Standard mutable tables use `createdAt` (`timestamptz`, default `now()`), `updatedAt` (`timestamptz`, auto-updated via trigger), and `id` (UUIDv7, primary key default). Existing named/composite keys and domain lifecycle clocks follow the explicit [base-column exceptions](../../docs/adr/001-base-column-exceptions.md).\n\n**Tasks:**"
     },
     "01-platform-infrastructure.md#spec-80eda7c7402b": {
       "source": "kanban/epics/01-platform-infrastructure.md",
@@ -2371,7 +2383,7 @@
     },
     "01-platform-infrastructure.md#spec-2b0c597de8ef": {
       "source": "kanban/epics/01-platform-infrastructure.md",
-      "context": "#### S-03.01: Dockerfiles for web, API, and worker processes\n\n**Description:** As a platform engineer, I want optimized, multi-stage Docker builds for the three process types so that images are small, secure, and reproducible.\n\n**Acceptance Criteria:**\n- `Dockerfile.web` builds the Vite SPA frontend: dev → build → deploy stage\n- `Dockerfile.api` builds the NestJS API with SWC or webpack\n- `Dockerfile.worker` uses the same build stage as API but CMD differs (`CMD [\"node\", \"dist/apps/api/main\"]` vs `CMD [\"node\", \"dist/apps/api/worker\"]`)\n- Multi-stage builds with a `dependencies` stage, `build` stage, and `production` stage\n- Production stage uses `node:20-alpine` or `node:20-slim` (minimal base image)\n- Image runs as non-root user (`node`), with read-only root filesystem where practical\n- `HEALTHCHECK` instruction in Dockerfiles\n- Node.js runs with `NODE_ENV=production`, inspector disabled, `insecureHTTPParser` not set\n- Request/body/header/timeout limits set at the application layer (NestJS `body-parser` config, etc.)\n- `.dockerignore` excludes `node_modules`, `.git`, `dist` (already built), test files, dev configs\n- Images are tagged with `:latest` and `:git-sha` for traceability\n\n**Tasks:**"
+      "context": "#### S-03.01: Dockerfiles for web, API, and worker processes\n\n**Description:** As a platform engineer, I want optimized, multi-stage Docker builds for the three process types so that images are small, secure, and reproducible.\n\n**Acceptance Criteria:**\n- `Dockerfile.web` builds the Vite SPA frontend: dev → build → deploy stage\n- `Dockerfile.api` builds the NestJS API with SWC or webpack\n- `Dockerfile.worker` uses the same build stage as API but CMD differs (`CMD [\"node\", \"dist/apps/api/main\"]` vs `CMD [\"node\", \"dist/apps/api/worker\"]`)\n- Multi-stage builds with a `dependencies` stage, `build` stage, and `production` stage\n- Production stages use the tested Node 24 LTS Bookworm slim base image.\n- Image runs as non-root user (`node`), with read-only root filesystem where practical\n- `HEALTHCHECK` instruction in Dockerfiles\n- Node.js runs with `NODE_ENV=production`, inspector disabled, `insecureHTTPParser` not set\n- Request/body/header/timeout limits set at the application layer (NestJS `body-parser` config, etc.)\n- `.dockerignore` excludes `node_modules`, `.git`, `dist` (already built), test files, dev configs\n- Images are tagged with `:latest` and `:git-sha` for traceability\n\n**Tasks:**"
     },
     "01-platform-infrastructure.md#spec-57b9aa15b310": {
       "source": "kanban/epics/01-platform-infrastructure.md",
@@ -3642,7 +3654,7 @@
       "version": "0.6.0",
       "title": "Production readiness",
       "goal": "Infrastructure, security, migration, provider configuration, backups, monitoring and recovery are proven for the selected production topology.",
-      "status": "planned",
+      "status": "in_progress",
       "depends_on": [
         "0.5.0"
       ],
@@ -5740,12 +5752,12 @@
         "line": 291,
         "story": "01-platform-infrastructure.md#spec-4bf5c971e08f"
       },
-      "requirement": "- **T-02.02.02:** Create base table factory with `id`, `createdAt`, `updatedAt` columns\n  - **Notes:** Export `createTable` function or `baseColumns` object used in every domain schema. `updatedAt` uses a PostgreSQL trigger `modify_updated_at()` for automatic updates on row modification. `createdAt` uses `defaultNow()`.\n  - **Dependencies:** T-02.02.01\n  - **Complexity:** S",
+      "requirement": "- **T-02.02.02:** Create base table factory with `id`, `createdAt`, `updatedAt` columns\n  - **Notes:** Export `createTable` or `baseColumns` for the standard mutable shape. `updatedAt` uses a PostgreSQL trigger for automatic updates on row modification. `createdAt` uses `defaultNow()`. Preserve the approved table-specific keys and lifecycle fields in the exception inventory.\n  - **Dependencies:** T-02.02.01\n  - **Complexity:** S",
       "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Literal universal base columns remain unmet:38 current schema tables omit id, created_at or updated_at. Named authentication keys, composite joins, append-only events and profile-keyed wallets require an explicit compatibility migration or approved requirement exceptions; do not rewrite identities/history or count the current factory as universal compliance."
+        "All 96 table-specific representation exceptions are approved and documented. Verify the remaining seven standard updated_at clocks without an obvious dedicated trigger and repair any demonstrated missing timestamps without changing financial, document or identity invariants."
       ],
       "owner": null,
       "depends_on": [],
@@ -5907,7 +5919,9 @@
           "packages/db/src/migrate.snapshot.test.ts",
           "packages/db/src/migrate.ts"
         ],
-        "batches": [],
+        "batches": [
+          "release-0.6-owner-policy-reconciliation"
+        ],
         "current_acceptance": null
       }
     },
@@ -7346,7 +7360,6 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Owner decision pending: existing tested Node24 images conflict with the literal Node20 story requirement. Do not silently waive it or downgrade the working toolchain.",
         "Published latest/immutable revision tags, registry delivery and production rollout remain assigned to R06/V01 deployment review. Local test tags are not release traceability proof."
       ],
       "owner": null,
@@ -7407,7 +7420,9 @@
           "Dockerfile.web",
           "docker-compose.prod.yml"
         ],
-        "batches": [],
+        "batches": [
+          "release-0.6-owner-policy-reconciliation"
+        ],
         "current_acceptance": null
       }
     },
@@ -7426,7 +7441,6 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Owner decision pending: existing tested Node24 images conflict with the literal Node20 story requirement. Do not silently waive it or downgrade the working toolchain.",
         "Published latest/immutable revision tags, registry delivery and production rollout remain assigned to R06/V01 deployment review. Local test tags are not release traceability proof."
       ],
       "owner": null,
@@ -7487,7 +7501,9 @@
           "Dockerfile.web",
           "docker-compose.prod.yml"
         ],
-        "batches": [],
+        "batches": [
+          "release-0.6-owner-policy-reconciliation"
+        ],
         "current_acceptance": null
       }
     },
@@ -477512,7 +477528,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-component-direction-matrix"
+          "release-0.5-component-direction-matrix",
+          "release-0.6-owner-policy-reconciliation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -517135,7 +517152,8 @@
           "release-0.5-preference-write-recovery",
           "release-0.5-electricity-staff-acknowledgement",
           "release-0.5-solar-postal-required",
-          "release-0.5-conditional-form-closure"
+          "release-0.5-conditional-form-closure",
+          "release-0.6-owner-policy-reconciliation"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -518447,7 +518465,7 @@
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
-              "sha256": "638497e6ddc6315e845ed34dd1facbd24fc0032d98f0d77a1b34a0c0270546e0"
+              "sha256": "13584fee3866a623b761340eaf9afda339eff0544fdc7cb4518b669e3244f1b7"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -518653,7 +518671,8 @@
           "release-0.5-component-direction-matrix",
           "release-0.5-action-contrast",
           "release-0.5-required-input-semantics",
-          "release-0.5-conditional-heading-acceptance"
+          "release-0.5-conditional-heading-acceptance",
+          "release-0.6-owner-policy-reconciliation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -518873,7 +518892,7 @@
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
-              "sha256": "638497e6ddc6315e845ed34dd1facbd24fc0032d98f0d77a1b34a0c0270546e0"
+              "sha256": "13584fee3866a623b761340eaf9afda339eff0544fdc7cb4518b669e3244f1b7"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -520097,7 +520116,8 @@
           "release-0.5-component-direction-matrix",
           "release-0.5-action-contrast",
           "release-0.5-required-input-semantics",
-          "release-0.5-conditional-heading-acceptance"
+          "release-0.5-conditional-heading-acceptance",
+          "release-0.6-owner-policy-reconciliation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -520317,7 +520337,7 @@
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
-              "sha256": "638497e6ddc6315e845ed34dd1facbd24fc0032d98f0d77a1b34a0c0270546e0"
+              "sha256": "13584fee3866a623b761340eaf9afda339eff0544fdc7cb4518b669e3244f1b7"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -522259,7 +522279,8 @@
           "release-0.5-component-direction-matrix",
           "release-0.5-action-contrast",
           "release-0.5-required-input-semantics",
-          "release-0.5-conditional-heading-acceptance"
+          "release-0.5-conditional-heading-acceptance",
+          "release-0.6-owner-policy-reconciliation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -522479,7 +522500,7 @@
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
-              "sha256": "638497e6ddc6315e845ed34dd1facbd24fc0032d98f0d77a1b34a0c0270546e0"
+              "sha256": "13584fee3866a623b761340eaf9afda339eff0544fdc7cb4518b669e3244f1b7"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -733906,25 +733927,73 @@
       "requirement": [
         "Record lost-contact recovery authority/evidence policy.",
         "Disposition signed machine callback and native CSP-report CSRF boundaries.",
-        "Resolve 38 table base-column exceptions, tested Node24 versus legacy Node20, and tested Base UI versus obsolete Radix wording.",
+        "Resolve the base-column exceptions using current schema evidence, Node 24 versus legacy Node 20, and Base UI versus obsolete Radix wording.",
         "Do not silently change working architecture or repeat the same question without a concrete recommendation."
       ],
-      "status": "blocked",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Record lost-contact recovery authority/evidence policy.",
-        "Disposition signed machine callback and native CSP-report CSRF boundaries.",
-        "Resolve 38 table base-column exceptions, tested Node24 versus legacy Node20, and tested Base UI versus obsolete Radix wording.",
-        "Do not silently change working architecture or repeat the same question without a concrete recommendation."
-      ],
+      "remaining": [],
       "owner": "project owner",
       "depends_on": [],
       "evidence": {
-        "current_acceptance": null,
-        "batches": []
-      },
-      "blocker": "Six earlier owner decisions are still unresolved; their exact questions are retained under decisions.pending."
+        "current_acceptance": {
+          "kind": "explicit_owner_policy_reconciliation",
+          "reviewed_sha": "f9e064782a43efe5cafb78d1942d0f53e36dd6f0",
+          "source_evidence": [
+            {
+              "path": "kanban/epics/01-platform-infrastructure.md",
+              "sha256": "218fc5ee7b31ba3d5d2c6e0b31e9da15a5357b67318cbc11a517194471f42429"
+            },
+            {
+              "path": "docs/adr/001-data-types-and-conventions.md",
+              "sha256": "51dfaed7c88b0e07d748b39af6581d85c0d0ae28a4b1137c66c358466900795e"
+            },
+            {
+              "path": "docs/adr/001-base-column-exceptions.md",
+              "sha256": "a0da17f768a2ffa03a82563e0225766d24590ec738d83ff14338000ffd842a9b"
+            },
+            {
+              "path": "docs/operations/preflight/production-image-review.md",
+              "sha256": "13584fee3866a623b761340eaf9afda339eff0544fdc7cb4518b669e3244f1b7"
+            },
+            {
+              "path": "Dockerfile.base",
+              "sha256": "97efa77ecd5503f1eb3507c54f2a4b9167949829e306440252ded401477d34ed"
+            },
+            {
+              "path": "Dockerfile.web",
+              "sha256": "76dc081c98bc771f47c20ef045ae59f75406e8270f0a930913c153912b75d3ff"
+            },
+            {
+              "path": "docs/design/design-system.md",
+              "sha256": "64c402c0e616d534264eb5c889260944d66d2179d8d693cadf9d963c7302041e"
+            },
+            {
+              "path": "docs/runbooks/account-recovery.md",
+              "sha256": "a741a39aebef911fde97b9768f3bb1669be928a736ce5bf558d4b247bd4a4fc4"
+            },
+            {
+              "path": "packages/db/src/base-table.ts",
+              "sha256": "014c0d2749b83c270077ef2f6eb8edae5dd4df14824144a6ef77fca59eed9b7d"
+            },
+            {
+              "path": "packages/db/src/base-table.test.ts",
+              "sha256": "c4b3521970bb3ba6e5c72f1eb8d3437f3d8347de6e04eea4c640c8c956ca650a"
+            }
+          ],
+          "checks": [
+            "Recorded all six owner dispositions, retaining the existing protected recovery, signed callback and narrow CSP controls, Node 24 LTS, the accepted Base UI configuration and explicit table-specific schema exceptions.",
+            "Compared all 181 deployed Drizzle definitions with live staging metadata for the three standard columns; the two SQL-managed configuration tables have all three. Listed all 96 exceptions exactly once, with scope and reasons.",
+            "Verified Node 24.22.2 on the actual staging API, web and worker; Node 24 is maintained LTS and Node 20 is end of life per the official Node release schedule.",
+            "Five existing base-table factory unit assertions passed in an isolated Node test configuration; the normal package fixture startup was stopped after the workstation Docker daemon hung, and no integration pass is inferred.",
+            "Only policy, documentation and board source changed. The four prior task bindings to the image review guide were renewed for the additive runtime decision."
+          ]
+        },
+        "batches": [
+          "release-0.6-owner-policy-reconciliation"
+        ]
+      }
     },
     {
       "key": "release-readiness#R-05.02",
@@ -733963,7 +734032,7 @@
         "Execute migration/seed ordering, backup/PITR and restore/rollback rehearsals; measure actual service RPO/RTO.",
         "Install required monitoring, alerts and quality schedules and prove first execution/delivery. Local scripts alone are not proof."
       ],
-      "status": "todo",
+      "status": "blocked",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
@@ -733981,7 +734050,8 @@
           "decision": "release_0_3_sms_provisioning",
           "receipts": "/Users/majid/.local/state/barghsa-manual-batches/release-0.3-sms-direct/live-line-probe-receipts.jsonl"
         }
-      }
+      },
+      "blocker": "Production-equivalent host, separate TLS PostgreSQL/pooler, off-server backup storage and payment sandbox protected configuration are not available in the known workspace. The public domain serves legacy WordPress; the accessible app host is disposable staging. Owner access/provisioning direction and SMS.ir live verification status requested together on 2026-11-09. Isolated recovery tests and staging monitoring checks can continue."
     },
     {
       "key": "release-readiness#R-06.01",
@@ -818456,6 +818526,74 @@
       "staging_and_telegram_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-check-activation/release-live-receipt.json",
       "staging_and_telegram_scope_proof_sha256": "23e25aa51e5ddf8face92af1824093324a8728aa4af0df08986a95b0e022f6c8",
       "release_disposition": "Accepted exact v0.5.0 SHA is deployed and healthy on staging; one Persian summary and one two-image album confirmed. Production was not deployed."
+    },
+    "release-0.6-owner-policy-reconciliation": {
+      "batch": "release-0.6-owner-policy-reconciliation",
+      "base_commit": "f9e064782a43efe5cafb78d1942d0f53e36dd6f0",
+      "task_keys": [
+        "release-readiness#R-05.01",
+        "01-platform-infrastructure.md#T-02.02.02",
+        "01-platform-infrastructure.md#T-03.01.01",
+        "01-platform-infrastructure.md#T-03.01.02",
+        "07-ui-ux-design.md#T-07.01.01.02",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.05.01.06",
+        "07-ui-ux-design.md#T-07.05.01.10",
+        "07-ui-ux-design.md#T-07.05.02.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "kanban/epics/01-platform-infrastructure.md",
+          "sha256": "218fc5ee7b31ba3d5d2c6e0b31e9da15a5357b67318cbc11a517194471f42429"
+        },
+        {
+          "path": "docs/adr/001-data-types-and-conventions.md",
+          "sha256": "51dfaed7c88b0e07d748b39af6581d85c0d0ae28a4b1137c66c358466900795e"
+        },
+        {
+          "path": "docs/adr/001-base-column-exceptions.md",
+          "sha256": "a0da17f768a2ffa03a82563e0225766d24590ec738d83ff14338000ffd842a9b"
+        },
+        {
+          "path": "docs/operations/preflight/production-image-review.md",
+          "sha256": "13584fee3866a623b761340eaf9afda339eff0544fdc7cb4518b669e3244f1b7"
+        },
+        {
+          "path": "Dockerfile.base",
+          "sha256": "97efa77ecd5503f1eb3507c54f2a4b9167949829e306440252ded401477d34ed"
+        },
+        {
+          "path": "Dockerfile.web",
+          "sha256": "76dc081c98bc771f47c20ef045ae59f75406e8270f0a930913c153912b75d3ff"
+        },
+        {
+          "path": "docs/design/design-system.md",
+          "sha256": "64c402c0e616d534264eb5c889260944d66d2179d8d693cadf9d963c7302041e"
+        },
+        {
+          "path": "docs/runbooks/account-recovery.md",
+          "sha256": "a741a39aebef911fde97b9768f3bb1669be928a736ce5bf558d4b247bd4a4fc4"
+        },
+        {
+          "path": "packages/db/src/base-table.ts",
+          "sha256": "014c0d2749b83c270077ef2f6eb8edae5dd4df14824144a6ef77fca59eed9b7d"
+        },
+        {
+          "path": "packages/db/src/base-table.test.ts",
+          "sha256": "c4b3521970bb3ba6e5c72f1eb8d3437f3d8347de6e04eea4c640c8c956ca650a"
+        }
+      ],
+      "checks": [
+        "Recorded all six owner dispositions, retaining the existing protected recovery, signed callback and narrow CSP controls, Node 24 LTS, the accepted Base UI configuration and explicit table-specific schema exceptions.",
+        "Compared all 181 deployed Drizzle definitions with live staging metadata for the three standard columns; the two SQL-managed configuration tables have all three. Listed all 96 exceptions exactly once, with scope and reasons.",
+        "Verified Node 24.22.2 on the actual staging API, web and worker; Node 24 is maintained LTS and Node 20 is end of life per the official Node release schedule.",
+        "Five existing base-table factory unit assertions passed in an isolated Node test configuration; the normal package fixture startup was stopped after the workstation Docker daemon hung, and no integration pass is inferred.",
+        "Only policy, documentation and board source changed. The four prior task bindings to the image review guide were renewed for the additive runtime decision."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/owner-policy-acceptance-receipt.json",
+      "source_scope_proof_sha256": "791073a92948e0b307efc0aa032b105f2b5b725cdd6f93be63056f7ad0c005ab",
+      "release_disposition": "Policy decisions accepted; product timestamp, production rollout and operational proof remain separately gated."
     }
   },
   "historical_improvements": [
@@ -818495,18 +818633,20 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-acceptance-reconciliation",
+    "id": "release-0.6-verify-clocks-and-recovery",
     "release": "0.6.0",
     "task_keys": [
-      "release-readiness#R-05.01",
-      "release-readiness#R-05.02"
+      "01-platform-infrastructure.md#T-02.02.02",
+      "01-platform-infrastructure.md#T-04.01.03",
+      "release-readiness#R-05.02",
+      "release-readiness#R-05.03"
     ],
-    "goal": "Reconcile the recorded owner decisions with current evidence and inspect the existing platform, security, and operations implementation before making changes."
+    "goal": "Verify the remaining standard update clocks and isolated recovery behavior; reuse current production-readiness evidence and obtain the protected environment required for external gates."
   },
   "launch_forecast": {
-    "status": "v0_5_released_v0_6_operational_gates_pending",
-    "next_update_after": "v0.6.0 policy reconciliation and operational prerequisites review",
-    "method": "v0.5.0 has an exact live staging release and confirmed Telegram receipts. v0.6.0 production-readiness checks and v0.9.0 rehearsal remain; no reliable launch date yet."
+    "status": "v0_6_operational_access_and_security_gates_pending",
+    "next_update_after": "v0.6.0 timestamp and recovery checks plus production-equivalent environment availability",
+    "method": "v0.5.0 staging and Telegram receipts are confirmed. v0.6.0 owner policy is recorded. Local and disposable staging rehearsals do not satisfy the production-equivalent TLS, provider, off-server recovery, load or schedule gates; production access/provisioning timing is external."
   },
   "capabilities": [
     {

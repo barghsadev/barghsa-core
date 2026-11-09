@@ -94,9 +94,11 @@ The standard mutable-domain shape includes these three columns, provided by `cre
 | `created_at` | `timestamptz`   | `now()`               | Set on INSERT, never updated                   |
 | `updated_at` | `timestamptz`   | `now()` + `$onUpdate` | Updated by ORM writers or the database trigger |
 
-**Implementation:** `packages/db/src/base-table.ts` — `createTable()` spreads `baseColumns` into every table definition.
+**Implementation:** `packages/db/src/base-table.ts` — `createTable()` spreads `baseColumns` into the tables that use the factory.
 
-**Existing deviation:** 38 current schema tables omit at least one standard field. These include authentication records with named keys, composite-key joins, append-only events, lookup/configuration rows and wallets keyed by profile. This does not satisfy the literal universal base-column requirement. Preserve existing identities and immutable history until a separate compatibility migration or an approved requirement exception resolves each case. Timestamp coverage is complete for current tables that already declare `updated_at`.
+**Current census:** On v0.5.0 staging (`dae51e34`), 96 of 183 public tables omit at least one of the three columns. All 181 compiled Drizzle table definitions match their live PostgreSQL table on these columns. The two SQL-managed tables, `brand_config` and `sms_provider_configs`, have all three columns. This replaces the earlier 38-table count.
+
+The [approved exception inventory](001-base-column-exceptions.md) records each affected table, its missing columns, and the reason for keeping its identity and lifecycle model. The initial source inventory identified direct updates on 25 exception tables missing at least one standard timestamp. That inventory only counts direct call sites; it does not establish that other tables are immutable. Standard `updated_at` clocks and lifecycle-sensitive transitions still require verification.
 
 ### 8. Column Naming Convention
 

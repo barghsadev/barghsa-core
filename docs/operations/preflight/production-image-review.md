@@ -21,6 +21,8 @@ All checks passed. Additional validation: workspace typechecks, ten tests import
 
 Node 24 runs all three applications. Each API/worker package is deployed with production dependencies from the frozen workspace lockfile. The old legacy packaging path re-resolved dependencies and was discarded. Production DB migrations remain next to the compiled DB package. Worker starts dist/main.js, which is the actual fresh compiler output. Web has one implementation, apps/web/server.js, including shutdown and security headers.
 
+The v0.6.0 owner decision retains Node 24 LTS and updates the older Node 20 requirement. The v0.5.0 staging API, web and worker each reported Node 24.22.2. [Node.js lists Node 24 as LTS and Node 20 as end of life](https://nodejs.org/en/about/previous-releases). Production image publishing and rollout remain separate acceptance checks.
+
 API and worker receive provider configuration from an external runtime environment file named by BARGHSA_RUNTIME_ENV_FILE. The same file is supplied to Compose with --env-file for required interpolation. Do not commit the file. Database URL, public application/API origins, delivery encryption key and payment merchant configuration must be supplied. Provider-specific variables in the file reach both applications; unavailable identity verification remains fail-closed.
 
 ## Limits

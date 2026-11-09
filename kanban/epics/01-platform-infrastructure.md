@@ -279,7 +279,7 @@ This domain owns every piece of platform infrastructure the Barghsa energy platf
 - Rates/quantities stored as `numeric(20, 6)` for fixed-precision arithmetic
 - No `float4`/`float8` used in any financial, contractual, or quantity column
 - Enum-like status fields use `varchar` or custom PostgreSQL enums with explicit Drizzle `pgEnum`
-- Every table has `createdAt` (`timestamptz`, default `now()`), `updatedAt` (`timestamptz`, auto-updated via trigger), and `id` (UUIDv7, primary key default)
+- Standard mutable tables use `createdAt` (`timestamptz`, default `now()`), `updatedAt` (`timestamptz`, auto-updated via trigger), and `id` (UUIDv7, primary key default). Existing named/composite keys and domain lifecycle clocks follow the explicit [base-column exceptions](../../docs/adr/001-base-column-exceptions.md).
 
 **Tasks:**
 
@@ -289,7 +289,7 @@ This domain owns every piece of platform infrastructure the Barghsa energy platf
   - **Complexity:** M
 
 - **T-02.02.02:** Create base table factory with `id`, `createdAt`, `updatedAt` columns
-  - **Notes:** Export `createTable` function or `baseColumns` object used in every domain schema. `updatedAt` uses a PostgreSQL trigger `modify_updated_at()` for automatic updates on row modification. `createdAt` uses `defaultNow()`.
+  - **Notes:** Export `createTable` or `baseColumns` for the standard mutable shape. `updatedAt` uses a PostgreSQL trigger for automatic updates on row modification. `createdAt` uses `defaultNow()`. Preserve the approved table-specific keys and lifecycle fields in the exception inventory.
   - **Dependencies:** T-02.02.01
   - **Complexity:** S
 
@@ -409,7 +409,7 @@ This domain owns every piece of platform infrastructure the Barghsa energy platf
 - `Dockerfile.api` builds the NestJS API with SWC or webpack
 - `Dockerfile.worker` uses the same build stage as API but CMD differs (`CMD ["node", "dist/apps/api/main"]` vs `CMD ["node", "dist/apps/api/worker"]`)
 - Multi-stage builds with a `dependencies` stage, `build` stage, and `production` stage
-- Production stage uses `node:20-alpine` or `node:20-slim` (minimal base image)
+- Production stages use the tested Node 24 LTS Bookworm slim base image.
 - Image runs as non-root user (`node`), with read-only root filesystem where practical
 - `HEALTHCHECK` instruction in Dockerfiles
 - Node.js runs with `NODE_ENV=production`, inspector disabled, `insecureHTTPParser` not set
