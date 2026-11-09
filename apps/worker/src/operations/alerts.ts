@@ -17,6 +17,7 @@ const labels: Record<string, string> = {
     'تأخیر پردازش اعلان‌ها بحرانی است / Notification processing is critically delayed',
   RefundObligationOverdue: 'تعهد بازپرداخت معوق است / Mandatory refund is overdue',
   WalletReconciliationCritical: 'مغایرت بحرانی کیف پول / Critical wallet reconciliation mismatch',
+  PaymentCallbackAnomaly: 'ناهنجاری در پاسخ درگاه پرداخت / Payment callback anomaly',
   AiModelCircuitOpen: 'مدل هوش مصنوعی در دسترس نیست / AI model unavailable',
   WorkerUnavailable: 'پردازشگر پس‌زمینه در دسترس نیست / Background worker unavailable',
 };
@@ -24,6 +25,7 @@ const criticalAlerts = new Set([
   'NotificationDeadLettersAccumulating',
   'NotificationOutboxBacklogCritical',
   'WalletReconciliationCritical',
+  'PaymentCallbackAnomaly',
   'WorkerUnavailable',
 ]);
 const alertPriorities = new Map<string, 'P1' | 'P2'>([
@@ -32,6 +34,7 @@ const alertPriorities = new Map<string, 'P1' | 'P2'>([
   ['NotificationOutboxBacklogCritical', 'P1'],
   ['RefundObligationOverdue', 'P2'],
   ['WalletReconciliationCritical', 'P1'],
+  ['PaymentCallbackAnomaly', 'P1'],
 ]);
 type Alert = {
   name: string;

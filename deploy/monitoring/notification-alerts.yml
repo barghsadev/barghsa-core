@@ -69,6 +69,16 @@ groups:
           priority: P1
         annotations:
           summary: Current wallet balance differs from its ledger at or above the critical threshold
+      - alert: PaymentCallbackAnomaly
+        expr: |
+          max without (instance, pod, callback, reason) (
+            max_over_time(payment_callback_last_anomaly_timestamp_seconds[5m])
+          ) > time() - 300
+        labels:
+          severity: critical
+          priority: P1
+        annotations:
+          summary: A payment callback had an invalid signature, stale timestamp or replayed event ID
   - name: barghsa-ai-models
     rules:
       - alert: AiModelCircuitOpen

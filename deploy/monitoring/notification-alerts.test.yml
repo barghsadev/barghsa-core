@@ -4,6 +4,68 @@
   'tests':
     [
       {
+        'name': 'Signed payment anomalies fire a single P1 across replicas and clear after five minutes',
+        'interval': '1m',
+        'input_series':
+          [
+            {
+              'series': 'payment_callback_last_anomaly_timestamp_seconds{job="api",environment="staging",database="core",instance="a",pod="a",callback="topup",reason="invalid_signature"}',
+              'values': '_ 60 60 60 60 60 60 60',
+            },
+            {
+              'series': 'payment_callback_last_anomaly_timestamp_seconds{job="api",environment="staging",database="core",instance="b",pod="b",callback="chargeback",reason="event_replay"}',
+              'values': '_ _ 120 stale _ _ _ _',
+            },
+          ],
+        'alert_rule_test':
+          [
+            { 'eval_time': '0m', 'alertname': 'PaymentCallbackAnomaly', 'exp_alerts': [] },
+            {
+              'eval_time': '1m',
+              'alertname': 'PaymentCallbackAnomaly',
+              'exp_alerts':
+                [
+                  {
+                    'exp_labels':
+                      {
+                        'job': 'api',
+                        'environment': 'staging',
+                        'database': 'core',
+                        'severity': 'critical',
+                        'priority': 'P1',
+                      },
+                    'exp_annotations':
+                      {
+                        'summary': 'A payment callback had an invalid signature, stale timestamp or replayed event ID',
+                      },
+                  },
+                ],
+            },
+            {
+              'eval_time': '6m',
+              'alertname': 'PaymentCallbackAnomaly',
+              'exp_alerts':
+                [
+                  {
+                    'exp_labels':
+                      {
+                        'job': 'api',
+                        'environment': 'staging',
+                        'database': 'core',
+                        'severity': 'critical',
+                        'priority': 'P1',
+                      },
+                    'exp_annotations':
+                      {
+                        'summary': 'A payment callback had an invalid signature, stale timestamp or replayed event ID',
+                      },
+                  },
+                ],
+            },
+            { 'eval_time': '7m', 'alertname': 'PaymentCallbackAnomaly', 'exp_alerts': [] },
+          ],
+      },
+      {
         'name': 'Critical current wallet drift alerts once per scope and clears after correction',
         'interval': '1m',
         'input_series':

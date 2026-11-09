@@ -1,6 +1,7 @@
 import { WalletProfileArchivedError } from './profile-lock.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { createHash, timingSafeEqual } from 'node:crypto';
+import { observePaymentCallbackAnomaly } from '../metrics/payment-callback-metrics.js';
 import {
   BadRequestException,
   ConflictException,
@@ -118,12 +119,14 @@ export class ChargebackDetectionService {
     );
     if (!verification.ok) {
       if (verification.reason === 'replayed') {
+        observePaymentCallbackAnomaly('chargeback', 'stale_timestamp');
         this.logger.warn('Rejected replayed or expired payment chargeback signature');
         httpError(
           ErrorCodes.PROVIDER_CALLBACK_REPLAYED,
           'Payment provider callback is expired or replayed'
         );
       }
+      observePaymentCallbackAnomaly('chargeback', 'invalid_signature');
       this.logger.warn(`Rejected payment chargeback signature (${verification.reason})`);
       httpError(
         ErrorCodes.PROVIDER_CALLBACK_INVALID,
@@ -206,6 +209,7 @@ export class ChargebackDetectionService {
           }
           assertClaimedNotificationMatches(existing.raw, notification);
           if (existing.status !== 'processing') {
+            observePaymentCallbackAnomaly('chargeback', 'event_replay');
             return alreadyProcessedResult(existing);
           }
         }
@@ -538,6 +542,7 @@ function assertClaimedNotificationMatches(
       chargebackPayloadDigest(notification)
     );
   if (!digestMatches) {
+    observePaymentCallbackAnomaly('chargeback', 'event_replay');
     httpError(
       ErrorCodes.PROVIDER_CALLBACK_INVALID,
       'Payment chargeback event payload does not match the claimed notification'

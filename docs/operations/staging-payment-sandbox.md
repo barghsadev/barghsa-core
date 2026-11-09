@@ -54,3 +54,21 @@ Read-only browser visits never settle or credit a wallet.
 Record live HTTPS request/inquiry/verification and actual application callback
 receipts separately in the board. A fixture test or a signed envelope is not a
 confirmed wallet credit. Preserve uncertain outcomes for reconciliation.
+
+## Signed callback anomalies
+
+`PaymentCallbackAnomaly` raises a P1 when the signed top-up or chargeback endpoint
+detects an invalid signature, a timestamp outside its existing tolerance, or
+reuse of a claimed event ID. Recent anomalies are grouped by environment and
+database across API replicas. The alert clears five minutes after the last
+observed anomaly. A provider retry after a completed event can trigger this
+alert while safely receiving the stored outcome.
+
+Use `payment_callback_last_anomaly_timestamp_seconds` on the private API scrape
+to distinguish top-up from chargeback and signature failure from stale time or
+event replay. Compare the server clock and gateway delivery history. The metric
+contains only the fixed endpoint and reason labels and the API server's clock.
+Use the protected payment event and ledger records to check whether the
+original event settled. Keep uncertain payments in reconciliation and preserve
+their original idempotency keys. Browser confirmation retries and recovery of
+matching in-progress events follow their normal settlement checks.

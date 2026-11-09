@@ -5,6 +5,7 @@ import {
   type FinancialSubmissionActor,
 } from '../finance/financial-submission-actor.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
+import { observePaymentCallbackAnomaly } from '../metrics/payment-callback-metrics.js';
 import { HttpException, Inject, Injectable, Logger, Optional } from '@nestjs/common';
 import { z } from 'zod';
 import { getDbPool } from '@barghsa/db';
@@ -152,12 +153,14 @@ export class OnlineTopUpCallbackService {
     );
     if (!verification.ok) {
       if (verification.reason === 'replayed') {
+        observePaymentCallbackAnomaly('topup', 'stale_timestamp');
         this.logger.warn('Rejected replayed or expired payment callback signature');
         httpError(
           ErrorCodes.PROVIDER_CALLBACK_REPLAYED,
           'Payment provider callback is expired or replayed'
         );
       }
+      observePaymentCallbackAnomaly('topup', 'invalid_signature');
       this.logger.warn(`Rejected payment callback signature (${verification.reason})`);
       httpError(
         ErrorCodes.PROVIDER_CALLBACK_INVALID,
@@ -307,6 +310,7 @@ export class OnlineTopUpCallbackService {
           }
           const sameOrder = existing.pendingTransactionId === pending.id;
           if (!sameOrder || existing.walletId !== pending.walletId) {
+            if (input.authenticatedWebhook) observePaymentCallbackAnomaly('topup', 'event_replay');
             httpError(
               ErrorCodes.PROVIDER_CALLBACK_INVALID,
               'Payment callback event belongs to another merchant order'
@@ -316,6 +320,7 @@ export class OnlineTopUpCallbackService {
           const resumeUnpaidForPaid =
             sameOrder && existing.status === 'unpaid' && input.status === 'paid';
           if (!resumeCrash && !resumeUnpaidForPaid) {
+            if (input.authenticatedWebhook) observePaymentCallbackAnomaly('topup', 'event_replay');
             // Keep the session lock and connection until the duplicate ledger read finishes.
             return await this.alreadyProcessedResult(client, existing, pending);
           }

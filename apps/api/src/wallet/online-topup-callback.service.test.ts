@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import promClient from 'prom-client';
 import { HttpException } from '@nestjs/common';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
@@ -177,6 +178,7 @@ function scriptClient(opts: {
 
 describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
   beforeEach(() => {
+    promClient.register.resetMetrics();
     mockPool.connect.mockResolvedValue(mockClient);
     mockClient.query.mockReset();
     mockClient.release.mockReset();
@@ -205,6 +207,9 @@ describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
     });
     expect(credit).not.toHaveBeenCalled();
     expect(verifyPayment).not.toHaveBeenCalled();
+    expect(await promClient.register.metrics()).toMatch(
+      /payment_callback_last_anomaly_timestamp_seconds\{callback="topup",reason="invalid_signature"\} [1-9]/
+    );
   });
 
   it('rejects a timestamp outside the replay window', async () => {
@@ -226,6 +231,9 @@ describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
       error: ErrorCodes.PROVIDER_CALLBACK_REPLAYED.code,
     });
     expect(credit).not.toHaveBeenCalled();
+    expect(await promClient.register.metrics()).toMatch(
+      /payment_callback_last_anomaly_timestamp_seconds\{callback="topup",reason="stale_timestamp"\} [1-9]/
+    );
   });
 
   it('rejects a merchant id that does not match configured merchant context', async () => {
@@ -390,6 +398,30 @@ describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
     });
     expect(credit).not.toHaveBeenCalled();
     expect(verifyPayment).not.toHaveBeenCalled();
+    expect(await promClient.register.metrics()).toMatch(
+      /payment_callback_last_anomaly_timestamp_seconds\{callback="topup",reason="event_replay"\} [1-9]/
+    );
+  });
+
+  it('replays a browser confirmation without raising a signed callback anomaly', async () => {
+    scriptClient({
+      pending: makePendingRow({ state: 'Released' }),
+      existingCredit: { id: CREDIT_ID },
+      claimInserted: false,
+      existingEvent: claimedEventRow({
+        event_id: zarinpalReturnEventId(TX_ID, AUTHORITY, 'paid'),
+        status: 'credited',
+      }),
+    });
+    const { service, credit, verifyPayment } = makeService();
+    await expect(
+      service.handleZarinpalReturn({ orderId: TX_ID, authority: AUTHORITY, status: 'OK' })
+    ).resolves.toMatchObject({ processed: false, credited: true, creditTransactionId: CREDIT_ID });
+    expect(credit).not.toHaveBeenCalled();
+    expect(verifyPayment).not.toHaveBeenCalled();
+    expect(await promClient.register.metrics()).not.toContain(
+      'payment_callback_last_anomaly_timestamp_seconds{'
+    );
   });
 
   it('retains the advisory lock and connection until duplicate ledger lookup settles', async () => {
@@ -454,6 +486,9 @@ describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
       String(call[0]).includes("SET state = 'Released'")
     );
     expect(creditUpdates).toHaveLength(0);
+    expect(await promClient.register.metrics()).toMatch(
+      /payment_callback_last_anomaly_timestamp_seconds\{callback="topup",reason="event_replay"\} [1-9]/
+    );
   });
 
   it('resumes a processing claim for the same order after a crash', async () => {
@@ -635,6 +670,9 @@ describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
       String(call[0]).includes("SET status = 'processing'")
     );
     expect(reopen).toBeDefined();
+    expect(await promClient.register.metrics()).not.toContain(
+      'payment_callback_last_anomaly_timestamp_seconds{'
+    );
   });
 
   it('rejects a ZarinPal GET return whose Authority does not match the pending order', async () => {

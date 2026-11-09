@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import promClient from 'prom-client';
 import { BadRequestException, HttpException } from '@nestjs/common';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { WALLET_CHARGEBACK_REASON, chargebackCreditIdempotencyKey } from '@barghsa/shared/finance';
@@ -185,6 +186,7 @@ function scriptClient(opts: {
 
 describe('ChargebackDetectionService (T-04.2.04.02)', () => {
   beforeEach(() => {
+    promClient.register.resetMetrics();
     mockPool.connect.mockResolvedValue(mockClient);
     mockClient.query.mockReset();
     mockClient.release.mockReset();
@@ -224,6 +226,9 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
       error: ErrorCodes.PROVIDER_CALLBACK_INVALID.code,
     });
     expect(reverseTransaction).not.toHaveBeenCalled();
+    expect(await promClient.register.metrics()).toMatch(
+      /payment_callback_last_anomaly_timestamp_seconds\{callback="chargeback",reason="invalid_signature"\} [1-9]/
+    );
   });
 
   it('rejects a tampered signature before mapping or reversing', async () => {
@@ -256,6 +261,9 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
       error: ErrorCodes.PROVIDER_CALLBACK_REPLAYED.code,
     });
     expect(reverseTransaction).not.toHaveBeenCalled();
+    expect(await promClient.register.metrics()).toMatch(
+      /payment_callback_last_anomaly_timestamp_seconds\{callback="chargeback",reason="stale_timestamp"\} [1-9]/
+    );
   });
 
   it('rejects a merchant id that does not match the configured merchant', async () => {
@@ -337,6 +345,9 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
       status: 'reversed',
     });
     expect(reverseTransaction).not.toHaveBeenCalled();
+    expect(await promClient.register.metrics()).toMatch(
+      /payment_callback_last_anomaly_timestamp_seconds\{callback="chargeback",reason="event_replay"\} [1-9]/
+    );
   });
 
   it('resumes a stuck processing claim and reverses the original top-up', async () => {
@@ -359,6 +370,9 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
       WALLET_CHARGEBACK_REASON,
       `wallet-chargeback-reversal:${EVENT_ID}`,
       mockClient
+    );
+    expect(await promClient.register.metrics()).not.toContain(
+      'payment_callback_last_anomaly_timestamp_seconds{'
     );
   });
 
@@ -383,6 +397,9 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
         message: 'Payment chargeback event payload does not match the claimed notification',
       });
       expect(reverseTransaction).not.toHaveBeenCalled();
+      expect(await promClient.register.metrics()).toMatch(
+        /payment_callback_last_anomaly_timestamp_seconds\{callback="chargeback",reason="event_replay"\} [1-9]/
+      );
     }
   );
 
