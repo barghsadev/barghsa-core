@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T21:15:51+00:00",
+  "updated": "2026-11-09T21:17:32+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -484027,19 +484027,64 @@
         "story": "06-security-testing-observability.md#spec-e681e92bce32"
       },
       "requirement": "| T-06.15.01.06 | Configure deduplication and alert grouping to prevent noise storms | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-staged-operations-alert-readback"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-deployed-alert-config-and-immutable-receipts",
+          "base_commit": "3ed569469ea32451f75557671d9a186ad719e1be",
+          "source_evidence": [
+            {
+              "path": "deploy/monitoring/staging-alertmanager.yml",
+              "sha256": "677414eb78ee16f23fb2fb1e119467c12ca1ee6a8387f08ea5690f1751de405e"
+            },
+            {
+              "path": "deploy/monitoring/staging-compose.yml",
+              "sha256": "4b790180d0edb115fbd353c9722f6a29d0f006a3dbaceb23fb35fad22564c3f8"
+            },
+            {
+              "path": "deploy/monitoring/staging-worker-alerts.yml",
+              "sha256": "f80c5b2811eb67b6e10fe3413ce9d7fb1fc8ed305e44ce2889a7212eb113c2f5"
+            },
+            {
+              "path": "apps/worker/src/operations/alerts.ts",
+              "sha256": "ba553841d6a1034a2b12d79726b27bd149180978d1be0f200365c77d9b4370a0"
+            },
+            {
+              "path": "apps/worker/src/operations/alerts.integration.test.ts",
+              "sha256": "54745d65579880f91874d435eee2a92603be6fe888d598c675086ffbd9380c02"
+            },
+            {
+              "path": "apps/worker/src/notifications/in-app-transport.ts",
+              "sha256": "875100b7ac24faa17d2c82f25e4b2380b3d820fc4806d9d1d18732ef7af95282"
+            },
+            {
+              "path": "apps/worker/src/notifications/channel-availability.ts",
+              "sha256": "c98745aa86e32e74513d6b8a58566b8166d1f0ac0a2189b84e06e81ca324b894"
+            },
+            {
+              "path": "packages/db/drizzle/production/0277_operations_alert_receipts.sql",
+              "sha256": "f2c0b87b2a823745f65a87b47c09f3e1debf6988f3580ef379f7854fbc336f2c"
+            },
+            {
+              "path": "docs/operations/notification-monitoring.md",
+              "sha256": "c5be4b006803a82593a402077bcc7f2f06de2811810f0a2ce00fad7898a7c69f"
+            }
+          ],
+          "checks": [
+            "The running staging Alertmanager configuration matched the committed SHA-256 and amtool validated it. It groups by alert name, environment and database, waits 10 seconds, groups subsequent changes at one minute, repeats at four hours and inhibits the pending dead-letter warning during its critical accumulation incident.",
+            "The deployed receiver readback found 16 unique occurrence tuples and 16 persisted inbox rows bound to the intended recipient. Reused ten unchanged worker operations integration cases from run 42681795739, including authenticated firing and recovery, replay deduplication, private audience and transactional safeguards."
+          ]
+        }
       }
     },
     {
@@ -745949,7 +745994,7 @@
       "remaining": [
         "Verify topology, TLS/hostname checks, firewall, secrets, encrypted off-server backups and storage retention.",
         "Execute migration/seed ordering, backup/PITR and restore/rollback rehearsals; measure actual service RPO/RTO.",
-        "Verify production-equivalent monitoring, alert delivery and quality schedules. Staging private API and worker scrapes and PostgreSQL query timings are verified.",
+        "Verify production-equivalent monitoring and quality schedules. The stage receiver has 16 private inbox delivery receipts including provider, dead-letter and SMS low-credit firing/recovery. All six external email legs were skipped because the channel was disabled. An authorized monitoring email recipient with an enabled verified channel and actual provider delivery receipt are still required.",
         "Provision approved Persian/English profile.verification_status SMS.ir templates or activate direct text, test owned verified destination and record actual provider acceptance/delivery reports before production. Both 11 October direct-line probes rejected with HTTP400/status123; owner deferred this evidence from v0.3.0 staging only.",
         "Provide an authorized ClamAV signature feed and verify that the chosen staging scanner loads current vendor data, including clean and infected scan receipts. The direct stage feed returned HTTP 403 and a cooldown.",
         "Staging CSP report-only review found five cross-origin image reports and the live public branding response references the same barghsa.com favicon origin. Publish the preserved PNG as a sealed staging asset with authorized staff step-up, verify the byte-identical response and complete the full week of reviewed reports before enforcing CSP.",
@@ -745970,7 +746015,8 @@
           "release-0.6-staging-postgres-monitoring-readback",
           "release-0.6-packaged-production-seed",
           "release-0.6-runtime-readiness-and-staging-smoke",
-          "release-0.6-proxy-security-headers"
+          "release-0.6-proxy-security-headers",
+          "release-0.6-staged-operations-alert-readback"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -837780,6 +837826,61 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/layered-rate-limits",
       "source_scope_proof": "release-0.6-layered-rate-limits-and-diagnostic-privacy.json",
       "source_scope_proof_sha256": "cd6edd3709ddc2878307548b4b0b6c54859f38467f4624e29b591780d51a8b11"
+    },
+    "release-0.6-staged-operations-alert-readback": {
+      "batch": "release-0.6-staged-operations-alert-readback",
+      "base_commit": "3ed569469ea32451f75557671d9a186ad719e1be",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.15.01.06",
+        "release-readiness#R-05.03"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/monitoring/staging-alertmanager.yml",
+          "sha256": "677414eb78ee16f23fb2fb1e119467c12ca1ee6a8387f08ea5690f1751de405e"
+        },
+        {
+          "path": "deploy/monitoring/staging-compose.yml",
+          "sha256": "4b790180d0edb115fbd353c9722f6a29d0f006a3dbaceb23fb35fad22564c3f8"
+        },
+        {
+          "path": "deploy/monitoring/staging-worker-alerts.yml",
+          "sha256": "f80c5b2811eb67b6e10fe3413ce9d7fb1fc8ed305e44ce2889a7212eb113c2f5"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.ts",
+          "sha256": "ba553841d6a1034a2b12d79726b27bd149180978d1be0f200365c77d9b4370a0"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.integration.test.ts",
+          "sha256": "54745d65579880f91874d435eee2a92603be6fe888d598c675086ffbd9380c02"
+        },
+        {
+          "path": "apps/worker/src/notifications/in-app-transport.ts",
+          "sha256": "875100b7ac24faa17d2c82f25e4b2380b3d820fc4806d9d1d18732ef7af95282"
+        },
+        {
+          "path": "apps/worker/src/notifications/channel-availability.ts",
+          "sha256": "c98745aa86e32e74513d6b8a58566b8166d1f0ac0a2189b84e06e81ca324b894"
+        },
+        {
+          "path": "packages/db/drizzle/production/0277_operations_alert_receipts.sql",
+          "sha256": "f2c0b87b2a823745f65a87b47c09f3e1debf6988f3580ef379f7854fbc336f2c"
+        },
+        {
+          "path": "docs/operations/notification-monitoring.md",
+          "sha256": "c5be4b006803a82593a402077bcc7f2f06de2811810f0a2ce00fad7898a7c69f"
+        }
+      ],
+      "checks": [
+        "The running staging Alertmanager configuration matched the committed SHA-256 and amtool validated it. It groups by alert name, environment and database, waits 10 seconds, groups subsequent changes at one minute, repeats at four hours and inhibits the pending dead-letter warning during its critical accumulation incident.",
+        "The deployed receiver readback found 16 unique occurrence tuples and 16 persisted inbox rows bound to the intended recipient. Reused ten unchanged worker operations integration cases from run 42681795739, including authenticated firing and recovery, replay deduplication, private audience and transactional safeguards.",
+        "Read-only staging verification observed a healthy private operations receiver, matching protected configuration, the expected least-privilege operations role and persisted firing/recovery receipts for provider degradation, dead-letter alerts and the SMS low-credit P2 alert. Six email legs were intentionally skipped because the account channel was disabled. No provider email receipt exists for those operations alerts.",
+        "The staging backup environment file was absent. The actual production-equivalent off-server backup destination, restore, alert delivery and schedule receipts remain required. This readback created no notifications or provider attempts."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/staged-alerts-readback",
+      "source_scope_proof": "release-0.6-staged-operations-alert-readback.json",
+      "source_scope_proof_sha256": "6e374de76231381dcc903b190be2cdeca98ec903f10b1355ed64a873505a6a0b"
     }
   },
   "historical_improvements": [
