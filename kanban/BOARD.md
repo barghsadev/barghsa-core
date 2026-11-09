@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T22:59:26+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T23:04:01+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1047 | Accepted with unchanged source bindings. |
-| verify | 281 | Existing work may be complete; inspect evidence before building. |
+| done | 1048 | Accepted with unchanged source bindings. |
+| verify | 280 | Existing work may be complete; inspect evidence before building. |
 | partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1368,7 +1368,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.14.01.02` | done | Recorded batch work | Instrument RED metrics: request rate, error count (by status/route), latency (p50/p95/p99) |
 | `06-security-testing-observability.md#T-06.14.01.03` | done | Recorded batch work | Instrument database metrics: pool size, active/idle/waiting connections, query duration, slow queries |
 | `06-security-testing-observability.md#T-06.14.01.04` | done | Recorded batch work | Instrument queue metrics: queue depth, oldest-unprocessed age, processing time, failure rate, dead-letter count |
-| `06-security-testing-observability.md#T-06.14.01.05` | verify | Inventory needed | Instrument external provider metrics: call latency, success/error count, circuit-breaker state |
+| `06-security-testing-observability.md#T-06.14.01.05` | done | Recorded batch work | Instrument external provider metrics: call latency, success/error count, circuit-breaker state |
 | `06-security-testing-observability.md#T-06.14.01.06` | done | Recorded batch work | Instrument business safety metrics: unresolved refund count, reconciliation mismatch count, outbox backlog age |
 | `06-security-testing-observability.md#T-06.14.01.07` | done | Recorded batch work | Instrument worker metrics: job processing rate, lease expiry, retry count, dead-letter count |
 | `06-security-testing-observability.md#T-06.14.01.08` | done | Recorded batch work | Instrument AI metrics: request count, token usage, latency, cost per model, concurrency |

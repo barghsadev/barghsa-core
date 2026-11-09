@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T22:59:26+00:00",
-  "source_commit": "dcd410b54961230abd17cbc1181d3294966fcf96",
+  "updated": "2026-11-09T23:04:01+00:00",
+  "source_commit": "bfcfe6b483b7b7699caf4c3f55989c7741510f8d",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -72467,7 +72467,8 @@
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-payment-idempotency-conflict-alert",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-external-provider-metrics-reconciliation"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -73311,7 +73312,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "c5be4b006803a82593a402077bcc7f2f06de2811810f0a2ce00fad7898a7c69f"
+              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
             },
             {
               "path": "docs/operations/ai-model-tests.md",
@@ -77526,7 +77527,8 @@
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-payment-idempotency-conflict-alert",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-external-provider-metrics-reconciliation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -77554,7 +77556,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "c5be4b006803a82593a402077bcc7f2f06de2811810f0a2ce00fad7898a7c69f"
+              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
@@ -77772,7 +77774,8 @@
         ],
         "batches": [
           "release-0.6-notification-eligible-backlog-alerts",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-external-provider-metrics-reconciliation"
         ],
         "current_acceptance": {
           "kind": "unchanged-audit-bindings",
@@ -77792,7 +77795,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "c5be4b006803a82593a402077bcc7f2f06de2811810f0a2ce00fad7898a7c69f"
+              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
             }
           ],
           "checks": [
@@ -85922,7 +85925,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-external-provider-metrics-reconciliation"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -86118,7 +86122,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "c5be4b006803a82593a402077bcc7f2f06de2811810f0a2ce00fad7898a7c69f"
+              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -86878,7 +86882,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-external-provider-metrics-reconciliation"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -87074,7 +87079,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "c5be4b006803a82593a402077bcc7f2f06de2811810f0a2ce00fad7898a7c69f"
+              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -87834,7 +87839,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-external-provider-metrics-reconciliation"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -88030,7 +88036,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "c5be4b006803a82593a402077bcc7f2f06de2811810f0a2ce00fad7898a7c69f"
+              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -88791,7 +88797,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-external-provider-metrics-reconciliation"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -88987,7 +88994,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "c5be4b006803a82593a402077bcc7f2f06de2811810f0a2ce00fad7898a7c69f"
+              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -89747,7 +89754,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-external-provider-metrics-reconciliation"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -89943,7 +89951,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "c5be4b006803a82593a402077bcc7f2f06de2811810f0a2ce00fad7898a7c69f"
+              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -90706,7 +90714,8 @@
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-payment-idempotency-conflict-alert",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-external-provider-metrics-reconciliation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -90842,7 +90851,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "c5be4b006803a82593a402077bcc7f2f06de2811810f0a2ce00fad7898a7c69f"
+              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -91449,7 +91458,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-external-provider-metrics-reconciliation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -91609,7 +91619,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "c5be4b006803a82593a402077bcc7f2f06de2811810f0a2ce00fad7898a7c69f"
+              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -92091,7 +92101,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-external-provider-metrics-reconciliation"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -92287,7 +92298,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "c5be4b006803a82593a402077bcc7f2f06de2811810f0a2ce00fad7898a7c69f"
+              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -441733,7 +441744,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-payment-idempotency-conflict-alert",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-external-provider-metrics-reconciliation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -441953,7 +441965,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "c5be4b006803a82593a402077bcc7f2f06de2811810f0a2ce00fad7898a7c69f"
+              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
             },
             {
               "path": "docs/operations/ai-model-tests.md",
@@ -443230,7 +443242,8 @@
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-outbox-worker-processing-metrics",
-          "release-0.6-ai-inference-metrics"
+          "release-0.6-ai-inference-metrics",
+          "release-0.6-external-provider-metrics-reconciliation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -443386,7 +443399,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "c5be4b006803a82593a402077bcc7f2f06de2811810f0a2ce00fad7898a7c69f"
+              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -485652,20 +485665,99 @@
         "story": "06-security-testing-observability.md#spec-ec4f15075ffa"
       },
       "requirement": "| T-06.14.01.05 | Instrument external provider metrics: call latency, success/error count, circuit-breaker state | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-external-provider-metrics-reconciliation"
+        ],
+        "current_acceptance": {
+          "kind": "verified-provider-attribution-and-circuit-metrics",
+          "base_commit": "bfcfe6b483b7b7699caf4c3f55989c7741510f8d",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/provider-config/provider-health-metrics.ts",
+              "sha256": "6daba6e30935379f845554f25be2ab473ac2a1af5080541c0574a91d0b76e3bb"
+            },
+            {
+              "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+              "sha256": "9f99de9310a4a438741ad74ed1531a43a5369b587338f866771e9574f6574445"
+            },
+            {
+              "path": "apps/api/src/provider-config/email-provider-config.service.ts",
+              "sha256": "8f8a8cbc77b92ea7536f374f4df947e20d0e2b5ca1297482f0bea6e56361ee82"
+            },
+            {
+              "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
+              "sha256": "58e24e4be4ee977610a057a2ec46d331958bd1a96dac4cad4757991d92addb3f"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "b11b691680a16cfd244d5430449a7c91c918a09f5f3e5b5c09ed31299d80359c"
+            },
+            {
+              "path": "apps/worker/src/notifications/send-receipt.ts",
+              "sha256": "4c63b2247d0c93d52fed53332769ffab9b1530f473fddd5886b25632af10b421"
+            },
+            {
+              "path": "apps/web/src/components/ProviderHealthMetrics.tsx",
+              "sha256": "cad6e74d60ccd6f96af09b4a82479b003671d6ebaa6b2915285f46ffcd02dc44"
+            },
+            {
+              "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+              "sha256": "a72f4e37a56dd99540aeb5a9ecfe69126db05f322e971061614e9f11f0ab33b0"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "docs/operations/notification-monitoring.md",
+              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
+            },
+            {
+              "path": "apps/worker/src/notifications/worker-metrics.ts",
+              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+            },
+            {
+              "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
+              "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
+            },
+            {
+              "path": "apps/worker/src/operations/alerts.integration.test.ts",
+              "sha256": "2173dc5ab7655d24aa874c1420e509df3584fbc7c35cc08ad1daf9265da42055"
+            },
+            {
+              "path": "apps/api/src/metrics/ai-inference-metrics.ts",
+              "sha256": "eca447ca827b1b483051ff5bad0041948389212cadb271121ac4943b27f8294c"
+            },
+            {
+              "path": "apps/api/src/metrics/metrics.service.ts",
+              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
+            },
+            {
+              "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
+              "sha256": "c975715a0e2b4f49dcbb56a6251edb8c270691e6ecc67ed8a48e331784208e43"
+            }
+          ],
+          "checks": [
+            "Existing email and SMS provider APIs expose attributed success/error counts and latency percentiles from the durable attempt history. The current worker scrape exposes each active provider circuit. The AI completion path also has model outcome/latency metrics and an independent circuit sample.",
+            "Hosted full run 42709841616 job 129476154430 passed 17,055 package tests at fa7d7416, including all 60 provider self-test cases. Provider source, fixture, consumer and lockfile paths match this batch. The attempted isolated rerun stopped at SSH transfer before running tests and is excluded.",
+            "Reused 23 current worker receiver/provider cases and 15 AI PostgreSQL/API cases, which cover state changes, retired providers and independent circuit and budget samples. The strict image license step failed separately. The full browser and combined coverage results remain pending."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.14.01.06",
@@ -486380,7 +486472,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-external-provider-metrics-reconciliation"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -486400,7 +486493,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "c5be4b006803a82593a402077bcc7f2f06de2811810f0a2ce00fad7898a7c69f"
+              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
             }
           ],
           "checks": [
@@ -486541,7 +486634,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-payment-idempotency-conflict-alert",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-external-provider-metrics-reconciliation"
         ],
         "current_acceptance": {
           "kind": "source-bound-deployed-alert-config-and-immutable-receipts",
@@ -486581,7 +486675,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "c5be4b006803a82593a402077bcc7f2f06de2811810f0a2ce00fad7898a7c69f"
+              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
             }
           ],
           "checks": [
@@ -739893,7 +739987,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "c5be4b006803a82593a402077bcc7f2f06de2811810f0a2ce00fad7898a7c69f"
+              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
             },
             {
               "path": "docs/operations/notification-template-seeding.md",
@@ -741608,7 +741702,8 @@
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-outbox-worker-processing-metrics",
-          "release-0.6-ai-inference-metrics"
+          "release-0.6-ai-inference-metrics",
+          "release-0.6-external-provider-metrics-reconciliation"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -743825,7 +743920,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "c5be4b006803a82593a402077bcc7f2f06de2811810f0a2ce00fad7898a7c69f"
+              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
             },
             {
               "path": "docs/operations/notification-template-seeding.md",
@@ -745446,7 +745541,8 @@
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-outbox-worker-processing-metrics",
-          "release-0.6-ai-inference-metrics"
+          "release-0.6-ai-inference-metrics",
+          "release-0.6-external-provider-metrics-reconciliation"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -749476,7 +749572,8 @@
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-security-scenario-and-signed-fixture-reconciliation",
           "release-0.6-outbox-worker-processing-metrics",
-          "release-0.6-ai-inference-metrics"
+          "release-0.6-ai-inference-metrics",
+          "release-0.6-external-provider-metrics-reconciliation"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -844697,6 +844794,109 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/ai-inference-metrics",
       "source_scope_proof": "ai-inference-metrics-source-proof.json",
       "source_scope_proof_sha256": "eab77a76432117aaacdeca33111cc5c00789e9f4fac3e7a65e5df263261d99bb"
+    },
+    "release-0.6-external-provider-metrics-reconciliation": {
+      "batch": "release-0.6-external-provider-metrics-reconciliation",
+      "base_commit": "bfcfe6b483b7b7699caf4c3f55989c7741510f8d",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.06.01",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.01.07",
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "06-security-testing-observability.md#T-06.14.01.05",
+        "06-security-testing-observability.md#T-06.15.01.01",
+        "06-security-testing-observability.md#T-06.15.01.06",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/provider-config/provider-health-metrics.ts",
+          "sha256": "6daba6e30935379f845554f25be2ab473ac2a1af5080541c0574a91d0b76e3bb"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+          "sha256": "9f99de9310a4a438741ad74ed1531a43a5369b587338f866771e9574f6574445"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.service.ts",
+          "sha256": "8f8a8cbc77b92ea7536f374f4df947e20d0e2b5ca1297482f0bea6e56361ee82"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
+          "sha256": "58e24e4be4ee977610a057a2ec46d331958bd1a96dac4cad4757991d92addb3f"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "b11b691680a16cfd244d5430449a7c91c918a09f5f3e5b5c09ed31299d80359c"
+        },
+        {
+          "path": "apps/worker/src/notifications/send-receipt.ts",
+          "sha256": "4c63b2247d0c93d52fed53332769ffab9b1530f473fddd5886b25632af10b421"
+        },
+        {
+          "path": "apps/web/src/components/ProviderHealthMetrics.tsx",
+          "sha256": "cad6e74d60ccd6f96af09b4a82479b003671d6ebaa6b2915285f46ffcd02dc44"
+        },
+        {
+          "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "sha256": "a72f4e37a56dd99540aeb5a9ecfe69126db05f322e971061614e9f11f0ab33b0"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
+          "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        },
+        {
+          "path": "docs/operations/notification-monitoring.md",
+          "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
+        },
+        {
+          "path": "apps/worker/src/notifications/worker-metrics.ts",
+          "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+        },
+        {
+          "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
+          "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.integration.test.ts",
+          "sha256": "2173dc5ab7655d24aa874c1420e509df3584fbc7c35cc08ad1daf9265da42055"
+        },
+        {
+          "path": "apps/api/src/metrics/ai-inference-metrics.ts",
+          "sha256": "eca447ca827b1b483051ff5bad0041948389212cadb271121ac4943b27f8294c"
+        },
+        {
+          "path": "apps/api/src/metrics/metrics.service.ts",
+          "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
+        },
+        {
+          "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
+          "sha256": "c975715a0e2b4f49dcbb56a6251edb8c270691e6ecc67ed8a48e331784208e43"
+        }
+      ],
+      "checks": [
+        "Existing email and SMS provider APIs expose attributed success/error counts and latency percentiles from the durable attempt history. The current worker scrape exposes each active provider circuit. The AI completion path also has model outcome/latency metrics and an independent circuit sample.",
+        "Hosted full run 42709841616 job 129476154430 passed 17,055 package tests at fa7d7416, including all 60 provider self-test cases. Provider source, fixture, consumer and lockfile paths match this batch. The attempted isolated rerun stopped at SSH transfer before running tests and is excluded.",
+        "Reused 23 current worker receiver/provider cases and 15 AI PostgreSQL/API cases, which cover state changes, retired providers and independent circuit and budget samples. The strict image license step failed separately. The full browser and combined coverage results remain pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/external-provider-metrics",
+      "source_scope_proof": "external-provider-source-proof.json",
+      "source_scope_proof_sha256": "8201d22d5b2d17b447948e1d20cf443d0ad12a007f77d6c61d22cdd3d1283ef0"
     }
   },
   "historical_improvements": [

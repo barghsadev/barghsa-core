@@ -2,6 +2,14 @@
 
 `EmailProviderDegraded` and `SmsProviderDegraded` alert when an active provider's persisted health is zero. Replica series are combined per provider; a healthy sample from one replica cannot hide a degraded sample from another. Retired configuration versions do not emit health series. A healthy tested replacement therefore resolves the old alert while preserving the retired version's configuration-pause history. Local Prometheus rule tests cover healthy, tripped, replica disagreement and recovery states. Acceptance requires actual Alertmanager firing/recovery and native delivery receipts recorded in the board.
 
+The email and SMS provider APIs return the last hour of attributable attempt
+and failure counts, average latency and p50, p95 and p99 latency by provider
+configuration. The views show attempts and the failure rate. Successful
+attempts are the total less failed or uncertain attempts. Channel backlog is
+shared across configurations. The private worker scrape publishes the current
+circuit state for each active configuration. A recovery that reuses an accepted
+receipt produces no new provider latency sample.
+
 Migration0130 adds bounded failure timestamps. Drain older API and email-sending worker instances, apply the migration, then start the updated fleet together. Older writers do not maintain these timestamps. Legacy counters retain their earliest recorded window time conservatively; individual historical failure times cannot be reconstructed. Exact rolling evidence accumulates after rollout. Existing degraded states and probe ownership are preserved.
 
 The circuit counts five consecutive transient provider failures inside a rolling five-minute window. Permanent provider rejections interrupt that sequence. Local ownership/persistence failures do not degrade the provider, and accepted delivery remains a provider success even when saving its receipt subsequently fails. This classification changes provider health only; ambiguous delivery outcomes still require reconciliation before any resend. A failed recovery probe keeps the circuit open, including a permanent failure. One new probe is permitted after the 60-second cooldown.
