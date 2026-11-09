@@ -24,6 +24,12 @@ import {
   type ContractSignatureData,
   type ContractVersion,
 } from '../lib/contracts.js';
+import {
+  validContractDetail,
+  validContractSnapshot,
+  validContractVersionPage,
+  type ContractVersionPage,
+} from '../lib/contract-detail-records.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { ContractActivationPanel } from './ContractActivationPanel.js';
 import { ContractSignaturePanel } from './ContractSignaturePanel.js';
@@ -212,7 +218,6 @@ function lifecycleReceipt(value: unknown, { kind, source }: LifecycleCommand) {
     result.state === (kind === 'submit' ? 'AwaitingStaffReview' : 'AwaitingCustomerAcceptance')
   );
 }
-type VersionPage = { versions: ContractVersion[]; nextBefore: number | null };
 function ContractDetailContent({
   id,
   staff,
@@ -360,6 +365,8 @@ function ContractDetailContent({
     const read = ++readEpoch.current;
     const fresh = () =>
       alive.current && !controller.signal.aborted && read === readEpoch.current && !owner.current;
+    source.current = null;
+    setData(null);
     setSignatureStatus(null);
     setVersions([]);
     setNext(null);
@@ -372,7 +379,7 @@ function ContractDetailContent({
     const base = `${contractBase(staff)}/${encodeURIComponent(id)}`;
     void Promise.all([
       readContract<ContractDetailData>(base, { signal: controller.signal }),
-      readContract<VersionPage>(`${base}/versions`, { signal: controller.signal }),
+      readContract<ContractVersionPage>(`${base}/versions`, { signal: controller.signal }),
       selectedVersion
         ? readContract<ContractVersion | ContractDetailData>(
             `${base}/versions/${encodeURIComponent(selectedVersion)}`,
@@ -382,14 +389,23 @@ function ContractDetailContent({
     ])
       .then(([contract, page, chosen]) => {
         if (!fresh()) return;
-        const version = chosen
-          ? staff
-            ? (chosen as ContractVersion)
-            : (chosen as ContractDetailData).version
-          : staff
-            ? contract.currentVersion
-            : contract.version;
-        if (!version || !version.content) throw new Error('Missing contract snapshot');
+        if (!validContractDetail(contract, id) || !validContractVersionPage(page, id))
+          throw new Error('Invalid contract detail');
+        const current = staff ? contract.currentVersion : contract.version;
+        if (!validContractSnapshot(current, id, staff ? contract.currentVersionId : undefined))
+          throw new Error('Invalid current contract snapshot');
+        const customerSelection = !staff ? (chosen as ContractDetailData | null) : null;
+        if (
+          customerSelection &&
+          (!validContractDetail(customerSelection, id) ||
+            customerSelection.profileId !== contract.profileId)
+        )
+          throw new Error('Mismatched selected contract');
+        const version = customerSelection
+          ? customerSelection.version
+          : ((chosen as ContractVersion | null) ?? current);
+        if (!validContractSnapshot(version, id, selectedVersion ?? undefined))
+          throw new Error('Invalid selected contract snapshot');
         const pending = lifecycle.current;
         if (pending?.waiting) {
           if (contract.id !== id || contract.profileId !== pending.source.contract.profileId)
@@ -446,11 +462,12 @@ function ContractDetailContent({
     setLoadingMore(true);
     setHistoryError(false);
     try {
-      const page = await readContract<VersionPage>(
-        `${contractBase(staff)}/${id}/versions?before=${next}`,
+      const page = await readContract<ContractVersionPage>(
+        `${contractBase(staff)}/${encodeURIComponent(id)}/versions?before=${next}`,
         { signal: controller.signal }
       );
       if (fresh()) {
+        if (!validContractVersionPage(page, id, next)) throw new Error('Invalid version history');
         setVersions((previous) => [
           ...previous,
           ...page.versions.filter((item) => !previous.some((old) => old.id === item.id)),
@@ -623,7 +640,7 @@ function ContractDetailContent({
     }
   }
   function selectVersion(value: string) {
-    if (!blocked()) {
+    if (!blocked() && value !== selectedVersion && value !== data?.version.id) {
       ++epoch.current;
       setSelectedVersion(value);
       setData(null);

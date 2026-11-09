@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T01:16:44+00:00",
-  "source_commit": "3e82186e3b9f5bfd9250ad57f6cb3cf2e87a23c2",
+  "updated": "2026-11-09T01:24:55+00:00",
+  "source_commit": "9e046b57d335d26c1ec86d6fdddeb85e0d936008",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -163134,7 +163134,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -163178,7 +163178,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/lib/contract-authoring-form.ts",
@@ -163475,6 +163475,10 @@
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
               "sha256": "1a5fde3186fbad811a477ab2dd0dbde7203d8cad2fae9d28791c8ad60d505764"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -164140,7 +164144,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -164184,7 +164188,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/lib/contract-authoring-form.ts",
@@ -164481,6 +164485,10 @@
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
               "sha256": "1a5fde3186fbad811a477ab2dd0dbde7203d8cad2fae9d28791c8ad60d505764"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -165149,7 +165157,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -165193,7 +165201,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/lib/contract-authoring-form.ts",
@@ -165490,6 +165498,10 @@
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
               "sha256": "1a5fde3186fbad811a477ab2dd0dbde7203d8cad2fae9d28791c8ad60d505764"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -166156,7 +166168,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -166200,7 +166212,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/lib/contract-authoring-form.ts",
@@ -166497,6 +166509,10 @@
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
               "sha256": "1a5fde3186fbad811a477ab2dd0dbde7203d8cad2fae9d28791c8ad60d505764"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -167162,7 +167178,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -167206,7 +167222,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/lib/contract-authoring-form.ts",
@@ -167503,6 +167519,10 @@
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
               "sha256": "1a5fde3186fbad811a477ab2dd0dbde7203d8cad2fae9d28791c8ad60d505764"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -168168,7 +168188,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -168212,7 +168232,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/lib/contract-authoring-form.ts",
@@ -168509,6 +168529,10 @@
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
               "sha256": "1a5fde3186fbad811a477ab2dd0dbde7203d8cad2fae9d28791c8ad60d505764"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -169173,7 +169197,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -169217,7 +169241,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/lib/contract-authoring-form.ts",
@@ -169514,6 +169538,10 @@
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
               "sha256": "1a5fde3186fbad811a477ab2dd0dbde7203d8cad2fae9d28791c8ad60d505764"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -170181,7 +170209,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -170225,7 +170253,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/lib/contract-authoring-form.ts",
@@ -170522,6 +170550,10 @@
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
               "sha256": "1a5fde3186fbad811a477ab2dd0dbde7203d8cad2fae9d28791c8ad60d505764"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -171187,7 +171219,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -171231,7 +171263,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/lib/contract-authoring-form.ts",
@@ -171528,6 +171560,10 @@
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
               "sha256": "1a5fde3186fbad811a477ab2dd0dbde7203d8cad2fae9d28791c8ad60d505764"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -172193,7 +172229,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -172237,7 +172273,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/lib/contract-authoring-form.ts",
@@ -172534,6 +172570,10 @@
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
               "sha256": "1a5fde3186fbad811a477ab2dd0dbde7203d8cad2fae9d28791c8ad60d505764"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -173200,7 +173240,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -173244,7 +173284,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/lib/contract-authoring-form.ts",
@@ -173541,6 +173581,10 @@
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
               "sha256": "1a5fde3186fbad811a477ab2dd0dbde7203d8cad2fae9d28791c8ad60d505764"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -174206,7 +174250,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -174250,7 +174294,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/lib/contract-authoring-form.ts",
@@ -174547,6 +174591,10 @@
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
               "sha256": "1a5fde3186fbad811a477ab2dd0dbde7203d8cad2fae9d28791c8ad60d505764"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -175211,7 +175259,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -175255,7 +175303,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/lib/contract-authoring-form.ts",
@@ -175552,6 +175600,10 @@
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
               "sha256": "1a5fde3186fbad811a477ab2dd0dbde7203d8cad2fae9d28791c8ad60d505764"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -176217,7 +176269,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -176261,7 +176313,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/lib/contract-authoring-form.ts",
@@ -176558,6 +176610,10 @@
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
               "sha256": "1a5fde3186fbad811a477ab2dd0dbde7203d8cad2fae9d28791c8ad60d505764"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -177139,7 +177195,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -177187,7 +177243,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-signature-native-validation.test.tsx",
@@ -177424,6 +177480,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -177950,7 +178010,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -177998,7 +178058,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-signature-native-validation.test.tsx",
@@ -178235,6 +178295,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -178758,7 +178822,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -178806,7 +178870,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-signature-native-validation.test.tsx",
@@ -179043,6 +179107,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -179565,7 +179633,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -179613,7 +179681,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-signature-native-validation.test.tsx",
@@ -179850,6 +179918,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -180374,7 +180446,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -180422,7 +180494,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-signature-native-validation.test.tsx",
@@ -180659,6 +180731,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -181193,7 +181269,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -181446,6 +181522,10 @@
             {
               "path": "scripts/check-route-budgets.test.mjs",
               "sha256": "351382a501857a2b4b5168e80e0b8cd791cdbd5984a7b9c46e3e8faf4f23bc38"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -182381,7 +182461,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -182698,6 +182778,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -183866,7 +183950,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -184119,6 +184203,10 @@
             {
               "path": "scripts/check-route-budgets.test.mjs",
               "sha256": "351382a501857a2b4b5168e80e0b8cd791cdbd5984a7b9c46e3e8faf4f23bc38"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -184995,7 +185083,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -185248,6 +185336,10 @@
             {
               "path": "scripts/check-route-budgets.test.mjs",
               "sha256": "351382a501857a2b4b5168e80e0b8cd791cdbd5984a7b9c46e3e8faf4f23bc38"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -186104,7 +186196,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -186361,6 +186453,10 @@
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
               "sha256": "1a5fde3186fbad811a477ab2dd0dbde7203d8cad2fae9d28791c8ad60d505764"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -186891,7 +186987,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -187144,6 +187240,10 @@
             {
               "path": "scripts/check-route-budgets.test.mjs",
               "sha256": "351382a501857a2b4b5168e80e0b8cd791cdbd5984a7b9c46e3e8faf4f23bc38"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -337415,7 +337515,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -337668,6 +337768,10 @@
             {
               "path": "scripts/check-route-budgets.test.mjs",
               "sha256": "351382a501857a2b4b5168e80e0b8cd791cdbd5984a7b9c46e3e8faf4f23bc38"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -338525,7 +338629,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -338782,6 +338886,10 @@
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
               "sha256": "1a5fde3186fbad811a477ab2dd0dbde7203d8cad2fae9d28791c8ad60d505764"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -339312,7 +339420,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -339565,6 +339673,10 @@
             {
               "path": "scripts/check-route-budgets.test.mjs",
               "sha256": "351382a501857a2b4b5168e80e0b8cd791cdbd5984a7b9c46e3e8faf4f23bc38"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -340422,7 +340534,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -340679,6 +340791,10 @@
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
               "sha256": "1a5fde3186fbad811a477ab2dd0dbde7203d8cad2fae9d28791c8ad60d505764"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -341210,7 +341326,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -341463,6 +341579,10 @@
             {
               "path": "scripts/check-route-budgets.test.mjs",
               "sha256": "351382a501857a2b4b5168e80e0b8cd791cdbd5984a7b9c46e3e8faf4f23bc38"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -342339,7 +342459,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -342592,6 +342712,10 @@
             {
               "path": "scripts/check-route-budgets.test.mjs",
               "sha256": "351382a501857a2b4b5168e80e0b8cd791cdbd5984a7b9c46e3e8faf4f23bc38"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -343470,7 +343594,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -343723,6 +343847,10 @@
             {
               "path": "scripts/check-route-budgets.test.mjs",
               "sha256": "351382a501857a2b4b5168e80e0b8cd791cdbd5984a7b9c46e3e8faf4f23bc38"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -344600,7 +344728,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -344853,6 +344981,10 @@
             {
               "path": "scripts/check-route-budgets.test.mjs",
               "sha256": "351382a501857a2b4b5168e80e0b8cd791cdbd5984a7b9c46e3e8faf4f23bc38"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -413128,7 +413260,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.test.tsx",
@@ -413140,7 +413272,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
@@ -413501,6 +413633,10 @@
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
               "sha256": "bb217dd08adde363c0496fe4f92efafcfb87f99c5bedb9bbf3850c192de9575f"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -417121,7 +417257,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.test.tsx",
@@ -417133,7 +417269,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
@@ -417494,6 +417630,10 @@
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
               "sha256": "bb217dd08adde363c0496fe4f92efafcfb87f99c5bedb9bbf3850c192de9575f"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -418421,7 +418561,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.test.tsx",
@@ -418433,7 +418573,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
@@ -418794,6 +418934,10 @@
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
               "sha256": "bb217dd08adde363c0496fe4f92efafcfb87f99c5bedb9bbf3850c192de9575f"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -419721,7 +419865,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.test.tsx",
@@ -419733,7 +419877,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
@@ -420094,6 +420238,10 @@
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
               "sha256": "bb217dd08adde363c0496fe4f92efafcfb87f99c5bedb9bbf3850c192de9575f"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -441442,7 +441590,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -441490,7 +441638,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-signature-native-validation.test.tsx",
@@ -441727,6 +441875,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -492798,7 +492950,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
@@ -493371,6 +493523,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/server-state-foundation-current-acceptance",
@@ -494219,7 +494375,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.test.tsx",
@@ -494359,7 +494515,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -494628,6 +494784,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -495106,7 +495266,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.test.tsx",
@@ -495246,7 +495406,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -495515,6 +495675,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -495934,7 +496098,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.test.tsx",
@@ -496074,7 +496238,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -496343,6 +496507,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -497636,7 +497804,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
@@ -498209,6 +498377,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/server-state-foundation-current-acceptance",
@@ -512132,7 +512304,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.tsx",
@@ -512549,6 +512721,10 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "aab5a31e236ab70a7c588c676e3a0a2cf0bb8250e8d96ecdc469c9be175dcfa2"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -517501,7 +517677,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -518354,6 +518530,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -546780,7 +546960,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -548650,7 +548830,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -550521,7 +550701,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -552361,7 +552541,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -554227,7 +554407,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -556102,7 +556282,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -557950,7 +558130,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -559762,7 +559942,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -561574,7 +561754,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -563387,7 +563567,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -565199,7 +565379,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -566757,7 +566937,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -566981,7 +567161,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -568154,6 +568334,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -568656,7 +568840,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -568880,7 +569064,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -570053,6 +570237,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -571248,7 +571436,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -571764,7 +571952,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-signature-password-recovery.test.tsx",
@@ -573261,6 +573449,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -573446,7 +573638,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -573670,7 +573862,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -574843,6 +575035,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -575345,7 +575541,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -575569,7 +575765,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -576742,6 +576938,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -577244,7 +577444,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -577468,7 +577668,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -578641,6 +578841,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -579143,7 +579347,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -579367,7 +579571,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -580540,6 +580744,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -581042,7 +581250,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -581266,7 +581474,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -582439,6 +582647,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -582941,7 +583153,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -583165,7 +583377,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -584338,6 +584550,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -584840,7 +585056,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -585064,7 +585280,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -586237,6 +586453,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -586739,7 +586959,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -586963,7 +587183,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -588136,6 +588356,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -588638,7 +588862,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -588862,7 +589086,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -590035,6 +590259,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -590537,7 +590765,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -590761,7 +590989,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -591934,6 +592162,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -592436,7 +592668,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -592660,7 +592892,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -593833,6 +594065,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -595075,7 +595311,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -595299,7 +595535,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -596472,6 +596708,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -596974,7 +597214,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -597198,7 +597438,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -598371,6 +598611,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -598718,7 +598962,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer and staff document lists and detail panels have current targeted error, retry and authority withdrawal receipts. Dashboard widget and admin first-read evidence remains indexed. Resolve the remaining contract child states and applicable account and staff child-route conditions from named evidence."
+        "Customer and staff document detail and contract snapshot/history recovery have current targeted receipts. Dashboard widget and admin first-read evidence remains indexed. Reconcile the outstanding account and staff child-route pending, empty and error conditions against the named route evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -598854,7 +599098,8 @@
           "release-0.5-electricity-owned-checkout-addresses",
           "release-0.5-electricity-catalogue-validation",
           "release-0.5-dashboard-widget-acceptance",
-          "release-0.5-document-detail-authority"
+          "release-0.5-document-detail-authority",
+          "release-0.5-contract-snapshot-states"
         ],
         "current_acceptance": null
       }
@@ -599312,7 +599557,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -601120,7 +601365,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -602928,7 +603173,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -604736,7 +604981,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -606544,7 +606789,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -608352,7 +608597,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -610160,7 +610405,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -637739,7 +637984,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -638408,6 +638653,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -638867,7 +639116,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -639536,6 +639785,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -639995,7 +640248,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -640664,6 +640917,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -641126,7 +641383,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -641795,6 +642052,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -642257,7 +642518,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -642926,6 +643187,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -643415,7 +643680,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -644084,6 +644349,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -644542,7 +644811,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -645211,6 +645480,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -645669,7 +645942,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -646338,6 +646611,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -646797,7 +647074,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -647466,6 +647743,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -647943,7 +648224,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -648612,6 +648893,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -649072,7 +649357,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -649741,6 +650026,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -650300,7 +650589,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -650649,6 +650938,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -651129,7 +651422,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -651478,6 +651771,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -651966,7 +652263,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -652315,6 +652612,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -652787,7 +653088,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -653136,6 +653437,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -653607,7 +653912,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -653956,6 +654261,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -680578,7 +680887,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -681247,6 +681556,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -681704,7 +682017,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -682373,6 +682686,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -682830,7 +683147,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -683499,6 +683816,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -683956,7 +684277,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -684625,6 +684946,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -713744,7 +714069,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -713788,7 +714113,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/lib/contract-authoring-form.ts",
@@ -714757,6 +715082,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -717381,7 +717710,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -718445,7 +718774,7 @@
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
-              "sha256": "222a18b8a86bf9bcba99f6907a43f8f96321fb32da4cee3c5c5cdc5d7a61b888"
+              "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
             },
             {
               "path": "apps/web/src/lib/contract-guidance.test.ts",
@@ -719130,6 +719459,10 @@
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
               "sha256": "bb217dd08adde363c0496fe4f92efafcfb87f99c5bedb9bbf3850c192de9575f"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -728626,7 +728959,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer and staff document lists and detail panels have current targeted error, retry and authority withdrawal receipts. Dashboard widget and admin first-read evidence remains indexed. Resolve the remaining contract child states and applicable account and staff child-route conditions from named evidence."
+        "Customer and staff document detail and contract snapshot/history recovery have current targeted receipts. Dashboard widget and admin first-read evidence remains indexed. Reconcile the outstanding account and staff child-route pending, empty and error conditions against the named route evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -728828,7 +729161,8 @@
           "release-0.5-electricity-owned-checkout-addresses",
           "release-0.5-electricity-catalogue-validation",
           "release-0.5-dashboard-widget-acceptance",
-          "release-0.5-document-detail-authority"
+          "release-0.5-document-detail-authority",
+          "release-0.5-contract-snapshot-states"
         ]
       }
     },
@@ -729012,7 +729346,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "8f5c2c8daf69bad5b51e598a7fd7fda2b6a2017b48e4fcb66b9c85cf4f84b86b"
+              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
             },
             {
               "path": "apps/web/src/components/ContractDraftForm.tsx",
@@ -730637,6 +730971,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -730775,7 +731113,8 @@
             "All 101 transfer budgets and affected native consultation accessibility and keyboard cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-consultation-denial/proof.json",
             "All 101 transfer budgets and affected native electricity delivery, accessibility and checkout cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-owned-checkout-addresses/proof.json",
             "All 101 transfer budgets and native catalogue accessibility and checkout journey cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-catalogue-validation/proof.json",
-            "All 101 final transfer budgets and affected document/solar browser checks passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-detail-authority/proof.json"
+            "All 101 final transfer budgets and affected document/solar browser checks passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-detail-authority/proof.json",
+            "All 101 transfer budgets and affected contract journeys passed against the reviewed final runtime. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-snapshot-states/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -809724,6 +810063,45 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-detail-authority/reviewed-final.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-detail-authority/renewed-bindings.json",
       "release_disposition": "Closed document detail render recovery and signed-link withdrawal gaps. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-contract-snapshot-states": {
+      "batch": "release-0.5-contract-snapshot-states",
+      "base_commit": "9e046b57d335d26c1ec86d6fdddeb85e0d936008",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/components/ContractDetail.tsx",
+          "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+        },
+        {
+          "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
+          "sha256": "ff31865be6ab8fac61ac236834809bfa4f20ea072b3ec5e3dac1b177ba022c4d"
+        },
+        {
+          "path": "apps/web/src/lib/contract-detail-records.ts",
+          "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
+        }
+      ],
+      "checks": [
+        "Three baseline regressions reproduced a mismatched staff current-version snapshot, a customer historical snapshot from a different profile, and an invalid pagination cursor that kept repeating the same page.",
+        "Initial and selected contract reads validate snapshot identity, renderable version metadata and history. Current detail and actions are hidden while a replacement read is pending. A malformed page keeps the last valid contract and version cursor with a local error. Re-selecting the same version leaves its terms visible.",
+        "Eighty-five focused units and thirty-two native browser cases passed. Chromium and mobile Safari exercised staff review, customer acceptance, signed-copy evidence, amendment, cancellation and historical electricity increase behavior in English and Persian. Sixteen instrumented Chromium cases combined with both unit reports passed the critical coverage group with 377/411 lines and 692/811 branches.",
+        "All 101 production route and interaction transfer budgets, web typecheck, changed-file lint and formatting passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-snapshot-states",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-snapshot-states/proof.json",
+      "source_scope_proof_sha256": "a4823a14e31db50bfe1f3182f47c85d0650ee6a55349b67d1c2131ca1ea990f9",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-snapshot-states/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-snapshot-states/renewed-bindings.json",
+      "release_disposition": "Closed contract snapshot validation and historical read recovery gaps. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [
@@ -809774,7 +810152,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Reproduce and close malformed contract detail, selected version and version-history read states. Preserve captured signature, lifecycle, financial and profile authority. Then reconcile remaining account and staff child states. GitHub required-check enforcement and staging Sentry delivery remain independent."
+    "goal": "Resolve demonstrable account and staff child-route pending, empty and error states using the existing route evidence. Preserve account and profile authority. GitHub required-check enforcement and the staging Sentry receipt remain independent."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",

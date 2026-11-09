@@ -654,6 +654,102 @@ it('manual parent refresh genuinely rereads the same detail and preserves uncons
     '  independent raw reason  '
   );
 });
+
+it('rejects a mismatched current version and waits for a fresh snapshot before restoring staff actions', async () => {
+  const source = signingSource({ state: 'AwaitingStaffReview' });
+  const base = '/api/admin/contracts/' + contractId;
+  let attempt = 0;
+  let finish!: (response: Response) => void;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (url: string) => {
+      if (url === `${base}/versions`)
+        return response({ versions: [source.version], nextBefore: null });
+      if (url === base) {
+        if (++attempt === 1)
+          return response({ ...source.contract, currentVersionId: documentId(9) });
+        return new Promise<Response>((resolve) => {
+          finish = resolve;
+        });
+      }
+      return response(signingView(true));
+    })
+  );
+  await render(<ContractDetail id={contractId} staff onClose={() => {}} onChanged={() => {}} />);
+  await vi.waitFor(() => expect(host.textContent).toContain(en.error));
+  expect(host.textContent).not.toContain(source.version.changeDescription);
+  expect(host.querySelector('#contract-change-reason')).toBeNull();
+  await click(en.refresh);
+  await vi.waitFor(() => expect(finish).toBeDefined());
+  expect(host.textContent).toContain(en.loading);
+  expect(host.querySelector('#contract-change-reason')).toBeNull();
+  await act(async () => finish(response(source.contract)));
+  await vi.waitFor(() => expect(host.querySelector('#contract-change-reason')).not.toBeNull());
+});
+
+it('checks the selected customer snapshot identity and keeps an already selected version visible', async () => {
+  const source = signingSource({ state: 'AwaitingCustomerAcceptance' });
+  const base = '/api/contracts/' + contractId;
+  const previous = { ...source.version, id: documentId(9), versionNumber: 1 };
+  const current = { ...source.contract, version: source.version, canAccept: true };
+  let selectedReads = 0;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (url: string) => {
+      if (url === `${base}/versions`)
+        return response({ versions: [source.version, previous], nextBefore: null });
+      if (url === `${base}/versions/${previous.id}`)
+        return response({
+          ...current,
+          profileId: ++selectedReads === 1 ? documentId(8) : profileId,
+          version: { ...previous, changeDescription: 'Prior version terms' },
+        });
+      if (url === base) return response(current);
+      return response(signingView(false));
+    })
+  );
+  await render(
+    <ContractDetail id={contractId} staff={false} onClose={() => {}} onChanged={() => {}} />
+  );
+  await vi.waitFor(() => expect(button(`${en.version} 1`)).toBeDefined());
+  await click(`${en.version} 1`);
+  await vi.waitFor(() => expect(host.textContent).toContain(en.error));
+  expect(host.textContent).not.toContain('Prior version terms');
+  await click(en.refresh);
+  await vi.waitFor(() => expect(host.textContent).toContain('Prior version terms'));
+  await click(`${en.version} 1`);
+  expect(host.textContent).toContain('Prior version terms');
+  expect(selectedReads).toBe(2);
+});
+
+it('keeps the contract and cursor while retrying invalid version metadata', async () => {
+  const source = signingSource({ state: 'AwaitingStaffReview' });
+  const base = '/api/admin/contracts/' + contractId;
+  const older = { ...source.version, id: documentId(9), versionNumber: 1 };
+  const more = vi.fn(async () =>
+    response({ versions: [older], nextBefore: more.mock.calls.length === 1 ? 2 : null })
+  );
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (url: string) => {
+      if (url === `${base}/versions`)
+        return response({ versions: [source.version], nextBefore: 2 });
+      if (url === `${base}/versions?before=2`) return more();
+      if (url === base) return response(source.contract);
+      return response(signingView(true));
+    })
+  );
+  await render(<ContractDetail id={contractId} staff onClose={() => {}} onChanged={() => {}} />);
+  await vi.waitFor(() => expect(button(en.next)).toBeDefined());
+  await click(en.next);
+  await vi.waitFor(() => expect(host.textContent).toContain(en.error));
+  expect(host.textContent).toContain(source.version.changeDescription);
+  expect(host.textContent).not.toContain(`${en.version} 1`);
+  await click(en.next);
+  await vi.waitFor(() => expect(button(`${en.version} 1`)).toBeDefined());
+  expect(more).toHaveBeenCalledTimes(2);
+});
+
 it('fences a held sibling signature denial after a parent reason command claims the resource', async () => {
   const source = signingSource({ state: 'AwaitingStaffReview' });
   let finish!: (response: Response) => void;
