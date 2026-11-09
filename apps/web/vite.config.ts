@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
 import { resolve } from 'path';
 import { readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { execFileSync } from 'node:child_process';
 import { isAuthEntryPath } from './entry-routes.js';
 
@@ -33,6 +34,26 @@ function releaseMetadataPlugin() {
       });
     },
   } satisfies import('vite').Plugin;
+}
+
+function fontNoticesPlugin(): import('vite').Plugin {
+  const uiRoot = resolve(__dirname, '../../packages/ui');
+  const requireFromUi = createRequire(resolve(uiRoot, 'package.json'));
+  return {
+    name: 'font-notices',
+    generateBundle() {
+      for (const [name, path] of [
+        ['Vazirmatn-OFL.txt', resolve(uiRoot, 'src/fonts/vazirmatn-OFL.txt')],
+        ['Inter-OFL.txt', requireFromUi.resolve('@fontsource-variable/inter/LICENSE')],
+      ]) {
+        this.emitFile({
+          type: 'asset',
+          fileName: `assets/licenses/${name}`,
+          source: readFileSync(path),
+        });
+      }
+    },
+  };
 }
 
 /**
@@ -96,6 +117,7 @@ export default defineConfig(({ mode }) => {
       tailwindcss(),
       immutableAssetsPlugin(),
       releaseMetadataPlugin(),
+      fontNoticesPlugin(),
     ],
     // CDN base URL — set CDN_URL for production builds so assets resolve via CDN
     base: authEntry ? base.replace(/\/?$/, '/') + 'auth/' : base,
