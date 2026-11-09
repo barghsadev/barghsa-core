@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T21:05:10+00:00",
+  "updated": "2026-11-09T21:09:11+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -8708,7 +8708,8 @@
           "release-0.6-packaged-production-seed",
           "release-0.6-production-image-recipes-and-distribution",
           "release-0.6-container-runtime-hardening",
-          "release-0.6-pilot-and-commercial-topology-documentation"
+          "release-0.6-pilot-and-commercial-topology-documentation",
+          "release-0.6-private-session-cutover-and-health-probes"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -8720,7 +8721,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "1861e8667c35e8bf61a4adf11e394836d9e24a1de594065fc352a423b3d4c12e"
+              "sha256": "69bab0b440cf51e592b8a3b61e3e3a661d0cf161bb4826dfdc15956fa8b81b03"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -12313,7 +12314,8 @@
           "audit/skipped-work-handoff.md"
         ],
         "batches": [
-          "release-0.6-pilot-and-commercial-topology-documentation"
+          "release-0.6-pilot-and-commercial-topology-documentation",
+          "release-0.6-private-session-cutover-and-health-probes"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -12325,7 +12327,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "1861e8667c35e8bf61a4adf11e394836d9e24a1de594065fc352a423b3d4c12e"
+              "sha256": "69bab0b440cf51e592b8a3b61e3e3a661d0cf161bb4826dfdc15956fa8b81b03"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -12384,7 +12386,8 @@
           "audit/skipped-work-handoff.md"
         ],
         "batches": [
-          "release-0.6-pilot-and-commercial-topology-documentation"
+          "release-0.6-pilot-and-commercial-topology-documentation",
+          "release-0.6-private-session-cutover-and-health-probes"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -12396,7 +12399,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "1861e8667c35e8bf61a4adf11e394836d9e24a1de594065fc352a423b3d4c12e"
+              "sha256": "69bab0b440cf51e592b8a3b61e3e3a661d0cf161bb4826dfdc15956fa8b81b03"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -16845,12 +16848,10 @@
         "story": "01-platform-infrastructure.md#spec-5a483d9327c7"
       },
       "requirement": "- **T-07.05.03:** Verify health-endpoint middleware exclusions\n  - **Notes:** Integration tests prove `/api/health/live` and `/api/health/ready` require no session, bypass application rate limits, and do not create ordinary audit entries while still emitting operational metrics.\n  - **Dependencies:** T-03.03.01\n  - **Complexity:** S",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -16879,8 +16880,43 @@
         "changed_paths": [
           "audit/skipped-work-handoff.md"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-private-session-cutover-and-health-probes"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-isolated-http-and-telemetry-proof",
+          "base_commit": "fb5cc156a76ed5e4c41abd14072731d22aea4a62",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/health/health.controller.ts",
+              "sha256": "e9f6a4494b73b18d25972007845fddb97dd99f80028058a6462111e7156f0b60"
+            },
+            {
+              "path": "apps/api/src/health/health.service.ts",
+              "sha256": "cafbb49eda3715d91702c4529d756f154d0f8c485278ddfdbfc8409ce281ea36"
+            },
+            {
+              "path": "apps/api/src/metrics/http-request-metrics.integration.test.ts",
+              "sha256": "d5d9a8477d85e7deb354e552c15fb63b43428c3d7ed39fb6817059adea65f2a6"
+            },
+            {
+              "path": "apps/api/src/metrics/metrics.controller.ts",
+              "sha256": "c2b33dda5b151adea21984a1d82e5269ec058d553073319ff0fc18d02e9f934d"
+            },
+            {
+              "path": "apps/api/src/metrics/telemetry-http.integration.test.ts",
+              "sha256": "aea0869320ba7477afaf71705b1acfedf2e9a1f98741aa4f4dc3cdf5df71cb0a"
+            },
+            {
+              "path": "deploy/production/README.md",
+              "sha256": "69bab0b440cf51e592b8a3b61e3e3a661d0cf161bb4826dfdc15956fa8b81b03"
+            }
+          ],
+          "checks": [
+            "All four compiled HTTP and telemetry integration cases passed against isolated migrated PostgreSQL. Public liveness and twenty concurrent readiness requests made no rate-window or ordinary audit writes. PostgreSQL readiness statistics and OTLP metrics remained available, and invalid schema metadata blocked readiness while liveness stayed up.",
+            "Documented the public liveness and readiness endpoints and the protected sign-in, read-only current-account and logout synthetic flow. The exact compiled candidate exercised the synthetic sign-in, current account readback and logout through the private TLS edge. Deployed synthetic scheduling and alert receipt are separate operations gates."
+          ]
+        }
       }
     },
     {
@@ -473447,12 +473483,10 @@
         "story": "06-security-testing-observability.md#spec-eaadff652fdc"
       },
       "requirement": "| T-06.01.04.08 | Ensure tokens, refresh tokens, OTPs, passwords, national IDs never in localStorage, URLs, analytics, or client logs | S |",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Rehearse the legacy credential cutover and restricted edge logging using the exact isolated staging candidate and staging proxy policy. Verify live cutover receipts separately after acceptance."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -473493,11 +473527,12 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-browser-and-edge-privacy",
-          "release-0.6-exception-correlation-and-sensitive-diagnostics"
+          "release-0.6-exception-correlation-and-sensitive-diagnostics",
+          "release-0.6-private-session-cutover-and-health-probes"
         ],
         "current_acceptance": {
-          "kind": "source-bound-native-session-authority",
-          "base_commit": "b4c243ee41d4ec78721157d77ee7dac5ddecdfb1",
+          "kind": "source-bound-browser-api-and-private-cutover-proof",
+          "base_commit": "fb5cc156a76ed5e4c41abd14072731d22aea4a62",
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
@@ -473505,7 +473540,11 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "23f6aa3b42757d22f29e8dee200979647a8cb798c3e3c16fd3d64f96f1d76a29"
+              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+            },
+            {
+              "path": "apps/api/src/auth/auth.controller.test.ts",
+              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -473513,7 +473552,7 @@
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-              "sha256": "df413d16d2bc08f880cadb0ac03c041faca72fc2661349b31f5d5fecb5b2d4ad"
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
             },
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
@@ -473525,7 +473564,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
             },
             {
               "path": "apps/api/src/crm/crm.service.ts",
@@ -473652,12 +473691,16 @@
               "sha256": "29dc4b58c3216d8b29a57fd35f24334d36c13014d9685dd5dd2ec8448ac9f179"
             },
             {
+              "path": "deploy/staging/nginx-api-proxy.conf",
+              "sha256": "ffc79d8f52d6dd3628d7b0feee4aca07a172f3f33547ff02abe9238244dd5f09"
+            },
+            {
               "path": "deploy/staging/nginx.conf",
               "sha256": "a6169fa2716af694ba983c277b145f6da6efabc41ee8c92479582af418b19e21"
             },
             {
               "path": "docs/security/otp.md",
-              "sha256": "2908ac23a7a66b5e73397b3c9e0363b038765fb5fc8a16c86a94cd32de589cc9"
+              "sha256": "6ea9b24cf002c0c19ac5ce076e1b80b16851673d562659bdc0b792c491da376b"
             },
             {
               "path": "docs/security/session-lifetime.md",
@@ -473674,10 +473717,6 @@
             {
               "path": "packages/shared/src/analytics/index.test.ts",
               "sha256": "2ba2073de74257f9986e6c6b7ac44aa6f884153c9c47d791f2822f56b1022a53"
-            },
-            {
-              "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
             }
           ],
           "checks": [
@@ -473691,7 +473730,9 @@
             "Scoped review verified browser storage, structured identity input, auth URL references, recovery proof handling, typed product analytics and route-error reporting. The browser and analytics suites passed eight tests and the route-error controller passed twenty-one.",
             "The live staging config inherited the standard raw request access log. The source change strips query and referrer values and normalizes individual revocation paths for staging and pilot. Full staging syntax passed on the installed NGINX binary. Ten private loopback requests verified both log formats while the handler retained the original query and expected status.",
             "Hosted be0cac75 run 42689595374 job 129405764028 passed the entire 43-case document HTTP file and 7,799 of 7,800 API assertions. The sole failure was the old refresh JSON fixture expecting the raw session bearer. Its replacement asserts the exact session reference, preserves the cookie assertions and additionally verifies both credentials use their HttpOnly cookie paths.",
-            "All 75 auth-controller unit cases passed against the corrected fixture. The exact hosted run containing the correction is tracked separately."
+            "All 75 auth-controller unit cases passed against the corrected fixture. The exact hosted run containing the correction is tracked separately.",
+            "A private TLS edge used the current staging proxy and log directives. The exact deployed v0.5.0 application image issued and accepted a synthetic UUIDv7 session and exposed both bearer values in JSON. After the isolated edge cutover, the compiled 67a37758 candidate refused the still-live legacy session and linked refresh token. A fresh UUIDv4 session and refresh exposed only a non-authenticating reference in JSON.",
+            "The acting user completed real password step-up and rotated its credentials. The private edge rejected raw-bearer revocation, accepted the public reference, and the target session then failed authentication. Logs excluded synthetic bearer, refresh, reference, query and referer values. The private test identity, database, network and containers were removed. Live cutover, legacy row cleanup and actual staged receipts remain separate release actions."
           ]
         }
       }
@@ -482814,7 +482855,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-database-client-pool-metrics"
+          "release-0.6-database-client-pool-metrics",
+          "release-0.6-private-session-cutover-and-health-probes"
         ],
         "current_acceptance": {
           "kind": "native-database-client-pool-and-query-metrics",
@@ -482842,7 +482884,7 @@
             },
             {
               "path": "apps/api/src/metrics/telemetry-http.integration.test.ts",
-              "sha256": "9fc0d2776175d661a57d697e0a2a4b7f68ef3d6db4b0e71aa454a54a7ae0f627"
+              "sha256": "aea0869320ba7477afaf71705b1acfedf2e9a1f98741aa4f4dc3cdf5df71cb0a"
             }
           ],
           "checks": [
@@ -485013,19 +485055,84 @@
         "story": "06-security-testing-observability.md#spec-e0acbf77e4ef"
       },
       "requirement": "| T-06.17.03.01 | Define synthetic check endpoints: `/health` (public), authenticated read-only query, login flow | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-private-session-cutover-and-health-probes"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-isolated-http-and-telemetry-proof",
+          "base_commit": "fb5cc156a76ed5e4c41abd14072731d22aea4a62",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.test.ts",
+              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
+            },
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "943f5fbaf1175e1d85c639c138aa8850d4fa84b8970c219eafa4306c614ac1f8"
+            },
+            {
+              "path": "apps/api/src/health/health.controller.ts",
+              "sha256": "e9f6a4494b73b18d25972007845fddb97dd99f80028058a6462111e7156f0b60"
+            },
+            {
+              "path": "apps/api/src/health/health.service.ts",
+              "sha256": "cafbb49eda3715d91702c4529d756f154d0f8c485278ddfdbfc8409ce281ea36"
+            },
+            {
+              "path": "apps/api/src/metrics/http-request-metrics.integration.test.ts",
+              "sha256": "d5d9a8477d85e7deb354e552c15fb63b43428c3d7ed39fb6817059adea65f2a6"
+            },
+            {
+              "path": "apps/api/src/metrics/metrics.controller.ts",
+              "sha256": "c2b33dda5b151adea21984a1d82e5269ec058d553073319ff0fc18d02e9f934d"
+            },
+            {
+              "path": "apps/api/src/metrics/telemetry-http.integration.test.ts",
+              "sha256": "aea0869320ba7477afaf71705b1acfedf2e9a1f98741aa4f4dc3cdf5df71cb0a"
+            },
+            {
+              "path": "apps/api/src/session/session-http.integration.test.ts",
+              "sha256": "e3eda2262818e847102592749bf6c2714fb0dd85162db8568c0b18f2cf5980b3"
+            },
+            {
+              "path": "apps/api/src/session/session.controller.ts",
+              "sha256": "724b8e72ca44937aeaec1d32248c72f61f1795a462096df323e34029cf16976a"
+            },
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "f476f711dfda6f7101010a9e35dbe9191b41fe44e4aea0858e702d23ef8de31e"
+            },
+            {
+              "path": "deploy/production/README.md",
+              "sha256": "69bab0b440cf51e592b8a3b61e3e3a661d0cf161bb4826dfdc15956fa8b81b03"
+            },
+            {
+              "path": "deploy/staging/nginx-api-proxy.conf",
+              "sha256": "ffc79d8f52d6dd3628d7b0feee4aca07a172f3f33547ff02abe9238244dd5f09"
+            },
+            {
+              "path": "deploy/staging/nginx.conf",
+              "sha256": "a6169fa2716af694ba983c277b145f6da6efabc41ee8c92479582af418b19e21"
+            },
+            {
+              "path": "docs/security/session-lifetime.md",
+              "sha256": "85efc197eccc06fc801bf1b9991389241a4ff376f98fbba0006b16a8e8b5e738"
+            }
+          ],
+          "checks": [
+            "All four compiled HTTP and telemetry integration cases passed against isolated migrated PostgreSQL. Public liveness and twenty concurrent readiness requests made no rate-window or ordinary audit writes. PostgreSQL readiness statistics and OTLP metrics remained available, and invalid schema metadata blocked readiness while liveness stayed up.",
+            "Documented the public liveness and readiness endpoints and the protected sign-in, read-only current-account and logout synthetic flow. The exact compiled candidate exercised the synthetic sign-in, current account readback and logout through the private TLS edge. Deployed synthetic scheduling and alert receipt are separate operations gates."
+          ]
+        }
       }
     },
     {
@@ -745277,7 +745384,8 @@
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-exception-correlation-and-sensitive-diagnostics",
           "release-0.6-capability-and-assistant-maintenance",
-          "release-0.6-pilot-and-commercial-topology-documentation"
+          "release-0.6-pilot-and-commercial-topology-documentation",
+          "release-0.6-private-session-cutover-and-health-probes"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -836928,6 +837036,84 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/pilot-and-commercial-topology",
       "source_scope_proof": "release-0.6-pilot-and-commercial-topology-documentation.json",
       "source_scope_proof_sha256": "3a77bcb8c7617275a69b09a80629662d406a29ff2d9d54cc6b89e85afc68736f"
+    },
+    "release-0.6-private-session-cutover-and-health-probes": {
+      "batch": "release-0.6-private-session-cutover-and-health-probes",
+      "base_commit": "fb5cc156a76ed5e4c41abd14072731d22aea4a62",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.01.04.08",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.controller.test.ts",
+          "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
+        },
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "943f5fbaf1175e1d85c639c138aa8850d4fa84b8970c219eafa4306c614ac1f8"
+        },
+        {
+          "path": "apps/api/src/health/health.controller.ts",
+          "sha256": "e9f6a4494b73b18d25972007845fddb97dd99f80028058a6462111e7156f0b60"
+        },
+        {
+          "path": "apps/api/src/health/health.service.ts",
+          "sha256": "cafbb49eda3715d91702c4529d756f154d0f8c485278ddfdbfc8409ce281ea36"
+        },
+        {
+          "path": "apps/api/src/metrics/http-request-metrics.integration.test.ts",
+          "sha256": "d5d9a8477d85e7deb354e552c15fb63b43428c3d7ed39fb6817059adea65f2a6"
+        },
+        {
+          "path": "apps/api/src/metrics/metrics.controller.ts",
+          "sha256": "c2b33dda5b151adea21984a1d82e5269ec058d553073319ff0fc18d02e9f934d"
+        },
+        {
+          "path": "apps/api/src/metrics/telemetry-http.integration.test.ts",
+          "sha256": "aea0869320ba7477afaf71705b1acfedf2e9a1f98741aa4f4dc3cdf5df71cb0a"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "e3eda2262818e847102592749bf6c2714fb0dd85162db8568c0b18f2cf5980b3"
+        },
+        {
+          "path": "apps/api/src/session/session.controller.ts",
+          "sha256": "724b8e72ca44937aeaec1d32248c72f61f1795a462096df323e34029cf16976a"
+        },
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "f476f711dfda6f7101010a9e35dbe9191b41fe44e4aea0858e702d23ef8de31e"
+        },
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "69bab0b440cf51e592b8a3b61e3e3a661d0cf161bb4826dfdc15956fa8b81b03"
+        },
+        {
+          "path": "deploy/staging/nginx-api-proxy.conf",
+          "sha256": "ffc79d8f52d6dd3628d7b0feee4aca07a172f3f33547ff02abe9238244dd5f09"
+        },
+        {
+          "path": "deploy/staging/nginx.conf",
+          "sha256": "a6169fa2716af694ba983c277b145f6da6efabc41ee8c92479582af418b19e21"
+        },
+        {
+          "path": "docs/security/session-lifetime.md",
+          "sha256": "85efc197eccc06fc801bf1b9991389241a4ff376f98fbba0006b16a8e8b5e738"
+        }
+      ],
+      "checks": [
+        "A private TLS edge used the current staging proxy and log directives. The exact deployed v0.5.0 application image issued and accepted a synthetic UUIDv7 session and exposed both bearer values in JSON. After the isolated edge cutover, the compiled 67a37758 candidate refused the still-live legacy session and linked refresh token. A fresh UUIDv4 session and refresh exposed only a non-authenticating reference in JSON.",
+        "The acting user completed real password step-up and rotated its credentials. The private edge rejected raw-bearer revocation, accepted the public reference, and the target session then failed authentication. Logs excluded synthetic bearer, refresh, reference, query and referer values. The private test identity, database, network and containers were removed. Live cutover, legacy row cleanup and actual staged receipts remain separate release actions.",
+        "All four compiled HTTP and telemetry integration cases passed against isolated migrated PostgreSQL. Public liveness and twenty concurrent readiness requests made no rate-window or ordinary audit writes. PostgreSQL readiness statistics and OTLP metrics remained available, and invalid schema metadata blocked readiness while liveness stayed up.",
+        "Documented the public liveness and readiness endpoints and the protected sign-in, read-only current-account and logout synthetic flow. The exact compiled candidate exercised the synthetic sign-in, current account readback and logout through the private TLS edge. Deployed synthetic scheduling and alert receipt are separate operations gates.",
+        "GitHub rejected the attempted 9a863b78 direct push with GH013 because a later cancelled branch-seed run posted a failed check under the same context. The combined 67a37758 exact candidate passed Verify monorepo integrity in run 42697837840 and its exact SHA was read back on remote main. The active ruleset was preserved. This push is not release acceptance or deployment."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-cutover-private",
+      "source_scope_proof": "release-0.6-private-session-cutover-and-health-probes.json",
+      "source_scope_proof_sha256": "a56aa8e96d063125b13b1fe519efbfb13a555f43b0a360f9bea9c476e591a4ea"
     }
   },
   "historical_improvements": [

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T21:05:10+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T21:09:11+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 995 | Accepted with unchanged source bindings. |
-| verify | 333 | Existing work may be complete; inspect evidence before building. |
-| partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 998 | Accepted with unchanged source bindings. |
+| verify | 331 | Existing work may be complete; inspect evidence before building. |
+| partial | 33 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 3 | Named owner or external prerequisite. |
@@ -1082,7 +1082,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-07.04.04` | verify | Earlier deferred | Create incident response plan |
 | `01-platform-infrastructure.md#T-07.05.01` | verify | Earlier deferred | Enforce “no external call inside a database transaction” |
 | `01-platform-infrastructure.md#T-07.05.02` | verify | Earlier deferred | Generate and verify TypeScript API client contracts from OpenAPI |
-| `01-platform-infrastructure.md#T-07.05.03` | verify | Earlier deferred | Verify health-endpoint middleware exclusions |
+| `01-platform-infrastructure.md#T-07.05.03` | done | Earlier deferred | Verify health-endpoint middleware exclusions |
 | `01-platform-infrastructure.md#T-07.05.04` | verify | Earlier deferred | Document and gate module extraction criteria |
 | `06-security-testing-observability.md#T-06.01.01.01` | done | Recorded batch work | Implement `PasswordService` with Argon2id via Node.js crypto bindings (e.g. `argon2` npm package) |
 | `06-security-testing-observability.md#T-06.01.01.02` | done | Recorded batch work | Create benchmark script to determine optimal cost/time/memory/parallelism parameters for target hardware |
@@ -1114,7 +1114,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.01.04.05` | done | Recorded batch work | Implement absolute session expiry (configurable, e.g. 7 days) + idle expiry (configurable, e.g. 30 min) |
 | `06-security-testing-observability.md#T-06.01.04.06` | done | Recorded batch work | Build session/device management UI: list active sessions, device info, last activity, revoke action |
 | `06-security-testing-observability.md#T-06.01.04.07` | done | Recorded batch work | Implement session revocation triggers: password reset, staff disablement, ownership transfer, compromise detection |
-| `06-security-testing-observability.md#T-06.01.04.08` | partial | Recorded batch work | Ensure tokens, refresh tokens, OTPs, passwords, national IDs never in localStorage, URLs, analytics, or client logs |
+| `06-security-testing-observability.md#T-06.01.04.08` | done | Recorded batch work | Ensure tokens, refresh tokens, OTPs, passwords, national IDs never in localStorage, URLs, analytics, or client logs |
 | `06-security-testing-observability.md#T-06.01.04.09` | done | Recorded batch work | Write concurrency tests: session fixation prevention, refresh token reuse, simultaneous session mutations |
 | `06-security-testing-observability.md#T-06.01.04.10` | done | Recorded batch work | Security review: verify no cookie leakage, no fixation vectors, proper SameSite/Path/Domain/HostOnly |
 | `06-security-testing-observability.md#T-06.02.01.01` | done | Recorded batch work | Implement CSRF token service: generate per-session token, store in session store, validate custom header |
@@ -1430,7 +1430,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.17.02.03` | done | Recorded batch work | Build admin UI: view active maintenance modes, activate/deactivate with reason + estimated duration + owner |
 | `06-security-testing-observability.md#T-06.17.02.04` | verify | Inventory needed | Ensure in-app and synthetic health checks respect maintenance mode (don't alert on expected unavailability) |
 | `06-security-testing-observability.md#T-06.17.02.05` | done | Recorded batch work | Write integration tests: maintenance-prevented action returns correct status; non-maintained capabilities unaffected |
-| `06-security-testing-observability.md#T-06.17.03.01` | verify | Inventory needed | Define synthetic check endpoints: `/health` (public), authenticated read-only query, login flow |
+| `06-security-testing-observability.md#T-06.17.03.01` | done | Recorded batch work | Define synthetic check endpoints: `/health` (public), authenticated read-only query, login flow |
 | `06-security-testing-observability.md#T-06.17.03.02` | verify | Inventory needed | Implement synthetic monitoring configuration (Checkly / Grafana Synthetics / independent provider) |
 | `06-security-testing-observability.md#T-06.17.03.03` | verify | Inventory needed | Ensure synthetic checks use isolated test accounts and never create real orders/payments |
 | `06-security-testing-observability.md#T-06.17.03.04` | verify | Inventory needed | Configure alert on synthetic check failure → on-call |

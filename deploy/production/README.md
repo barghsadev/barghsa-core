@@ -46,3 +46,9 @@ The administrator starts with a five-minute password-change flow. Repeating the 
 Keep `BARGHSA_WEB_CSP_MODE=report-only` during the required reporting window. Follow the [browser CSP policy](../../docs/security/content-security-policy.md). Switch to `enforce` only after checking sanitized reports and exercising the real customer and staff routes. Return to `report-only` to roll back policy enforcement without disabling collection.
 
 Record the positive TLS connection and a rejected wrong hostname or untrusted CA, network denial from an unauthorized host, failed-migration startup behavior, successful migration and seed receipts, and healthy app and worker readback. Repeat the [backup and restore rehearsal](../../docs/operations/backup/postgresql-restore-runbook.md) with authenticated off-server storage and an independent fingerprint. The Compose file and disposable staging tests do not establish those operational results.
+
+## Synthetic health probes
+
+Probe `GET /api/health/live` without credentials to verify the process can serve requests. Probe `GET /api/health/ready` for traffic admission. Treat PostgreSQL or schema failure as a readiness failure. The response can report degradation for optional dependencies while the API continues to serve traffic.
+
+Use a dedicated customer test account and its protected verified contact for the authenticated journey. Bootstrap CSRF through `GET /api/auth/csrf`, sign in through `POST /api/auth/login`, and complete `POST /api/auth/login/verify` when challenged. Use the returned cookies to read `GET /api/auth/user` and verify only the expected test account identity. Sign out through `POST /api/auth/logout` with the active CSRF proof. Keep credentials, contact values and response bodies out of monitoring output. Report status, duration and the response correlation ID. The probe makes no financial or customer-profile changes.

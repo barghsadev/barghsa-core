@@ -49,7 +49,18 @@ it('exports database metrics over OTLP and keeps serving after a collector failu
   expect((await fetch(`${fixture.base}/api/health/live`)).status).toBe(200);
 }, 25_000);
 
-it('serves concurrent readiness probes with real PostgreSQL pool statistics', async () => {
+it('serves public health probes with real PostgreSQL statistics and no rate or audit writes', async () => {
+  const operationalWrites = async () =>
+    (
+      await fixture.pool.query(
+        `SELECT (SELECT count(*)::int FROM rate_limit_windows) AS rate_windows,
+                (SELECT count(*)::int FROM audit_log) AS audit_entries`
+      )
+    ).rows[0];
+  const before = await operationalWrites();
+  const liveness = await fetch(`${fixture.base}/api/health/live`);
+  expect(liveness.status).toBe(200);
+  expect(await liveness.json()).toEqual({ status: 'ok' });
   const results = await Promise.all(
     Array.from({ length: 20 }, async () => {
       const response = await fetch(`${fixture.base}/api/health/ready`);
@@ -74,6 +85,7 @@ it('serves concurrent readiness probes with real PostgreSQL pool statistics', as
       },
     });
   }
+  expect(await operationalWrites()).toEqual(before);
 });
 
 it('returns 503 for incompatible schema metadata while liveness stays available', async () => {
