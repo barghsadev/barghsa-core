@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express';
 import { randomBytes } from 'node:crypto';
+import { SESSION_ABSOLUTE_TIMEOUT_MS } from './session-lifetime.js';
 
 /**
  * Session cookie name.
@@ -39,15 +40,13 @@ export const CSRF_COOKIE_NAME = 'barghsa_csrf';
  */
 export function setCsrfCookie(res: Response, csrfToken: string): void {
   const isSecure = process.env.NODE_ENV === 'production';
-  // Max age matches absolute session timeout (24h)
-  const maxAge = 24 * 60 * 60 * 1000;
 
   res.cookie(CSRF_COOKIE_NAME, csrfToken, {
     httpOnly: false,
     secure: isSecure,
     sameSite: 'strict',
     path: '/',
-    maxAge,
+    maxAge: SESSION_ABSOLUTE_TIMEOUT_MS,
   });
 }
 

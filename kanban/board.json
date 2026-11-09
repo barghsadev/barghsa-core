@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T19:22:43+00:00",
+  "updated": "2026-11-09T19:27:31+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -21871,7 +21871,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.5-required-input-semantics",
           "release-0.6-browser-origin-security",
-          "release-0.6-password-hash-calibration"
+          "release-0.6-password-hash-calibration",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -21895,7 +21896,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "apps/web/e2e/login-recovery.spec.ts",
@@ -22355,6 +22356,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/password-hash-calibration/release-0.6-password-hash-calibration.json",
               "scope": "Only the shared hashing policy binding changes. Its default is identical to the preceding explicit Argon2id profile. Bounded override tests, native legacy verification and current compiled HTTP and bootstrap cases renew this binding. Existing caller/session/UI code and prior independent evidence retain their scope."
+            },
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -22681,7 +22691,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.5-required-input-semantics",
           "release-0.6-browser-origin-security",
-          "release-0.6-password-hash-calibration"
+          "release-0.6-password-hash-calibration",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -22721,7 +22732,7 @@
             },
             {
               "path": "apps/api/src/session/cookie.helper.ts",
-              "sha256": "1e1a3b2092c2200f29d531468b8c15d5920b2da42aeaaf5c1d159c9937c32192"
+              "sha256": "e7df184920fe77f1b06cd760893792ec5945be026967eba39b2acd894888d8a3"
             },
             {
               "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
@@ -22729,7 +22740,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "apps/api/src/session/trusted-devices.controller.ts",
@@ -23266,6 +23277,16 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/password-hash-calibration/release-0.6-password-hash-calibration.json",
               "scope": "Only the shared hashing policy binding changes. Its default is identical to the preceding explicit Argon2id profile. Bounded override tests, native legacy verification and current compiled HTTP and bootstrap cases renew this binding. Existing caller/session/UI code and prior independent evidence retain their scope."
+            },
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/cookie.helper.ts",
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -23582,7 +23603,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.5-required-input-semantics",
           "release-0.6-browser-origin-security",
-          "release-0.6-password-hash-calibration"
+          "release-0.6-password-hash-calibration",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -23630,7 +23652,7 @@
             },
             {
               "path": "apps/api/src/session/cookie.helper.ts",
-              "sha256": "1e1a3b2092c2200f29d531468b8c15d5920b2da42aeaaf5c1d159c9937c32192"
+              "sha256": "e7df184920fe77f1b06cd760893792ec5945be026967eba39b2acd894888d8a3"
             },
             {
               "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
@@ -23638,7 +23660,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "apps/web/e2e/login-recovery.spec.ts",
@@ -24079,6 +24101,16 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/password-hash-calibration/release-0.6-password-hash-calibration.json",
               "scope": "Only the shared hashing policy binding changes. Its default is identical to the preceding explicit Argon2id profile. Bounded override tests, native legacy verification and current compiled HTTP and bootstrap cases renew this binding. Existing caller/session/UI code and prior independent evidence retain their scope."
+            },
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/cookie.helper.ts",
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -24383,7 +24415,8 @@
           "release-0.5-required-input-semantics",
           "release-0.6-browser-origin-security",
           "release-0.6-remove-unapproved-session-location-data",
-          "release-0.6-password-hash-calibration"
+          "release-0.6-password-hash-calibration",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -24435,7 +24468,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "apps/web/e2e/login-recovery.spec.ts",
@@ -24902,6 +24935,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/password-hash-calibration/release-0.6-password-hash-calibration.json",
               "scope": "Only the shared hashing policy binding changes. Its default is identical to the preceding explicit Argon2id profile. Bounded override tests, native legacy verification and current compiled HTTP and bootstrap cases renew this binding. Existing caller/session/UI code and prior independent evidence retain their scope."
+            },
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -25158,7 +25200,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-browser-origin-security",
           "release-0.6-remove-unapproved-session-location-data",
-          "release-0.6-password-hash-calibration"
+          "release-0.6-password-hash-calibration",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -25174,7 +25217,7 @@
             },
             {
               "path": "apps/api/src/session/cookie.helper.ts",
-              "sha256": "1e1a3b2092c2200f29d531468b8c15d5920b2da42aeaaf5c1d159c9937c32192"
+              "sha256": "e7df184920fe77f1b06cd760893792ec5945be026967eba39b2acd894888d8a3"
             },
             {
               "path": "apps/api/src/session/csrf.guard.ts",
@@ -25206,7 +25249,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "apps/api/src/session/step-up.guard.ts",
@@ -25622,6 +25665,16 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/password-hash-calibration/release-0.6-password-hash-calibration.json",
               "scope": "Only the shared hashing policy binding changes. Its default is identical to the preceding explicit Argon2id profile. Bounded override tests, native legacy verification and current compiled HTTP and bootstrap cases renew this binding. Existing caller/session/UI code and prior independent evidence retain their scope."
+            },
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/cookie.helper.ts",
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -25826,7 +25879,8 @@
           "release-0.6-font-source-provenance",
           "release-0.6-postgres-go-license-notices",
           "release-0.6-package-metadata-review",
-          "release-0.6-password-hash-calibration"
+          "release-0.6-password-hash-calibration",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -25842,7 +25896,7 @@
             },
             {
               "path": "apps/api/src/session/cookie.helper.ts",
-              "sha256": "1e1a3b2092c2200f29d531468b8c15d5920b2da42aeaaf5c1d159c9937c32192"
+              "sha256": "e7df184920fe77f1b06cd760893792ec5945be026967eba39b2acd894888d8a3"
             },
             {
               "path": "apps/api/src/session/csrf.guard.ts",
@@ -25878,7 +25932,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "apps/api/src/session/step-up.guard.ts",
@@ -26297,6 +26351,16 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/password-hash-calibration/release-0.6-password-hash-calibration.json",
               "scope": "Only the shared hashing policy binding changes. Its default is identical to the preceding explicit Argon2id profile. Bounded override tests, native legacy verification and current compiled HTTP and bootstrap cases renew this binding. Existing caller/session/UI code and prior independent evidence retain their scope."
+            },
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/cookie.helper.ts",
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -27462,7 +27526,8 @@
           "release-0.6-remove-unapproved-session-location-data",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-proxy-trust-and-request-limits",
-          "release-0.6-nightly-real-admin-journeys"
+          "release-0.6-nightly-real-admin-journeys",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -27594,7 +27659,7 @@
             },
             {
               "path": "apps/api/src/session/cookie.helper.ts",
-              "sha256": "1e1a3b2092c2200f29d531468b8c15d5920b2da42aeaaf5c1d159c9937c32192"
+              "sha256": "e7df184920fe77f1b06cd760893792ec5945be026967eba39b2acd894888d8a3"
             },
             {
               "path": "apps/api/src/session/csrf.guard.test.ts",
@@ -27646,7 +27711,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "apps/api/src/session/step-up.guard.test.ts",
@@ -28893,6 +28958,16 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-authentication-journeys/acceptance-proof.json"
               ],
               "scope": "Only changed bindings renewed: additive anonymous published-terms metadata/OpenAPI with all existing methods/tests exact; auth-entry-only current-session gate with all other root gates exact; local informational meter/predictable-password minimum preserved; ten UI-only copy values and two additive i18n exports; test fixture/required meter assertions updated without weakening critical assertions. Exact scope proofs,121 native,101 UI,118 i18n,78 distinct browser and all89 original budgets apply. Task/release status, unmet criteria, financial/business routes and independent live gates unchanged."
+            },
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/cookie.helper.ts",
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -29061,7 +29136,8 @@
           "release-0.5-final-gates",
           "release-0.5-review-preview-deadlines",
           "release-0.6-browser-origin-security",
-          "release-0.6-password-hash-calibration"
+          "release-0.6-password-hash-calibration",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -29093,7 +29169,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "apps/web/e2e/auth-rate-limit.spec.ts",
@@ -29508,6 +29584,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/password-hash-calibration/release-0.6-password-hash-calibration.json",
               "scope": "Only the shared hashing policy binding changes. Its default is identical to the preceding explicit Argon2id profile. Bounded override tests, native legacy verification and current compiled HTTP and bootstrap cases renew this binding. Existing caller/session/UI code and prior independent evidence retain their scope."
+            },
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -29739,7 +29824,8 @@
           "release-0.6-browser-origin-security",
           "release-0.6-remove-unapproved-session-location-data",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-password-hash-calibration"
+          "release-0.6-password-hash-calibration",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -29787,7 +29873,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "apps/web/e2e/auth-rate-limit.spec.ts",
@@ -30750,6 +30836,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/password-hash-calibration/release-0.6-password-hash-calibration.json",
               "scope": "Only the shared hashing policy binding changes. Its default is identical to the preceding explicit Argon2id profile. Bounded override tests, native legacy verification and current compiled HTTP and bootstrap cases renew this binding. Existing caller/session/UI code and prior independent evidence retain their scope."
+            },
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -31546,7 +31641,8 @@
           "release-0.6-browser-origin-security",
           "release-0.6-browser-response-policy",
           "release-0.6-proxy-trust-and-request-limits",
-          "release-0.6-password-hash-calibration"
+          "release-0.6-password-hash-calibration",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -31590,7 +31686,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "apps/web/e2e/auth-rate-limit.spec.ts",
@@ -32098,6 +32194,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/password-hash-calibration/release-0.6-password-hash-calibration.json",
               "scope": "Only the shared hashing policy binding changes. Its default is identical to the preceding explicit Argon2id profile. Bounded override tests, native legacy verification and current compiled HTTP and bootstrap cases renew this binding. Existing caller/session/UI code and prior independent evidence retain their scope."
+            },
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -49202,7 +49307,8 @@
           "release-0.5-crm-profile-loading-heading",
           "release-0.5-crm-archive-touch-targets",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -49246,7 +49352,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
@@ -50136,6 +50242,15 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-authentication-journeys/acceptance-proof.json"
               ],
               "scope": "Only changed bindings renewed: additive anonymous published-terms metadata/OpenAPI with all existing methods/tests exact; auth-entry-only current-session gate with all other root gates exact; local informational meter/predictable-password minimum preserved; ten UI-only copy values and two additive i18n exports; test fixture/required meter assertions updated without weakening critical assertions. Exact scope proofs,121 native,101 UI,118 i18n,78 distinct browser and all89 original budgets apply. Task/release status, unmet criteria, financial/business routes and independent live gates unchanged."
+            },
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -71094,7 +71209,8 @@
           "release-0.6-private-api-monitoring",
           "release-0.6-solar-replay-lock-order",
           "release-0.6-native-integration-acceptance",
-          "release-0.6-api-worker-shutdown-and-fixture-reuse"
+          "release-0.6-api-worker-shutdown-and-fixture-reuse",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -71698,7 +71814,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "apps/api/src/session/session-cap.integration.test.ts",
@@ -73322,6 +73438,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown/release-0.6-api-worker-shutdown-and-fixture-reuse.json",
               "scope": "Fixture-only renewal. All sixteen compiled worker process cases passed with identical test bodies and independent databases cloned from the same production migration chain. Existing runtime, live provider and release receipt evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -195153,7 +195278,8 @@
           "release-0.5-profile-lifecycle-feedback",
           "release-0.5-dependency-gate-closure",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -195265,7 +195391,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -195946,6 +196072,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -196065,7 +196200,8 @@
           "release-0.5-profile-lifecycle-feedback",
           "release-0.5-dependency-gate-closure",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -196177,7 +196313,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -196858,6 +196994,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -196978,7 +197123,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-responsive-width-acceptance",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-solar-replay-lock-order"
+          "release-0.6-solar-replay-lock-order",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "kind": "verified-profile-closure-preview-expiry-ownership-retention-and-support",
@@ -197034,7 +197180,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "apps/api/src/session/staff-permissions.test.ts",
@@ -197896,6 +198042,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -198032,7 +198187,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.5-onboarding-deadlines-coverage",
           "release-0.5-consultation-offer-layout",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -198132,7 +198288,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "apps/api/src/session/staff-permissions.test.ts",
@@ -199790,6 +199946,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -199971,7 +200136,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.5-onboarding-deadlines-coverage",
           "release-0.5-consultation-offer-layout",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -200071,7 +200237,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "apps/api/src/session/staff-permissions.test.ts",
@@ -201729,6 +201895,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -201892,7 +202067,8 @@
           "release-0.5-profile-lifecycle-feedback",
           "release-0.5-dependency-gate-closure",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -202004,7 +202180,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -202685,6 +202861,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -468553,7 +468738,8 @@
           "release-0.5-profile-lifecycle-feedback",
           "release-0.5-ui-coverage-collection",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "status": "done",
@@ -468585,7 +468771,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -468810,6 +468996,15 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-chat-journeys/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only: two additive dictionary values, exact retained JSON handler/security engine, added SSE transport and extended retained tests, explicit OpenAPI content documentation, safe inactive-selector options. Current native/UI/browser checks and exact scope proofs apply. Unmet criteria, task/release status and independent live/Telegram gates unchanged."
+            },
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -468894,7 +469089,8 @@
           "release-0.5-profile-lifecycle-feedback",
           "release-0.5-ui-coverage-collection",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -468926,7 +469122,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -469175,6 +469371,15 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-chat-journeys/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only: two additive dictionary values, exact retained JSON handler/security engine, added SSE transport and extended retained tests, explicit OpenAPI content documentation, safe inactive-selector options. Current native/UI/browser checks and exact scope proofs apply. Unmet criteria, task/release status and independent live/Telegram gates unchanged."
+            },
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -469259,7 +469464,8 @@
           "release-0.5-profile-lifecycle-feedback",
           "release-0.5-ui-coverage-collection",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "status": "done",
@@ -469291,7 +469497,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -469516,6 +469722,15 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-chat-journeys/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only: two additive dictionary values, exact retained JSON handler/security engine, added SSE transport and extended retained tests, explicit OpenAPI content documentation, safe inactive-selector options. Current native/UI/browser checks and exact scope proofs apply. Unmet criteria, task/release status and independent live/Telegram gates unchanged."
+            },
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -469601,7 +469816,8 @@
           "release-0.5-profile-lifecycle-feedback",
           "release-0.5-ui-coverage-collection",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -469633,7 +469849,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -469882,6 +470098,15 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-chat-journeys/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only: two additive dictionary values, exact retained JSON handler/security engine, added SSE transport and extended retained tests, explicit OpenAPI content documentation, safe inactive-selector options. Current native/UI/browser checks and exact scope proofs apply. Unmet criteria, task/release status and independent live/Telegram gates unchanged."
+            },
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -471242,19 +471467,59 @@
         "story": "06-security-testing-observability.md#spec-eaadff652fdc"
       },
       "requirement": "| T-06.01.04.01 | Implement opaque session token generation and cookie management (HttpOnly, Secure in prod, SameSite policy per T-06.02.01.04, Path) | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-session-lifetimes-cookies-and-refresh"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-compiled-session-verification",
+          "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
+              "sha256": "d3317bca524349d995b84ac1fa33155cf4d141d4a406b2896e8d5df2a23d6d1e"
+            },
+            {
+              "path": "apps/api/src/session/cookie.helper.test.ts",
+              "sha256": "83571994ebfe3a715dc65284ca051687156f25095a77284ecd6c9c983bff69f3"
+            },
+            {
+              "path": "apps/api/src/session/cookie.helper.ts",
+              "sha256": "e7df184920fe77f1b06cd760893792ec5945be026967eba39b2acd894888d8a3"
+            },
+            {
+              "path": "apps/api/src/session/session-csrf-race-http.integration.test.ts",
+              "sha256": "d6b757d79648f55f20f9176bf2b33b9f0146d4051e471ba9c30a0935c6f5c8d4"
+            },
+            {
+              "path": "apps/api/src/session/session-http.integration.test.ts",
+              "sha256": "d23f3230379767dda10939f46422fc03121ba1ec3c2d3833665dbd50de49c707"
+            },
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
+            },
+            {
+              "path": "docs/security/cookies.md",
+              "sha256": "f0d516fc6d1504f76d3d624f482658ec4d876e1022fb8bede5c1f652ad16a013"
+            }
+          ],
+          "checks": [
+            "Opaque session and refresh cookies use HttpOnly, production Secure, centralized Lax, and their scoped paths. The CSRF transport is readable with strict SameSite and is bound to active server state. Current unit and compiled HTTP login, refresh and rotation cases exercised the cookie boundary."
+          ]
+        }
       }
     },
     {
@@ -471268,19 +471533,51 @@
         "story": "06-security-testing-observability.md#spec-eaadff652fdc"
       },
       "requirement": "| T-06.01.04.02 | Implement session store in PostgreSQL (not Redis; Redis is optional, auth must work without it) | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-session-lifetimes-cookies-and-refresh"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-compiled-session-verification",
+          "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
+              "sha256": "d3317bca524349d995b84ac1fa33155cf4d141d4a406b2896e8d5df2a23d6d1e"
+            },
+            {
+              "path": "apps/api/src/session/session-csrf-race-http.integration.test.ts",
+              "sha256": "d6b757d79648f55f20f9176bf2b33b9f0146d4051e471ba9c30a0935c6f5c8d4"
+            },
+            {
+              "path": "apps/api/src/session/session-http.integration.test.ts",
+              "sha256": "d23f3230379767dda10939f46422fc03121ba1ec3c2d3833665dbd50de49c707"
+            },
+            {
+              "path": "apps/api/src/session/session.service.test.ts",
+              "sha256": "0a277a4b865c189cceb2b888ee8c611192973e425ae35e40d0d9b4d8d2afe988"
+            },
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
+            },
+            {
+              "path": "packages/db/src/schema/sessions.ts",
+              "sha256": "d092d3b69e0dd7550cdcad65106a9aa7242e359e42e094f00ace643531754cb5"
+            }
+          ],
+          "checks": [
+            "The current compiled API signed in, validated, rotated and revoked sessions against real PostgreSQL on an internal network with no Redis service. Both idle and absolute deadlines are stored in the session row."
+          ]
+        }
       }
     },
     {
@@ -471320,19 +471617,59 @@
         "story": "06-security-testing-observability.md#spec-eaadff652fdc"
       },
       "requirement": "| T-06.01.04.04 | Implement refresh token rotation with reuse detection (stealing detection + user alert + revoke token family) | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-session-lifetimes-cookies-and-refresh"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-compiled-session-verification",
+          "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
+              "sha256": "d3317bca524349d995b84ac1fa33155cf4d141d4a406b2896e8d5df2a23d6d1e"
+            },
+            {
+              "path": "apps/api/src/auth/session-notifications.ts",
+              "sha256": "804030204fc1a4530a1caa6a5a9690ec577857ab2a5f828179f8f85577c0143f"
+            },
+            {
+              "path": "apps/api/src/session/session-csrf-race-http.integration.test.ts",
+              "sha256": "d6b757d79648f55f20f9176bf2b33b9f0146d4051e471ba9c30a0935c6f5c8d4"
+            },
+            {
+              "path": "apps/api/src/session/session-http.integration.test.ts",
+              "sha256": "d23f3230379767dda10939f46422fc03121ba1ec3c2d3833665dbd50de49c707"
+            },
+            {
+              "path": "apps/api/src/session/session.service.test.ts",
+              "sha256": "0a277a4b865c189cceb2b888ee8c611192973e425ae35e40d0d9b4d8d2afe988"
+            },
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
+            },
+            {
+              "path": "packages/db/src/schema/refresh-tokens.ts",
+              "sha256": "9463287050f178b2113423e2513edc8c95095d22d94661146492067c1391ca9e"
+            },
+            {
+              "path": "packages/db/src/schema/sessions.ts",
+              "sha256": "d092d3b69e0dd7550cdcad65106a9aa7242e359e42e094f00ace643531754cb5"
+            }
+          ],
+          "checks": [
+            "Real HTTP refresh enforces CSRF and idle expiry, rotates the credential, and revokes the family on reuse. Source review and existing unit tests confirm that reuse records one private warning and consumes related tokens inside the revocation transaction."
+          ]
+        }
       }
     },
     {
@@ -471346,19 +471683,75 @@
         "story": "06-security-testing-observability.md#spec-eaadff652fdc"
       },
       "requirement": "| T-06.01.04.05 | Implement absolute session expiry (configurable, e.g. 7 days) + idle expiry (configurable, e.g. 30 min) | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-session-lifetimes-cookies-and-refresh"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-compiled-session-verification",
+          "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
+              "sha256": "d3317bca524349d995b84ac1fa33155cf4d141d4a406b2896e8d5df2a23d6d1e"
+            },
+            {
+              "path": "apps/api/src/session/cookie.helper.test.ts",
+              "sha256": "83571994ebfe3a715dc65284ca051687156f25095a77284ecd6c9c983bff69f3"
+            },
+            {
+              "path": "apps/api/src/session/cookie.helper.ts",
+              "sha256": "e7df184920fe77f1b06cd760893792ec5945be026967eba39b2acd894888d8a3"
+            },
+            {
+              "path": "apps/api/src/session/session-csrf-race-http.integration.test.ts",
+              "sha256": "d6b757d79648f55f20f9176bf2b33b9f0146d4051e471ba9c30a0935c6f5c8d4"
+            },
+            {
+              "path": "apps/api/src/session/session-http.integration.test.ts",
+              "sha256": "d23f3230379767dda10939f46422fc03121ba1ec3c2d3833665dbd50de49c707"
+            },
+            {
+              "path": "apps/api/src/session/session-lifetime-http.integration.test.ts",
+              "sha256": "b7c9ea006b47acabba55532f8e727c267b5600381160652eb911c892c8619533"
+            },
+            {
+              "path": "apps/api/src/session/session-lifetime.test.ts",
+              "sha256": "6d0296c0c3439ed50633ba01b8b9834c0e9e4d906c18f04f77e0c9b0a4e0e1ae"
+            },
+            {
+              "path": "apps/api/src/session/session-lifetime.ts",
+              "sha256": "ca53863b89d9c498d46436d5e4ab9caa147df16da7546a6e4adbe032c8ccc865"
+            },
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
+            },
+            {
+              "path": "docs/security/cookies.md",
+              "sha256": "f0d516fc6d1504f76d3d624f482658ec4d876e1022fb8bede5c1f652ad16a013"
+            },
+            {
+              "path": "docs/security/session-lifetime.md",
+              "sha256": "bb7dfcba6b934214243eea4587e6e8c5c1384f237d5603b51d0d76d64f616001"
+            }
+          ],
+          "checks": [
+            "Eight configuration cases preserve the default 30-minute idle and 24-hour absolute windows, permit only shorter integer values, and reject invalid settings. The compiled login stored a 300-second idle and 7200-second absolute lifetime and issued a CSRF cookie with a 7200-second age. The current API also rejected idle expiry on refresh and preserved default rotation, cookie handling and forced password change."
+          ]
+        }
       }
     },
     {
@@ -471476,19 +471869,75 @@
         "story": "06-security-testing-observability.md#spec-eaadff652fdc"
       },
       "requirement": "| T-06.01.04.10 | Security review: verify no cookie leakage, no fixation vectors, proper SameSite/Path/Domain/HostOnly | S |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-session-lifetimes-cookies-and-refresh"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-compiled-session-verification",
+          "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
+              "sha256": "d3317bca524349d995b84ac1fa33155cf4d141d4a406b2896e8d5df2a23d6d1e"
+            },
+            {
+              "path": "apps/api/src/session/cookie.helper.test.ts",
+              "sha256": "83571994ebfe3a715dc65284ca051687156f25095a77284ecd6c9c983bff69f3"
+            },
+            {
+              "path": "apps/api/src/session/cookie.helper.ts",
+              "sha256": "e7df184920fe77f1b06cd760893792ec5945be026967eba39b2acd894888d8a3"
+            },
+            {
+              "path": "apps/api/src/session/session-csrf-race-http.integration.test.ts",
+              "sha256": "d6b757d79648f55f20f9176bf2b33b9f0146d4051e471ba9c30a0935c6f5c8d4"
+            },
+            {
+              "path": "apps/api/src/session/session-http.integration.test.ts",
+              "sha256": "d23f3230379767dda10939f46422fc03121ba1ec3c2d3833665dbd50de49c707"
+            },
+            {
+              "path": "apps/api/src/session/session-lifetime-http.integration.test.ts",
+              "sha256": "b7c9ea006b47acabba55532f8e727c267b5600381160652eb911c892c8619533"
+            },
+            {
+              "path": "apps/api/src/session/session-lifetime.test.ts",
+              "sha256": "6d0296c0c3439ed50633ba01b8b9834c0e9e4d906c18f04f77e0c9b0a4e0e1ae"
+            },
+            {
+              "path": "apps/api/src/session/session-lifetime.ts",
+              "sha256": "ca53863b89d9c498d46436d5e4ab9caa147df16da7546a6e4adbe032c8ccc865"
+            },
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
+            },
+            {
+              "path": "docs/security/cookies.md",
+              "sha256": "f0d516fc6d1504f76d3d624f482658ec4d876e1022fb8bede5c1f652ad16a013"
+            },
+            {
+              "path": "docs/security/session-lifetime.md",
+              "sha256": "bb7dfcba6b934214243eea4587e6e8c5c1384f237d5603b51d0d76d64f616001"
+            }
+          ],
+          "checks": [
+            "The security-owned same-origin policy uses HostOnly session and refresh cookies, scoped paths and production Secure. Current tests exercised removal of the legacy root session cookie, HTTP-only credentials, CSRF rotation and authority revalidation across a lock wait. The browser and API continue to enforce CSRF separately from SameSite."
+          ]
+        }
       }
     },
     {
@@ -471515,7 +471964,8 @@
           "release-0.6-browser-origin-security",
           "release-0.6-remove-unapproved-session-location-data",
           "release-0.6-private-api-monitoring",
-          "release-0.6-proxy-trust-and-request-limits"
+          "release-0.6-proxy-trust-and-request-limits",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -471575,7 +472025,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "docs/security/cookies.md",
@@ -471593,7 +472043,18 @@
               "apps/api/src/app.factory.ts"
             ],
             "base_commit": "133576f31ba18e34a02b1892866a3210e3cad037"
-          }
+          },
+          "source_renewals": [
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
+            }
+          ]
         }
       }
     },
@@ -471621,7 +472082,8 @@
           "release-0.6-browser-origin-security",
           "release-0.6-remove-unapproved-session-location-data",
           "release-0.6-private-api-monitoring",
-          "release-0.6-proxy-trust-and-request-limits"
+          "release-0.6-proxy-trust-and-request-limits",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -471681,7 +472143,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "docs/security/cookies.md",
@@ -471699,7 +472161,18 @@
               "apps/api/src/app.factory.ts"
             ],
             "base_commit": "133576f31ba18e34a02b1892866a3210e3cad037"
-          }
+          },
+          "source_renewals": [
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
+            }
+          ]
         }
       }
     },
@@ -471815,7 +472288,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-browser-origin-security",
-          "release-0.6-remove-unapproved-session-location-data"
+          "release-0.6-remove-unapproved-session-location-data",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -471827,7 +472301,7 @@
             },
             {
               "path": "apps/api/src/session/cookie.helper.ts",
-              "sha256": "1e1a3b2092c2200f29d531468b8c15d5920b2da42aeaaf5c1d159c9937c32192"
+              "sha256": "e7df184920fe77f1b06cd760893792ec5945be026967eba39b2acd894888d8a3"
             },
             {
               "path": "apps/api/src/session/csrf.guard.test.ts",
@@ -471862,6 +472336,17 @@
             "Central security-owned cookie topology and helper cover Lax session/refresh, Strict CSRF/challenge, Secure in production and narrow cookie paths; no per-module widening.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
             "The exact compiled API and source-bound session HTTP suite passed 17 cases on isolated PostgreSQL 16, including the owner-approved null location even for a public IP and legacy country metadata. Existing authentication, CSRF, expiry, step-up, revoke-all and forced-change assertions passed."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/cookie.helper.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
+            }
           ]
         }
       }
@@ -472014,7 +472499,8 @@
           "release-0.6-browser-origin-security",
           "release-0.6-remove-unapproved-session-location-data",
           "release-0.6-private-api-monitoring",
-          "release-0.6-proxy-trust-and-request-limits"
+          "release-0.6-proxy-trust-and-request-limits",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -472074,7 +472560,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "docs/security/cookies.md",
@@ -472092,7 +472578,18 @@
               "apps/api/src/app.factory.ts"
             ],
             "base_commit": "133576f31ba18e34a02b1892866a3210e3cad037"
-          }
+          },
+          "source_renewals": [
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
+            }
+          ]
         }
       }
     },
@@ -730647,7 +731144,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "apps/api/src/session/staff-permissions.ts",
@@ -733397,6 +733894,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown/release-0.6-api-worker-shutdown-and-fixture-reuse.json",
               "scope": "Fixture-only renewal. All sixteen compiled worker process cases passed with identical test bodies and independent databases cloned from the same production migration chain. Existing runtime, live provider and release receipt evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -733669,7 +734175,8 @@
           "release-0.6-production-image-recipes-and-distribution",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-proxy-trust-and-request-limits",
-          "release-0.6-api-worker-shutdown-and-fixture-reuse"
+          "release-0.6-api-worker-shutdown-and-fixture-reuse",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -734570,7 +735077,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.ts",
-              "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+              "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
             },
             {
               "path": "apps/api/src/session/staff-permissions.ts",
@@ -737190,6 +737697,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown/release-0.6-api-worker-shutdown-and-fixture-reuse.json",
               "scope": "Fixture-only renewal. All sixteen compiled worker process cases passed with identical test bodies and independent databases cloned from the same production migration chain. Existing runtime, live provider and release receipt evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+              "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+              "paths": [
+                "apps/api/src/session/session.service.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
+              "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -737480,7 +737996,8 @@
           "release-0.6-production-image-recipes-and-distribution",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-proxy-trust-and-request-limits",
-          "release-0.6-api-worker-shutdown-and-fixture-reuse"
+          "release-0.6-api-worker-shutdown-and-fixture-reuse",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -741465,7 +741982,8 @@
           "release-0.6-api-worker-shutdown-and-fixture-reuse",
           "release-0.6-password-hash-calibration",
           "release-0.6-reconciliation-fixture-document-boundary",
-          "release-0.6-otp-issuance-expiry-and-delivery-acceptance"
+          "release-0.6-otp-issuance-expiry-and-delivery-acceptance",
+          "release-0.6-session-lifetimes-cookies-and-refresh"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -832108,6 +832626,122 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/otp-issuance-and-expiry",
       "source_scope_proof": "release-0.6-otp-issuance-expiry-and-delivery-acceptance.json",
       "source_scope_proof_sha256": "6aab3d5475d040d4b289fb970f27e44a9c06208983335d8bcea1c6bdf614b13a"
+    },
+    "release-0.6-session-lifetimes-cookies-and-refresh": {
+      "batch": "release-0.6-session-lifetimes-cookies-and-refresh",
+      "base_commit": "771a9f85c9974edeb4a477102cd242f9f4bd4d3f",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.01.04.01",
+        "06-security-testing-observability.md#T-06.01.04.02",
+        "06-security-testing-observability.md#T-06.01.04.04",
+        "06-security-testing-observability.md#T-06.01.04.05",
+        "06-security-testing-observability.md#T-06.01.04.10",
+        "release-readiness#R-05.02",
+        "02-auth-users-admin.md#T-02.01.01",
+        "02-auth-users-admin.md#T-02.01.02",
+        "02-auth-users-admin.md#T-02.01.03",
+        "02-auth-users-admin.md#T-02.01.04",
+        "02-auth-users-admin.md#T-02.02.01",
+        "02-auth-users-admin.md#T-02.02.02",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-02.03.01",
+        "02-auth-users-admin.md#T-02.03.02",
+        "02-auth-users-admin.md#T-02.04.01",
+        "02-auth-users-admin.md#T-05.02.04",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "02-auth-users-admin.md#T-11.01.01",
+        "02-auth-users-admin.md#T-11.01.02",
+        "02-auth-users-admin.md#T-11.01.03",
+        "02-auth-users-admin.md#T-11.02.01",
+        "02-auth-users-admin.md#T-11.02.02",
+        "02-auth-users-admin.md#T-11.03.01",
+        "05-notifications-documents-ai.md#T-05.24.01",
+        "05-notifications-documents-ai.md#T-05.24.02",
+        "05-notifications-documents-ai.md#T-05.24.03",
+        "05-notifications-documents-ai.md#T-05.24.04",
+        "06-security-testing-observability.md#T-06.02.01.01",
+        "06-security-testing-observability.md#T-06.02.01.02",
+        "06-security-testing-observability.md#T-06.02.01.04",
+        "06-security-testing-observability.md#T-06.02.01.07",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+        },
+        {
+          "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
+          "sha256": "d3317bca524349d995b84ac1fa33155cf4d141d4a406b2896e8d5df2a23d6d1e"
+        },
+        {
+          "path": "apps/api/src/auth/session-notifications.ts",
+          "sha256": "804030204fc1a4530a1caa6a5a9690ec577857ab2a5f828179f8f85577c0143f"
+        },
+        {
+          "path": "apps/api/src/session/cookie.helper.test.ts",
+          "sha256": "83571994ebfe3a715dc65284ca051687156f25095a77284ecd6c9c983bff69f3"
+        },
+        {
+          "path": "apps/api/src/session/cookie.helper.ts",
+          "sha256": "e7df184920fe77f1b06cd760893792ec5945be026967eba39b2acd894888d8a3"
+        },
+        {
+          "path": "apps/api/src/session/session-csrf-race-http.integration.test.ts",
+          "sha256": "d6b757d79648f55f20f9176bf2b33b9f0146d4051e471ba9c30a0935c6f5c8d4"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "d23f3230379767dda10939f46422fc03121ba1ec3c2d3833665dbd50de49c707"
+        },
+        {
+          "path": "apps/api/src/session/session-lifetime-http.integration.test.ts",
+          "sha256": "b7c9ea006b47acabba55532f8e727c267b5600381160652eb911c892c8619533"
+        },
+        {
+          "path": "apps/api/src/session/session-lifetime.test.ts",
+          "sha256": "6d0296c0c3439ed50633ba01b8b9834c0e9e4d906c18f04f77e0c9b0a4e0e1ae"
+        },
+        {
+          "path": "apps/api/src/session/session-lifetime.ts",
+          "sha256": "ca53863b89d9c498d46436d5e4ab9caa147df16da7546a6e4adbe032c8ccc865"
+        },
+        {
+          "path": "apps/api/src/session/session.service.test.ts",
+          "sha256": "0a277a4b865c189cceb2b888ee8c611192973e425ae35e40d0d9b4d8d2afe988"
+        },
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "f83bc79ce07af0bd53cee1358ba451ca7b1c6d0171d643c619ad46e52148655f"
+        },
+        {
+          "path": "docs/security/cookies.md",
+          "sha256": "f0d516fc6d1504f76d3d624f482658ec4d876e1022fb8bede5c1f652ad16a013"
+        },
+        {
+          "path": "docs/security/session-lifetime.md",
+          "sha256": "bb7dfcba6b934214243eea4587e6e8c5c1384f237d5603b51d0d76d64f616001"
+        },
+        {
+          "path": "packages/db/src/schema/refresh-tokens.ts",
+          "sha256": "9463287050f178b2113423e2513edc8c95095d22d94661146492067c1391ca9e"
+        },
+        {
+          "path": "packages/db/src/schema/sessions.ts",
+          "sha256": "d092d3b69e0dd7550cdcad65106a9aa7242e359e42e094f00ace643531754cb5"
+        }
+      ],
+      "checks": [
+        "Opaque session and refresh cookies use HttpOnly, production Secure, centralized Lax, and their scoped paths. The CSRF transport is readable with strict SameSite and is bound to active server state. Current unit and compiled HTTP login, refresh and rotation cases exercised the cookie boundary.",
+        "The current compiled API signed in, validated, rotated and revoked sessions against real PostgreSQL on an internal network with no Redis service. Both idle and absolute deadlines are stored in the session row.",
+        "Real HTTP refresh enforces CSRF and idle expiry, rotates the credential, and revokes the family on reuse. Source review and existing unit tests confirm that reuse records one private warning and consumes related tokens inside the revocation transaction.",
+        "Eight configuration cases preserve the default 30-minute idle and 24-hour absolute windows, permit only shorter integer values, and reject invalid settings. The compiled login stored a 300-second idle and 7200-second absolute lifetime and issued a CSRF cookie with a 7200-second age. The current API also rejected idle expiry on refresh and preserved default rotation, cookie handling and forced password change.",
+        "The security-owned same-origin policy uses HostOnly session and refresh cookies, scoped paths and production Secure. Current tests exercised removal of the legacy root session cookie, HTTP-only credentials, CSRF rotation and authority revalidation across a lock wait. The browser and API continue to enforce CSRF separately from SameSite."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime",
+      "source_scope_proof": "release-0.6-session-lifetimes-cookies-and-refresh.json",
+      "source_scope_proof_sha256": "a765d89f0446e35d82096aafcd6339b8213fac19365cb851d15a23309f33bb5d"
     }
   },
   "historical_improvements": [

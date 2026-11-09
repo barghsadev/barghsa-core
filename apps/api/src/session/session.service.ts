@@ -12,11 +12,9 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 import { defaultInboxContent, defaultInboxLink } from '@barghsa/shared/notifications';
 import { resolveStaffPermissions } from './staff-permissions.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
+import { SESSION_ABSOLUTE_TIMEOUT_MS, SESSION_IDLE_TIMEOUT_MS } from './session-lifetime.js';
 
-/** Session idle timeout: 30 minutes */
-export const SESSION_IDLE_TIMEOUT_MS = 30 * 60 * 1000;
-/** Session absolute timeout: 24 hours */
-export const SESSION_ABSOLUTE_TIMEOUT_MS = 24 * 60 * 60 * 1000;
+export { SESSION_ABSOLUTE_TIMEOUT_MS, SESSION_IDLE_TIMEOUT_MS } from './session-lifetime.js';
 /** Refresh token length (bytes before hex encoding) */
 const REFRESH_TOKEN_BYTES = 32;
 /** CSRF token length (bytes before hex encoding) */
