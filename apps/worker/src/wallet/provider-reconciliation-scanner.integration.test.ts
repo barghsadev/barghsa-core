@@ -21,9 +21,11 @@ afterAll(async () => {
   await db?.close();
 });
 beforeEach(async () => {
+  // Truncating profiles would cascade into the append-only document access log.
   await db.pool.query(
-    'TRUNCATE reconciliation_exceptions,wallet_topup_callback_events,wallet_chargeback_events,wallet_transactions,wallets,profiles CASCADE'
+    'TRUNCATE reconciliation_exceptions,wallet_topup_callback_events,wallet_chargeback_events,wallet_transactions,wallets CASCADE'
   );
+  await db.pool.query("DELETE FROM profiles WHERE user_id='provider-fixture'");
 });
 async function profile() {
   const id = randomUUID();

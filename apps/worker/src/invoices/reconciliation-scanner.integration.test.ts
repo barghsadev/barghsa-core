@@ -17,10 +17,11 @@ afterAll(async () => {
   await db?.close();
 });
 beforeEach(async () => {
-  // Fixture reset only; the scanner must retain every financial row below.
+  // Truncating profiles would cascade into the append-only document access log.
   await db.pool.query(
-    'TRUNCATE reconciliation_exceptions, invoices, wallets, wallet_transactions, bank_receipts, profiles CASCADE'
+    'TRUNCATE reconciliation_exceptions, invoices, wallets, wallet_transactions, bank_receipts CASCADE'
   );
+  await db.pool.query('DELETE FROM profiles WHERE user_id=$1', [owner]);
 });
 
 async function profile() {

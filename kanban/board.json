@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T19:13:46+00:00",
+  "updated": "2026-11-09T19:16:20+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -98411,7 +98411,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-api-worker-shutdown-and-fixture-reuse"
+          "release-0.6-api-worker-shutdown-and-fixture-reuse",
+          "release-0.6-reconciliation-fixture-document-boundary"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -98879,7 +98880,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reconciliation-scanner.integration.test.ts",
-              "sha256": "1001c560f3d577063afabcf864334fad5ac25d13052797e437261988e8ac6da8"
+              "sha256": "9af278fd7c42a1d178fa82a0d4bd9c0ea41a3e1ff0e00f27b7de5e315a9a85b1"
             },
             {
               "path": "apps/worker/src/invoices/reconciliation-scanner.test.ts",
@@ -98931,7 +98932,7 @@
             },
             {
               "path": "apps/worker/src/wallet/provider-reconciliation-scanner.integration.test.ts",
-              "sha256": "01751e11c692ded83d8ad7f52598e8e701bdc8f810011f06c0f9d2ea0e4dda7b"
+              "sha256": "96ba22e59d24eadad4b0808088c43ebde9e597f7b3a86cdb9c61e3df96868d70"
             },
             {
               "path": "apps/worker/src/wallet/provider-reconciliation-scanner.test.ts",
@@ -99231,6 +99232,16 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown/release-0.6-api-worker-shutdown-and-fixture-reuse.json",
               "scope": "Fixture-only renewal. All sixteen compiled worker process cases passed with identical test bodies and independent databases cloned from the same production migration chain. Existing runtime, live provider and release receipt evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-reconciliation-fixture-document-boundary",
+              "base_commit": "f456d87327d578a99d13f98ec4f70b850ed87693",
+              "paths": [
+                "apps/worker/src/invoices/reconciliation-scanner.integration.test.ts",
+                "apps/worker/src/wallet/provider-reconciliation-scanner.integration.test.ts"
+              ],
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/reconciliation-fixture-document-boundary/release-0.6-reconciliation-fixture-document-boundary.json",
+              "scope": "Test fixture-only renewal using thirty-one distinct native PostgreSQL cases. The production scanner, retention protection and prior evidence scopes remain unchanged."
             }
           ],
           "presentation_renewals": [
@@ -741070,7 +741081,8 @@
           "release-0.6-static-server-shutdown-acceptance",
           "release-0.6-development-env-and-watcher-acceptance",
           "release-0.6-api-worker-shutdown-and-fixture-reuse",
-          "release-0.6-password-hash-calibration"
+          "release-0.6-password-hash-calibration",
+          "release-0.6-reconciliation-fixture-document-boundary"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -831551,6 +831563,60 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/password-hash-calibration",
       "source_scope_proof": "release-0.6-password-hash-calibration.json",
       "source_scope_proof_sha256": "ef12ac881b6e46a162435e295525cdef2f19f9ae62caf8ceb2b6880b88942f24"
+    },
+    "release-0.6-reconciliation-fixture-document-boundary": {
+      "batch": "release-0.6-reconciliation-fixture-document-boundary",
+      "base_commit": "f456d87327d578a99d13f98ec4f70b850ed87693",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.09.01",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/invoices/reconciliation-scanner.integration.test.ts",
+          "sha256": "9af278fd7c42a1d178fa82a0d4bd9c0ea41a3e1ff0e00f27b7de5e315a9a85b1"
+        },
+        {
+          "path": "apps/worker/src/wallet/provider-reconciliation-scanner.integration.test.ts",
+          "sha256": "96ba22e59d24eadad4b0808088c43ebde9e597f7b3a86cdb9c61e3df96868d70"
+        },
+        {
+          "path": "apps/worker/src/invoices/reconciliation-scanner.ts",
+          "sha256": "363d126a97adfd60599c72d8d1003ca0f41cefddacd82ad392e636e96b56efc7"
+        },
+        {
+          "path": "apps/worker/src/wallet/provider-reconciliation-scanner.ts",
+          "sha256": "831372737216003f21f5118ce364fbf4efbdf19622c318169b9cd99ab2959dc7"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+          "sha256": "e26f8952d5453615418dd3bace94dae60323f8337efce8088364efda7caf7a02"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.service.ts",
+          "sha256": "9ad1a18ec7dcb699cc1dd87474f2e60d807e02aa2985710053563deb091fb08a"
+        },
+        {
+          "path": "packages/db/drizzle/production/0140_document_lifecycle.sql",
+          "sha256": "7334c8337f4dce799029dd1fc9a1f00c20063022cfe0dd549f1035b3560a848d"
+        },
+        {
+          "path": "packages/db/drizzle/production/0271_document_access_log.sql",
+          "sha256": "770c659f79d8664416d32cf8ca7f1d8bdcc3e9a5ffebca0e7c44d5df3169f578"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+        }
+      ],
+      "checks": [
+        "Hosted run 42679898088 passed all sixteen compiled worker lifecycle cases but found thirty-one reconciliation failures at setup. Cascading TRUNCATE profiles reached the append-only document access log, which correctly rejected it with PostgreSQL 23514.",
+        "Both fixtures retain their financial table reset and remove only their own synthetic profile rows. Source review verifies that no test body, financial scanner, schema migration or trigger changed.",
+        "Thirty cases passed in the first isolated native run. The remaining provider-lock case could not load a compiled API module omitted from that runner. With the correct API artifacts mounted, only that case was rerun and passed, for thirty-one distinct cases covering both suites."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/reconciliation-fixture-document-boundary",
+      "source_scope_proof": "release-0.6-reconciliation-fixture-document-boundary.json",
+      "source_scope_proof_sha256": "b1e3f603ec6e822c913f430d6e60939f3a8e553be0485910eeea3a6748bf9ddf"
     }
   },
   "historical_improvements": [
