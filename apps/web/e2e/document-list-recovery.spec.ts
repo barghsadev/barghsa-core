@@ -227,6 +227,8 @@ for (const locale of ['en', 'fa'] as const) {
       documentTemplateText(key, locale);
     let listStatus = 503,
       detailStatus = 503,
+      malformedList = false,
+      malformedDetail = false,
       detailReads = 0,
       hold = false,
       held: Route | undefined;
@@ -241,14 +243,18 @@ for (const locale of ['en', 'fa'] as const) {
           return;
         }
         return listStatus === 200
-          ? route.fulfill({ json: [templateRow] })
+          ? route.fulfill({ json: malformedList ? [null] : [templateRow] })
           : route.fulfill({ status: listStatus, json: {} });
       }
     );
     await page.route(`**/api/admin/document-templates/${templateRow.id}`, (route) => {
       detailReads++;
       return detailStatus === 200
-        ? route.fulfill({ json: templateDetail })
+        ? route.fulfill({
+            json: malformedDetail
+              ? { ...templateDetail, versions: [{ ...templateDetail.versions[0], files: null }] }
+              : templateDetail,
+          })
         : route.fulfill({ status: detailStatus, json: {} });
     });
     await page.goto('/admin/document-templates');
@@ -313,12 +319,104 @@ for (const locale of ['en', 'fa'] as const) {
         path: '/tmp/barghsa-document-template-fa-mobile-safari.png',
         fullPage: true,
       });
+    const refresh = main.getByRole('button', { name: word('refresh'), exact: true });
+    const listError = content.getByRole('alert').filter({ hasText: word('error') });
+    malformedList = true;
+    malformedDetail = true;
+    await refresh.click();
+    await expect(listError).toBeVisible();
+    await expect(error).toBeVisible();
+    await expect(
+      content.getByRole('button', { name: new RegExp(templateRow.title) })
+    ).toBeVisible();
+    await expect(page.locator('#document-template-title')).toHaveValue('Metadata draft');
+    await expect(page.locator('#document-template-summary')).toHaveValue('Version draft');
+    expect(queries.at(-1)).toBe(query);
+    malformedList = false;
+    malformedDetail = false;
+    await listError.getByRole('button', { name: word('retry'), exact: true }).click();
+    await error.getByRole('button', { name: word('retry'), exact: true }).click();
+    await expect(listError).toHaveCount(0);
+    await expect(error).toHaveCount(0);
+    await expect(page.locator('#document-template-title')).toHaveValue('Metadata draft');
+    expect(
+      await page
+        .locator('#document-template-files')
+        .evaluate((input: HTMLInputElement) => input.files?.[0]?.name)
+    ).toBe('Draft.pdf');
     listStatus = 403;
-    await main.getByRole('button', { name: word('refresh'), exact: true }).click();
+    await refresh.click();
     await expect(content.getByRole('alert')).toContainText(word('denied'));
     await expect(page.locator('#document-template-title')).toHaveCount(0);
     await expect(page.locator('#document-template-files')).toHaveCount(0);
   });
+  for (const source of ['detail', 'download'] as const) {
+    test(`template ${source} denial withdraws the list and aborts stale reads (${locale})`, async ({
+      page,
+    }) => {
+      await shell(page, locale, true);
+      const word = (key: Parameters<typeof documentTemplateText>[0]) =>
+        documentTemplateText(key, locale);
+      const endpoint = '/api/admin/document-templates';
+      const detailPath = `${endpoint}/${templateRow.id}`;
+      const version = templateDetail.versions[0]!;
+      const filePath = `${detailPath}/versions/${version.id}/files/${version.files[0]!.id}/download`;
+      let hold = false;
+      let heldList: Route | undefined;
+      let aborted = false;
+      page.on('requestfailed', (request) => {
+        if (new URL(request.url()).pathname === endpoint) aborted = true;
+      });
+      await page.route(
+        (url) => url.pathname === endpoint,
+        (route) => {
+          if (hold) {
+            heldList = route;
+            return;
+          }
+          return route.fulfill({ json: [templateRow] });
+        }
+      );
+      await page.route(`**${detailPath}`, (route) =>
+        source === 'detail'
+          ? route.fulfill({ status: 403, json: { message: 'Private template data' } })
+          : route.fulfill({ json: templateDetail })
+      );
+      await page.route(`**${filePath}`, (route) =>
+        hold
+          ? route.fulfill({ status: 403, json: { message: 'Private template data' } })
+          : route.fulfill({ json: { url: 'https://files.example.test/terms.pdf' } })
+      );
+      await page.goto('/admin/document-templates');
+      const main = page.getByRole('main');
+      const list = main.getByRole('region', { name: word('listTitle'), exact: true });
+      const row = list.getByRole('button', { name: new RegExp(templateRow.title) });
+      const download = main.getByRole('button', { name: word('download'), exact: true });
+      const signedLink = main.getByRole('link', { name: word('openFile'), exact: true });
+      await expect(row).toBeVisible();
+      if (source === 'download') {
+        await row.click();
+        await download.click();
+        await expect(signedLink).toBeVisible();
+      }
+      try {
+        hold = true;
+        await main.getByRole('button', { name: word('refresh'), exact: true }).click();
+        await expect.poll(() => !!heldList).toBe(true);
+        await (source === 'detail' ? row : download).click();
+        await expect(list.getByRole('alert')).toContainText(word('denied'));
+        await expect(row).toHaveCount(0);
+        await expect(download).toHaveCount(0);
+        await expect(signedLink).toHaveCount(0);
+        await expect.poll(() => aborted).toBe(true);
+        await heldList!.fulfill({ json: [templateRow] }).catch(() => {});
+        await expect(row).toHaveCount(0);
+        await expect(main).not.toContainText('Private template data');
+      } finally {
+        await heldList?.abort().catch(() => {});
+      }
+    });
+  }
   test(`document governance fields link validation to the exact input (${locale})`, async ({
     page,
   }) => {

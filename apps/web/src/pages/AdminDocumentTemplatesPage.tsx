@@ -33,7 +33,7 @@ import { documentTemplateText } from '@barghsa/i18n/document-templates';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useLocale } from '../hooks/useLocale.js';
-import { documentUrl } from '../lib/documents.js';
+import { DocumentRequestError, documentUrl } from '../lib/documents.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import {
   emptyTemplateMetadata as blank,
@@ -41,12 +41,24 @@ import {
   metadataErrors,
   versionErrors,
   metadataReceipt,
+  templateDetailReceipt,
+  templateReceipt,
   versionReceipt,
   type TemplateCategory as Category,
   type DocumentTemplate as Template,
   type TemplateMetadata as Draft,
   type TemplateVersionDraft,
 } from '../lib/document-template-form.js';
+
+async function readTemplateJson(path: string, options: RequestInit): Promise<unknown> {
+  const response = await fetch(path, options);
+  if (!response.ok) throw new DocumentRequestError(response.status, null);
+  return response.json();
+}
+
+function templateAccessDenied(error: unknown) {
+  return error instanceof DocumentRequestError && [401, 403].includes(error.status);
+}
 
 export default function AdminDocumentTemplatesPage(props: { queries?: ListQueryBinding } = {}) {
   const actor = useAccountUser();
@@ -116,7 +128,7 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
   const [state, setState] = useState<'loading' | 'ready' | 'denied' | 'error'>('loading');
   const [revision, setRevision] = useState(0);
   const [detailRevision, setDetailRevision] = useState(0);
-  const [detailState, setDetailState] = useState<'loading' | 'ready' | 'denied' | 'error'>('ready');
+  const [detailState, setDetailState] = useState<'loading' | 'ready' | 'error'>('ready');
   const [acceptedCriteria, setAcceptedCriteria] = useState('');
   const [versionChanged, setVersionChanged] = useState(false);
   const criteria = JSON.stringify([search, category]);
@@ -128,6 +140,7 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
     undefined,
     JSON.stringify(['template-detail', selected])
   );
+  const listRequest = useRef<AbortController | null>(null);
   const linkRequests = useRef(new Set<AbortController>());
   function retireLinks() {
     for (const controller of linkRequests.current) controller.abort();
@@ -188,6 +201,13 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
     setSaved(false);
     setDetailRevision((value) => value + 1);
   }
+  function denyAccess() {
+    accessDenied.current = true;
+    listRequest.current?.abort();
+    setRows(null);
+    setState('denied');
+    choose(null, true);
+  }
   useEffect(
     () => () => {
       retireLinks();
@@ -197,24 +217,20 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
   );
   useEffect(() => {
     const controller = new AbortController();
+    listRequest.current = controller;
     setState('loading');
     const params = new URLSearchParams();
     if (search) params.set('search', search);
     if (category) params.set('category', category);
-    void readList<Template[]>(
+    void readList<unknown>(
       `/api/admin/document-templates?${params}`,
       { signal: controller.signal },
-      async (path, options) => {
-        const response = await fetch(path, options);
-        if (!response.ok)
-          throw new Error([401, 403].includes(response.status) ? 'denied' : 'error');
-        const data = (await response.json()) as Template[];
-        if (!Array.isArray(data)) throw new Error('error');
-        return data;
-      }
+      readTemplateJson
     )
       .then((data) => {
         if (controller.signal.aborted) return;
+        if (!Array.isArray(data) || !data.every(templateReceipt))
+          throw new Error('Invalid document template list');
         accessDenied.current = false;
         setRows(data);
         setAcceptedCriteria(criteria);
@@ -222,13 +238,8 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
       })
       .catch((reason: unknown) => {
         if (controller.signal.aborted) return;
-        const denied = reason instanceof Error && reason.message === 'denied';
-        setState(denied ? 'denied' : 'error');
-        if (denied) {
-          accessDenied.current = true;
-          setRows(null);
-          choose(null, true);
-        }
+        if (templateAccessDenied(reason)) denyAccess();
+        else setState('error');
       });
     return () => controller.abort();
   }, [category, revision, search, criteria, readList]);
@@ -240,24 +251,18 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
     const controller = new AbortController();
     setDetailState('loading');
     const current = linkGeneration.current;
-    void readDetail<Template>(
+    void readDetail<unknown>(
       `/api/admin/document-templates/${selected}`,
       { signal: controller.signal },
-      async (path, options) => {
-        const response = await fetch(path, options);
-        if (!response.ok)
-          throw new Error([401, 403].includes(response.status) ? 'denied' : 'error');
-        const next = (await response.json()) as Template;
-        if (next.id !== selected || (next.versions !== undefined && !Array.isArray(next.versions)))
-          throw new Error('error');
-        return next;
-      }
+      readTemplateJson
     )
       .then((next) => {
         if (controller.signal.aborted || accessDenied.current || current !== linkGeneration.current)
           return;
+        if (!templateDetailReceipt(next) || next.id !== selected)
+          throw new Error('Invalid document template detail');
         const previous = acceptedDetail.current;
-        const latest = next.versions?.[0];
+        const latest = next.versions[0];
         if (!previous)
           version.reset({
             ...emptyTemplateVersion(),
@@ -285,25 +290,8 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
       .catch((reason: unknown) => {
         if (controller.signal.aborted || accessDenied.current || current !== linkGeneration.current)
           return;
-        const denied = reason instanceof Error && reason.message === 'denied';
-        setDetailState(denied ? 'denied' : 'error');
-        if (denied) {
-          retireLinks();
-          ++linkGeneration.current;
-          acceptedDetail.current = null;
-          setDetail(null);
-          setEditing(false);
-          metadata.reset(blank());
-          version.reset(emptyTemplateVersion());
-          owner.current = null;
-          captured.current = null;
-          setUncertain(false);
-          setVersionChanged(false);
-          setSaved(false);
-          setLinks({});
-          setLinkError(false);
-          setAction(null);
-        }
+        if (templateAccessDenied(reason)) denyAccess();
+        else setDetailState('error');
       });
     return () => controller.abort();
   }, [selected, detailRevision, readDetail]);
@@ -390,21 +378,25 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
     const controller = new AbortController();
     linkRequests.current.add(controller);
     try {
-      const data = await readDetail<{ url: string }>(
+      const data = await readDetail<unknown>(
         `/api/admin/document-templates/${selected}/versions/${versionId}/files/${fileId}/download`,
         { signal: controller.signal },
-        async (path, options) => {
-          const response = await fetch(path, options);
-          if (!response.ok) throw new Error('Link unavailable');
-          return (await response.json()) as { url: string };
-        }
+        readTemplateJson
       );
-      const url = documentUrl(data.url);
-      if (!controller.signal.aborted && current === linkGeneration.current && !accessDenied.current)
+      const url = documentUrl((data as { url?: unknown } | null)?.url);
+      if (
+        !controller.signal.aborted &&
+        current === linkGeneration.current &&
+        !accessDenied.current
+      ) {
         setLinks((links) => ({ ...links, [fileId]: url }));
-    } catch {
-      if (!controller.signal.aborted && current === linkGeneration.current && !accessDenied.current)
-        setLinkError(true);
+        setLinkError(false);
+      }
+    } catch (reason: unknown) {
+      if (controller.signal.aborted || current !== linkGeneration.current || accessDenied.current)
+        return;
+      if (templateAccessDenied(reason)) denyAccess();
+      else setLinkError(true);
     } finally {
       linkRequests.current.delete(controller);
     }
@@ -601,21 +593,19 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
           </div>
           <div className="min-w-0 space-y-7" role="region" aria-label={word('workspaceTitle')}>
             {detailState === 'loading' && <LoadingStatus>{word('loadingDetail')}</LoadingStatus>}
-            {(detailState === 'error' || detailState === 'denied') && (
+            {detailState === 'error' && (
               <div role="alert" className="space-y-2">
-                <p>{word(detailState === 'denied' ? 'denied' : 'detailError')}</p>
-                {detailState !== 'denied' && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={validating || !!action}
-                    onClick={() => {
-                      if (!owner.current || uncertain) setDetailRevision((value) => value + 1);
-                    }}
-                  >
-                    {word('retry')}
-                  </Button>
-                )}
+                <p>{word('detailError')}</p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={validating || !!action}
+                  onClick={() => {
+                    if (!owner.current || uncertain) setDetailRevision((value) => value + 1);
+                  }}
+                >
+                  {word('retry')}
+                </Button>
               </div>
             )}
             {versionChanged && <p role="status">{word('versionChanged')}</p>}
@@ -1029,12 +1019,7 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
             (!!selected && detailState !== 'ready')
           }
           onClose={closeAction}
-          onDenied={() => {
-            accessDenied.current = true;
-            setRows(null);
-            setState('denied');
-            choose(null, true);
-          }}
+          onDenied={denyAccess}
           onUnconfirmed={() => {
             setUncertain(true);
             setAction(null);

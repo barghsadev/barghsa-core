@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T00:15:51+00:00",
-  "source_commit": "c6dd02bd19a12afacbf62a4e0b2539a6a56eb2df",
+  "updated": "2026-11-09T00:27:55+00:00",
+  "source_commit": "bb7b73bd66c7dc32e92edf3fcf6b1ecbf14de49b",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -100102,11 +100102,11 @@
             },
             {
               "path": "apps/web/src/lib/document-template-form.test.ts",
-              "sha256": "4a3e6ba2e3e3dcb5a582603a11459164a64783ce3260c0b5988fd998875db734"
+              "sha256": "76eacfd686b862fd3533e7251294c72127ec80fb54f6999786d8edeeed06ee26"
             },
             {
               "path": "apps/web/src/lib/document-template-form.ts",
-              "sha256": "458f1a64060cae8d3bf2d884e424db6a02a0c566485b076df031f416c5573a2d"
+              "sha256": "5445f0b304a5652cd0583b58afc5d6d727f6d793af49cfb03c48981bc74fe70d"
             },
             {
               "path": "apps/web/src/lib/electricity-settings-form.test.ts",
@@ -100946,11 +100946,11 @@
             },
             {
               "path": "apps/web/src/lib/document-template-form.test.ts",
-              "sha256": "4a3e6ba2e3e3dcb5a582603a11459164a64783ce3260c0b5988fd998875db734"
+              "sha256": "76eacfd686b862fd3533e7251294c72127ec80fb54f6999786d8edeeed06ee26"
             },
             {
               "path": "apps/web/src/lib/document-template-form.ts",
-              "sha256": "458f1a64060cae8d3bf2d884e424db6a02a0c566485b076df031f416c5573a2d"
+              "sha256": "5445f0b304a5652cd0583b58afc5d6d727f6d793af49cfb03c48981bc74fe70d"
             },
             {
               "path": "apps/web/src/lib/electricity-settings-form.test.ts",
@@ -108048,11 +108048,11 @@
             },
             {
               "path": "apps/web/src/lib/document-template-form.test.ts",
-              "sha256": "4a3e6ba2e3e3dcb5a582603a11459164a64783ce3260c0b5988fd998875db734"
+              "sha256": "76eacfd686b862fd3533e7251294c72127ec80fb54f6999786d8edeeed06ee26"
             },
             {
               "path": "apps/web/src/lib/document-template-form.ts",
-              "sha256": "458f1a64060cae8d3bf2d884e424db6a02a0c566485b076df031f416c5573a2d"
+              "sha256": "5445f0b304a5652cd0583b58afc5d6d727f6d793af49cfb03c48981bc74fe70d"
             },
             {
               "path": "apps/web/src/lib/electricity-settings-form.test.ts",
@@ -177127,7 +177127,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -177199,7 +177199,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/lib/contract-review-signature-form.test.ts",
@@ -177419,7 +177419,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -177934,7 +177934,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -178006,7 +178006,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/lib/contract-review-signature-form.test.ts",
@@ -178226,7 +178226,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -178738,7 +178738,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -178810,7 +178810,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/lib/contract-review-signature-form.test.ts",
@@ -179030,7 +179030,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -179541,7 +179541,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -179613,7 +179613,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/lib/contract-review-signature-form.test.ts",
@@ -179833,7 +179833,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -180346,7 +180346,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -180418,7 +180418,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/lib/contract-review-signature-form.test.ts",
@@ -180638,7 +180638,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -381181,7 +381181,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -382145,7 +382145,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -383108,7 +383108,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -439981,11 +439981,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/routes/admin/document-templates.tsx",
@@ -439993,11 +439993,11 @@
             },
             {
               "path": "apps/web/src/lib/document-template-form.ts",
-              "sha256": "458f1a64060cae8d3bf2d884e424db6a02a0c566485b076df031f416c5573a2d"
+              "sha256": "5445f0b304a5652cd0583b58afc5d6d727f6d793af49cfb03c48981bc74fe70d"
             },
             {
               "path": "apps/web/src/lib/document-template-form.test.ts",
-              "sha256": "4a3e6ba2e3e3dcb5a582603a11459164a64783ce3260c0b5988fd998875db734"
+              "sha256": "76eacfd686b862fd3533e7251294c72127ec80fb54f6999786d8edeeed06ee26"
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
@@ -440045,7 +440045,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -440259,11 +440259,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/routes/admin/document-templates.tsx",
@@ -440271,11 +440271,11 @@
             },
             {
               "path": "apps/web/src/lib/document-template-form.ts",
-              "sha256": "458f1a64060cae8d3bf2d884e424db6a02a0c566485b076df031f416c5573a2d"
+              "sha256": "5445f0b304a5652cd0583b58afc5d6d727f6d793af49cfb03c48981bc74fe70d"
             },
             {
               "path": "apps/web/src/lib/document-template-form.test.ts",
-              "sha256": "4a3e6ba2e3e3dcb5a582603a11459164a64783ce3260c0b5988fd998875db734"
+              "sha256": "76eacfd686b862fd3533e7251294c72127ec80fb54f6999786d8edeeed06ee26"
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
@@ -440323,7 +440323,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -440539,11 +440539,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/routes/admin/document-templates.tsx",
@@ -440551,11 +440551,11 @@
             },
             {
               "path": "apps/web/src/lib/document-template-form.ts",
-              "sha256": "458f1a64060cae8d3bf2d884e424db6a02a0c566485b076df031f416c5573a2d"
+              "sha256": "5445f0b304a5652cd0583b58afc5d6d727f6d793af49cfb03c48981bc74fe70d"
             },
             {
               "path": "apps/web/src/lib/document-template-form.test.ts",
-              "sha256": "4a3e6ba2e3e3dcb5a582603a11459164a64783ce3260c0b5988fd998875db734"
+              "sha256": "76eacfd686b862fd3533e7251294c72127ec80fb54f6999786d8edeeed06ee26"
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
@@ -440603,7 +440603,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -440817,11 +440817,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/routes/admin/document-templates.tsx",
@@ -440829,11 +440829,11 @@
             },
             {
               "path": "apps/web/src/lib/document-template-form.ts",
-              "sha256": "458f1a64060cae8d3bf2d884e424db6a02a0c566485b076df031f416c5573a2d"
+              "sha256": "5445f0b304a5652cd0583b58afc5d6d727f6d793af49cfb03c48981bc74fe70d"
             },
             {
               "path": "apps/web/src/lib/document-template-form.test.ts",
-              "sha256": "4a3e6ba2e3e3dcb5a582603a11459164a64783ce3260c0b5988fd998875db734"
+              "sha256": "76eacfd686b862fd3533e7251294c72127ec80fb54f6999786d8edeeed06ee26"
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
@@ -440881,7 +440881,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -441096,11 +441096,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/routes/admin/document-templates.tsx",
@@ -441108,11 +441108,11 @@
             },
             {
               "path": "apps/web/src/lib/document-template-form.ts",
-              "sha256": "458f1a64060cae8d3bf2d884e424db6a02a0c566485b076df031f416c5573a2d"
+              "sha256": "5445f0b304a5652cd0583b58afc5d6d727f6d793af49cfb03c48981bc74fe70d"
             },
             {
               "path": "apps/web/src/lib/document-template-form.test.ts",
-              "sha256": "4a3e6ba2e3e3dcb5a582603a11459164a64783ce3260c0b5988fd998875db734"
+              "sha256": "76eacfd686b862fd3533e7251294c72127ec80fb54f6999786d8edeeed06ee26"
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
@@ -441160,7 +441160,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -441398,7 +441398,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -441470,7 +441470,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/lib/contract-review-signature-form.test.ts",
@@ -441690,7 +441690,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -442322,7 +442322,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -442358,7 +442358,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -442810,7 +442810,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -442846,7 +442846,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -443202,7 +443202,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -443581,7 +443581,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -443617,7 +443617,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -443963,7 +443963,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -444135,7 +444135,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -444500,7 +444500,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -444877,7 +444877,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -444913,7 +444913,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -445359,7 +445359,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -445399,7 +445399,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -445865,7 +445865,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -445905,7 +445905,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -446371,7 +446371,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -446411,7 +446411,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -446877,7 +446877,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -446917,7 +446917,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -447382,7 +447382,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -447418,7 +447418,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -447778,7 +447778,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -448097,7 +448097,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -448129,7 +448129,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -448440,7 +448440,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -448472,7 +448472,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -448785,7 +448785,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -448817,7 +448817,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             },
             {
               "path": "docs/decisions/notification-provider-closure.md",
@@ -449155,7 +449155,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -449187,7 +449187,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -449498,7 +449498,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -449530,7 +449530,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             }
           ],
           "checks": [
@@ -491179,7 +491179,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -493270,7 +493270,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
@@ -494347,7 +494347,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -495230,7 +495230,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -496054,7 +496054,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -498092,7 +498092,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
@@ -511538,7 +511538,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -512212,7 +512212,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -516937,7 +516937,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -517721,7 +517721,7 @@
             },
             {
               "path": "apps/web/src/lib/document-template-form.ts",
-              "sha256": "458f1a64060cae8d3bf2d884e424db6a02a0c566485b076df031f416c5573a2d"
+              "sha256": "5445f0b304a5652cd0583b58afc5d6d727f6d793af49cfb03c48981bc74fe70d"
             },
             {
               "path": "apps/web/src/lib/electricity-correction-form-schemas.ts",
@@ -517869,7 +517869,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -518491,7 +518491,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
@@ -519931,7 +519931,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
@@ -522087,7 +522087,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
@@ -546676,7 +546676,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -546788,7 +546788,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -548542,7 +548542,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -548654,7 +548654,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -550409,7 +550409,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -550521,7 +550521,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -552245,7 +552245,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -552357,7 +552357,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -554107,7 +554107,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -554219,7 +554219,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -555978,7 +555978,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -556090,7 +556090,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -557822,7 +557822,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -557934,7 +557934,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -559630,7 +559630,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -559742,7 +559742,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -561438,7 +561438,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -561550,7 +561550,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -563247,7 +563247,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -563359,7 +563359,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -565055,7 +565055,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -565167,7 +565167,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -566837,7 +566837,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -567013,11 +567013,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -568732,7 +568732,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -568908,11 +568908,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -570516,7 +570516,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -571624,7 +571624,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -571996,7 +571996,7 @@
             },
             {
               "path": "apps/web/src/lib/document-template-form.ts",
-              "sha256": "458f1a64060cae8d3bf2d884e424db6a02a0c566485b076df031f416c5573a2d"
+              "sha256": "5445f0b304a5652cd0583b58afc5d6d727f6d793af49cfb03c48981bc74fe70d"
             },
             {
               "path": "apps/web/src/lib/documents.ts",
@@ -572316,11 +572316,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -573514,7 +573514,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -573690,11 +573690,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -575409,7 +575409,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -575585,11 +575585,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -577304,7 +577304,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -577480,11 +577480,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -579199,7 +579199,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -579375,11 +579375,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -581094,7 +581094,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -581270,11 +581270,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -582989,7 +582989,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -583165,11 +583165,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -584884,7 +584884,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -585060,11 +585060,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -586779,7 +586779,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -586955,11 +586955,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -588674,7 +588674,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -588850,11 +588850,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -590569,7 +590569,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -590745,11 +590745,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -592464,7 +592464,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -592640,11 +592640,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -595099,7 +595099,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -595275,11 +595275,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -596994,7 +596994,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -597170,11 +597170,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -598486,7 +598486,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Dashboard, customer contract and invoice lists, five customer detail surfaces and the staff invoice ledger have scoped state receipts. A denied staff invoice detail withdraws the ledger and suppresses pending pages. Reconcile the other admin and read-owning child routes with original criteria and verify specific gaps."
+        "Dashboard, customer financial lists and detail surfaces, staff invoice ledger, and document templates have scoped state evidence. The template list, detail and signed-link paths now withdraw on shared permission loss. Compare remaining admin route states against original criteria and verify any uncovered behavior."
       ],
       "owner": null,
       "depends_on": [],
@@ -598614,7 +598614,8 @@
           "release-0.5-dashboard-profile-conflict",
           "release-0.5-customer-financial-list-states",
           "release-0.5-financial-detail-denial",
-          "release-0.5-staff-ledger-permission-withdrawal"
+          "release-0.5-staff-ledger-permission-withdrawal",
+          "release-0.5-document-template-read-boundary"
         ],
         "current_acceptance": null
       }
@@ -599092,7 +599093,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -599204,7 +599205,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -600896,7 +600897,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -601008,7 +601009,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -602700,7 +602701,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -602812,7 +602813,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -604504,7 +604505,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -604616,7 +604617,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -606308,7 +606309,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -606420,7 +606421,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -608112,7 +608113,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -608224,7 +608225,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -609916,7 +609917,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
@@ -610028,7 +610029,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -637699,7 +637700,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -638823,7 +638824,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -639947,7 +639948,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -641074,7 +641075,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -642201,7 +642202,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -643355,7 +643356,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -644478,7 +644479,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -645601,7 +645602,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -646725,7 +646726,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -647867,7 +647868,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -648992,7 +648993,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -680494,7 +680495,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -681616,7 +681617,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -682738,7 +682739,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -683860,7 +683861,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -703985,7 +703986,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminVatPage.tsx",
@@ -713608,7 +713609,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -713660,7 +713661,7 @@
             },
             {
               "path": "apps/web/src/components/document-list-recovery.test.tsx",
-              "sha256": "9beabb1d892c2de7e1b01951ca32b7f409b67a45cc3c6323d2eeff0d20765f41"
+              "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
             },
             {
               "path": "apps/web/src/lib/contract-review-signature-form.test.ts",
@@ -714372,7 +714373,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
@@ -721628,7 +721629,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -722044,11 +722045,11 @@
             },
             {
               "path": "apps/web/src/lib/document-template-form.test.ts",
-              "sha256": "4a3e6ba2e3e3dcb5a582603a11459164a64783ce3260c0b5988fd998875db734"
+              "sha256": "76eacfd686b862fd3533e7251294c72127ec80fb54f6999786d8edeeed06ee26"
             },
             {
               "path": "apps/web/src/lib/document-template-form.ts",
-              "sha256": "458f1a64060cae8d3bf2d884e424db6a02a0c566485b076df031f416c5573a2d"
+              "sha256": "5445f0b304a5652cd0583b58afc5d6d727f6d793af49cfb03c48981bc74fe70d"
             },
             {
               "path": "apps/web/src/lib/documents.ts",
@@ -722192,11 +722193,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
@@ -723476,7 +723477,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             },
             {
               "path": "apps/web/src/lib/brand-config.ts",
@@ -725510,7 +725511,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+              "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -725910,11 +725911,11 @@
             },
             {
               "path": "apps/web/src/lib/document-template-form.test.ts",
-              "sha256": "4a3e6ba2e3e3dcb5a582603a11459164a64783ce3260c0b5988fd998875db734"
+              "sha256": "76eacfd686b862fd3533e7251294c72127ec80fb54f6999786d8edeeed06ee26"
             },
             {
               "path": "apps/web/src/lib/document-template-form.ts",
-              "sha256": "458f1a64060cae8d3bf2d884e424db6a02a0c566485b076df031f416c5573a2d"
+              "sha256": "5445f0b304a5652cd0583b58afc5d6d727f6d793af49cfb03c48981bc74fe70d"
             },
             {
               "path": "apps/web/src/lib/documents.ts",
@@ -726058,11 +726059,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
-              "sha256": "41830047dfe635157c3fd08376a3c8cab44cf3d3c02c918e5f7ac23a7e997fc5"
+              "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
@@ -727322,7 +727323,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "b07ef96ed8a91f5bc730b1fc7a19d298d4e80217e82234bf350560bc6db0374c"
+              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
             },
             {
               "path": "apps/api/src/telegram/telegram-links.service.ts",
@@ -728262,7 +728263,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Dashboard, customer contract and invoice lists, five customer detail surfaces and the staff invoice ledger have scoped state receipts. A denied staff invoice detail withdraws the ledger and suppresses pending pages. Reconcile the other admin and read-owning child routes with original criteria and verify specific gaps."
+        "Dashboard, customer financial lists and detail surfaces, staff invoice ledger, and document templates have scoped state evidence. The template list, detail and signed-link paths now withdraw on shared permission loss. Compare remaining admin route states against original criteria and verify any uncovered behavior."
       ],
       "owner": null,
       "depends_on": [],
@@ -728456,7 +728457,8 @@
           "release-0.5-dashboard-profile-conflict",
           "release-0.5-customer-financial-list-states",
           "release-0.5-financial-detail-denial",
-          "release-0.5-staff-ledger-permission-withdrawal"
+          "release-0.5-staff-ledger-permission-withdrawal",
+          "release-0.5-document-template-read-boundary"
         ]
       }
     },
@@ -729392,7 +729394,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+              "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -730393,7 +730395,8 @@
             "The deferred panel loading batch passes all 101 transfer budgets and six cold authentication checks on final assets. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-lazy-panel-waits/proof.json",
             "All 101 route and interaction transfer budgets pass on the dashboard conflict build. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-profile-conflict/proof.json",
             "All 101 transfer budgets pass on the unavailable financial detail build. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-detail-denial/proof.json",
-            "All 101 transfer budgets pass on the staff ledger permission withdrawal build. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-ledger-permission-withdrawal/proof.json"
+            "All 101 transfer budgets pass on the staff ledger permission withdrawal build. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-ledger-permission-withdrawal/proof.json",
+            "All 101 transfer budgets pass on the document template read-boundary build. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-template-read-boundary/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -808693,6 +808696,61 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-ledger-permission-withdrawal/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-ledger-permission-withdrawal/renewed-bindings.json",
       "release_disposition": "Closed staff invoice ledger withdrawal after permission denial. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-document-template-read-boundary": {
+      "batch": "release-0.5-document-template-read-boundary",
+      "base_commit": "bb7b73bd66c7dc32e92edf3fcf6b1ecbf14de49b",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/document-list-recovery.spec.ts",
+          "sha256": "5855a6a2687aeec7118346d2765f103e59c4f652bbf14255c7f40f9a93597d46"
+        },
+        {
+          "path": "apps/web/src/components/document-list-recovery.test.tsx",
+          "sha256": "d0fcc76763dbcd29d20d2d09d8f0a72fe00389fb9496dfdd698c6a09287dc80d"
+        },
+        {
+          "path": "apps/web/src/components/document-template-query.test.tsx",
+          "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+        },
+        {
+          "path": "apps/web/src/lib/document-template-form.test.ts",
+          "sha256": "76eacfd686b862fd3533e7251294c72127ec80fb54f6999786d8edeeed06ee26"
+        },
+        {
+          "path": "apps/web/src/lib/document-template-form.ts",
+          "sha256": "5445f0b304a5652cd0583b58afc5d6d727f6d793af49cfb03c48981bc74fe70d"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
+          "sha256": "17332231941ec9c947b73b104e36d445d0eb8adee92963578c8c2849764cbf54"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
+          "sha256": "81fceeccf974f5ad25e75df7c08c5ae750414c010ba80d248b994acc6d874aee"
+        }
+      ],
+      "checks": [
+        "The prior emitted build reproduced malformed template data bypassing the local retry state and both a denied detail and denied signed-download read leaving the list visible. The detail-denial baseline was repeated after waiting for the initial authorized list.",
+        "The final page validates list summaries and complete version render data. Permission denial on list, detail, signed link or a command clears the shared workspace, retires signed links, and aborts obsolete reads. Temporary errors retain authorized rows and drafts.",
+        "Four final signed-link browser cases pass in Chromium and Mobile Safari. Twenty-eight unaffected native cases carry across the final one-line file-link error reset. They cover malformed and denied reads, list and detail recovery, filters and version authoring. Forty-three final unit cases and 10 instrumented browser cases pass.",
+        "Critical coverage passes with 295 of 302 lines and 318 of 368 branches. The template validation helper passes the changed-source floor. All 101 transfer budgets, changed-file lint, formatting and typechecking pass."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-template-read-boundary",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-template-read-boundary/proof.json",
+      "source_scope_proof_sha256": "d4e6ff6ebb8e81b62c272284d9a1821312a3f91b765b646e65251bfd498b6ec6",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-template-read-boundary/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-template-read-boundary/renewed-bindings.json",
+      "release_disposition": "Closed malformed template response recovery and shared authorization withdrawal. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [

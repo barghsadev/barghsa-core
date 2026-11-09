@@ -15,7 +15,7 @@ vi.mock('../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ number: String, money: String }),
 }));
 const row = {
-  id: 'template-1',
+  id: 'f1000000-0000-4000-8000-000000000001',
   title: 'Current template',
   description: 'Current description',
   category: 'contract',
@@ -26,7 +26,7 @@ const detail = {
   ...row,
   versions: [
     {
-      id: 'version-1',
+      id: 'f1000000-0000-4000-8000-000000000002',
       versionNumber: 1,
       changeSummary: 'Current version',
       createdAt: '2026-01-01',
@@ -35,7 +35,7 @@ const detail = {
       conflicts: [],
       files: [
         {
-          id: 'file-1',
+          id: 'f1000000-0000-4000-8000-000000000003',
           originalName: 'current.pdf',
           mimeType: 'application/pdf',
           sizeBytes: 100,
@@ -66,12 +66,13 @@ function data(path: string) {
       ],
     };
   if (path.endsWith('/download')) return { url: 'https://files.test/current-template.pdf' };
-  if (path.includes('?')) return [row, { ...row, id: 'template-2', title: 'Other template' }];
+  if (path.includes('?'))
+    return [row, { ...row, id: 'f1000000-0000-4000-8000-000000000004', title: 'Other template' }];
   return {
     ...detail,
     id: path.split('/').at(-1),
     versions: nextVersion
-      ? [{ ...detail.versions[0], id: 'version-2', versionNumber: 2 }]
+      ? [{ ...detail.versions[0], id: 'f1000000-0000-4000-8000-000000000005', versionNumber: 2 }]
       : detail.versions,
   };
 }

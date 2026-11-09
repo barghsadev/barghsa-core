@@ -318,8 +318,9 @@ it('template detail retry does not reload its list; newer versions drop obsolete
             versions: [
               {
                 ...templateDetail.versions[0]!,
-                id: 'new-version',
-                files: [{ ...templateFile, id: 'new-file' }],
+                id: 'f1000000-0000-4000-8000-000000000006',
+                versionNumber: 2,
+                files: [{ ...templateFile, id: 'f1000000-0000-4000-8000-000000000007' }],
               },
             ],
           }

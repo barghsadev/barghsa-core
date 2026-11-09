@@ -320,6 +320,69 @@ it('builds the next version from selected old files and new PDF files', async ()
   const form = harness.action!.body as FormData;
   expect(form.get('retainedFileIds')).toBe(JSON.stringify([DOCX]));
   expect((form.get('files') as File).name).toBe('terms.pdf');
+  await act(async () => {
+    expect(harness.dialog!.onValidationError(['private-field'])).toBe(false);
+    expect(harness.dialog!.onValidationError(['changeSummary', 'files', 'private-field'])).toBe(
+      true
+    );
+    harness.dialog!.onClose();
+  });
+  const summary = container.querySelector('#document-template-summary');
+  expect(summary?.getAttribute('aria-invalid')).toBe('true');
+  expect(container.textContent).toContain('Choose PDF or DOCX files within the size limits.');
+  expect(container.textContent).not.toContain('private-field');
+  expect(container.querySelector('#document-template-files')).toBe(input);
+  expect(input.files?.[0]).toBe(replacement);
+  await vi.waitFor(() => expect(document.activeElement).toBe(summary));
+});
+
+it('keeps authorized template detail through file-link failures and clears the error on recovery', async () => {
+  const url = 'https://files.example.test/terms.docx';
+  const replies = [response({}, 503), response(null), response({ url })];
+  const fetcher = vi.fn(async (path: string) => {
+    if (path.endsWith('/download')) return replies.shift()!;
+    return path.includes(`/${TEMPLATE}`) ? response(detail) : response(list);
+  });
+  vi.stubGlobal('fetch', fetcher);
+  await render();
+  await click('Customer agreement');
+  const failure = 'Could not get the file link. Try again.';
+  for (const remaining of [2, 1]) {
+    await click('Get file link');
+    expect(replies).toHaveLength(remaining);
+    expect(container.querySelector('[role="alert"]')?.textContent).toBe(failure);
+    expect(container.querySelector('a[href]')).toBeNull();
+    expect(container.querySelector('#document-template-files')).not.toBeNull();
+  }
+  await click('Get file link');
+  expect(replies).toHaveLength(0);
+  expect(container.textContent).not.toContain(failure);
+  expect(container.querySelector<HTMLAnchorElement>('a[href]')?.href).toBe(url);
+  expect(fetcher.mock.calls.filter(([path]) => !path.endsWith('/download'))).toHaveLength(2);
+});
+
+it('keeps the empty history visible while reviewing the first file version', async () => {
+  const empty = { ...detail, versionCount: 0, versions: [] };
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (url: string) =>
+      url.includes(`/${TEMPLATE}`) ? response(empty) : response([{ ...list[0], versionCount: 0 }])
+    )
+  );
+  await render();
+  await click('Customer agreement');
+  expect(container.textContent).toContain('No files have been added to this template yet.');
+  expect(container.querySelector('input[type="checkbox"]')).toBeNull();
+  const input = container.querySelector<HTMLInputElement>('#document-template-files')!;
+  const file = new File(['%PDF-1.7'], 'first.pdf', { type: 'application/pdf' });
+  Object.defineProperty(input, 'files', { configurable: true, value: [file] });
+  await act(async () => input.dispatchEvent(new Event('change', { bubbles: true })));
+  await click('Create new version');
+  expect(harness.action?.path).toBe(`/api/admin/document-templates/${TEMPLATE}/versions`);
+  const form = harness.action!.body as FormData;
+  expect(form.get('retainedFileIds')).toBe('[]');
+  expect((form.get('files') as File).name).toBe('first.pdf');
+  expect(container.textContent).toContain('No files have been added to this template yet.');
 });
 
 it('shows the Persian page and a clear permission denial', async () => {

@@ -86,6 +86,64 @@ export function templateReceipt(value: unknown): value is DocumentTemplate {
     Number.isFinite(Date.parse(row.updatedAt))
   );
 }
+
+const strings = (value: unknown): value is string[] =>
+  Array.isArray(value) && value.every((item) => typeof item === 'string');
+
+function validTemplateFile(value: unknown): value is TemplateFile {
+  if (!value || typeof value !== 'object') return false;
+  const file = value as TemplateFile;
+  return (
+    uuid(file.id) &&
+    typeof file.originalName === 'string' &&
+    typeof file.mimeType === 'string' &&
+    Number.isSafeInteger(file.sizeBytes) &&
+    file.sizeBytes >= 0 &&
+    typeof file.checksum === 'string' &&
+    Array.isArray(file.placeholders) &&
+    file.placeholders.every(
+      (item) => item && typeof item.name === 'string' && typeof item.context === 'string'
+    )
+  );
+}
+
+function validTemplateVersion(value: unknown): value is TemplateVersion {
+  if (!value || typeof value !== 'object') return false;
+  const version = value as TemplateVersion;
+  return (
+    uuid(version.id) &&
+    Number.isSafeInteger(version.versionNumber) &&
+    version.versionNumber > 0 &&
+    typeof version.changeSummary === 'string' &&
+    typeof version.createdAt === 'string' &&
+    Number.isFinite(Date.parse(version.createdAt)) &&
+    strings(version.placeholders) &&
+    strings(version.missingRequired) &&
+    Array.isArray(version.conflicts) &&
+    version.conflicts.every(
+      (conflict) =>
+        conflict &&
+        typeof conflict.name === 'string' &&
+        Array.isArray(conflict.files) &&
+        conflict.files.every(
+          (file) => file && typeof file.fileName === 'string' && typeof file.context === 'string'
+        )
+    ) &&
+    Array.isArray(version.files) &&
+    version.files.every(validTemplateFile)
+  );
+}
+
+export function templateDetailReceipt(
+  value: unknown
+): value is DocumentTemplate & { versions: TemplateVersion[] } {
+  return (
+    templateReceipt(value) &&
+    Array.isArray(value.versions) &&
+    value.versions.every(validTemplateVersion)
+  );
+}
+
 export function metadataReceipt(
   value: unknown,
   draft: TemplateMetadata,
