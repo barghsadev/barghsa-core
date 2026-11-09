@@ -43,8 +43,12 @@ deploy/staging/deploy.sh
 ```
 
 After a release milestone and its gates are accepted, prepare its version and
-notes, push directly to `main`, verify the exact remote SHA, and immediately enqueue
-that immutable release:
+notes. Use a `codex/preflight/<batch>` branch whose tip matches the current
+remote `main`, seeding a new one there if needed. Push the exact candidate to
+that branch so CI has a real base for affected tests. Once GitHub Actions reports
+**Verify monorepo integrity** as successful
+on the candidate SHA, push that same SHA directly to `main`. Verify the remote
+SHA and immediately enqueue the immutable release:
 
 ```sh
 python3 deploy/staging/release-queue.py enqueue --commit "$(git rev-parse HEAD)" \
@@ -52,8 +56,8 @@ python3 deploy/staging/release-queue.py enqueue --commit "$(git rev-parse HEAD)"
 ```
 
 Screenshots are optional. This command returns immediately and starts a detached
-worker. Continue building the next batch. CI remains informational for this disposable
-test environment; neither CI results nor deployment completion block building.
+worker. The subsequent `main` CI run and staging deployment are independent;
+neither blocks work on the next authorized batch.
 The worker runs `./deploy/staging/deploy.sh` from an isolated checkout of the exact
 pushed commit, then attaches the captured screenshots. The main Persian announcement
 and exact live release are required. An optional screenshot failure records a

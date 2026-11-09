@@ -22,3 +22,11 @@ authorize retrying an unknown deployment or Telegram send.
 Keep the isolated configuration until the worker finishes. Record the original
 failure and actual retry/deployment receipts in the board's release evidence.
 Do not reset Docker Desktop, remove global credentials or restart unrelated jobs.
+
+If Docker Desktop itself is unavailable, an authorized Linux amd64 engine can
+build the same immutable staging checkout over SSH. Set `DOCKER_HOST` and the
+isolated `DOCKER_CONFIG` only for the release worker. Confirm the engine has
+capacity and can fetch the exact locked dependencies before choosing it. If
+one registry address works and the build's default resolution times out, scope
+the verified address to the build only. Keep the registry hostname, TLS and
+lockfile integrity checks intact. Do not change server-wide DNS.

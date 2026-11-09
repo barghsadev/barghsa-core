@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T11:03:07+00:00",
-  "source_commit": "f3d7b141ffe79735783051ade2cdbf26a2a2b795",
+  "updated": "2026-11-09T11:24:27+00:00",
+  "source_commit": "dae51e34b4e54625dfe8b5d2b9747bc23e5c5b3c",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -10,14 +10,14 @@
     "consultation"
   ],
   "latest_release": {
-    "version": "0.4.0",
-    "commit": "eab6a0a0eede4005e3ce2ad3f5d95c28783a5492",
+    "version": "0.5.0",
+    "commit": "dae51e34b4e54625dfe8b5d2b9747bc23e5c5b3c",
     "staging_status": "completed",
-    "completed_at": "2026-11-06T21:44:11.796580+00:00",
+    "completed_at": "2026-11-09T11:24:20.908948+00:00",
     "telegram_messages": [
-      94,
-      95,
-      96
+      97,
+      98,
+      99
     ]
   },
   "migration": {
@@ -922,7 +922,7 @@
       "scope": "Reuse existing complete form/wizard engines. Named destructive/financial modal wrappers and identical shared gates compose existing domain-owned step-up, wizard review and retry flows. Persistent resource destruction needs typed approval; temporary unsaved row edits retain local behavior. Financial consent adds exact IRR/toman display without changing command money or snapshots. No feature or safety deferral."
     },
     "ui_route_error_reporting": {
-      "status": "pending_owner_decision",
+      "status": "resolved",
       "task_keys": [
         "07-ui-ux-design.md#T-07.12.01.09"
       ],
@@ -931,10 +931,12 @@
       "recommendation": "Use a narrow scrubbed client-error intake feeding the existing operations pipeline, with actual receipt evidence. No new service or recurring cost.",
       "owner_request": "May the existing Grafana/Loki pipeline replace the named Sentry destination? Otherwise identify the protected Sentry DSN configuration location.",
       "requested_at": "2026-11-07T02:13:15+00:00",
-      "independent_work": "Continue all other selected v0.5.0 notification/recovery criteria. Do not mark the reporting criterion complete or implement the dependent alternate receiver before the decision."
+      "independent_work": "Continue all other selected v0.5.0 notification/recovery criteria. Do not mark the reporting criterion complete or implement the dependent alternate receiver before the decision.",
+      "resolution": "The owner supplied the protected configuration locally and the exact Sentry event permalink. The DSN was installed on the staging host; ingestion and authenticated project readback verified the exact support reference.",
+      "resolution_receipt": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-check-activation/sentry-project-receipt.json"
     },
     "ui_accessibility_merge_policy": {
-      "status": "pending_owner_decision",
+      "status": "resolved",
       "task_keys": [
         "07-ui-ux-design.md#T-07.05.02.04"
       ],
@@ -942,11 +944,13 @@
       "evidence": "The owner refreshed the CLI credential and GitHub reports the workflow scope. The exact fast CI accessibility gate is validated and in source. GitHub main is unprotected with no required checks.",
       "recommendation": "Keep direct main pushes and explicitly accept the failing CI job plus source-bound release gate, or authorize a narrowly scoped GitHub merge rule with explicit push bypass.",
       "independent_work": "Continue accessibility, responsive and route acceptance. Do not alter external repository protection without owner decision.",
-      "required_action": "Decide whether to accept direct-main pushes with the failing CI and source-bound release gate, or authorize compatible required merge protection. Workflow authentication is resolved.",
+      "required_action": "Use the preflight branch to obtain the required GitHub Actions check on the candidate SHA, then fast-forward main directly.",
       "workflow_authorization": {
         "status": "verified",
         "evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ci-workflow/verified-oauth-scopes.txt"
-      }
+      },
+      "resolution": "Protect main is active. The exact v0.5.0 SHA passed the required job before a successful direct push using the existing CLI account, with no bypass.",
+      "resolution_receipt": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-check-activation/release-push-receipt.json"
     }
   },
   "specification_sources": {
@@ -3581,7 +3585,7 @@
       "version": "0.5.0",
       "title": "Usable and accessible product",
       "goal": "Customer and admin workflows work on desktop/mobile in both languages and themes, including keyboard use, errors, filters and safe confirmations.",
-      "status": "accepted",
+      "status": "released",
       "depends_on": [
         "0.4.0"
       ],
@@ -3590,9 +3594,28 @@
         "WCAG 2.2 AA, RTL, loading/recovery and wizard criteria pass their relevant checks.",
         "Original performance and bundle limits remain satisfied."
       ],
-      "published_commit": null,
-      "staging_receipt": null,
-      "telegram_receipt": null,
+      "published_commit": "dae51e34b4e54625dfe8b5d2b9747bc23e5c5b3c",
+      "staging_receipt": {
+        "job": "/Users/majid/.local/state/barghsa-staging-queue/jobs/dae51e34b4e54625dfe8b5d2b9747bc23e5c5b3c/job.json",
+        "live_verification": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-check-activation/release-live-receipt.json",
+        "completed_at": "2026-11-09T11:24:20.908948+00:00",
+        "version": "0.5.0",
+        "commit": "dae51e34b4e54625dfe8b5d2b9747bc23e5c5b3c",
+        "health": "Exact HTTPS release metadata; healthy API, web and worker images; PostgreSQL, Redis and object storage ready; private S3 write/signed read passed; Sentry runtime configured."
+      },
+      "telegram_receipt": {
+        "summary": "/Users/majid/.local/state/barghsa-staging-releases/79f358b237337cf1eb1a8b97900910bd5012f781818656ce2a3d2e4ff03072e6.json",
+        "album": "/Users/majid/.local/state/barghsa-staging-releases/album-79f358b237337cf1eb1a8b97900910bd5012f781818656ce2a3d2e4ff03072e6.json",
+        "chat_id": -1004467450624,
+        "message_ids": [
+          97,
+          98,
+          99
+        ],
+        "media_group_id": "14353787681880409",
+        "summary_sha256": "101c54df39a782a1b6322b892087743af74d4981427bde492ead9b15acc9fe3f",
+        "album_sha256": "94d7e210be2aaaa9a6d3e5c882e7fe8699366370177b326bf44efa33030b90a9"
+      },
       "acceptance": {
         "accepted_at": "2026-11-09T10:37:04+00:00",
         "evidence": "release-0.5-milestone-acceptance",
@@ -3603,6 +3626,16 @@
           "performance": "The final product source passes 101 original and added route and interaction budgets, including the wallet verification interaction at 499.90 KB under its unchanged 500 KB cap. Existing coverage floors and money assertions remain intact."
         },
         "production_authorized": false
+      },
+      "push_receipt": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-check-activation/release-push-receipt.json",
+      "deployment_job": {
+        "commit": "dae51e34b4e54625dfe8b5d2b9747bc23e5c5b3c",
+        "phase": "completed",
+        "status_path": "/Users/majid/.local/state/barghsa-staging-queue/jobs/dae51e34b4e54625dfe8b5d2b9747bc23e5c5b3c/job.json",
+        "candidate_images": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-check-activation/candidate-image-receipt.json",
+        "scoped_build_client_context": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-check-activation/staging-docker-config/config.json",
+        "scoped_build_route_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-check-activation/staging-npm-address-probe.log",
+        "operations_runbook": "docs/operations/docker-release-client.md"
       }
     },
     {
@@ -104211,7 +104244,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-conditional-native-choices",
           "release-0.5-review-preview-deadlines",
-          "release-0.5-staging-image-package-source"
+          "release-0.5-staging-image-package-source",
+          "release-0.5-protected-publication"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -104583,7 +104617,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "a68da3e6d2251e1d0b3623786a5c25b1e457b7c43f32eec1469711f8d6f767d5"
+              "sha256": "a5c2f149134ee16667208b2cca4d0777076ffe952bae9a5cc37c67381a08666f"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -460638,7 +460672,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-conditional-native-choices",
           "release-0.5-review-preview-deadlines",
-          "release-0.5-staging-image-package-source"
+          "release-0.5-staging-image-package-source",
+          "release-0.5-protected-publication"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -461010,7 +461045,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "a68da3e6d2251e1d0b3623786a5c25b1e457b7c43f32eec1469711f8d6f767d5"
+              "sha256": "a5c2f149134ee16667208b2cca4d0777076ffe952bae9a5cc37c67381a08666f"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -724597,7 +724632,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "a68da3e6d2251e1d0b3623786a5c25b1e457b7c43f32eec1469711f8d6f767d5"
+              "sha256": "a5c2f149134ee16667208b2cca4d0777076ffe952bae9a5cc37c67381a08666f"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -726295,7 +726330,8 @@
           "release-0.5-action-contrast",
           "release-0.5-review-preview-deadlines",
           "release-0.5-conditional-heading-acceptance",
-          "release-0.5-direct-push-preflight"
+          "release-0.5-direct-push-preflight",
+          "release-0.5-protected-publication"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -728464,7 +728500,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "a68da3e6d2251e1d0b3623786a5c25b1e457b7c43f32eec1469711f8d6f767d5"
+              "sha256": "a5c2f149134ee16667208b2cca4d0777076ffe952bae9a5cc37c67381a08666f"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -730069,7 +730105,8 @@
           "release-0.5-action-contrast",
           "release-0.5-review-preview-deadlines",
           "release-0.5-conditional-heading-acceptance",
-          "release-0.5-direct-push-preflight"
+          "release-0.5-direct-push-preflight",
+          "release-0.5-protected-publication"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -818388,6 +818425,37 @@
       "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-check-activation/staging-debian-mirror-trusted-probe.log",
       "source_scope_proof_sha256": "ecb126371172b22b149108fc719251e3edbdfcb7b71702185994cfe0d7809a4a",
       "source_renewals": "Package source and transport change only. Related live and product evidence is retained; no release deployment is claimed by the package probe."
+    },
+    "release-0.5-protected-publication": {
+      "batch": "release-0.5-protected-publication",
+      "base_commit": "dae51e34b4e54625dfe8b5d2b9747bc23e5c5b3c",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "checks": [
+        "The active main ruleset and its required GitHub Actions app ID were read back through GitHub CLI immediately before publication.",
+        "The exact v0.5.0 candidate passed Verify monorepo integrity on the preflight branch. GitHub accepted a normal direct fast-forward of main, and the exact remote SHA was read back before the detached staging enqueue.",
+        "The operations guides now describe the verified preflight route and the scoped staging builder options. Both Markdown files pass formatting."
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "a5c2f149134ee16667208b2cca4d0777076ffe952bae9a5cc37c67381a08666f"
+        },
+        {
+          "path": "docs/operations/docker-release-client.md",
+          "sha256": "c1c925d5842d19aad8cbea9deafe1d95c15bdeecde1753a488fbbaf1e090ed40"
+        }
+      ],
+      "source_renewals": "Deployment documentation only; worker commands, runtime and prior verified provider receipts remain unchanged.",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-check-activation/release-push-receipt.json",
+      "source_scope_proof_sha256": "b6d511ed7284da9354600525dbb0183de640a711d83fa090aa2c9f2b3bb439fa",
+      "staging_and_telegram_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-check-activation/release-live-receipt.json",
+      "staging_and_telegram_scope_proof_sha256": "23e25aa51e5ddf8face92af1824093324a8728aa4af0df08986a95b0e022f6c8",
+      "release_disposition": "Accepted exact v0.5.0 SHA is deployed and healthy on staging; one Persian summary and one two-image album confirmed. Production was not deployed."
     }
   },
   "historical_improvements": [
@@ -818427,15 +818495,18 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.5-publication",
-    "release": "0.5.0",
-    "task_keys": [],
-    "goal": "Run Verify monorepo integrity on the exact v0.5.0 candidate on a preflight branch seeded from main. After the job passes, fast-forward main directly and immediately enqueue staging on exact remote readback."
+    "id": "release-0.6-acceptance-reconciliation",
+    "release": "0.6.0",
+    "task_keys": [
+      "release-readiness#R-05.01",
+      "release-readiness#R-05.02"
+    ],
+    "goal": "Reconcile the recorded owner decisions with current evidence and inspect the existing platform, security, and operations implementation before making changes."
   },
   "launch_forecast": {
-    "status": "v0_5_accepted_publication_preflight",
-    "next_update_after": "v0.5.0 exact staging and Telegram receipts and v0.6.0 prerequisite triage",
-    "method": "v0.5.0 product gates are accepted. Its exact release commit must pass the active GitHub rule before publication. v0.6.0 operational and v0.9.0 rehearsal gates remain; no reliable launch date yet."
+    "status": "v0_5_released_v0_6_operational_gates_pending",
+    "next_update_after": "v0.6.0 policy reconciliation and operational prerequisites review",
+    "method": "v0.5.0 has an exact live staging release and confirmed Telegram receipts. v0.6.0 production-readiness checks and v0.9.0 rehearsal remain; no reliable launch date yet."
   },
   "capabilities": [
     {

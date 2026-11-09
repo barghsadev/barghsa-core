@@ -2,9 +2,9 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T11:03:07+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T11:24:27+00:00. First production launch: electricity, saving, solar and consultation.
 
-Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
+Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
 Counts describe evidence and task acceptance, not the percentage of product built.
 
@@ -39,8 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Run Verify monorepo integrity on the exact v0.5.0 candidate on a preflight branch seeded from main. After the job passes, fast-forward main directly and immediately enqueue staging on exact remote readback.
+Reconcile the recorded owner decisions with current evidence and inspect the existing platform, security, and operations implementation before making changes.
 
+- `release-readiness#R-05.01`: Resolve the six recorded owner decisions
+- `release-readiness#R-05.02`: Renew security and operational task acceptance
 
 ## v0.2.0: Complete customer journeys
 
