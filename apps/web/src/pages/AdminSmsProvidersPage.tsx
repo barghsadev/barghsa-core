@@ -651,7 +651,7 @@ export default function AdminSmsProvidersPage() {
         <ListPage.Content
           loading={loading}
           error={loadFailed || scope.denied}
-          retainContent={catalogue.data !== null}
+          retainContent={providers.length > 0}
           loadingView={<LoadingStatus>{smsProviderText('tabs', locale)}…</LoadingStatus>}
           errorView={<p role="alert">{text(scope.denied ? 'denied' : 'loadFailed')}</p>}
           empty={!providers.length}

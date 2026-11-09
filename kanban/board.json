@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T02:58:29+00:00",
-  "source_commit": "299c812d0c05430c913f924d7cabf0ff41b7d7d1",
+  "updated": "2026-11-09T03:07:20+00:00",
+  "source_commit": "aea9ac7c5b108e5243253401256cdca0cf6eebb2",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -88912,7 +88912,7 @@
             },
             {
               "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
-              "sha256": "739aa6d07a2a110d5a5074fddd3846abe7e12b1f0f791bf8c40f3b5e49b335ba"
+              "sha256": "211030ae04807bc9147ad939498ce614074cd30693dfe079ec434a2118d9bf0a"
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
@@ -88936,7 +88936,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/routes/admin/providers.tsx",
@@ -131181,7 +131181,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
@@ -133377,7 +133377,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
@@ -434889,7 +434889,7 @@
             },
             {
               "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
-              "sha256": "739aa6d07a2a110d5a5074fddd3846abe7e12b1f0f791bf8c40f3b5e49b335ba"
+              "sha256": "211030ae04807bc9147ad939498ce614074cd30693dfe079ec434a2118d9bf0a"
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
@@ -434913,7 +434913,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/routes/admin/providers.tsx",
@@ -435326,7 +435326,7 @@
             },
             {
               "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
-              "sha256": "739aa6d07a2a110d5a5074fddd3846abe7e12b1f0f791bf8c40f3b5e49b335ba"
+              "sha256": "211030ae04807bc9147ad939498ce614074cd30693dfe079ec434a2118d9bf0a"
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
@@ -435350,7 +435350,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/routes/admin/providers.tsx",
@@ -435762,7 +435762,7 @@
             },
             {
               "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
-              "sha256": "739aa6d07a2a110d5a5074fddd3846abe7e12b1f0f791bf8c40f3b5e49b335ba"
+              "sha256": "211030ae04807bc9147ad939498ce614074cd30693dfe079ec434a2118d9bf0a"
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
@@ -435786,7 +435786,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/routes/admin/providers.tsx",
@@ -436197,7 +436197,7 @@
             },
             {
               "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
-              "sha256": "739aa6d07a2a110d5a5074fddd3846abe7e12b1f0f791bf8c40f3b5e49b335ba"
+              "sha256": "211030ae04807bc9147ad939498ce614074cd30693dfe079ec434a2118d9bf0a"
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
@@ -436221,7 +436221,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/routes/admin/providers.tsx",
@@ -436714,7 +436714,7 @@
             },
             {
               "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
-              "sha256": "739aa6d07a2a110d5a5074fddd3846abe7e12b1f0f791bf8c40f3b5e49b335ba"
+              "sha256": "211030ae04807bc9147ad939498ce614074cd30693dfe079ec434a2118d9bf0a"
             },
             {
               "path": "apps/web/e2e/provider-forms.spec.ts",
@@ -436754,7 +436754,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
@@ -437694,7 +437694,7 @@
             },
             {
               "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
-              "sha256": "739aa6d07a2a110d5a5074fddd3846abe7e12b1f0f791bf8c40f3b5e49b335ba"
+              "sha256": "211030ae04807bc9147ad939498ce614074cd30693dfe079ec434a2118d9bf0a"
             },
             {
               "path": "apps/web/src/lib/email-providers-api.ts",
@@ -437710,7 +437710,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
@@ -491479,7 +491479,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -511866,7 +511866,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -518205,7 +518205,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -547136,7 +547136,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -549006,7 +549006,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -550877,7 +550877,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -552717,7 +552717,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -554583,7 +554583,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -556458,7 +556458,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -558306,7 +558306,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -560118,7 +560118,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -561930,7 +561930,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -563743,7 +563743,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -565555,7 +565555,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -567389,7 +567389,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -569292,7 +569292,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -572752,7 +572752,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -574090,7 +574090,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -575993,7 +575993,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -577896,7 +577896,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -579799,7 +579799,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -581702,7 +581702,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -583605,7 +583605,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -585508,7 +585508,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -587411,7 +587411,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -589314,7 +589314,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -591217,7 +591217,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -593120,7 +593120,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -595763,7 +595763,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -597666,7 +597666,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -598962,7 +598962,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The staff inventory covers loading and error on all 48 primary data routes and authorized empty or unset states on 40 routes. Ten customer collections have held first-read and authorized-empty receipts in both languages on Chromium and mobile Safari. The CRM correction scope, storage cleanup recovery, verification settings shared read denial combined service-workflow grant withdrawal, and notification delivery-window session cleanup have current source-bound evidence. Reconcile other original route interactions and independently loaded children before full acceptance."
+        "The staff inventory covers loading and error on 48 primary data routes and authorized empty or unset states on 40 routes. Ten customer collections have held first-read and authorized-empty receipts in both languages on Chromium and mobile Safari. Focused current receipts cover CRM correction scope, storage cleanup recovery, verification and service-workflow access withdrawal, notification session cleanup, and the provider, roles, staff directory and team interactions listed in the latest batch. Finish reconciliation of other route-specific interactions and independently loaded details."
       ],
       "owner": null,
       "depends_on": [],
@@ -599110,7 +599110,8 @@
           "release-0.5-storage-cleanup-read-states",
           "release-0.5-verification-shared-read-access",
           "release-0.5-service-workflow-grant-revocation",
-          "release-0.5-notification-settings-session"
+          "release-0.5-notification-settings-session",
+          "release-0.5-staff-configuration-adoption"
         ],
         "current_acceptance": null
       }
@@ -599744,7 +599745,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -601552,7 +601553,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -603360,7 +603361,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -605168,7 +605169,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -606976,7 +606977,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -608784,7 +608785,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -610592,7 +610593,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -638275,7 +638276,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -639407,7 +639408,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -640539,7 +640540,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -641674,7 +641675,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -642809,7 +642810,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -643971,7 +643972,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -645102,7 +645103,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -646233,7 +646234,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -647365,7 +647366,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -648515,7 +648516,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -649648,7 +649649,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -681178,7 +681179,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -682308,7 +682309,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -683438,7 +683439,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -684568,7 +684569,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -705006,7 +705007,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -705475,7 +705476,8 @@
             "Bindings renewed by release-0.5-notification-recovery-journey: tested presentation, read-only owned timestamp and additive locale changes. All 71 UI HTTP calls and 96 captured body/review/idempotency fields are unchanged, old feedback labels and original numeric limits are preserved, and affected browser/API/unit and export checks are recorded.",
             "Bindings renewed by release-0.5-staff-lists-and-receipts: scoped query and confirmed receipt behavior with the original assertions, write payloads, CSRF and budgets. Current targeted unit and native results are recorded.",
             "Bindings renewed by release-0.5-candidate-acceptance: 92 affected units, 70 native correction, authority, solar and saving cases, 24 public authentication and terms cases, and 97 unchanged bundle limits. Ownership, monetary commands and confirmation assertions remain covered.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "Renewed the named original route and recovery cases on both production-browser projects. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-configuration-adoption/proof.json"
           ],
           "criterion_result": "Responsive roles table/cards expose grouped checkbox grants read-only, including wildcard and ungranted comparison. Staff-user effective-permission inspection validates exact-user receipts, current access and denial cleanup. Eight FA/EN light/dark browser journeys and relevant component cases pass. Existing accepted native staff authority is reused.",
           "limitations": [
@@ -705909,7 +705911,8 @@
             "Bindings renewed by release-0.5-forms-confirmation-journey: additive confirmation entry/exports, display-only exact IRR/toman, scoped host/risk metadata and guarded explicit approval. Existing81 requests and180 payload/version/idempotency fields AST-identical; backend/shared domain and original budgets unchanged.139 distinct native cases,138 affected full-file web passes, shared control/distribution checks cover the UI delta. Original domain evidence retained for unchanged behavior; adapted test actions explicitly perform the additional approval and preserve assertions.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "Renewed the named original route and recovery cases on both production-browser projects. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-configuration-adoption/proof.json"
           ],
           "criterion_result": "SMTP/Resend selection, conditional write-only credential fields, masked saved config, connection test, active-version identity, guarded activate/disable/rollback and recovery verified. No live external send inferred from browser fixtures.",
           "limitations": [
@@ -705994,7 +705997,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
@@ -706011,7 +706014,8 @@
             "Bindings renewed by release-0.5-forms-confirmation-journey: additive confirmation entry/exports, display-only exact IRR/toman, scoped host/risk metadata and guarded explicit approval. Existing81 requests and180 payload/version/idempotency fields AST-identical; backend/shared domain and original budgets unchanged.139 distinct native cases,138 affected full-file web passes, shared control/distribution checks cover the UI delta. Original domain evidence retained for unchanged behavior; adapted test actions explicitly perform the additional approval and preserve assertions.",
             "Bindings renewed by release-0.5-notification-recovery-journey: tested presentation, read-only owned timestamp and additive locale changes. All 71 UI HTTP calls and 96 captured body/review/idempotency fields are unchanged, old feedback labels and original numeric limits are preserved, and affected browser/API/unit and export checks are recorded.",
             "Bindings renewed by release-0.5-protected-staff-browser-closure: one validated OTP toast and bounded geography dialog. 32 distinct native cases and 61 related unit tests passed, retaining current staff confirmation, authority, focus and exact response assertions.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "Renewed the named original route and recovery cases on both production-browser projects. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-configuration-adoption/proof.json"
           ],
           "criterion_result": "Masked key, sender, throughput and low-credit threshold, locale-aware event/template/variable mappings and explicit test preview/send verified. Native durable send identity, unknown-outcome hold and protected provider snapshots unchanged. Owner-deferred live SMS activation remains a separate production gate.",
           "limitations": [
@@ -708507,7 +708511,8 @@
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json"
+            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
+            "Renewed the named original route and recovery cases on both production-browser projects. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-configuration-adoption/proof.json"
           ],
           "criterion_result": "Existing team CRUD, current staff membership, member-bound lead, round-robin/expertise/load strategies and team escalation/fallback routing verified. Read recovery, stale membership/rules, preserved drafts, unverified write/reset, captured step-up, localizations, keyboard and mobile forms pass. Native routing/permission/audit evidence remains current.",
           "limitations": [
@@ -713040,7 +713045,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/worker/src/notifications/sms-transport.ts",
@@ -722324,7 +722329,7 @@
             },
             {
               "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
-              "sha256": "739aa6d07a2a110d5a5074fddd3846abe7e12b1f0f791bf8c40f3b5e49b335ba"
+              "sha256": "211030ae04807bc9147ad939498ce614074cd30693dfe079ec434a2118d9bf0a"
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
@@ -722916,7 +722921,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -726210,7 +726215,7 @@
             },
             {
               "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
-              "sha256": "739aa6d07a2a110d5a5074fddd3846abe7e12b1f0f791bf8c40f3b5e49b335ba"
+              "sha256": "211030ae04807bc9147ad939498ce614074cd30693dfe079ec434a2118d9bf0a"
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
@@ -726786,7 +726791,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -728970,7 +728975,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The staff inventory covers loading and error on all 48 primary data routes and authorized empty or unset states on 40 routes. Ten customer collections have held first-read and authorized-empty receipts in both languages on Chromium and mobile Safari. The CRM correction scope, storage cleanup recovery, verification settings shared read denial combined service-workflow grant withdrawal, and notification delivery-window session cleanup have current source-bound evidence. Reconcile other original route interactions and independently loaded children before full acceptance."
+        "The staff inventory covers loading and error on 48 primary data routes and authorized empty or unset states on 40 routes. Ten customer collections have held first-read and authorized-empty receipts in both languages on Chromium and mobile Safari. Focused current receipts cover CRM correction scope, storage cleanup recovery, verification and service-workflow access withdrawal, notification session cleanup, and the provider, roles, staff directory and team interactions listed in the latest batch. Finish reconciliation of other route-specific interactions and independently loaded details."
       ],
       "owner": null,
       "depends_on": [],
@@ -729184,7 +729189,8 @@
           "release-0.5-storage-cleanup-read-states",
           "release-0.5-verification-shared-read-access",
           "release-0.5-service-workflow-grant-revocation",
-          "release-0.5-notification-settings-session"
+          "release-0.5-notification-settings-session",
+          "release-0.5-staff-configuration-adoption"
         ]
       }
     },
@@ -730192,7 +730198,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+              "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -731145,7 +731151,8 @@
             "All 101 transfer budgets and affected Persian/English storage browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-storage-cleanup-read-states/proof.json",
             "All 101 transfer budgets and affected verification and service-workflow browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-verification-shared-read-access/proof.json",
             "All 101 transfer budgets and 58 affected settings browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflow-grant-revocation/proof.json",
-            "All 101 transfer budgets and 62 affected notification browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-settings-session/proof.json"
+            "All 101 transfer budgets and 62 affected notification browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-settings-session/proof.json",
+            "All 101 transfer budgets and 64 affected staff and provider browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-configuration-adoption/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -810959,6 +810966,45 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-settings-session/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-settings-session/renewed-bindings.json",
       "release_disposition": "Closed notification delivery-window session expiry and verified related template and queue recovery. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-staff-configuration-adoption": {
+      "batch": "release-0.5-staff-configuration-adoption",
+      "base_commit": "aea9ac7c5b108e5243253401256cdca0cf6eebb2",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "07-ui-ux-design.md#T-07.30.02.02",
+        "07-ui-ux-design.md#T-07.30.02.06",
+        "07-ui-ux-design.md#T-07.30.02.07",
+        "07-ui-ux-design.md#T-07.30.02.16",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
+          "sha256": "211030ae04807bc9147ad939498ce614074cd30693dfe079ec434a2118d9bf0a"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
+          "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
+        }
+      ],
+      "checks": [
+        "Both baseline Chromium cases reached an authorized empty SMS response after the held first read and HTTP 503 retry. The empty state was absent in both languages. An empty array had enabled row retention and suppressed the empty view.",
+        "The SMS table retains rows only when it has accepted rows. Empty success displays the existing localized message and enables Create. The held first read and failed read do not show an empty state and keep Create disabled.",
+        "The final emitted runtime passed 64 distinct Chromium and mobile Safari cases, split between 24 SMS and 40 email, role, directory and team cases. The 56 passing predecessor cases are retained as earlier evidence. The final build changed relevant emitted assets so the earlier results were not counted toward the final total.",
+        "Twenty-eight instrumented Chromium cases, 46 focused unit cases, web typecheck, changed-file lint, formatting and all 101 transfer budgets passed. The unchanged critical gate measured 235/247 lines and 345/375 branches."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-configuration-adoption",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-configuration-adoption/proof.json",
+      "source_scope_proof_sha256": "01e6618c5da0fc19af760c67faae8e713e4c2d1b352c2dba2a6abdeba457d100",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-configuration-adoption/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-configuration-adoption/renewed-bindings.json",
+      "release_disposition": "Closed the missing SMS empty result and bound named staff configuration cases. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [
@@ -811009,7 +811055,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Reconcile the remaining route-specific interactions and independent reads using named receipts. GitHub required checks and staging Sentry remain independent."
+    "goal": "Reconcile remaining independently loaded details against their original route receipts. Start with staff catalogue detail reads and customer service detail states. Required GitHub checks and staging Sentry remain independent."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",

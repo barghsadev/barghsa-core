@@ -29,6 +29,53 @@ const sms = {
   },
 };
 for (const locale of ['en', 'fa'] as const) {
+  test(`an authorized empty SMS catalogue shows its next action (${locale})`, async ({ page }) => {
+    await crmShell(page, locale);
+    const text = (key: Parameters<typeof smsProviderText>[0]) => smsProviderText(key, locale);
+    await page.route('**/api/admin/email-providers', (route) => route.fulfill({ json: [] }));
+    await page.route('**/api/admin/sms-providers/template-event-keys', (route) =>
+      route.fulfill({ json: ['auth.otp'] })
+    );
+    await page.route('**/api/admin/sms-providers/template-variable-choices', (route) =>
+      route.fulfill({ json: [{ eventKey: 'auth.otp', locale, variables: ['code'] }] })
+    );
+    let reads = 0;
+    let failFirstRead!: () => void;
+    const firstRead = new Promise<void>((resolve) => {
+      failFirstRead = resolve;
+    });
+    await page.route('**/api/admin/sms-providers', async (route) => {
+      if (++reads === 1) {
+        await firstRead;
+        return route.fulfill({ status: 503, json: {} });
+      }
+      return route.fulfill({ json: [] });
+    });
+    await page.goto('/admin/providers');
+    await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
+    const panel = page.getByRole('region', { name: text('title'), exact: true });
+    const content = panel.locator('[data-slot="list-content"]');
+    const empty = content.getByText(text('empty'), { exact: true });
+    const create = panel.getByRole('button', { name: text('new'), exact: true });
+    await expect.poll(() => reads).toBe(1);
+    try {
+      await expect(content).toHaveAttribute('aria-busy', 'true');
+      await expect(content.getByRole('status')).toBeVisible();
+      await expect(empty).toHaveCount(0);
+      await expect(create).toBeDisabled();
+    } finally {
+      failFirstRead();
+    }
+    await expect(content.getByRole('alert')).toHaveText(text('loadFailed'));
+    await expect(empty).toHaveCount(0);
+    await expect(create).toBeDisabled();
+    await panel.getByRole('button', { name: text('retry'), exact: true }).click();
+    await expect(create).toBeEnabled();
+    await expect(content.getByRole('alert')).toHaveCount(0);
+    expect(reads).toBe(2);
+    await expect(empty).toBeVisible();
+  });
+
   test(`configuration pauses remain visible on both provider tabs (${locale})`, async ({
     page,
   }) => {
