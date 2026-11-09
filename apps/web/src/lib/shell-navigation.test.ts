@@ -4,7 +4,7 @@ import { currentNavigation } from './shell-navigation.js';
 import { mobileNavigation } from './mobile-navigation.js';
 import type { NavigationGroup } from '../components/AppShell.js';
 
-const group = (...routes: string[]): NavigationGroup[] => [
+const group = (...routes: NavigationGroup['items'][number]['to'][]): NavigationGroup[] => [
   { label: 'Pages', items: routes.map((to) => ({ to, label: to, icon: Zap })) },
 ];
 it('selects service tabs and keeps every supplied page reachable exactly once', () => {

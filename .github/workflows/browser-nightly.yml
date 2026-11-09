@@ -1,7 +1,7 @@
 name: Nightly browser checks
 on:
   schedule:
-    - cron: '17 2 * * *'
+    - cron: '0 2 * * *'
   workflow_dispatch:
 
 permissions:
@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   contracts:
-    name: Dependency advisories and migration drift
+    name: Dependency advisories, migration drift and navigation
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -42,6 +42,9 @@ jobs:
             printf '%s\n' "$changes" >&2
             exit 1
           fi
+      - name: Verify registered navigation destinations
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: pnpm exec turbo run typecheck --filter=@barghsa/web
       - name: Upload nightly dependency and migration results
         if: always()
         uses: actions/upload-artifact@v4
@@ -59,9 +62,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        project: [firefox, mobile-chrome, webkit, mobile-safari]
+        project: [chromium, firefox, mobile-chrome, webkit, mobile-safari]
         shard: [1, 2, 3, 4, 5, 6, 7, 8]
         include:
+          - { project: chromium, browser: chromium }
           - { project: firefox, browser: firefox }
           - { project: mobile-chrome, browser: chromium }
           - { project: webkit, browser: webkit }

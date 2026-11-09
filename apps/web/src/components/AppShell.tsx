@@ -7,6 +7,7 @@ import { Topbar } from './Topbar.js';
 import { shellText } from '@barghsa/i18n/shell';
 import { BreadcrumbBar } from './BreadcrumbBar.js';
 import { InsideRouteMain } from './RouteFallbackLandmark.js';
+import type { FileRoutesByTo } from '../routeTree.gen.js';
 import { currentNavigation } from '../lib/shell-navigation.js';
 import {
   AnalyticsConsentBanner,
@@ -15,7 +16,7 @@ import {
 
 export interface NavigationGroup {
   label: string;
-  items: { to: string; label: string; icon: LucideIcon }[];
+  items: { to: keyof FileRoutesByTo; label: string; icon: LucideIcon }[];
 }
 
 function subscribeCompactNavigation(listener: () => void) {

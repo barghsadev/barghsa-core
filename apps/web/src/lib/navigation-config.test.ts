@@ -1,6 +1,7 @@
 import { expect, it } from 'vitest';
 import { Zap } from 'lucide-react';
 import { parseNavigation, permittedNavigation } from './navigation-config.js';
+import type { NavigationGroup } from '../components/AppShell.js';
 
 const config = {
   version: 1 as const,
@@ -31,10 +32,10 @@ it('accepts known workspace versions and denies missing, malformed or different-
   ).not.toBeNull();
 });
 it('filters all groups through the exact supplied backend paths without adding unknown destinations', () => {
-  const groups = [
+  const groups: NavigationGroup[] = [
     {
       label: 'Finance',
-      items: ['/invoices', '/wallet'].map((to) => ({ to, label: to, icon: Zap })),
+      items: (['/invoices', '/wallet'] as const).map((to) => ({ to, label: to, icon: Zap })),
     },
     { label: 'Orders', items: [{ to: '/electricity', label: 'Electricity', icon: Zap }] },
   ];

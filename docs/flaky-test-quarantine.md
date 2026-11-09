@@ -28,7 +28,7 @@ Every CI run produces a flaky-test report:
 
 - The total number of known flaky tests (active quarantine records) is reported as a CI annotation.
 - The report appears in the CI run summary. Active valid quarantines remain visible in ordinary CI. A manually dispatched CI release check runs the full suite, measures changed-code coverage from the last released commit in the board, and uses the stricter promotion mode.
-- The nightly browser workflow runs Firefox, WebKit and both mobile projects, reports observed outcomes and checks the quarantine registry. Other scheduled quality gates remain tracked in T-05.05.01.
+- The nightly browser workflow runs Chromium, Firefox, WebKit and both mobile projects, reports observed outcomes and checks the quarantine registry. Other scheduled quality gates remain tracked in T-05.05.01.
 
 ### 4. Quarantine Lifecycle
 
@@ -128,6 +128,6 @@ source for known quarantines across runners; browser counts describe that run on
 - `README.md` — Quality gates section (release-candidate and production-promotion gates reference the flaky-test policy)
 - `.github/workflows/ci.yml` — CI pipeline with flaky-test reporting step
 
-The nightly browser workflow is `.github/workflows/browser-nightly.yml`. Firefox, WebKit and both mobile projects each run across eight Playwright shards. Each shard serves its own production build and uses disposable test fixtures. Nightly and full CI build the component catalogue with `pnpm --filter @barghsa/ui stories:build` before Playwright discovers tests. The catalogue specs load the generated `packages/ui/story-build/meta.json` during discovery. The nightly workflow retains each shard's failure traces and outcome and quarantine reports for 14 days and also supports manual dispatch. Record actual GitHub runs separately from local verification.
+The nightly browser workflow is `.github/workflows/browser-nightly.yml` and is scheduled daily at 02:00 UTC. Each desktop and mobile project runs across eight Playwright shards. Each shard serves its own production build and uses disposable test fixtures. Nightly and full CI build the component catalogue with `pnpm --filter @barghsa/ui stories:build` before Playwright discovers tests. The catalogue specs load the generated `packages/ui/story-build/meta.json` during discovery. The nightly workflow retains each shard's failure traces and outcome and quarantine reports for 14 days and also supports manual dispatch. Record actual GitHub runs separately from local verification.
 
-A separate nightly job fetches a fresh dependency advisory report and checks it with the same validator as ordinary CI. It also runs Drizzle generation against the checkout and requires an unchanged migration directory. The job retains both reports for 14 days.
+A separate nightly job fetches a fresh dependency advisory report and checks it with the same validator as ordinary CI. It also runs Drizzle generation against the checkout and requires an unchanged migration directory. The job retains both reports for 14 days. Web typechecking verifies that workspace shell link destinations exist in the generated route tree.

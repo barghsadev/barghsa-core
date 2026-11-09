@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T17:13:01+00:00",
+  "updated": "2026-11-09T17:19:31+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -5183,7 +5183,7 @@
             },
             {
               "path": "docs/flaky-test-quarantine.md",
-              "sha256": "9b56723ed59fa50c448e044592ff5206ad2b3c524123e1a5e346a51a2d086f28"
+              "sha256": "232b56c1782338cde424dabf711cef091e9784c23a832f4b7c1c67e25bd29431"
             }
           ],
           "checks": [
@@ -5193,7 +5193,8 @@
             "Workflow syntax passed. This batch verifies configuration and scoped policy controls. Running the full suite on the accepted release candidate remains a separate milestone gate.",
             "Renewed the quarantine process document binding after its nightly topology paragraph documented the eight-shard partition. The ordinary test and quarantine policy sections are unchanged.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
-            "Renewed the quarantine process document binding after documenting the independent nightly dependency and migration check."
+            "Renewed the quarantine process document binding after documenting the independent nightly dependency and migration check.",
+            "Renewed the quarantine process document binding after recording the 02:00 UTC schedule and all three desktop engines plus both mobile projects."
           ]
         }
       }
@@ -5293,7 +5294,7 @@
             },
             {
               "path": "docs/flaky-test-quarantine.md",
-              "sha256": "9b56723ed59fa50c448e044592ff5206ad2b3c524123e1a5e346a51a2d086f28"
+              "sha256": "232b56c1782338cde424dabf711cef091e9784c23a832f4b7c1c67e25bd29431"
             }
           ],
           "checks": [
@@ -5303,7 +5304,8 @@
             "Workflow syntax passed. This batch verifies configuration and scoped policy controls. Running the full suite on the accepted release candidate remains a separate milestone gate.",
             "Renewed the quarantine process document binding after its nightly topology paragraph documented the eight-shard partition. The ordinary test and quarantine policy sections are unchanged.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
-            "Renewed the quarantine process document binding after documenting the independent nightly dependency and migration check."
+            "Renewed the quarantine process document binding after documenting the independent nightly dependency and migration check.",
+            "Renewed the quarantine process document binding after recording the 02:00 UTC schedule and all three desktop engines plus both mobile projects."
           ]
         }
       }
@@ -5517,7 +5519,8 @@
         ],
         "batches": [
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-nightly-browser-shard-capacity"
+          "release-0.6-nightly-browser-shard-capacity",
+          "release-0.6-nightly-navigation-and-chromium"
         ],
         "current_acceptance": null
       }
@@ -5667,7 +5670,7 @@
             },
             {
               "path": "docs/flaky-test-quarantine.md",
-              "sha256": "9b56723ed59fa50c448e044592ff5206ad2b3c524123e1a5e346a51a2d086f28"
+              "sha256": "232b56c1782338cde424dabf711cef091e9784c23a832f4b7c1c67e25bd29431"
             }
           ],
           "checks": [
@@ -5677,7 +5680,8 @@
             "Workflow syntax passed. This batch verifies configuration and scoped policy controls. Running the full suite on the accepted release candidate remains a separate milestone gate.",
             "Renewed the quarantine process document binding after its nightly topology paragraph documented the eight-shard partition. The ordinary test and quarantine policy sections are unchanged.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
-            "Renewed the quarantine process document binding after documenting the independent nightly dependency and migration check."
+            "Renewed the quarantine process document binding after documenting the independent nightly dependency and migration check.",
+            "Renewed the quarantine process document binding after recording the 02:00 UTC schedule and all three desktop engines plus both mobile projects."
           ]
         }
       }
@@ -5751,7 +5755,8 @@
         "batches": [
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
-          "release-0.6-nightly-browser-shard-capacity"
+          "release-0.6-nightly-browser-shard-capacity",
+          "release-0.6-nightly-navigation-and-chromium"
         ],
         "current_acceptance": null
       }
@@ -12391,9 +12396,9 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Record a complete scheduled Chromium, Firefox, WebKit and mobile critical-browser run. The existing schedule runs Firefox, WebKit and both mobile projects at 02:17 UTC. Desktop Chromium currently runs in the ordinary CI path.",
-        "Record the fresh advisory and Drizzle migration-drift job outcomes from the actual schedule. Local validation passed and the ordinary CI validator consumed the exact hosted report.",
-        "Connect and verify scheduled navigation link checks, seven-day observed flake analysis and an authorized results receiver."
+        "Record a complete actual 02:00 UTC scheduled run across the Chromium, Firefox, WebKit and both mobile projects. Local discovery verified the same partition and actual scheduled run results are required.",
+        "Record the fresh dependency advisory, Drizzle migration-drift and shell navigation job outcomes from the actual schedule. The registered shell destinations are verified locally by web typecheck and targeted tests.",
+        "Verify destinations outside the typed workspace shell registry, seven-day observed flake analysis and an authorized results receiver."
       ],
       "owner": null,
       "depends_on": [],
@@ -12426,7 +12431,8 @@
         "batches": [
           "2026-09-21-nightly-browser-repairs",
           "release-0.6-nightly-browser-shard-capacity",
-          "release-0.6-nightly-advisory-and-schema-gate"
+          "release-0.6-nightly-advisory-and-schema-gate",
+          "release-0.6-nightly-navigation-and-chromium"
         ],
         "current_acceptance": null
       }
@@ -494575,7 +494581,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
@@ -494583,7 +494589,7 @@
             },
             {
               "path": "apps/web/src/lib/navigation-config.test.ts",
-              "sha256": "ac90d3166413d762986e07d692cfabb5c31fb5cffae072d07675c8880dd2eeec"
+              "sha256": "ba24f20e82023d2c6406958e651906195ae950926eee5c7caac38070e9418223"
             },
             {
               "path": "apps/web/src/lib/navigation-config.ts",
@@ -494591,7 +494597,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "9a18f50b7be08bebe7dc70aa8c5ef673b4e2014a8c78896d48fa65ab2a2eb30a"
+              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -494645,7 +494651,8 @@
             "Bindings renewed by release-0.5-route-fallback-and-announcement: verified route landmarks, terminal notice, timeout without retries, preserved authority/financial actions and equivalent shell CSS. Affected browser/unit and original budgets passed.",
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
-            "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates."
+            "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ui-navigation-current-acceptance",
@@ -494849,7 +494856,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
@@ -494857,7 +494864,7 @@
             },
             {
               "path": "apps/web/src/lib/navigation-config.test.ts",
-              "sha256": "ac90d3166413d762986e07d692cfabb5c31fb5cffae072d07675c8880dd2eeec"
+              "sha256": "ba24f20e82023d2c6406958e651906195ae950926eee5c7caac38070e9418223"
             },
             {
               "path": "apps/web/src/lib/navigation-config.ts",
@@ -494865,7 +494872,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "9a18f50b7be08bebe7dc70aa8c5ef673b4e2014a8c78896d48fa65ab2a2eb30a"
+              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -494919,7 +494926,8 @@
             "Bindings renewed by release-0.5-route-fallback-and-announcement: verified route landmarks, terminal notice, timeout without retries, preserved authority/financial actions and equivalent shell CSS. Affected browser/unit and original budgets passed.",
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
-            "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates."
+            "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ui-navigation-current-acceptance",
@@ -495542,7 +495550,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/AuditLogViewer.tsx",
@@ -496113,7 +496121,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-component-closure",
           "limitations": [
@@ -496552,7 +496561,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -496642,7 +496651,8 @@
             "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed.",
             "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
-            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain."
+            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-component-closure",
           "limitations": [
@@ -514982,7 +514992,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardLayout.tsx",
@@ -515094,7 +515104,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-and-rtl",
           "limitations": [
@@ -515298,7 +515309,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardLayout.tsx",
@@ -515410,7 +515421,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-and-rtl",
           "limitations": [
@@ -515614,7 +515626,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardLayout.tsx",
@@ -515726,7 +515738,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-and-rtl",
           "limitations": [
@@ -515930,7 +515943,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardLayout.tsx",
@@ -516042,7 +516055,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-and-rtl",
           "limitations": [
@@ -516899,7 +516913,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
@@ -517346,7 +517360,8 @@
             "The populated route census covers 93 routes and 2,976 browser, width and direction cells. Its 23 recorded subpixel diagnostics all have 44px computed minima and at least 44px at device-pixel resolution. No required cell is missing.",
             "The shared popup batch verifies conditional menu actions and list options in both locales on mobile Chrome and Safari. The native control audit covers 89 raw controls, including separately associated labels, native uploads and the electricity rules range. The discovered signature label gap is now covered on both sides of the contract workflow.",
             "The signature browser cases tap the extended acknowledgement label on mobile Safari. They verify required original and signed documents, the acknowledgement requirement, the associated validation message, focus and the exact same protected request after step-up. The route matrix retains its existing assertions.",
-            "Sixteen distinct production browser cases and 35 unit cases passed. Eight isolated Chromium cases supplied mapped coverage for the edited source. The final eight-group coverage gate, scoped static checks, 98 bundle budgets and three cold authentication transfers passed."
+            "Sixteen distinct production browser cases and 35 unit cases passed. Eight isolated Chromium cases supplied mapped coverage for the edited source. The final eight-group coverage gate, scoped static checks, 98 bundle budgets and three cold authentication transfers passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-signature-target-and-fields/proof.json",
           "scope_dispositions": [
@@ -517564,7 +517579,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -517724,7 +517739,7 @@
             },
             {
               "path": "apps/web/src/lib/navigation-config.test.ts",
-              "sha256": "ac90d3166413d762986e07d692cfabb5c31fb5cffae072d07675c8880dd2eeec"
+              "sha256": "ba24f20e82023d2c6406958e651906195ae950926eee5c7caac38070e9418223"
             },
             {
               "path": "apps/web/src/lib/navigation-config.ts",
@@ -517760,7 +517775,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "9a18f50b7be08bebe7dc70aa8c5ef673b4e2014a8c78896d48fa65ab2a2eb30a"
+              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -517928,7 +517943,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "criterion_result": "Customer primary tabs are Home/Electricity orders/Wallet/Profile plus More when authorized; staff tabs prioritize actual operation grants. All granted remaining pages remain reachable exactly once. Native server grants and client allowlist prevent manufacturing missing links. Initial compact bar, deferred More/error fallback and exact active-page markers verified in FA/EN and both browser projects.",
           "limitations": [
@@ -518366,7 +518382,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -518526,7 +518542,7 @@
             },
             {
               "path": "apps/web/src/lib/navigation-config.test.ts",
-              "sha256": "ac90d3166413d762986e07d692cfabb5c31fb5cffae072d07675c8880dd2eeec"
+              "sha256": "ba24f20e82023d2c6406958e651906195ae950926eee5c7caac38070e9418223"
             },
             {
               "path": "apps/web/src/lib/navigation-config.ts",
@@ -518562,7 +518578,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "9a18f50b7be08bebe7dc70aa8c5ef673b4e2014a8c78896d48fa65ab2a2eb30a"
+              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -518730,7 +518746,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "criterion_result": "Compact topbar retains linked brand icon, hamburger, notification bell and account avatar/profile identity with the required operating-context marker. Theme/language and secondary account actions remain in the account menu. Eight-width no-overflow, permission/context and keyboard checks pass.",
           "limitations": [
@@ -519167,7 +519184,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -519327,7 +519344,7 @@
             },
             {
               "path": "apps/web/src/lib/navigation-config.test.ts",
-              "sha256": "ac90d3166413d762986e07d692cfabb5c31fb5cffae072d07675c8880dd2eeec"
+              "sha256": "ba24f20e82023d2c6406958e651906195ae950926eee5c7caac38070e9418223"
             },
             {
               "path": "apps/web/src/lib/navigation-config.ts",
@@ -519363,7 +519380,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "9a18f50b7be08bebe7dc70aa8c5ef673b4e2014a8c78896d48fa65ab2a2eb30a"
+              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -519531,7 +519548,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "criterion_result": "Tablet768–1023px uses a60px rail with accessible labels and at least44x44 targets. It expands by tap/menu, keyboard focus and hover on hover-capable devices. Phone drawer and full desktop sidebar remain available; current page and focus/More recovery are retained.",
           "limitations": [
@@ -520049,7 +520067,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -520217,7 +520235,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-fallback-and-announcement",
           "limitations": [
@@ -521373,7 +521392,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -521541,7 +521560,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-fallback-and-announcement",
           "limitations": [
@@ -523791,7 +523811,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
@@ -524054,7 +524074,8 @@
             "Rechecked 3,360 recorded layout snapshots across 2,976 distinct cells for 93 populated routes. Each has one main landmark, one level-one heading inside main, ordered main headings and names on repeated landmarks. Archived test and helper hashes match their source bindings.",
             "Branding keeps one localized level-one heading and a visible loading skeleton while the initial read is held. The notification editor names the variable reference region from its heading, and the independent publish action uses a level-two heading.",
             "Conditional pending, stale-chunk recovery, CRM loading and saving agreement receipts remain linked. Later route source changes are bound to the existing populated and direction evidence.",
-            "34 browser cases and 438 unit cases passed. All eight coverage groups, typecheck, scoped lint and formatting, production build, 98 bundle limits and three cold authentication transfers passed. Template publication, current authority and branding receipt assertions remain intact."
+            "34 browser cases and 438 unit cases passed. All eight coverage groups, typecheck, scoped lint and formatting, production build, 98 bundle limits and three cold authentication transfers passed. Template publication, current authority and branding receipt assertions remain intact.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-heading-acceptance/proof.json",
           "scope_dispositions": [
@@ -525524,7 +525545,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -525767,7 +525788,8 @@
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
-            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -526368,7 +526390,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -526611,7 +526633,8 @@
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
-            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -527724,7 +527747,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -527967,7 +527990,8 @@
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
-            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -528466,7 +528490,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -529046,7 +529070,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -529380,7 +529405,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -529960,7 +529985,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -530294,7 +530320,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -530874,7 +530900,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -531208,7 +531235,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -531788,7 +531815,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -532122,7 +532150,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -532702,7 +532730,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -533036,7 +533065,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -533616,7 +533645,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -533950,7 +533980,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -534530,7 +534560,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -534864,7 +534895,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -535444,7 +535475,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -535778,7 +535810,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -536358,7 +536390,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -536692,7 +536725,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -537272,7 +537305,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -537606,7 +537640,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -538186,7 +538220,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -538520,7 +538555,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -539100,7 +539135,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -539434,7 +539470,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -540014,7 +540050,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -540348,7 +540385,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -540928,7 +540965,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -541262,7 +541300,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -541842,7 +541880,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -542176,7 +542215,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -542756,7 +542795,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -543090,7 +543130,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -543670,7 +543710,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -544004,7 +544045,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -544584,7 +544625,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -544918,7 +544960,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -545498,7 +545540,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -545832,7 +545875,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -546412,7 +546455,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -622705,7 +622749,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -622865,7 +622909,7 @@
             },
             {
               "path": "apps/web/src/lib/navigation-config.test.ts",
-              "sha256": "ac90d3166413d762986e07d692cfabb5c31fb5cffae072d07675c8880dd2eeec"
+              "sha256": "ba24f20e82023d2c6406958e651906195ae950926eee5c7caac38070e9418223"
             },
             {
               "path": "apps/web/src/lib/navigation-config.ts",
@@ -622901,7 +622945,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "9a18f50b7be08bebe7dc70aa8c5ef673b4e2014a8c78896d48fa65ab2a2eb30a"
+              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -623069,7 +623113,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "criterion_result": "Rich profile dropdown shows active initials/name/type, current accessible choices with avatar/name/type/verification badges, checked selection and profile-management link. Fresh account/revision-owned reads use the existing strict parser and cancel obsolete reads. Lazy-choice failure preserves context and offers explicit reload; no POST occurs during this failure.",
           "limitations": [
@@ -623506,7 +623551,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -623666,7 +623711,7 @@
             },
             {
               "path": "apps/web/src/lib/navigation-config.test.ts",
-              "sha256": "ac90d3166413d762986e07d692cfabb5c31fb5cffae072d07675c8880dd2eeec"
+              "sha256": "ba24f20e82023d2c6406958e651906195ae950926eee5c7caac38070e9418223"
             },
             {
               "path": "apps/web/src/lib/navigation-config.ts",
@@ -623702,7 +623747,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "9a18f50b7be08bebe7dc70aa8c5ef673b4e2014a8c78896d48fa65ab2a2eb30a"
+              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -623870,7 +623915,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "criterion_result": "Compact ProfileBadge uses the same account-owned directory as the picker, shows current initials/type icon/name, truncates safely with full-name title and preserves the separate visible customer/staff marker. Missing/unavailable profile metadata is withheld rather than borrowing another scope.",
           "limitations": [
@@ -624307,7 +624353,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -624467,7 +624513,7 @@
             },
             {
               "path": "apps/web/src/lib/navigation-config.test.ts",
-              "sha256": "ac90d3166413d762986e07d692cfabb5c31fb5cffae072d07675c8880dd2eeec"
+              "sha256": "ba24f20e82023d2c6406958e651906195ae950926eee5c7caac38070e9418223"
             },
             {
               "path": "apps/web/src/lib/navigation-config.ts",
@@ -624503,7 +624549,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "9a18f50b7be08bebe7dc70aa8c5ef673b4e2014a8c78896d48fa65ab2a2eb30a"
+              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -624671,7 +624717,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "criterion_result": "A captured, target-bound switch blocks the workspace with a full-page non-dismissible loading/recovery view, including inert fallback before modal code loads. Exact response plus fresh current directory must confirm the target. Unknown replies hold without replay, recheck usesGET only, accepted changes persist backend preference and reset private queries/requests/tabs. Existing default-setting and invitation CSRF tests retained.",
           "limitations": [
@@ -625108,7 +625155,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -625268,7 +625315,7 @@
             },
             {
               "path": "apps/web/src/lib/navigation-config.test.ts",
-              "sha256": "ac90d3166413d762986e07d692cfabb5c31fb5cffae072d07675c8880dd2eeec"
+              "sha256": "ba24f20e82023d2c6406958e651906195ae950926eee5c7caac38070e9418223"
             },
             {
               "path": "apps/web/src/lib/navigation-config.ts",
@@ -625304,7 +625351,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "9a18f50b7be08bebe7dc70aa8c5ef673b4e2014a8c78896d48fa65ab2a2eb30a"
+              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -625472,7 +625519,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "criterion_result": "Unverified profiles can be selected/read while existing verification banner and server commercial-order guards remain authoritative. Status badges expose verified/unverified without granting permissions. Native profile verification/context cases and existing verification sources retained; no commercial gate changed.",
           "limitations": [
@@ -625913,7 +625961,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -626073,7 +626121,7 @@
             },
             {
               "path": "apps/web/src/lib/navigation-config.test.ts",
-              "sha256": "ac90d3166413d762986e07d692cfabb5c31fb5cffae072d07675c8880dd2eeec"
+              "sha256": "ba24f20e82023d2c6406958e651906195ae950926eee5c7caac38070e9418223"
             },
             {
               "path": "apps/web/src/lib/navigation-config.ts",
@@ -626109,7 +626157,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "9a18f50b7be08bebe7dc70aa8c5ef673b4e2014a8c78896d48fa65ab2a2eb30a"
+              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -626277,7 +626325,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "criterion_result": "Owner approved on2026-11-06 the existing explicit-ID or server-owned active-preference representation. Current ownership/active-agent checks, exact target receipt plus fresh confirmation, old-response suppression and cross-tab reset verified. Native foreign/suspended/agent contexts and late old wallet/notification values remain isolated; no profile header migration or financial-rule change.",
           "limitations": [
@@ -626714,7 +626763,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -626874,7 +626923,7 @@
             },
             {
               "path": "apps/web/src/lib/navigation-config.test.ts",
-              "sha256": "ac90d3166413d762986e07d692cfabb5c31fb5cffae072d07675c8880dd2eeec"
+              "sha256": "ba24f20e82023d2c6406958e651906195ae950926eee5c7caac38070e9418223"
             },
             {
               "path": "apps/web/src/lib/navigation-config.ts",
@@ -626910,7 +626959,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "9a18f50b7be08bebe7dc70aa8c5ef673b4e2014a8c78896d48fa65ab2a2eb30a"
+              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -627078,7 +627127,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "criterion_result": "AppShell retains shared directional flex layout, existing sidebar/topbar CSS variables, scrollable bounded main content, skip link and account banners. Desktop sidebar and responsive rail/phone surfaces verified; event/media/Escape logic retained byte-exact.",
           "limitations": [
@@ -627515,7 +627565,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -627675,7 +627725,7 @@
             },
             {
               "path": "apps/web/src/lib/navigation-config.test.ts",
-              "sha256": "ac90d3166413d762986e07d692cfabb5c31fb5cffae072d07675c8880dd2eeec"
+              "sha256": "ba24f20e82023d2c6406958e651906195ae950926eee5c7caac38070e9418223"
             },
             {
               "path": "apps/web/src/lib/navigation-config.ts",
@@ -627711,7 +627761,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "9a18f50b7be08bebe7dc70aa8c5ef673b4e2014a8c78896d48fa65ab2a2eb30a"
+              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -627879,7 +627929,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "criterion_result": "Sidebar now includes brand at its head, profile picker below when expanded, grouped permitted links, directional icons, active marker and responsive expansion. Labels remain accessible in collapsed mode. Administrative links reflect actual backend grants rather than a frontend role-name assumption.",
           "limitations": [
@@ -628317,7 +628368,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -628477,7 +628528,7 @@
             },
             {
               "path": "apps/web/src/lib/navigation-config.test.ts",
-              "sha256": "ac90d3166413d762986e07d692cfabb5c31fb5cffae072d07675c8880dd2eeec"
+              "sha256": "ba24f20e82023d2c6406958e651906195ae950926eee5c7caac38070e9418223"
             },
             {
               "path": "apps/web/src/lib/navigation-config.ts",
@@ -628513,7 +628564,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "9a18f50b7be08bebe7dc70aa8c5ef673b4e2014a8c78896d48fa65ab2a2eb30a"
+              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -628681,7 +628732,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "criterion_result": "Topbar retains language/theme controls, current notification bell and account popover, with compact preferences in that popover. Current profile identity is supplied through a customer-only slot; staff does not fetch customer profile authority. Root auth BrandMark default rendering remains exact and login light/dark FA/EN checks pass.",
           "limitations": [
@@ -629119,7 +629171,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -629279,7 +629331,7 @@
             },
             {
               "path": "apps/web/src/lib/navigation-config.test.ts",
-              "sha256": "ac90d3166413d762986e07d692cfabb5c31fb5cffae072d07675c8880dd2eeec"
+              "sha256": "ba24f20e82023d2c6406958e651906195ae950926eee5c7caac38070e9418223"
             },
             {
               "path": "apps/web/src/lib/navigation-config.ts",
@@ -629315,7 +629367,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "9a18f50b7be08bebe7dc70aa8c5ef673b4e2014a8c78896d48fa65ab2a2eb30a"
+              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -629483,7 +629535,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "criterion_result": "ProfileMenu keeps current account avatar/name/email/mobile, My Profile/settings/logout, explicit operating-context indicator and authorized staff/customer switch. Current authority/error recovery and session CSRF/one-context behavior remain unchanged; native and both browser contexts pass.",
           "limitations": [
@@ -629921,7 +629974,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -630081,7 +630134,7 @@
             },
             {
               "path": "apps/web/src/lib/navigation-config.test.ts",
-              "sha256": "ac90d3166413d762986e07d692cfabb5c31fb5cffae072d07675c8880dd2eeec"
+              "sha256": "ba24f20e82023d2c6406958e651906195ae950926eee5c7caac38070e9418223"
             },
             {
               "path": "apps/web/src/lib/navigation-config.ts",
@@ -630117,7 +630170,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "9a18f50b7be08bebe7dc70aa8c5ef673b4e2014a8c78896d48fa65ab2a2eb30a"
+              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -630285,7 +630338,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "criterion_result": "Bottom bar shows up to four granted primary destinations plus More, reflects the true active route, preserves every remaining granted link, closes on navigation/desktop transition and restores focus. Phone/desktop/keyboard/RTL and failed bar/sheet recovery pass. Its initial payload remains counted under original page limits.",
           "limitations": [
@@ -630723,7 +630777,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -630883,7 +630937,7 @@
             },
             {
               "path": "apps/web/src/lib/navigation-config.test.ts",
-              "sha256": "ac90d3166413d762986e07d692cfabb5c31fb5cffae072d07675c8880dd2eeec"
+              "sha256": "ba24f20e82023d2c6406958e651906195ae950926eee5c7caac38070e9418223"
             },
             {
               "path": "apps/web/src/lib/navigation-config.ts",
@@ -630919,7 +630973,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "9a18f50b7be08bebe7dc70aa8c5ef673b4e2014a8c78896d48fa65ab2a2eb30a"
+              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -631087,7 +631141,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "criterion_result": "Existing BreadcrumbBar keeps current route/path, localized root and safe detail label, collapsed parent disclosure, Escape/focus restoration and true list-return links. Raw record IDs never appear as breadcrumb labels. Real route/consent recovery tests retained across both projects.",
           "limitations": [
@@ -631525,7 +631580,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -631685,7 +631740,7 @@
             },
             {
               "path": "apps/web/src/lib/navigation-config.test.ts",
-              "sha256": "ac90d3166413d762986e07d692cfabb5c31fb5cffae072d07675c8880dd2eeec"
+              "sha256": "ba24f20e82023d2c6406958e651906195ae950926eee5c7caac38070e9418223"
             },
             {
               "path": "apps/web/src/lib/navigation-config.ts",
@@ -631721,7 +631776,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "9a18f50b7be08bebe7dc70aa8c5ef673b4e2014a8c78896d48fa65ab2a2eb30a"
+              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -631889,7 +631944,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "criterion_result": "Navigation is resolved from current server grants and profile type. Client local labels/icons only filter known routes from that configuration; missing or wrong-area configuration fails closed and can refresh. Native per-permission/operating-context tests and restricted-menu browser cases pass.",
           "limitations": [
@@ -632327,7 +632383,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -632487,7 +632543,7 @@
             },
             {
               "path": "apps/web/src/lib/navigation-config.test.ts",
-              "sha256": "ac90d3166413d762986e07d692cfabb5c31fb5cffae072d07675c8880dd2eeec"
+              "sha256": "ba24f20e82023d2c6406958e651906195ae950926eee5c7caac38070e9418223"
             },
             {
               "path": "apps/web/src/lib/navigation-config.ts",
@@ -632523,7 +632579,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "9a18f50b7be08bebe7dc70aa8c5ef673b4e2014a8c78896d48fa65ab2a2eb30a"
+              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -632691,7 +632747,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "criterion_result": "Customer service/account destinations and staff operations/settings groups remain backend-filtered, including all four services, CRM, document templates and finance/administration where granted. Personal customer work and staff operations retain their explicit authorized operating-context boundary.",
           "limitations": [
@@ -633129,7 +633186,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -633289,7 +633346,7 @@
             },
             {
               "path": "apps/web/src/lib/navigation-config.test.ts",
-              "sha256": "ac90d3166413d762986e07d692cfabb5c31fb5cffae072d07675c8880dd2eeec"
+              "sha256": "ba24f20e82023d2c6406958e651906195ae950926eee5c7caac38070e9418223"
             },
             {
               "path": "apps/web/src/lib/navigation-config.ts",
@@ -633325,7 +633382,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "9a18f50b7be08bebe7dc70aa8c5ef673b4e2014a8c78896d48fa65ab2a2eb30a"
+              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -633493,7 +633550,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "criterion_result": "Legal profiles expose legal-profile/team/agent routes only with corresponding current grants; Individual profiles expose personal-profile/saving routes. Shared service links retain their own server permission boundaries. Current backend navigation tests and FA/EN customer/staff menu checks pass.",
           "limitations": [
@@ -633931,7 +633989,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -634091,7 +634149,7 @@
             },
             {
               "path": "apps/web/src/lib/navigation-config.test.ts",
-              "sha256": "ac90d3166413d762986e07d692cfabb5c31fb5cffae072d07675c8880dd2eeec"
+              "sha256": "ba24f20e82023d2c6406958e651906195ae950926eee5c7caac38070e9418223"
             },
             {
               "path": "apps/web/src/lib/navigation-config.ts",
@@ -634127,7 +634185,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "9a18f50b7be08bebe7dc70aa8c5ef673b4e2014a8c78896d48fa65ab2a2eb30a"
+              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -634295,7 +634353,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "criterion_result": "Owner approved current router-context reuse with fresh authority on navigation/profile/permission changes instead of immutable session-long grants. Existing current-session/navigation parsers/providers and backend permission resolution remain byte-exact. Revocation, restricted configuration and context change tests pass.",
           "limitations": [
@@ -711150,7 +711209,7 @@
             },
             {
               "path": "apps/web/src/components/admin-settings-layout.test.tsx",
-              "sha256": "dfda07beee9db65a013588ccb4cb50e04061e4f65c6906e3e6b0165883d34510"
+              "sha256": "c3fc2c1e9d40096e7a0e04e873d1f736d485ad9800e901ec90160c55d1a9d167"
             },
             {
               "path": "apps/web/src/lib/admin-settings-navigation.ts",
@@ -711165,7 +711224,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-settings/acceptance-proof.json",
             "Bindings renewed by release-0.5-forms-confirmation-journey: additive confirmation entry/exports, display-only exact IRR/toman, scoped host/risk metadata and guarded explicit approval. Existing81 requests and180 payload/version/idempotency fields AST-identical; backend/shared domain and original budgets unchanged.139 distinct native cases,138 affected full-file web passes, shared control/distribution checks cover the UI delta. Original domain evidence retained for unchanged behavior; adapted test actions explicitly perform the additional approval and preserve assertions.",
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
-            "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained."
+            "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "criterion_result": "Twelve permission-filtered categories, bounded desktop navigation, grouped mobile select, safe destinations, active state and destination focus. Eight bilingual/light-dark desktop/mobile journeys and nine component cases verify actual shell adoption.",
           "limitations": [
@@ -737520,7 +737580,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "c0380531bd85946e023feb7313bbe46641105cb22272e934dff43db1a667feaa"
+              "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
             },
             {
               "path": "apps/web/src/components/AssignmentFallbackEditor.tsx",
@@ -739386,7 +739446,8 @@
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
-            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -739638,7 +739699,8 @@
           "release-0.6-proxy-trust-and-request-limits",
           "release-0.6-pilot-proxy-and-cache-policy",
           "release-0.6-nightly-browser-shard-capacity",
-          "release-0.6-nightly-advisory-and-schema-gate"
+          "release-0.6-nightly-advisory-and-schema-gate",
+          "release-0.6-nightly-navigation-and-chromium"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -828741,6 +828803,63 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-contract-gate",
       "source_scope_proof": "receipt.json",
       "source_scope_proof_sha256": "fcfce15dbd1ea0f52ffc6c92d8a5634f435b899d4730af10f521b5cf72612830"
+    },
+    "release-0.6-nightly-navigation-and-chromium": {
+      "batch": "release-0.6-nightly-navigation-and-chromium",
+      "base_commit": "32d4c5000a3e44bdc359c85168fd932c791b33e0",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "17f9de3a68eae66e1c029a1c76633e7bd60b7f1ccf4147498fd42b4d4179eaa5"
+        },
+        {
+          "path": "docs/flaky-test-quarantine.md",
+          "sha256": "232b56c1782338cde424dabf711cef091e9784c23a832f4b7c1c67e25bd29431"
+        },
+        {
+          "path": "apps/web/src/components/AppShell.tsx",
+          "sha256": "2158bcd06c462691d1938637cdbaa5257bbbd8d445bfcaee201c65cc737b0079"
+        },
+        {
+          "path": "apps/web/src/components/admin-settings-layout.test.tsx",
+          "sha256": "c3fc2c1e9d40096e7a0e04e873d1f736d485ad9800e901ec90160c55d1a9d167"
+        },
+        {
+          "path": "apps/web/src/lib/navigation-config.test.ts",
+          "sha256": "ba24f20e82023d2c6406958e651906195ae950926eee5c7caac38070e9418223"
+        },
+        {
+          "path": "apps/web/src/lib/shell-navigation.test.ts",
+          "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+        },
+        {
+          "path": "apps/web/src/routeTree.gen.ts",
+          "sha256": "c1524622f37c4dc26c3fc7f5746d3a9a2d962c8397db0ab77e61efa0422be658"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "turbo.json",
+          "sha256": "d81d554260edd9a3e22854a220fd0e6dd95b2c7db7035de015e37a58c8279741"
+        }
+      ],
+      "checks": [
+        "Node 24 web typechecking and all 15 focused navigation/settings tests passed. A temporary invalid shell destination produced exactly TS2322. Vite transpiled the before and after AppShell to identical JavaScript.",
+        "The nightly job verifies workspace shell destinations against the generated router using the existing Turbo web typecheck and its four workspace build prerequisites. This validates registered app routes rather than reaching external URL destinations.",
+        "Chromium discovery found all 2,907 cases exactly once across eight shards, with 336–403 cases per shard. Together with the previously verified four projects, the same retry and outcome policies now cover 14,535 listed cases in 40 shards. Actual hosted and scheduled results remain open.",
+        "The nightly schedule now requests 02:00 UTC and the exact workflow passed actionlint and formatting. No scheduled execution has been certified."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-navigation-contract",
+      "source_scope_proof": "receipt.json",
+      "source_scope_proof_sha256": "05f13219e2366cfa304d0805dcf12681d28516600282a36d35c7dfef55614402"
     }
   },
   "historical_improvements": [
