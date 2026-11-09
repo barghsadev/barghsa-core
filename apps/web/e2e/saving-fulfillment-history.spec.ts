@@ -258,8 +258,11 @@ for (const locale of ['en', 'fa'] as const) {
     denied = true;
     await page.reload();
     await expect(
-      page.getByRole('alert').filter({ hasText: loadingText('readError', locale) })
+      page.getByRole('alert').filter({ hasText: loadingText('recordUnavailable', locale) })
     ).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: tSaving('retry', locale), exact: true })
+    ).toHaveCount(0);
     await expect(
       page.getByRole('region', { name: tSaving('fulfillment', locale), exact: true })
     ).toHaveCount(0);

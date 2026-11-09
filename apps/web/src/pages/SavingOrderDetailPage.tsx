@@ -217,7 +217,9 @@ export function SavingOrderDetailPage() {
         if (!controller.signal.aborted) {
           setDetail(null);
           setState(
-            reason instanceof ServerQueryError && reason.status === 404 ? 'notFound' : 'error'
+            reason instanceof ServerQueryError && [401, 403, 404].includes(reason.status)
+              ? 'notFound'
+              : 'error'
           );
         }
       });

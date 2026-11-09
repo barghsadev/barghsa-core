@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T03:07:20+00:00",
-  "source_commit": "aea9ac7c5b108e5243253401256cdca0cf6eebb2",
+  "updated": "2026-11-09T03:16:11+00:00",
+  "source_commit": "a172391461f53642f996e78c92d0af4d4940dc27",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -195384,7 +195384,7 @@
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
-              "sha256": "3c0fb6480940f3fe6651233e50f85b8482ac0bb52eca62af65c2130bb0e91123"
+              "sha256": "e7865630c0ed473cc578ea645d3005e48fd534d83d7907cba2715771d3a587a0"
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
@@ -197322,7 +197322,7 @@
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
-              "sha256": "3c0fb6480940f3fe6651233e50f85b8482ac0bb52eca62af65c2130bb0e91123"
+              "sha256": "e7865630c0ed473cc578ea645d3005e48fd534d83d7907cba2715771d3a587a0"
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
@@ -200108,7 +200108,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -201460,7 +201460,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -202812,7 +202812,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -204165,7 +204165,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -205477,7 +205477,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -206789,7 +206789,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -208101,7 +208101,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -209413,7 +209413,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -210725,7 +210725,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -212037,7 +212037,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -213350,7 +213350,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -214662,7 +214662,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -215975,7 +215975,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -217287,7 +217287,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -218599,7 +218599,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -219911,7 +219911,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -221223,7 +221223,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -222535,7 +222535,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -223848,7 +223848,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -225160,7 +225160,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -226472,7 +226472,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -227784,7 +227784,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -229096,7 +229096,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -230408,7 +230408,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -231721,7 +231721,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -233034,7 +233034,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -234347,7 +234347,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -235659,7 +235659,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -236971,7 +236971,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -238283,7 +238283,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -350093,7 +350093,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -351082,7 +351082,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -352073,7 +352073,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -353062,7 +353062,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -354051,7 +354051,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -355040,7 +355040,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -356030,7 +356030,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -357019,7 +357019,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -358008,7 +358008,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -358997,7 +358997,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -360708,7 +360708,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -362424,7 +362424,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -363413,7 +363413,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -364402,7 +364402,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -365393,7 +365393,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -366382,7 +366382,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -367376,7 +367376,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -368374,7 +368374,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -369372,7 +369372,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -370575,7 +370575,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "packages/db/drizzle/production/0161_saving_orders.sql",
@@ -371857,7 +371857,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "packages/db/drizzle/production/0161_saving_orders.sql",
@@ -373139,7 +373139,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "packages/db/drizzle/production/0161_saving_orders.sql",
@@ -374421,7 +374421,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "packages/db/drizzle/production/0161_saving_orders.sql",
@@ -375704,7 +375704,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "packages/db/drizzle/production/0161_saving_orders.sql",
@@ -376746,7 +376746,7 @@
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
-              "sha256": "3c0fb6480940f3fe6651233e50f85b8482ac0bb52eca62af65c2130bb0e91123"
+              "sha256": "e7865630c0ed473cc578ea645d3005e48fd534d83d7907cba2715771d3a587a0"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-prerequisites.spec.ts",
@@ -376794,7 +376794,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/saving-staff-operation-forms.test.tsx",
@@ -377601,7 +377601,7 @@
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
-              "sha256": "3c0fb6480940f3fe6651233e50f85b8482ac0bb52eca62af65c2130bb0e91123"
+              "sha256": "e7865630c0ed473cc578ea645d3005e48fd534d83d7907cba2715771d3a587a0"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-prerequisites.spec.ts",
@@ -377649,7 +377649,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/saving-staff-operation-forms.test.tsx",
@@ -378452,7 +378452,7 @@
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
-              "sha256": "3c0fb6480940f3fe6651233e50f85b8482ac0bb52eca62af65c2130bb0e91123"
+              "sha256": "e7865630c0ed473cc578ea645d3005e48fd534d83d7907cba2715771d3a587a0"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-prerequisites.spec.ts",
@@ -378500,7 +378500,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/saving-staff-operation-forms.test.tsx",
@@ -379303,7 +379303,7 @@
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
-              "sha256": "3c0fb6480940f3fe6651233e50f85b8482ac0bb52eca62af65c2130bb0e91123"
+              "sha256": "e7865630c0ed473cc578ea645d3005e48fd534d83d7907cba2715771d3a587a0"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-prerequisites.spec.ts",
@@ -379351,7 +379351,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/saving-staff-operation-forms.test.tsx",
@@ -380153,7 +380153,7 @@
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
-              "sha256": "3c0fb6480940f3fe6651233e50f85b8482ac0bb52eca62af65c2130bb0e91123"
+              "sha256": "e7865630c0ed473cc578ea645d3005e48fd534d83d7907cba2715771d3a587a0"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-prerequisites.spec.ts",
@@ -380201,7 +380201,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/saving-staff-operation-forms.test.tsx",
@@ -421722,7 +421722,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -491587,7 +491587,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.test.tsx",
@@ -494731,7 +494731,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/staff-service-query.test.tsx",
@@ -495622,7 +495622,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/staff-service-query.test.tsx",
@@ -496454,7 +496454,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/staff-service-query.test.tsx",
@@ -497275,7 +497275,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/solar-queue-navigation.test.tsx",
@@ -508593,7 +508593,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -512608,7 +512608,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -519293,7 +519293,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -547440,7 +547440,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -549310,7 +549310,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -551181,7 +551181,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -553021,7 +553021,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -554887,7 +554887,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -556762,7 +556762,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -558610,7 +558610,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -560422,7 +560422,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -562234,7 +562234,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -564047,7 +564047,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -565859,7 +565859,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -567469,7 +567469,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -567737,7 +567737,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -569372,7 +569372,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -569640,7 +569640,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -572892,7 +572892,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -573196,7 +573196,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -574170,7 +574170,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -574438,7 +574438,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -576073,7 +576073,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -576341,7 +576341,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -577976,7 +577976,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -578244,7 +578244,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -579879,7 +579879,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -580147,7 +580147,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -581782,7 +581782,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -582050,7 +582050,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -583685,7 +583685,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -583953,7 +583953,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -585588,7 +585588,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -585856,7 +585856,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -587491,7 +587491,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -587759,7 +587759,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -589394,7 +589394,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -589662,7 +589662,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -591297,7 +591297,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -591565,7 +591565,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -593200,7 +593200,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -593468,7 +593468,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -594832,7 +594832,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/solar-queue-navigation.test.tsx",
@@ -595843,7 +595843,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -596111,7 +596111,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -597746,7 +597746,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -598014,7 +598014,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -598962,7 +598962,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The staff inventory covers loading and error on 48 primary data routes and authorized empty or unset states on 40 routes. Ten customer collections have held first-read and authorized-empty receipts in both languages on Chromium and mobile Safari. Focused current receipts cover CRM correction scope, storage cleanup recovery, verification and service-workflow access withdrawal, notification session cleanup, and the provider, roles, staff directory and team interactions listed in the latest batch. Finish reconciliation of other route-specific interactions and independently loaded details."
+        "The staff inventory covers loading and error on 48 primary data routes and authorized empty or unset states on 40 routes. Ten customer collections have held first-read and authorized-empty receipts in both languages on Chromium and mobile Safari. Exact current cases cover temporary and unavailable responses for five customer detail routes plus saving fulfillment, and the independent gift-code statistics and contract-template history states. Prior route-specific receipts remain scoped. Reconcile remaining independent children and original route interactions before full acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -599111,7 +599111,8 @@
           "release-0.5-verification-shared-read-access",
           "release-0.5-service-workflow-grant-revocation",
           "release-0.5-notification-settings-session",
-          "release-0.5-staff-configuration-adoption"
+          "release-0.5-staff-configuration-adoption",
+          "release-0.5-saving-detail-denied-read"
         ],
         "current_acceptance": null
       }
@@ -600049,7 +600050,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -601857,7 +601858,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -603665,7 +603666,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -605473,7 +605474,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -607281,7 +607282,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -609089,7 +609090,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -610897,7 +610898,7 @@
             },
             {
               "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
-              "sha256": "355e78e7f46349adc4a86a8c593615de104e219e8d8cda746ef0ea6343b7c0e3"
+              "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
             },
             {
               "path": "apps/web/src/pages/saving-funding-query.test.tsx",
@@ -688878,7 +688879,7 @@
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
-              "sha256": "3c0fb6480940f3fe6651233e50f85b8482ac0bb52eca62af65c2130bb0e91123"
+              "sha256": "e7865630c0ed473cc578ea645d3005e48fd534d83d7907cba2715771d3a587a0"
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
@@ -689719,7 +689720,7 @@
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
-              "sha256": "3c0fb6480940f3fe6651233e50f85b8482ac0bb52eca62af65c2130bb0e91123"
+              "sha256": "e7865630c0ed473cc578ea645d3005e48fd534d83d7907cba2715771d3a587a0"
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
@@ -690562,7 +690563,7 @@
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
-              "sha256": "3c0fb6480940f3fe6651233e50f85b8482ac0bb52eca62af65c2130bb0e91123"
+              "sha256": "e7865630c0ed473cc578ea645d3005e48fd534d83d7907cba2715771d3a587a0"
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
@@ -691403,7 +691404,7 @@
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
-              "sha256": "3c0fb6480940f3fe6651233e50f85b8482ac0bb52eca62af65c2130bb0e91123"
+              "sha256": "e7865630c0ed473cc578ea645d3005e48fd534d83d7907cba2715771d3a587a0"
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
@@ -692244,7 +692245,7 @@
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
-              "sha256": "3c0fb6480940f3fe6651233e50f85b8482ac0bb52eca62af65c2130bb0e91123"
+              "sha256": "e7865630c0ed473cc578ea645d3005e48fd534d83d7907cba2715771d3a587a0"
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
@@ -693089,7 +693090,7 @@
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
-              "sha256": "3c0fb6480940f3fe6651233e50f85b8482ac0bb52eca62af65c2130bb0e91123"
+              "sha256": "e7865630c0ed473cc578ea645d3005e48fd534d83d7907cba2715771d3a587a0"
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
@@ -693934,7 +693935,7 @@
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
-              "sha256": "3c0fb6480940f3fe6651233e50f85b8482ac0bb52eca62af65c2130bb0e91123"
+              "sha256": "e7865630c0ed473cc578ea645d3005e48fd534d83d7907cba2715771d3a587a0"
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
@@ -694775,7 +694776,7 @@
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
-              "sha256": "3c0fb6480940f3fe6651233e50f85b8482ac0bb52eca62af65c2130bb0e91123"
+              "sha256": "e7865630c0ed473cc578ea645d3005e48fd534d83d7907cba2715771d3a587a0"
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
@@ -695616,7 +695617,7 @@
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
-              "sha256": "3c0fb6480940f3fe6651233e50f85b8482ac0bb52eca62af65c2130bb0e91123"
+              "sha256": "e7865630c0ed473cc578ea645d3005e48fd534d83d7907cba2715771d3a587a0"
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
@@ -696458,7 +696459,7 @@
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
-              "sha256": "3c0fb6480940f3fe6651233e50f85b8482ac0bb52eca62af65c2130bb0e91123"
+              "sha256": "e7865630c0ed473cc578ea645d3005e48fd534d83d7907cba2715771d3a587a0"
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
@@ -697305,7 +697306,7 @@
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
-              "sha256": "3c0fb6480940f3fe6651233e50f85b8482ac0bb52eca62af65c2130bb0e91123"
+              "sha256": "e7865630c0ed473cc578ea645d3005e48fd534d83d7907cba2715771d3a587a0"
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
@@ -718002,7 +718003,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -718282,7 +718283,7 @@
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
-              "sha256": "3c0fb6480940f3fe6651233e50f85b8482ac0bb52eca62af65c2130bb0e91123"
+              "sha256": "e7865630c0ed473cc578ea645d3005e48fd534d83d7907cba2715771d3a587a0"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-prerequisites.spec.ts",
@@ -728975,7 +728976,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The staff inventory covers loading and error on 48 primary data routes and authorized empty or unset states on 40 routes. Ten customer collections have held first-read and authorized-empty receipts in both languages on Chromium and mobile Safari. Focused current receipts cover CRM correction scope, storage cleanup recovery, verification and service-workflow access withdrawal, notification session cleanup, and the provider, roles, staff directory and team interactions listed in the latest batch. Finish reconciliation of other route-specific interactions and independently loaded details."
+        "The staff inventory covers loading and error on 48 primary data routes and authorized empty or unset states on 40 routes. Ten customer collections have held first-read and authorized-empty receipts in both languages on Chromium and mobile Safari. Exact current cases cover temporary and unavailable responses for five customer detail routes plus saving fulfillment, and the independent gift-code statistics and contract-template history states. Prior route-specific receipts remain scoped. Reconcile remaining independent children and original route interactions before full acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -729190,7 +729191,8 @@
           "release-0.5-verification-shared-read-access",
           "release-0.5-service-workflow-grant-revocation",
           "release-0.5-notification-settings-session",
-          "release-0.5-staff-configuration-adoption"
+          "release-0.5-staff-configuration-adoption",
+          "release-0.5-saving-detail-denied-read"
         ]
       }
     },
@@ -730318,7 +730320,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "8626954de7a7b18791a52e37aa710cb4b9a30964d557794f51b564e377e9f163"
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -731152,7 +731154,8 @@
             "All 101 transfer budgets and affected verification and service-workflow browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-verification-shared-read-access/proof.json",
             "All 101 transfer budgets and 58 affected settings browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflow-grant-revocation/proof.json",
             "All 101 transfer budgets and 62 affected notification browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-settings-session/proof.json",
-            "All 101 transfer budgets and 64 affected staff and provider browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-configuration-adoption/proof.json"
+            "All 101 transfer budgets and 64 affected staff and provider browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-configuration-adoption/proof.json",
+            "All 101 transfer budgets and 48 customer detail/fulfillment cases and eight independent staff detail cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-detail-denied-read/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -811005,6 +811008,49 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-configuration-adoption/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-configuration-adoption/renewed-bindings.json",
       "release_disposition": "Closed the missing SMS empty result and bound named staff configuration cases. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-saving-detail-denied-read": {
+      "batch": "release-0.5-saving-detail-denied-read",
+      "base_commit": "a172391461f53642f996e78c92d0af4d4940dc27",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/customer-service-detail-recovery.spec.ts",
+          "sha256": "299936f261502f3534086319fa1bff8ff9fdcc412701c44c1a8b011a121868aa"
+        },
+        {
+          "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
+          "sha256": "e7865630c0ed473cc578ea645d3005e48fd534d83d7907cba2715771d3a587a0"
+        },
+        {
+          "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
+          "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
+        },
+        {
+          "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
+          "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
+        }
+      ],
+      "checks": [
+        "The predecessor Chromium build showed the transient failure state after saving detail HTTP 403 in both languages. The saving detail now classifies 401, 403 and 404 as unavailable. It withdraws prior private data and actions and keeps the orders return link. Temporary read failures still offer an explicit retry.",
+        "The final runtime passed 48 distinct Chromium and mobile Safari detail and fulfillment cases. Four fulfillment checks required the unavailable notice and absence of retry after 403. Their 503 recovery and private-history withdrawal assertions stayed in place. The final browser-test snapshot differs from the build only in that fixture.",
+        "Eight scoped staff catalogue cases verified that gift-code usage and contract-template history load independently, recover an exact failed child read by keyboard and distinguish authorized empty results while retaining the parent list. The first gift-code fixture missed its list query parameters. Its corrected endpoint matcher passed without product changes.",
+        "Twelve instrumented Chromium cases and 34 focused units passed. The existing critical gate passed at 66/67 lines and 153/175 branches. Web typecheck, changed-file lint, formatting and all 101 transfer budgets passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-detail-denied-read",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-detail-denied-read/proof.json",
+      "source_scope_proof_sha256": "3b17765fdd5ce05e7f0c90f5ca4966c1e4afcdf9e56a031d82e4165763767b46",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-detail-denied-read/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-detail-denied-read/renewed-bindings.json",
+      "release_disposition": "Closed saving detail denial feedback and verified independent staff catalogue reads. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [
@@ -811055,7 +811101,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Reconcile remaining independently loaded details against their original route receipts. Start with staff catalogue detail reads and customer service detail states. Required GitHub checks and staging Sentry remain independent."
+    "goal": "Finish the route-specific acceptance reconciliation using the current named detail, list, and layout cases. Verify any still-unproven conditional scope. GitHub required checks and staging Sentry remain independent."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",

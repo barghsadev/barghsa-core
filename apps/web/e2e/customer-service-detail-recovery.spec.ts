@@ -44,7 +44,7 @@ const details = [
     failure: [t('electricity.order.detailFailed', 'en'), t('electricity.order.detailFailed', 'fa')],
     retry: ['Try again', 'تلاش دوباره'],
     list: '/electricity/orders',
-    checksDenial: true,
+    failureHasContext: true,
   },
   {
     name: 'invoice',
@@ -54,7 +54,7 @@ const details = [
     failure: [t('invoices.details.error', 'en'), t('invoices.details.error', 'fa')],
     retry: ['Try again', 'تلاش دوباره'],
     list: '/invoices',
-    checksDenial: true,
+    failureHasContext: true,
     unavailable: [t('invoices.details.notFound', 'en'), t('invoices.details.notFound', 'fa')],
   },
 ];
@@ -112,7 +112,7 @@ for (const [index, locale] of (['en', 'fa'] as const).entries())
             return;
           }
           return route.fulfill({
-            status: detail.checksDenial && theme === 'light' ? 403 : 404,
+            status: theme === 'light' ? 403 : 404,
             json: { message: 'Private provider detail' },
           });
         });
@@ -133,7 +133,7 @@ for (const [index, locale] of (['en', 'fa'] as const).entries())
         await expect.poll(() => first !== undefined).toBe(true);
         await first!.fulfill({ status: 503, json: { message: 'Private provider detail' } });
         const failure = main.getByRole('alert').filter({ hasText: detail.failure[index]! });
-        if (detail.checksDenial) await expect(failure).toContainText(detail.failure[index]!);
+        if (detail.failureHasContext) await expect(failure).toContainText(detail.failure[index]!);
         else await expect(failure).toHaveText(detail.failure[index]!);
         await expect(loading).toHaveCount(0);
         await retry.press('Enter');
