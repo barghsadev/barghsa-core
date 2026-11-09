@@ -243,6 +243,35 @@ it('reads the rotated session before a trust DELETE and uses the replacement CSR
   expect(requests.at(-1)!.csrf).toBe('rotated');
   expect(state.sessions).toHaveLength(2);
 });
+it('confirms bulk trust removal with an owner-scoped read and never resends the command', async () => {
+  const state = fixture();
+  document.cookie = 'barghsa_csrf=security-current';
+  await mount();
+  await act(async () => button(trustedDeviceText('removeAll', 'en'), host).click());
+  expect(dialog().textContent).toContain(trustedDeviceText('confirmAll', 'en'));
+  state.override = (path, method) => {
+    if (method === 'DELETE') return Response.json({ revoked: true });
+    return Response.json(path.endsWith('trusted-devices') ? state.devices : state.sessions);
+  };
+  await submit();
+  expect(dialog().textContent).toContain(copy('uncertain', 'en'));
+  expect(state.requests.slice(2).map(({ path, method }) => [path, method])).toEqual([
+    ['/api/auth/trusted-devices', 'DELETE'],
+    ['/api/auth/sessions', 'GET'],
+    ['/api/auth/trusted-devices', 'GET'],
+  ]);
+  expect(state.requests[2]).toMatchObject({
+    csrf: 'security-current',
+    body: null,
+    keyed: false,
+  });
+  state.devices = [];
+  await click('check');
+  expect(dialog()).toBeNull();
+  expect(host.textContent).toContain(copy('confirmed', 'en'));
+  expect(state.sessions).toHaveLength(2);
+  expect(state.requests.filter(({ method }) => method !== 'GET')).toHaveLength(1);
+});
 it('requires a fresh read proving all other sessions inactive after a valid revoke-all receipt', async () => {
   const state = fixture();
   await mount();

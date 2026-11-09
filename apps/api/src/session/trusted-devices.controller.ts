@@ -44,6 +44,30 @@ export class TrustedDevicesController {
     );
   }
 
+  @Delete()
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @RateLimit({ namespace: 'trusted-devices:revoke:user', limit: 20, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Remove all device trust for the current account after step-up' })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      type: 'object',
+      required: ['revoked'],
+      properties: { revoked: { type: 'boolean', enum: [true] } },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Session is no longer active' })
+  @ApiResponse({ status: 403, description: 'CSRF or recent step-up required' })
+  revokeAll(@Req() req: AuthenticatedRequest) {
+    return this.sessions.revokeDeviceTrust(
+      req.session.userId,
+      req.session.sessionId,
+      null,
+      req.ip ?? null
+    );
+  }
+
   @Delete(':id')
   @UseGuards(StepUpGuard)
   @RequiresStepUp()
@@ -65,7 +89,7 @@ export class TrustedDevicesController {
   revoke(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
     if (!id || id.length > 128)
       throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
-    return this.sessions.revokeTrustedDevice(
+    return this.sessions.revokeDeviceTrust(
       req.session.userId,
       req.session.sessionId,
       id,

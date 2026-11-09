@@ -42,17 +42,17 @@ export function SecurityRevocationDialog({
     () => authorized.current
   );
   const text = (key: string) => securitySettingsText(key, locale);
-  const title =
-    operation.kind === 'trust'
-      ? trustedDeviceText('remove', locale)
-      : t(
-          operation.kind === 'others' ? 'settings.security.revokeAll' : 'settings.security.revoke',
-          locale
-        );
+  const changesTrust = operation.kind === 'trust' || operation.kind === 'allTrust';
+  const title = changesTrust
+    ? trustedDeviceText(operation.kind === 'allTrust' ? 'removeAll' : 'remove', locale)
+    : t(
+        operation.kind === 'others' ? 'settings.security.revokeAll' : 'settings.security.revoke',
+        locale
+      );
   const passwordId =
     operation.kind === 'others'
       ? 'revoke-password'
-      : operation.kind === 'trust'
+      : changesTrust
         ? 'trusted-device-password'
         : 'revoke-single-password';
   return (
@@ -70,8 +70,8 @@ export function SecurityRevocationDialog({
       >
         <DialogTitle>{title}</DialogTitle>
         <DialogDescription>
-          {operation.kind === 'trust'
-            ? trustedDeviceText('confirm', locale)
+          {changesTrust
+            ? trustedDeviceText(operation.kind === 'allTrust' ? 'confirmAll' : 'confirm', locale)
             : t(
                 operation.kind === 'others'
                   ? 'settings.security.revokeAllConfirm'
@@ -79,7 +79,7 @@ export function SecurityRevocationDialog({
                 locale
               )}
         </DialogDescription>
-        {operation.kind !== 'others' && (
+        {(operation.kind === 'session' || operation.kind === 'trust') && (
           <div className="text-sm rounded border p-3 bg-muted/20 space-y-1 break-words">
             <p className="font-medium">
               {deviceName(
@@ -178,7 +178,7 @@ export function SecurityRevocationDialog({
                 type="submit"
                 variant="destructive"
                 className={
-                  operation.kind === 'trust'
+                  changesTrust
                     ? undefined
                     : 'bg-red-700 text-white hover:bg-red-800 dark:bg-red-700 dark:text-white dark:hover:bg-red-800'
                 }

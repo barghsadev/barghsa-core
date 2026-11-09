@@ -132,7 +132,7 @@ function revokeTriggerKey(operation: SecurityOperation) {
     ? 'session:' + operation.target.sessionId
     : operation.kind === 'trust'
       ? 'trust:' + operation.target.id
-      : 'others';
+      : operation.kind;
 }
 
 function SettingsSecurityPage() {
@@ -141,6 +141,7 @@ function SettingsSecurityPage() {
   const scope = usePreferenceSettingsOwner(),
     lists = useSecuritySettingsLists(scope);
   const [selected, setSelected] = useState<SecurityOperation | null>(null);
+  const selectedTrust = selected?.kind === 'trust' || selected?.kind === 'allTrust';
   const [confirmed, setConfirmed] = useState(false);
   const revokeTriggers = useRef(new Map<string, HTMLButtonElement>());
   const finalFocus = useRef<HTMLElement | null>(null),
@@ -314,7 +315,9 @@ function SettingsSecurityPage() {
             heading={devicesHeading}
             refresh={() => void refresh('devices')}
             choose={(target, trigger) => choose({ kind: 'trust', target }, trigger)}
+            chooseAll={(trigger) => choose({ kind: 'allTrust' }, trigger)}
             trackRevokeTrigger={(id, node) => trackRevokeTrigger('trust:' + id, node)}
+            trackRevokeAllTrigger={(node) => trackRevokeTrigger('allTrust', node)}
           />
           {selected && (
             <SecurityRevocationDialog
@@ -337,12 +340,13 @@ function SettingsSecurityPage() {
                 // the same session or device is still eligible.
                 finalFocus.current =
                   revokeTriggers.current.get(revokeTriggerKey(selected)) ??
-                  (selected.kind === 'trust' ? devicesHeading.current : sessionsHeading.current);
+                  (selectedTrust ? devicesHeading.current : sessionsHeading.current);
                 setSelected(null);
               }}
               done={() => {
-                finalFocus.current =
-                  selected.kind === 'trust' ? devicesHeading.current : sessionsHeading.current;
+                finalFocus.current = selectedTrust
+                  ? devicesHeading.current
+                  : sessionsHeading.current;
                 setSelected(null);
                 setConfirmed(true);
               }}

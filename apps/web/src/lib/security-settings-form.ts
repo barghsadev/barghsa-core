@@ -20,6 +20,7 @@ export type TrustedDevice = {
 export type SecurityOperation =
   | { kind: 'session'; target: SecuritySession }
   | { kind: 'trust'; target: TrustedDevice }
+  | { kind: 'allTrust' }
   | { kind: 'others' };
 const object = (v: unknown): v is Record<string, unknown> =>
   !!v && typeof v === 'object' && !Array.isArray(v);
@@ -110,6 +111,7 @@ export function securityOperationAvailable(
 ): boolean {
   if (sessions.filter((v) => v.isCurrentSession).length !== 1) return false;
   if (operation.kind === 'others') return sessions.some((v) => !v.isCurrentSession);
+  if (operation.kind === 'allTrust') return devices.length > 0;
   return operation.kind === 'session'
     ? sessions.some((v) => v.sessionId === operation.target.sessionId && !v.isCurrentSession)
     : devices.some((v) => v.id === operation.target.id);
@@ -120,6 +122,7 @@ export function securityOperationConfirmed(
   devices: TrustedDevice[]
 ): boolean {
   if (sessions.filter((v) => v.isCurrentSession).length !== 1) return false;
+  if (operation.kind === 'allTrust') return devices.length === 0;
   return operation.kind === 'others'
     ? !sessions.some((v) => !v.isCurrentSession)
     : operation.kind === 'session'
@@ -128,7 +131,7 @@ export function securityOperationConfirmed(
 }
 export function securityReceipt(kind: SecurityOperation['kind'], value: unknown): boolean {
   if (!object(value)) return false;
-  if (kind === 'trust') return value.revoked === true;
+  if (kind === 'trust' || kind === 'allTrust') return value.revoked === true;
   if (kind === 'session') return value.message === 'Session revoked.';
   const count = value.revokedCount;
   return (

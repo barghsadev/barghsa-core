@@ -168,6 +168,54 @@ it('revokes durably, audits once without secrets and requires OTP on the next lo
   expect(await login.json()).toMatchObject({ requiresOtp: true });
 });
 
+it('removes all owned device trust once and preserves every active session', async () => {
+  const path = `${http.base}/api/auth/trusted-devices`;
+  await http.pool.query(`INSERT INTO device_trusts(id,user_id,device_fingerprint,expires_at)
+    VALUES ('extra','trust-owner','extra-secret',NOW()+INTERVAL '1 day'),
+           ('expired','trust-owner','expired-secret',NOW()-INTERVAL '1 second')`);
+  expect(
+    (await fetch(path, { method: 'DELETE', headers: { Cookie: headers().Cookie } })).status
+  ).toBe(403);
+  await http.pool.query('UPDATE sessions SET step_up_verified_at=NULL WHERE session_id=$1', [
+    session,
+  ]);
+  const stale = await fetch(path, { method: 'DELETE', headers: headers() });
+  expect(stale.status).toBe(403);
+  expect(await stale.json()).toMatchObject({ error: { code: 'AUTHZ:STEP_UP_REQUIRED' } });
+  expect((await http.pool.query('SELECT id FROM device_trusts')).rows).toHaveLength(4);
+
+  await http.pool.query('UPDATE sessions SET step_up_verified_at=NOW() WHERE session_id=$1', [
+    session,
+  ]);
+  const responses = await Promise.all(
+    [0, 1].map(() => fetch(path, { method: 'DELETE', headers: headers() }))
+  );
+  for (const response of responses) {
+    expect(response.status, await response.clone().text()).toBe(200);
+    expect(await response.json()).toEqual({ revoked: true });
+  }
+  expect((await http.pool.query('SELECT id FROM device_trusts')).rows).toEqual([{ id: other }]);
+  expect(
+    (await http.pool.query('SELECT revoked_at FROM sessions WHERE session_id=$1', [session])).rows
+  ).toEqual([{ revoked_at: null }]);
+  const audit = (
+    await http.pool.query(
+      "SELECT user_id, metadata::jsonb FROM audit_log WHERE event='device_trust_revoked'"
+    )
+  ).rows;
+  expect(audit).toEqual([
+    {
+      user_id: 'trust-owner',
+      metadata: {
+        allDevices: true,
+        deviceCount: 3,
+        stepUpVerified: true,
+        stepUpVerifiedAt: expect.any(String),
+      },
+    },
+  ]);
+});
+
 it.each(['revoke', 'disable', 'step-up', 'expiry'])(
   'rechecks actor %s after an account lock wait',
   async (change) => {
@@ -215,17 +263,21 @@ it.each(['revoke', 'disable', 'step-up', 'expiry'])(
   }
 );
 
-it('rolls back deletion if its audit cannot persist', async () => {
-  await http.pool
-    .query(`CREATE FUNCTION deny_trust_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.event='device_trust_revoked' THEN RAISE EXCEPTION 'controlled audit failure'; END IF; RETURN NEW; END; $$;
+it.each(['single', 'bulk'] as const)(
+  'rolls back %s deletion if its audit cannot persist',
+  async (kind) => {
+    await http.pool
+      .query(`CREATE FUNCTION deny_trust_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.event='device_trust_revoked' THEN RAISE EXCEPTION 'controlled audit failure'; END IF; RETURN NEW; END; $$;
     CREATE TRIGGER deny_trust_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION deny_trust_audit();`);
-  const response = await fetch(endpoint(), { method: 'DELETE', headers: headers() });
-  expect(response.status).toBe(500);
-  expect(await response.text()).not.toContain('controlled audit failure');
-  expect(
-    (await http.pool.query('SELECT id FROM device_trusts WHERE id=$1', [own])).rows
-  ).toHaveLength(1);
-});
+    const path = kind === 'single' ? endpoint() : `${http.base}/api/auth/trusted-devices`;
+    const response = await fetch(path, { method: 'DELETE', headers: headers() });
+    expect(response.status).toBe(500);
+    expect(await response.text()).not.toContain('controlled audit failure');
+    expect(
+      (await http.pool.query('SELECT id FROM device_trusts WHERE id=$1', [own])).rows
+    ).toHaveLength(1);
+  }
+);
 
 it('rechecks step-up expiry after waiting on the target device row', async () => {
   const lock = await http.pool.connect();

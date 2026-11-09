@@ -26434,6 +26434,43 @@
       }
     },
     "/api/auth/trusted-devices": {
+      "delete": {
+        "operationId": "TrustedDevicesController_revokeAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "revoked": {
+                      "enum": [
+                        true
+                      ],
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "revoked"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          },
+          "401": {
+            "description": "Session is no longer active"
+          },
+          "403": {
+            "description": "CSRF or recent step-up required"
+          }
+        },
+        "summary": "Remove all device trust for the current account after step-up",
+        "tags": [
+          "Sessions"
+        ]
+      },
       "get": {
         "operationId": "TrustedDevicesController_list",
         "parameters": [],

@@ -24,6 +24,7 @@ export function useSecurityRevocationForm(
 ) {
   const text = (key: string) => securitySettingsText(key, locale);
   const family = 'security:' + operation.kind;
+  const changesTrust = operation.kind === 'trust' || operation.kind === 'allTrust';
   const [needsPassword, setNeedsPassword] = useState(operation.kind === 'others');
   const required = useRef(needsPassword);
   required.current = needsPassword;
@@ -87,8 +88,7 @@ export function useSecurityRevocationForm(
   }
   async function fresh() {
     if (!(await lists.read('sessions')) || !scope.owns(family)) return false;
-    if (operation.kind === 'trust' && (!(await lists.read('devices')) || !scope.owns(family)))
-      return false;
+    if (changesTrust && (!(await lists.read('devices')) || !scope.owns(family))) return false;
     return lists.current().sessions.filter((v) => v.isCurrentSession).length === 1;
   }
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -96,7 +96,7 @@ export function useSecurityRevocationForm(
     if (!authorized() || held.current || !scope.isCurrent() || scope.isLocked()) return;
     if (
       !lists.ready('sessions') ||
-      (operation.kind === 'trust' && !lists.ready('devices')) ||
+      (changesTrust && !lists.ready('devices')) ||
       !securityOperationAvailable(operation, lists.current().sessions, lists.current().devices)
     ) {
       setError(text('sourceChanged'));
@@ -151,7 +151,8 @@ export function useSecurityRevocationForm(
               ? '/api/auth/sessions/revoke-all'
               : operation.kind === 'session'
                 ? '/api/auth/sessions/' + encodeURIComponent(operation.target.sessionId)
-                : '/api/auth/trusted-devices/' + encodeURIComponent(operation.target.id);
+                : '/api/auth/trusted-devices' +
+                  (operation.kind === 'trust' ? '/' + encodeURIComponent(operation.target.id) : '');
           const response = await fetch(path, {
             method: operation.kind === 'others' ? 'POST' : 'DELETE',
             credentials: 'include',
@@ -169,7 +170,7 @@ export function useSecurityRevocationForm(
             unknown();
             return;
           }
-          if (operation.kind === 'others') {
+          if (operation.kind === 'others' || operation.kind === 'allTrust') {
             if (!(await fresh())) {
               unknown();
               return;

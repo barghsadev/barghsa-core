@@ -1370,10 +1370,10 @@ export class SessionService {
     return result.rows;
   }
 
-  async revokeTrustedDevice(
+  async revokeDeviceTrust(
     userId: string,
     sessionId: string,
-    deviceId: string,
+    deviceId: string | null,
     ip: string | null
   ) {
     const client = await getDbPool().connect();
@@ -1390,8 +1390,9 @@ export class SessionService {
         'SELECT session_id FROM sessions WHERE session_id=$1 AND user_id=$2 FOR UPDATE',
         [sessionId, userId]
       );
-      const target = await client.query(
-        'SELECT id FROM device_trusts WHERE id=$1 AND user_id=$2 FOR UPDATE',
+      const targets = await client.query<{ id: string }>(
+        `SELECT id FROM device_trusts
+         WHERE user_id=$2 AND ($1::text IS NULL OR id=$1) ORDER BY id FOR UPDATE`,
         [deviceId, userId]
       );
       const checkAuthorization = async () => {
@@ -1411,10 +1412,14 @@ export class SessionService {
       };
       // Row locks protect authority changes; the database clock also covers time spent waiting.
       const actor = await checkAuthorization();
-      if (!target.rows.length)
-        throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
-      await client.query('DELETE FROM device_trusts WHERE id=$1 AND user_id=$2', [
-        deviceId,
+      if (!targets.rows.length) {
+        if (deviceId !== null)
+          throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+        await client.query('COMMIT');
+        return { revoked: true as const };
+      }
+      await client.query('DELETE FROM device_trusts WHERE id=ANY($1::text[]) AND user_id=$2', [
+        targets.rows.map(({ id }) => id),
         userId,
       ]);
       await client.query(
@@ -1423,7 +1428,13 @@ export class SessionService {
         [
           uuidv7(),
           userId,
-          JSON.stringify({ deviceId, stepUpVerified: true, stepUpVerifiedAt: actor.verifiedAt }),
+          JSON.stringify({
+            ...(deviceId === null
+              ? { allDevices: true, deviceCount: targets.rows.length }
+              : { deviceId }),
+            stepUpVerified: true,
+            stepUpVerifiedAt: actor.verifiedAt,
+          }),
           correlationIdStorage.getStore() ?? uuidv7(),
           ip,
         ]

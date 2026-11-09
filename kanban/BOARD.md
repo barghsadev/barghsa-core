@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T19:33:45+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T19:41:16+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 983 | Accepted with unchanged source bindings. |
+| done | 984 | Accepted with unchanged source bindings. |
 | verify | 347 | Existing work may be complete; inspect evidence before building. |
-| partial | 32 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 31 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 3 | Named owner or external prerequisite. |
@@ -1104,7 +1104,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.01.03.02` | done | Recorded batch work | Implement step-up authentication gate for sensitive actions (payment confirmation, refunds, role changes, credential changes, session revocation) |
 | `06-security-testing-observability.md#T-06.01.03.03` | done | Recorded batch work | Implement device fingerprinting and trust scoring (cookie-based device ID, user-agent, IP geo, known device list) |
 | `06-security-testing-observability.md#T-06.01.03.04` | done | Recorded batch work | Build "trust this device for N days" flow with visible trust management UI |
-| `06-security-testing-observability.md#T-06.01.03.05` | partial | Recorded batch work | Build device management UI: list active devices, trust status, last seen, revoke individual device or all devices |
+| `06-security-testing-observability.md#T-06.01.03.05` | done | Recorded batch work | Build device management UI: list active devices, trust status, last seen, revoke individual device or all devices |
 | `06-security-testing-observability.md#T-06.01.03.06` | done | Recorded batch work | Ensure OTP is re-requested when step-up is triggered |
 | `06-security-testing-observability.md#T-06.01.03.07` | done | Recorded batch work | Write integration tests: customer MFA only on new device, staff MFA always, step-up for sensitive ops, device trust expiry |
 | `06-security-testing-observability.md#T-06.01.04.01` | done | Recorded batch work | Implement opaque session token generation and cookie management (HttpOnly, Secure in prod, SameSite policy per T-06.02.01.04, Path) |

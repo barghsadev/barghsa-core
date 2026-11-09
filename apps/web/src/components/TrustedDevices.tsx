@@ -14,7 +14,9 @@ export function TrustedDevices({
   heading,
   refresh,
   choose,
+  chooseAll,
   trackRevokeTrigger,
+  trackRevokeAllTrigger,
 }: {
   locale: Locale;
   formatTimestamp: (value: string) => string;
@@ -24,7 +26,9 @@ export function TrustedDevices({
   heading: RefObject<HTMLHeadingElement | null>;
   refresh: () => void;
   choose: (target: TrustedDevice, trigger: HTMLElement) => void;
+  chooseAll: (trigger: HTMLElement) => void;
   trackRevokeTrigger?: (id: string, node: HTMLButtonElement | null) => void;
+  trackRevokeAllTrigger?: (node: HTMLButtonElement | null) => void;
 }) {
   const text = (key: TrustedDeviceTextKey) => trustedDeviceText(key, locale);
   const devices = lists.ready('devices') ? lists.data.devices : [];
@@ -121,6 +125,17 @@ export function TrustedDevices({
           </dl>
         </div>
       ))}
+      {devices.length > 0 && (
+        <Button
+          type="button"
+          variant="outline"
+          disabled={scope.locked}
+          ref={trackRevokeAllTrigger}
+          onClick={(event) => chooseAll(event.currentTarget)}
+        >
+          {text('removeAll')}
+        </Button>
+      )}
     </section>
   );
 }
