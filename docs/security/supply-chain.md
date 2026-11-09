@@ -6,7 +6,7 @@ Semgrep checks production app, worker and shared source for direct request data 
 
 Gitleaks scans all Git history and verifies its own redaction with a synthetic credential. Its reports must never contain recovered secrets. When changing web build inputs, scan the built frontend separately for unintentionally embedded credentials.
 
-Trivy scans the actual API/worker, web, ClamAV, and PostgreSQL backup images built from the checked source. The reports retain all severities and record the exact local image ID. Scanner errors, missing inventory and high or critical vulnerabilities fail the check. Before promoting a release, scan the exact immutable images that will be deployed; a rebuild from the same commit can resolve different base layers.
+Trivy scans the actual API/worker, web, ClamAV, and PostgreSQL backup images built from the checked source. The reports retain all severities and record the exact local image ID. The same package inventory produces a CycloneDX SBOM for each image; its image ID and checksum are verified before upload. Scanner errors, missing inventory and high or critical vulnerabilities fail the check. Before promoting a release, scan the exact immutable images that will be deployed; a rebuild from the same commit can resolve different base layers.
 
 Triage medium findings within the current sprint. Record the affected component, production reachability, owner and remediation date. Resolve high and critical findings with a credible production path before release. An accepted risk needs explicit approval with a reason, a compensating control and an expiry.
 

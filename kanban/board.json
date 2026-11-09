@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T13:48:34+00:00",
+  "updated": "2026-11-09T13:52:59+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -8774,7 +8774,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Real packaged API checks confirmed readiness stays 200 during Redis, storage and unavailable AI inference, and returns 503 during PostgreSQL loss. Full provider-specific maintenance journey and final deployed readiness remain open."
+        "An isolated dependency rehearsal verified optional Redis/storage/AI availability does not block readiness; PostgreSQL outage returned 503, liveness stayed 200, and readiness recovered when PostgreSQL resumed. Full provider-specific maintenance journey and final deployed readiness remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -8811,7 +8811,8 @@
         },
         "changed_paths": [],
         "batches": [
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-runtime-sbom-provenance"
         ],
         "current_acceptance": null
       }
@@ -472110,7 +472111,8 @@
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-preflight-reconciliation",
           "release-0.6-runtime-image-scan-gate",
-          "release-0.6-combined-runtime-image-candidate"
+          "release-0.6-combined-runtime-image-candidate",
+          "release-0.6-runtime-sbom-provenance"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -472138,7 +472140,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "3377756b589761454c7d71ff5bacc41416baf433f214cb5cfa6cc5bfc4baada4"
+              "sha256": "1266c7d85d256b9327e57a0e69fcef6f3191cd480a25848496b4c33de8ca29e2"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -472157,7 +472159,8 @@
             "Audited complete Git history, tracked environment paths and exact built frontend separately. No committed or bundled credentials detected.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Gitleaks flagged a specification SHA-256 on the exact preflight commit. Verified the digest against the committed public file. Only the exact historical fingerprint is excluded. Synthetic credential detection, redaction, and a full 3,018-commit scan with zero leaks passed locally.",
-            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
+            "Pinned Trivy converted all four exact hosted inventory reports without rescanning. The new verifier accepted four exact SBOMs and rejected mismatched, empty or unbound SBOMs and a report with a high finding."
           ]
         }
       }
@@ -472478,7 +472481,8 @@
           "release-0.6-alpine-node-runtime-candidate",
           "release-0.6-alpine-clamav-candidate",
           "release-0.6-postgres-image-candidate",
-          "release-0.6-combined-runtime-image-candidate"
+          "release-0.6-combined-runtime-image-candidate",
+          "release-0.6-runtime-sbom-provenance"
         ],
         "current_acceptance": {
           "kind": "pinned_trivy_and_exact_image_inventory",
@@ -472502,7 +472506,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "3377756b589761454c7d71ff5bacc41416baf433f214cb5cfa6cc5bfc4baada4"
+              "sha256": "1266c7d85d256b9327e57a0e69fcef6f3191cd480a25848496b4c33de8ca29e2"
             },
             {
               "path": "packages/db/scripts/backup/Dockerfile",
@@ -472510,7 +472514,7 @@
             },
             {
               "path": "scripts/check-runtime-images.sh",
-              "sha256": "1eec2f0af48372387db325c9ccc0a046e6e7038f2baa6354e981c1887f4f6126"
+              "sha256": "2eca8dd26a253b7d487ad99eb5c8b52da7b103f743c8a6f3eb8fdf6957c20bfd"
             }
           ],
           "checks": [
@@ -472520,7 +472524,8 @@
             "Only unused build package managers were removed from the same runtime bases. Web, packaged migration, API/worker readiness and Poppler checks passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/runtime-package-manager-removal-receipt.json",
             "Runtime image renewal: the pinned Node 24 Alpine images built and ran; packaged migration, nonroot native Argon2/Sharp/Poppler, API/worker/AI/web readiness and built login CSP passed. Trivy found no high or critical findings in either isolated image.",
             "Exact isolated PostgreSQL 16.15/PostGIS/pgvector Alpine image, with Go 1.27.3 rebuilt gosu, scanned at zero high or critical findings. Final repository build and deployment proof remain separate.",
-            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
+            "Pinned Trivy converted all four exact hosted inventory reports without rescanning. The new verifier accepted four exact SBOMs and rejected mismatched, empty or unbound SBOMs and a report with a high finding."
           ]
         }
       }
@@ -472932,7 +472937,8 @@
           "release-0.6-alpine-node-runtime-candidate",
           "release-0.6-alpine-clamav-candidate",
           "release-0.6-postgres-image-candidate",
-          "release-0.6-combined-runtime-image-candidate"
+          "release-0.6-combined-runtime-image-candidate",
+          "release-0.6-runtime-sbom-provenance"
         ],
         "current_acceptance": {
           "kind": "actual_hosted_image_blocking_evidence",
@@ -472960,7 +472966,7 @@
             },
             {
               "path": "scripts/check-runtime-images.sh",
-              "sha256": "1eec2f0af48372387db325c9ccc0a046e6e7038f2baa6354e981c1887f4f6126"
+              "sha256": "2eca8dd26a253b7d487ad99eb5c8b52da7b103f743c8a6f3eb8fdf6957c20bfd"
             }
           ],
           "checks": [
@@ -472968,7 +472974,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/runtime-package-manager-removal-receipt.json",
             "Runtime image renewal: the pinned Node 24 Alpine images built and ran; packaged migration, nonroot native Argon2/Sharp/Poppler, API/worker/AI/web readiness and built login CSP passed. Trivy found no high or critical findings in either isolated image.",
             "Exact isolated PostgreSQL 16.15/PostGIS/pgvector Alpine image, with Go 1.27.3 rebuilt gosu, scanned at zero high or critical findings. Final repository build and deployment proof remain separate.",
-            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
+            "Pinned Trivy converted all four exact hosted inventory reports without rescanning. The new verifier accepted four exact SBOMs and rejected mismatched, empty or unbound SBOMs and a report with a high finding."
           ]
         }
       }
@@ -475056,7 +475063,8 @@
         "batches": [
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-runtime-image-scan-gate",
-          "release-0.6-combined-runtime-image-candidate"
+          "release-0.6-combined-runtime-image-candidate",
+          "release-0.6-runtime-sbom-provenance"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -475076,7 +475084,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "3377756b589761454c7d71ff5bacc41416baf433f214cb5cfa6cc5bfc4baada4"
+              "sha256": "1266c7d85d256b9327e57a0e69fcef6f3191cd480a25848496b4c33de8ca29e2"
             },
             {
               "path": "scripts/check-sast.py",
@@ -475090,7 +475098,8 @@
           "checks": [
             "Existing required ruleset check now fails closed on the SAST outcome; medium triage and credible high/critical remediation are documented.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
-            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
+            "Pinned Trivy converted all four exact hosted inventory reports without rescanning. The new verifier accepted four exact SBOMs and rejected mismatched, empty or unbound SBOMs and a report with a high finding."
           ]
         }
       }
@@ -475678,18 +475687,20 @@
         "story": "06-security-testing-observability.md#spec-7e8081f9925c"
       },
       "requirement": "| T-06.12.03.01 | Implement main-branch CI workflow: full test suites, E2E, accessibility, container build+scan, SBOM | L |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "The container scan gate emits and verifies exact CycloneDX SBOMs. Final hosted image artifacts and required full unit, PostgreSQL, browser, accessibility and combined coverage runs on the release candidate remain required."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-runtime-sbom-provenance"
+        ],
         "current_acceptance": null
       }
     },
@@ -475716,7 +475727,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-runtime-sbom-provenance"
         ],
         "current_acceptance": null
       }
@@ -823947,6 +823959,45 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-preflight-remediation-receipt.json",
       "source_scope_proof_sha256": "fc3506916c1fb7d34e0af012cc78c1452501667f3fc98e087ff6d2dc6b188881"
+    },
+    "release-0.6-runtime-sbom-provenance": {
+      "batch": "release-0.6-runtime-sbom-provenance",
+      "base_commit": "27e6b06eee7b61dd9982062082ba260252cc4719",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-03.03.04",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "06-security-testing-observability.md#T-06.11.02.04",
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "06-security-testing-observability.md#T-06.12.03.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "scripts/check-runtime-images.sh",
+          "sha256": "2eca8dd26a253b7d487ad99eb5c8b52da7b103f743c8a6f3eb8fdf6957c20bfd"
+        },
+        {
+          "path": "docs/security/supply-chain.md",
+          "sha256": "1266c7d85d256b9327e57a0e69fcef6f3191cd480a25848496b4c33de8ca29e2"
+        },
+        {
+          "path": "apps/api/src/health/health.controller.ts",
+          "sha256": "e9f6a4494b73b18d25972007845fddb97dd99f80028058a6462111e7156f0b60"
+        },
+        {
+          "path": "apps/api/src/health/health.service.ts",
+          "sha256": "cafbb49eda3715d91702c4529d756f154d0f8c485278ddfdbfc8409ce281ea36"
+        }
+      ],
+      "checks": [
+        "Pinned Trivy converted all four exact hosted inventory reports without rescanning. The new verifier accepted four exact SBOMs and rejected mismatched, empty or unbound SBOMs and a report with a high finding.",
+        "Isolated packaged API stayed live while PostgreSQL was paused, returned 503 for readiness with a safe error envelope, and returned 200 after unpause. This used synthetic dependencies; no live stage disruption."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/runtime-sbom-gate-receipt.json",
+      "source_scope_proof_sha256": "ae03c69e46955a060648b8fa4a807ef3a0198ec9e0dcd9f5ac26de7b5f000c53",
+      "readiness_log_sha256": "3096c17be2de232842f952e2c9374ed29b1ebc65c1ecd43638090729a77d748a"
     }
   },
   "historical_improvements": [

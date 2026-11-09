@@ -41,7 +41,8 @@ for image in "$@"; do
   index=$((index + 1))
   report="$report_dir/$index-vulnerabilities.json"
   provenance="$report_dir/$index-image.json"
-  if [[ -e "$report" || -e "$provenance" ]]; then
+  sbom="$report_dir/$index-sbom.cdx.json"
+  if [[ -e "$report" || -e "$provenance" || -e "$sbom" ]]; then
     echo "Refusing to reuse image scan output: $report" >&2
     exit 2
   fi
@@ -64,17 +65,29 @@ for image in "$@"; do
     status=1
     continue
   fi
-  if ! python3 - "$report" "$provenance" "$image" "$image_id" "$version" <<'PY'
+  if ! "$scratch/trivy" convert --format cyclonedx --output "$sbom" "$report"; then
+    echo "SBOM conversion failed for $image" >&2
+    status=1
+    continue
+  fi
+  if ! python3 - "$report" "$sbom" "$provenance" "$image" "$image_id" "$version" <<'PY'
 import hashlib
 import json
 from pathlib import Path
 import re
 import sys
 
-report_path, output_path, image, image_id, version = sys.argv[1:]
+report_path, sbom_path, output_path, image, image_id, version = sys.argv[1:]
 raw = Path(report_path).read_bytes()
 report = json.loads(raw)
 results = report.get("Results")
+sbom_raw = Path(sbom_path).read_bytes()
+sbom = json.loads(sbom_raw)
+subject = sbom.get("metadata", {}).get("component", {})
+image_ids = [
+    item["value"] for item in subject.get("properties", [])
+    if item.get("name") == "aquasecurity:trivy:ImageID"
+]
 if (
     not re.fullmatch(r"sha256:[a-f0-9]{64}", image_id)
     or report.get("Metadata", {}).get("ImageID") != image_id
@@ -82,6 +95,15 @@ if (
     or not any(item.get("Class") == "os-pkgs" and item.get("Packages") for item in results)
 ):
     raise SystemExit(f"No complete OS vulnerability result for the exact image {image}")
+if (
+    sbom.get("bomFormat") != "CycloneDX"
+    or subject.get("type") != "container"
+    or subject.get("name") != image
+    or image_ids != [image_id]
+    or not isinstance(sbom.get("components"), list)
+    or not sbom["components"]
+):
+    raise SystemExit(f"No complete SBOM for the exact image {image}")
 levels = {}
 for item in results:
     for finding in item.get("Vulnerabilities") or []:
@@ -90,7 +112,9 @@ for item in results:
 blocked = levels.get("HIGH", 0) + levels.get("CRITICAL", 0)
 Path(output_path).write_text(json.dumps({
     "image": image, "image_id": image_id, "scanner": f"Trivy {version}",
-    "report_sha256": hashlib.sha256(raw).hexdigest(), "by_severity": levels,
+    "report_sha256": hashlib.sha256(raw).hexdigest(),
+    "sbom_sha256": hashlib.sha256(sbom_raw).hexdigest(),
+    "by_severity": levels,
     "blocked": blocked > 0,
 }, indent=2) + "\n")
 print(f"{image}: {blocked} high/critical vulnerabilities (image {image_id})")

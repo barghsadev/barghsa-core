@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T13:48:34+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T13:52:59+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 903 | Accepted with unchanged source bindings. |
-| verify | 432 | Existing work may be complete; inspect evidence before building. |
-| partial | 28 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 431 | Existing work may be complete; inspect evidence before building. |
+| partial | 29 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 2 | Named owner or external prerequisite. |
@@ -1334,7 +1334,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.12.02.04` | verify | Inventory needed | Implement OpenAPI drift detection: generated schema vs committed spec |
 | `06-security-testing-observability.md#T-06.12.02.05` | verify | Inventory needed | Configure required reviewers: domain owner; Finance/Security/Legal when protected rules change |
 | `06-security-testing-observability.md#T-06.12.02.06` | verify | Inventory needed | Add status check reporting: pass/fail per check, summary comment on PR |
-| `06-security-testing-observability.md#T-06.12.03.01` | verify | Inventory needed | Implement main-branch CI workflow: full test suites, E2E, accessibility, container build+scan, SBOM |
+| `06-security-testing-observability.md#T-06.12.03.01` | partial | Recorded batch work | Implement main-branch CI workflow: full test suites, E2E, accessibility, container build+scan, SBOM |
 | `06-security-testing-observability.md#T-06.12.03.02` | partial | Recorded batch work | Build staging smoke deployment: readiness/liveness verification, migration rehearsal |
 | `06-security-testing-observability.md#T-06.12.03.03` | verify | Inventory needed | Implement automatic gate: block RC if P0/P1 defect or unexplained flaky critical test |
 | `06-security-testing-observability.md#T-06.12.03.04` | verify | Inventory needed | Provider contract tests in CI: SMTP fake, SMS.ir fake, payment fake, storage fake |
