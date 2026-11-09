@@ -5,11 +5,21 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: browser-nightly-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
-  packaging:
-    name: Validate isolated Node runtime hardening
+  browsers:
+    name: Isolated container runtime / ${{ matrix.project }}
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [chromium]
+        include:
+          - { project: chromium, browser: chromium }
     steps:
       - uses: actions/checkout@v4
       - name: Verify Compose rejects injected Node flags
