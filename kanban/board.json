@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T03:56:09+00:00",
-  "source_commit": "f89d13e4ed00abde32dbe75103ab4491a65cac04",
+  "updated": "2026-11-09T04:05:02+00:00",
+  "source_commit": "2db87ff7e39c3ba96180a5eeed8e86093497f4d4",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -56454,7 +56454,7 @@
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
-              "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+              "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
@@ -57565,7 +57565,7 @@
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
-              "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+              "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
@@ -58676,7 +58676,7 @@
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
-              "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+              "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
@@ -92850,7 +92850,7 @@
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
-              "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+              "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
@@ -93893,7 +93893,7 @@
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
-              "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+              "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
@@ -94942,7 +94942,7 @@
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
-              "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+              "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
@@ -491347,7 +491347,7 @@
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
-              "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+              "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
             },
             {
               "path": "apps/web/src/components/TicketStaffForms.tsx",
@@ -494503,7 +494503,7 @@
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
-              "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+              "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
@@ -495394,7 +495394,7 @@
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
-              "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+              "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
@@ -496226,7 +496226,7 @@
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
-              "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+              "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
@@ -512400,7 +512400,7 @@
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
-              "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+              "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
             },
             {
               "path": "apps/web/src/components/TicketReplyInput.tsx",
@@ -517913,7 +517913,7 @@
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
-              "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+              "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.tsx",
@@ -518751,7 +518751,7 @@
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
-              "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+              "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
             },
             {
               "path": "apps/web/src/components/TicketReplyInput.tsx",
@@ -520195,7 +520195,7 @@
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
-              "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+              "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
             },
             {
               "path": "apps/web/src/components/TicketReplyInput.tsx",
@@ -522355,7 +522355,7 @@
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
-              "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+              "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
             },
             {
               "path": "apps/web/src/components/TicketReplyInput.tsx",
@@ -571848,7 +571848,7 @@
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
-              "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+              "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
             },
             {
               "path": "apps/web/src/components/TicketReplyInput.array.test.tsx",
@@ -598962,8 +598962,8 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The canonical route inventory now links primary read, detail, dashboard, entry or static evidence for every path. The 13 routes with changed direct sources have newer scoped receipts. Complete the remaining independent list and detail states by checking each child's applicable loading, retry and empty or unavailable behavior against the named receipts.",
-        "The shared wallet read and contract signature first-read recovery now have current evidence. Source-matched receipts cover 11 other independent owners within their stated scope. Check the remaining child conditions and per-route controls before full acceptance."
+        "The 98-path inventory retains primary read, detail, layout and redirect evidence. All 27 component owners in the selected request inventory now have scoped source and case references or a verified write-only classification.",
+        "Reconcile the remaining route-specific read conditions and the original keyboard, form, filter and stale-context controls before full acceptance. The recorded child cases cover only their named conditions."
       ],
       "owner": null,
       "depends_on": [],
@@ -599118,7 +599118,8 @@
           "release-0.5-launch-entry-acceptance",
           "release-0.5-gift-profile-read-retry",
           "release-0.5-conditional-read-reconciliation",
-          "release-0.5-signature-first-read-feedback"
+          "release-0.5-signature-first-read-feedback",
+          "release-0.5-embedded-ticket-read-states"
         ],
         "current_acceptance": null
       }
@@ -677733,7 +677734,7 @@
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
-              "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+              "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
@@ -678265,7 +678266,7 @@
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
-              "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+              "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
@@ -678801,7 +678802,7 @@
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
-              "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+              "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
@@ -679334,7 +679335,7 @@
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
-              "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+              "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
@@ -679866,7 +679867,7 @@
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
-              "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+              "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
@@ -680400,7 +680401,7 @@
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
-              "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+              "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
@@ -716749,7 +716750,7 @@
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
-              "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+              "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
@@ -728982,8 +728983,8 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "All 98 canonical paths have per-route receipt links, including 93 populated layout observations, and the current build passed 86 launch-entry, public account and guide cases. Close the original per-route control acceptance by reconciling keyboard, forms, filters and stale-context conditions against the named cases. Carry only evidence within its recorded scope.",
-        "The shared wallet read and contract signature first-read recovery now have current evidence. Source-matched receipts cover 11 other independent owners within their stated scope. Check the remaining child conditions and per-route controls before full acceptance."
+        "The 98-path inventory retains primary read, detail, layout and redirect evidence. All 27 component owners in the selected request inventory now have scoped source and case references or a verified write-only classification.",
+        "Reconcile the remaining route-specific read conditions and the original keyboard, form, filter and stale-context controls before full acceptance. The recorded child cases cover only their named conditions."
       ],
       "owner": null,
       "depends_on": [],
@@ -729204,7 +729205,8 @@
           "release-0.5-launch-entry-acceptance",
           "release-0.5-gift-profile-read-retry",
           "release-0.5-conditional-read-reconciliation",
-          "release-0.5-signature-first-read-feedback"
+          "release-0.5-signature-first-read-feedback",
+          "release-0.5-embedded-ticket-read-states"
         ]
       }
     },
@@ -729776,7 +729778,7 @@
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
-              "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+              "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.tsx",
@@ -731170,7 +731172,8 @@
             "All 101 transfer budgets and 48 customer detail/fulfillment cases and eight independent staff detail cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-detail-denied-read/proof.json",
             "All 101 transfer budgets and 28 native gift-code cases passed. Auth assets are byte-identical. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-gift-profile-read-retry/proof.json",
             "All 101 transfer budgets and 24 current native cases across the launch services passed. Auth assets are byte-identical. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-read-reconciliation/proof.json",
-            "All 101 transfer budgets and 16 native signing cases passed. Auth assets are byte-identical. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-signature-first-read-feedback/proof.json"
+            "All 101 transfer budgets and 16 native signing cases passed. Auth assets are byte-identical. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-signature-first-read-feedback/proof.json",
+            "All 101 transfer budgets and 20 scoped native ticket, legal-document and receipt history cases passed. Auth assets are byte-identical. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-embedded-ticket-read-states/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -811397,6 +811400,41 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-signature-first-read-feedback/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-signature-first-read-feedback/renewed-bindings.json",
       "release_disposition": "Closed signature first-read error feedback. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-embedded-ticket-read-states": {
+      "batch": "release-0.5-embedded-ticket-read-states",
+      "base_commit": "2db87ff7e39c3ba96180a5eeed8e86093497f4d4",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/components/TicketIntakeForm.tsx",
+          "sha256": "9f9ad6a2e89127037ebbcda8822b9e171a4f00f15ecc09572a9d9be75ec49fe7"
+        },
+        {
+          "path": "apps/web/src/pages/support-queue-recovery.test.tsx",
+          "sha256": "6dbf1a6c6259d2ca1fad5d39b8bc19a7e4dcbc6e102bdd5ef325c864b96e0a88"
+        }
+      ],
+      "checks": [
+        "The predecessor briefly mounted the localized ticket options error while the first request was still held. The intake form now renders the current read state and accepts selections only after the current scope settles. A transient error keeps the text and file inputs and retries only the options endpoint.",
+        "Thirty-eight ticket unit cases and eight ticket browser cases passed in Chromium and mobile Safari. Existing command capture, ordered attachments, reply visibility, and exact receipt assertions remained in place.",
+        "The 68 selected child unit cases and 12 native CRM document and staff receipt history cases passed. Eighty unrelated unit cases were excluded by the test name selector. The reconciliation identifies all 27 component owners in the selected request inventory, including one write-only command entry, and records the scope of each current or carried observation.",
+        "The changed-source gate passed with 11/12 lines and 27/36 branches. All 101 budgets, typecheck, lint and formatting passed. The main app output completed before the auth build hit ENOSPC. Auth alone was rebuilt with identical asset bytes and matching release metadata before browser checks."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-embedded-ticket-read-states",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-embedded-ticket-read-states/proof.json",
+      "source_scope_proof_sha256": "dd9a5678b0dd29ac17297e999b1927351c0891d85a8090512fa3efc74d8fa360",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-embedded-ticket-read-states/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-embedded-ticket-read-states/renewed-bindings.json",
+      "release_disposition": "Fixed the premature ticket options error and reconciled all component owners in the selected inventory. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [
@@ -811447,7 +811485,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Reconcile remaining child read conditions and original per-route controls against current source and named cases. Required-check enforcement and live staging Sentry remain independent."
+    "goal": "Reconcile remaining route-level and hook-owned read conditions and original route controls using the primary route and embedded owner evidence. Required-check enforcement and live staging Sentry remain independent."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",

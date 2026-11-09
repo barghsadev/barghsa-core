@@ -73,9 +73,11 @@ export function TicketIntakeForm({
   const alive = useRef(true),
     uploaded = useRef(new Map<File, string>()),
     offered = useRef<TicketOptions | null>(null);
-  const [options, setOptions] = useState<TicketOptions | null>(null),
-    [loading, setLoading] = useState(false),
-    [error, setError] = useState(''),
+  const [optionsResult, setOptionsResult] = useState<{
+      key: string;
+      options: TicketOptions | null;
+      error?: 'forbidden' | 'load';
+    } | null>(null),
     [recordPage, setRecordPage] = useState(1),
     [version, setVersion] = useState(0),
     [preview, setPreview] = useState<File | null>(null),
@@ -116,8 +118,25 @@ export function TicketIntakeForm({
       offered.current = null;
     };
   }, []);
-  const optionsQueryKey =
+  const optionsKey =
     open && actor
+      ? JSON.stringify([
+          reader,
+          scope,
+          actor,
+          profileRevision,
+          'ticket-intake-options',
+          profileId,
+          recordPage,
+          version,
+        ])
+      : null;
+  const result = optionsResult?.key === optionsKey ? optionsResult : null;
+  const options = result?.options ?? null;
+  const error = result?.error;
+  const loading = optionsKey !== null && !result;
+  const optionsQueryKey =
+    optionsKey && actor
       ? queryKeys.catalogue.detail(
           {
             context: 'account',
@@ -125,7 +144,7 @@ export function TicketIntakeForm({
             accountId: actor,
             revision: profileRevision,
           },
-          JSON.stringify([reader, scope, 'ticket-intake-options', profileId, recordPage, version])
+          optionsKey
         )
       : null;
   const optionsQuery = useServerDetailQuery<{ status: number; value: unknown }>({
@@ -146,13 +165,11 @@ export function TicketIntakeForm({
     },
   });
   useEffect(() => {
-    if (!open || !actor) return;
+    setOptionsResult(null);
+    offered.current = null;
+    if (!optionsKey) return;
     const controller = new AbortController(),
       token = scope;
-    setLoading(true);
-    setError('');
-    setOptions(null);
-    offered.current = null;
     void optionsQuery
       .refetch()
       .then((reply) => {
@@ -166,15 +183,16 @@ export function TicketIntakeForm({
         if (!parsed) throw new Error('error');
         if (!controller.signal.aborted && alive.current && current.current === token) {
           offered.current = parsed;
-          setOptions(parsed);
+          setOptionsResult({ key: optionsKey, options: parsed });
         }
       })
       .catch((reason: unknown) => {
         if (!controller.signal.aborted && current.current === token)
-          setError(reason instanceof Error ? reason.message : 'error');
-      })
-      .finally(() => {
-        if (!controller.signal.aborted && current.current === token) setLoading(false);
+          setOptionsResult({
+            key: optionsKey,
+            options: null,
+            error: reason instanceof Error && reason.message === 'forbidden' ? 'forbidden' : 'load',
+          });
       });
     return () => {
       controller.abort();
@@ -183,7 +201,7 @@ export function TicketIntakeForm({
   }, [open, actor, scope, profileId, recordPage, version, profileRevision]);
   async function submit(event: FormEvent) {
     event.preventDefault();
-    if (!actor || !open || loading || !offered.current || !coordination.claim('intake')) return;
+    if (!actor || !options || !offered.current || !coordination.claim('intake')) return;
     const raw = { ...form.getValues(), files: [...form.getValues('files')] },
       token = scope,
       record = offered.current.records.find((r) => r.type + ':' + r.id === raw.record);
@@ -324,7 +342,7 @@ export function TicketIntakeForm({
             ['normal', 'high'].map((v) => ({ value: v, label: text(v) }))
           )}
           {loading ? (
-            open && <LoadingStatus>{text('loading')}</LoadingStatus>
+            <LoadingStatus>{text('loading')}</LoadingStatus>
           ) : options ? (
             <>
               {field('profileId', 'profile', [
@@ -374,7 +392,7 @@ export function TicketIntakeForm({
               )}
             </>
           ) : (
-            open && (
+            error && (
               <div role="alert">
                 <p>{text(error === 'forbidden' ? 'forbidden' : 'optionsError')}</p>
                 {error !== 'forbidden' && (
@@ -453,7 +471,7 @@ export function TicketIntakeForm({
             )}
           />
           {form.formState.errors.root && <p role="alert">{copy('validationUnavailable')}</p>}
-          <Button type="submit" disabled={pending || loading || !options}>
+          <Button type="submit" disabled={pending || !options}>
             {pending && (
               <span
                 aria-hidden="true"

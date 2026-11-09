@@ -224,19 +224,35 @@ it('detail failure retries only the selected ticket and comments, without reload
 });
 it('ticket creation options recover locally while preserving text and file input identity', async () => {
   let status = 503;
+  let finish!: (response: Response) => void;
   const calls: string[] = [];
   vi.stubGlobal(
     'fetch',
     vi.fn(async (url: string) => {
       calls.push(url);
       return url.endsWith('/options') && status !== 200
-        ? new Response('{}', { status })
+        ? new Promise<Response>((resolve) => {
+            finish = resolve;
+          })
         : Response.json(data(url));
     })
   );
   const { host, close } = await mount(CustomerTicketsPage);
+  const alerts: string[] = [];
+  const observer = new MutationObserver((records) => {
+    for (const record of records) {
+      for (const node of record.addedNodes) {
+        if (node instanceof HTMLElement && node.matches('[role="alert"]'))
+          alerts.push(node.textContent ?? '');
+      }
+    }
+  });
+  observer.observe(host, { childList: true, subtree: true });
   try {
     await act(async () => button(host, 'Create ticket').click());
+    expect(host.querySelector('[data-slot="ticket-intake-form"] [role="status"]')).not.toBeNull();
+    expect(alerts.join(' ')).not.toContain('Ticket options could not be loaded');
+    await act(async () => finish(new Response('{}', { status })));
     await change(host, '#ticket-subject', 'Draft subject');
     await change(host, '#ticket-body', 'Draft body');
     const fileInput = host.querySelector('#ticket-files');
@@ -248,6 +264,7 @@ it('ticket creation options recover locally while preserving text and file input
     expect(host.querySelector<HTMLTextAreaElement>('#ticket-body')?.value).toBe('Draft body');
     expect(host.querySelector('#ticket-files')).toBe(fileInput);
   } finally {
+    observer.disconnect();
     await close();
   }
 });
