@@ -44,7 +44,7 @@ jobs:
           node --test scripts/browser-projects.test.mjs
           python3 -m unittest discover -s scripts -p 'test_check_browser_results.py'
       - name: Exercise the production app in the selected browser
-        run: node scripts/run-production-browser.mjs e2e/admin-settings-live.spec.ts --project="\${{ matrix.project }}" --retries=0
+        run: node scripts/run-production-browser.mjs e2e/admin-settings-live.spec.ts --project "${{ matrix.project }}" --retries=0
         env:
           BARGHSA_TEST_PREBUILT: '1'
       - name: Report observed browser outcomes
