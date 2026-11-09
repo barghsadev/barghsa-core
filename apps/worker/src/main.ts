@@ -51,6 +51,7 @@ import { runOutboxPoll } from './notifications/outbox-runner.js';
 import { evaluateWalletLowBalanceSignals } from './wallet/low-balance-notifications.js';
 import { collectNotificationGauges, exportWorkerMetrics } from './notifications/worker-metrics.js';
 import { collectRefundObligationMetrics } from './refunds/refund-metrics.js';
+import { collectReconciliationMetrics } from './wallet/reconciliation-metrics.js';
 import { InAppNotificationTransport } from './notifications/in-app-transport.js';
 import { scanServiceBreaches } from './service-targets/breach-scanner.js';
 import { scanServiceWorkflows } from './service-targets/workflow-scanner.js';
@@ -150,7 +151,11 @@ async function main(): Promise<void> {
     if (pathname === '/metrics') {
       try {
         const pool = getDbPool();
-        await Promise.all([collectNotificationGauges(pool), collectRefundObligationMetrics(pool)]);
+        await Promise.all([
+          collectNotificationGauges(pool),
+          collectRefundObligationMetrics(pool),
+          collectReconciliationMetrics(pool),
+        ]);
         const body = await exportWorkerMetrics();
         res.writeHead(200, { 'Content-Type': 'text/plain; version=0.0.4; charset=utf-8' });
         res.end(body);

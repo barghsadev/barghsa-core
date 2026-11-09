@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T22:13:59+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T22:21:17+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1033 | Accepted with unchanged source bindings. |
-| verify | 294 | Existing work may be complete; inspect evidence before building. |
-| partial | 35 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 1035 | Accepted with unchanged source bindings. |
+| verify | 293 | Existing work may be complete; inspect evidence before building. |
+| partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 3 | Named owner or external prerequisite. |
@@ -1369,7 +1369,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.14.01.03` | done | Recorded batch work | Instrument database metrics: pool size, active/idle/waiting connections, query duration, slow queries |
 | `06-security-testing-observability.md#T-06.14.01.04` | verify | Inventory needed | Instrument queue metrics: queue depth, oldest-unprocessed age, processing time, failure rate, dead-letter count |
 | `06-security-testing-observability.md#T-06.14.01.05` | verify | Inventory needed | Instrument external provider metrics: call latency, success/error count, circuit-breaker state |
-| `06-security-testing-observability.md#T-06.14.01.06` | partial | Recorded batch work | Instrument business safety metrics: unresolved refund count, reconciliation mismatch count, outbox backlog age |
+| `06-security-testing-observability.md#T-06.14.01.06` | done | Recorded batch work | Instrument business safety metrics: unresolved refund count, reconciliation mismatch count, outbox backlog age |
 | `06-security-testing-observability.md#T-06.14.01.07` | verify | Inventory needed | Instrument worker metrics: job processing rate, lease expiry, retry count, dead-letter count |
 | `06-security-testing-observability.md#T-06.14.01.08` | verify | Inventory needed | Instrument AI metrics: request count, token usage, latency, cost per model, concurrency |
 | `06-security-testing-observability.md#T-06.14.02.01` | verify | Inventory needed | Create Executive SLO dashboard: availability, latency (p95/p99), error budget, burn rate |
@@ -1400,7 +1400,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.15.02.04` | verify | Inventory needed | Configure multi-window, multi-burn-rate alert (MWMBR) for accurate detection |
 | `06-security-testing-observability.md#T-06.15.02.05` | verify | Inventory needed | Ensure outbox backlog, refund mismatch, and provider health alerts have SLO-linked burn budgets |
 | `06-security-testing-observability.md#T-06.15.03.01` | done | Recorded batch work | Configure unresolved refund obligation alert: count > 0 for > 1 hour → P2 |
-| `06-security-testing-observability.md#T-06.15.03.02` | verify | Inventory needed | Configure reconciliation mismatch alert: wallet/cached balance drift > threshold → P1 |
+| `06-security-testing-observability.md#T-06.15.03.02` | done | Recorded batch work | Configure reconciliation mismatch alert: wallet/cached balance drift > threshold → P1 |
 | `06-security-testing-observability.md#T-06.15.03.03` | done | Recorded batch work | Configure outbox backlog age alert: oldest-unprocessed > 5 min → P2, > 15 min → P1 |
 | `06-security-testing-observability.md#T-06.15.03.04` | verify | Inventory needed | Configure duplicate payment detection: same idempotency key with different payload → P1 |
 | `06-security-testing-observability.md#T-06.15.03.05` | verify | Inventory needed | Configure provider callback anomaly alert: unexpected signature, replay, stale timestamp → P1 |

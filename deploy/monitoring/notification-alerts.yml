@@ -62,6 +62,13 @@ groups:
           priority: P2
         annotations:
           summary: At least one mandatory refund has remained outstanding for more than one hour
+      - alert: WalletReconciliationCritical
+        expr: max without (instance, pod) (reconciliation_wallets_critical_drift) > 0
+        labels:
+          severity: critical
+          priority: P1
+        annotations:
+          summary: Current wallet balance differs from its ledger at or above the critical threshold
   - name: barghsa-ai-models
     rules:
       - alert: AiModelCircuitOpen

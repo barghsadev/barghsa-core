@@ -15,6 +15,8 @@ import { runOutboxPoll } from '../notifications/outbox-runner.js';
 import { loadNotificationRecipient } from '../notifications/channel-availability-loader.js';
 import { collectNotificationGauges, exportWorkerMetrics } from '../notifications/worker-metrics.js';
 import { collectRefundObligationMetrics } from '../refunds/refund-metrics.js';
+import { collectReconciliationMetrics } from '../wallet/reconciliation-metrics.js';
+import { WALLET_MISMATCH_CRITICAL_ABS_IRR } from '@barghsa/shared/finance';
 
 let ctx: { pool: Pool; connectionString: string; close: () => Promise<void> };
 let server: ReturnType<typeof createServer>, base: string;
@@ -243,6 +245,7 @@ it.each([
   { alertname: 'NotificationOutboxBacklog', severity: 'warning', priority: 'P2' },
   { alertname: 'NotificationOutboxBacklogCritical', severity: 'critical', priority: 'P1' },
   { alertname: 'RefundObligationOverdue', severity: 'warning', priority: 'P2' },
+  { alertname: 'WalletReconciliationCritical', severity: 'critical', priority: 'P1' },
 ])('records $alertname only with its matching severity and priority', async (labels) => {
   const input = envelope();
   Object.assign(input.alerts[0]!.labels, labels);
@@ -312,14 +315,92 @@ it('counts distinct overdue mandatory refunds from both ledgers and clears after
     );
 
     await collectRefundObligationMetrics(client);
-    expect(await exportWorkerMetrics()).toContain('refund_obligations_overdue 3\n');
+    const outstanding = await exportWorkerMetrics();
+    expect(outstanding).toContain('refund_obligations_unresolved 4\n');
+    expect(outstanding).toContain('refund_obligations_overdue 3\n');
 
     await client.query("UPDATE refund_obligations SET status='completed'");
     await client.query("UPDATE refunds SET state='Completed' WHERE id = ANY($1::uuid[])", [
       [overlap, contract],
     ]);
     await collectRefundObligationMetrics(client);
-    expect(await exportWorkerMetrics()).toContain('refund_obligations_overdue 0\n');
+    const cleared = await exportWorkerMetrics();
+    expect(cleared).toContain('refund_obligations_unresolved 0\n');
+    expect(cleared).toContain('refund_obligations_overdue 0\n');
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+  }
+});
+
+it('rechecks current posted and reserved wallet drift without changing the recorded case', async () => {
+  const client = await ctx.pool.connect();
+  const wallet = randomUUID();
+  const resolved = randomUUID();
+  const posted = 9_007_199_254_740_999n;
+  const threshold = WALLET_MISMATCH_CRITICAL_ABS_IRR;
+  try {
+    await client.query('BEGIN');
+    // Use the PostgreSQL collector with synthetic balances and durable case states.
+    await client.query(`
+      CREATE TEMP TABLE reconciliation_exceptions (
+        exception_type text, severity text, status text, details jsonb
+      ) ON COMMIT DROP;
+      CREATE TEMP TABLE wallets (
+        profile_id uuid, posted_balance bigint, reserved_balance bigint
+      ) ON COMMIT DROP;
+      CREATE TEMP TABLE wallet_transactions (wallet_id uuid, amount bigint, state text) ON COMMIT DROP
+    `);
+    await client.query(
+      `INSERT INTO reconciliation_exceptions VALUES
+        ('wallet_mismatch','high','open',jsonb_build_object('walletId',$1::text)),
+        ('payment_mismatch','high','investigating','{}'),
+        ('wallet_mismatch','critical','resolved',jsonb_build_object('walletId',$2::text))`,
+      [wallet, resolved]
+    );
+    await client.query('INSERT INTO wallets VALUES ($1,$2,0),($3,$4,0)', [
+      wallet,
+      (posted + threshold - 1n).toString(),
+      resolved,
+      threshold.toString(),
+    ]);
+    await client.query("INSERT INTO wallet_transactions VALUES ($1,$2,'Completed')", [
+      wallet,
+      posted.toString(),
+    ]);
+    await collectReconciliationMetrics(client);
+    const initial = await exportWorkerMetrics();
+    expect(initial).toContain('reconciliation_mismatches_unresolved 2\n');
+    expect(initial).toContain('reconciliation_wallets_critical_drift 0\n');
+
+    await client.query('UPDATE wallets SET posted_balance=$2 WHERE profile_id=$1', [
+      wallet,
+      (posted + threshold).toString(),
+    ]);
+    await collectReconciliationMetrics(client);
+    expect(await exportWorkerMetrics()).toContain('reconciliation_wallets_critical_drift 1\n');
+
+    await client.query('UPDATE wallets SET posted_balance=$2 WHERE profile_id=$1', [
+      wallet,
+      posted.toString(),
+    ]);
+    await client.query("INSERT INTO wallet_transactions VALUES ($1,$2,'Reserved')", [
+      wallet,
+      threshold.toString(),
+    ]);
+    await collectReconciliationMetrics(client);
+    expect(await exportWorkerMetrics()).toContain('reconciliation_wallets_critical_drift 1\n');
+
+    await client.query('UPDATE wallets SET reserved_balance=$2 WHERE profile_id=$1', [
+      wallet,
+      threshold.toString(),
+    ]);
+    await collectReconciliationMetrics(client);
+    const corrected = await exportWorkerMetrics();
+    expect(corrected).toContain('reconciliation_mismatches_unresolved 2\n');
+    expect(corrected).toContain('reconciliation_wallets_critical_drift 0\n');
+    expect(corrected).not.toContain(wallet);
+    expect(corrected).not.toContain(posted.toString());
   } finally {
     await client.query('ROLLBACK');
     client.release();

@@ -4,6 +4,51 @@
   'tests':
     [
       {
+        'name': 'Critical current wallet drift alerts once per scope and clears after correction',
+        'interval': '1m',
+        'input_series':
+          [
+            {
+              'series': 'reconciliation_wallets_critical_drift{job="worker",environment="staging",database="core",instance="a",pod="a"}',
+              'values': '0 1 0',
+            },
+            {
+              'series': 'reconciliation_wallets_critical_drift{job="worker",environment="staging",database="core",instance="b",pod="b"}',
+              'values': '0 1 0',
+            },
+            {
+              'series': 'reconciliation_mismatches_unresolved{job="worker",environment="staging",database="core",instance="a",pod="a"}',
+              'values': '4 4 4',
+            },
+          ],
+        'alert_rule_test':
+          [
+            { 'eval_time': '0m', 'alertname': 'WalletReconciliationCritical', 'exp_alerts': [] },
+            {
+              'eval_time': '1m',
+              'alertname': 'WalletReconciliationCritical',
+              'exp_alerts':
+                [
+                  {
+                    'exp_labels':
+                      {
+                        'job': 'worker',
+                        'environment': 'staging',
+                        'database': 'core',
+                        'severity': 'critical',
+                        'priority': 'P1',
+                      },
+                    'exp_annotations':
+                      {
+                        'summary': 'Current wallet balance differs from its ledger at or above the critical threshold',
+                      },
+                  },
+                ],
+            },
+            { 'eval_time': '2m', 'alertname': 'WalletReconciliationCritical', 'exp_alerts': [] },
+          ],
+      },
+      {
         'name': 'Overdue mandatory refunds alert once per database scope and recover',
         'interval': '1m',
         'input_series':

@@ -274,7 +274,10 @@ it('compiled worker serves health/metrics, executes scheduled jobs and drains on
     expect(metricText).toContain('# HELP');
     expect(metricText).toContain('# TYPE provider_sms_credit_low gauge');
     expect(metricText).toContain('notifications_eligible_outbox_age_seconds 0\n');
+    expect(metricText).toContain('refund_obligations_unresolved 0\n');
     expect(metricText).toContain('refund_obligations_overdue 0\n');
+    expect(metricText).toContain('reconciliation_mismatches_unresolved 0\n');
+    expect(metricText).toContain('reconciliation_wallets_critical_drift 0\n');
     expect((await fetch(worker.base + '/missing')).status).toBe(404);
     const jobs = [
       'ai_model_test',
