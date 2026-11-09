@@ -34,7 +34,8 @@ class ConfigBackupTests(unittest.TestCase):
         cls.sql('CREATE DATABASE barghsa', 'postgres')
         journal = json.loads(Path('/schema/meta/_journal.json').read_text())
         for migration in journal['entries']:
-            result = subprocess.run(['psql', '-Xq', '-h', str(cls.socket), '-U', 'postgres',
+            # Match the migration runner's transaction boundary for DDL and table locks.
+            result = subprocess.run(['psql', '-Xq', '--single-transaction', '-h', str(cls.socket), '-U', 'postgres',
                                      '-d', 'barghsa', '-v', 'ON_ERROR_STOP=1',
                                      '-f', '/schema/' + migration['tag'] + '.sql'], capture_output=True, text=True)
             if result.returncode:

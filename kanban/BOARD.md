@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T11:42:06+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T11:51:57+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,11 +10,11 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 874 | Accepted with unchanged source bindings. |
+| done | 875 | Accepted with unchanged source bindings. |
 | verify | 470 | Existing work may be complete; inspect evidence before building. |
-| partial | 20 | An earlier review found unmet criteria; reconcile later fixes. |
-| todo | 4 | New, concrete work or release checks. |
-| in_progress | 0 | Existing work to finish. |
+| partial | 19 | An earlier review found unmet criteria; reconcile later fixes. |
+| todo | 3 | New, concrete work or release checks. |
+| in_progress | 1 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
 | superseded | 3 | Explicit approved scope disposition. |
 
@@ -39,12 +39,15 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify the remaining standard update clocks and isolated recovery behavior; reuse current production-readiness evidence and obtain the protected environment required for external gates.
+Verify the exact browser origin boundary, credentialed CORS and CSRF through the affected native HTTP journeys. Continue independent production-readiness checks while the required environment access is pending.
 
-- `01-platform-infrastructure.md#T-02.02.02`: Create base table factory with `id`, `createdAt`, `updatedAt` columns
-- `01-platform-infrastructure.md#T-04.01.03`: Document and automate restore procedure
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
-- `release-readiness#R-05.03`: Prove production deployment, backup and recovery prerequisites
+- `06-security-testing-observability.md#T-06.02.01.03`: Implement Origin validation against allowlist (configurable via admin settings or env)
+- `06-security-testing-observability.md#T-06.02.04.01`: Implement CORS middleware with exact origin allowlist (env config, not wildcard)
+- `06-security-testing-observability.md#T-06.02.04.02`: Ensure credentialed CORS (credentials: include) never accepts wildcard origin
+- `06-security-testing-observability.md#T-06.02.04.03`: Restrict allowed methods to required subset; restrict allowed headers
+- `06-security-testing-observability.md#T-06.02.04.04`: Cache preflight response (e.g. `Access-Control-Max-Age: 3600`)
+- `06-security-testing-observability.md#T-06.02.04.05`: Write CORS integration tests: valid origin, invalid origin, credentialed request, preflight
 
 ## v0.2.0: Complete customer journeys
 
@@ -951,8 +954,8 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | Qualified task | State | Build evidence | Required work |
 | --- | --- | --- | --- |
 | `release-readiness#R-05.01` | done | Recorded batch work | Resolve the six recorded owner decisions |
-| `release-readiness#R-05.02` | todo | Inventory needed | Renew security and operational task acceptance |
-| `release-readiness#R-05.03` | blocked | Inventory needed | Prove production deployment, backup and recovery prerequisites |
+| `release-readiness#R-05.02` | in_progress | Inventory needed | Renew security and operational task acceptance |
+| `release-readiness#R-05.03` | blocked | Recorded batch work | Prove production deployment, backup and recovery prerequisites |
 | `01-platform-infrastructure.md#T-01.01.01` | done | Earlier acceptance_verified | Create `pnpm-workspace.yaml` with `packages: ['apps/*', 'packages/*']` and verify `pnpm install` resolves correctly |
 | `01-platform-infrastructure.md#T-01.01.02` | verify | Earlier acceptance_verified | Create root `turbo.json` pipeline definition |
 | `01-platform-infrastructure.md#T-01.01.03` | verify | Earlier acceptance_verified | Create root `.npmrc` with strict peer dependencies and no shameful hoisting |
@@ -979,7 +982,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-02.01.03` | verify | Earlier acceptance_verified | Implement query timeout and cancellation via Drizzle configuration |
 | `01-platform-infrastructure.md#T-02.01.04` | verify | Earlier acceptance_verified | Set up database health check endpoint for readiness probes |
 | `01-platform-infrastructure.md#T-02.02.01` | done | Earlier acceptance_verified | Create `packages/db/src/types.ts` with custom Drizzle type definitions |
-| `01-platform-infrastructure.md#T-02.02.02` | partial | Earlier partial | Create base table factory with `id`, `createdAt`, `updatedAt` columns |
+| `01-platform-infrastructure.md#T-02.02.02` | done | Earlier partial | Create base table factory with `id`, `createdAt`, `updatedAt` columns |
 | `01-platform-infrastructure.md#T-02.02.03` | verify | Earlier acceptance_verified | Create UUIDv7 generation function migration |
 | `01-platform-infrastructure.md#T-02.02.04` | verify | Earlier acceptance_verified | Document and enforce column conventions in ADR |
 | `01-platform-infrastructure.md#T-02.03.01` | verify | Earlier acceptance_verified | Configure `drizzle.config.ts` in `packages/db` |
