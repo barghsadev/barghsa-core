@@ -3,6 +3,7 @@ import { test, expect } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { tStaffTeams as t } from '@barghsa/i18n/staff-team-forms';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
 import {
   staffTeam,
   staffTeamId,
@@ -11,6 +12,64 @@ import {
 } from '../src/test/staff-directory-fixtures';
 import AxeBuilder from '@axe-core/playwright';
 test.use({ viewport: { width: 390, height: 844 } });
+
+for (const locale of ['en', 'fa'] as const)
+  test(`changed staff membership blocks the stale team draft until it is reset (${locale})`, async ({
+    page,
+  }) => {
+    await setupCatalogueForms(page, locale, false);
+    const text = (key: string) => t(`admin.teams.${key}`, locale);
+    const currentMember = {
+      ...staffMember,
+      id: '33333333-3333-4333-8333-333333333333',
+      name: 'Current member',
+    };
+    let listedTeam = staffTeam;
+    let memberReads = 0;
+    const writes: unknown[] = [];
+    await page.route('**/api/admin/staff-teams', (route) => route.fulfill({ json: [listedTeam] }));
+    await page.route('**/api/admin/staff-teams/members?*', (route) => {
+      const editing = new URL(route.request().url()).searchParams.get('teamId');
+      if (editing) memberReads++;
+      const selected = editing ? [currentMember] : [];
+      return route.fulfill({ json: { items: selected, selected, hasMore: false } });
+    });
+    await page.route('**/api/admin/config/assignment-rules', (route) =>
+      route.fulfill({ json: staffRoutingRules })
+    );
+    await page.route(`**/api/admin/staff-teams/${staffTeamId}`, (route) => {
+      writes.push(route.request().postDataJSON());
+      return route.fulfill({ status: 409, json: {} });
+    });
+    await page.goto('/admin/staff-teams');
+    await page.getByRole('button', { name: text('edit'), exact: true }).click();
+    const form = page.locator('form').filter({ has: page.locator('#staff-team-name') });
+    const description = form.locator('#staff-team-description');
+    const save = form.getByRole('button', { name: text('saveTeam'), exact: true });
+    const retry = form.getByRole('button', { name: text('memberRetry'), exact: true });
+    const selected = form.getByRole('list', { name: text('selected') });
+    await description.fill('Keep unsent team description');
+    await expect.poll(() => memberReads).toBe(1);
+    await expect(retry).toBeVisible();
+    await expect(save).toBeDisabled();
+    await expect(selected.getByText(loadingText('recordUnavailable', locale))).toBeVisible();
+    await expect(selected.getByText(text('loading'))).toHaveCount(0);
+    expect(writes).toEqual([]);
+
+    listedTeam = { ...staffTeam, memberUserIds: [currentMember.id], leadUserId: currentMember.id };
+    await page.getByRole('button', { name: text('refresh'), exact: true }).click();
+    await expect(form.getByText(text('staleTeam'))).toBeVisible();
+    await expect.poll(() => memberReads).toBe(2);
+    await expect(retry).toHaveCount(0);
+    await expect(description).toHaveValue('Keep unsent team description');
+    await expect(save).toBeDisabled();
+    await form.getByRole('button', { name: text('resetTeam'), exact: true }).click();
+    await expect(form.locator('#staff-team-lead')).toHaveValue(currentMember.id);
+    await expect(selected.getByText(currentMember.name)).toBeVisible();
+    await expect(save).toBeEnabled();
+    expect(writes).toEqual([]);
+  });
+
 for (const locale of ['en', 'fa'] as const)
   for (const dark of [false, true]) {
     test(`team fields, membership, lead and captured step-up (${locale}, ${dark ? 'dark' : 'light'})`, async ({

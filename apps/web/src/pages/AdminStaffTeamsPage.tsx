@@ -4,6 +4,7 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { AssignmentFallbackEditor } from '../components/AssignmentFallbackEditor.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { tStaffTeams as t } from '@barghsa/i18n/staff-team-forms';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
 import {
   LoadingStatus,
   Alert,
@@ -66,6 +67,7 @@ export default function AdminStaffTeamsPage() {
   const teamRequest = useRef<AbortController | null>(null);
   const numbers = useNumberFormatting(locale);
   const label = (key: string) => t(`admin.teams.${key}`, locale);
+  const unavailableMember = loadingText('recordUnavailable', locale);
   const [teams, setTeams] = useState<Team[]>([]);
   const [known, setKnown] = useState<Record<string, Member>>({});
   const teamMessages = {
@@ -165,7 +167,7 @@ export default function AdminStaffTeamsPage() {
     knownRef = useRef<Record<string, Member>>({});
   actionRef.current = action;
   knownRef.current = known;
-  const memberScope = JSON.stringify([search, editing]);
+  const memberScope = JSON.stringify([search, editing, memberRevision]);
   const visibleMembers = memberScope === acceptedMemberScope ? members : [];
   function clearAction() {
     ++workGeneration.current;
@@ -321,6 +323,7 @@ export default function AdminStaffTeamsPage() {
         if (teamDirty.current || !fresh) setTeamStale(true);
         else resetTeam(teamValues(fresh));
         editedTeam.current = fresh ?? selected;
+        if (fresh) setMemberRevision((value) => value + 1);
         setSaved(false);
       }
       const captured = actionRef.current;
@@ -440,6 +443,15 @@ export default function AdminStaffTeamsPage() {
         if (!validMembers(data)) throw new Error('Invalid members');
         if (controller.signal.aborted || owner !== denialGeneration.current || deniedRef.current)
           return;
+        // The server reports persisted membership separately from the search results.
+        const team = editedTeam.current;
+        if (
+          team &&
+          team.id === editing &&
+          (data.selected.length !== team.memberUserIds.length ||
+            data.selected.some((member) => !team.memberUserIds.includes(member.id)))
+        )
+          throw new Error('Staff team membership changed');
         if (
           [...data.items, ...data.selected].some(
             (member) =>
@@ -489,12 +501,14 @@ export default function AdminStaffTeamsPage() {
     }));
   }
   const disabled = loading || error || denied || !!action || pending;
+  const unknownMember = memberLoading ? label('loading') : unavailableMember;
   const live = useRef({ teamReady: false, rulesReady: false });
   live.current = {
     teamReady:
       !loading &&
       !error &&
       !denied &&
+      memberScope === acceptedMemberScope &&
       !memberLoading &&
       !memberError &&
       !teamStale &&
@@ -536,7 +550,7 @@ export default function AdminStaffTeamsPage() {
             title: label(kind === 'team' ? 'saveTeam' : 'saveRules'),
             description:
               kind === 'team'
-                ? `${(body as ReturnType<typeof teamBody>).name} · ${(body as ReturnType<typeof teamBody>).memberUserIds.map((id) => knownRef.current[id]?.name ?? label('loading')).join(', ')}`
+                ? `${(body as ReturnType<typeof teamBody>).name} · ${(body as ReturnType<typeof teamBody>).memberUserIds.map((id) => knownRef.current[id]?.name ?? unavailableMember).join(', ')}`
                 : STAFF_ASSIGNMENT_WORK_TYPES.map((type) => {
                     const rule = (body as StaffAssignmentRules)[type];
                     return `${label(type)}: ${
@@ -806,7 +820,7 @@ export default function AdminStaffTeamsPage() {
                 <ul aria-label={label('selected')} className="flex flex-wrap gap-2">
                   {draft.members.map((id) => (
                     <li key={id} className="rounded border p-2 text-sm">
-                      {known[id]?.name ?? label('loading')}{' '}
+                      {known[id]?.name ?? unknownMember}{' '}
                       {known[id]?.eligible === false && label('inactive')}{' '}
                       <button
                         type="button"
@@ -832,7 +846,7 @@ export default function AdminStaffTeamsPage() {
                     <option value="">{label('noLead')}</option>
                     {draft.members.map((id) => (
                       <option key={id} value={id} disabled={known[id]?.eligible === false}>
-                        {known[id]?.name ?? label('loading')}
+                        {known[id]?.name ?? unknownMember}
                       </option>
                     ))}
                   </NativeSelect>
@@ -1045,7 +1059,7 @@ export default function AdminStaffTeamsPage() {
               ? rulesLoading || rulesError || rulesStale || rulesUncertain
               : action.method === 'DELETE'
                 ? teamUncertain
-                : memberLoading || memberError || teamStale || teamUncertain)
+                : !live.current.teamReady)
           }
           onClose={() => {
             if (actionGeneration === workGeneration.current) clearAction();

@@ -53,11 +53,14 @@ for (const locale of ['en', 'fa'] as const)
       fail = false;
     let rules = structuredClone(DEFAULT_STAFF_ASSIGNMENT_RULES);
     const bodies: unknown[] = [];
-    await page.route('**/api/admin/staff-teams/members?*', (route) =>
-      route.fulfill({
-        json: { items: [{ id: 'staff-a', name: 'Support Alice' }], selected: [], hasMore: false },
-      })
-    );
+    await page.route('**/api/admin/staff-teams/members?*', (route) => {
+      const member = { id: 'staff-a', name: 'Support Alice' };
+      const teamId = new URL(route.request().url()).searchParams.get('teamId');
+      const selected = teams.find((team) => team.id === teamId)?.memberUserIds.includes(member.id);
+      return route.fulfill({
+        json: { items: [member], selected: selected ? [member] : [], hasMore: false },
+      });
+    });
     await page.route('**/api/admin/staff-teams', (route) => {
       if (route.request().method() === 'GET') return route.fulfill({ json: teams });
       bodies.push(route.request().postDataJSON());

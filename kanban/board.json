@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T04:44:22+00:00",
-  "source_commit": "67bc0cee875b82d759e963f727e50278b62fbac4",
+  "updated": "2026-11-09T04:50:19+00:00",
+  "source_commit": "72514a44f46302d8189ddff0985678dcf5d3e09a",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35488,7 +35488,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -56422,11 +56422,11 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "fc9d9b06ecee8e89936feb08db381217c3f365129daf4e27fe9f45e4b83f138d"
+              "sha256": "813129e9f7876aef62361b1995e049ce73aea65562eb9afa905853c42f49f060"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
-              "sha256": "1c62047cba0116b7df8ea54ad2df83e7882a091d465c2bd950ed807342769ee2"
+              "sha256": "bcf7d40338ec0f4327560cc8caeabbc868af165e97c32674282f9970a8352baf"
             },
             {
               "path": "apps/web/e2e/support-list-query.spec.ts",
@@ -57533,11 +57533,11 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "fc9d9b06ecee8e89936feb08db381217c3f365129daf4e27fe9f45e4b83f138d"
+              "sha256": "813129e9f7876aef62361b1995e049ce73aea65562eb9afa905853c42f49f060"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
-              "sha256": "1c62047cba0116b7df8ea54ad2df83e7882a091d465c2bd950ed807342769ee2"
+              "sha256": "bcf7d40338ec0f4327560cc8caeabbc868af165e97c32674282f9970a8352baf"
             },
             {
               "path": "apps/web/e2e/support-list-query.spec.ts",
@@ -58644,11 +58644,11 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "fc9d9b06ecee8e89936feb08db381217c3f365129daf4e27fe9f45e4b83f138d"
+              "sha256": "813129e9f7876aef62361b1995e049ce73aea65562eb9afa905853c42f49f060"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
-              "sha256": "1c62047cba0116b7df8ea54ad2df83e7882a091d465c2bd950ed807342769ee2"
+              "sha256": "bcf7d40338ec0f4327560cc8caeabbc868af165e97c32674282f9970a8352baf"
             },
             {
               "path": "apps/web/e2e/support-list-query.spec.ts",
@@ -63184,7 +63184,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -92818,11 +92818,11 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "fc9d9b06ecee8e89936feb08db381217c3f365129daf4e27fe9f45e4b83f138d"
+              "sha256": "813129e9f7876aef62361b1995e049ce73aea65562eb9afa905853c42f49f060"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
-              "sha256": "1c62047cba0116b7df8ea54ad2df83e7882a091d465c2bd950ed807342769ee2"
+              "sha256": "bcf7d40338ec0f4327560cc8caeabbc868af165e97c32674282f9970a8352baf"
             },
             {
               "path": "apps/web/e2e/support-list-query.spec.ts",
@@ -93861,11 +93861,11 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "fc9d9b06ecee8e89936feb08db381217c3f365129daf4e27fe9f45e4b83f138d"
+              "sha256": "813129e9f7876aef62361b1995e049ce73aea65562eb9afa905853c42f49f060"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
-              "sha256": "1c62047cba0116b7df8ea54ad2df83e7882a091d465c2bd950ed807342769ee2"
+              "sha256": "bcf7d40338ec0f4327560cc8caeabbc868af165e97c32674282f9970a8352baf"
             },
             {
               "path": "apps/web/e2e/support-list-query.spec.ts",
@@ -94910,11 +94910,11 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "fc9d9b06ecee8e89936feb08db381217c3f365129daf4e27fe9f45e4b83f138d"
+              "sha256": "813129e9f7876aef62361b1995e049ce73aea65562eb9afa905853c42f49f060"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
-              "sha256": "1c62047cba0116b7df8ea54ad2df83e7882a091d465c2bd950ed807342769ee2"
+              "sha256": "bcf7d40338ec0f4327560cc8caeabbc868af165e97c32674282f9970a8352baf"
             },
             {
               "path": "apps/web/e2e/support-list-query.spec.ts",
@@ -491497,7 +491497,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -494649,7 +494649,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -495540,7 +495540,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -496372,7 +496372,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -497205,7 +497205,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
@@ -511872,7 +511872,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -512550,7 +512550,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -517547,7 +517547,7 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "fc9d9b06ecee8e89936feb08db381217c3f365129daf4e27fe9f45e4b83f138d"
+              "sha256": "813129e9f7876aef62361b1995e049ce73aea65562eb9afa905853c42f49f060"
             },
             {
               "path": "apps/web/e2e/staff-wallet-ledger.spec.ts",
@@ -518219,7 +518219,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -567395,7 +567395,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -569298,7 +569298,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -571250,11 +571250,11 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "fc9d9b06ecee8e89936feb08db381217c3f365129daf4e27fe9f45e4b83f138d"
+              "sha256": "813129e9f7876aef62361b1995e049ce73aea65562eb9afa905853c42f49f060"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
-              "sha256": "1c62047cba0116b7df8ea54ad2df83e7882a091d465c2bd950ed807342769ee2"
+              "sha256": "bcf7d40338ec0f4327560cc8caeabbc868af165e97c32674282f9970a8352baf"
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
@@ -572770,7 +572770,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -574096,7 +574096,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -575999,7 +575999,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -577902,7 +577902,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -579805,7 +579805,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -581708,7 +581708,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -583611,7 +583611,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -585514,7 +585514,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -587417,7 +587417,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -589320,7 +589320,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -591223,7 +591223,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -593126,7 +593126,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -594762,7 +594762,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
@@ -595769,7 +595769,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -597672,7 +597672,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -598966,7 +598966,7 @@
       "remaining": [
         "The 98-path inventory retains primary read, detail, layout and redirect evidence. All 27 component owners in the selected request inventory now have scoped source and case references or a verified write-only classification.",
         "All 20 selected hook owners now have scoped read evidence or a verified write-only classification. Current receipts cover staff electricity and saving, checkout wallets, revision options, and ten named dashboard or settings and operations routes.",
-        "Reconcile page- and route-owned conditional states and original route controls beyond the named cases before full acceptance."
+        "Staff teams now have a current receipt for a changed membership read, preserved draft and explicit recovery. Reconcile other page- and route-owned conditions and original route controls beyond the named cases."
       ],
       "owner": null,
       "depends_on": [],
@@ -599127,7 +599127,8 @@
           "release-0.5-revision-options-pending",
           "release-0.5-staff-saving-read-shape",
           "release-0.5-staff-electricity-read-shape",
-          "release-0.5-shared-read-reconciliation"
+          "release-0.5-shared-read-reconciliation",
+          "release-0.5-staff-team-membership-read"
         ],
         "current_acceptance": null
       }
@@ -638308,7 +638309,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -639440,7 +639441,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -640572,7 +640573,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -641707,7 +641708,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -642842,7 +642843,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -644004,7 +644005,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -645135,7 +645136,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -646266,7 +646267,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -647398,7 +647399,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -648548,7 +648549,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -649681,7 +649682,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -681211,7 +681212,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -682341,7 +682342,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -683471,7 +683472,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -684601,7 +684602,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -708435,11 +708436,11 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "fc9d9b06ecee8e89936feb08db381217c3f365129daf4e27fe9f45e4b83f138d"
+              "sha256": "813129e9f7876aef62361b1995e049ce73aea65562eb9afa905853c42f49f060"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
-              "sha256": "1c62047cba0116b7df8ea54ad2df83e7882a091d465c2bd950ed807342769ee2"
+              "sha256": "bcf7d40338ec0f4327560cc8caeabbc868af165e97c32674282f9970a8352baf"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -708483,7 +708484,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
@@ -716726,11 +716727,11 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "fc9d9b06ecee8e89936feb08db381217c3f365129daf4e27fe9f45e4b83f138d"
+              "sha256": "813129e9f7876aef62361b1995e049ce73aea65562eb9afa905853c42f49f060"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
-              "sha256": "1c62047cba0116b7df8ea54ad2df83e7882a091d465c2bd950ed807342769ee2"
+              "sha256": "bcf7d40338ec0f4327560cc8caeabbc868af165e97c32674282f9970a8352baf"
             },
             {
               "path": "apps/web/e2e/support-list-query.spec.ts",
@@ -728993,7 +728994,7 @@
       "remaining": [
         "The 98-path inventory retains primary read, detail, layout and redirect evidence. All 27 component owners in the selected request inventory now have scoped source and case references or a verified write-only classification.",
         "All 20 selected hook owners now have scoped read evidence or a verified write-only classification. Current receipts cover staff electricity and saving, checkout wallets, revision options, and ten named dashboard or settings and operations routes.",
-        "Reconcile page- and route-owned conditional states and original route controls beyond the named cases before full acceptance."
+        "Staff teams now have a current receipt for a changed membership read, preserved draft and explicit recovery. Reconcile other page- and route-owned conditions and original route controls beyond the named cases."
       ],
       "owner": null,
       "depends_on": [],
@@ -729220,7 +729221,8 @@
           "release-0.5-revision-options-pending",
           "release-0.5-staff-saving-read-shape",
           "release-0.5-staff-electricity-read-shape",
-          "release-0.5-shared-read-reconciliation"
+          "release-0.5-shared-read-reconciliation",
+          "release-0.5-staff-team-membership-read"
         ]
       }
     },
@@ -730244,7 +730246,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "eb6731163e2a8874f84b5eb3d92d04d3e2ba8f80f4621b5c306ce824ee435813"
+              "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -731191,7 +731193,8 @@
             "Current simple electricity and saving checkout balance states and staff funding views passed on both native engines. All 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-checkout-wallet-read-states/proof.json",
             "Current simple and advanced revision journeys and 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-revision-options-pending/proof.json",
             "Current saving staff queue and detail journeys and 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-saving-read-shape/proof.json",
-            "Current electricity staff queue and detail journeys and 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-electricity-read-shape/proof.json"
+            "Current electricity staff queue and detail journeys and 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-electricity-read-shape/proof.json",
+            "Current staff team membership, routing and recovery journeys and 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-team-membership-read/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -731284,7 +731287,8 @@
           "release-0.5-checkout-wallet-read-states",
           "release-0.5-revision-options-pending",
           "release-0.5-staff-saving-read-shape",
-          "release-0.5-staff-electricity-read-shape"
+          "release-0.5-staff-electricity-read-shape",
+          "release-0.5-staff-team-membership-read"
         ]
       }
     },
@@ -812183,6 +812187,45 @@
       "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-read-reconciliation/proof.json",
       "source_scope_proof_sha256": "ee17cf0ebad936452a120f5840c7cf93fee3f0d9681825227a6a83d943689092",
       "release_disposition": "Shared read ownership reconciled. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-staff-team-membership-read": {
+      "batch": "release-0.5-staff-team-membership-read",
+      "base_commit": "72514a44f46302d8189ddff0985678dcf5d3e09a",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/staff-team-forms.spec.ts",
+          "sha256": "813129e9f7876aef62361b1995e049ce73aea65562eb9afa905853c42f49f060"
+        },
+        {
+          "path": "apps/web/e2e/staff-teams.spec.ts",
+          "sha256": "bcf7d40338ec0f4327560cc8caeabbc868af165e97c32674282f9970a8352baf"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
+          "sha256": "1deefd9f7bce35094bd2e44fe8b0cc35f79897a8ca61a8566e4952c19415712e"
+        }
+      ],
+      "checks": [
+        "Both predecessor Chromium cases reproduced a missing retry state when the selected members endpoint disagreed with the saved team list.",
+        "The team editor rejects a member result for a different saved membership, displays a settled unavailable label, and blocks team save and confirmation. A changed team list triggers a fresh member read. An unsent team draft remains until an explicit reset, and assignment-rule work remains independent.",
+        "Fifty Chromium and mobile Safari cases passed. Four directly exercise the membership disagreement and explicit recovery across both locales. The existing team, routing, step-up, denial and receipt assertions also passed. The legacy mock now returns persisted membership for the requested team; no assertion changed.",
+        "All 39 focused units, 101 transfer budgets, web typecheck, lint and formatting passed. The critical file gate passed at 368/401 lines and 396/455 branches. Auth assets are byte-identical."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-team-membership-read",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-team-membership-read/proof.json",
+      "source_scope_proof_sha256": "beac0f8c71d0187458f21929fec1f15e704f26f3c91f4a86544d238e8436710b",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-team-membership-read/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-team-membership-read/renewed-bindings.json",
+      "release_disposition": "Closed the staff team membership read gap. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [
