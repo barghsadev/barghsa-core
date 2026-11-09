@@ -148,7 +148,15 @@ async function main() {
         [dead, outbox, job, event, profile]
       );
     }
+  const readyAgentEditorModels: Record<string, { id: string; title: string }> = {};
   for (const locale of ['en', 'fa']) {
+    const { rows } = await http.pool.query<{ id: string; title: string }>(
+      `INSERT INTO ai_models(title,provider_type,base_url,model_name,created_by,is_enabled,last_test_status)
+       VALUES ($1,'openai_compatible','https://example.test','test','team-ui-admin',true,'passed')
+       RETURNING id,title`,
+      [`Editor model ${locale}`]
+    );
+    readyAgentEditorModels[locale] = rows[0]!;
     await http.pool.query(
       "INSERT INTO reconciliation_exceptions(exception_type,severity,description,details) VALUES ('wallet_mismatch','high',$1,$2::jsonb)",
       [
@@ -177,7 +185,15 @@ async function main() {
   process.once('message', requestClose);
   process.once('disconnect', requestClose);
   process.once('SIGTERM', requestClose);
-  process.send?.({ base: http.base, session, csrf, customerSession, customerCsrf, jobs });
+  process.send?.({
+    base: http.base,
+    session,
+    csrf,
+    customerSession,
+    customerCsrf,
+    jobs,
+    readyAgentEditorModels,
+  });
 }
 main().catch(async (error) => {
   console.error(error);

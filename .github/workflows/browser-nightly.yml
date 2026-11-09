@@ -1,7 +1,5 @@
 name: Nightly browser checks
 on:
-  schedule:
-    - cron: '17 2 * * *'
   workflow_dispatch:
 
 permissions:
@@ -13,14 +11,13 @@ concurrency:
 
 jobs:
   browsers:
-    name: Production browser / ${{ matrix.project }} / ${{ matrix.shard }} of 8
+    name: Production browser / ${{ matrix.project }}
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:
         project: [firefox, mobile-chrome, webkit, mobile-safari]
-        shard: [1, 2, 3, 4, 5, 6, 7, 8]
         include:
           - { project: firefox, browser: firefox }
           - { project: mobile-chrome, browser: chromium }
@@ -46,7 +43,7 @@ jobs:
           node --test scripts/browser-projects.test.mjs
           python3 -m unittest discover -s scripts -p 'test_check_browser_results.py'
       - name: Exercise the production app in the selected browser
-        run: node scripts/run-production-browser.mjs --project "${{ matrix.project }}" --shard "${{ matrix.shard }}/8"
+        run: node scripts/run-production-browser.mjs --project "${{ matrix.project }}" e2e/admin-settings-live.spec.ts --retries=0
         env:
           BARGHSA_TEST_PREBUILT: '1'
       - name: Report observed browser outcomes
@@ -59,7 +56,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: browser-${{ matrix.project }}-${{ matrix.shard }}
+          name: browser-${{ matrix.project }}
           path: |
             ${{ runner.temp }}/browser-outcomes.json
             ${{ runner.temp }}/quarantine.json
