@@ -14,7 +14,7 @@ x-app-image: &app-image '${BARGHSA_APP_REPOSITORY:?Set the app image repository}
 
 x-db-environment: &db-environment
   NODE_ENV: production
-  NODE_OPTIONS: --max-old-space-size=512
+  NODE_OPTIONS: --max-old-space-size=512 --no-deprecation
   DATABASE_SSL_ENABLED: 'true'
   DATABASE_SSL_REJECT_UNAUTHORIZED: 'true'
   DATABASE_CA_PATH: /run/secrets/database-ca.pem

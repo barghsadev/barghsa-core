@@ -16,6 +16,8 @@ import uuid
 
 prefix = 'barghsa-packaging-' + uuid.uuid4().hex[:10]
 owned = []
+node_options = '--max-old-space-size=512 --no-deprecation'
+unsafe_node_options = '--inspect=0.0.0.0 --insecure-http-parser'
 
 
 def docker(*args, check=True):
@@ -72,7 +74,8 @@ def check_compose():
                       DATABASE_URL='postgresql://test:synthetic@postgres:5432/barghsa',
                       APP_PUBLIC_URL='https://app.example.test', API_PUBLIC_URL='https://app.example.test',
                       PAYMENT_GATEWAY_MERCHANT_ID='synthetic-only', AUTH_DELIVERY_ENCRYPTION_KEY='11'*32)
-        runtime.write_text('\n'.join(f'{k}={v}' for k, v in values.items()))
+        runtime.write_text('\n'.join(f'{k}={v}' for k, v in values.items())
+                           + f'\nNODE_OPTIONS={unsafe_node_options}\n')
         result = subprocess.run(['docker', 'compose', '--env-file', str(runtime),
                                  '-f', 'docker-compose.yml', '-f', 'docker-compose.prod.yml',
                                  'config', '--format', 'json'], capture_output=True, text=True,
@@ -82,10 +85,11 @@ def check_compose():
         assert 'pgbouncer' in services
         assert services['api']['build'] == services['worker']['build']
         assert services['worker']['command'] == ['node', 'worker/dist/main.js']
-        for name in ['api', 'worker', 'web']:
+        for name in ['api', 'worker', 'web', 'ai-inference']:
             service = services[name]
             assert service['read_only'] and service['cap_drop'] == ['ALL']
             assert 'no-new-privileges:true' in service['security_opt']
+            assert service['environment']['NODE_OPTIONS'] == node_options, name
         assert services['api']['healthcheck']['test'] == ['CMD', 'node', 'healthcheck-runtime.cjs']
     print('PASS production Compose: shared image, worker override, hardening and enabled pool dependency', flush=True)
 
@@ -94,7 +98,7 @@ def check_hybrid_compose():
     with tempfile.TemporaryDirectory(prefix='barghsa-hybrid-proof-') as temporary:
         fixture = Path(temporary)
         runtime = fixture / 'runtime.env'
-        runtime.write_text('NODE_OPTIONS=--inspect=0.0.0.0 --insecure-http-parser\n')
+        runtime.write_text(f'NODE_OPTIONS={unsafe_node_options}\n')
         ca = fixture / 'ca.pem'
         ca.write_text('synthetic only')
         env = {**os.environ, 'BARGHSA_RUNTIME_ENV_FILE': str(runtime),
@@ -109,7 +113,7 @@ def check_hybrid_compose():
         services = json.loads(config)['services']
         for name in ('api', 'worker', 'ai-inference', 'migrate'):
             service = services[name]
-            assert service['environment']['NODE_OPTIONS'] == '--max-old-space-size=512', name
+            assert service['environment']['NODE_OPTIONS'] == node_options, name
             assert service['read_only'] and service['cap_drop'] == ['ALL'], name
     print('PASS hybrid Compose ignores unsafe Node flags from runtime and migration files', flush=True)
 
@@ -155,7 +159,7 @@ try:
         assert info['HostConfig']['ReadonlyRootfs']
         assert info['HostConfig']['CapDrop'] == ['ALL']
         assert info['Config']['Env'].count('NODE_ENV=production') == 1
-        assert info['Config']['Env'].count('NODE_OPTIONS=--max-old-space-size=512') == 1
+        assert info['Config']['Env'].count('NODE_OPTIONS='+node_options) == 1
         assert not any(arg.startswith('--inspect') for arg in info['Args'])
         if kind != 'web':
             ids.append(info['Image'])
