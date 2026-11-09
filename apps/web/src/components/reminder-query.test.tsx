@@ -36,8 +36,12 @@ beforeEach(() => {
         first = false;
         signal = init!.signal as AbortSignal;
         if (failed) {
+          const response = new Response(JSON.stringify({ message: 'obsolete-private-error' }), {
+            status: 500,
+          });
+          vi.spyOn(response, 'json').mockImplementation(readErrorBody);
           return new Promise<Response>((resolve) => {
-            finish = () => resolve({ ok: false, status: 500, json: readErrorBody } as Response);
+            finish = () => resolve(response);
           });
         }
         return {

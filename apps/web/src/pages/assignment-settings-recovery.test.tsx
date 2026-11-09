@@ -11,8 +11,7 @@ import {
   assignmentSlots,
 } from '../test/assignment-settings-fixtures.js';
 import { isAgentSlots, isAssignmentAgents, isResponseTargets } from '../lib/assignment-settings.js';
-vi.mock('@tanstack/react-router', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@tanstack/react-router')>()),
+vi.mock('@tanstack/react-router', () => ({
   Link: ({ children, to }: { children: ReactNode; to: string }) => <a href={to}>{children}</a>,
 }));
 let host: HTMLDivElement, root: Root;

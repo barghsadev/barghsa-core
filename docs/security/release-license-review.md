@@ -25,6 +25,8 @@ The isolated Node Alpine app still contains both libvips variants. Its active Sh
 
 A dry run of the production and auth builds identified 74 and 28 npm packages, respectively, with JavaScript present in emitted chunks. Only DOMPurify needed a license expression check; the separately emitted font assets are reviewed above. DOMPurify `3.4.17` declares MPL-2.0 **or** Apache-2.0. Use the already allowed Apache-2.0 option and retain the corresponding notices. Do not treat other workspace inventory entries as shipped solely because the dependency resolver lists them. Base OS and tooling notices, including Poppler and ClamAV, still need the final image inventory and distribution review.
 
+The combined app image SBOM identified three third-party packages without a normalized license field: `busboy@1.6.0`, `png-js@2.0.0`, and `streamsearch@1.1.0`. Their original MIT license files were read from the isolated app image and matched the pinned package copies byte for byte. Internal Barghsa workspace entries without a third-party license field are first-party code.
+
 ## GeoLite2 decision
 
 The feature shows a country estimate in the signed-in user's session list. It does not decide authentication, payments, verification, permissions or device trust. [The existing session policy](session-location.md) already permits the location to display as unavailable when there is no acceptable dataset.

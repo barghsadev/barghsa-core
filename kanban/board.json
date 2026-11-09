@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T13:52:59+00:00",
+  "updated": "2026-11-09T13:55:39+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -11207,7 +11207,8 @@
           "release-0.6-remove-unapproved-session-location-data",
           "release-0.6-browser-font-notices",
           "release-0.6-immutable-location-and-signature-feed",
-          "release-0.6-combined-runtime-image-candidate"
+          "release-0.6-combined-runtime-image-candidate",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": null
       },
@@ -24173,7 +24174,8 @@
           "release-0.6-remove-unapproved-session-location-data",
           "release-0.6-browser-font-notices",
           "release-0.6-immutable-location-and-signature-feed",
-          "release-0.6-combined-runtime-image-candidate"
+          "release-0.6-combined-runtime-image-candidate",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -24329,7 +24331,7 @@
             },
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "798be8f78490c35ca1c6a44159ac78501623facbc15e7e07f915dd34a9805752"
+              "sha256": "624578dfb0f228a151c3c9e98e0217634bda978f859af77b8431d6c6f56f2a2c"
             }
           ],
           "checks": [
@@ -36049,7 +36051,8 @@
           "release-0.5-action-contrast",
           "release-0.5-review-preview-deadlines",
           "release-0.5-conditional-heading-acceptance",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -36365,7 +36368,7 @@
             },
             {
               "path": "apps/web/src/components/reminder-query.test.tsx",
-              "sha256": "f9366712fdf031f13e1af8da201a1781dbc143387be5c15004de8acf1e0a9af7"
+              "sha256": "f11038f813f11e4f65c89a81250f543c48668252ed51bb358315879dbea8be27"
             },
             {
               "path": "apps/web/src/components/contract-cancellation-query.test.tsx",
@@ -36450,7 +36453,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested."
+            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance",
           "limitations": [
@@ -104288,7 +104292,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ai-tab-intrinsic-widths",
           "release-0.5-essential-control-contrast",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -104452,7 +104457,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
@@ -104533,7 +104538,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "limitations": [],
           "operational_limits": [
@@ -125783,7 +125789,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-invoice-response-feedback",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -126223,7 +126230,7 @@
             },
             {
               "path": "apps/web/src/components/reminder-query.test.tsx",
-              "sha256": "f9366712fdf031f13e1af8da201a1781dbc143387be5c15004de8acf1e0a9af7"
+              "sha256": "f11038f813f11e4f65c89a81250f543c48668252ed51bb358315879dbea8be27"
             }
           ],
           "checks": [
@@ -126261,7 +126268,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested."
+            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/invoice-lifecycle",
           "limitations": [
@@ -126777,7 +126785,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-invoice-response-feedback",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -127217,7 +127226,7 @@
             },
             {
               "path": "apps/web/src/components/reminder-query.test.tsx",
-              "sha256": "f9366712fdf031f13e1af8da201a1781dbc143387be5c15004de8acf1e0a9af7"
+              "sha256": "f11038f813f11e4f65c89a81250f543c48668252ed51bb358315879dbea8be27"
             }
           ],
           "checks": [
@@ -127255,7 +127264,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested."
+            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/invoice-lifecycle",
           "limitations": [
@@ -127771,7 +127781,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-invoice-response-feedback",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -128211,7 +128222,7 @@
             },
             {
               "path": "apps/web/src/components/reminder-query.test.tsx",
-              "sha256": "f9366712fdf031f13e1af8da201a1781dbc143387be5c15004de8acf1e0a9af7"
+              "sha256": "f11038f813f11e4f65c89a81250f543c48668252ed51bb358315879dbea8be27"
             }
           ],
           "checks": [
@@ -128249,7 +128260,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested."
+            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/invoice-lifecycle",
           "limitations": [
@@ -128765,7 +128777,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-invoice-response-feedback",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -129205,7 +129218,7 @@
             },
             {
               "path": "apps/web/src/components/reminder-query.test.tsx",
-              "sha256": "f9366712fdf031f13e1af8da201a1781dbc143387be5c15004de8acf1e0a9af7"
+              "sha256": "f11038f813f11e4f65c89a81250f543c48668252ed51bb358315879dbea8be27"
             }
           ],
           "checks": [
@@ -129243,7 +129256,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested."
+            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/invoice-lifecycle",
           "limitations": [
@@ -129759,7 +129773,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-invoice-response-feedback",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -130199,7 +130214,7 @@
             },
             {
               "path": "apps/web/src/components/reminder-query.test.tsx",
-              "sha256": "f9366712fdf031f13e1af8da201a1781dbc143387be5c15004de8acf1e0a9af7"
+              "sha256": "f11038f813f11e4f65c89a81250f543c48668252ed51bb358315879dbea8be27"
             }
           ],
           "checks": [
@@ -130237,7 +130252,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested."
+            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/invoice-lifecycle",
           "limitations": [
@@ -130753,7 +130769,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-invoice-response-feedback",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -131193,7 +131210,7 @@
             },
             {
               "path": "apps/web/src/components/reminder-query.test.tsx",
-              "sha256": "f9366712fdf031f13e1af8da201a1781dbc143387be5c15004de8acf1e0a9af7"
+              "sha256": "f11038f813f11e4f65c89a81250f543c48668252ed51bb358315879dbea8be27"
             }
           ],
           "checks": [
@@ -131231,7 +131248,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested."
+            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/invoice-lifecycle",
           "limitations": [
@@ -131831,7 +131849,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-invoice-response-feedback",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -132319,7 +132338,7 @@
             },
             {
               "path": "apps/web/src/components/reminder-query.test.tsx",
-              "sha256": "f9366712fdf031f13e1af8da201a1781dbc143387be5c15004de8acf1e0a9af7"
+              "sha256": "f11038f813f11e4f65c89a81250f543c48668252ed51bb358315879dbea8be27"
             }
           ],
           "checks": [
@@ -132360,7 +132379,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested."
+            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/invoice-lifecycle",
           "limitations": [
@@ -132953,7 +132973,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-invoice-response-feedback",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -133393,7 +133414,7 @@
             },
             {
               "path": "apps/web/src/components/reminder-query.test.tsx",
-              "sha256": "f9366712fdf031f13e1af8da201a1781dbc143387be5c15004de8acf1e0a9af7"
+              "sha256": "f11038f813f11e4f65c89a81250f543c48668252ed51bb358315879dbea8be27"
             }
           ],
           "checks": [
@@ -133431,7 +133452,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested."
+            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/invoice-lifecycle",
           "limitations": [
@@ -134031,7 +134053,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-invoice-response-feedback",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -134519,7 +134542,7 @@
             },
             {
               "path": "apps/web/src/components/reminder-query.test.tsx",
-              "sha256": "f9366712fdf031f13e1af8da201a1781dbc143387be5c15004de8acf1e0a9af7"
+              "sha256": "f11038f813f11e4f65c89a81250f543c48668252ed51bb358315879dbea8be27"
             }
           ],
           "checks": [
@@ -134560,7 +134583,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested."
+            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/invoice-lifecycle",
           "limitations": [
@@ -135153,7 +135177,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-invoice-response-feedback",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -135593,7 +135618,7 @@
             },
             {
               "path": "apps/web/src/components/reminder-query.test.tsx",
-              "sha256": "f9366712fdf031f13e1af8da201a1781dbc143387be5c15004de8acf1e0a9af7"
+              "sha256": "f11038f813f11e4f65c89a81250f543c48668252ed51bb358315879dbea8be27"
             }
           ],
           "checks": [
@@ -135631,7 +135656,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested."
+            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/invoice-lifecycle",
           "limitations": [
@@ -136147,7 +136173,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-invoice-response-feedback",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -136515,7 +136542,7 @@
             },
             {
               "path": "apps/web/src/components/reminder-query.test.tsx",
-              "sha256": "f9366712fdf031f13e1af8da201a1781dbc143387be5c15004de8acf1e0a9af7"
+              "sha256": "f11038f813f11e4f65c89a81250f543c48668252ed51bb358315879dbea8be27"
             }
           ],
           "checks": [
@@ -136544,7 +136571,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested."
+            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/invoice-lifecycle",
           "limitations": [
@@ -136915,7 +136943,8 @@
           "release-0.5-staff-confirmation-fixtures",
           "release-0.5-invoice-response-feedback",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -137299,7 +137328,7 @@
             },
             {
               "path": "apps/web/src/components/reminder-query.test.tsx",
-              "sha256": "f9366712fdf031f13e1af8da201a1781dbc143387be5c15004de8acf1e0a9af7"
+              "sha256": "f11038f813f11e4f65c89a81250f543c48668252ed51bb358315879dbea8be27"
             },
             {
               "path": "apps/web/src/components/contract-cancellation-query.test.tsx",
@@ -137336,7 +137365,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested."
+            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/invoice-lifecycle",
           "limitations": [
@@ -137701,7 +137731,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
           "release-0.5-invoice-response-feedback",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -138045,7 +138076,7 @@
             },
             {
               "path": "apps/web/src/components/reminder-query.test.tsx",
-              "sha256": "f9366712fdf031f13e1af8da201a1781dbc143387be5c15004de8acf1e0a9af7"
+              "sha256": "f11038f813f11e4f65c89a81250f543c48668252ed51bb358315879dbea8be27"
             }
           ],
           "checks": [
@@ -138079,7 +138110,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested."
+            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/invoice-lifecycle",
           "limitations": [
@@ -456028,7 +456060,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ai-tab-intrinsic-widths",
           "release-0.5-essential-control-contrast",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -456192,7 +456225,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
@@ -456273,7 +456306,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "limitations": [],
           "operational_limits": [
@@ -456508,7 +456542,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ai-tab-intrinsic-widths",
           "release-0.5-essential-control-contrast",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -456672,7 +456707,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
@@ -456769,7 +456804,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "limitations": [],
           "operational_limits": [
@@ -457014,7 +457050,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ai-tab-intrinsic-widths",
           "release-0.5-essential-control-contrast",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -457178,7 +457215,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
@@ -457259,7 +457296,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "limitations": [],
           "operational_limits": [
@@ -457493,7 +457531,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ai-tab-intrinsic-widths",
           "release-0.5-essential-control-contrast",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -457657,7 +457696,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
@@ -457754,7 +457793,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "limitations": [],
           "operational_limits": [
@@ -457997,7 +458037,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ai-tab-intrinsic-widths",
           "release-0.5-essential-control-contrast",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -458161,7 +458202,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
@@ -458242,7 +458283,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "limitations": [],
           "operational_limits": [
@@ -495326,7 +495368,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-query-provider-and-devtools",
@@ -495894,7 +495937,7 @@
             },
             {
               "path": "apps/web/src/components/reminder-query.test.tsx",
-              "sha256": "f9366712fdf031f13e1af8da201a1781dbc143387be5c15004de8acf1e0a9af7"
+              "sha256": "f11038f813f11e4f65c89a81250f543c48668252ed51bb358315879dbea8be27"
             },
             {
               "path": "apps/web/src/hooks/useOwnedInvoiceReview.ts",
@@ -496002,7 +496045,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested."
+            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "limitations": [
             "No query-key/read/mutation page adoption, all-page cancellation, complete milestone, live providers, deployment or production acceptance is certified."
@@ -496729,7 +496773,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -496965,7 +497010,7 @@
             },
             {
               "path": "apps/web/src/components/reminder-query.test.tsx",
-              "sha256": "f9366712fdf031f13e1af8da201a1781dbc143387be5c15004de8acf1e0a9af7"
+              "sha256": "f11038f813f11e4f65c89a81250f543c48668252ed51bb358315879dbea8be27"
             },
             {
               "path": "apps/web/src/components/saving-change-query.test.tsx",
@@ -497261,7 +497306,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested."
+            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-lists-and-receipts",
           "limitations": [
@@ -497626,7 +497672,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -497862,7 +497909,7 @@
             },
             {
               "path": "apps/web/src/components/reminder-query.test.tsx",
-              "sha256": "f9366712fdf031f13e1af8da201a1781dbc143387be5c15004de8acf1e0a9af7"
+              "sha256": "f11038f813f11e4f65c89a81250f543c48668252ed51bb358315879dbea8be27"
             },
             {
               "path": "apps/web/src/components/saving-change-query.test.tsx",
@@ -498158,7 +498205,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested."
+            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-lists-and-receipts",
           "limitations": [
@@ -498464,7 +498512,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -498700,7 +498749,7 @@
             },
             {
               "path": "apps/web/src/components/reminder-query.test.tsx",
-              "sha256": "f9366712fdf031f13e1af8da201a1781dbc143387be5c15004de8acf1e0a9af7"
+              "sha256": "f11038f813f11e4f65c89a81250f543c48668252ed51bb358315879dbea8be27"
             },
             {
               "path": "apps/web/src/components/saving-change-query.test.tsx",
@@ -498996,7 +499045,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested."
+            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-lists-and-receipts",
           "limitations": [
@@ -500208,7 +500258,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-query-provider-and-devtools",
@@ -500776,7 +500827,7 @@
             },
             {
               "path": "apps/web/src/components/reminder-query.test.tsx",
-              "sha256": "f9366712fdf031f13e1af8da201a1781dbc143387be5c15004de8acf1e0a9af7"
+              "sha256": "f11038f813f11e4f65c89a81250f543c48668252ed51bb358315879dbea8be27"
             },
             {
               "path": "apps/web/src/hooks/useOwnedInvoiceReview.ts",
@@ -500884,7 +500935,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested."
+            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "limitations": [
             "No query-key/read/mutation page adoption, all-page cancellation, complete milestone, live providers, deployment or production acceptance is certified."
@@ -549443,7 +549495,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550087,7 +550140,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -550867,7 +550920,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -551319,7 +551373,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -551963,7 +552018,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -552743,7 +552798,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -553196,7 +553252,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553840,7 +553897,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -554620,7 +554677,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -555042,7 +555100,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -555686,7 +555745,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -556466,7 +556525,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -556914,7 +556974,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -557558,7 +557619,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -558338,7 +558399,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -558795,7 +558857,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -559439,7 +559502,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -560219,7 +560282,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -560649,7 +560713,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -561293,7 +561358,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -562073,7 +562138,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -562467,7 +562533,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -563111,7 +563178,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -563891,7 +563958,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -564285,7 +564353,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -564929,7 +564998,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -565709,7 +565778,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -566104,7 +566174,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -566748,7 +566819,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -567528,7 +567599,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -567922,7 +567994,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -568566,7 +568639,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -569346,7 +569419,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -569734,7 +569808,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -570442,7 +570517,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -571271,7 +571346,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -571643,7 +571719,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -572351,7 +572428,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -573180,7 +573257,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -573573,7 +573651,8 @@
           "release-0.5-team-member-recovery",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -574929,7 +575008,7 @@
             },
             {
               "path": "apps/web/src/components/reminder-query.test.tsx",
-              "sha256": "f9366712fdf031f13e1af8da201a1781dbc143387be5c15004de8acf1e0a9af7"
+              "sha256": "f11038f813f11e4f65c89a81250f543c48668252ed51bb358315879dbea8be27"
             },
             {
               "path": "apps/web/src/components/root-profile-query.test.tsx",
@@ -575897,7 +575976,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -576364,7 +576443,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-member-recovery/proof.json",
           "limitations": [
@@ -576454,7 +576534,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -577162,7 +577243,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -577991,7 +578072,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -578363,7 +578445,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -579071,7 +579154,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -579900,7 +579983,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -580272,7 +580356,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -580980,7 +581065,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -581809,7 +581894,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -582181,7 +582267,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -582889,7 +582976,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -583718,7 +583805,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -584090,7 +584178,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -584798,7 +584887,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -585627,7 +585716,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -585999,7 +586089,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -586707,7 +586798,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -587536,7 +587627,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -587908,7 +588000,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -588616,7 +588709,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -589445,7 +589538,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -589817,7 +589911,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -590525,7 +590620,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -591354,7 +591449,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -591726,7 +591822,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -592434,7 +592531,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -593263,7 +593360,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -593635,7 +593733,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -594343,7 +594442,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -595172,7 +595271,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -595544,7 +595644,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -596252,7 +596353,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -597081,7 +597182,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -598197,7 +598299,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -598905,7 +599008,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -599734,7 +599837,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -600106,7 +600210,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -600814,7 +600919,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -601643,7 +601748,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -603419,7 +603525,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -604063,7 +604170,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -604843,7 +604950,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -605233,7 +605341,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -605877,7 +605986,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -606657,7 +606766,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -607047,7 +607157,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -607691,7 +607802,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -608471,7 +608582,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -608861,7 +608973,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -609505,7 +609618,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -610285,7 +610398,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -610675,7 +610789,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -611319,7 +611434,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -612099,7 +612214,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -612489,7 +612605,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -613133,7 +613250,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -613913,7 +614030,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -614303,7 +614421,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -614947,7 +615066,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/branding-settings.test.tsx",
@@ -615727,7 +615846,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -712749,7 +712869,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-essential-control-contrast",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_acceptance": {
           "kind": "verified-admin-safety-and-team-ui-journeys",
@@ -712813,7 +712934,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/staff-team-forms.test.tsx",
@@ -712855,7 +712976,8 @@
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Renewed the named original route and recovery cases on both production-browser projects. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-configuration-adoption/proof.json",
-            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits."
+            "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "criterion_result": "Existing team CRUD, current staff membership, member-bound lead, round-robin/expertise/load strategies and team escalation/fallback routing verified. Read recovery, stale membership/rules, preserved drafts, unverified write/reset, captured step-up, localizations, keyboard and mobile forms pass. Native routing/permission/audit evidence remains current.",
           "limitations": [
@@ -719360,7 +719482,7 @@
             },
             {
               "path": "apps/web/src/components/reminder-query.test.tsx",
-              "sha256": "f9366712fdf031f13e1af8da201a1781dbc143387be5c15004de8acf1e0a9af7"
+              "sha256": "f11038f813f11e4f65c89a81250f543c48668252ed51bb358315879dbea8be27"
             },
             {
               "path": "apps/web/src/hooks/useOwnedInvoiceReview.ts",
@@ -719545,7 +719667,8 @@
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested."
+            "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "limitations": [
             "Complete the remaining effective contract/refund/invoice/receipt criteria after the existing owner decisions on engine/callback/credit-trigger/increase representations are dispositioned. Eleven scoped tasks remain partial; six have no current whole-task acceptance. Preserve the separate mathematical-policy, development reload and operational gates. Current35 boundary passes and94 matching accepted tasks do not certify those unresolved requirements."
@@ -720865,7 +720988,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-review-preview-deadlines",
           "release-0.6-browser-font-notices",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ]
       }
     },
@@ -727309,7 +727433,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
@@ -728634,7 +728758,8 @@
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
-            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed."
+            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "limitations": [],
           "operational_limits": [
@@ -729396,7 +729521,8 @@
           "release-0.6-staging-image-rollback",
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -731193,7 +731319,7 @@
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
-              "sha256": "6cd9be1c82a38adee14be86f432c8f2f177bfffd7e613bb5c1a3835b81fe6980"
+              "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
             },
             {
               "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
@@ -732531,7 +732657,8 @@
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
-            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed."
+            "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
           ],
           "limitations": [
             "Current staging is v0.3.0/2ac708c11225a1239156787cddfdd3ab094fb8f8, API/web/worker healthy and Redis/object storage readiness verified. After effective v0.4.0 criteria are accepted, deploy its immutable candidate and verify actual AI routing, slot isolation and notification/storage operations. Earlier v0.1.29/forced-TLS warning description is stale and does not dispatch a rebuild.",
@@ -733183,7 +733310,8 @@
           "release-0.6-staging-image-rollback",
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-web-fixture-typecheck-and-license-readback"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -823998,6 +824126,98 @@
       "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/runtime-sbom-gate-receipt.json",
       "source_scope_proof_sha256": "ae03c69e46955a060648b8fa4a807ef3a0198ec9e0dcd9f5ac26de7b5f000c53",
       "readiness_log_sha256": "3096c17be2de232842f952e2c9374ed29b1ebc65c1ecd43638090729a77d748a"
+    },
+    "release-0.6-web-fixture-typecheck-and-license-readback": {
+      "batch": "release-0.6-web-fixture-typecheck-and-license-readback",
+      "base_commit": "cc8cd775269aea312d81e9ad92724ee62aecb831",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "02-auth-users-admin.md#T-02.02.02",
+        "02-auth-users-admin.md#T-03.03.06",
+        "02-auth-users-admin.md#T-09.11.04",
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06",
+        "04-invoices-wallet-contracts.md#T-04.1.05.02",
+        "04-invoices-wallet-contracts.md#T-04.1.05.03",
+        "04-invoices-wallet-contracts.md#T-04.1.05.04",
+        "05-notifications-documents-ai.md#T-05.19.01",
+        "05-notifications-documents-ai.md#T-05.19.02",
+        "05-notifications-documents-ai.md#T-05.19.03",
+        "05-notifications-documents-ai.md#T-05.20.01",
+        "05-notifications-documents-ai.md#T-05.20.02",
+        "07-ui-ux-design.md#T-07.01.04.01",
+        "07-ui-ux-design.md#T-07.01.04.02",
+        "07-ui-ux-design.md#T-07.01.04.03",
+        "07-ui-ux-design.md#T-07.01.04.04",
+        "07-ui-ux-design.md#T-07.01.04.06",
+        "07-ui-ux-design.md#T-07.10.01.01",
+        "07-ui-ux-design.md#T-07.10.01.02",
+        "07-ui-ux-design.md#T-07.10.01.03",
+        "07-ui-ux-design.md#T-07.10.01.04",
+        "07-ui-ux-design.md#T-07.10.01.05",
+        "07-ui-ux-design.md#T-07.10.01.06",
+        "07-ui-ux-design.md#T-07.10.02.01",
+        "07-ui-ux-design.md#T-07.10.02.02",
+        "07-ui-ux-design.md#T-07.10.02.03",
+        "07-ui-ux-design.md#T-07.10.02.04",
+        "07-ui-ux-design.md#T-07.10.02.05",
+        "07-ui-ux-design.md#T-07.11.01.01",
+        "07-ui-ux-design.md#T-07.11.01.02",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.11.01.04",
+        "07-ui-ux-design.md#T-07.11.01.05",
+        "07-ui-ux-design.md#T-07.11.02.01",
+        "07-ui-ux-design.md#T-07.11.02.02",
+        "07-ui-ux-design.md#T-07.11.02.03",
+        "07-ui-ux-design.md#T-07.11.02.04",
+        "07-ui-ux-design.md#T-07.11.02.05",
+        "07-ui-ux-design.md#T-07.12.01.01",
+        "07-ui-ux-design.md#T-07.12.01.02",
+        "07-ui-ux-design.md#T-07.12.01.03",
+        "07-ui-ux-design.md#T-07.12.01.04",
+        "07-ui-ux-design.md#T-07.12.01.06",
+        "07-ui-ux-design.md#T-07.12.01.07",
+        "07-ui-ux-design.md#T-07.13.01.01",
+        "07-ui-ux-design.md#T-07.13.01.02",
+        "07-ui-ux-design.md#T-07.13.01.03",
+        "07-ui-ux-design.md#T-07.13.01.04",
+        "07-ui-ux-design.md#T-07.13.01.05",
+        "07-ui-ux-design.md#T-07.13.01.06",
+        "07-ui-ux-design.md#T-07.13.01.07",
+        "07-ui-ux-design.md#T-07.30.02.16",
+        "release-readiness#R-02.01",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/components/reminder-query.test.tsx",
+          "sha256": "f11038f813f11e4f65c89a81250f543c48668252ed51bb358315879dbea8be27"
+        },
+        {
+          "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
+          "sha256": "5a20557cfadaeffcebddaddb6080473dbf89bc6f50be31040f425fbe57d6dae6"
+        },
+        {
+          "path": "docs/security/release-license-review.md",
+          "sha256": "624578dfb0f228a151c3c9e98e0217634bda978f859af77b8431d6c6f56f2a2c"
+        }
+      ],
+      "checks": [
+        "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+        "Confirmed exact MIT notice bytes in the isolated app image for busboy 1.6.0, png-js 2.0.0 and streamsearch 1.1.0. Remaining named exceptions are still pending review."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-test-fixtures-semgrep.json",
+      "source_scope_proof_sha256": "69f397c7a5eb3d40253947c48887a983676c9e4603e2183e0e36269d187b6df8"
     }
   },
   "historical_improvements": [
