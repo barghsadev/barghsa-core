@@ -217,7 +217,7 @@ export function wrapClientQuery(
     const scheduleTimeout = (): void => {
       if (queryTimeoutMs <= 0 || !capturedQuery) return;
       timeoutId = setTimeout(() => {
-        structuredLog('warn', 'query_timeout', { query: text, timeoutMs: queryTimeoutMs });
+        structuredLog('warn', 'query_timeout', { timeoutMs: queryTimeoutMs });
         const target = client as QueryClient;
         const queuedIndex = target._queryQueue?.indexOf(capturedQuery) ?? -1;
         if (queuedIndex >= 0) {
@@ -273,7 +273,7 @@ export function wrapClientQuery(
         cleanup();
         const durationMs = Date.now() - startedAt;
         if (!err && process.env.NODE_ENV === 'production' && durationMs > SLOW_QUERY_THRESHOLD_MS) {
-          structuredLog('warn', 'slow_query', { query: text, durationMs });
+          structuredLog('warn', 'slow_query', { durationMs });
         }
         originalCb(err, res);
       };
@@ -295,7 +295,7 @@ export function wrapClientQuery(
         cleanup();
         const durationMs = Date.now() - startedAt;
         if (process.env.NODE_ENV === 'production' && durationMs > SLOW_QUERY_THRESHOLD_MS) {
-          structuredLog('warn', 'slow_query', { query: text, durationMs });
+          structuredLog('warn', 'slow_query', { durationMs });
         }
       });
     }

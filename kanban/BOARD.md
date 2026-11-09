@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T18:19:42+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T18:29:35+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 936 | Accepted with unchanged source bindings. |
-| verify | 399 | Existing work may be complete; inspect evidence before building. |
+| done | 941 | Accepted with unchanged source bindings. |
+| verify | 394 | Existing work may be complete; inspect evidence before building. |
 | partial | 27 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -974,15 +974,15 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-01.04.05` | done | Earlier acceptance_verified | Wire `test` and `test:coverage` tasks in `turbo.json` |
 | `01-platform-infrastructure.md#T-01.04.06` | partial | Earlier partial | Configure flaky-test quarantine process |
 | `01-platform-infrastructure.md#T-01.05.01` | verify | Earlier acceptance_verified | Implement global NestJS `HttpExceptionFilter` and `CorrelationIdMiddleware` |
-| `01-platform-infrastructure.md#T-02.01.01` | verify | Earlier acceptance_verified | Initialize `packages/db` with Drizzle ORM, `pg`, `pg-pool`, and drizzle-kit |
-| `01-platform-infrastructure.md#T-02.01.02` | verify | Earlier acceptance_verified | Create PostgreSQL pool factory with configurable pool, statement timeout, lock timeout, and idle transaction guard |
-| `01-platform-infrastructure.md#T-02.01.03` | verify | Earlier acceptance_verified | Implement query timeout and cancellation via Drizzle configuration |
+| `01-platform-infrastructure.md#T-02.01.01` | done | Earlier acceptance_verified | Initialize `packages/db` with Drizzle ORM, `pg`, `pg-pool`, and drizzle-kit |
+| `01-platform-infrastructure.md#T-02.01.02` | done | Earlier acceptance_verified | Create PostgreSQL pool factory with configurable pool, statement timeout, lock timeout, and idle transaction guard |
+| `01-platform-infrastructure.md#T-02.01.03` | done | Earlier acceptance_verified | Implement query timeout and cancellation via Drizzle configuration |
 | `01-platform-infrastructure.md#T-02.01.04` | done | Earlier acceptance_verified | Set up database health check endpoint for readiness probes |
 | `01-platform-infrastructure.md#T-02.02.01` | done | Earlier acceptance_verified | Create `packages/db/src/types.ts` with custom Drizzle type definitions |
 | `01-platform-infrastructure.md#T-02.02.02` | done | Earlier partial | Create base table factory with `id`, `createdAt`, `updatedAt` columns |
 | `01-platform-infrastructure.md#T-02.02.03` | verify | Earlier acceptance_verified | Create UUIDv7 generation function migration |
-| `01-platform-infrastructure.md#T-02.02.04` | verify | Earlier acceptance_verified | Document and enforce column conventions in ADR |
-| `01-platform-infrastructure.md#T-02.03.01` | verify | Earlier acceptance_verified | Configure `drizzle.config.ts` in `packages/db` |
+| `01-platform-infrastructure.md#T-02.02.04` | done | Earlier acceptance_verified | Document and enforce column conventions in ADR |
+| `01-platform-infrastructure.md#T-02.03.01` | done | Earlier acceptance_verified | Configure `drizzle.config.ts` in `packages/db` |
 | `01-platform-infrastructure.md#T-02.03.02` | partial | Earlier partial | Create migration runner script for production deployments |
 | `01-platform-infrastructure.md#T-02.03.03` | verify | Earlier acceptance_verified | Create migration validation test (clean + upgrade path) |
 | `01-platform-infrastructure.md#T-02.03.04` | verify | Earlier acceptance_verified | Implement expand/migrate/contract documentation and PR checklist |
@@ -1362,7 +1362,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.13.02.03` | verify | Inventory needed | Add pseudonymous actor/profile IDs to logs (never raw national IDs, secrets, tokens) |
 | `06-security-testing-observability.md#T-06.13.02.04` | verify | Inventory needed | Implement environment-aware log level: debug in dev, info in staging, warn+ in production |
 | `06-security-testing-observability.md#T-06.13.02.05` | verify | Inventory needed | Configure Loki log shipping agent (Promtail / Grafana Alloy) |
-| `06-security-testing-observability.md#T-06.13.02.06` | verify | Inventory needed | Ensure secrets, PII, payment details, and tokens are redacted from all log output |
+| `06-security-testing-observability.md#T-06.13.02.06` | verify | Recorded batch work | Ensure secrets, PII, payment details, and tokens are redacted from all log output |
 | `06-security-testing-observability.md#T-06.13.02.07` | verify | Inventory needed | Write integration test: log format compliance, redaction, correlation ID presence |
 | `06-security-testing-observability.md#T-06.14.01.01` | done | Recorded batch work | Implement Prometheus metrics endpoint in API and worker processes |
 | `06-security-testing-observability.md#T-06.14.01.02` | done | Recorded batch work | Instrument RED metrics: request rate, error count (by status/route), latency (p50/p95/p99) |

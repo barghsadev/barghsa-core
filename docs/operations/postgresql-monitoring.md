@@ -4,6 +4,10 @@ The API collects PostgreSQL 16 and 17 database, connection, checkpoint, WAL, que
 
 Each API process also reports `pg_pool_capacity`, `pg_pool_connections` by active or idle state, and `pg_pool_waiting_requests`. Sum the connection states for the current pool size. Active counts all non-idle clients, including clients still connecting. The application takes this snapshot before it queries database statistics, and returns it even if statistics collection fails. `pg_waiting_connections` separately counts PostgreSQL sessions waiting on locks.
 
+Application `slow_query` and `query_timeout` warnings carry the measured duration or configured timeout in milliseconds. Use the private `pg_stat_statements` query IDs for statement-level investigation.
+
+The deadline wrapper queues each timeout setting beside its statement through `pg` 8. The driver warns that overlapping `client.query()` calls will be removed in `pg` 9. The upgrade needs a replacement for that queue behavior and a fresh run of the PostgreSQL cancellation tests.
+
 The staging Prometheus configuration scrapes the API on `barghsa-staging-api-1:4000` and the worker on `barghsa-staging-worker-1:9090` over the private network. After loading it, verify both targets are `up` on the loopback Prometheus endpoint. Check `pg_metrics_collection_success` separately to distinguish a reachable endpoint from successful database statistics collection.
 
 To compare database behavior with API traffic, use `barghsa_http_request_duration_seconds_count` for completed responses and `barghsa_http_request_duration_seconds_bucket` for latency. Apply `rate(...[5m])` to the count and filter `status=~"[45].."` for errors by route and status. Estimate p50, p95 and p99 by using `histogram_quantile` with `0.50`, `0.95` or `0.99` over `sum by (le, route) (rate(barghsa_http_request_duration_seconds_bucket[5m]))`. Scope dashboard queries to the intended environment and database.

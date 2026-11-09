@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T18:19:42+00:00",
+  "updated": "2026-11-09T18:29:35+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -6017,12 +6017,10 @@
         "story": "01-platform-infrastructure.md#spec-053e0b41eb13"
       },
       "requirement": "- **T-02.01.01:** Initialize `packages/db` with Drizzle ORM, `pg`, `pg-pool`, and drizzle-kit\n  - **Notes:** `package.json` declares `drizzle-orm`, `drizzle-kit`, `pg`, `@types/pg`. Dependencies: `drizzle-orm` (runtime), `drizzle-kit` (dev, for migrations/generate). Export `* from './src/index'` in package entry.\n  - **Dependencies:** S-01.02\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -6058,8 +6056,30 @@
           "packages/db/package.json",
           "packages/db/src/index.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-database-pool-deadlines-and-log-privacy"
+        ],
+        "current_acceptance": {
+          "kind": "current-source-and-targeted-database-receipts",
+          "base_commit": "117a10ce5dfdbd405a9a85a029496adbc78df719",
+          "source_evidence": [
+            {
+              "path": "packages/db/package.json",
+              "sha256": "f50a797717d37728081e84710f49e96cf22681e314a28da2239296ede40efe88"
+            },
+            {
+              "path": "packages/db/src/index.ts",
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "The built workspace exports a pg.Pool and a typed Drizzle database instance on that same pool. The runtime uses pg’s Pool and the migration tooling remains a development dependency. The package build, typecheck and runtime export smoke passed."
+          ]
+        }
       }
     },
     {
@@ -6073,12 +6093,10 @@
         "story": "01-platform-infrastructure.md#spec-053e0b41eb13"
       },
       "requirement": "- **T-02.01.02:** Create PostgreSQL pool factory with configurable pool, statement timeout, lock timeout, and idle transaction guard\n  - **Notes:** Factory function `createDbPool(config: DbPoolConfig)` returns the pool. Apply `statement_timeout` via `query` event handler or `pool.on('connect')` with `SET statement_timeout`. Apply `lock_timeout` and `idle_in_transaction_session_timeout` similarly. Use environment variables: `DATABASE_URL`, `DB_POOL_MIN`, `DB_POOL_MAX`. Export typed `drizzle(pool, { schema, logger })` instance.\n  - **Dependencies:** T-02.01.01\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -6129,8 +6147,38 @@
         "changed_paths": [
           "packages/db/src/index.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-database-pool-deadlines-and-log-privacy"
+        ],
+        "current_acceptance": {
+          "kind": "current-source-and-targeted-database-receipts",
+          "base_commit": "117a10ce5dfdbd405a9a85a029496adbc78df719",
+          "source_evidence": [
+            {
+              "path": "packages/db/src/index.ts",
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
+            },
+            {
+              "path": "packages/db/src/index.test.ts",
+              "sha256": "d2fbc2f853d71bb14841e297a653d34e589d532c4a4ef2f826773ca90565fb02"
+            },
+            {
+              "path": "packages/db/src/transaction-pool.ts",
+              "sha256": "344e0cd56420b654226823093b0e0fa871bec7dbe6a0f994bb182e36690f833a"
+            },
+            {
+              "path": "packages/db/src/connection-security.test.ts",
+              "sha256": "09e419aa690c0aaa69cf99f794d5109985ec921ab800b0c87ee566793c5d8719"
+            },
+            {
+              "path": "packages/db/src/connection-options.integration.test.ts",
+              "sha256": "f9180f6c9ccd2e37c17a1b56e209cfc538ebe120c094a16ec3369e3deb7f7cdf"
+            }
+          ],
+          "checks": [
+            "The current pool exposes configured capacity, honors server startup statement, lock and idle-transaction limits, and preserves TLS handling. Native PostgreSQL tests verified timeout settings and subsequent reads. Production-equivalent PgBouncer connectivity remains a separate requirement."
+          ]
+        }
       }
     },
     {
@@ -6144,12 +6192,10 @@
         "story": "01-platform-infrastructure.md#spec-053e0b41eb13"
       },
       "requirement": "- **T-02.01.03:** Implement query timeout and cancellation via Drizzle configuration\n  - **Notes:** For slow query detection, emit structured log warning for queries exceeding 200ms. Use Drizzle's `beforeQuery`/`afterQuery` hooks or a pool middleware. Cancel long-running queries server-side if they exceed statement_timeout.\n  - **Dependencies:** T-02.01.02\n  - **Complexity:** S",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -6184,8 +6230,38 @@
         "changed_paths": [
           "packages/db/src/index.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-database-pool-deadlines-and-log-privacy"
+        ],
+        "current_acceptance": {
+          "kind": "current-source-and-targeted-database-receipts",
+          "base_commit": "117a10ce5dfdbd405a9a85a029496adbc78df719",
+          "source_evidence": [
+            {
+              "path": "packages/db/src/index.ts",
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
+            },
+            {
+              "path": "packages/db/src/query-cancellation.integration.test.ts",
+              "sha256": "d42e1bf00dfe6a12d52d682782edbaa8061340661002dd36f0ec5c311047fe33"
+            },
+            {
+              "path": "docs/operations/postgresql-monitoring.md",
+              "sha256": "30ef84b616a107084ec54a24565b543f596690ffcbf156dbae9c977469823a6f"
+            },
+            {
+              "path": "packages/db/src/query-timeout-policy.integration.test.ts",
+              "sha256": "158e471e79a185c8e1caf433fc14383da2db50d1a2da49f32634ff73f94d15c7"
+            },
+            {
+              "path": "packages/db/src/transaction-pool.ts",
+              "sha256": "344e0cd56420b654226823093b0e0fa871bec7dbe6a0f994bb182e36690f833a"
+            }
+          ],
+          "checks": [
+            "Native PostgreSQL verifies 10-second read and 30-second write defaults, custom server cancellation, queued and active query identity, callback completion, transaction rollback and post-cancellation reuse. Structured slow-query and timeout warnings retain timing and omit SQL, parameters and private markers."
+          ]
+        }
       }
     },
     {
@@ -6274,7 +6350,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "scripts/healthcheck-runtime.cjs",
@@ -7226,12 +7302,10 @@
         "story": "01-platform-infrastructure.md#spec-4bf5c971e08f"
       },
       "requirement": "- **T-02.02.04:** Document and enforce column conventions in ADR\n  - **Notes:** Create `docs/adr/001-data-types-and-conventions.md` detailing: UTC timestamptz + timezone metadata, half-open range semantics, integer IRR, numeric precision, UUIDv7 benefits vs UUIDv4, and prohibition of floating-point in financial contexts.\n  - **Dependencies:** T-02.02.01, T-02.02.02\n  - **Complexity:** S\n  - **UI/UX:** N/A\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -7390,8 +7464,42 @@
           "packages/db/src/migrate.snapshot.test.ts",
           "packages/db/src/migrate.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-database-pool-deadlines-and-log-privacy"
+        ],
+        "current_acceptance": {
+          "kind": "current-source-and-targeted-database-receipts",
+          "base_commit": "117a10ce5dfdbd405a9a85a029496adbc78df719",
+          "source_evidence": [
+            {
+              "path": "docs/adr/001-data-types-and-conventions.md",
+              "sha256": "51dfaed7c88b0e07d748b39af6581d85c0d0ae28a4b1137c66c358466900795e"
+            },
+            {
+              "path": "docs/adr/001-base-column-exceptions.md",
+              "sha256": "a0da17f768a2ffa03a82563e0225766d24590ec738d83ff14338000ffd842a9b"
+            },
+            {
+              "path": "packages/db/src/types.ts",
+              "sha256": "584962fd6ea6153a65bb080b7f704472ad90542fdd87225345aeffc26a051a6d"
+            },
+            {
+              "path": "packages/db/src/types.test.ts",
+              "sha256": "b4fd9fbb93970404a31eb2a4bac4263750712ba6d7625c6fc8e768619a8000c6"
+            },
+            {
+              "path": "packages/db/src/base-table.ts",
+              "sha256": "014c0d2749b83c270077ef2f6eb8edae5dd4df14824144a6ef77fca59eed9b7d"
+            },
+            {
+              "path": "packages/db/src/base-table.test.ts",
+              "sha256": "c4b3521970bb3ba6e5c72f1eb8d3437f3d8347de6e04eea4c640c8c956ca650a"
+            }
+          ],
+          "checks": [
+            "The current accepted ADR covers UUIDv7, UTC timestamps, explicit timezone metadata, half-open ranges, integer IRR, fixed precision and the prohibition on financial floating point. Exact native tests verified the UUID default, Drizzle builders, bigint IRR, decimal precision, half-open range formatting and standard mutable table columns. The approved per-table exceptions remain recorded."
+          ]
+        }
       }
     },
     {
@@ -7405,12 +7513,10 @@
         "story": "01-platform-infrastructure.md#spec-80eda7c7402b"
       },
       "requirement": "- **T-02.03.01:** Configure `drizzle.config.ts` in `packages/db`\n  - **Notes:** Set `schema: './src/schema/**/*.ts'`, `out: './drizzle'`, `dialect: 'postgresql'`. Configure `introspect: { casing: 'camel' }`. Add `extensions: plv8` if used. Set `dbCredentials: { url: process.env.DATABASE_URL }` for commands.\n  - **Dependencies:** T-02.01.01\n  - **Complexity:** S",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -7569,8 +7675,38 @@
           "packages/db/src/migrate.snapshot.test.ts",
           "packages/db/src/migrate.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-database-pool-deadlines-and-log-privacy"
+        ],
+        "current_acceptance": {
+          "kind": "current-source-and-targeted-database-receipts",
+          "base_commit": "117a10ce5dfdbd405a9a85a029496adbc78df719",
+          "source_evidence": [
+            {
+              "path": "packages/db/drizzle.config.ts",
+              "sha256": "d2579b827513a2c26414737f5cfb57b97189038f897d9dedbad7ba87af5c380e"
+            },
+            {
+              "path": "packages/db/package.json",
+              "sha256": "f50a797717d37728081e84710f49e96cf22681e314a28da2239296ede40efe88"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "docs/development/database-migrations.md",
+              "sha256": "3f0518d287407a1e648e054803b3f57696691db3477aaa82252b71577e122b3a"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/_journal.json",
+              "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+            }
+          ],
+          "checks": [
+            "The existing Drizzle configuration generates only deployable schemas and uses the canonical drizzle/production history, PostgreSQL dialect, camelCase introspection and DATABASE_URL. Hosted run 42668480792 reported zero generated drift, and the configuration, schema, journal and dependency inputs remain unchanged."
+          ]
+        }
       }
     },
     {
@@ -9347,7 +9483,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "scripts/healthcheck-runtime.cjs",
@@ -9575,7 +9711,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             }
           ],
           "checks": [
@@ -26019,7 +26155,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/schema/account-recovery.ts",
@@ -30339,7 +30475,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/schema/account-recovery.ts",
@@ -71094,7 +71230,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "apps/api/src/notifications/native-customer-templates.integration.test.ts",
@@ -83962,7 +84098,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/migrate.email-corrections.test.ts",
@@ -84912,7 +85048,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/migrate.email-corrections.test.ts",
@@ -85862,7 +85998,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/migrate.email-corrections.test.ts",
@@ -86813,7 +86949,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/migrate.email-corrections.test.ts",
@@ -87763,7 +87899,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/migrate.email-corrections.test.ts",
@@ -88655,7 +88791,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/migrate.email-corrections.test.ts",
@@ -89416,7 +89552,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/migrate.email-corrections.test.ts",
@@ -90088,7 +90224,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/migrate.email-corrections.test.ts",
@@ -106458,7 +106594,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -292595,7 +292731,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/schema/account-recovery.ts",
@@ -300148,7 +300284,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/schema/account-recovery.ts",
@@ -320716,7 +320852,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/schema/account-recovery.ts",
@@ -351417,7 +351553,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/schema/account-recovery.ts",
@@ -444788,7 +444924,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -445281,7 +445417,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -446061,7 +446197,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -446718,7 +446854,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/migrate.snapshot.test.ts",
@@ -447375,7 +447511,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -447862,7 +447998,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -448373,7 +448509,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -448884,7 +449020,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -449395,7 +449531,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -449905,7 +450041,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -459988,7 +460124,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -460560,7 +460696,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -461130,7 +461266,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -461700,7 +461836,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -462769,7 +462905,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -463534,7 +463670,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -464528,7 +464664,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -465097,7 +465233,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -465667,7 +465803,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -466238,7 +466374,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -466831,7 +466967,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -467400,7 +467536,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -478294,7 +478430,9 @@
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-database-pool-deadlines-and-log-privacy"
+        ],
         "current_acceptance": null
       }
     },
@@ -478443,7 +478581,7 @@
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "86d7f4c87d7059d1853811276de6fdcbb947c2f23072872aa121bb7d29c4afd4"
+              "sha256": "30ef84b616a107084ec54a24565b543f596690ffcbf156dbae9c977469823a6f"
             }
           ],
           "checks": [
@@ -478495,7 +478633,7 @@
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "86d7f4c87d7059d1853811276de6fdcbb947c2f23072872aa121bb7d29c4afd4"
+              "sha256": "30ef84b616a107084ec54a24565b543f596690ffcbf156dbae9c977469823a6f"
             },
             {
               "path": "packages/db/src/metrics.ts",
@@ -730655,7 +730793,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/invoice-outcome-notifications-upgrade.migrated.test.ts",
@@ -734548,7 +734686,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "0f9d9c55c282c9919469f90f5ed1e5b999b3485e254384d0d58d9fecae462c37"
+              "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
             },
             {
               "path": "packages/db/src/invoice-outcome-notifications-upgrade.migrated.test.ts",
@@ -739875,7 +740013,8 @@
           "release-0.6-nightly-hosted-portable-browser-captures",
           "release-0.6-nightly-documents-timeout-repeat",
           "release-0.6-nightly-critical-browser-journeys",
-          "release-0.6-runtime-node-options"
+          "release-0.6-runtime-node-options",
+          "release-0.6-database-pool-deadlines-and-log-privacy"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -829680,6 +829819,108 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/node-runtime-option-reconciliation",
       "source_scope_proof": "release-0.6-runtime-node-options.json",
       "source_scope_proof_sha256": "4570c0e7678827c5794cb41c8fa7b44cddfac7530c35ef9381c459434a53d88e"
+    },
+    "release-0.6-database-pool-deadlines-and-log-privacy": {
+      "batch": "release-0.6-database-pool-deadlines-and-log-privacy",
+      "base_commit": "117a10ce5dfdbd405a9a85a029496adbc78df719",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.01.01",
+        "01-platform-infrastructure.md#T-02.01.02",
+        "01-platform-infrastructure.md#T-02.01.03",
+        "01-platform-infrastructure.md#T-02.02.04",
+        "01-platform-infrastructure.md#T-02.03.01",
+        "06-security-testing-observability.md#T-06.13.02.06",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/adr/001-base-column-exceptions.md",
+          "sha256": "a0da17f768a2ffa03a82563e0225766d24590ec738d83ff14338000ffd842a9b"
+        },
+        {
+          "path": "docs/adr/001-data-types-and-conventions.md",
+          "sha256": "51dfaed7c88b0e07d748b39af6581d85c0d0ae28a4b1137c66c358466900795e"
+        },
+        {
+          "path": "docs/development/database-migrations.md",
+          "sha256": "3f0518d287407a1e648e054803b3f57696691db3477aaa82252b71577e122b3a"
+        },
+        {
+          "path": "docs/operations/postgresql-monitoring.md",
+          "sha256": "30ef84b616a107084ec54a24565b543f596690ffcbf156dbae9c977469823a6f"
+        },
+        {
+          "path": "packages/db/drizzle.config.ts",
+          "sha256": "d2579b827513a2c26414737f5cfb57b97189038f897d9dedbad7ba87af5c380e"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+        },
+        {
+          "path": "packages/db/package.json",
+          "sha256": "f50a797717d37728081e84710f49e96cf22681e314a28da2239296ede40efe88"
+        },
+        {
+          "path": "packages/db/src/base-table.test.ts",
+          "sha256": "c4b3521970bb3ba6e5c72f1eb8d3437f3d8347de6e04eea4c640c8c956ca650a"
+        },
+        {
+          "path": "packages/db/src/base-table.ts",
+          "sha256": "014c0d2749b83c270077ef2f6eb8edae5dd4df14824144a6ef77fca59eed9b7d"
+        },
+        {
+          "path": "packages/db/src/connection-options.integration.test.ts",
+          "sha256": "f9180f6c9ccd2e37c17a1b56e209cfc538ebe120c094a16ec3369e3deb7f7cdf"
+        },
+        {
+          "path": "packages/db/src/connection-security.test.ts",
+          "sha256": "09e419aa690c0aaa69cf99f794d5109985ec921ab800b0c87ee566793c5d8719"
+        },
+        {
+          "path": "packages/db/src/index.test.ts",
+          "sha256": "d2fbc2f853d71bb14841e297a653d34e589d532c4a4ef2f826773ca90565fb02"
+        },
+        {
+          "path": "packages/db/src/index.ts",
+          "sha256": "3d3ad5e45fac8c0af276eb4042023df747152c6c66a05d670547019865f3c417"
+        },
+        {
+          "path": "packages/db/src/query-cancellation.integration.test.ts",
+          "sha256": "d42e1bf00dfe6a12d52d682782edbaa8061340661002dd36f0ec5c311047fe33"
+        },
+        {
+          "path": "packages/db/src/query-timeout-policy.integration.test.ts",
+          "sha256": "158e471e79a185c8e1caf433fc14383da2db50d1a2da49f32634ff73f94d15c7"
+        },
+        {
+          "path": "packages/db/src/transaction-pool.ts",
+          "sha256": "344e0cd56420b654226823093b0e0fa871bec7dbe6a0f994bb182e36690f833a"
+        },
+        {
+          "path": "packages/db/src/types.test.ts",
+          "sha256": "b4fd9fbb93970404a31eb2a4bac4263750712ba6d7625c6fc8e768619a8000c6"
+        },
+        {
+          "path": "packages/db/src/types.ts",
+          "sha256": "584962fd6ea6153a65bb080b7f704472ad90542fdd87225345aeffc26a051a6d"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "The built workspace exports a pg.Pool and a typed Drizzle database instance on that same pool. The runtime uses pg’s Pool and the migration tooling remains a development dependency. The package build, typecheck and runtime export smoke passed.",
+        "The current pool exposes configured capacity, honors server startup statement, lock and idle-transaction limits, and preserves TLS handling. Native PostgreSQL tests verified timeout settings and subsequent reads. Production-equivalent PgBouncer connectivity remains a separate requirement.",
+        "Native PostgreSQL verifies 10-second read and 30-second write defaults, custom server cancellation, queued and active query identity, callback completion, transaction rollback and post-cancellation reuse. Structured slow-query and timeout warnings retain timing and omit SQL, parameters and private markers.",
+        "The current accepted ADR covers UUIDv7, UTC timestamps, explicit timezone metadata, half-open ranges, integer IRR, fixed precision and the prohibition on financial floating point. Exact native tests verified the UUID default, Drizzle builders, bigint IRR, decimal precision, half-open range formatting and standard mutable table columns. The approved per-table exceptions remain recorded.",
+        "The existing Drizzle configuration generates only deployable schemas and uses the canonical drizzle/production history, PostgreSQL dialect, camelCase introspection and DATABASE_URL. Hosted run 42668480792 reported zero generated drift, and the configuration, schema, journal and dependency inputs remain unchanged.",
+        "Seven exact Vitest files passed 55 checks on native Linux against a disposable PostgreSQL instance and an isolated Docker network. Two same-source deadline checks had failed over SSH when round trips exceeded the 100 ms client deadline. The native run kept the original deadline and cancellation assertions. No service or data from live staging was used."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-pool-acceptance",
+      "source_scope_proof": "release-0.6-database-pool-deadlines-and-log-privacy.json",
+      "source_scope_proof_sha256": "8dfb6522dacd5238dac452af284e62fe16db533fe47c4d06f969cd1729e3ba3d"
     }
   },
   "historical_improvements": [

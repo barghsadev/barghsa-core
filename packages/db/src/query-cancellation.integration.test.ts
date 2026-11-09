@@ -10,15 +10,27 @@ it('cancels a running query without breaking its database connection', async () 
   const errors: Error[] = [];
   client.on('error', (error) => errors.push(error));
   await client.connect();
+  const output = vi.spyOn(console, 'log').mockImplementation(() => {});
+  vi.stubEnv('NODE_ENV', 'production');
   try {
     client.query = wrapClientQuery(client, 100);
     const start = performance.now();
-    const result = await client.query('SELECT pg_sleep(1)').catch((error: unknown) => error);
+    const result = await client
+      .query("SELECT pg_sleep(1), 'private-timeout-marker'")
+      .catch((error: unknown) => error);
     expect(result).toMatchObject({ code: '57014' });
     expect(performance.now() - start).toBeLessThan(800);
+    expect(output.mock.calls.map(([line]) => JSON.parse(String(line)))).toContainEqual({
+      level: 'warn',
+      event: 'query_timeout',
+      timeoutMs: 100,
+    });
+    expect(JSON.stringify(output.mock.calls)).not.toContain('private-timeout-marker');
     expect((await client.query('SELECT 42 AS answer')).rows[0].answer).toBe(42);
     expect(errors).toEqual([]);
   } finally {
+    vi.unstubAllEnvs();
+    output.mockRestore();
     await client.end();
   }
 });
@@ -97,18 +109,19 @@ for (const callback of [false, true]) {
     vi.stubEnv('NODE_ENV', 'production');
     try {
       client.query = wrapClientQuery(client, 1000);
+      const query = "SELECT pg_sleep(0.25), 'private-slow-marker'";
       if (callback)
         await new Promise<void>((resolve, reject) => {
-          client.query('SELECT pg_sleep(0.25)', (error) => (error ? reject(error) : resolve()));
+          client.query(query, (error) => (error ? reject(error) : resolve()));
         });
-      else await client.query('SELECT pg_sleep(0.25)');
+      else await client.query(query);
       const warnings = output.mock.calls.map(([line]) => JSON.parse(String(line)));
       expect(warnings).toContainEqual({
         level: 'warn',
         event: 'slow_query',
-        query: 'SELECT pg_sleep(0.25)',
         durationMs: expect.any(Number),
       });
+      expect(JSON.stringify(output.mock.calls)).not.toContain('private-slow-marker');
       expect(warnings.find((value) => value.event === 'slow_query').durationMs).toBeGreaterThan(
         200
       );
