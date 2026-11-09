@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T18:15:58+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T18:19:42+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 935 | Accepted with unchanged source bindings. |
+| done | 936 | Accepted with unchanged source bindings. |
 | verify | 399 | Existing work may be complete; inspect evidence before building. |
-| partial | 28 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 27 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 3 | Named owner or external prerequisite. |
@@ -39,9 +39,8 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Finish source-bound runtime hardening, collect the scheduled browser and quality outcomes, and reconcile the remaining v0.6.0 operational prerequisites before accepting a staging release.
+Collect the scheduled browser and quality outcomes and verify the remaining v0.6.0 operational prerequisites before accepting a staging release.
 
-- `06-security-testing-observability.md#T-06.07.03.01`: Harden Dockerfile: non-root user, read-only rootfs where practical, no inspector, `NODE_OPTIONS=--no-deprecation`
 - `01-platform-infrastructure.md#T-01.04.04`: Configure Playwright for E2E testing
 - `01-platform-infrastructure.md#T-01.04.06`: Configure flaky-test quarantine process
 - `01-platform-infrastructure.md#T-05.05.01`: Create nightly CI schedule
@@ -1229,7 +1228,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.07.02.06` | blocked | Recorded batch work | Set up license compliance check (e.g. license-checker) for dependency licenses |
 | `06-security-testing-observability.md#T-06.07.02.07` | partial | Recorded batch work | Generate SBOM (Software Bill of Materials) for each production build |
 | `06-security-testing-observability.md#T-06.07.02.08` | partial | Recorded batch work | Create CI gate config: SCA/SAST/secret/container scans on every PR, full scan on main |
-| `06-security-testing-observability.md#T-06.07.03.01` | partial | Recorded batch work | Harden Dockerfile: non-root user, read-only rootfs where practical, no inspector, `NODE_OPTIONS=--no-deprecation` |
+| `06-security-testing-observability.md#T-06.07.03.01` | done | Recorded batch work | Harden Dockerfile: non-root user, read-only rootfs where practical, no inspector, `NODE_OPTIONS=--no-deprecation` |
 | `06-security-testing-observability.md#T-06.07.03.02` | done | Recorded batch work | Disable `insecureHTTPParser`; set explicit request/body/header/time limits at proxy and application level |
 | `06-security-testing-observability.md#T-06.07.03.03` | verify | Inventory needed | Configure TLS at reverse proxy: modern protocols (TLS 1.2+), secure ciphers, HSTS |
 | `06-security-testing-observability.md#T-06.07.03.04` | done | Recorded batch work | Ensure proxy trust configured to exact hop topology (not `trust proxy` globally) |

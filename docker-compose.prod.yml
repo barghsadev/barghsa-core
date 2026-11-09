@@ -40,7 +40,7 @@ services:
       - '127.0.0.1:4000:4000'
     environment:
       NODE_ENV: production
-      NODE_OPTIONS: '--max-old-space-size=512'
+      NODE_OPTIONS: '--max-old-space-size=512 --no-deprecation'
       DATABASE_URL: ${DATABASE_URL:?Set the application database URL}
       REDIS_URL: ${REDIS_URL:-}
       APP_PUBLIC_URL: ${APP_PUBLIC_URL:?Set the public application URL}
@@ -85,7 +85,7 @@ services:
       - '127.0.0.1:3000:3000'
     environment:
       NODE_ENV: production
-      NODE_OPTIONS: '--max-old-space-size=512'
+      NODE_OPTIONS: '--max-old-space-size=512 --no-deprecation'
     depends_on:
       api:
         condition: service_healthy
@@ -116,6 +116,7 @@ services:
     command: ['node', 'worker/dist/main.js']
     environment:
       NODE_ENV: production
+      NODE_OPTIONS: '--max-old-space-size=512 --no-deprecation'
       DATABASE_URL: ${DATABASE_URL:?Set the application database URL}
       AUTH_DELIVERY_ENCRYPTION_KEY: ${AUTH_DELIVERY_ENCRYPTION_KEY:?Set the auth delivery encryption key}
       DOCUMENT_CLAMAV_HOST: clamav
@@ -147,6 +148,7 @@ services:
     command: ['node', 'worker/dist/ai-inference/main.js']
     environment:
       NODE_ENV: production
+      NODE_OPTIONS: '--max-old-space-size=512 --no-deprecation'
       DATABASE_URL: ${DATABASE_URL:?Set the application database URL}
       AI_INFERENCE_HOST: 0.0.0.0
       AI_INFERENCE_PORT: 9091

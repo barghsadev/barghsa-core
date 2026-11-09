@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T18:15:58+00:00",
+  "updated": "2026-11-09T18:19:42+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -8350,7 +8350,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
+              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
             },
             {
               "path": "deploy/production/README.md",
@@ -8378,7 +8378,7 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "14b6c1865d6a6df6bb7b9e59bc37a824c1353b28e5269da54c6c69311e407e35"
+              "sha256": "a309a4778f463ea8d8dc5c3b36fdb439546dc0854b04a975a21e544466338eea"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -8587,7 +8587,8 @@
         "batches": [
           "release-0.6-owner-policy-reconciliation",
           "release-0.6-remove-runtime-package-managers",
-          "release-0.6-production-image-recipes-and-distribution"
+          "release-0.6-production-image-recipes-and-distribution",
+          "release-0.6-runtime-node-options"
         ],
         "current_acceptance": null
       }
@@ -8671,7 +8672,8 @@
         "batches": [
           "release-0.6-owner-policy-reconciliation",
           "release-0.6-remove-runtime-package-managers",
-          "release-0.6-production-image-recipes-and-distribution"
+          "release-0.6-production-image-recipes-and-distribution",
+          "release-0.6-runtime-node-options"
         ],
         "current_acceptance": null
       }
@@ -8851,11 +8853,11 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
+              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "d2381ff9c3ec67588ac9cb330639710d4c8d2e953670e77460962b8d67301c84"
+              "sha256": "0cefa7d30daaf37d4f0057958e3573ca0c10e96ee16057defddea38aa4d0fe2b"
             },
             {
               "path": "scripts/healthcheck-runtime.cjs",
@@ -8875,7 +8877,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
             }
           ],
           "checks": [
@@ -8964,27 +8966,27 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
+              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "d2381ff9c3ec67588ac9cb330639710d4c8d2e953670e77460962b8d67301c84"
+              "sha256": "0cefa7d30daaf37d4f0057958e3573ca0c10e96ee16057defddea38aa4d0fe2b"
             },
             {
               "path": "docker-compose.prod.yml",
-              "sha256": "ae07525b58933aebe50a0457aae9674d5a717b81a1968cf1c0171864c5b99147"
+              "sha256": "6692960392eed05f855b41b38befbd26b560662163056076fa3c0a4f56aaf03f"
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "14b6c1865d6a6df6bb7b9e59bc37a824c1353b28e5269da54c6c69311e407e35"
+              "sha256": "a309a4778f463ea8d8dc5c3b36fdb439546dc0854b04a975a21e544466338eea"
             },
             {
               "path": "scripts/test-container-packaging.py",
-              "sha256": "a2d4f9ef8615da96df7795e62218ddf1a4a76eb5bd5a9a44d95d1734c8c7f7b9"
+              "sha256": "d26e7104238852e55cfdbfc3b647e0583634d8fee51298d93211aaae76a8936e"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
-              "sha256": "cf2a6fbdafabafe399de070e6afd1bb1b300a5648476153b0525c2d0a5a9e562"
+              "sha256": "672758f4d999da242dfd1936f51502998b24a9e7b92c876b46d6348a2ac4fa8d"
             }
           ],
           "checks": [
@@ -106056,7 +106058,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
+              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
             },
             {
               "path": "apps/api/openapi.json",
@@ -106424,7 +106426,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -383324,7 +383326,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -384295,7 +384297,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -385265,7 +385267,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -459966,7 +459968,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -460538,7 +460540,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -461108,7 +461110,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -461678,7 +461680,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -462747,7 +462749,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -463128,7 +463130,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
+              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
             },
             {
               "path": "apps/api/openapi.json",
@@ -463496,7 +463498,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -464506,7 +464508,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -465075,7 +465077,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -465645,7 +465647,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -466216,7 +466218,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -466809,7 +466811,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -467378,7 +467380,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -470627,7 +470629,7 @@
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "d2381ff9c3ec67588ac9cb330639710d4c8d2e953670e77460962b8d67301c84"
+              "sha256": "0cefa7d30daaf37d4f0057958e3573ca0c10e96ee16057defddea38aa4d0fe2b"
             },
             {
               "path": "apps/web/build.mjs",
@@ -470643,11 +470645,11 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "14b6c1865d6a6df6bb7b9e59bc37a824c1353b28e5269da54c6c69311e407e35"
+              "sha256": "a309a4778f463ea8d8dc5c3b36fdb439546dc0854b04a975a21e544466338eea"
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
             },
             {
               "path": "docs/security/content-security-policy.md",
@@ -470707,11 +470709,11 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "14b6c1865d6a6df6bb7b9e59bc37a824c1353b28e5269da54c6c69311e407e35"
+              "sha256": "a309a4778f463ea8d8dc5c3b36fdb439546dc0854b04a975a21e544466338eea"
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
             },
             {
               "path": "docs/security/content-security-policy.md",
@@ -470925,7 +470927,7 @@
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "d2381ff9c3ec67588ac9cb330639710d4c8d2e953670e77460962b8d67301c84"
+              "sha256": "0cefa7d30daaf37d4f0057958e3573ca0c10e96ee16057defddea38aa4d0fe2b"
             },
             {
               "path": "apps/web/build.mjs",
@@ -470941,11 +470943,11 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "14b6c1865d6a6df6bb7b9e59bc37a824c1353b28e5269da54c6c69311e407e35"
+              "sha256": "a309a4778f463ea8d8dc5c3b36fdb439546dc0854b04a975a21e544466338eea"
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
             },
             {
               "path": "docs/security/content-security-policy.md",
@@ -471061,11 +471063,11 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "14b6c1865d6a6df6bb7b9e59bc37a824c1353b28e5269da54c6c69311e407e35"
+              "sha256": "a309a4778f463ea8d8dc5c3b36fdb439546dc0854b04a975a21e544466338eea"
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -474040,11 +474042,11 @@
             },
             {
               "path": "Dockerfile.base",
-              "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
+              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "d2381ff9c3ec67588ac9cb330639710d4c8d2e953670e77460962b8d67301c84"
+              "sha256": "0cefa7d30daaf37d4f0057958e3573ca0c10e96ee16057defddea38aa4d0fe2b"
             },
             {
               "path": "deploy/clamav/Dockerfile",
@@ -474488,21 +474490,62 @@
         "story": "06-security-testing-observability.md#spec-2b24cec414cb"
       },
       "requirement": "| T-06.07.03.01 | Harden Dockerfile: non-root user, read-only rootfs where practical, no inspector, `NODE_OPTIONS=--no-deprecation` | S |",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Non-root/read-only operation, strict HTTP parsing, inspector denial and fixed heap options passed. Reconcile the literal --no-deprecation option with the current production choice to keep deprecation warnings visible."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-container-runtime-hardening"
+          "release-0.6-container-runtime-hardening",
+          "release-0.6-runtime-node-options"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "source-bound-node-options-and-isolated-runtime",
+          "base_commit": "26141c87068028fb8eae7d7d1415eb1fb3584f26",
+          "source_evidence": [
+            {
+              "path": "Dockerfile.base",
+              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
+            },
+            {
+              "path": "Dockerfile.web",
+              "sha256": "0cefa7d30daaf37d4f0057958e3573ca0c10e96ee16057defddea38aa4d0fe2b"
+            },
+            {
+              "path": "deploy/production/compose.yml",
+              "sha256": "a309a4778f463ea8d8dc5c3b36fdb439546dc0854b04a975a21e544466338eea"
+            },
+            {
+              "path": "deploy/staging/compose.yml",
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+            },
+            {
+              "path": "docker-compose.prod.yml",
+              "sha256": "6692960392eed05f855b41b38befbd26b560662163056076fa3c0a4f56aaf03f"
+            },
+            {
+              "path": "docs/operations/preflight/production-image-review.md",
+              "sha256": "672758f4d999da242dfd1936f51502998b24a9e7b92c876b46d6348a2ac4fa8d"
+            },
+            {
+              "path": "scripts/test-container-packaging.py",
+              "sha256": "d26e7104238852e55cfdbfc3b647e0583634d8fee51298d93211aaae76a8936e"
+            },
+            {
+              "path": "docker-compose.yml",
+              "sha256": "e1988b13aa6671f943136b593b44e1b828d689e8db5e5359a41302c577baf462"
+            }
+          ],
+          "checks": [
+            "The staged and production Node configurations retain their heap limits and set --no-deprecation. The local Node control suppressed a deprecation warning and emitted an ordinary warning. Both production Compose forms reject inspector and insecure-parser flags from protected environment files.",
+            "A disposable private Linux network reused the previously verified app, web and PostgreSQL content. The app and web image variants applied only the exact ENV instructions from the changed Dockerfiles. Native packaged migration, non-root/read-only readiness, shared API/worker image, inspector denial, strict HTTP parsing, dependency loss and recovery, clean SIGTERM, and test-resource cleanup all passed.",
+            "The probe verifies this runtime configuration delta. The derived images were not deployed or distributed. Candidate registry digests and exact staging and production-equivalent evidence are separate gates."
+          ]
+        }
       }
     },
     {
@@ -474554,11 +474597,11 @@
             },
             {
               "path": "scripts/test-container-packaging.py",
-              "sha256": "a2d4f9ef8615da96df7795e62218ddf1a4a76eb5bd5a9a44d95d1734c8c7f7b9"
+              "sha256": "d26e7104238852e55cfdbfc3b647e0583634d8fee51298d93211aaae76a8936e"
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "14b6c1865d6a6df6bb7b9e59bc37a824c1353b28e5269da54c6c69311e407e35"
+              "sha256": "a309a4778f463ea8d8dc5c3b36fdb439546dc0854b04a975a21e544466338eea"
             }
           ],
           "checks": [
@@ -474700,11 +474743,11 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
+              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "d2381ff9c3ec67588ac9cb330639710d4c8d2e953670e77460962b8d67301c84"
+              "sha256": "0cefa7d30daaf37d4f0057958e3573ca0c10e96ee16057defddea38aa4d0fe2b"
             },
             {
               "path": "deploy/clamav/Dockerfile",
@@ -474764,19 +474807,19 @@
           "source_evidence": [
             {
               "path": "scripts/test-container-packaging.py",
-              "sha256": "a2d4f9ef8615da96df7795e62218ddf1a4a76eb5bd5a9a44d95d1734c8c7f7b9"
+              "sha256": "d26e7104238852e55cfdbfc3b647e0583634d8fee51298d93211aaae76a8936e"
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "14b6c1865d6a6df6bb7b9e59bc37a824c1353b28e5269da54c6c69311e407e35"
+              "sha256": "a309a4778f463ea8d8dc5c3b36fdb439546dc0854b04a975a21e544466338eea"
             },
             {
               "path": "Dockerfile.base",
-              "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
+              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "d2381ff9c3ec67588ac9cb330639710d4c8d2e953670e77460962b8d67301c84"
+              "sha256": "0cefa7d30daaf37d4f0057958e3573ca0c10e96ee16057defddea38aa4d0fe2b"
             },
             {
               "path": "scripts/run-packaged-migrations.cjs",
@@ -474788,7 +474831,7 @@
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
-              "sha256": "cf2a6fbdafabafe399de070e6afd1bb1b300a5648476153b0525c2d0a5a9e562"
+              "sha256": "672758f4d999da242dfd1936f51502998b24a9e7b92c876b46d6348a2ac4fa8d"
             }
           ],
           "checks": [
@@ -478331,7 +478374,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -523167,7 +523210,7 @@
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
-              "sha256": "cf2a6fbdafabafe399de070e6afd1bb1b300a5648476153b0525c2d0a5a9e562"
+              "sha256": "672758f4d999da242dfd1936f51502998b24a9e7b92c876b46d6348a2ac4fa8d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -523603,7 +523646,7 @@
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
-              "sha256": "cf2a6fbdafabafe399de070e6afd1bb1b300a5648476153b0525c2d0a5a9e562"
+              "sha256": "672758f4d999da242dfd1936f51502998b24a9e7b92c876b46d6348a2ac4fa8d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -525062,7 +525105,7 @@
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
-              "sha256": "cf2a6fbdafabafe399de070e6afd1bb1b300a5648476153b0525c2d0a5a9e562"
+              "sha256": "672758f4d999da242dfd1936f51502998b24a9e7b92c876b46d6348a2ac4fa8d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -527264,7 +527307,7 @@
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
-              "sha256": "cf2a6fbdafabafe399de070e6afd1bb1b300a5648476153b0525c2d0a5a9e562"
+              "sha256": "672758f4d999da242dfd1936f51502998b24a9e7b92c876b46d6348a2ac4fa8d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -714939,7 +714982,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
+              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
             },
             {
               "path": "apps/api/openapi.json",
@@ -715636,7 +715679,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
+              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
             },
             {
               "path": "apps/api/openapi.json",
@@ -730336,7 +730379,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
             },
             {
               "path": "deploy/staging/deploy.sh",
@@ -734229,7 +734272,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "b9e81528fe5a7c802113263c5444a34a70c38b4940399b36da4672bd2e0f13bb"
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
             },
             {
               "path": "deploy/staging/deploy.sh",
@@ -739726,15 +739769,15 @@
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
-              "sha256": "cf2a6fbdafabafe399de070e6afd1bb1b300a5648476153b0525c2d0a5a9e562"
+              "sha256": "672758f4d999da242dfd1936f51502998b24a9e7b92c876b46d6348a2ac4fa8d"
             },
             {
               "path": "Dockerfile.base",
-              "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
+              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "d2381ff9c3ec67588ac9cb330639710d4c8d2e953670e77460962b8d67301c84"
+              "sha256": "0cefa7d30daaf37d4f0057958e3573ca0c10e96ee16057defddea38aa4d0fe2b"
             },
             {
               "path": "docs/design/design-system.md",
@@ -739831,7 +739874,8 @@
           "release-0.6-nightly-real-admin-journeys",
           "release-0.6-nightly-hosted-portable-browser-captures",
           "release-0.6-nightly-documents-timeout-repeat",
-          "release-0.6-nightly-critical-browser-journeys"
+          "release-0.6-nightly-critical-browser-journeys",
+          "release-0.6-runtime-node-options"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -829584,6 +829628,58 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-critical-browser",
       "source_scope_proof": "release-0.6-nightly-critical-browser-journeys.json",
       "source_scope_proof_sha256": "f706fbf97c1bd7db0515d3d4c4a5d17cbd189345e26e2f521b559963a6f49058"
+    },
+    "release-0.6-runtime-node-options": {
+      "batch": "release-0.6-runtime-node-options",
+      "base_commit": "26141c87068028fb8eae7d7d1415eb1fb3584f26",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.07.03.01",
+        "01-platform-infrastructure.md#T-03.01.01",
+        "01-platform-infrastructure.md#T-03.01.02",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "Dockerfile.base",
+          "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
+        },
+        {
+          "path": "Dockerfile.web",
+          "sha256": "0cefa7d30daaf37d4f0057958e3573ca0c10e96ee16057defddea38aa4d0fe2b"
+        },
+        {
+          "path": "deploy/production/compose.yml",
+          "sha256": "a309a4778f463ea8d8dc5c3b36fdb439546dc0854b04a975a21e544466338eea"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+        },
+        {
+          "path": "docker-compose.prod.yml",
+          "sha256": "6692960392eed05f855b41b38befbd26b560662163056076fa3c0a4f56aaf03f"
+        },
+        {
+          "path": "docs/operations/preflight/production-image-review.md",
+          "sha256": "672758f4d999da242dfd1936f51502998b24a9e7b92c876b46d6348a2ac4fa8d"
+        },
+        {
+          "path": "scripts/test-container-packaging.py",
+          "sha256": "d26e7104238852e55cfdbfc3b647e0583634d8fee51298d93211aaae76a8936e"
+        },
+        {
+          "path": "docker-compose.yml",
+          "sha256": "e1988b13aa6671f943136b593b44e1b828d689e8db5e5359a41302c577baf462"
+        }
+      ],
+      "checks": [
+        "The staged and production Node configurations retain their heap limits and set --no-deprecation. The local Node control suppressed a deprecation warning and emitted an ordinary warning. Both production Compose forms reject inspector and insecure-parser flags from protected environment files.",
+        "A disposable private Linux network reused the previously verified app, web and PostgreSQL content. The app and web image variants applied only the exact ENV instructions from the changed Dockerfiles. Native packaged migration, non-root/read-only readiness, shared API/worker image, inspector denial, strict HTTP parsing, dependency loss and recovery, clean SIGTERM, and test-resource cleanup all passed.",
+        "The probe verifies this runtime configuration delta. The derived images were not deployed or distributed. Candidate registry digests and exact staging and production-equivalent evidence are separate gates."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/node-runtime-option-reconciliation",
+      "source_scope_proof": "release-0.6-runtime-node-options.json",
+      "source_scope_proof_sha256": "4570c0e7678827c5794cb41c8fa7b44cddfac7530c35ef9381c459434a53d88e"
     }
   },
   "historical_improvements": [
@@ -829623,16 +829719,15 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-runtime-and-scheduled-acceptance",
+    "id": "release-0.6-scheduled-and-operational-acceptance",
     "release": "0.6.0",
     "task_keys": [
-      "06-security-testing-observability.md#T-06.07.03.01",
       "01-platform-infrastructure.md#T-01.04.04",
       "01-platform-infrastructure.md#T-01.04.06",
       "01-platform-infrastructure.md#T-05.05.01",
       "release-readiness#R-05.02"
     ],
-    "goal": "Finish source-bound runtime hardening, collect the scheduled browser and quality outcomes, and reconcile the remaining v0.6.0 operational prerequisites before accepting a staging release."
+    "goal": "Collect the scheduled browser and quality outcomes and verify the remaining v0.6.0 operational prerequisites before accepting a staging release."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",

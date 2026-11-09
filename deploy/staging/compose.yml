@@ -82,7 +82,7 @@ services:
     env_file: /etc/barghsa/staging/runtime.env
     environment:
       NODE_ENV: production
-      NODE_OPTIONS: --max-old-space-size=512
+      NODE_OPTIONS: --max-old-space-size=512 --no-deprecation
       PORT: '4000'
       API_TRUSTED_PROXY_IPS: ${BARGHSA_PROXY_IPS:-}
       DOCUMENT_CLAMAV_HOST: clamav
@@ -117,7 +117,7 @@ services:
     env_file: /etc/barghsa/staging/runtime.env
     environment:
       NODE_ENV: production
-      NODE_OPTIONS: --max-old-space-size=512
+      NODE_OPTIONS: --max-old-space-size=512 --no-deprecation
       WORKER_PORT: '9090'
       DOCUMENT_CLAMAV_HOST: clamav
       DOCUMENT_CLAMAV_PORT: '3310'
@@ -148,7 +148,7 @@ services:
     env_file: /etc/barghsa/staging/runtime.env
     environment:
       NODE_ENV: production
-      NODE_OPTIONS: --max-old-space-size=256
+      NODE_OPTIONS: --max-old-space-size=256 --no-deprecation
       AI_INFERENCE_HOST: '0.0.0.0'
       AI_INFERENCE_PORT: '9091'
       WORKER_PORT: '9091'
@@ -175,7 +175,7 @@ services:
     pull_policy: never
     environment:
       NODE_ENV: production
-      NODE_OPTIONS: --max-old-space-size=256
+      NODE_OPTIONS: --max-old-space-size=256 --no-deprecation
       PORT: '3000'
       WEB_CSP_MODE: ${BARGHSA_WEB_CSP_MODE:-report-only}
     ports:
