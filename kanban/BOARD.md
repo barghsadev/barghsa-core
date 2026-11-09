@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T20:56:41+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T21:05:10+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 993 | Accepted with unchanged source bindings. |
-| verify | 335 | Existing work may be complete; inspect evidence before building. |
+| done | 995 | Accepted with unchanged source bindings. |
+| verify | 333 | Existing work may be complete; inspect evidence before building. |
 | partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1028,8 +1028,8 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-04.04.05` | done | Earlier acceptance_verified | Implement ETag support for safe metadata endpoints |
 | `01-platform-infrastructure.md#T-05.01.01` | verify | Earlier deferred | Create Ansible playbook or deploy script for pilot topology |
 | `01-platform-infrastructure.md#T-05.01.02` | verify | Earlier deferred | Create `docker-compose.prod.yml` for pilot single-VM deployment |
-| `01-platform-infrastructure.md#T-05.01.03` | verify | Earlier deferred | Document explicitly that single-server deployment has lower availability |
-| `01-platform-infrastructure.md#T-05.02.01` | verify | Earlier deferred | Design and document commercial HA topology |
+| `01-platform-infrastructure.md#T-05.01.03` | done | Earlier deferred | Document explicitly that single-server deployment has lower availability |
+| `01-platform-infrastructure.md#T-05.02.01` | done | Earlier deferred | Design and document commercial HA topology |
 | `01-platform-infrastructure.md#T-05.02.02` | verify | Earlier deferred | Configure rolling/blue-green deployment automation for HA |
 | `01-platform-infrastructure.md#T-05.02.03` | verify | Earlier deferred | Implement circuit breaker for external providers |
 | `01-platform-infrastructure.md#T-05.02.04` | partial | Earlier deferred | Configure maintenance mode per capability, not whole-application |

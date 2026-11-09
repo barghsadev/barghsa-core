@@ -4,6 +4,8 @@ The supported pilot proxy is NGINX with operator-supplied TLS certificate files.
 
 Use `nginx.conf` on the pilot host. Its upstreams are the API at `127.0.0.1:4000` and web at `127.0.0.1:3000`. Production compose publishes these application ports only on host loopback. Public traffic must reach NGINX's TLS listener. This configuration does not turn the development backing-service compose into a certified production installation.
 
+An all-in-one pilot targets 99.5% availability without an HA commitment. Loss of the host stops every service. Keep encrypted backups outside the host and rehearse recovery. Use separate PostgreSQL and versioned object storage before enabling real customer payments. [Topology and availability policy](../../docs/adr/003-hybrid-deployment.md#5-documented-lower-availability-for-single-server-deployments). [PostgreSQL backup and restore runbook](../../docs/operations/backup/postgresql-restore-runbook.md).
+
 Before rollout:
 
 - Replace `barghsa.example.com` with the intended public host and supply `/etc/ssl/certs/barghsa.pem` plus `/etc/ssl/private/barghsa.key`. Keep certificate private keys outside Git.

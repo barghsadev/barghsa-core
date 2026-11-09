@@ -12,7 +12,7 @@ The Barghsa platform runs PostgreSQL as its primary data store. In production, t
 1. **All-in-one (single-server):** PostgreSQL, the API server, web server, and worker all run on a single VM. Acceptable for the initial pilot / low-traffic phase. Lower availability — a host failure brings down everything.
 2. **Hybrid (managed PostgreSQL + app VM):** PostgreSQL runs on dedicated managed infrastructure (AWS RDS, Google Cloud SQL, DigitalOcean Managed Database, or a dedicated database VM). Application processes (API, web, worker) run on separate application VM(s). The application connects to PostgreSQL over TLS with certificate validation. Firewall rules restrict database access to authorized app VM IP(s) only.
 
-For initial development and small-scale deployment, the single-server approach is sufficient. For any deployment that processes real customer payments or requires more than 99.5% availability, the hybrid topology with managed PostgreSQL is required.
+The all-in-one topology is suitable for development and pilots without real payments. Real customer payments require PostgreSQL and versioned object storage separate from the application host. A commercial availability target above 99.5% requires the redundant topology below.
 
 This ADR documents the hybrid deployment architecture, the TLS connection configuration, and the migration path from single-server to hybrid.
 
@@ -77,10 +77,20 @@ Application code reads these variables in `createDbPool()` and passes them to th
 
 Single-server deployments (all-in-one topology) come with explicitly documented availability limitations:
 
-- **Target availability:** ≤ 99.5% (no HA commitment)
-- **Risks:** No redundancy — host failure causes complete outage. No PostgreSQL automatic failover.
-- **Mitigations:** Encrypted off-server backups (per T-04.01.07), documented restore procedure (per T-04.01.03), and a migration path to hybrid topology.
-- **Restriction:** Single-server must not process real customer payments without an explicit risk acceptance from the platform lead.
+- The pilot targets 99.5% availability without an HA commitment.
+- A host failure stops the whole service. The all-in-one topology has no redundant application or automatic PostgreSQL failover.
+- Encrypted off-server backups and a rehearsed restore are required. Follow the [PostgreSQL backup and restore runbook](../operations/backup/postgresql-restore-runbook.md).
+- Real customer payments require separate PostgreSQL and versioned object storage.
+
+### 6. Commercial high availability
+
+Place at least two replicas each of the web, API and background worker across two independent failure domains. Size the remaining replicas to handle the expected load after losing either domain. Use the same application images in both domains. Route public web and API traffic through a managed TLS load balancer. Admit API replicas after `/api/health/ready` succeeds and remove unhealthy replicas from rotation. Keep workers and inference endpoints on private networks.
+
+Use managed multi-zone PostgreSQL with automatic failover, or a Patroni cluster with the same tested recovery contract. Provide redundant PgBouncer endpoints for ordinary API and worker connections and a direct endpoint for migrations and session-bound financial locks. Validate TLS certificates and hostnames on every database hop. Use versioned, redundant S3-compatible object storage. Redis can accelerate cross-replica reads and quotas. PostgreSQL remains authoritative when Redis is unavailable.
+
+Apply compatible migrations before routing traffic to a new revision. Introduce the new replicas in one failure domain, check readiness and the affected journeys, then drain old connections before replacing the other domain. Stop promotion and restore the previous verified image digests on failed readiness or smoke checks. Run destructive schema cleanup only after the rollback window.
+
+The design targets 99.9% availability and recovery within 60 minutes via automatic failover. Measure recovery from loss of a failure domain, including PostgreSQL promotion, application reconnection, worker recovery and readback of committed financial records. Record the observed recovery time and exact image and configuration identities in the release evidence.
 
 ## Consequences
 

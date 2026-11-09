@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T20:56:41+00:00",
+  "updated": "2026-11-09T21:05:10+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -8707,7 +8707,8 @@
         "batches": [
           "release-0.6-packaged-production-seed",
           "release-0.6-production-image-recipes-and-distribution",
-          "release-0.6-container-runtime-hardening"
+          "release-0.6-container-runtime-hardening",
+          "release-0.6-pilot-and-commercial-topology-documentation"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -8719,7 +8720,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "6ad207d44ba36e69cf015fa7f0c07276435d00f612b2724e3b578b7f2a6db2fc"
+              "sha256": "1861e8667c35e8bf61a4adf11e394836d9e24a1de594065fc352a423b3d4c12e"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -11664,7 +11665,8 @@
         ],
         "batches": [
           "release-0.6-pilot-proxy-and-cache-policy",
-          "release-0.6-browser-and-edge-privacy"
+          "release-0.6-browser-and-edge-privacy",
+          "release-0.6-pilot-and-commercial-topology-documentation"
         ],
         "current_acceptance": {
           "kind": "native-proxy-and-authorized-cache-boundaries",
@@ -11676,7 +11678,7 @@
             },
             {
               "path": "deploy/pilot/README.md",
-              "sha256": "73893e4222d64ffd5d02f153de197429bfee548d9e2375fa64fa846870c6cc24"
+              "sha256": "b197366503d03cc1c93613e3ecc3250c87ba157534b5744e140867d366194287"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -12014,7 +12016,8 @@
         ],
         "batches": [
           "release-0.6-pilot-proxy-and-cache-policy",
-          "release-0.6-browser-and-edge-privacy"
+          "release-0.6-browser-and-edge-privacy",
+          "release-0.6-pilot-and-commercial-topology-documentation"
         ],
         "current_acceptance": {
           "kind": "native-proxy-and-authorized-cache-boundaries",
@@ -12026,7 +12029,7 @@
             },
             {
               "path": "deploy/pilot/README.md",
-              "sha256": "73893e4222d64ffd5d02f153de197429bfee548d9e2375fa64fa846870c6cc24"
+              "sha256": "b197366503d03cc1c93613e3ecc3250c87ba157534b5744e140867d366194287"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -12126,7 +12129,8 @@
           "apps/api/src/app.factory.ts"
         ],
         "batches": [
-          "release-0.6-pilot-proxy-and-cache-policy"
+          "release-0.6-pilot-proxy-and-cache-policy",
+          "release-0.6-pilot-and-commercial-topology-documentation"
         ],
         "current_acceptance": {
           "kind": "native-proxy-and-authorized-cache-boundaries",
@@ -12158,7 +12162,7 @@
             },
             {
               "path": "deploy/pilot/README.md",
-              "sha256": "73893e4222d64ffd5d02f153de197429bfee548d9e2375fa64fa846870c6cc24"
+              "sha256": "b197366503d03cc1c93613e3ecc3250c87ba157534b5744e140867d366194287"
             }
           ],
           "checks": [
@@ -12276,12 +12280,10 @@
         "story": "01-platform-infrastructure.md#spec-ff2c0bec0e87"
       },
       "requirement": "- **T-05.01.03:** Document explicitly that single-server deployment has lower availability\n  - **Notes:** Single-server availability target: 99.5% (without HA commitment). Document risks: no redundancy, host failure = full outage. Must use encrypted off-server backups. Must not process real customer payments without at least separate PostgreSQL/storage. Include in runbook.\n  - **Dependencies:** T-05.01.01\n  - **Complexity:** S\n  - **UI/UX:** N/A\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -12310,8 +12312,32 @@
         "changed_paths": [
           "audit/skipped-work-handoff.md"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-pilot-and-commercial-topology-documentation"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-documentation-review",
+          "base_commit": "67a3775809c9f7195b5dac712a5ca019bda03277",
+          "source_evidence": [
+            {
+              "path": "deploy/pilot/README.md",
+              "sha256": "b197366503d03cc1c93613e3ecc3250c87ba157534b5744e140867d366194287"
+            },
+            {
+              "path": "deploy/production/README.md",
+              "sha256": "1861e8667c35e8bf61a4adf11e394836d9e24a1de594065fc352a423b3d4c12e"
+            },
+            {
+              "path": "docs/adr/003-hybrid-deployment.md",
+              "sha256": "45fa1af6f22126dfc9e055e8c3439c8dcee11b64e4aa24adaefaa8783b57287f"
+            }
+          ],
+          "checks": [
+            "Reviewed the pilot runbook and hybrid ADR against the exact source requirements. They document the 99.5% pilot target without an HA commitment, complete single-host failure, encrypted off-server backup and restore, and separate PostgreSQL and versioned object storage before real payments.",
+            "Reviewed the commercial topology design for two independent failure domains, N+1 application capacity, managed TLS load balancing, readiness admission, redundant workers, automatic database failover, redundant PgBouncer, private versioned object storage, optional Redis, and rolling rollback boundaries. The documented 99.9% and 60-minute targets require separately measured operational acceptance.",
+            "Verified each relative Markdown link and section anchor across the three reviewed documents. Changed-file formatting and git diff --check passed. The changes are documentation only."
+          ]
+        }
       }
     },
     {
@@ -12325,12 +12351,10 @@
         "story": "01-platform-infrastructure.md#spec-cdd7dd41709e"
       },
       "requirement": "- **T-05.02.01:** Design and document commercial HA topology\n  - **Notes:** Document the architecture: managed LB → two+ API replicas (host A, host B), two+ web replicas, two+ workers. PostgreSQL Multi-AZ or Patroni cluster. Redis optional, cross-replica cache. S3 object storage (already HA). N+1 redundancy for all application processes. PgBouncer for connection pooling across replicas. RTO ≤ 60 min via automatic failover.\n  - **Dependencies:** E-04, S-05.01\n  - **Complexity:** L",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -12359,8 +12383,32 @@
         "changed_paths": [
           "audit/skipped-work-handoff.md"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-pilot-and-commercial-topology-documentation"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-documentation-review",
+          "base_commit": "67a3775809c9f7195b5dac712a5ca019bda03277",
+          "source_evidence": [
+            {
+              "path": "deploy/pilot/README.md",
+              "sha256": "b197366503d03cc1c93613e3ecc3250c87ba157534b5744e140867d366194287"
+            },
+            {
+              "path": "deploy/production/README.md",
+              "sha256": "1861e8667c35e8bf61a4adf11e394836d9e24a1de594065fc352a423b3d4c12e"
+            },
+            {
+              "path": "docs/adr/003-hybrid-deployment.md",
+              "sha256": "45fa1af6f22126dfc9e055e8c3439c8dcee11b64e4aa24adaefaa8783b57287f"
+            }
+          ],
+          "checks": [
+            "Reviewed the pilot runbook and hybrid ADR against the exact source requirements. They document the 99.5% pilot target without an HA commitment, complete single-host failure, encrypted off-server backup and restore, and separate PostgreSQL and versioned object storage before real payments.",
+            "Reviewed the commercial topology design for two independent failure domains, N+1 application capacity, managed TLS load balancing, readiness admission, redundant workers, automatic database failover, redundant PgBouncer, private versioned object storage, optional Redis, and rolling rollback boundaries. The documented 99.9% and 60-minute targets require separately measured operational acceptance.",
+            "Verified each relative Markdown link and section anchor across the three reviewed documents. Changed-file formatting and git diff --check passed. The changes are documentation only."
+          ]
+        }
       }
     },
     {
@@ -745228,7 +745276,8 @@
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-exception-correlation-and-sensitive-diagnostics",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-pilot-and-commercial-topology-documentation"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -836848,6 +836897,37 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/capability-and-assistant-maintenance",
       "source_scope_proof": "release-0.6-capability-and-assistant-maintenance.json",
       "source_scope_proof_sha256": "47bc4ca12c2be10b103a64d2814861bb992ddda9fd8c90ab8d03852f3eb4678c"
+    },
+    "release-0.6-pilot-and-commercial-topology-documentation": {
+      "batch": "release-0.6-pilot-and-commercial-topology-documentation",
+      "base_commit": "67a3775809c9f7195b5dac712a5ca019bda03277",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/pilot/README.md",
+          "sha256": "b197366503d03cc1c93613e3ecc3250c87ba157534b5744e140867d366194287"
+        },
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "1861e8667c35e8bf61a4adf11e394836d9e24a1de594065fc352a423b3d4c12e"
+        },
+        {
+          "path": "docs/adr/003-hybrid-deployment.md",
+          "sha256": "45fa1af6f22126dfc9e055e8c3439c8dcee11b64e4aa24adaefaa8783b57287f"
+        }
+      ],
+      "checks": [
+        "Reviewed the pilot runbook and hybrid ADR against the exact source requirements. They document the 99.5% pilot target without an HA commitment, complete single-host failure, encrypted off-server backup and restore, and separate PostgreSQL and versioned object storage before real payments.",
+        "Reviewed the commercial topology design for two independent failure domains, N+1 application capacity, managed TLS load balancing, readiness admission, redundant workers, automatic database failover, redundant PgBouncer, private versioned object storage, optional Redis, and rolling rollback boundaries. The documented 99.9% and 60-minute targets require separately measured operational acceptance.",
+        "Verified each relative Markdown link and section anchor across the three reviewed documents. Changed-file formatting and git diff --check passed. The changes are documentation only."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/pilot-and-commercial-topology",
+      "source_scope_proof": "release-0.6-pilot-and-commercial-topology-documentation.json",
+      "source_scope_proof_sha256": "3a77bcb8c7617275a69b09a80629662d406a29ff2d9d54cc6b89e85afc68736f"
     }
   },
   "historical_improvements": [
