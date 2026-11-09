@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T21:27:35+00:00",
+  "updated": "2026-11-09T21:31:32+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -484328,19 +484328,45 @@
         "story": "06-security-testing-observability.md#spec-e681e92bce32"
       },
       "requirement": "| T-06.15.01.01 | Define alert severity taxonomy: P1 (user-facing outage, payment/refund risk), P2 (degradation, backlog), P3 (warning, info) | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "docs/operations/service-objectives.md"
+        ],
+        "batches": [
+          "release-0.6-service-objectives-and-priorities"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-operational-design-review",
+          "base_commit": "faab764b95eed908eaa7d5e25c6295110d6f8099",
+          "source_evidence": [
+            {
+              "path": "docs/operations/service-objectives.md",
+              "sha256": "7c5ec1a00171b0f4cc25fba50eac0832e0d89dbb32c474a9471b7c708c86efcc"
+            },
+            {
+              "path": "kanban/epics/05-notifications-documents-ai.md",
+              "sha256": "0d9f6223219f3fb1bb8311d0ca3294bc09dcd77886822cb6f980f3cee53984ee"
+            },
+            {
+              "path": "deploy/monitoring/notification-alerts.yml",
+              "sha256": "ea9f961dca49550d918eb04a8ae265bde833c7171e2925a810528bd6ad811cbb"
+            },
+            {
+              "path": "docs/operations/notification-monitoring.md",
+              "sha256": "c5be4b006803a82593a402077bcc7f2f06de2811810f0a2ce00fad7898a7c69f"
+            }
+          ],
+          "checks": [
+            "Reviewed P1 customer outage and financial integrity, P2 degradation and backlog, and P3 working-hours warning with separate response and ownership expectations. The specific owner-approved notification rule and staged readback confirm low SMS credit remains P2. Alert transport labels and deployment/routing remain separately assessed."
+          ]
+        }
       }
     },
     {
@@ -484581,19 +484607,41 @@
         "story": "06-security-testing-observability.md#spec-f627e75f2527"
       },
       "requirement": "| T-06.15.02.01 | Define SLOs with SLIs: availability, API latency (p95), core page LCP (p75), job start time (p99), RPO, RTO | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "docs/operations/service-objectives.md"
+        ],
+        "batches": [
+          "release-0.6-service-objectives-and-priorities"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-operational-design-review",
+          "base_commit": "faab764b95eed908eaa7d5e25c6295110d6f8099",
+          "source_evidence": [
+            {
+              "path": "docs/operations/service-objectives.md",
+              "sha256": "7c5ec1a00171b0f4cc25fba50eac0832e0d89dbb32c474a9471b7c708c86efcc"
+            },
+            {
+              "path": "architecture.md",
+              "sha256": "cbcd79a588d4abc2e4e65760058504bc6619fba4cdd00e76db457ec0e9e0c7e2"
+            },
+            {
+              "path": "docs/operations/backup/postgresql-restore-runbook.md",
+              "sha256": "2847d70d254764dde8123bc4d132f8b0e809ac0e667282cea7f5e6c519799374"
+            }
+          ],
+          "checks": [
+            "Matched all six indicators to the unchanged reliability budgets and restore limits. Definitions cover authenticated eligible outcomes, route p95, representative mobile p75 LCP, due-to-claim job p99 and late misses, verified RPO and readiness-through-finance RTO. No SLO measurement or dashboard deployment is implied."
+          ]
+        }
       }
     },
     {
@@ -746406,7 +746454,8 @@
           "release-0.6-storage-abstraction-direct-transfer-and-admin",
           "release-0.6-versioned-config-cache-and-diagnostic-privacy",
           "release-0.6-dynamic-js-lint-and-sanitized-html-boundary",
-          "release-0.6-current-license-inventory-readback"
+          "release-0.6-current-license-inventory-readback",
+          "release-0.6-service-objectives-and-priorities"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -838629,6 +838678,45 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/license-current-42d2c407",
       "source_scope_proof": "release-0.6-current-license-inventory-readback.json",
       "source_scope_proof_sha256": "28aff0ea1514625efde1cbc7c93c5aa6708a20de250799e47c58be4406cf8427"
+    },
+    "release-0.6-service-objectives-and-priorities": {
+      "batch": "release-0.6-service-objectives-and-priorities",
+      "base_commit": "faab764b95eed908eaa7d5e25c6295110d6f8099",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.15.01.01",
+        "06-security-testing-observability.md#T-06.15.02.01",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/operations/service-objectives.md",
+          "sha256": "7c5ec1a00171b0f4cc25fba50eac0832e0d89dbb32c474a9471b7c708c86efcc"
+        },
+        {
+          "path": "kanban/epics/05-notifications-documents-ai.md",
+          "sha256": "0d9f6223219f3fb1bb8311d0ca3294bc09dcd77886822cb6f980f3cee53984ee"
+        },
+        {
+          "path": "deploy/monitoring/notification-alerts.yml",
+          "sha256": "ea9f961dca49550d918eb04a8ae265bde833c7171e2925a810528bd6ad811cbb"
+        },
+        {
+          "path": "docs/operations/notification-monitoring.md",
+          "sha256": "c5be4b006803a82593a402077bcc7f2f06de2811810f0a2ce00fad7898a7c69f"
+        },
+        {
+          "path": "architecture.md",
+          "sha256": "cbcd79a588d4abc2e4e65760058504bc6619fba4cdd00e76db457ec0e9e0c7e2"
+        },
+        {
+          "path": "docs/operations/backup/postgresql-restore-runbook.md",
+          "sha256": "2847d70d254764dde8123bc4d132f8b0e809ac0e667282cea7f5e6c519799374"
+        }
+      ],
+      "checks": [
+        "Reviewed P1 customer outage and financial integrity, P2 degradation and backlog, and P3 working-hours warning with separate response and ownership expectations. The specific owner-approved notification rule and staged readback confirm low SMS credit remains P2. Alert transport labels and deployment/routing remain separately assessed.",
+        "Matched all six indicators to the unchanged reliability budgets and restore limits. Definitions cover authenticated eligible outcomes, route p95, representative mobile p75 LCP, due-to-claim job p99 and late misses, verified RPO and readiness-through-finance RTO. No SLO measurement or dashboard deployment is implied."
+      ]
     }
   },
   "historical_improvements": [

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T21:27:35+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T21:31:32+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1014 | Accepted with unchanged source bindings. |
-| verify | 315 | Existing work may be complete; inspect evidence before building. |
+| done | 1016 | Accepted with unchanged source bindings. |
+| verify | 313 | Existing work may be complete; inspect evidence before building. |
 | partial | 33 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1386,7 +1386,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.14.03.01` | verify | Inventory needed | Implement monthly cost tracking instrumentation: compute (per environment), PostgreSQL, object storage/egress, Redis, notification providers, observability stack, AI provider/model |
 | `06-security-testing-observability.md#T-06.14.03.02` | verify | Inventory needed | Expose unit-cost metrics: cost per active profile, cost per order |
 | `06-security-testing-observability.md#T-06.14.03.03` | verify | Inventory needed | Configure alert on >20% monthly variance from budget per cost category |
-| `06-security-testing-observability.md#T-06.15.01.01` | verify | Inventory needed | Define alert severity taxonomy: P1 (user-facing outage, payment/refund risk), P2 (degradation, backlog), P3 (warning, info) |
+| `06-security-testing-observability.md#T-06.15.01.01` | done | Recorded batch work | Define alert severity taxonomy: P1 (user-facing outage, payment/refund risk), P2 (degradation, backlog), P3 (warning, info) |
 | `06-security-testing-observability.md#T-06.15.01.02` | verify | Inventory needed | Configure P1 alerts: payment/refund duplication risk, ledger mismatch, backup failure, outbox backlog > threshold, elevated auth failures, SLO burn rate |
 | `06-security-testing-observability.md#T-06.15.01.03` | verify | Inventory needed | Configure P2 alerts: provider circuit-breaker open, queue age > target, database connection pool saturation, elevated error rate on critical routes |
 | `06-security-testing-observability.md#T-06.15.01.04` | verify | Inventory needed | Configure P3 alerts: certificate expiry, storage lifecycle warning, reconciliation mismatch, low SMS credit |
@@ -1394,7 +1394,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.15.01.06` | done | Recorded batch work | Configure deduplication and alert grouping to prevent noise storms |
 | `06-security-testing-observability.md#T-06.15.01.07` | verify | Inventory needed | Set up dead-man check / watchdog for alert delivery pipeline |
 | `06-security-testing-observability.md#T-06.15.01.08` | verify | Inventory needed | Every alert links to its dashboard and runbook |
-| `06-security-testing-observability.md#T-06.15.02.01` | verify | Inventory needed | Define SLOs with SLIs: availability, API latency (p95), core page LCP (p75), job start time (p99), RPO, RTO |
+| `06-security-testing-observability.md#T-06.15.02.01` | done | Recorded batch work | Define SLOs with SLIs: availability, API latency (p95), core page LCP (p75), job start time (p99), RPO, RTO |
 | `06-security-testing-observability.md#T-06.15.02.02` | verify | Inventory needed | Implement SLO burn-rate alerting: fast burn (5% budget/hour) → P1, slow burn (2% budget/day) → P2 |
 | `06-security-testing-observability.md#T-06.15.02.03` | verify | Inventory needed | Implement error budget tracking dashboard with consumption rate and burn-down |
 | `06-security-testing-observability.md#T-06.15.02.04` | verify | Inventory needed | Configure multi-window, multi-burn-rate alert (MWMBR) for accurate detection |
