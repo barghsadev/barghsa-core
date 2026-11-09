@@ -312,9 +312,11 @@ it('keeps invalid destination feedback when a native blur overlaps submit valida
 });
 
 const activationPassword = 'Activation-test-123!';
-const activationToken = 'a'.repeat(64);
-const activationUrl = (token: string) => `/activate#token=${token}`;
+const activationToken = `v2_${'a'.repeat(64)}`;
+const invitation = 'f'.repeat(64);
+const activationUrl = (reference: string) => `/activate#invitation=${reference}`;
 async function fillActivation() {
+  await fill('#activation-code', activationToken);
   await fill('#activation-password', activationPassword);
   await fill('#activation-confirmation', activationPassword);
 }
@@ -327,12 +329,20 @@ it('bounds an activation response body and discards a late success', async () =>
     json: () => body.promise,
   }));
   vi.stubGlobal('fetch', fetcher);
-  window.history.replaceState(null, '', activationUrl(activationToken));
+  window.history.replaceState(null, '', activationUrl(invitation));
   await mount(ActivationRoute);
+  expect(host.querySelector<HTMLInputElement>('#activation-code')?.value).toBe('');
+  expect(window.location.hash).toBe('');
   await fillActivation();
   await submit();
   expect(host.querySelector('form')?.getAttribute('aria-busy')).toBe('true');
   const signal = fetcher.mock.calls[0]![1].signal!;
+  expect(JSON.parse(String(fetcher.mock.calls[0]![1].body))).toEqual({
+    token: activationToken,
+    invitation,
+    newPassword: activationPassword,
+  });
+  expect(window.location.href).not.toContain(activationToken);
   await act(async () => vi.advanceTimersByTimeAsync(15_000));
   expect(signal.aborted).toBe(true);
   expect(host.querySelector('[role=alert]')?.textContent).toBe(copy('activationUnconfirmed', 'en'));
@@ -346,7 +356,7 @@ it('retires the submitted token and draft when a different link arrives', async 
   const response = deferred<Response>();
   const fetcher = vi.fn(async (_path: string, _init: RequestInit) => response.promise);
   vi.stubGlobal('fetch', fetcher);
-  window.history.replaceState(null, '', activationUrl(activationToken));
+  window.history.replaceState(null, '', activationUrl(invitation));
   await mount(ActivationRoute);
   await fillActivation();
   await submit();
@@ -360,11 +370,23 @@ it('retires the submitted token and draft when a different link arrives', async 
   expect(signal.aborted).toBe(true);
   expect(fetcher).toHaveBeenCalledTimes(1);
   expect(window.location.hash).toBe('');
+  expect(host.querySelector<HTMLInputElement>('#activation-code')?.value).toBe('');
   expect(host.querySelector<HTMLInputElement>('#activation-password')?.value).toBe('');
   expect(host.querySelector<HTMLInputElement>('#activation-confirmation')?.value).toBe('');
   await act(async () => response.resolve(Response.json({ activated: true })));
   expect(host.querySelector('form')?.getAttribute('aria-busy')).toBe('false');
   expect(host.textContent).not.toContain(t('auth.activate.success', 'en'));
+});
+
+it('clears a historical bearer link without using its credential', async () => {
+  const fetcher = vi.fn();
+  vi.stubGlobal('fetch', fetcher);
+  window.history.replaceState(null, '', `/activate#token=${'a'.repeat(64)}`);
+  await mount(ActivationRoute);
+  expect(window.location.hash).toBe('');
+  expect(host.querySelector('form')).toBeNull();
+  expect(host.textContent).toContain(t('auth.activate.invalid', 'en'));
+  expect(fetcher).not.toHaveBeenCalled();
 });
 
 it('bounds the new-contact receipt body and never reapplies an uncertain proof', async () => {

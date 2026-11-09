@@ -7,6 +7,7 @@ import {
   type EmailBranding,
 } from '@barghsa/shared/notification-delivery';
 import { escapeHtml } from '@barghsa/shared/notifications';
+import { createHash } from 'node:crypto';
 import type { Pool } from 'pg';
 import { SmsirConfigSchema } from '@barghsa/shared/auth-delivery';
 
@@ -22,15 +23,41 @@ export interface AuthMessage {
   emailBranding?: EmailBranding | null;
 }
 
+export function staffActivationUrl(value: unknown, invitation: string): string | null {
+  if (typeof value !== 'string') return null;
+  try {
+    const url = new URL(value);
+    const localHttp =
+      process.env.NODE_ENV !== 'production' &&
+      url.protocol === 'http:' &&
+      ['localhost', '127.0.0.1'].includes(url.hostname);
+    if (
+      (url.protocol === 'https:' || localHttp) &&
+      !url.username &&
+      !url.password &&
+      !url.search &&
+      url.pathname === '/activate' &&
+      url.hash === `#invitation=${invitation}`
+    )
+      return url.href;
+  } catch {
+    // An invalid URL must never reach the provider.
+  }
+  return null;
+}
+
 /** Dependencies are supplied by controlled provider tests, never by request data. */
 export function createAuthSender(pool: Pool, request: typeof fetch = fetch) {
   return async (message: AuthMessage): Promise<string> => {
     const activation = message.purpose === 'staff_activation';
-    if (
-      !(activation
-        ? /^[a-f0-9]{64}$/.test(message.code) && typeof message.activationUrl === 'string'
-        : /^\d{6}$/.test(message.code))
-    )
+    const link =
+      activation && /^v2_[a-f0-9]{64}$/.test(message.code)
+        ? staffActivationUrl(
+            message.activationUrl,
+            createHash('sha256').update(message.code).digest('hex')
+          )
+        : null;
+    if (!(activation ? link : /^\d{6}$/.test(message.code)))
       throw new Error('Invalid auth message');
     const email = message.destination.includes('@');
     if (activation && !email) throw new Error('Activation requires email');
@@ -38,9 +65,13 @@ export function createAuthSender(pool: Pool, request: typeof fetch = fetch) {
       ? 'فعال‌سازی حساب برق‌آسا / Activate your Barghsa account'
       : 'کد تأیید برق‌آسا / Barghsa verification code';
     let text = activation
-      ? `برای فعال‌سازی حساب و تعیین رمز عبور، این پیوند را باز کنید. اعتبار: ۲۴ ساعت.
-Open this link to activate your account and set your password. It expires in 24 hours.
-${message.activationUrl}`
+      ? `برای فعال‌سازی حساب، پیوند زیر را باز کنید و کد را در فرم وارد کنید. اعتبار: ۲۴ ساعت.
+Open the invitation and enter the code in the form to activate your account. It expires in 24 hours.
+${link}
+
+کد فعال‌سازی / Activation code:
+${message.code}
+این کد را با کسی به اشتراک نگذارید. Do not share this code.`
       : `کد تأیید برق‌آسا: ${message.code}\nBarghsa verification code: ${message.code}\nاین کد را با کسی به اشتراک نگذارید. Do not share this code.`;
     if (email) {
       const brand =

@@ -7,6 +7,11 @@
       (() => {
         // Configure Zod before any browser schema modules can initialize.
         (globalThis.__zod_globalConfig ??= {}).jitless = true;
+        if (
+          location.pathname === '/activate' &&
+          new URLSearchParams(location.hash.slice(1)).has('token')
+        )
+          history.replaceState(history.state, '', location.pathname);
         const supported = (value) => {
           const code = typeof value === 'string' ? value.toLowerCase().split('-')[0] : null;
           return code === 'fa' || code === 'en' ? code : null;

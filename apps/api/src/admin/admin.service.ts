@@ -402,7 +402,7 @@ export class AdminService {
         400
       );
     }
-    const rawToken = randomBytes(32).toString('hex');
+    const rawToken = `v2_${randomBytes(32).toString('hex')}`;
     const tokenHash = createHash('sha256').update(rawToken).digest('hex');
     try {
       const origin = new URL(process.env.APP_PUBLIC_URL ?? '');
@@ -416,7 +416,7 @@ export class AdminService {
       )
         throw new Error('Invalid public URL');
       const link = new URL('/activate', origin.origin);
-      link.hash = new URLSearchParams({ token: rawToken }).toString();
+      link.hash = new URLSearchParams({ invitation: tokenHash }).toString();
       const id = randomUUID();
       return {
         id,

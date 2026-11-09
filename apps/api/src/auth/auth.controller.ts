@@ -438,13 +438,24 @@ export class AuthController {
   async activateStaff(@Body() body: unknown, @Req() req: Request): Promise<{ activated: true }> {
     const parsed = z
       .object({ newPassword: ResetPasswordStrengthSchema })
-      .extend({ token: z.string().regex(/^[a-f0-9]{64}$/) })
+      .extend({
+        token: z.string().regex(/^v2_[a-f0-9]{64}$/),
+        invitation: z
+          .string()
+          .regex(/^[a-f0-9]{64}$/)
+          .optional(),
+      })
       .safeParse(body);
     if (!parsed.success)
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
         400
       );
+    if (
+      parsed.data.invitation &&
+      createHash('sha256').update(parsed.data.token).digest('hex') !== parsed.data.invitation
+    )
+      throw new HttpException({ error: ErrorCodes.AUTH_TOKEN_INVALID.code }, 401);
     return this.authService.activateStaff(
       parsed.data.token,
       parsed.data.newPassword,

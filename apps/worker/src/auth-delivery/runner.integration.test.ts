@@ -302,10 +302,14 @@ it('cannot overwrite a newer lease after a provider accepted the old attempt', a
     provider_ref: 'new-attempt',
   });
 });
-it('sends a valid staff activation with its encrypted link and cancels a replaced token', async () => {
+const invitationLink = (token: string) =>
+  `https://app.example.test/activate#invitation=${hash(token)}`;
+const staffCode = `v2_${'a'.repeat(64)}`;
+
+it('sends a valid staff invitation and cancels a replaced code', async () => {
   const id = randomUUID(),
-    token = 'a'.repeat(64),
-    link = `https://app.example.test/activate#token=${token}`;
+    token = staffCode,
+    link = invitationLink(token);
   await pool.query(
     "UPDATE users SET is_staff=true,activation_token=$1,activation_token_expires_at=NOW()+INTERVAL '1 day'",
     [hash(token)]
@@ -331,6 +335,32 @@ it('sends a valid staff activation with its encrypted link and cancels a replace
   await pool.query("UPDATE users SET activation_token='replaced'");
   expect(await runAuthDelivery(pool, send)).toBe('cancelled');
   expect(send).toHaveBeenCalledOnce();
+});
+
+it('cancels an attempted legacy bearer link without sending changed content', async () => {
+  const id = randomUUID();
+  const token = 'a'.repeat(64);
+  await pool.query(
+    "UPDATE users SET is_staff=true,activation_token=$1,activation_token_expires_at=NOW()+INTERVAL '1 day'",
+    [hash(token)]
+  );
+  await pool.query(
+    `INSERT INTO auth_delivery_outbox(id,kind,user_id,code_hash,encrypted_payload,expires_at,attempts)
+     VALUES ($1,'staff_activation','delivery-user',$2,$3,NOW()+INTERVAL '1 day',1)`,
+    [
+      id,
+      hash(token),
+      encryptAuthDelivery(id, {
+        code: token,
+        destination,
+        activationUrl: `https://app.example.test/activate#token=${token}`,
+      }),
+    ]
+  );
+  const send = vi.fn();
+  expect(await runAuthDelivery(pool, send)).toBe('cancelled');
+  expect(send).not.toHaveBeenCalled();
+  expect(await state(id)).toMatchObject({ status: 'cancelled', encrypted_payload: null });
 });
 
 const smsConfig = {
@@ -359,9 +389,15 @@ for (const invalid of [
   { ...message, purpose: 'staff_activation' },
   {
     ...message,
-    code: 'a'.repeat(64),
+    code: staffCode,
     purpose: 'staff_activation',
     activationUrl: 'https://app.example.test/activate',
+  },
+  {
+    ...message,
+    code: staffCode,
+    purpose: 'staff_activation',
+    activationUrl: invitationLink(staffCode),
   },
 ]) {
   it(`rejects invalid authentication message ${invalid.purpose}/${invalid.code.length}`, async () => {
@@ -459,13 +495,14 @@ it('sends OTP and activation email through the real shared adapter with stable i
   );
   const send = createAuthSender(pool, request);
   expect(await send({ ...message, destination })).toBe('mail-receipt');
-  const link = 'https://app.example.test/activate#token=' + 'a'.repeat(64);
+  const token = staffCode;
+  const link = invitationLink(token);
   expect(
     await send({
       ...message,
       id: 'activation-1',
       destination,
-      code: 'a'.repeat(64),
+      code: token,
       purpose: 'staff_activation',
       activationUrl: link,
     })
@@ -476,6 +513,8 @@ it('sends OTP and activation email through the real shared adapter with stable i
   const bodies = request.mock.calls.map(([, options]) => JSON.parse(String(options?.body)));
   expect(bodies[0].text).toContain(code);
   expect(bodies[1].text).toContain(link);
+  expect(bodies[1].text.split('\n')).toContain(token);
+  expect(link).not.toContain(token);
   expect(bodies[0].html).toContain('Barghsa');
   expect(bodies[1].html).toContain('Barghsa');
 });
@@ -491,12 +530,12 @@ it.each(['login', 'staff_activation'] as const)(
     const request = vi.fn<typeof fetch>(
       async () => new Response(JSON.stringify({ id: 'localized-mail' }), { status: 200 })
     );
-    const link = 'https://app.example.test/activate#token=' + 'a'.repeat(64);
+    const link = invitationLink(staffCode);
     const input = {
       ...message,
       destination,
       purpose,
-      ...(purpose === 'staff_activation' ? { code: 'a'.repeat(64), activationUrl: link } : {}),
+      ...(purpose === 'staff_activation' ? { code: staffCode, activationUrl: link } : {}),
     };
     expect(await createAuthSender(pool, request)(input)).toBe('localized-mail');
     expect(request).toHaveBeenCalledOnce();

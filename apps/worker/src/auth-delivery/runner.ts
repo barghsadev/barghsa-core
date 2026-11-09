@@ -7,7 +7,7 @@ import {
   normalizeEmailBranding,
   type EmailBranding,
 } from '@barghsa/shared/notification-delivery';
-import { createAuthSender, type AuthMessage } from './providers.js';
+import { createAuthSender, staffActivationUrl, type AuthMessage } from './providers.js';
 
 interface DeliveryRow {
   correlation_id: string | null;
@@ -82,6 +82,16 @@ export async function runAuthDelivery(
       createHash('sha256').update(payload.code).digest('hex') !== row.code_hash
     )
       throw new Error('Invalid auth delivery payload');
+    const activationUrl =
+      challenge.purpose === 'staff_activation' && /^v2_[a-f0-9]{64}$/.test(payload.code)
+        ? staffActivationUrl(payload.activationUrl, row.code_hash)
+        : null;
+    // Earlier messages may have been attempted under this delivery key. Reissue
+    // through staff administration instead of changing or replaying their content.
+    if (challenge.purpose === 'staff_activation' && !activationUrl) {
+      await finish('cancelled');
+      return 'cancelled';
+    }
     let emailBranding: EmailBranding | null | undefined;
     if (challenge.destination.includes('@')) {
       if (payload.emailBranding) emailBranding = normalizeEmailBranding(payload.emailBranding);
@@ -104,9 +114,7 @@ export async function runAuthDelivery(
       destination: challenge.destination,
       purpose: challenge.purpose,
       ...(emailBranding !== undefined ? { emailBranding } : {}),
-      ...(typeof payload.activationUrl === 'string'
-        ? { activationUrl: payload.activationUrl }
-        : {}),
+      ...(activationUrl ? { activationUrl } : {}),
     });
     await finish('sent', ref);
     return 'sent';

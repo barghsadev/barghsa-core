@@ -614,7 +614,21 @@ async function createStaff() {
   return body.userId;
 }
 
-it('creates staff with a queued link and consumes the delivered link only once', async () => {
+function deliveredStaffInvitation(text: string) {
+  const link = text.match(/https:\/\/[^\s]+/)?.[0];
+  const token = text.match(/Activation code:\n(v2_[a-f0-9]{64})\n/)?.[1];
+  expect(link).toBeTruthy();
+  expect(token).toBeTruthy();
+  const url = new URL(link!);
+  const invitation = new URLSearchParams(url.hash.slice(1)).get('invitation');
+  expect(url.pathname).toBe('/activate');
+  expect(url.search).toBe('');
+  expect(link).not.toContain(token!);
+  expect(invitation).toBe(createHash('sha256').update(token!).digest('hex'));
+  return { token: token!, invitation: invitation! };
+}
+
+it('creates staff with a queued invitation and consumes the separate delivered code only once', async () => {
   const userId = await createStaff();
   expect(
     (await fixture.pool.query('SELECT password_hash FROM users WHERE user_id=$1', [userId])).rows[0]
@@ -622,9 +636,7 @@ it('creates staff with a queued link and consumes the delivered link only once',
   ).toMatch(requiredPasswordHash);
   expect(await deliver()).toBe('sent');
   expect(received).toHaveLength(1);
-  const link = received[0]!.text.match(/https:\/\/[^\s]+/)?.[0];
-  expect(link).toBeTruthy();
-  const token = new URLSearchParams(new URL(link!).hash.slice(1)).get('token')!;
+  const { token, invitation } = deliveredStaffInvitation(received[0]!.text);
   const account = (
     await fixture.pool.query(
       'SELECT activation_token,is_admin,is_staff FROM users WHERE user_id=$1',
@@ -637,8 +649,14 @@ it('creates staff with a queued link and consumes the delivered link only once',
     is_staff: true,
   });
   const newPassword = 'Activated-staff-password-123!';
+  expect(
+    (await post('auth/activate-staff', { token, invitation: 'b'.repeat(64), newPassword })).status
+  ).toBe(401);
+  expect(
+    (await post('auth/activate-staff', { token: invitation, invitation, newPassword })).status
+  ).toBe(400);
   const results = await Promise.all(
-    [1, 2].map(() => post('auth/activate-staff', { token, newPassword }))
+    [1, 2].map(() => post('auth/activate-staff', { token, invitation, newPassword }))
   );
   expect(results.map((result) => result.status).sort()).toEqual([200, 401]);
   const activated = (
@@ -698,12 +716,30 @@ it('does not send an expired activation and rolls back staff creation when queui
   ).toBe(0);
 });
 
+it('rejects a live legacy bearer code at the activation endpoint', async () => {
+  const userId = await createStaff();
+  const token = 'e'.repeat(64);
+  const invitation = createHash('sha256').update(token).digest('hex');
+  await fixture.pool.query('UPDATE users SET activation_token=$1 WHERE user_id=$2', [
+    invitation,
+    userId,
+  ]);
+  const response = await post('auth/activate-staff', {
+    token,
+    invitation,
+    newPassword: 'Activated-staff-password-123!',
+  });
+  expect(response.status).toBe(400);
+  expect(
+    (await fixture.pool.query('SELECT activation_token FROM users WHERE user_id=$1', [userId])).rows
+  ).toEqual([{ activation_token: invitation }]);
+  expect(fixture.logs()).not.toContain(token);
+});
+
 it('lets an administrator replace a pending activation and invalidates the previous link', async () => {
   const userId = await createStaff();
   expect(await deliver()).toBe('sent');
-  const first = new URLSearchParams(
-    new URL(received[0]!.text.match(/https:\/\/[^\s]+/)![0]).hash.slice(1)
-  ).get('token')!;
+  const first = deliveredStaffInvitation(received[0]!.text);
   const session = (
     await fixture.pool.query(
       "SELECT session_id,csrf_token FROM sessions WHERE user_id='provider-admin' LIMIT 1"
@@ -733,17 +769,16 @@ it('lets an administrator replace a pending activation and invalidates the previ
   const replaced = await post(`admin/users/${userId}/resend-activation`, {}, headers);
   expect(replaced.status, await replaced.text()).toBe(200);
   const stale = await post('auth/activate-staff', {
-    token: first,
+    ...first,
     newPassword: 'Activated-staff-password-123!',
   });
   expect(stale.status, await stale.text()).toBe(401);
   expect(await deliver()).toBe('sent');
-  const next = new URLSearchParams(
-    new URL(received[1]!.text.match(/https:\/\/[^\s]+/)![0]).hash.slice(1)
-  ).get('token')!;
-  expect(next).not.toBe(first);
+  const next = deliveredStaffInvitation(received[1]!.text);
+  expect(next.token).not.toBe(first.token);
+  expect(next.invitation).not.toBe(first.invitation);
   const activated = await post('auth/activate-staff', {
-    token: next,
+    ...next,
     newPassword: 'Activated-staff-password-123!',
   });
   expect(activated.status, await activated.text()).toBe(200);
