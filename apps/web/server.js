@@ -108,6 +108,12 @@ async function serveFile(distDir, urlPath) {
  */
 export function createStaticServer(options = {}) {
   const distDir = resolve(options.distDir ?? DEFAULT_DIST_DIR);
+  const cspMode = process.env['WEB_CSP_MODE'] ?? 'report-only';
+  if (cspMode !== 'report-only' && cspMode !== 'enforce') {
+    throw new Error('WEB_CSP_MODE must be report-only or enforce');
+  }
+  const cspHeader =
+    cspMode === 'enforce' ? 'Content-Security-Policy' : 'Content-Security-Policy-Report-Only';
 
   /** @type {Set<import('node:net').Socket>} */
   const activeConnections = new Set();
@@ -137,7 +143,7 @@ export function createStaticServer(options = {}) {
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
     res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
     res.setHeader(
-      'Content-Security-Policy-Report-Only',
+      cspHeader,
       "default-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; script-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; form-action 'self'; report-uri /api/csp-report"
     );
 
@@ -151,7 +157,7 @@ export function createStaticServer(options = {}) {
         return clean.replace(/^<\w+/, (start) => `${start} nonce="${nonce}"`);
       });
       res.setHeader(
-        'Content-Security-Policy-Report-Only',
+        cspHeader,
         `default-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; script-src 'strict-dynamic' 'nonce-${nonce}'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; form-action 'self'; report-uri /api/csp-report`
       );
       res.writeHead(200, {

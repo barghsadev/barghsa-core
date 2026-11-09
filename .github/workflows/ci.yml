@@ -105,6 +105,10 @@ jobs:
           path: ${{ runner.temp }}/dependency-audit.json
           retention-days: 14
       - run: pnpm build
+      - name: Verify security headers on the production web build
+        run: node scripts/check-production-security-headers.mjs
+        env:
+          WEB_CSP_MODE: report-only
       - run: pnpm typecheck
       - run: pnpm format:check
       - run: pnpm lint
@@ -116,6 +120,8 @@ jobs:
         run: pnpm check:bundle
       - name: Validate pilot TLS proxy and edge quotas
         run: python3 scripts/test-pilot-proxy.py
+      - name: Validate staging proxy security headers and edge quotas
+        run: python3 scripts/test-pilot-proxy.py --profile staging
       - run: pnpm check:contract
       - run: pnpm check:db-snapshot
       - name: Install production browser check runtime

@@ -177,6 +177,7 @@ services:
       NODE_ENV: production
       NODE_OPTIONS: --max-old-space-size=256
       PORT: '3000'
+      WEB_CSP_MODE: ${BARGHSA_WEB_CSP_MODE:-report-only}
     ports:
       - '127.0.0.1:3000:3000'
     depends_on:

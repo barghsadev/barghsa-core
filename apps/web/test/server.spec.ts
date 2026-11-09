@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import { createStaticServer } from '../server.js';
 import type { Server } from 'node:http';
 import { mkdtemp, writeFile, mkdir } from 'node:fs/promises';
@@ -131,6 +131,36 @@ describe('static server', () => {
       expect(Number(first.headers['content-length'])).toBe(Buffer.byteLength(first.body));
     }
   );
+
+  it('enforces the configured nonce policy without also sending Report-Only', async () => {
+    vi.stubEnv('WEB_CSP_MODE', 'enforce');
+    const enforcing = createStaticServer({ distDir });
+    try {
+      await new Promise<void>((resolve) => enforcing.listen(0, '127.0.0.1', resolve));
+      const res = await fetch(enforcing, '/login');
+      const policy = res.headers['content-security-policy'];
+      const nonce = policy?.match(/'nonce-([^']+)'/)?.[1];
+      expect(nonce).toBeTruthy();
+      expect(res.body).toContain(`nonce="${nonce}"`);
+      expect(policy).toContain("frame-ancestors 'none'");
+      expect(policy).toContain('report-uri /api/csp-report');
+      expect(res.headers['content-security-policy-report-only']).toBeUndefined();
+      const asset = await fetch(enforcing, '/assets/app-a1b2c3d4.js');
+      expect(asset.headers['content-security-policy']).toContain("script-src 'none'");
+    } finally {
+      vi.unstubAllEnvs();
+      await new Promise<void>((resolve) => enforcing.close(() => resolve()));
+    }
+  });
+
+  it('refuses to start with an unknown CSP mode', () => {
+    vi.stubEnv('WEB_CSP_MODE', 'disabled');
+    try {
+      expect(() => createStaticServer({ distDir })).toThrow('WEB_CSP_MODE');
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
 
   it('serves static files with correct Content-Type', async () => {
     const html = await fetch(server, '/index.html');

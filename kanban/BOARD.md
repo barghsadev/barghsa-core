@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 887 | Accepted with unchanged source bindings. |
-| verify | 458 | Existing work may be complete; inspect evidence before building. |
-| partial | 19 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 891 | Accepted with unchanged source bindings. |
+| verify | 448 | Existing work may be complete; inspect evidence before building. |
+| partial | 25 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,19 +39,21 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Close browser response policy and proxy header gaps with current web and edge evidence. Preserve Report-Only until violation review and keep HSTS gated on verified production TLS.
+Verify existing static analysis, dependency and secret scans, and image gates against current evidence. Build only demonstrated gaps.
 
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
-- `01-platform-infrastructure.md#T-04.04.02`: Configure security headers in reverse proxy
-- `06-security-testing-observability.md#T-06.02.02.02`: Implement CSP middleware in web process; support Report-Only mode toggle via config
-- `06-security-testing-observability.md#T-06.02.02.04`: Ensure nonce generation and propagation for inline scripts/styles across the served HTML shell and client
-- `06-security-testing-observability.md#T-06.02.02.05`: Add CI test that verifies CSP headers in production build
-- `06-security-testing-observability.md#T-06.02.02.06`: Roll out: 1 week Report-Only monitoring → analyze violations → switch to Enforce
-- `06-security-testing-observability.md#T-06.02.03.01`: Implement security headers middleware: `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`
-- `06-security-testing-observability.md#T-06.02.03.02`: Implement `Strict-Transport-Security` header configurable by env; enable HSTS only in production with verified TLS
-- `06-security-testing-observability.md#T-06.02.03.03`: Ensure `frame-ancestors 'none'` in CSP prevents clickjacking
-- `06-security-testing-observability.md#T-06.02.03.04`: Write integration tests: verify all security headers present and correct on responses
-- `06-security-testing-observability.md#T-06.02.03.05`: Add CI check that fails if required security headers are missing or misconfigured
+- `01-platform-infrastructure.md#T-05.03.04`: Configure security scans in PR gate
+- `06-security-testing-observability.md#T-06.04.02.04`: Write SAST scan configuration targeting SQL injection patterns
+- `06-security-testing-observability.md#T-06.07.01.05`: Audit codebase for hardcoded secrets, .env committed, frontend-bundled secrets
+- `06-security-testing-observability.md#T-06.07.01.06`: Add CI secret scan (e.g. truffleHog, gitLeaks) to block commits with secrets
+- `06-security-testing-observability.md#T-06.07.02.01`: Configure SCA tool (e.g. Snyk, npm audit, OWASP Dependency-Check) in CI
+- `06-security-testing-observability.md#T-06.07.02.02`: Configure SAST tool (e.g. CodeQL, Semgrep) with custom rules for NestJS/Drizzle security patterns
+- `06-security-testing-observability.md#T-06.07.02.03`: Configure container vulnerability scanning (e.g. Trivy, Grype) on Docker images
+- `06-security-testing-observability.md#T-06.07.02.04`: Configure secret scanning on every PR (e.g. gitLeaks, truffleHog)
+- `06-security-testing-observability.md#T-06.07.02.08`: Create CI gate config: SCA/SAST/secret/container scans on every PR, full scan on main
+- `06-security-testing-observability.md#T-06.07.03.05`: Add container security scanning to CI (Trivy, etc.)
+- `06-security-testing-observability.md#T-06.11.02.03`: Configure Semgrep/CodeQL with security-focused rules for NestJS/Drizzle patterns
+- `06-security-testing-observability.md#T-06.11.02.04`: Add CI gate: critical/high SAST findings block merge; medium triaged within sprint
 
 ## v0.2.0: Complete customer journeys
 
@@ -1132,18 +1134,18 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.02.01.06` | done | Recorded batch work | Ensure CSRF failures return safe error + correlation ID; log as security event |
 | `06-security-testing-observability.md#T-06.02.01.07` | done | Recorded batch work | Write integration tests: valid CSRF token, missing token, expired token, rotated token, origin mismatch, same-site bypass |
 | `06-security-testing-observability.md#T-06.02.01.08` | verify | Inventory needed | DAST security test: automated CSRF injection attempts |
-| `06-security-testing-observability.md#T-06.02.02.01` | verify | Inventory needed | Design CSP directive set for web app (nonce-based scripts, hashed styles where needed) |
-| `06-security-testing-observability.md#T-06.02.02.02` | verify | Inventory needed | Implement CSP middleware in web process; support Report-Only mode toggle via config |
+| `06-security-testing-observability.md#T-06.02.02.01` | done | Recorded batch work | Design CSP directive set for web app (nonce-based scripts, hashed styles where needed) |
+| `06-security-testing-observability.md#T-06.02.02.02` | done | Recorded batch work | Implement CSP middleware in web process; support Report-Only mode toggle via config |
 | `06-security-testing-observability.md#T-06.02.02.03` | done | Recorded batch work | Configure CSP reporting endpoint (e.g. `csp-reports` route or external `report-uri`) |
-| `06-security-testing-observability.md#T-06.02.02.04` | verify | Inventory needed | Ensure nonce generation and propagation for inline scripts/styles across the served HTML shell and client |
-| `06-security-testing-observability.md#T-06.02.02.05` | verify | Inventory needed | Add CI test that verifies CSP headers in production build |
-| `06-security-testing-observability.md#T-06.02.02.06` | verify | Inventory needed | Roll out: 1 week Report-Only monitoring → analyze violations → switch to Enforce |
+| `06-security-testing-observability.md#T-06.02.02.04` | partial | Recorded batch work | Ensure nonce generation and propagation for inline scripts/styles across the served HTML shell and client |
+| `06-security-testing-observability.md#T-06.02.02.05` | done | Recorded batch work | Add CI test that verifies CSP headers in production build |
+| `06-security-testing-observability.md#T-06.02.02.06` | partial | Recorded batch work | Roll out: 1 week Report-Only monitoring → analyze violations → switch to Enforce |
 | `06-security-testing-observability.md#T-06.02.02.07` | verify | Inventory needed | Verify no `unsafe-eval` usage across codebase (replace `eval`, `new Function`, string setTimeout) |
-| `06-security-testing-observability.md#T-06.02.03.01` | verify | Inventory needed | Implement security headers middleware: `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy` |
-| `06-security-testing-observability.md#T-06.02.03.02` | verify | Inventory needed | Implement `Strict-Transport-Security` header configurable by env; enable HSTS only in production with verified TLS |
-| `06-security-testing-observability.md#T-06.02.03.03` | verify | Inventory needed | Ensure `frame-ancestors 'none'` in CSP prevents clickjacking |
-| `06-security-testing-observability.md#T-06.02.03.04` | verify | Inventory needed | Write integration tests: verify all security headers present and correct on responses |
-| `06-security-testing-observability.md#T-06.02.03.05` | verify | Inventory needed | Add CI check that fails if required security headers are missing or misconfigured |
+| `06-security-testing-observability.md#T-06.02.03.01` | done | Recorded batch work | Implement security headers middleware: `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy` |
+| `06-security-testing-observability.md#T-06.02.03.02` | partial | Recorded batch work | Implement `Strict-Transport-Security` header configurable by env; enable HSTS only in production with verified TLS |
+| `06-security-testing-observability.md#T-06.02.03.03` | partial | Recorded batch work | Ensure `frame-ancestors 'none'` in CSP prevents clickjacking |
+| `06-security-testing-observability.md#T-06.02.03.04` | partial | Recorded batch work | Write integration tests: verify all security headers present and correct on responses |
+| `06-security-testing-observability.md#T-06.02.03.05` | partial | Recorded batch work | Add CI check that fails if required security headers are missing or misconfigured |
 | `06-security-testing-observability.md#T-06.02.04.01` | done | Recorded batch work | Implement CORS middleware with exact origin allowlist (env config, not wildcard) |
 | `06-security-testing-observability.md#T-06.02.04.02` | done | Recorded batch work | Ensure credentialed CORS (credentials: include) never accepts wildcard origin |
 | `06-security-testing-observability.md#T-06.02.04.03` | done | Recorded batch work | Restrict allowed methods to required subset; restrict allowed headers |

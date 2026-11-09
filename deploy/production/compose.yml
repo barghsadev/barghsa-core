@@ -107,6 +107,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: '3000'
+      WEB_CSP_MODE: ${BARGHSA_WEB_CSP_MODE:-report-only}
     ports: ['127.0.0.1:3000:3000']
     depends_on:
       api: { condition: service_healthy }

@@ -32,9 +32,11 @@ function request(path, options = {}) {
   });
 }
 
+const permissions = 'camera=(), microphone=(), geolocation=()';
 const upstreamLimit = await request('/api/auth/application-limited');
 assert.equal(upstreamLimit.status, 429);
 assert.equal(upstreamLimit.headers['retry-after'], '60');
+assert.equal(upstreamLimit.headers['permissions-policy'], permissions);
 assert.equal(JSON.parse(upstreamLimit.body).error.code, 'FIXTURE:APPLICATION_LIMIT');
 for (const language of ['fa', 'en']) {
   // Let the same client's quota refill before exercising the next language.
@@ -57,6 +59,7 @@ for (const language of ['fa', 'en']) {
     assert.equal(response.headers['x-content-type-options'], 'nosniff');
     assert.equal(response.headers['x-frame-options'], 'DENY');
     assert.equal(response.headers['referrer-policy'], 'strict-origin-when-cross-origin');
+    assert.equal(response.headers['permissions-policy'], permissions);
     const error = JSON.parse(response.body).error;
     assert.equal(error.code, 'RATE_LIMIT:EXCEEDED');
     assert.equal(error.retryAfterSeconds, 1);
@@ -65,6 +68,7 @@ for (const language of ['fa', 'en']) {
   // An exhausted auth quota must not throttle health or unrelated API routes.
   const ping = await request('/api/ping');
   assert.equal(ping.status, 200);
+  assert.equal(ping.headers['permissions-policy'], permissions);
   assert.equal(JSON.parse(ping.body).headers['x-forwarded-for'], '127.0.0.1');
   console.log(`PASS ${language}: ${limited.length} localized edge rejections; health unaffected`);
 }
