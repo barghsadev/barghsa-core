@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T04:37:29+00:00",
-  "source_commit": "0d181e2b234df041779fa58874a7964fecf15316",
+  "updated": "2026-11-09T04:44:22+00:00",
+  "source_commit": "67bc0cee875b82d759e963f727e50278b62fbac4",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -598965,7 +598965,8 @@
       "launch_required": true,
       "remaining": [
         "The 98-path inventory retains primary read, detail, layout and redirect evidence. All 27 component owners in the selected request inventory now have scoped source and case references or a verified write-only classification.",
-        "Current receipts cover checkout wallet states, revision option loading and staff electricity and saving queue or detail recovery. Reconcile the remaining route and hook-owned conditions and original route controls before full acceptance."
+        "All 20 selected hook owners now have scoped read evidence or a verified write-only classification. Current receipts cover staff electricity and saving, checkout wallets, revision options, and ten named dashboard or settings and operations routes.",
+        "Reconcile page- and route-owned conditional states and original route controls beyond the named cases before full acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -599125,7 +599126,8 @@
           "release-0.5-checkout-wallet-read-states",
           "release-0.5-revision-options-pending",
           "release-0.5-staff-saving-read-shape",
-          "release-0.5-staff-electricity-read-shape"
+          "release-0.5-staff-electricity-read-shape",
+          "release-0.5-shared-read-reconciliation"
         ],
         "current_acceptance": null
       }
@@ -728990,7 +728992,8 @@
       "launch_required": true,
       "remaining": [
         "The 98-path inventory retains primary read, detail, layout and redirect evidence. All 27 component owners in the selected request inventory now have scoped source and case references or a verified write-only classification.",
-        "Current receipts cover checkout wallet states, revision option loading and staff electricity and saving queue or detail recovery. Reconcile the remaining route and hook-owned conditions and original route controls before full acceptance."
+        "All 20 selected hook owners now have scoped read evidence or a verified write-only classification. Current receipts cover staff electricity and saving, checkout wallets, revision options, and ten named dashboard or settings and operations routes.",
+        "Reconcile page- and route-owned conditional states and original route controls beyond the named cases before full acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -729216,7 +729219,8 @@
           "release-0.5-checkout-wallet-read-states",
           "release-0.5-revision-options-pending",
           "release-0.5-staff-saving-read-shape",
-          "release-0.5-staff-electricity-read-shape"
+          "release-0.5-staff-electricity-read-shape",
+          "release-0.5-shared-read-reconciliation"
         ]
       }
     },
@@ -811615,6 +811619,570 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-electricity-read-shape/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-electricity-read-shape/renewed-bindings.json",
       "release_disposition": "Closed observed staff electricity read recovery gaps. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-shared-read-reconciliation": {
+      "batch": "release-0.5-shared-read-reconciliation",
+      "base_commit": "67bc0cee875b82d759e963f727e50278b62fbac4",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "07949862684b86d6ff241d5f71e59e6c71a5cc1ddc70655b0d508beb53865dac"
+        },
+        {
+          "path": "apps/web/e2e/gift-code-tables.spec.ts",
+          "sha256": "d6dde9c73e36667edf9495e19a9df86087a785d3e205af83fa9336c79f254b99"
+        },
+        {
+          "path": "apps/web/e2e/global-setup.ts",
+          "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+        },
+        {
+          "path": "apps/web/e2e/knowledge-policy-recovery.spec.ts",
+          "sha256": "968214c68886442b4f6106fd2294f3d5c182aced41e056c18df26b52f1084bb3"
+        },
+        {
+          "path": "apps/web/e2e/operational-queue-recovery.spec.ts",
+          "sha256": "4db48d3b5ac60fcee1d0bd02e81359266c6b69ca0c4bef3abe913137ece381f7"
+        },
+        {
+          "path": "apps/web/e2e/preference-settings-forms.spec.ts",
+          "sha256": "e78db405b69c4f165efab3b3b201b36ffb7761267b639616e2ea422a3c299e17"
+        },
+        {
+          "path": "apps/web/e2e/security-settings-forms.spec.ts",
+          "sha256": "152471a2964820a2a66a9433bca8b40164ede412467d138f8774542d7ce323b4"
+        },
+        {
+          "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
+          "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+        },
+        {
+          "path": "apps/web/e2e/staff-directory-recovery.spec.ts",
+          "sha256": "3e4c7f173f3d6bdeb425227d8bb7011a51cb8539f1c7d3c4f1b277f38430c8a2"
+        },
+        {
+          "path": "apps/web/e2e/staff-finance-list-recovery.spec.ts",
+          "sha256": "decfb5a903391dac3560fb5f1663398b2ccb95f0c230c0b168d9963b4206da7a"
+        },
+        {
+          "path": "apps/web/package.json",
+          "sha256": "5a3332374e37d4a7d9eb5165a34156172d191be2dc1c3e77b1068eca5ab3818a"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/AgentDetailDialog.tsx",
+          "sha256": "48fbf1b74dacb75c71a1481b3c6be6c47d07452fa78f920fd7fe1f5c5168a379"
+        },
+        {
+          "path": "apps/web/src/components/AuditLogViewer.tsx",
+          "sha256": "8fdc6e6b01fc82b8ad245653625a3b106815b2cb58efa90910ec4f5b45e64f77"
+        },
+        {
+          "path": "apps/web/src/components/ContractActivationRules.tsx",
+          "sha256": "910a23a3e818130933611ba14eef9f8d3ff841690968cb927617f4372d4d1148"
+        },
+        {
+          "path": "apps/web/src/components/CrmAddressEditor.tsx",
+          "sha256": "055325650757329afa9b03821096831bbf39388a5f158e9e86d70935bebee1b7"
+        },
+        {
+          "path": "apps/web/src/components/CrmLegalEditor.tsx",
+          "sha256": "a96819cfe960e89a55f2500dec0b5c39f2d7443dc06425026edbc78201810c0d"
+        },
+        {
+          "path": "apps/web/src/components/DeadLetterPanel.tsx",
+          "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+        },
+        {
+          "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
+          "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+        },
+        {
+          "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
+          "sha256": "143bd009b52705c900ca50da5e4e6622af0e8d9e53e67d5cfe5068dda08b37a4"
+        },
+        {
+          "path": "apps/web/src/components/InvitationBanner.tsx",
+          "sha256": "1ad609e0914b939fd6b6eeb4145e5e22661f119856dde50a27c95e045bcdcf6a"
+        },
+        {
+          "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
+          "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
+        },
+        {
+          "path": "apps/web/src/components/InvoiceCorrectionsPanel.tsx",
+          "sha256": "ebf20e782877f50e037abc79f86a348213a45b8902b47932275c1a5063ab9c42"
+        },
+        {
+          "path": "apps/web/src/components/InvoiceDueAtPanel.tsx",
+          "sha256": "a5fae862d8cf2f8591416ab45372cf91a98dcdb9cbc323eaef73803065e82868"
+        },
+        {
+          "path": "apps/web/src/components/KnowledgeBaseDocumentPicker.tsx",
+          "sha256": "067bbd10fdbca1d47af938c77d5d1ccd7f7c4bbc16fe17e390cf2d1e781b40a4"
+        },
+        {
+          "path": "apps/web/src/components/ManualInvoiceForm.tsx",
+          "sha256": "b15deb6337e0a9dd96f878953e5da59e6d00d1733629363be7491d5ac6248813"
+        },
+        {
+          "path": "apps/web/src/components/ProfileMenu.tsx",
+          "sha256": "82ecc67ce2bcc52b26bcca44cb4cba6a34ec75e0e53bc402248325fe56f10776"
+        },
+        {
+          "path": "apps/web/src/components/ProfileSwitcher.tsx",
+          "sha256": "01e0a438a69e7f67a6a401dfe066cd2fb9d775ad41b3f0fa6cd2f49c0a6ac928"
+        },
+        {
+          "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
+          "sha256": "f0f647ced11fae45862e669f1cecfab7c230dfa8e251e3730bf8243d0b0268f9"
+        },
+        {
+          "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
+          "sha256": "ff5e37578acdef5fb18e19ad2d074c2bb033382ffe322cdd36b1adc94e0ab6a9"
+        },
+        {
+          "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
+          "sha256": "ef268e2ee3303c37b3b7fa2b75d5170dd41fe15112e0459db7f7d79bfae9daa7"
+        },
+        {
+          "path": "apps/web/src/components/SecurityRevocationDialog.tsx",
+          "sha256": "b381a20c0e1173438df6937ecd933f44ad3f94958147ff20ab0183e8264df972"
+        },
+        {
+          "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
+          "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
+        },
+        {
+          "path": "apps/web/src/components/SolarContractForm.tsx",
+          "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
+        },
+        {
+          "path": "apps/web/src/components/TelegramLinkPanel.tsx",
+          "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
+        },
+        {
+          "path": "apps/web/src/components/TosBanner.tsx",
+          "sha256": "6909f582e4612b788bb01e85093401df8c6654ef30ee4d72badccbaa79b6eaa4"
+        },
+        {
+          "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
+          "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
+        },
+        {
+          "path": "apps/web/src/hooks/useAsyncData.test.tsx",
+          "sha256": "771810d972bba2cf01af73757cf9b1d9dfe373c4d5d5f93ebd6a301720cc7133"
+        },
+        {
+          "path": "apps/web/src/hooks/useAsyncData.ts",
+          "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
+        },
+        {
+          "path": "apps/web/src/hooks/useCatalogueConfirmationRead.ts",
+          "sha256": "f82cd597023dc893e5cb9af7972b7158073490c0384f61be9859e72709341618"
+        },
+        {
+          "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
+          "sha256": "3094accd09c58b57b7e9066d527a913fe0efbf672aea6281ee12feb2b7bb2d5c"
+        },
+        {
+          "path": "apps/web/src/hooks/useCatalogueResource.test.tsx",
+          "sha256": "6374a7766d742797e7bc72e6377ad61d050ca49f54a9e15b4878073589e5f9ee"
+        },
+        {
+          "path": "apps/web/src/hooks/useCatalogueResource.ts",
+          "sha256": "4f3c47da06b3d18235f0512c588e5b12a8003fbac6ed87ed216cd97cb94ca631"
+        },
+        {
+          "path": "apps/web/src/hooks/useCustomerServiceHistory.test.tsx",
+          "sha256": "07b181c67d419fd1ef3e928820861999899c45b6d818a0af1f6db74381e5ca87"
+        },
+        {
+          "path": "apps/web/src/hooks/useCustomerServiceHistory.ts",
+          "sha256": "fc70f03965a95ddb72f468edd7aeeed573b0004925200f569b7293cbf28f0400"
+        },
+        {
+          "path": "apps/web/src/hooks/useFormDraft.test.tsx",
+          "sha256": "6831fe8c16148c7e27b4cba3fff135e5096deabab327bac022f8ed0c09083271"
+        },
+        {
+          "path": "apps/web/src/hooks/useFormDraft.ts",
+          "sha256": "1323dc6eefd9e38d6fff5c7de26ea94e7550b3d418b05121507a82254a79e8a9"
+        },
+        {
+          "path": "apps/web/src/hooks/useGeographyOptions.ts",
+          "sha256": "520091b3c30a4f9686760ec8d5691f5f9f7818521c6555efe059ae7ac4333225"
+        },
+        {
+          "path": "apps/web/src/hooks/useGiftCodeCatalogue.ts",
+          "sha256": "4e4d3aec4c22b448a2a2e9e3aa91cadf7c945a5506d311998f9de7ef34c1da5a"
+        },
+        {
+          "path": "apps/web/src/hooks/useOnboardingDraft.test.tsx",
+          "sha256": "73738b2c507ee8591ee1b2099c27f23ba060ec83f75c93b12f0a969054bf9029"
+        },
+        {
+          "path": "apps/web/src/hooks/useOnboardingDraft.ts",
+          "sha256": "ab284b4cf3c5e0a6a6b07cbac58adae4540576f062cb2aa7eb301d79a92d75b2"
+        },
+        {
+          "path": "apps/web/src/hooks/useOperationalQueue.test.tsx",
+          "sha256": "fbf1c7c6fca6717bf0ac9f6fe6261aebbacd97188022f28f99cb869b8907e354"
+        },
+        {
+          "path": "apps/web/src/hooks/useOperationalQueue.ts",
+          "sha256": "2d66f00c756ed9d1d68ea3f4394e243d4c12b6125d47446c0c29f30c88770544"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
+          "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
+          "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedGateRead.test.tsx",
+          "sha256": "2a175c1f45c7444554edf2f8ecdd3c88f4c8dd394e431fc842c74f9ea569cda8"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedGateRead.ts",
+          "sha256": "955e166337afda25d6becbfc9c7e9a47b3b342a6934b04eb6deafcb92e716295"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedInvoiceReview.test.tsx",
+          "sha256": "cfc99481975c2d26fbb7425bd32bdb5dcb3ee3767d5d5743e4b53b94dadef616"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedInvoiceReview.ts",
+          "sha256": "a928b66193795d500754ba8e7e58280bb802ab5659d4fba7e4e626bad1ea3428"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedProfileRead.test.tsx",
+          "sha256": "4dd4cfc13cccb40a60c9a16da8d2a55fa16f256aff8404305eccb35aaab45298"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedProfileRead.ts",
+          "sha256": "9a0158813169266ded1315664fb99b30988d8e44e69a47d648a77c7b021d1fc9"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedStaffServiceRead.test.tsx",
+          "sha256": "3a0e987fc9624f6b0dd577d478b2d23589b6a00f724671da8fc72ba2db3c5a86"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedStaffServiceRead.ts",
+          "sha256": "32c1269a80fcff189bcb8953f1ea274ceb5d1c2874eb5b8fcee2df31ccecc64a"
+        },
+        {
+          "path": "apps/web/src/hooks/usePreferenceSettingsForm.ts",
+          "sha256": "84646eef89d8e80845dcfab092a8cb22113e79b64a6d35bfeb3b3f9060d2cff4"
+        },
+        {
+          "path": "apps/web/src/hooks/useProfileSettingsEditor.ts",
+          "sha256": "9cb48a0b68c721abaab9c2d5733021ff420eacebdd64aa8cbb45939c421563ac"
+        },
+        {
+          "path": "apps/web/src/hooks/useSavedAddressSettingsEditor.ts",
+          "sha256": "956c87397684c412c002da39a5606b17a591325b53cf47fe5d772d91f6f7baaa"
+        },
+        {
+          "path": "apps/web/src/hooks/useSecurityRevocationForm.ts",
+          "sha256": "c67189a8d5d9373b49dfc659e8314bb6492c5b4dcd96235c94ca97fcda647b61"
+        },
+        {
+          "path": "apps/web/src/hooks/useSecuritySettings.test.tsx",
+          "sha256": "d87ff177a15f326528d4cba9bf6a52a00df84599bf25ae1422cafca3ca4dadf7"
+        },
+        {
+          "path": "apps/web/src/hooks/useSecuritySettings.ts",
+          "sha256": "b147234e1376089f842f94f1a6969c0336715489441a8b0f922b8411af54005b"
+        },
+        {
+          "path": "apps/web/src/hooks/useServerQuery.test.tsx",
+          "sha256": "bc67512f820dfdbf4d86f2214988083789502dd13b0ed2e0ccd3258d7c7df87f"
+        },
+        {
+          "path": "apps/web/src/hooks/useServerQuery.ts",
+          "sha256": "d48dcb712ea4eee821a3b101e12b3d7ee81f11277a8b42ab8aeb594cb2fab47d"
+        },
+        {
+          "path": "apps/web/src/hooks/useSettingsCommand.ts",
+          "sha256": "d26862e04f82d8839ffdee8d100a33ad4aa33119afdff0d129ca336deffbb843"
+        },
+        {
+          "path": "apps/web/src/hooks/useSettingsSnapshot.ts",
+          "sha256": "c22b0ab868390c7ccf0de6291468052d9c19db633d8cb6f827546696e4822907"
+        },
+        {
+          "path": "apps/web/src/hooks/useStaffDashboardData.ts",
+          "sha256": "a3bb637f5d6a615b02ed7e55cedf26e133558c3bfb197de67328504b1fdac032"
+        },
+        {
+          "path": "apps/web/src/hooks/useStaffQueryRead.ts",
+          "sha256": "e21695a1a08c18ea78dcc4a17a19555992e8a94ba3284fea02d3a587bd8ca4e0"
+        },
+        {
+          "path": "apps/web/src/hooks/useTicketCommand.ts",
+          "sha256": "b27c1ecdcb40271844edcf0150b6a3fec7684ea1dca3a18ed131398798a2aa2b"
+        },
+        {
+          "path": "apps/web/src/lib/query-keys.ts",
+          "sha256": "e4ba099d6287bf44a752c95ef7ac5fa182127f6710ec4a77849d1d45614c968f"
+        },
+        {
+          "path": "apps/web/src/lib/security-settings-form.test.ts",
+          "sha256": "a8a069f5de087e2e05a861ac7e32991d32511e2670ef75cc8ba5b3df62d39053"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
+          "sha256": "b60a6a8d933d095170a0aea17ee963fa5df152d93913592158c37a832619f390"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
+          "sha256": "63a4ef08d9d629743277a2be08c8fe5e798766bb43d12dd9d4598cba2cb83fc2"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
+          "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+        },
+        {
+          "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+          "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
+        },
+        {
+          "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
+          "sha256": "b77c8cd06fabfee049e7ed41cd68310bf6b202d2fe6d913a089e3350b395a017"
+        },
+        {
+          "path": "apps/web/src/pages/AdminCataloguePage.tsx",
+          "sha256": "0ce4eb4228c830c1d8dd2a426e953dfe0b47154d8e33967bb26c67d65f96d1b6"
+        },
+        {
+          "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
+          "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
+          "sha256": "18b94c9afaf2b37bee9e5e05dca669abdf459c4b2a43b1542e12e2786d2e2409"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDashboard.test.tsx",
+          "sha256": "b25cfa756d64056e139b6dbd72082be24b8b4d4713c900d6d0c39f4307cbd578"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
+          "sha256": "68fa86c23168db0583ae7cbb6655305f858fb26f872837983c9aec3fd59c1e59"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
+          "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
+          "sha256": "6749b87bf32c141145ee9b31415b542dafbcbcd14c3a8d78f301ed432db8f428"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
+          "sha256": "9753e41d3caf52f333ff9991276aa7c1307dc7207ba2b65d1aafcd637a2a9d9b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
+          "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
+          "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+        },
+        {
+          "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
+          "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
+        },
+        {
+          "path": "apps/web/src/pages/AdminRolesPage.tsx",
+          "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
+          "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
+          "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
+          "sha256": "cb2fd0117f8e190f0bc1fbbd2a3ccb7d93a6f80ccc692cf110f75bf5479fa102"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
+          "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
+          "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStorageConfig.tsx",
+          "sha256": "4357b96888a6aed8ed9a9d40775e618d9f40f1ded3b8e7a1e724fd11ad15faee"
+        },
+        {
+          "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
+          "sha256": "71c5222f07d1c41fa642bd206ade7288d6f22e633950ea487046b1d2f6e1cb0d"
+        },
+        {
+          "path": "apps/web/src/pages/AdminVatPage.tsx",
+          "sha256": "64783c14fd207a752cd57330c9c3c04a90e4282c8dd2397202d7a7a7503ab138"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+          "sha256": "a90d0bdf8a11edcfc040b76e254247992f645f6bcc74fd69414fc532d56a77ea"
+        },
+        {
+          "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
+          "sha256": "37206fd46d5fbdc864f9bd7847bf9a745c2ad94fa15ce778a65f1eb77edfed63"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.test.tsx",
+          "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.tsx",
+          "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
+        },
+        {
+          "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
+          "sha256": "bce31803a06358afb642c57ab6e9b6fb7d275efcd24ef213998c5152483e75ba"
+        },
+        {
+          "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
+          "sha256": "8e2c4277fc0ce52f91e9a3961b2b3664d5ccb26524044e304223d1e2eaef9f5b"
+        },
+        {
+          "path": "apps/web/src/pages/InvoicesPage.tsx",
+          "sha256": "3ceed241a39c1cee1fa6ce6cd63bc9144d85d1b0a49fcb1a81f90e1785e3b2c0"
+        },
+        {
+          "path": "apps/web/src/pages/SavingOrdersPage.tsx",
+          "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+        },
+        {
+          "path": "apps/web/src/pages/SavingsOrderPage.tsx",
+          "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+        },
+        {
+          "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
+          "sha256": "092529a37d2178621babb556d9677d4f0f7497f94ba6d81210b11a45ec61ee48"
+        },
+        {
+          "path": "apps/web/src/pages/SolarRequestPage.tsx",
+          "sha256": "cd08bddbaaa38991861dd6011f0edbfa2ce435bf9004f2f15da9ce58517dd519"
+        },
+        {
+          "path": "apps/web/src/pages/SolarRequestsPage.tsx",
+          "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+        },
+        {
+          "path": "apps/web/src/pages/TeamPage.tsx",
+          "sha256": "ebbecde19091a8a3109d3c236b388a7e6d362bda9ce71e11ce94a9cb9118fad0"
+        },
+        {
+          "path": "apps/web/src/pages/TicketsPage.tsx",
+          "sha256": "957cdaefba5bb88d77ef2ec2062ed9ad3a87379a3b34dbd09416629d6b20b98e"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.tsx",
+          "sha256": "44ee2de825c64b4a53473aaf8a022175959f36ed543fa97f6d582949c89be630"
+        },
+        {
+          "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
+          "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+        },
+        {
+          "path": "apps/web/src/pages/electricity-revision-geography.test.tsx",
+          "sha256": "41155a89dee5b23e746860a1502525af97d6bd863fc087fe38ac196582dc0ea1"
+        },
+        {
+          "path": "apps/web/src/pages/geography-recovery.test.tsx",
+          "sha256": "d0e0bc412e7090b51dfb9ff26920f3947fac764737b808d216662d754d3d4436"
+        },
+        {
+          "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
+          "sha256": "611aeb0a03b8c5ddc6da1a7df3ff66be65519c9a6390cf54782b54dfecaa14ae"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/index.tsx",
+          "sha256": "47ff271f5d9cf0235d0388d30fa2db1383836f074dd59666c868cfbd91a7cc4d"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/preference-native-forms.test.tsx",
+          "sha256": "d46dd4c7a53cb630dc66ed36f167b2743668aa53f68d28209fec12b6f9e14d33"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/security.tsx",
+          "sha256": "9d3e0a0c517b93f7d4eefd6cc2120e4c3d45025d2e1e3c59bf7efb78e57e0765"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/timezone.tsx",
+          "sha256": "32f73dc2a6fa3c73b9acf99605e0c1b64794bc179c236895632a7a5f56381f68"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
+          "sha256": "81c644be74e099b0b985b74182f923530b85367de783be2f862a517325b95cd9"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
+          "sha256": "d7775fe6894ca50a7b293d5162e43267734a5489d23db74d4764e9d39a49bd0c"
+        },
+        {
+          "path": "apps/web/src/test/query-provider.tsx",
+          "sha256": "ac44623d5e62f2bf5f2e8a6e57e79cfaf42539ff065d7b076e66de27a5b7f947"
+        },
+        {
+          "path": "apps/web/vite.config.ts",
+          "sha256": "285d44f8fad6426e5d1a728a131240ee89195f7c8ce92217620018eba34f867f"
+        },
+        {
+          "path": "apps/web/vitest.config.ts",
+          "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+        },
+        {
+          "path": "package.json",
+          "sha256": "886264b44b4a98229d8f38d01775db77f95128e8eb80eb1f70f2c41f97c784ff"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "aab5a31e236ab70a7c588c676e3a0a2cf0bb8250e8d96ecdc469c9be175dcfa2"
+        }
+      ],
+      "checks": [
+        "A current source scan confirmed all 90 graph-linked hook and file pairs, including the 17 paths with changed index metadata. The scan records 118 direct calls.",
+        "Seventeen read hooks have scoped receipts. Three hooks only submit commands. The latest unit run passed 327 tests across 20 explicit files. Two electricity geography caller cases were reused after a clean dependency and fixture comparison.",
+        "Forty-eight Chromium and mobile Safari cases passed against the verified existing production build, with both languages and the relevant theme variants. Tests used synthetic API responses and trace archives were disabled to keep temporary storage bounded.",
+        "Named route receipts cover the staff dashboard, policy and knowledge choices, promotions, customer preferences and security, failed jobs and notifications, the staff directory, and receipt queue recovery. Other route controls still need scoped acceptance."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-read-reconciliation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-read-reconciliation/proof.json",
+      "source_scope_proof_sha256": "ee17cf0ebad936452a120f5840c7cf93fee3f0d9681825227a6a83d943689092",
+      "release_disposition": "Shared read ownership reconciled. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [
@@ -811665,7 +812233,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Reconcile remaining route-level and hook-owned reads and original route controls using current source and named cases. Required-check enforcement and live staging Sentry remain independent."
+    "goal": "Reconcile remaining page- and route-owned conditional states and original route controls. Required-check enforcement and live staging Sentry remain independent."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
