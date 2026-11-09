@@ -1,0 +1,21 @@
+# Authorization policy
+
+PostgreSQL supplies current account, session, ownership and role authority. The session guard checks expiry, revocation and operating context and loads current staff grants. The endpoint identifies the resource and action, applies its domain capability and checks the object's authorized scope before it returns private data or accepts a command. UI navigation only presents the actions available to the current context. [Session controls](session-lifetime.md).
+
+## Customer profiles
+
+- Use the authenticated account's server-owned active profile preference or the endpoint's explicit profile ID. In either case, authorize that profile using its current owner or active agent membership. Switching profiles changes a preference. The same account must prove authority to use the new selection. [Owner decision on profile context](../decisions/profile-workspace-navigation.md).
+- An agent's Manager, Finance and Legal roles contribute additive capabilities within one legal profile. Actual ownership comes from the profile's current owner. Domain operations apply their permission for the requested action and retain additional constraints such as commercial verification or a signature review.
+- Read and mutate customer orders, invoices, contracts, wallet records, tickets and documents within the authorized profile or account. Apply both the record identifier and authorized scope before returning results or issuing a signed transfer. Keep exact amounts, terms and state transitions inside the domain's authoritative transaction. [Customer setup and delegation](../decisions/customer-setup-and-delegation.md).
+
+## Staff capabilities
+
+- Staff sessions use the union of current database role capabilities for Customer Support, CRM and Verification, Finance, Legal and Contracts, Operations and Admin. A matching permission, explicit wildcard grant or current administrator authority is required. Staff account status permits staff context. Each protected operation still checks the required capability.
+- Apply resource and assignment scope when the domain requires it. Explicit module-wide document read grants retain their approved scope. Distinguish read, write, approval and override capabilities, and require fresh step-up for designated high-risk actions. [Verification authority](../decisions/verification-policy.md).
+- Recheck current session, capability and scope inside the protected decision when concurrent role removal, ownership changes or expiry could invalidate it. Preserve required CSRF proof, audit and idempotency across retries. Keep protected audit records separate from general diagnostics.
+
+## Background and external work
+
+- A worker acts on an authorized durable record with an operation-specific claim or lease. Before publishing a private result, recheck its current ownership or grant and enforce its result scope. Preserve transaction and provider idempotency boundaries when a retry is allowed. [Async jobs](../operations/async-jobs.md).
+- The assistant reads published knowledge within the current audience and slot. Its launch scope permits read-only guidance. Session, operating context, publication and output checks determine what an answer can include. [AI inference](../operations/ai-inference.md).
+- Signed provider callbacks prove the expected issuer, message and replay boundary independently of customer or staff sessions. Resolve the referenced durable intent before accepting a status or financial change. [Staging payment verification](../operations/staging-payment-sandbox.md).

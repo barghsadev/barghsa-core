@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T21:52:39+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T21:54:29+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1019 | Accepted with unchanged source bindings. |
-| verify | 309 | Existing work may be complete; inspect evidence before building. |
+| done | 1021 | Accepted with unchanged source bindings. |
+| verify | 307 | Existing work may be complete; inspect evidence before building. |
 | partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1142,12 +1142,12 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.02.04.03` | done | Recorded batch work | Restrict allowed methods to required subset; restrict allowed headers |
 | `06-security-testing-observability.md#T-06.02.04.04` | done | Recorded batch work | Cache preflight response (e.g. `Access-Control-Max-Age: 3600`) |
 | `06-security-testing-observability.md#T-06.02.04.05` | done | Recorded batch work | Write CORS integration tests: valid origin, invalid origin, credentialed request, preflight |
-| `06-security-testing-observability.md#T-06.03.01.01` | verify | Inventory needed | Design authorization policy engine: roles, capabilities/permissions, resource types, scopes (profile, system) |
+| `06-security-testing-observability.md#T-06.03.01.01` | done | Recorded batch work | Design authorization policy engine: roles, capabilities/permissions, resource types, scopes (profile, system) |
 | `06-security-testing-observability.md#T-06.03.01.02` | verify | Inventory needed | Implement `AuthorizationService` with deny-by-default policy resolution |
 | `06-security-testing-observability.md#T-06.03.01.03` | verify | Inventory needed | Implement NestJS guard/decorator for endpoint-level permission checks |
 | `06-security-testing-observability.md#T-06.03.01.04` | verify | Inventory needed | Implement profile-scoped data access: load resources by both `id` and `activeProfileId`; reject cross-profile access |
 | `06-security-testing-observability.md#T-06.03.01.05` | verify | Inventory needed | Extend authorization to background workers, AI tool calls, file access URLs, exports, and admin actions |
-| `06-security-testing-observability.md#T-06.03.01.06` | verify | Inventory needed | Implement staff role permissions: deny-by-default, additive by role (CS, CRM, Finance, Legal, Ops, Admin) |
+| `06-security-testing-observability.md#T-06.03.01.06` | done | Recorded batch work | Implement staff role permissions: deny-by-default, additive by role (CS, CRM, Finance, Legal, Ops, Admin) |
 | `06-security-testing-observability.md#T-06.03.01.07` | verify | Inventory needed | Ensure all staff permissions are explicit capabilities; high-risk commands require dedicated capability + step-up auth |
 | `06-security-testing-observability.md#T-06.03.01.08` | verify | Inventory needed | Write integration tests: each role's permitted/denied actions, profile isolation, cross-tenant BOLA attempts |
 | `06-security-testing-observability.md#T-06.03.01.09` | verify | Inventory needed | Ensure AuthorizationService logs every authorization denial as a structured audit event with actor, resource, action, reason, timestamp |
