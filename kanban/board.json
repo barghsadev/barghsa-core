@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T04:29:49+00:00",
-  "source_commit": "c18013ec3c56cc232bb287f1d45a5c8efcf067f1",
+  "updated": "2026-11-09T04:37:29+00:00",
+  "source_commit": "0d181e2b234df041779fa58874a7964fecf15316",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -320116,7 +320116,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -321014,7 +321014,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -321915,7 +321915,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -322813,7 +322813,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -323712,7 +323712,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -324610,7 +324610,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -325510,7 +325510,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -326414,7 +326414,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -334751,7 +334751,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -335657,7 +335657,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -336564,7 +336564,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -421687,7 +421687,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -491429,7 +491429,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -494605,7 +494605,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -495496,7 +495496,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -496328,7 +496328,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -497177,7 +497177,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -508555,7 +508555,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -511828,7 +511828,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -512502,7 +512502,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -517535,7 +517535,7 @@
             },
             {
               "path": "apps/web/e2e/staff-business-list-recovery.spec.ts",
-              "sha256": "62372530e905fcb839caa05270d6105478b30f912ac21c917d6af4054b998a94"
+              "sha256": "b77c90319c2c020cb7c4f6841d6b1d9bce9e7593f85ca5f9d7fd747a32063c4e"
             },
             {
               "path": "apps/web/e2e/staff-order-list-query.spec.ts",
@@ -518163,7 +518163,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -519247,7 +519247,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -547102,7 +547102,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -548972,7 +548972,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -550843,7 +550843,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -552683,7 +552683,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -554549,7 +554549,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -556424,7 +556424,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -558272,7 +558272,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -560084,7 +560084,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -561896,7 +561896,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -563709,7 +563709,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -565521,7 +565521,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -572694,7 +572694,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -594734,7 +594734,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -598965,7 +598965,7 @@
       "launch_required": true,
       "remaining": [
         "The 98-path inventory retains primary read, detail, layout and redirect evidence. All 27 component owners in the selected request inventory now have scoped source and case references or a verified write-only classification.",
-        "Current receipts cover checkout wallet states, revision option loading and staff saving queue or detail recovery. Reconcile the remaining route and hook-owned conditions and original route controls before full acceptance."
+        "Current receipts cover checkout wallet states, revision option loading and staff electricity and saving queue or detail recovery. Reconcile the remaining route and hook-owned conditions and original route controls before full acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -599124,7 +599124,8 @@
           "release-0.5-embedded-ticket-read-states",
           "release-0.5-checkout-wallet-read-states",
           "release-0.5-revision-options-pending",
-          "release-0.5-staff-saving-read-shape"
+          "release-0.5-staff-saving-read-shape",
+          "release-0.5-staff-electricity-read-shape"
         ],
         "current_acceptance": null
       }
@@ -599722,7 +599723,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -601530,7 +601531,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -603338,7 +603339,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -605146,7 +605147,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -606954,7 +606955,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -608762,7 +608763,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -610570,7 +610571,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -638245,7 +638246,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -639377,7 +639378,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -640509,7 +640510,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -641644,7 +641645,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -642779,7 +642780,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -643941,7 +643942,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -645072,7 +645073,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -646203,7 +646204,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -647335,7 +647336,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -648485,7 +648486,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -649618,7 +649619,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -681148,7 +681149,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -682278,7 +682279,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -683408,7 +683409,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -684538,7 +684539,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -689147,7 +689148,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -689988,7 +689989,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -690831,7 +690832,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -691672,7 +691673,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -692513,7 +692514,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -693358,7 +693359,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -694203,7 +694204,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -695044,7 +695045,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -695885,7 +695886,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -696727,7 +696728,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -697574,7 +697575,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -717675,7 +717676,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -728989,7 +728990,7 @@
       "launch_required": true,
       "remaining": [
         "The 98-path inventory retains primary read, detail, layout and redirect evidence. All 27 component owners in the selected request inventory now have scoped source and case references or a verified write-only classification.",
-        "Current receipts cover checkout wallet states, revision option loading and staff saving queue or detail recovery. Reconcile the remaining route and hook-owned conditions and original route controls before full acceptance."
+        "Current receipts cover checkout wallet states, revision option loading and staff electricity and saving queue or detail recovery. Reconcile the remaining route and hook-owned conditions and original route controls before full acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -729214,7 +729215,8 @@
           "release-0.5-embedded-ticket-read-states",
           "release-0.5-checkout-wallet-read-states",
           "release-0.5-revision-options-pending",
-          "release-0.5-staff-saving-read-shape"
+          "release-0.5-staff-saving-read-shape",
+          "release-0.5-staff-electricity-read-shape"
         ]
       }
     },
@@ -730158,7 +730160,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
-              "sha256": "6d159c6761198531142817d8fb776381d12e7fd39232c7ac0a48a9556c33dbff"
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
@@ -731184,7 +731186,8 @@
             "All 101 transfer budgets and 20 scoped native ticket, legal-document and receipt history cases passed. Auth assets are byte-identical. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-embedded-ticket-read-states/proof.json",
             "Current simple electricity and saving checkout balance states and staff funding views passed on both native engines. All 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-checkout-wallet-read-states/proof.json",
             "Current simple and advanced revision journeys and 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-revision-options-pending/proof.json",
-            "Current saving staff queue and detail journeys and 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-saving-read-shape/proof.json"
+            "Current saving staff queue and detail journeys and 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-saving-read-shape/proof.json",
+            "Current electricity staff queue and detail journeys and 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-electricity-read-shape/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -731276,7 +731279,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.5-checkout-wallet-read-states",
           "release-0.5-revision-options-pending",
-          "release-0.5-staff-saving-read-shape"
+          "release-0.5-staff-saving-read-shape",
+          "release-0.5-staff-electricity-read-shape"
         ]
       }
     },
@@ -811575,6 +811579,42 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-saving-read-shape/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-saving-read-shape/renewed-bindings.json",
       "release_disposition": "Closed observed staff saving read recovery gaps. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-staff-electricity-read-shape": {
+      "batch": "release-0.5-staff-electricity-read-shape",
+      "base_commit": "0d181e2b234df041779fa58874a7964fecf15316",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/staff-business-list-recovery.spec.ts",
+          "sha256": "b77c90319c2c020cb7c4f6841d6b1d9bce9e7593f85ca5f9d7fd747a32063c4e"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
+          "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
+        }
+      ],
+      "checks": [
+        "The exact predecessor runtime failed three Chromium regressions. A response for another electricity order left the staff detail loading in both locales. The uppercase UUID route failed to load its canonical order.",
+        "The staff electricity queue rejects an invalid page before updating accepted rows. Detail reads retry independently for a mismatched order, and case-insensitive UUID lookup uses the canonical ID. Tested authorization, confirmation, and financial review boundaries remain in place.",
+        "Twenty-four production Chromium and mobile Safari cases passed. The three staff business queues retain their relevant drafts and cursor across retry, then withdraw private work on denial. Electricity URL selection, permissions, layout, accessibility, and navigation were exercised by named cases.",
+        "All 32 focused units and 11 source-mapped Chromium cases passed. The combined critical gate passed at 345/359 lines and 490/559 branches. All 101 transfer budgets, web typecheck, lint and formatting passed. Auth assets are byte-identical.",
+        "The initial baseline setup stopped before execution while rebuilding shared dependencies. An initial coverage cohort exhausted RAM while writing traces. The recorded checks use the verified prebuilt runtime and the passing coverage cohort ran without diagnostic trace archives."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-electricity-read-shape",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-electricity-read-shape/proof.json",
+      "source_scope_proof_sha256": "3d9f70abb0905314328f711b210303b818c869424a8ee93e3c61ea8dca4a29c0",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-electricity-read-shape/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-electricity-read-shape/renewed-bindings.json",
+      "release_disposition": "Closed observed staff electricity read recovery gaps. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [

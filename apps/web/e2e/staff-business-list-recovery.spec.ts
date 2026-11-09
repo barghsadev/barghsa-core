@@ -107,7 +107,7 @@ for (const locale of ['en', 'fa'] as const) {
       await page.route(`**${base}/${firstWork}`, (route) => {
         detailReads++;
         if (name === 'saving' && detailFail) return;
-        if (name === 'saving' && malformedDetail) {
+        if (name !== 'consultation' && malformedDetail) {
           heldMalformedDetail = route;
           return;
         }
@@ -155,26 +155,23 @@ for (const locale of ['en', 'fa'] as const) {
       const initialQueueReads = queries.length;
       expect(initialQueueReads).toBeGreaterThan(0);
       detailFail = false;
-      if (name !== 'electricity') {
-        malformedDetail = true;
-        await retry.click();
-        await expect.poll(() => detailReads).toBe(2);
-        if (name === 'saving') {
-          await expect(retry).toHaveCount(0);
-          await heldMalformedDetail!.fulfill({ json: row(olderWork) });
-        }
-        await expect(retry).toBeVisible();
-        await expect(page.locator(draft)).toHaveCount(0);
-        await expect(list.getByRole('heading', { name: 'Older buyer' })).toHaveCount(0);
-        await expect(content.getByRole('button', { name: /First buyer/ })).toBeVisible();
-        malformedDetail = false;
+      malformedDetail = true;
+      await retry.click();
+      await expect.poll(() => detailReads).toBe(2);
+      if (name !== 'consultation') {
+        await expect(retry).toHaveCount(0);
+        await heldMalformedDetail!.fulfill({ json: row(olderWork) });
       }
+      await expect(retry).toBeVisible();
+      await expect(page.locator(draft)).toHaveCount(0);
+      await expect(list.getByText('Older buyer', { exact: true })).toHaveCount(0);
+      await expect(content.getByRole('button', { name: /First buyer/ })).toBeVisible();
+      malformedDetail = false;
       await retry.click();
       const input = page.locator(draft);
       await expect(input).toBeVisible();
       expect(queries).toHaveLength(initialQueueReads);
-      const expectedDetailReads = name === 'electricity' ? 2 : 3;
-      expect(detailReads).toBe(expectedDetailReads);
+      expect(detailReads).toBe(3);
       if (name === 'consultation') {
         await expect(
           list.locator('bdi').filter({ hasText: 'Chosen consultation staff نام <name>' })
@@ -199,20 +196,20 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(content.getByRole('button', { name: retryWord, exact: true })).toBeVisible();
       const failed = queries.at(-1);
       pageFail = false;
-      if (name !== 'electricity') {
-        malformedPage = true;
-        await content.getByRole('button', { name: retryWord, exact: true }).click();
-        await expect(content.getByRole('button', { name: retryWord, exact: true })).toBeVisible();
-        await expect(content.getByRole('button', { name: /First buyer/ })).toBeVisible();
-        await expect(input).toHaveValue('Preserve this staff draft');
-        expect(queries.at(-1)).toBe(failed);
-        malformedPage = false;
-      }
+      malformedPage = true;
+      const previousQueueReads = queries.length;
+      await content.getByRole('button', { name: retryWord, exact: true }).click();
+      await expect.poll(() => queries.length).toBe(previousQueueReads + 1);
+      await expect(content.getByRole('button', { name: retryWord, exact: true })).toBeVisible();
+      await expect(content.getByRole('button', { name: /First buyer/ })).toBeVisible();
+      await expect(input).toHaveValue('Preserve this staff draft');
+      expect(queries.at(-1)).toBe(failed);
+      malformedPage = false;
       await content.getByRole('button', { name: retryWord, exact: true }).click();
       await expect(content.getByRole('button', { name: /Older buyer/ })).toBeVisible();
       expect(queries.at(-1)).toBe(failed);
       expect(new URLSearchParams(failed).get('after')).toBe(firstWork);
-      expect(detailReads).toBe(expectedDetailReads);
+      expect(detailReads).toBe(3);
       await expect(input).toHaveValue('Preserve this staff draft');
       expect(await list.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
       if (name === 'electricity') {
@@ -260,4 +257,18 @@ test('saving staff can reopen a canonical order from an uppercase UUID', async (
   await page.goto(`/admin/saving-orders?orderId=${id.toUpperCase()}`);
   await expect(page.getByRole('heading', { name: 'Older buyer', exact: true })).toBeVisible();
   await expect(page.locator('#saving-staff-note')).toBeVisible();
+});
+
+test('electricity staff can reopen a canonical order from an uppercase UUID', async ({ page }) => {
+  await shell(page, 'en');
+  const id = `a${firstWork.slice(1)}`;
+  const base = '/api/staff/electricity/orders';
+  await page.route(
+    (url) => url.pathname === base,
+    (route) => route.fulfill({ json: { orders: [], nextAfter: null } })
+  );
+  await page.route(`**${base}/${id}`, (route) => route.fulfill({ json: electricityWork(id) }));
+  await page.goto(`/admin/electricity-orders?orderId=${id.toUpperCase()}`);
+  await expect(page.getByText('Older buyer', { exact: true })).toBeVisible();
+  await expect(page.locator('#electricity-review-reason')).toBeVisible();
 });

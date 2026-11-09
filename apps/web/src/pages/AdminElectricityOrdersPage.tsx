@@ -210,7 +210,7 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
   const [localSelected, setLocalSelected] = useState<string | null>(
     () => staffOrderId(new URLSearchParams(window.location.search).get('orderId')) || null
   );
-  const selectedId = queries ? queries.selected : localSelected;
+  const selectedId = (queries ? queries.selected : localSelected)?.toLowerCase() ?? null;
   const setSelectedId = (id: string | null, replace = false) =>
     queries ? queries.select(id, replace) : setLocalSelected(id);
   const [lookupId, setLookupId] = useState(
@@ -411,7 +411,7 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
 
   function lookupOrder(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const id = lookupId.trim();
+    const id = lookupId.trim().toLowerCase();
     if (!UUID_RE.test(id)) {
       setLookupInvalid(true);
       return;
@@ -437,7 +437,16 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
           return null;
         }
         if (!response.ok) throw new Error('Queue unavailable');
-        return response.json() as Promise<{ orders: ReviewOrder[]; nextAfter: string | null }>;
+        const value = (await response.json()) as {
+          orders: ReviewOrder[];
+          nextAfter: string | null;
+        };
+        if (
+          !Array.isArray(value?.orders) ||
+          value.orders.some((order) => !staffOrderId(order?.orderId))
+        )
+          throw new Error('Invalid electricity order queue');
+        return value;
       })
       .then((value) => {
         if (
@@ -515,7 +524,9 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
           return null;
         }
         if (!response.ok) throw new Error('Detail unavailable');
-        return response.json() as Promise<ReviewOrder>;
+        const value = (await response.json()) as ReviewOrder | null;
+        if (value?.orderId !== selectedId) throw new Error('Invalid electricity order detail');
+        return value;
       })
       .then((value) => {
         if (
