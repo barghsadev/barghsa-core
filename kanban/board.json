@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T13:24:17+00:00",
+  "updated": "2026-11-09T13:31:43+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -11129,7 +11129,8 @@
         "batches": [
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-remove-unapproved-session-location-data",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-immutable-location-and-signature-feed"
         ],
         "current_acceptance": null
       },
@@ -24093,7 +24094,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-browser-origin-security",
           "release-0.6-remove-unapproved-session-location-data",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-immutable-location-and-signature-feed"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -24249,7 +24251,7 @@
             },
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "d9216ea20a2807d0219c5ae77285918ae5be969d3404706dd7cf2445f74b788d"
+              "sha256": "0ff52276c96f8eaea26fce3574dfc947f89e2469af64bde3e1b2a73eb3a6ba5a"
             }
           ],
           "checks": [
@@ -24286,7 +24288,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
             "The exact compiled API and source-bound session HTTP suite passed 17 cases on isolated PostgreSQL 16, including the owner-approved null location even for a public IP and legacy country metadata. Existing authentication, CSRF, expiry, step-up, revoke-all and forced-change assertions passed.",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "The isolated immutable app and worker image contained no GeoIP package or dataset files; the packaged API did not resolve the retired dependency. The final promoted image must repeat this check."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/login-session-acceptance",
           "limitations": [
@@ -736347,7 +736350,8 @@
         "Verify topology, TLS/hostname checks, firewall, secrets, encrypted off-server backups and storage retention.",
         "Execute migration/seed ordering, backup/PITR and restore/rollback rehearsals; measure actual service RPO/RTO.",
         "Install required monitoring, alerts and quality schedules and prove first execution/delivery. Local scripts alone are not proof.",
-        "Provision approved Persian/English profile.verification_status SMS.ir templates or activate direct text, test owned verified destination and record actual provider acceptance/delivery reports before production. Both 11 October direct-line probes rejected with HTTP400/status123; owner deferred this evidence from v0.3.0 staging only."
+        "Provision approved Persian/English profile.verification_status SMS.ir templates or activate direct text, test owned verified destination and record actual provider acceptance/delivery reports before production. Both 11 October direct-line probes rejected with HTTP400/status123; owner deferred this evidence from v0.3.0 staging only.",
+        "Provide an authorized ClamAV signature feed and verify that the chosen staging scanner loads current vendor data, including clean and infected scan receipts. The direct stage feed returned HTTP 403 and a cooldown."
       ],
       "owner": null,
       "depends_on": [],
@@ -736355,7 +736359,8 @@
         "current_acceptance": null,
         "batches": [
           "release-0.6-database-clocks-and-recovery-rehearsal",
-          "release-0.6-hybrid-rehearsal-manifest"
+          "release-0.6-hybrid-rehearsal-manifest",
+          "release-0.6-immutable-location-and-signature-feed"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -822315,6 +822320,41 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/geoip-resolved-secret-scan.log",
       "source_scope_proof_sha256": "e0ad7457892364c34c80f92f9f88e5f75e36980db220566bb083caa94ab56e37"
+    },
+    "release-0.6-immutable-location-and-signature-feed": {
+      "batch": "release-0.6-immutable-location-and-signature-feed",
+      "base_commit": "1bfe70c2358cbadaea82502c5ff2cffa90c1ee32",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "02-auth-users-admin.md#T-02.02.02",
+        "release-readiness#R-05.03"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/security/release-license-review.md",
+          "sha256": "0ff52276c96f8eaea26fce3574dfc947f89e2469af64bde3e1b2a73eb3a6ba5a"
+        },
+        {
+          "path": "docs/operations/clamav-signatures.md",
+          "sha256": "c932c865778993427b9b0022901fdc981ace2deece6cc8fb8e5a11134f50f0bc"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        },
+        {
+          "path": "apps/api/src/session/session.controller.ts",
+          "sha256": "6610178d430b328e34471c46ac0ab2ce2382ec82a5ab4cbda6c96466383a9c99"
+        }
+      ],
+      "checks": [
+        "The isolated immutable app and worker image contained no GeoIP package or dataset files; the packaged API did not resolve the retired dependency. The final promoted image must repeat this check.",
+        "Staging is still v0.5.0 and healthy. The current ClamAV daemon loaded daily revision 28137; the vendor advertises 28178. An isolated FreshClam attempt returned HTTP 403 with a 24-hour cooldown. No live switch or retry.",
+        "Verified Sharp native runtime versions against the signed upstream release and collected the exact third-party notice. Owner or legal review still required for corresponding-source and replacement terms; font source evidence remains open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/v06-geoip-absence-and-scanner-feed.json",
+      "source_scope_proof_sha256": "b5d814166c1b686cc29e4d361f50179bac70e0cbe96f6816996e08b1d82f1619"
     }
   },
   "historical_improvements": [
