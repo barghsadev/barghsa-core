@@ -23,6 +23,10 @@ Node 24 runs all three applications. Each API/worker package is deployed with pr
 
 The v0.6.0 owner decision retains Node 24 LTS and updates the older Node 20 requirement. The v0.5.0 staging API, web and worker each reported Node 24.22.2. [Node.js lists Node 24 as LTS and Node 20 as end of life](https://nodejs.org/en/about/previous-releases). Production image publishing and rollout remain separate acceptance checks.
 
+The focused runtime smoke test uses already-loaded app, web and PostgreSQL image IDs with a private disposable database. It runs the packaged migration command and checks the running UID and GID, read-only root, dropped capabilities, inspector port, and HTTP parser on all three application processes. Supply the tested image IDs through `BARGHSA_TEST_APP_IMAGE`, `BARGHSA_TEST_WEB_IMAGE` and `BARGHSA_TEST_POSTGRES_IMAGE`, then run `python3 scripts/test-container-packaging.py`.
+
+The current images keep deprecation warnings visible and use `NODE_OPTIONS=--max-old-space-size=512`. The hybrid Compose file pins these options for the API, worker, AI inference and migrator, including when their environment files contain a conflicting value. The older runtime-hardening task also names `--no-deprecation`. Its acceptance remains open for that option while the runtime safeguards are tested separately.
+
 API and worker receive provider configuration from an external runtime environment file named by BARGHSA_RUNTIME_ENV_FILE. The same file is supplied to Compose with --env-file for required interpolation. Do not commit the file. Database URL, public application/API origins, delivery encryption key and payment merchant configuration must be supplied. Provider-specific variables in the file reach both applications; unavailable identity verification remains fail-closed.
 
 ## Limits

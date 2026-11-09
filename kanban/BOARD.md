@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T16:22:30+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T16:28:30+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 916 | Accepted with unchanged source bindings. |
-| verify | 421 | Existing work may be complete; inspect evidence before building. |
-| partial | 25 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 919 | Accepted with unchanged source bindings. |
+| verify | 417 | Existing work may be complete; inspect evidence before building. |
+| partial | 26 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 3 | Named owner or external prerequisite. |
@@ -39,12 +39,14 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify the production Docker context, non-root and read-only runtime, disabled inspector and HTTP parser safeguards. Reuse source-bound Docker and staged behavior where applicable.
+Verify current root workspace, dependency strictness, package builds and TypeScript references using exact hosted integrity evidence and scoped local probes.
 
-- `01-platform-infrastructure.md#T-03.01.03`: Create `.dockerignore`
-- `01-platform-infrastructure.md#T-03.01.05`: Implement security hardening in Docker images
-- `06-security-testing-observability.md#T-06.07.03.01`: Harden Dockerfile: non-root user, read-only rootfs where practical, no inspector, `NODE_OPTIONS=--no-deprecation`
-- `06-security-testing-observability.md#T-06.07.03.06`: Write container smoke test: non-root user, inspector not available, no unsafe parser
+- `01-platform-infrastructure.md#T-01.01.02`: Create root `turbo.json` pipeline definition
+- `01-platform-infrastructure.md#T-01.01.03`: Create root `.npmrc` with strict peer dependencies and no shameful hoisting
+- `01-platform-infrastructure.md#T-01.01.04`: Create root `package.json` with `packageManager`, scripts, and engines constraint
+- `01-platform-infrastructure.md#T-01.01.05`: Verify monorepo integrity: install deps, run `turbo build` across all packages, confirm no cross-package resolution errors
+- `01-platform-infrastructure.md#T-01.02.02`: Configure per-package tsconfig with project references in each of: `packages/db`, `packages/shared`, `packages/i18n`, `packages/ui`, `apps/web`, `apps/api`
+- `01-platform-infrastructure.md#T-01.02.04`: Wire `turbo.json` `typecheck` task and CI step to run `turbo typecheck`
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -995,9 +997,9 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-02.04.06` | verify | Earlier acceptance_verified | Configure database constraint to prevent deletion of system electricity products and creation of additional electricity-product types |
 | `01-platform-infrastructure.md#T-03.01.01` | partial | Earlier partial | Create `Dockerfile.web` with multi-stage build |
 | `01-platform-infrastructure.md#T-03.01.02` | partial | Earlier partial | Create shared `Dockerfile.base` for API and worker (same build, different CMD) |
-| `01-platform-infrastructure.md#T-03.01.03` | verify | Earlier acceptance_verified | Create `.dockerignore` |
+| `01-platform-infrastructure.md#T-03.01.03` | done | Earlier acceptance_verified | Create `.dockerignore` |
 | `01-platform-infrastructure.md#T-03.01.04` | done | Earlier acceptance_verified | Add `HEALTHCHECK` instruction to all Dockerfiles |
-| `01-platform-infrastructure.md#T-03.01.05` | verify | Earlier acceptance_verified | Implement security hardening in Docker images |
+| `01-platform-infrastructure.md#T-03.01.05` | done | Earlier acceptance_verified | Implement security hardening in Docker images |
 | `01-platform-infrastructure.md#T-03.02.01` | verify | Earlier acceptance_verified | Create `docker-compose.yml` with PostgreSQL, Redis, MinIO |
 | `01-platform-infrastructure.md#T-03.02.02` | verify | Earlier acceptance_verified | Create `.env.example` with all required development variables |
 | `01-platform-infrastructure.md#T-03.02.03` | verify | Earlier acceptance_verified | Create root `pnpm dev` script for hot-reload local development across all apps |
@@ -1229,12 +1231,12 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.07.02.06` | blocked | Recorded batch work | Set up license compliance check (e.g. license-checker) for dependency licenses |
 | `06-security-testing-observability.md#T-06.07.02.07` | partial | Recorded batch work | Generate SBOM (Software Bill of Materials) for each production build |
 | `06-security-testing-observability.md#T-06.07.02.08` | partial | Recorded batch work | Create CI gate config: SCA/SAST/secret/container scans on every PR, full scan on main |
-| `06-security-testing-observability.md#T-06.07.03.01` | verify | Inventory needed | Harden Dockerfile: non-root user, read-only rootfs where practical, no inspector, `NODE_OPTIONS=--no-deprecation` |
+| `06-security-testing-observability.md#T-06.07.03.01` | partial | Recorded batch work | Harden Dockerfile: non-root user, read-only rootfs where practical, no inspector, `NODE_OPTIONS=--no-deprecation` |
 | `06-security-testing-observability.md#T-06.07.03.02` | verify | Inventory needed | Disable `insecureHTTPParser`; set explicit request/body/header/time limits at proxy and application level |
 | `06-security-testing-observability.md#T-06.07.03.03` | verify | Inventory needed | Configure TLS at reverse proxy: modern protocols (TLS 1.2+), secure ciphers, HSTS |
 | `06-security-testing-observability.md#T-06.07.03.04` | verify | Inventory needed | Ensure proxy trust configured to exact hop topology (not `trust proxy` globally) |
 | `06-security-testing-observability.md#T-06.07.03.05` | done | Recorded batch work | Add container security scanning to CI (Trivy, etc.) |
-| `06-security-testing-observability.md#T-06.07.03.06` | verify | Inventory needed | Write container smoke test: non-root user, inspector not available, no unsafe parser |
+| `06-security-testing-observability.md#T-06.07.03.06` | done | Recorded batch work | Write container smoke test: non-root user, inspector not available, no unsafe parser |
 | `06-security-testing-observability.md#T-06.08.01.01` | verify | Inventory needed | Create initial threat model document (`docs/threat-model.md`) covering all critical flows |
 | `06-security-testing-observability.md#T-06.08.01.02` | verify | Inventory needed | Map trust boundaries, data flows, assets, threat actors (customer, staff, admin, external attacker, provider) |
 | `06-security-testing-observability.md#T-06.08.01.03` | verify | Inventory needed | Apply STRIDE or similar framework to each domain (auth, isolation, wallet, contracts, files, config, providers, AI) |

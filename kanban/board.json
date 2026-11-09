@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T16:22:30+00:00",
+  "updated": "2026-11-09T16:28:30+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -8007,7 +8007,8 @@
         ],
         "batches": [
           "release-0.6-packaged-production-seed",
-          "release-0.6-production-image-recipes-and-distribution"
+          "release-0.6-production-image-recipes-and-distribution",
+          "release-0.6-container-runtime-hardening"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -8043,7 +8044,7 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "7b5699f7b41e9b8966764eb9482155c17bcbb3aab1e9ea4084b93984d062bd19"
+              "sha256": "14b6c1865d6a6df6bb7b9e59bc37a824c1353b28e5269da54c6c69311e407e35"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -8352,12 +8353,10 @@
         "story": "01-platform-infrastructure.md#spec-2b0c597de8ef"
       },
       "requirement": "- **T-03.01.03:** Create `.dockerignore`\n  - **Notes:** Exclude: `node_modules/` (any depth), `.git/`, `dist/` (build stage produces it), `coverage/`, `.turbo/`, `.env`, `*.md` (except build-essential), `test/`, `e2e/`, `drizzle/` (migration snapshots not needed in final image), `.husky/`, `.vscode/`.\n  - **Dependencies:** T-03.01.01, T-03.01.02\n  - **Complexity:** S",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -8413,8 +8412,29 @@
           "Dockerfile.web",
           "docker-compose.prod.yml"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-container-runtime-hardening"
+        ],
+        "current_acceptance": {
+          "kind": "packaged-runtime-and-compose-hardening",
+          "base_commit": "4a9c2ead61b77ff613032aa93ee6597205389cad",
+          "source_evidence": [
+            {
+              "path": ".dockerignore",
+              "sha256": "3bd5500ebfe885097be0a0813b2a7ec040d7cbf433fe060ce1b11f67a887a941"
+            },
+            {
+              "path": "scripts/test-docker-context.py",
+              "sha256": "31ef6fc14320269f8fb636ed46f0564243df568c781c3a86ad7dd4243a2ce99e"
+            }
+          ],
+          "checks": [
+            "The exact .dockerignore and Docker context fixture match the prior native Docker evidence for all 11 excluded and seven required paths. Production migration SQL and journal remain available.",
+            "A synthetic hybrid Compose environment previously overrode Node flags in API, worker, AI inference and migrator. With the fixed heap option the manifest refuses that override in all four services. Local overlay and hybrid Compose checks passed. The production rollout remains separate.",
+            "The persistent isolated smoke test uses real packaged migrations, waits for PostgreSQL TCP readiness, and mirrors production read-only and tmpfs settings. Exact fixture images pass non-root UID/GID, no inspector listener, strict HTTP parsing, readiness loss and recovery, same app image for API and worker, and clean API, web and worker shutdown. A standalone Node 24 control returns 200 with the insecure parser and 400 with the strict parser.",
+            "The fixture reused recorded image IDs and created no production resources. The test removed its disposable containers and private network. Verify the final immutable release images and actual production ingress separately."
+          ]
+        }
       }
     },
     {
@@ -8542,12 +8562,10 @@
         "story": "01-platform-infrastructure.md#spec-2b0c597de8ef"
       },
       "requirement": "- **T-03.01.05:** Implement security hardening in Docker images\n  - **Notes:** Use `--no-cache` in apk add if Alpine. Set `USER node:node` (non-root). Drop `--cap-drop=ALL` and add only `--cap-add=NET_BIND_SERVICE` if binding <1024 port. Set read-only root filesystem (`--read-only`) in production compose. Set `NODE_ENV=production` and ensure `--enable-source-maps` is removed in prod. No debugger exposed. Set `NODE_OPTIONS=\"--max-old-space-size=512\"` for memory limit.\n  - **Dependencies:** T-03.01.01, T-03.01.02\n  - **Complexity:** M\n  - **UI/UX:** N/A\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -8603,8 +8621,45 @@
           "Dockerfile.web",
           "docker-compose.prod.yml"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-container-runtime-hardening"
+        ],
+        "current_acceptance": {
+          "kind": "packaged-runtime-and-compose-hardening",
+          "base_commit": "4a9c2ead61b77ff613032aa93ee6597205389cad",
+          "source_evidence": [
+            {
+              "path": "Dockerfile.base",
+              "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
+            },
+            {
+              "path": "Dockerfile.web",
+              "sha256": "d2381ff9c3ec67588ac9cb330639710d4c8d2e953670e77460962b8d67301c84"
+            },
+            {
+              "path": "docker-compose.prod.yml",
+              "sha256": "ae07525b58933aebe50a0457aae9674d5a717b81a1968cf1c0171864c5b99147"
+            },
+            {
+              "path": "deploy/production/compose.yml",
+              "sha256": "14b6c1865d6a6df6bb7b9e59bc37a824c1353b28e5269da54c6c69311e407e35"
+            },
+            {
+              "path": "scripts/test-container-packaging.py",
+              "sha256": "a2d4f9ef8615da96df7795e62218ddf1a4a76eb5bd5a9a44d95d1734c8c7f7b9"
+            },
+            {
+              "path": "docs/operations/preflight/production-image-review.md",
+              "sha256": "cf2a6fbdafabafe399de070e6afd1bb1b300a5648476153b0525c2d0a5a9e562"
+            }
+          ],
+          "checks": [
+            "The exact .dockerignore and Docker context fixture match the prior native Docker evidence for all 11 excluded and seven required paths. Production migration SQL and journal remain available.",
+            "A synthetic hybrid Compose environment previously overrode Node flags in API, worker, AI inference and migrator. With the fixed heap option the manifest refuses that override in all four services. Local overlay and hybrid Compose checks passed. The production rollout remains separate.",
+            "The persistent isolated smoke test uses real packaged migrations, waits for PostgreSQL TCP readiness, and mirrors production read-only and tmpfs settings. Exact fixture images pass non-root UID/GID, no inspector listener, strict HTTP parsing, readiness loss and recovery, same app image for API and worker, and clean API, web and worker shutdown. A standalone Node 24 control returns 200 with the insecure parser and 400 with the strict parser.",
+            "The fixture reused recorded image IDs and created no production resources. The test removed its disposable containers and private network. Verify the final immutable release images and actual production ingress separately."
+          ]
+        }
       }
     },
     {
@@ -469996,7 +470051,8 @@
           "release-0.6-production-quarantine-guard",
           "release-0.6-proxy-security-headers",
           "release-0.6-workspace-test-and-coverage-configuration",
-          "release-0.6-security-header-ci-and-nonce-evidence"
+          "release-0.6-security-header-ci-and-nonce-evidence",
+          "release-0.6-container-runtime-hardening"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -470024,7 +470080,7 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "7b5699f7b41e9b8966764eb9482155c17bcbb3aab1e9ea4084b93984d062bd19"
+              "sha256": "14b6c1865d6a6df6bb7b9e59bc37a824c1353b28e5269da54c6c69311e407e35"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -470070,7 +470126,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-browser-response-policy",
-          "release-0.6-security-header-ci-and-nonce-evidence"
+          "release-0.6-security-header-ci-and-nonce-evidence",
+          "release-0.6-container-runtime-hardening"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -470086,7 +470143,7 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "7b5699f7b41e9b8966764eb9482155c17bcbb3aab1e9ea4084b93984d062bd19"
+              "sha256": "14b6c1865d6a6df6bb7b9e59bc37a824c1353b28e5269da54c6c69311e407e35"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -470287,7 +470344,8 @@
           "release-0.6-production-quarantine-guard",
           "release-0.6-proxy-security-headers",
           "release-0.6-workspace-test-and-coverage-configuration",
-          "release-0.6-security-header-ci-and-nonce-evidence"
+          "release-0.6-security-header-ci-and-nonce-evidence",
+          "release-0.6-container-runtime-hardening"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -470315,7 +470373,7 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "7b5699f7b41e9b8966764eb9482155c17bcbb3aab1e9ea4084b93984d062bd19"
+              "sha256": "14b6c1865d6a6df6bb7b9e59bc37a824c1353b28e5269da54c6c69311e407e35"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -470416,7 +470474,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-browser-response-policy",
-          "release-0.6-security-header-ci-and-nonce-evidence"
+          "release-0.6-security-header-ci-and-nonce-evidence",
+          "release-0.6-container-runtime-hardening"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -470432,7 +470491,7 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "7b5699f7b41e9b8966764eb9482155c17bcbb3aab1e9ea4084b93984d062bd19"
+              "sha256": "14b6c1865d6a6df6bb7b9e59bc37a824c1353b28e5269da54c6c69311e407e35"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -473817,18 +473876,20 @@
         "story": "06-security-testing-observability.md#spec-2b24cec414cb"
       },
       "requirement": "| T-06.07.03.01 | Harden Dockerfile: non-root user, read-only rootfs where practical, no inspector, `NODE_OPTIONS=--no-deprecation` | S |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Non-root/read-only operation, strict HTTP parsing, inspector denial and fixed heap options passed. Reconcile the literal --no-deprecation option with the current production choice to keep deprecation warnings visible."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-container-runtime-hardening"
+        ],
         "current_acceptance": null
       }
     },
@@ -473995,19 +474056,58 @@
         "story": "06-security-testing-observability.md#spec-2b24cec414cb"
       },
       "requirement": "| T-06.07.03.06 | Write container smoke test: non-root user, inspector not available, no unsafe parser | S |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-container-runtime-hardening"
+        ],
+        "current_acceptance": {
+          "kind": "packaged-runtime-and-compose-hardening",
+          "base_commit": "4a9c2ead61b77ff613032aa93ee6597205389cad",
+          "source_evidence": [
+            {
+              "path": "scripts/test-container-packaging.py",
+              "sha256": "a2d4f9ef8615da96df7795e62218ddf1a4a76eb5bd5a9a44d95d1734c8c7f7b9"
+            },
+            {
+              "path": "deploy/production/compose.yml",
+              "sha256": "14b6c1865d6a6df6bb7b9e59bc37a824c1353b28e5269da54c6c69311e407e35"
+            },
+            {
+              "path": "Dockerfile.base",
+              "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
+            },
+            {
+              "path": "Dockerfile.web",
+              "sha256": "d2381ff9c3ec67588ac9cb330639710d4c8d2e953670e77460962b8d67301c84"
+            },
+            {
+              "path": "scripts/run-packaged-migrations.cjs",
+              "sha256": "692b4a45a4a4a560a2372d7c2d2cbd128b44ea0c9a120ec929e7e3ff61238a8c"
+            },
+            {
+              "path": "scripts/healthcheck-runtime.cjs",
+              "sha256": "024fe14b3e5888ba77b25a39a014ec3b9bba24007872d5dc306c3a3543b7042e"
+            },
+            {
+              "path": "docs/operations/preflight/production-image-review.md",
+              "sha256": "cf2a6fbdafabafe399de070e6afd1bb1b300a5648476153b0525c2d0a5a9e562"
+            }
+          ],
+          "checks": [
+            "The exact .dockerignore and Docker context fixture match the prior native Docker evidence for all 11 excluded and seven required paths. Production migration SQL and journal remain available.",
+            "A synthetic hybrid Compose environment previously overrode Node flags in API, worker, AI inference and migrator. With the fixed heap option the manifest refuses that override in all four services. Local overlay and hybrid Compose checks passed. The production rollout remains separate.",
+            "The persistent isolated smoke test uses real packaged migrations, waits for PostgreSQL TCP readiness, and mirrors production read-only and tmpfs settings. Exact fixture images pass non-root UID/GID, no inspector listener, strict HTTP parsing, readiness loss and recovery, same app image for API and worker, and clean API, web and worker shutdown. A standalone Node 24 control returns 200 with the insecure parser and 400 with the strict parser.",
+            "The fixture reused recorded image IDs and created no production resources. The test removed its disposable containers and private network. Verify the final immutable release images and actual production ingress separately."
+          ]
+        }
       }
     },
     {
@@ -520984,7 +521084,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-preflight-reconciliation",
-          "release-0.6-security-header-ci-and-nonce-evidence"
+          "release-0.6-security-header-ci-and-nonce-evidence",
+          "release-0.6-container-runtime-hardening"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -522296,7 +522397,7 @@
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
-              "sha256": "13584fee3866a623b761340eaf9afda339eff0544fdc7cb4518b669e3244f1b7"
+              "sha256": "cf2a6fbdafabafe399de070e6afd1bb1b300a5648476153b0525c2d0a5a9e562"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -522509,7 +522610,8 @@
           "release-0.6-owner-policy-reconciliation",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-security-header-ci-and-nonce-evidence"
+          "release-0.6-security-header-ci-and-nonce-evidence",
+          "release-0.6-container-runtime-hardening"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -522729,7 +522831,7 @@
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
-              "sha256": "13584fee3866a623b761340eaf9afda339eff0544fdc7cb4518b669e3244f1b7"
+              "sha256": "cf2a6fbdafabafe399de070e6afd1bb1b300a5648476153b0525c2d0a5a9e562"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -523964,7 +524066,8 @@
           "release-0.6-owner-policy-reconciliation",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-security-header-ci-and-nonce-evidence"
+          "release-0.6-security-header-ci-and-nonce-evidence",
+          "release-0.6-container-runtime-hardening"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -524184,7 +524287,7 @@
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
-              "sha256": "13584fee3866a623b761340eaf9afda339eff0544fdc7cb4518b669e3244f1b7"
+              "sha256": "cf2a6fbdafabafe399de070e6afd1bb1b300a5648476153b0525c2d0a5a9e562"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -526158,7 +526261,8 @@
           "release-0.6-owner-policy-reconciliation",
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
-          "release-0.6-security-header-ci-and-nonce-evidence"
+          "release-0.6-security-header-ci-and-nonce-evidence",
+          "release-0.6-container-runtime-hardening"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -526378,7 +526482,7 @@
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
-              "sha256": "13584fee3866a623b761340eaf9afda339eff0544fdc7cb4518b669e3244f1b7"
+              "sha256": "cf2a6fbdafabafe399de070e6afd1bb1b300a5648476153b0525c2d0a5a9e562"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -738656,7 +738760,7 @@
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
-              "sha256": "13584fee3866a623b761340eaf9afda339eff0544fdc7cb4518b669e3244f1b7"
+              "sha256": "cf2a6fbdafabafe399de070e6afd1bb1b300a5648476153b0525c2d0a5a9e562"
             },
             {
               "path": "Dockerfile.base",
@@ -738697,7 +738801,8 @@
           "release-0.6-remove-runtime-package-managers",
           "release-0.6-alpine-node-runtime-candidate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-packaged-production-seed"
+          "release-0.6-packaged-production-seed",
+          "release-0.6-container-runtime-hardening"
         ]
       }
     },
@@ -738738,7 +738843,8 @@
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-production-image-recipes-and-distribution",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-package-metadata-review"
+          "release-0.6-package-metadata-review",
+          "release-0.6-container-runtime-hardening"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -827057,6 +827163,78 @@
         "Identified six entries with no file bytes or packaged file entries. Two are generated PostgreSQL dependency groups and four are Alpine metapackages. Each remains visible in the exact review inventory and the dependencies remain fully scanned.",
         "The package approval ledger and strict checker are unchanged. No package exception was approved and no distribution was published."
       ]
+    },
+    "release-0.6-container-runtime-hardening": {
+      "batch": "release-0.6-container-runtime-hardening",
+      "base_commit": "4a9c2ead61b77ff613032aa93ee6597205389cad",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-03.01.03",
+        "01-platform-infrastructure.md#T-03.01.05",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.02",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.03.01",
+        "06-security-testing-observability.md#T-06.07.03.01",
+        "06-security-testing-observability.md#T-06.07.03.06",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.05.01.06",
+        "07-ui-ux-design.md#T-07.05.01.10",
+        "07-ui-ux-design.md#T-07.05.02.02",
+        "release-readiness#R-05.01",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".dockerignore",
+          "sha256": "3bd5500ebfe885097be0a0813b2a7ec040d7cbf433fe060ce1b11f67a887a941"
+        },
+        {
+          "path": "Dockerfile.base",
+          "sha256": "d561429d74d86c63a2ee90e1356f5ef06eb15be6369fee55846b46fb9a6f91fe"
+        },
+        {
+          "path": "Dockerfile.web",
+          "sha256": "d2381ff9c3ec67588ac9cb330639710d4c8d2e953670e77460962b8d67301c84"
+        },
+        {
+          "path": "deploy/production/compose.yml",
+          "sha256": "14b6c1865d6a6df6bb7b9e59bc37a824c1353b28e5269da54c6c69311e407e35"
+        },
+        {
+          "path": "docker-compose.prod.yml",
+          "sha256": "ae07525b58933aebe50a0457aae9674d5a717b81a1968cf1c0171864c5b99147"
+        },
+        {
+          "path": "docs/operations/preflight/production-image-review.md",
+          "sha256": "cf2a6fbdafabafe399de070e6afd1bb1b300a5648476153b0525c2d0a5a9e562"
+        },
+        {
+          "path": "scripts/healthcheck-runtime.cjs",
+          "sha256": "024fe14b3e5888ba77b25a39a014ec3b9bba24007872d5dc306c3a3543b7042e"
+        },
+        {
+          "path": "scripts/run-packaged-migrations.cjs",
+          "sha256": "692b4a45a4a4a560a2372d7c2d2cbd128b44ea0c9a120ec929e7e3ff61238a8c"
+        },
+        {
+          "path": "scripts/test-container-packaging.py",
+          "sha256": "a2d4f9ef8615da96df7795e62218ddf1a4a76eb5bd5a9a44d95d1734c8c7f7b9"
+        },
+        {
+          "path": "scripts/test-docker-context.py",
+          "sha256": "31ef6fc14320269f8fb636ed46f0564243df568c781c3a86ad7dd4243a2ce99e"
+        }
+      ],
+      "checks": [
+        "The exact .dockerignore and Docker context fixture match the prior native Docker evidence for all 11 excluded and seven required paths. Production migration SQL and journal remain available.",
+        "A synthetic hybrid Compose environment previously overrode Node flags in API, worker, AI inference and migrator. With the fixed heap option the manifest refuses that override in all four services. Local overlay and hybrid Compose checks passed. The production rollout remains separate.",
+        "The persistent isolated smoke test uses real packaged migrations, waits for PostgreSQL TCP readiness, and mirrors production read-only and tmpfs settings. Exact fixture images pass non-root UID/GID, no inspector listener, strict HTTP parsing, readiness loss and recovery, same app image for API and worker, and clean API, web and worker shutdown. A standalone Node 24 control returns 200 with the insecure parser and 400 with the strict parser.",
+        "The fixture reused recorded image IDs and created no production resources. The test removed its disposable containers and private network. Verify the final immutable release images and actual production ingress separately."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "container-runtime-hardening-proof.json",
+      "source_scope_proof_sha256": "44bd11ce04152221b6b824c0fbf631b47d6f0ae64b53d85a7c7ec90959f738cb"
     }
   },
   "historical_improvements": [
@@ -827096,16 +827274,18 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-container-runtime-hardening",
+    "id": "release-0.6-monorepo-build-and-typecheck",
     "release": "0.6.0",
     "task_keys": [
-      "01-platform-infrastructure.md#T-03.01.03",
-      "01-platform-infrastructure.md#T-03.01.05",
-      "06-security-testing-observability.md#T-06.07.03.01",
-      "06-security-testing-observability.md#T-06.07.03.06",
+      "01-platform-infrastructure.md#T-01.01.02",
+      "01-platform-infrastructure.md#T-01.01.03",
+      "01-platform-infrastructure.md#T-01.01.04",
+      "01-platform-infrastructure.md#T-01.01.05",
+      "01-platform-infrastructure.md#T-01.02.02",
+      "01-platform-infrastructure.md#T-01.02.04",
       "release-readiness#R-05.02"
     ],
-    "goal": "Verify the production Docker context, non-root and read-only runtime, disabled inspector and HTTP parser safeguards. Reuse source-bound Docker and staged behavior where applicable."
+    "goal": "Verify current root workspace, dependency strictness, package builds and TypeScript references using exact hosted integrity evidence and scoped local probes."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",
