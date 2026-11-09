@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T20:27:40+00:00",
+  "updated": "2026-11-09T20:33:25+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -11575,7 +11575,8 @@
           "scripts/proxy-fixture.mjs"
         ],
         "batches": [
-          "release-0.6-pilot-proxy-and-cache-policy"
+          "release-0.6-pilot-proxy-and-cache-policy",
+          "release-0.6-browser-and-edge-privacy"
         ],
         "current_acceptance": {
           "kind": "native-proxy-and-authorized-cache-boundaries",
@@ -11583,7 +11584,7 @@
           "source_evidence": [
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "f63afa980950f6ff6936737ae4080fb5dd1af90db79e57539acc58782102d14a"
+              "sha256": "29dc4b58c3216d8b29a57fd35f24334d36c13014d9685dd5dd2ec8448ac9f179"
             },
             {
               "path": "deploy/pilot/README.md",
@@ -11804,7 +11805,8 @@
           "scripts/proxy-fixture.mjs"
         ],
         "batches": [
-          "release-0.6-proxy-trust-and-request-limits"
+          "release-0.6-proxy-trust-and-request-limits",
+          "release-0.6-browser-and-edge-privacy"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -11812,11 +11814,11 @@
           "source_evidence": [
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "f63afa980950f6ff6936737ae4080fb5dd1af90db79e57539acc58782102d14a"
+              "sha256": "29dc4b58c3216d8b29a57fd35f24334d36c13014d9685dd5dd2ec8448ac9f179"
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "6be8c28e11255e44e22921cde7c0b65cd7a2800875a3d1ae152901e567dfe5e2"
+              "sha256": "a6169fa2716af694ba983c277b145f6da6efabc41ee8c92479582af418b19e21"
             },
             {
               "path": "scripts/check-staging-proxy.mjs",
@@ -11923,7 +11925,8 @@
           "scripts/proxy-fixture.mjs"
         ],
         "batches": [
-          "release-0.6-pilot-proxy-and-cache-policy"
+          "release-0.6-pilot-proxy-and-cache-policy",
+          "release-0.6-browser-and-edge-privacy"
         ],
         "current_acceptance": {
           "kind": "native-proxy-and-authorized-cache-boundaries",
@@ -11931,7 +11934,7 @@
           "source_evidence": [
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "f63afa980950f6ff6936737ae4080fb5dd1af90db79e57539acc58782102d14a"
+              "sha256": "29dc4b58c3216d8b29a57fd35f24334d36c13014d9685dd5dd2ec8448ac9f179"
             },
             {
               "path": "deploy/pilot/README.md",
@@ -31696,7 +31699,8 @@
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-browser-and-edge-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -31768,7 +31772,7 @@
             },
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "f63afa980950f6ff6936737ae4080fb5dd1af90db79e57539acc58782102d14a"
+              "sha256": "29dc4b58c3216d8b29a57fd35f24334d36c13014d9685dd5dd2ec8448ac9f179"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -31780,7 +31784,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "6be8c28e11255e44e22921cde7c0b65cd7a2800875a3d1ae152901e567dfe5e2"
+              "sha256": "a6169fa2716af694ba983c277b145f6da6efabc41ee8c92479582af418b19e21"
             },
             {
               "path": "packages/db/drizzle/production/0082_restore_foundation_constraints.sql",
@@ -472432,7 +472436,8 @@
         ],
         "batches": [
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-browser-and-edge-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-session-authority",
@@ -472536,7 +472541,7 @@
             },
             {
               "path": "docs/security/session-lifetime.md",
-              "sha256": "9a0cc24ec6fc58e026d44dc06c170232633c9b5834454d7e65eeadcc4071a99d"
+              "sha256": "85efc197eccc06fc801bf1b9991389241a4ff376f98fbba0006b16a8e8b5e738"
             },
             {
               "path": "packages/db/src/schema/sessions.ts",
@@ -472643,7 +472648,8 @@
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-browser-and-edge-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-session-verification",
@@ -472695,7 +472701,7 @@
             },
             {
               "path": "docs/security/session-lifetime.md",
-              "sha256": "9a0cc24ec6fc58e026d44dc06c170232633c9b5834454d7e65eeadcc4071a99d"
+              "sha256": "85efc197eccc06fc801bf1b9991389241a4ff376f98fbba0006b16a8e8b5e738"
             }
           ],
           "checks": [
@@ -472862,7 +472868,8 @@
         ],
         "batches": [
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-browser-and-edge-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-session-authority",
@@ -472962,7 +472969,7 @@
             },
             {
               "path": "docs/security/session-lifetime.md",
-              "sha256": "9a0cc24ec6fc58e026d44dc06c170232633c9b5834454d7e65eeadcc4071a99d"
+              "sha256": "85efc197eccc06fc801bf1b9991389241a4ff376f98fbba0006b16a8e8b5e738"
             },
             {
               "path": "packages/db/src/schema/sessions.ts",
@@ -472992,8 +472999,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify session credential cutover and restricted edge logs against the exact deployed staging candidate.",
-        "Finish a scoped audit of browser storage, URLs, analytics and client logging for OTPs, passwords and national identifiers."
+        "Rehearse the legacy credential cutover and restricted edge logging using the exact isolated staging candidate and staging proxy policy. Verify live cutover receipts separately after acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -473024,6 +473030,8 @@
           "apps/worker/src/auth-delivery/providers.ts",
           "apps/worker/src/auth-delivery/runner.integration.test.ts",
           "apps/worker/src/auth-delivery/runner.ts",
+          "deploy/pilot/nginx.conf",
+          "deploy/staging/nginx.conf",
           "docs/security/otp.md",
           "docs/security/session-lifetime.md",
           "packages/db/src/schema/sessions.ts",
@@ -473031,7 +473039,8 @@
         ],
         "batches": [
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-browser-and-edge-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-session-authority",
@@ -473064,6 +473073,18 @@
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
               "sha256": "93eb15f392957ac718596c8e9ac2f4ba52d84c5dd333ec0236d376a284a69427"
+            },
+            {
+              "path": "apps/api/src/crm/crm.service.ts",
+              "sha256": "bc0c9e119db3fab6020d2830de1551c9bf9b7cb5ba157ad7ad9070cefc0f1680"
+            },
+            {
+              "path": "apps/api/src/route-errors/route-errors.controller.test.ts",
+              "sha256": "e59f2ac8db69247aaca5bbbe9f8a6c31dcdab91a0d60adf2a658d9adf49b492b"
+            },
+            {
+              "path": "apps/api/src/route-errors/route-errors.controller.ts",
+              "sha256": "0e16a8a12e48adc346e7be9829475247b4e87aa14c0ad99676edbe0c07a66093"
             },
             {
               "path": "apps/api/src/session/cookie.helper.ts",
@@ -473118,8 +473139,32 @@
               "sha256": "84fbbeaecb43a5f25335f488ee4c2a6b89b659c084b831012b7b1d441714ee1f"
             },
             {
+              "path": "apps/web/src/hooks/usePasswordRecoveryForm.ts",
+              "sha256": "e95aa4249c21f42e28668f524f6f9b8d5f5b6ac860a16858d5d1e7e529a42135"
+            },
+            {
+              "path": "apps/web/src/lib/analytics-client.test.ts",
+              "sha256": "19932fbc34cfb7cbceeae33c2fd7e2d677dbeb2cbd5ed8e3736a3492a8e9a707"
+            },
+            {
+              "path": "apps/web/src/lib/analytics-client.ts",
+              "sha256": "3f1e7a436bdcf4adec83a56696f38d2e12d65b68163a5d0467b27191ee7dd1a5"
+            },
+            {
+              "path": "apps/web/src/lib/auth-entry-feedback.test.ts",
+              "sha256": "d137658c69e414f4ec446d00948d7ccd517dca8c0ff266d5239ed722f77ca994"
+            },
+            {
+              "path": "apps/web/src/lib/auth-entry-feedback.ts",
+              "sha256": "b629af1137edfa48b499808f9d5886c2f873ccbf1c50d32c7d5e8426b7ed9755"
+            },
+            {
               "path": "apps/web/src/lib/auth-responses.ts",
               "sha256": "67a6f449bd32a510b6a7317aaa090faa04f6651d323b69d2ec77b49d22345a6f"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-invoice-return.ts",
+              "sha256": "a7436ddd67a8e7877ac61125fafa2685a496332acd4cff73ef3b076598cea7be"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security-native-forms.test.tsx",
@@ -473134,6 +473179,10 @@
               "sha256": "c7d6d3f1a5a03454f6b9ff4513f660ad44ba2038ba8b3269f08f87b1befab140"
             },
             {
+              "path": "apps/web/src/routes/register/verify.tsx",
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
+            },
+            {
               "path": "apps/worker/src/auth-delivery/providers.ts",
               "sha256": "8d0b41f73b2fbf4957d7a35194a0bf6401e26d0d40e27fb9325f0855a618645d"
             },
@@ -473146,12 +473195,20 @@
               "sha256": "d8734308b2f9ecade81c09e44553886a126056a20f80c170bab6406e970e790a"
             },
             {
+              "path": "deploy/pilot/nginx.conf",
+              "sha256": "29dc4b58c3216d8b29a57fd35f24334d36c13014d9685dd5dd2ec8448ac9f179"
+            },
+            {
+              "path": "deploy/staging/nginx.conf",
+              "sha256": "a6169fa2716af694ba983c277b145f6da6efabc41ee8c92479582af418b19e21"
+            },
+            {
               "path": "docs/security/otp.md",
               "sha256": "2908ac23a7a66b5e73397b3c9e0363b038765fb5fc8a16c86a94cd32de589cc9"
             },
             {
               "path": "docs/security/session-lifetime.md",
-              "sha256": "9a0cc24ec6fc58e026d44dc06c170232633c9b5834454d7e65eeadcc4071a99d"
+              "sha256": "85efc197eccc06fc801bf1b9991389241a4ff376f98fbba0006b16a8e8b5e738"
             },
             {
               "path": "packages/db/src/schema/sessions.ts",
@@ -473160,6 +473217,10 @@
             {
               "path": "packages/i18n/src/password-recovery-forms.ts",
               "sha256": "63a19b260b5d652b3c8385363e2a3b262166a42a55948a4e10556a81375d2f70"
+            },
+            {
+              "path": "packages/shared/src/analytics/index.test.ts",
+              "sha256": "2ba2073de74257f9986e6c6b7ac44aa6f884153c9c47d791f2822f56b1022a53"
             }
           ],
           "checks": [
@@ -473169,7 +473230,9 @@
             "The email has a public invitation reference and separate one-time code. The API binds the entered code to the provided reference and preserves the existing 24-hour expiry, IP rate limit, password policy and atomic single-use transaction. Historical unprefixed codes cannot authorize activation.",
             "Four compiled native API cases passed for real encrypted-queue and mailbox delivery, expiry, rollback, legacy refusal, reissue and concurrent single-use. The whole auth-delivery worker file passed 46 cases. A previously attempted legacy message was cancelled before provider I/O and its encrypted payload erased.",
             "Sixteen web form tests and twelve compiled Chromium and Mobile Safari cases passed. Browser tests covered Persian and English, early legacy fragment scrubbing, empty code before entry, no browser storage, stale response cancellation and unchanged CSP. Both web tiers, all 101 route budgets and six cold-auth transfers passed.",
-            "The final API and worker builds, typechecks, dictionary build, lint, formatting and canonical contract verification passed. The contract is unchanged. A read-only staging query observed zero live pending staff activations and zero live queued activation rows before the fix."
+            "The final API and worker builds, typechecks, dictionary build, lint, formatting and canonical contract verification passed. The contract is unchanged. A read-only staging query observed zero live pending staff activations and zero live queued activation rows before the fix.",
+            "Scoped review verified browser storage, structured identity input, auth URL references, recovery proof handling, typed product analytics and route-error reporting. The browser and analytics suites passed eight tests and the route-error controller passed twenty-one.",
+            "The live staging config inherited the standard raw request access log. The source change strips query and referrer values and normalizes individual revocation paths for staging and pilot. Full staging syntax passed on the installed NGINX binary. Ten private loopback requests verified both log formats while the handler retained the original query and expected status."
           ]
         }
       }
@@ -473215,7 +473278,8 @@
         ],
         "batches": [
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-browser-and-edge-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-session-authority",
@@ -473307,7 +473371,7 @@
             },
             {
               "path": "docs/security/session-lifetime.md",
-              "sha256": "9a0cc24ec6fc58e026d44dc06c170232633c9b5834454d7e65eeadcc4071a99d"
+              "sha256": "85efc197eccc06fc801bf1b9991389241a4ff376f98fbba0006b16a8e8b5e738"
             },
             {
               "path": "packages/db/src/schema/sessions.ts",
@@ -473346,7 +473410,8 @@
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-browser-and-edge-privacy"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-session-verification",
@@ -473398,7 +473463,7 @@
             },
             {
               "path": "docs/security/session-lifetime.md",
-              "sha256": "9a0cc24ec6fc58e026d44dc06c170232633c9b5834454d7e65eeadcc4071a99d"
+              "sha256": "85efc197eccc06fc801bf1b9991389241a4ff376f98fbba0006b16a8e8b5e738"
             }
           ],
           "checks": [
@@ -474597,7 +474662,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-browser-response-policy",
-          "release-0.6-security-header-ci-and-nonce-evidence"
+          "release-0.6-security-header-ci-and-nonce-evidence",
+          "release-0.6-browser-and-edge-privacy"
         ],
         "current_acceptance": null
       }
@@ -474706,7 +474772,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-container-runtime-hardening",
           "release-0.6-proxy-trust-and-request-limits",
-          "release-0.6-browser-dynamic-evaluation-boundary"
+          "release-0.6-browser-dynamic-evaluation-boundary",
+          "release-0.6-browser-and-edge-privacy"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -474738,7 +474805,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "6be8c28e11255e44e22921cde7c0b65cd7a2800875a3d1ae152901e567dfe5e2"
+              "sha256": "a6169fa2716af694ba983c277b145f6da6efabc41ee8c92479582af418b19e21"
             },
             {
               "path": "docs/security/content-security-policy.md",
@@ -474820,7 +474887,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-proxy-trust-and-request-limits",
-          "release-0.6-browser-dynamic-evaluation-boundary"
+          "release-0.6-browser-dynamic-evaluation-boundary",
+          "release-0.6-browser-and-edge-privacy"
         ],
         "current_acceptance": {
           "kind": "production-csp-cross-origin-browser-and-first-party-control",
@@ -474840,7 +474908,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "6be8c28e11255e44e22921cde7c0b65cd7a2800875a3d1ae152901e567dfe5e2"
+              "sha256": "a6169fa2716af694ba983c277b145f6da6efabc41ee8c92479582af418b19e21"
             },
             {
               "path": "docs/security/content-security-policy.md",
@@ -478234,7 +478302,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-proxy-trust-and-request-limits"
+          "release-0.6-proxy-trust-and-request-limits",
+          "release-0.6-browser-and-edge-privacy"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -478250,11 +478319,11 @@
             },
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "f63afa980950f6ff6936737ae4080fb5dd1af90db79e57539acc58782102d14a"
+              "sha256": "29dc4b58c3216d8b29a57fd35f24334d36c13014d9685dd5dd2ec8448ac9f179"
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "6be8c28e11255e44e22921cde7c0b65cd7a2800875a3d1ae152901e567dfe5e2"
+              "sha256": "a6169fa2716af694ba983c277b145f6da6efabc41ee8c92479582af418b19e21"
             },
             {
               "path": "scripts/check-staging-proxy.mjs",
@@ -478322,7 +478391,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-proxy-trust-and-request-limits"
+          "release-0.6-proxy-trust-and-request-limits",
+          "release-0.6-browser-and-edge-privacy"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -478346,11 +478416,11 @@
             },
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "f63afa980950f6ff6936737ae4080fb5dd1af90db79e57539acc58782102d14a"
+              "sha256": "29dc4b58c3216d8b29a57fd35f24334d36c13014d9685dd5dd2ec8448ac9f179"
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "6be8c28e11255e44e22921cde7c0b65cd7a2800875a3d1ae152901e567dfe5e2"
+              "sha256": "a6169fa2716af694ba983c277b145f6da6efabc41ee8c92479582af418b19e21"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -481948,21 +482018,45 @@
         "story": "06-security-testing-observability.md#spec-fbdd9ec1cd8c"
       },
       "requirement": "| T-06.13.02.06 | Ensure secrets, PII, payment details, and tokens are redacted from all log output | M |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Review application, worker, database and ingress error log sinks for token, identity and payment detail redaction in a production-equivalent configuration. Run a representative sensitive-input rehearsal and verify the configured sink receipts."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [
-          "release-0.6-database-pool-deadlines-and-log-privacy"
+        "changed_paths": [
+          "deploy/pilot/nginx.conf",
+          "deploy/staging/nginx.conf"
         ],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-database-pool-deadlines-and-log-privacy",
+          "release-0.6-browser-and-edge-privacy"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-private-ingress-proof",
+          "base_commit": "fb5409974f4845cfd335013f45d12f9012954bc0",
+          "source_evidence": [
+            {
+              "path": "deploy/pilot/nginx.conf",
+              "sha256": "29dc4b58c3216d8b29a57fd35f24334d36c13014d9685dd5dd2ec8448ac9f179"
+            },
+            {
+              "path": "deploy/staging/nginx.conf",
+              "sha256": "a6169fa2716af694ba983c277b145f6da6efabc41ee8c92479582af418b19e21"
+            },
+            {
+              "path": "docs/security/session-lifetime.md",
+              "sha256": "85efc197eccc06fc801bf1b9991389241a4ff376f98fbba0006b16a8e8b5e738"
+            }
+          ],
+          "checks": [
+            "The live staging config inherited the standard raw request access log. The source change strips query and referrer values and normalizes individual revocation paths for staging and pilot. Full staging syntax passed on the installed NGINX binary. Ten private loopback requests verified both log formats while the handler retained the original query and expected status."
+          ]
+        }
       }
     },
     {
@@ -482013,7 +482107,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-private-api-monitoring",
-          "release-0.6-proxy-trust-and-request-limits"
+          "release-0.6-proxy-trust-and-request-limits",
+          "release-0.6-browser-and-edge-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-private-monitoring",
@@ -482045,7 +482140,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "6be8c28e11255e44e22921cde7c0b65cd7a2800875a3d1ae152901e567dfe5e2"
+              "sha256": "a6169fa2716af694ba983c277b145f6da6efabc41ee8c92479582af418b19e21"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
@@ -743985,7 +744080,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-document-http-fixture-isolation",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-browser-and-edge-privacy"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -835210,6 +835306,38 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/staff-activation-credential-transport",
       "source_scope_proof": "release-0.6-staff-activation-credential-transport.json",
       "source_scope_proof_sha256": "476cd142c6de70de25170e2b063191984e61f383a2c3cb885f716fe075fcffaf"
+    },
+    "release-0.6-browser-and-edge-privacy": {
+      "batch": "release-0.6-browser-and-edge-privacy",
+      "base_commit": "fb5409974f4845cfd335013f45d12f9012954bc0",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.01.04.08",
+        "06-security-testing-observability.md#T-06.13.02.06",
+        "06-security-testing-observability.md#T-06.02.02.06",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/pilot/nginx.conf",
+          "sha256": "29dc4b58c3216d8b29a57fd35f24334d36c13014d9685dd5dd2ec8448ac9f179"
+        },
+        {
+          "path": "deploy/staging/nginx.conf",
+          "sha256": "a6169fa2716af694ba983c277b145f6da6efabc41ee8c92479582af418b19e21"
+        },
+        {
+          "path": "docs/security/session-lifetime.md",
+          "sha256": "85efc197eccc06fc801bf1b9991389241a4ff376f98fbba0006b16a8e8b5e738"
+        }
+      ],
+      "checks": [
+        "Scoped review verified browser storage, structured identity input, auth URL references, recovery proof handling, typed product analytics and route-error reporting. The browser and analytics suites passed eight tests and the route-error controller passed twenty-one.",
+        "The live staging config inherited the standard raw request access log. The source change strips query and referrer values and normalizes individual revocation paths for staging and pilot. Full staging syntax passed on the installed NGINX binary. Ten private loopback requests verified both log formats while the handler retained the original query and expected status.",
+        "The live v0.5 report-only log had six CSP reports since 2026-11-09 11:23 UTC, including five image blocks for https://barghsa.com. The published favicon still uses that origin. The one-week observation and live enforcement gate remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-and-edge-privacy",
+      "source_scope_proof": "release-0.6-browser-and-edge-privacy.json",
+      "source_scope_proof_sha256": "bd6968c6407dc939a972cfc3c679a5c6c0414d3ac0c945dbaa3dfd93e0b24f82"
     }
   },
   "historical_improvements": [

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T20:27:40+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T20:33:25+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 988 | Accepted with unchanged source bindings. |
-| verify | 342 | Existing work may be complete; inspect evidence before building. |
-| partial | 32 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 341 | Existing work may be complete; inspect evidence before building. |
+| partial | 33 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 3 | Named owner or external prerequisite. |
@@ -1362,7 +1362,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.13.02.03` | verify | Inventory needed | Add pseudonymous actor/profile IDs to logs (never raw national IDs, secrets, tokens) |
 | `06-security-testing-observability.md#T-06.13.02.04` | verify | Inventory needed | Implement environment-aware log level: debug in dev, info in staging, warn+ in production |
 | `06-security-testing-observability.md#T-06.13.02.05` | verify | Inventory needed | Configure Loki log shipping agent (Promtail / Grafana Alloy) |
-| `06-security-testing-observability.md#T-06.13.02.06` | verify | Recorded batch work | Ensure secrets, PII, payment details, and tokens are redacted from all log output |
+| `06-security-testing-observability.md#T-06.13.02.06` | partial | Recorded batch work | Ensure secrets, PII, payment details, and tokens are redacted from all log output |
 | `06-security-testing-observability.md#T-06.13.02.07` | verify | Inventory needed | Write integration test: log format compliance, redaction, correlation ID presence |
 | `06-security-testing-observability.md#T-06.14.01.01` | done | Recorded batch work | Implement Prometheus metrics endpoint in API and worker processes |
 | `06-security-testing-observability.md#T-06.14.01.02` | done | Recorded batch work | Instrument RED metrics: request rate, error count (by status/route), latency (p50/p95/p99) |
