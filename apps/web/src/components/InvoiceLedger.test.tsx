@@ -57,12 +57,13 @@ afterEach(async () => {
 });
 
 it('opens staff invoice detail with line VAT and payment history, then selects its due-date tool', async () => {
+  const linked = { ...row, orderId: ORDER, type: 'auto' };
   const fetcher = vi.fn(async (input: RequestInfo | URL) => {
     const path = String(input);
     if (path.endsWith(`/${ID}`))
       return new Response(
         JSON.stringify({
-          ...row,
+          ...linked,
           lines: [
             {
               description: 'Electricity',
@@ -98,13 +99,20 @@ it('opens staff invoice detail with line VAT and payment history, then selects i
           },
         })
       );
-    return new Response(JSON.stringify({ items: [row], nextCursor: null }));
+    return new Response(JSON.stringify({ items: [linked], nextCursor: null }));
   });
   vi.stubGlobal('fetch', fetcher);
   const onSelectForDueAt = vi.fn();
+  const onSelectForRefund = vi.fn();
   const onOpenReceipt = vi.fn();
   await act(async () =>
-    root.render(<InvoiceLedger onSelectForDueAt={onSelectForDueAt} onOpenReceipt={onOpenReceipt} />)
+    root.render(
+      <InvoiceLedger
+        onSelectForDueAt={onSelectForDueAt}
+        onSelectForRefund={onSelectForRefund}
+        onOpenReceipt={onOpenReceipt}
+      />
+    )
   );
   expect(container.textContent).toContain('109000 IRR');
   expect(container.textContent).toContain('Electricity service period');
@@ -112,6 +120,9 @@ it('opens staff invoice detail with line VAT and payment history, then selects i
   expect(container.textContent).toContain('Electricity');
   expect(container.textContent).toContain('9000 IRR');
   expect(container.textContent).toContain('Wallet');
+  const detail = container.querySelector('section[aria-labelledby="invoice-ledger-detail-title"]')!;
+  expect(detail.textContent).toContain('Automatic');
+  expect(detail.textContent).toContain(ORDER);
   const receiptButton = [...container.querySelectorAll('button')].find(
     (button) => button.textContent === 'Open receipt scan'
   );
@@ -122,6 +133,11 @@ it('opens staff invoice detail with line VAT and payment history, then selects i
   );
   await act(async () => dueButton!.click());
   expect(onSelectForDueAt).toHaveBeenCalledWith(ID);
+  const refundButton = [...detail.querySelectorAll('button')].find(
+    (button) => button.textContent === 'Manage refunds'
+  );
+  await act(async () => refundButton!.click());
+  expect(onSelectForRefund).toHaveBeenCalledExactlyOnceWith(ID);
 });
 
 it.each([401, 403])(
@@ -280,7 +296,7 @@ it('retries a failed cursor without reloading selected invoice details or earlie
       });
     return new Response(
       JSON.stringify({
-        items: [{ ...row, invoiceId: path.includes('beforeAt=') ? older : ID }],
+        items: [path.includes('beforeAt=') ? { ...row, invoiceId: older, type: null } : row],
         nextCursor: path.includes('beforeAt=')
           ? null
           : { beforeAt: '2026-09-01T00:00:00.123456Z', beforeId: ID },
@@ -318,42 +334,59 @@ it('retries a failed cursor without reloading selected invoice details or earlie
   expect(fetcher.mock.calls.at(-1)![0]).toBe(failed);
   expect(fetcher.mock.calls.filter(([url]) => String(url).endsWith(`/${ID}`))).toHaveLength(1);
   expect(container.querySelectorAll('tbody button')).toHaveLength(2);
+  expect(container.querySelector('tbody')?.textContent).toContain('Unknown');
   expect(container.querySelector('section[aria-labelledby="invoice-ledger-detail-title"]')).toBe(
     selected
   );
 });
 
-it('retries invoice detail independently from the ledger', async () => {
-  let fail = true;
-  const fetcher = vi.fn(async (input: RequestInfo | URL) => {
-    if (String(input).endsWith(`/${ID}`))
-      return fail
-        ? new Response(null, { status: 503 })
-        : new Response(
-            JSON.stringify({
-              ...row,
-              lines: [],
-              activity: { payments: [], bankReceipts: [], refunds: [] },
-            })
-          );
-    return new Response(JSON.stringify({ items: [row], nextCursor: null }));
-  });
-  vi.stubGlobal('fetch', fetcher);
-  await act(async () =>
-    root.render(<InvoiceLedger onSelectForDueAt={vi.fn()} onOpenReceipt={vi.fn()} />)
-  );
-  await act(async () => (container.querySelector('tbody button') as HTMLButtonElement).click());
-  fail = false;
-  await act(async () =>
-    (
-      [
-        ...container.querySelectorAll(
-          'section[aria-labelledby="invoice-ledger-detail-title"] button'
-        ),
-      ].find((button) => button.textContent === 'Retry') as HTMLButtonElement
-    ).click()
-  );
-  expect(fetcher.mock.calls.filter(([url]) => !String(url).endsWith(`/${ID}`))).toHaveLength(1);
-  expect(fetcher.mock.calls.filter(([url]) => String(url).endsWith(`/${ID}`))).toHaveLength(2);
-  expect(container.textContent).toContain('Use in due-date tool');
-});
+it.each([200, 403, 404])(
+  'retries invoice detail independently from the ledger when it returns %s',
+  async (status) => {
+    let fail = true;
+    const fetcher = vi.fn(async (input: RequestInfo | URL) => {
+      if (String(input).endsWith(`/${ID}`))
+        return fail
+          ? new Response(null, { status: 503 })
+          : status === 200
+            ? Response.json({
+                ...row,
+                lines: [],
+                activity: { payments: [], bankReceipts: [], refunds: [] },
+              })
+            : Response.json({ message: 'Private invoice error' }, { status });
+      return new Response(JSON.stringify({ items: [row], nextCursor: null }));
+    });
+    vi.stubGlobal('fetch', fetcher);
+    await act(async () =>
+      root.render(<InvoiceLedger onSelectForDueAt={vi.fn()} onOpenReceipt={vi.fn()} />)
+    );
+    await act(async () => (container.querySelector('tbody button') as HTMLButtonElement).click());
+    fail = false;
+    await act(async () =>
+      (
+        [
+          ...container.querySelectorAll(
+            'section[aria-labelledby="invoice-ledger-detail-title"] button'
+          ),
+        ].find((button) => button.textContent === 'Retry') as HTMLButtonElement
+      ).click()
+    );
+    expect(fetcher.mock.calls.filter(([url]) => !String(url).endsWith(`/${ID}`))).toHaveLength(1);
+    expect(fetcher.mock.calls.filter(([url]) => String(url).endsWith(`/${ID}`))).toHaveLength(2);
+    if (status === 200) {
+      expect(container.textContent).toContain('Use in due-date tool');
+    } else {
+      expect(container.textContent).not.toContain('Use in due-date tool');
+      expect(container.textContent).not.toContain('Private invoice error');
+      expect(container.textContent).not.toContain('Retry');
+      if (status === 403) {
+        expect(container.textContent).toContain('You do not have permission to view invoices.');
+        expect(container.querySelector('tbody')).toBeNull();
+      } else {
+        expect(container.textContent).toContain('Record unavailable.');
+        expect(container.querySelector('tbody button')).not.toBeNull();
+      }
+    }
+  }
+);

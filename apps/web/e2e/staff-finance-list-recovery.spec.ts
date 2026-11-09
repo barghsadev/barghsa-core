@@ -3,6 +3,7 @@ import type { Route } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
 
 const first = '82000000-0000-4000-8000-000000000001';
 const older = '82000000-0000-4000-8000-000000000002';
@@ -65,6 +66,74 @@ async function shell(page: Page, locale: 'en' | 'fa') {
 for (const locale of ['en', 'fa'] as const) {
   const ledgerWord = (key: string) => adminText(`admin.invoices.ledger.${key}`, locale);
   const receiptWord = (key: string) => adminText(`admin.invoiceReceipts.${key}`, locale);
+  test(`staff invoice detail denial withdraws the ledger and aborts a pending page (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    let pendingPage: Route | undefined;
+    let pendingDetail: Route | undefined;
+    let pageAborted = false;
+    let deny = true;
+    const endpoint = '/api/admin/invoices/ledger';
+    page.on('requestfailed', (request) => {
+      const url = new URL(request.url());
+      if (url.pathname === endpoint && url.searchParams.has('beforeAt')) pageAborted = true;
+    });
+    await page.route(
+      (url) => url.pathname === endpoint,
+      (route) => {
+        if (new URL(route.request().url()).searchParams.has('beforeAt')) {
+          pendingPage = route;
+          return;
+        }
+        return route.fulfill({
+          json: { items: [invoice(first)], nextCursor: { beforeAt: stamp, beforeId: first } },
+        });
+      }
+    );
+    await page.route(`**${endpoint}/${first}`, (route) => {
+      if (!deny) return route.fulfill({ status: 404, json: { message: 'Private invoice error' } });
+      pendingDetail = route;
+    });
+    await page.goto('/admin/invoices');
+    const ledger = page.getByRole('region', { name: ledgerWord('title'), exact: true });
+    const open = ledger.getByRole('button', {
+      name: `${ledgerWord('detail')}: ${first}`,
+      exact: true,
+    });
+    const detail = ledger.getByRole('region', { name: ledgerWord('detail'), exact: true });
+    const more = ledger.getByRole('button', { name: ledgerWord('more'), exact: true });
+    try {
+      await open.click();
+      await expect(detail.getByRole('status')).toHaveText(ledgerWord('loadingDetail'));
+      await expect.poll(() => !!pendingDetail).toBe(true);
+      await more.click();
+      await expect.poll(() => !!pendingPage).toBe(true);
+      await pendingDetail!.fulfill({ status: 403, json: { message: 'Private invoice error' } });
+      await expect(ledger.getByRole('alert')).toHaveText(ledgerWord('forbidden'));
+      await expect(open).toHaveCount(0);
+      await expect(detail).toHaveCount(0);
+      await expect.poll(() => pageAborted).toBe(true);
+      await pendingPage!
+        .fulfill({ json: { items: [invoice(older)], nextCursor: null } })
+        .catch(() => {});
+      await expect(ledger.getByText(older, { exact: true })).toHaveCount(0);
+      await expect(ledger).not.toContainText('Private invoice error');
+    } finally {
+      await pendingPage?.abort().catch(() => {});
+      await pendingDetail?.abort().catch(() => {});
+    }
+    deny = false;
+    await page.goto('/admin/invoices');
+    await open.click();
+    await expect(detail.getByRole('alert')).toHaveText(loadingText('recordUnavailable', locale));
+    await expect(
+      detail.getByRole('button', { name: ledgerWord('retry'), exact: true })
+    ).toHaveCount(0);
+    await expect(open).toBeVisible();
+    await expect(detail).not.toContainText('Private invoice error');
+  });
+
   test(`staff ledger retains details and rows when retrying a failed page (${locale})`, async ({
     page,
   }, testInfo) => {

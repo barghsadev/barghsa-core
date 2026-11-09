@@ -14,6 +14,7 @@ import {
 import type { FormEvent } from 'react';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { t as appText } from '@barghsa/i18n/workspace';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -24,6 +25,7 @@ import { formatInvoiceServicePeriod } from '../lib/invoice-service-period.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useManualServerRead } from '../hooks/useServerQuery.js';
+import { ServerQueryError } from '../lib/server-query-client.js';
 import { queryKeys } from '../lib/query-keys.js';
 import { validInvoiceActivity, validInvoiceLine } from '../lib/customer-invoices.js';
 
@@ -152,10 +154,14 @@ async function getJson<T>(
   validate: (value: unknown) => value is T
 ): Promise<T> {
   const response = await fetch(path, { credentials: 'include', signal });
-  if (!response.ok) throw new Error(String(response.status));
+  if (!response.ok) throw new ServerQueryError(response.status);
   const data: unknown = await response.json();
   if (!validate(data)) throw new Error('Invalid invoice ledger response');
   return data;
+}
+
+function ledgerAccessDenied(error: unknown) {
+  return error instanceof ServerQueryError && [401, 403].includes(error.status);
 }
 
 type InvoiceLedgerProps = {
@@ -225,9 +231,29 @@ function OwnedInvoiceLedger({
   >(null);
   const [selectedId, setSelectedId] = useState<string | null>(deepLinkId || null);
   const [detail, setDetail] = useState<InvoiceDetail | null>(null);
-  const [detailStatus, setDetailStatus] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [detailStatus, setDetailStatus] = useState<'loading' | 'ready' | 'unavailable' | 'error'>(
+    'loading'
+  );
   const [revision, setRevision] = useState(0);
   const [detailRevision, setDetailRevision] = useState(0);
+  const listRead = useRef<AbortController | null>(null);
+  const detailRead = useRef<AbortController | null>(null);
+
+  function withdrawLedger() {
+    listRead.current?.abort();
+    detailRead.current?.abort();
+    setPages([]);
+    setSelectedId(null);
+    setDetail(null);
+    setStatus('forbidden');
+  }
+
+  function selectDetail(id: string | null) {
+    if (selectedId === id) return;
+    setDetail(null);
+    setDetailStatus('loading');
+    setSelectedId(id);
+  }
 
   useEffect(() => {
     if (!query) return;
@@ -244,6 +270,7 @@ function OwnedInvoiceLedger({
   }, [criteria]);
   useEffect(() => {
     const controller = new AbortController();
+    listRead.current = controller;
     const params = new URLSearchParams();
     if (state) params.set('state', state);
     if (invoiceId) params.set('invoiceId', invoiceId);
@@ -282,14 +309,9 @@ function OwnedInvoiceLedger({
         setStatus('ready');
       })
       .catch((error: unknown) => {
-        if (!controller.signal.aborted) {
-          if (error instanceof Error && ['401', '403'].includes(error.message)) {
-            setPages([]);
-            setSelectedId(null);
-            setDetail(null);
-            setStatus('forbidden');
-          } else setStatus('error');
-        }
+        if (controller.signal.aborted) return;
+        if (ledgerAccessDenied(error)) withdrawLedger();
+        else setStatus('error');
       });
     return () => controller.abort();
   }, [state, invoiceId, profileId, orderId, cursorKey, criteria, revision, read]);
@@ -297,6 +319,7 @@ function OwnedInvoiceLedger({
   useEffect(() => {
     if (!selectedId) return;
     const controller = new AbortController();
+    detailRead.current = controller;
     setDetail(null);
     setDetailStatus('loading');
     const path = `${base}/${encodeURIComponent(selectedId)}`;
@@ -309,8 +332,12 @@ function OwnedInvoiceLedger({
           setDetailStatus('ready');
         }
       })
-      .catch(() => {
-        if (!controller.signal.aborted) setDetailStatus('error');
+      .catch((error: unknown) => {
+        if (controller.signal.aborted) return;
+        if (ledgerAccessDenied(error)) withdrawLedger();
+        else if (error instanceof ServerQueryError && error.status === 404)
+          setDetailStatus('unavailable');
+        else setDetailStatus('error');
       });
     return () => controller.abort();
   }, [selectedId, detailRevision, read]);
@@ -356,7 +383,7 @@ function OwnedInvoiceLedger({
       className="inline-flex min-h-11 min-w-11 items-center font-mono text-primary underline underline-offset-2 pointer-coarse:min-h-[45px]!"
       dir="ltr"
       aria-label={`${word('detail')}: ${item.invoiceId}`}
-      onClick={() => setSelectedId(item.invoiceId)}
+      onClick={() => selectDetail(item.invoiceId)}
     >
       {item.invoiceId.slice(0, 8)}…
     </button>
@@ -596,13 +623,16 @@ function OwnedInvoiceLedger({
             <button
               type="button"
               className="text-sm text-primary underline"
-              onClick={() => setSelectedId(null)}
+              onClick={() => selectDetail(null)}
             >
               {word('close')}
             </button>
           </div>
           {detailStatus === 'loading' ? (
             <LoadingStatus>{word('loadingDetail')}</LoadingStatus>
+          ) : null}
+          {detailStatus === 'unavailable' ? (
+            <p role="alert">{loadingText('recordUnavailable', locale)}</p>
           ) : null}
           {detailStatus === 'error' ? (
             <p role="alert">

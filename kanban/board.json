@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T00:07:06+00:00",
-  "source_commit": "e790cdaab33115c3107979815fdbe78dab8eac2b",
+  "updated": "2026-11-09T00:15:51+00:00",
+  "source_commit": "c6dd02bd19a12afacbf62a4e0b2539a6a56eb2df",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -490995,7 +490995,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseDocumentPicker.tsx",
@@ -492826,7 +492826,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.tsx",
@@ -494199,7 +494199,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
@@ -495082,7 +495082,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
@@ -495906,7 +495906,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
@@ -496723,11 +496723,11 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.test.tsx",
-              "sha256": "6f178da1364af11fb8225b45ddb773ebcc41e21162cd23bf94a7c52e971593ab"
+              "sha256": "629272d555ed55554eb1abb9ece3a27a1463b8019781beb2f07b399b329d51af"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -497648,7 +497648,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.tsx",
@@ -508165,7 +508165,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/ProfileSwitchProgress.tsx",
@@ -511378,7 +511378,7 @@
             },
             {
               "path": "apps/web/e2e/staff-finance-list-recovery.spec.ts",
-              "sha256": "3e038f24f3c19b26745574af9eea1988b20cea6513658f239cb9d578e793faba"
+              "sha256": "decfb5a903391dac3560fb5f1663398b2ccb95f0c230c0b168d9963b4206da7a"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -511442,11 +511442,11 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.test.tsx",
-              "sha256": "6f178da1364af11fb8225b45ddb773ebcc41e21162cd23bf94a7c52e971593ab"
+              "sha256": "629272d555ed55554eb1abb9ece3a27a1463b8019781beb2f07b399b329d51af"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
@@ -512052,7 +512052,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
@@ -517485,7 +517485,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantPanel.tsx",
@@ -518431,7 +518431,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseUpload.tsx",
@@ -518837,7 +518837,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/ProfileSwitchProgress.tsx",
@@ -519871,7 +519871,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseUpload.tsx",
@@ -522027,7 +522027,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseUpload.tsx",
@@ -571240,11 +571240,11 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.test.tsx",
-              "sha256": "6f178da1364af11fb8225b45ddb773ebcc41e21162cd23bf94a7c52e971593ab"
+              "sha256": "629272d555ed55554eb1abb9ece3a27a1463b8019781beb2f07b399b329d51af"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -594092,11 +594092,11 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.test.tsx",
-              "sha256": "6f178da1364af11fb8225b45ddb773ebcc41e21162cd23bf94a7c52e971593ab"
+              "sha256": "629272d555ed55554eb1abb9ece3a27a1463b8019781beb2f07b399b329d51af"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -598486,7 +598486,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Dashboard, customer contracts/invoices lists and the five named customer detail surfaces have scoped evidence for initial loading and recovery. Electricity order and invoice details now withdraw unavailable records without a retry loop. Reconcile remaining list, detail and admin route criteria and verify any specific uncovered state."
+        "Dashboard, customer contract and invoice lists, five customer detail surfaces and the staff invoice ledger have scoped state receipts. A denied staff invoice detail withdraws the ledger and suppresses pending pages. Reconcile the other admin and read-owning child routes with original criteria and verify specific gaps."
       ],
       "owner": null,
       "depends_on": [],
@@ -598613,7 +598613,8 @@
           "release-0.5-lazy-panel-waits",
           "release-0.5-dashboard-profile-conflict",
           "release-0.5-customer-financial-list-states",
-          "release-0.5-financial-detail-denial"
+          "release-0.5-financial-detail-denial",
+          "release-0.5-staff-ledger-permission-withdrawal"
         ],
         "current_acceptance": null
       }
@@ -637542,7 +637543,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -638666,7 +638667,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -639790,7 +639791,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -640917,7 +640918,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -642044,7 +642045,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -643198,7 +643199,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -644321,7 +644322,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -645444,7 +645445,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -646568,7 +646569,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -647710,7 +647711,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -648835,7 +648836,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -680337,7 +680338,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -681459,7 +681460,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -682581,7 +682582,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -683703,7 +683704,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/InvoiceReceiptHistoryFilters.test.tsx",
@@ -728261,7 +728262,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Dashboard, customer contracts/invoices lists and the five named customer detail surfaces have scoped evidence for initial loading and recovery. Electricity order and invoice details now withdraw unavailable records without a retry loop. Reconcile remaining list, detail and admin route criteria and verify any specific uncovered state."
+        "Dashboard, customer contract and invoice lists, five customer detail surfaces and the staff invoice ledger have scoped state receipts. A denied staff invoice detail withdraws the ledger and suppresses pending pages. Reconcile the other admin and read-owning child routes with original criteria and verify specific gaps."
       ],
       "owner": null,
       "depends_on": [],
@@ -728454,7 +728455,8 @@
           "release-0.5-lazy-panel-waits",
           "release-0.5-dashboard-profile-conflict",
           "release-0.5-customer-financial-list-states",
-          "release-0.5-financial-detail-denial"
+          "release-0.5-financial-detail-denial",
+          "release-0.5-staff-ledger-permission-withdrawal"
         ]
       }
     },
@@ -728778,7 +728780,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
-              "sha256": "43892b33f925233fdf313ea1926b7b1be89ae758860f3bac2669a4f81886125a"
+              "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantLauncher.tsx",
@@ -730390,7 +730392,8 @@
             "The operational batch passes all 101 transfer budgets, with byte-matched auth assets and targeted native regression evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-route-receipts/proof.json",
             "The deferred panel loading batch passes all 101 transfer budgets and six cold authentication checks on final assets. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-lazy-panel-waits/proof.json",
             "All 101 route and interaction transfer budgets pass on the dashboard conflict build. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-profile-conflict/proof.json",
-            "All 101 transfer budgets pass on the unavailable financial detail build. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-detail-denial/proof.json"
+            "All 101 transfer budgets pass on the unavailable financial detail build. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-detail-denial/proof.json",
+            "All 101 transfer budgets pass on the staff ledger permission withdrawal build. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-ledger-permission-withdrawal/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -808651,6 +808654,45 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-detail-denial/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-detail-denial/renewed-bindings.json",
       "release_disposition": "Closed customer electricity order and invoice detail unavailable recovery. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-staff-ledger-permission-withdrawal": {
+      "batch": "release-0.5-staff-ledger-permission-withdrawal",
+      "base_commit": "c6dd02bd19a12afacbf62a4e0b2539a6a56eb2df",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/staff-finance-list-recovery.spec.ts",
+          "sha256": "decfb5a903391dac3560fb5f1663398b2ccb95f0c230c0b168d9963b4206da7a"
+        },
+        {
+          "path": "apps/web/src/components/InvoiceLedger.test.tsx",
+          "sha256": "629272d555ed55554eb1abb9ece3a27a1463b8019781beb2f07b399b329d51af"
+        },
+        {
+          "path": "apps/web/src/components/InvoiceLedger.tsx",
+          "sha256": "8091e242321171457f39af95f9200dec0567128411b7a4b731b45062fb30cb93"
+        }
+      ],
+      "checks": [
+        "The Chromium baseline left the authorized ledger visible after the detail endpoint denied the shared invoices:read permission. The fix withdraws rows and detail, aborts both reads, and suppresses late responses. A missing detail preserves the authorized list and uses an unavailable state.",
+        "Four final permission and missing-record cases pass in Chromium and Mobile Safari, in English and Persian. Sixteen unchanged native cases passed against the identical runtime for exact cursors, filters, open detail and the staff wallet-to-invoice handoff. Four initial permission cases had a stale fixture cursor on their separate missing-record step. The corrected cases start that step at the authorized first page.",
+        "All ten final ledger unit cases pass, including the existing uppercase deep link, exact due-date and refund destinations, and independent 200, 403 and 404 detail retry outcomes. Three isolated API controller cases pass and prove list and detail enforce the same permission. The unneeded database global setup run was stopped after it stalled before executing the mocked controller tests.",
+        "Five final instrumented browser cases passed. The critical changed-source gate passed with 185 of 191 lines and 188 of 219 branches covered. All 101 transfer budgets, changed-file lint, formatting and web typecheck pass."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-ledger-permission-withdrawal",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-ledger-permission-withdrawal/proof.json",
+      "source_scope_proof_sha256": "41ebadbd6ad8a17542db7f86a26a5d4b92d8fa44740cb160f2e8081d58632b7b",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-ledger-permission-withdrawal/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-ledger-permission-withdrawal/renewed-bindings.json",
+      "release_disposition": "Closed staff invoice ledger withdrawal after permission denial. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [
