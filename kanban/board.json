@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T10:37:04+00:00",
-  "source_commit": "b43b5d533a70dbdd49c6957af805793a171d1382",
+  "updated": "2026-11-09T10:57:05+00:00",
+  "source_commit": "fd4c7fde099868258c8724b93014252d82ceb814",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -437192,7 +437192,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-protected-staff-browser-closure",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-direct-push-preflight"
         ],
         "current_acceptance": {
           "status": "done",
@@ -437200,7 +437201,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
+              "sha256": "10c7d21e7f6b61b73698d77c542453d7003e081b317153a57cc2b432586bc28b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -437574,7 +437575,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
-          "release-0.5-action-contrast"
+          "release-0.5-action-contrast",
+          "release-0.5-direct-push-preflight"
         ],
         "current_acceptance": {
           "status": "done",
@@ -437582,7 +437584,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
+              "sha256": "10c7d21e7f6b61b73698d77c542453d7003e081b317153a57cc2b432586bc28b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -438110,7 +438112,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-protected-staff-browser-closure",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-direct-push-preflight"
         ],
         "current_acceptance": {
           "status": "done",
@@ -438118,7 +438121,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
+              "sha256": "10c7d21e7f6b61b73698d77c542453d7003e081b317153a57cc2b432586bc28b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -438473,7 +438476,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-protected-staff-browser-closure",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-direct-push-preflight"
         ],
         "current_acceptance": {
           "status": "done",
@@ -438481,7 +438485,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
+              "sha256": "10c7d21e7f6b61b73698d77c542453d7003e081b317153a57cc2b432586bc28b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -438836,7 +438840,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-protected-staff-browser-closure",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-direct-push-preflight"
         ],
         "current_acceptance": {
           "status": "done",
@@ -438844,7 +438849,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
+              "sha256": "10c7d21e7f6b61b73698d77c542453d7003e081b317153a57cc2b432586bc28b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -520581,7 +520586,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
-          "release-0.5-consultation-offer-layout"
+          "release-0.5-consultation-offer-layout",
+          "release-0.5-direct-push-preflight"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -520589,7 +520595,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
+              "sha256": "10c7d21e7f6b61b73698d77c542453d7003e081b317153a57cc2b432586bc28b"
             },
             {
               "path": ".size-limit.json",
@@ -521409,7 +521415,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
-          "release-0.5-consultation-offer-layout"
+          "release-0.5-consultation-offer-layout",
+          "release-0.5-direct-push-preflight"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -521417,7 +521424,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
+              "sha256": "10c7d21e7f6b61b73698d77c542453d7003e081b317153a57cc2b432586bc28b"
             },
             {
               "path": ".size-limit.json",
@@ -522741,7 +522748,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
-          "release-0.5-consultation-offer-layout"
+          "release-0.5-consultation-offer-layout",
+          "release-0.5-direct-push-preflight"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -522749,7 +522757,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
+              "sha256": "10c7d21e7f6b61b73698d77c542453d7003e081b317153a57cc2b432586bc28b"
             },
             {
               "path": ".size-limit.json",
@@ -523532,7 +523540,8 @@
           "release-0.5-address-states-and-route-reconciliation",
           "release-0.5-intake-response-recovery",
           "release-0.5-dashboard-profile-conflict",
-          "release-0.5-required-check-activation"
+          "release-0.5-required-check-activation",
+          "release-0.5-direct-push-preflight"
         ],
         "current_acceptance": {
           "kind": "active_github_required_check",
@@ -523544,7 +523553,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
+              "sha256": "10c7d21e7f6b61b73698d77c542453d7003e081b317153a57cc2b432586bc28b"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -722428,7 +722437,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
+              "sha256": "10c7d21e7f6b61b73698d77c542453d7003e081b317153a57cc2b432586bc28b"
             },
             {
               "path": "apps/api/openapi.json",
@@ -726281,7 +726290,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-action-contrast",
           "release-0.5-review-preview-deadlines",
-          "release-0.5-conditional-heading-acceptance"
+          "release-0.5-conditional-heading-acceptance",
+          "release-0.5-direct-push-preflight"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -726334,7 +726344,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
+              "sha256": "10c7d21e7f6b61b73698d77c542453d7003e081b317153a57cc2b432586bc28b"
             },
             {
               "path": "apps/api/openapi.json",
@@ -730054,7 +730064,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-action-contrast",
           "release-0.5-review-preview-deadlines",
-          "release-0.5-conditional-heading-acceptance"
+          "release-0.5-conditional-heading-acceptance",
+          "release-0.5-direct-push-preflight"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -731793,7 +731804,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "ea7d713b14b0c19fc165134f5e0cc6c6214d14f4d3c75af8876bce7b33385837"
+              "sha256": "10c7d21e7f6b61b73698d77c542453d7003e081b317153a57cc2b432586bc28b"
             },
             {
               "path": ".size-limit.json",
@@ -733839,7 +733850,8 @@
           "release-0.5-page-read-reconciliation",
           "release-0.5-library-read-reconciliation",
           "release-0.5-original-ui-closure",
-          "release-0.5-wallet-verification-controls"
+          "release-0.5-wallet-verification-controls",
+          "release-0.5-direct-push-preflight"
         ]
       }
     },
@@ -818317,6 +818329,36 @@
       ],
       "source_renewals": "338 existing task hashes for the root manifest were renewed after proving its only byte change is the SemVer string. No dependency, script or assertion changed.",
       "production_authorized": false
+    },
+    "release-0.5-direct-push-preflight": {
+      "batch": "release-0.5-direct-push-preflight",
+      "base_commit": "fd4c7fde099868258c8724b93014252d82ceb814",
+      "task_keys": [
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "10c7d21e7f6b61b73698d77c542453d7003e081b317153a57cc2b432586bc28b"
+        }
+      ],
+      "checks": [
+        "Verified that Protect main ruleset 26844024 targets the default branch and does not restrict the dedicated preflight ref.",
+        "Compared the complete workflow to the accepted source: the only functional change adds a preflight push branch filter; required jobs, assertions, permissions and existing triggers are identical.",
+        "Prettier and actionlint passed for the changed workflow. The unchanged SC2016 diagnostic for the literal Node.js audit program was reproduced on the baseline."
+      ],
+      "source_renewals": "Workflow trigger extension only. Existing main/PR check evidence remains valid; exact candidate job and subsequent direct push still need actual GitHub receipts."
     }
   },
   "historical_improvements": [
@@ -818359,12 +818401,12 @@
     "id": "release-0.5-publication",
     "release": "0.5.0",
     "task_keys": [],
-    "goal": "Verify the versioned build. Publish and immediately enqueue v0.5.0 after exact main readback. GitHub rejected the existing CLI identity’s direct push with GH013 under the active required check; use only an owner-authorized direct-push path."
+    "goal": "Run Verify monorepo integrity on the exact v0.5.0 candidate on a preflight branch seeded from main. After the job passes, fast-forward main directly and immediately enqueue staging on exact remote readback."
   },
   "launch_forecast": {
-    "status": "v0_5_accepted_publication_blocked",
+    "status": "v0_5_accepted_publication_preflight",
     "next_update_after": "v0.5.0 exact staging and Telegram receipts and v0.6.0 prerequisite triage",
-    "method": "v0.5.0 product gates are accepted. Publication requires an authorized path under the active main ruleset. v0.6.0 operational and v0.9.0 rehearsal gates remain; no reliable launch date yet."
+    "method": "v0.5.0 product gates are accepted. Its exact release commit must pass the active GitHub rule before publication. v0.6.0 operational and v0.9.0 rehearsal gates remain; no reliable launch date yet."
   },
   "capabilities": [
     {

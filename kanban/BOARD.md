@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T10:37:04+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T10:57:05+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify the versioned build. Publish and immediately enqueue v0.5.0 after exact main readback. GitHub rejected the existing CLI identity’s direct push with GH013 under the active required check; use only an owner-authorized direct-push path.
+Run Verify monorepo integrity on the exact v0.5.0 candidate on a preflight branch seeded from main. After the job passes, fast-forward main directly and immediately enqueue staging on exact remote readback.
 
 
 ## v0.2.0: Complete customer journeys
