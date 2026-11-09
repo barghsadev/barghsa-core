@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T19:58:58+00:00",
+  "updated": "2026-11-09T20:04:41+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -55870,7 +55870,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "kind": "verified-additive-agent-permissions-across-current-business-consumers",
@@ -56002,7 +56003,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.test.ts",
@@ -71294,7 +71295,8 @@
           "release-0.6-api-worker-shutdown-and-fixture-reuse",
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -71778,7 +71780,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -180174,7 +180176,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -180198,7 +180201,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -180990,7 +180993,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -181014,7 +181018,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -181803,7 +181807,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -181827,7 +181832,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -182615,7 +182620,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -182639,7 +182645,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -183429,7 +183435,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -183453,7 +183460,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -384395,7 +384402,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-review-preview-deadlines",
           "release-0.6-browser-response-policy",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "kind": "current-saving-documents-comments-and-retention-acceptance",
@@ -384407,7 +384415,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
@@ -385366,7 +385374,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-review-preview-deadlines",
           "release-0.6-browser-response-policy",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "kind": "current-saving-documents-comments-and-retention-acceptance",
@@ -385378,7 +385387,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
@@ -386336,7 +386345,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-review-preview-deadlines",
           "release-0.6-browser-response-policy",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "kind": "current-saving-documents-comments-and-retention-acceptance",
@@ -386348,7 +386358,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
@@ -426498,7 +426508,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-solar-replay-lock-order"
+          "release-0.6-solar-replay-lock-order",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "kind": "accepted-all-core-business-audit-event-families-and-append-only-history",
@@ -426762,7 +426773,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
@@ -443263,7 +443274,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -443271,7 +443283,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document-preview.test.ts",
@@ -443544,7 +443556,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -443552,7 +443565,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document-preview.test.ts",
@@ -445200,7 +445213,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -445224,7 +445238,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -446009,7 +446023,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -446017,7 +446032,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -446502,7 +446517,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -446510,7 +446526,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -446986,7 +447002,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -447050,7 +447067,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -447282,7 +447299,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -447290,7 +447308,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -447771,7 +447789,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-staging-image-rollback",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-production-image-recipes-and-distribution"
+          "release-0.6-production-image-recipes-and-distribution",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -447783,7 +447802,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document-preview.ts",
@@ -448302,7 +448321,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -448366,7 +448386,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -448596,7 +448616,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -448604,7 +448625,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -449083,7 +449104,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -449091,7 +449113,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -449594,7 +449616,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -449602,7 +449625,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -450105,7 +450128,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -450113,7 +450137,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -450616,7 +450640,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -450624,7 +450649,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -451126,7 +451151,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -451134,7 +451160,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -451610,7 +451636,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -451674,7 +451701,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -451925,7 +451952,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -451965,7 +451993,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
@@ -452268,7 +452296,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -452308,7 +452337,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
@@ -452613,7 +452642,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -452653,7 +452683,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
@@ -452983,7 +453013,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -453023,7 +453054,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
@@ -453326,7 +453357,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -453366,7 +453398,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
@@ -695896,7 +695928,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
           "release-0.5-essential-control-contrast",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -695912,7 +695945,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -696474,7 +696507,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
           "release-0.5-essential-control-contrast",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -696490,7 +696524,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -697051,7 +697085,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
           "release-0.5-essential-control-contrast",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -697067,7 +697102,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -697630,7 +697665,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
           "release-0.5-essential-control-contrast",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -697646,7 +697682,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -698207,7 +698243,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
           "release-0.5-essential-control-contrast",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -698223,7 +698260,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -698784,7 +698821,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
           "release-0.5-essential-control-contrast",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -698800,7 +698838,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -724962,7 +725000,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -727222,7 +727260,8 @@
           "release-0.6-native-integration-acceptance",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-document-http-fixture-isolation"
         ]
       }
     },
@@ -727834,7 +727873,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.test.ts",
@@ -731862,7 +731901,8 @@
           "release-0.6-solar-replay-lock-order",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-document-http-fixture-isolation"
         ]
       }
     },
@@ -732314,7 +732354,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -735792,7 +735832,8 @@
           "release-0.6-api-worker-shutdown-and-fixture-reuse",
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -736253,7 +736294,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -739615,7 +739656,8 @@
           "release-0.6-api-worker-shutdown-and-fixture-reuse",
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -743607,7 +743649,8 @@
           "release-0.6-mfa-device-and-financial-authorization",
           "release-0.6-csrf-rotation-and-dynamic-injection",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-document-http-fixture-isolation"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -834708,6 +834751,28 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-credential-transport",
       "source_scope_proof": "release-0.6-session-credential-transport-and-authority.json",
       "source_scope_proof_sha256": "3a49f20e839b0db320e339b32192548b23316c0bb661d112648718abec064403"
+    },
+    "release-0.6-document-http-fixture-isolation": {
+      "batch": "release-0.6-document-http-fixture-isolation",
+      "base_commit": "bc04f9d45df8b1bd0b3541122c7fed88c357e6ab",
+      "task_keys": [
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/documents/document-http.integration.test.ts",
+          "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
+        }
+      ],
+      "checks": [
+        "Hosted CI 42681795739 job 129377967232 reported 7,786 of 7,788 API tests passed. The scanner fixture test timed out at five seconds and the following confirmation received 401. All 884 worker cases passed in that job. The source is linked to the retained log.",
+        "A private native run reproduced both failures using the pinned MinIO image and the same test bodies. The timed-out async scanner case continued changing the file-wide API and database binding and let the following case use credentials from a different fixture.",
+        "The scanner case now uses only its own API and pool, restores the scanner environment immediately after startup, and has a 30-second integration harness timeout. All rollback, authorization, isolation, scanner state, delivery, and replay assertions remain in place.",
+        "The first corrected run passed 39 cases, including scanner isolation in 13246 ms and the following sealing case in 893 ms. Four different cases hit the local five-second runner limit. All four passed in a separate selected run with a 30-second runner-only timeout; all 43 distinct cases passed across these two runs. Their Git timeout and assertions are unchanged. Changed-file lint, formatting, API typecheck and isolated resource cleanup passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/document-fixture-timeout-and-isolation",
+      "source_scope_proof": "release-0.6-document-http-fixture-isolation.json",
+      "source_scope_proof_sha256": "8a734a1b419a4886c36623beaafa3b6b02241300e9af6a7c1bf573ff59c40b7b"
     }
   },
   "historical_improvements": [

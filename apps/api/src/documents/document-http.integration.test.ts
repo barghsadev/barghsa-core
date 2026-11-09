@@ -107,16 +107,16 @@ afterAll(async () => {
   }
 }, 30000);
 
-async function login(user: string = randomUUID(), role?: string) {
-  await http.pool.query(
+async function login(user: string = randomUUID(), role?: string, fixture = http) {
+  await fixture.pool.query(
     "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES($1,$1,'test',$2)",
     [user, !!role]
   );
   if (role)
-    await http.pool.query('INSERT INTO user_roles(user_id,role_id) VALUES($1,$2)', [user, role]);
+    await fixture.pool.query('INSERT INTO user_roles(user_id,role_id) VALUES($1,$2)', [user, role]);
   const session = randomUUID(),
     csrf = randomUUID();
-  await http.pool.query(
+  await fixture.pool.query(
     `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at)
     VALUES($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW()-INTERVAL '1 second')`,
     [session, user, csrf, randomUUID()]
@@ -128,35 +128,46 @@ async function login(user: string = randomUUID(), role?: string) {
   };
   return user;
 }
-async function send(path: string, user: string, method = 'GET', body?: unknown) {
+async function send(path: string, user: string, method = 'GET', body?: unknown, fixture = http) {
   if (method === 'POST')
-    body = await contractReviewConfirmation(http.base, path, headers[user]!, body);
-  return fetch(http.base + '/api/' + path, {
+    body = await contractReviewConfirmation(fixture.base, path, headers[user]!, body);
+  return fetch(fixture.base + '/api/' + path, {
     method,
     headers: headers[user]!,
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
   });
 }
-async function owner() {
-  const user = await login(),
+async function owner(fixture = http) {
+  const user = await login(undefined, undefined, fixture),
     profile = randomUUID();
-  await http.pool.query(
+  await fixture.pool.query(
     "INSERT INTO profiles(id,user_id,profile_type,is_default) VALUES($1,$2,'LEGAL',true)",
     [profile, user]
   );
   return { user, profile };
 }
-async function create(user: string, extra: Record<string, unknown> = {}, staff = false) {
-  const response = await send(staff ? 'admin/documents' : 'documents', user, 'POST', {
-    businessRecordType: 'standalone',
-    category: 'document',
-    fileName: 'evidence.pdf',
-    contentType: 'application/pdf',
-    fileSize: pdf.length,
-    idempotencyKey: randomUUID(),
-    ...extra,
-  });
-  expect(response.status, (await response.clone().text()) + http.logs()).toBe(201);
+async function create(
+  user: string,
+  extra: Record<string, unknown> = {},
+  staff = false,
+  fixture = http
+) {
+  const response = await send(
+    staff ? 'admin/documents' : 'documents',
+    user,
+    'POST',
+    {
+      businessRecordType: 'standalone',
+      category: 'document',
+      fileName: 'evidence.pdf',
+      contentType: 'application/pdf',
+      fileSize: pdf.length,
+      idempotencyKey: randomUUID(),
+      ...extra,
+    },
+    fixture
+  );
+  expect(response.status, (await response.clone().text()) + fixture.logs()).toBe(201);
   return (await response.json()) as Created;
 }
 async function upload(created: Created) {
@@ -171,15 +182,16 @@ const command = (revision: number) => ({
   expectedRevision: revision,
   idempotencyKey: randomUUID(),
 });
-async function confirm(created: Created, user: string, staff = false) {
+async function confirm(created: Created, user: string, staff = false, fixture = http) {
   await upload(created);
   const response = await send(
     `${staff ? 'admin/' : ''}documents/${created.document.id}/confirm`,
     user,
     'POST',
-    command(1)
+    command(1),
+    fixture
   );
-  expect(response.status, (await response.clone().text()) + http.logs()).toBe(200);
+  expect(response.status, (await response.clone().text()) + fixture.logs()).toBe(200);
   return (await response.json()) as DocumentDto;
 }
 async function act(
@@ -2581,7 +2593,7 @@ it('targets the current private document owner without changing old submission n
   ).toBe(f.user);
 });
 
-it('holds document state through mandatory scanner queue failures and delivers only to a current private administrator', async () => {
+async function verifyScannerQueueFailures() {
   const { runDocumentScans } = requireWorker(
     './dist/documents/scan-runner.js'
   ) as typeof import('../../../worker/dist/documents/scan-runner.js');
@@ -2591,21 +2603,24 @@ it('holds document state through mandatory scanner queue failures and delivers o
   const { InAppNotificationTransport } = requireWorker(
     './dist/notifications/in-app-transport.js'
   ) as typeof import('../../../worker/dist/notifications/in-app-transport.js');
-  const original = http;
-  process.env['DOCUMENT_CLAMAV_HOST'] = '127.0.0.1';
-  const configured = await startHttpFixture(process.env.TEST_DATABASE_URL!, storageEndpoint);
-  http = configured;
+  const oldScannerHost = process.env['DOCUMENT_CLAMAV_HOST'];
+  let configured: typeof http;
   try {
-    const admin = await login(),
-      inactive = await login();
-    await http.pool.query(
-      'UPDATE users SET is_staff=true,is_admin=true WHERE user_id=ANY($1::text[])',
-      [[admin, inactive]]
-    );
-    await http.pool.query("UPDATE users SET activation_token='pending' WHERE user_id=$1", [
-      inactive,
+    process.env['DOCUMENT_CLAMAV_HOST'] = '127.0.0.1';
+    configured = await startHttpFixture(process.env.TEST_DATABASE_URL!, storageEndpoint);
+  } finally {
+    if (oldScannerHost === undefined) delete process.env['DOCUMENT_CLAMAV_HOST'];
+    else process.env['DOCUMENT_CLAMAV_HOST'] = oldScannerHost;
+  }
+  const { pool } = configured;
+  try {
+    const admin = await login(undefined, undefined, configured),
+      inactive = await login(undefined, undefined, configured);
+    await pool.query('UPDATE users SET is_staff=true,is_admin=true WHERE user_id=ANY($1::text[])', [
+      [admin, inactive],
     ]);
-    const f = await owner();
+    await pool.query("UPDATE users SET activation_token='pending' WHERE user_id=$1", [inactive]);
+    const f = await owner(configured);
     const storage: StorageProvider = {
       getObject: async () => ({
         body: new ReadableStream<Uint8Array>({
@@ -2636,7 +2651,7 @@ it('holds document state through mandatory scanner queue failures and delivers o
       },
     };
     const tables = (
-      await http.pool.query(
+      await pool.query(
         "SELECT tablename FROM pg_tables WHERE schemaname='public' ORDER BY tablename"
       )
     ).rows.map((r) => r.tablename as string);
@@ -2646,7 +2661,7 @@ it('holds document state through mandatory scanner queue failures and delivers o
           tables.map(async (table) => [
             table,
             (
-              await http.pool.query(
+              await pool.query(
                 `SELECT COALESCE(jsonb_agg(to_jsonb(t) ORDER BY to_jsonb(t)::text),'[]'::jsonb) AS rows FROM "${table.replaceAll('"', '""')}" t`
               )
             ).rows[0].rows,
@@ -2655,26 +2670,27 @@ it('holds document state through mandatory scanner queue failures and delivers o
       );
     const poll = () =>
       runOutboxPoll({
-        pool: http.pool,
-        transports: { in_app: new InAppNotificationTransport(http.pool) },
+        pool,
+        transports: { in_app: new InAppNotificationTransport(pool) },
         deliveryWindow: { timezone: 'UTC', startHour: 9, endHour: 10 },
       });
     for (const table of ['notification_outbox', 'notification_job'])
       for (const mode of ['raise', 'suppress']) {
-        const document = await confirm(await create(f.user), f.user),
+        const created = await create(f.user, {}, false, configured);
+        const document = await confirm(created, f.user, false, configured),
           before = await snapshot();
         const match = `idempotency_key LIKE 'document.quarantined:${document.id}:%'`;
         const predicate =
           table === 'notification_outbox'
             ? `NEW.${match}`
             : `EXISTS(SELECT 1 FROM notification_outbox WHERE id=NEW.outbox_id AND ${match})`;
-        await http.pool.query(
+        await pool.query(
           `CREATE FUNCTION fail_scanner_queue() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF ${predicate} THEN ${mode === 'raise' ? "RAISE EXCEPTION 'scanner queue unavailable';" : 'RETURN NULL;'} END IF;RETURN NEW;END $$;CREATE TRIGGER fail_scanner_queue BEFORE INSERT ON ${table} FOR EACH ROW EXECUTE FUNCTION fail_scanner_queue()`
         );
         try {
           expect(
             await runDocumentScans(
-              http.pool,
+              pool,
               storage,
               { host: '127.0.0.1', port: 3310 },
               async () => 'infected'
@@ -2697,24 +2713,24 @@ it('holds document state through mandatory scanner queue failures and delivers o
             job[key] = previous[key];
           expect(after).toEqual(before);
         } finally {
-          await http.pool.query(
+          await pool.query(
             `DROP TRIGGER fail_scanner_queue ON ${table};DROP FUNCTION fail_scanner_queue()`
           );
         }
-        await http.pool.query(
+        await pool.query(
           "UPDATE document_scan_jobs SET next_attempt_at=NOW()-INTERVAL '1 second' WHERE document_id=$1",
           [document.id]
         );
         expect(
           await runDocumentScans(
-            http.pool,
+            pool,
             storage,
             { host: '127.0.0.1', port: 3310 },
             async () => 'infected'
           )
         ).toEqual({ clean: 0, infected: 1, retrying: 0 });
         const outbox = (
-          await http.pool.query('SELECT * FROM notification_outbox WHERE idempotency_key=$1', [
+          await pool.query('SELECT * FROM notification_outbox WHERE idempotency_key=$1', [
             `document.quarantined:${document.id}:${admin}`,
           ])
         ).rows;
@@ -2727,35 +2743,35 @@ it('holds document state through mandatory scanner queue failures and delivers o
         });
         expect(
           (
-            await http.pool.query('SELECT id FROM notification_outbox WHERE idempotency_key=$1', [
+            await pool.query('SELECT id FROM notification_outbox WHERE idempotency_key=$1', [
               `document.quarantined:${document.id}:${inactive}`,
             ])
           ).rows
         ).toEqual([]);
         if (table === 'notification_outbox' && mode === 'raise') {
-          await http.pool.query('UPDATE users SET is_admin=false WHERE user_id=$1', [admin]);
+          await pool.query('UPDATE users SET is_admin=false WHERE user_id=$1', [admin]);
           expect(await poll()).toMatchObject({ delivered: 0, failed: 1 });
           expect(
             (
-              await http.pool.query(
+              await pool.query(
                 "SELECT id FROM in_app_notifications WHERE delivery_key='outbox:'||$1::text",
                 [outbox[0].id]
               )
             ).rows
           ).toEqual([]);
-          await http.pool.query('UPDATE users SET is_admin=true WHERE user_id=$1', [admin]);
-          await http.pool.query(
+          await pool.query('UPDATE users SET is_admin=true WHERE user_id=$1', [admin]);
+          await pool.query(
             "UPDATE notification_job SET run_after=NOW()-INTERVAL '1 second' WHERE outbox_id=$1",
             [outbox[0].id]
           );
-          await http.pool.query(
+          await pool.query(
             "UPDATE notification_outbox SET locked_until=NULL,scheduled_for=NOW()-INTERVAL '1 second' WHERE id=$1",
             [outbox[0].id]
           );
         }
         expect(await poll()).toMatchObject({ delivered: 1, failed: 0 });
         const notices = (
-          await http.pool.query(
+          await pool.query(
             "SELECT * FROM in_app_notifications WHERE delivery_key='outbox:'||$1::text",
             [outbox[0].id]
           )
@@ -2772,9 +2788,9 @@ it('holds document state through mandatory scanner queue failures and delivers o
         expect(notices[0].localized_content.fa.title).toMatch(/[\u0600-\u06ff]/);
         expect(notices[0].localized_content.en.body).toContain('evidence.pdf');
         const saved = notices[0];
-        await http.pool.query('UPDATE users SET is_admin=false WHERE user_id=$1', [admin]);
+        await pool.query('UPDATE users SET is_admin=false WHERE user_id=$1', [admin]);
         await expect(
-          new InAppNotificationTransport(http.pool).send({
+          new InAppNotificationTransport(pool).send({
             outboxId: outbox[0].id,
             profileId: null,
             recipientId: admin,
@@ -2785,12 +2801,12 @@ it('holds document state through mandatory scanner queue failures and delivers o
           })
         ).resolves.toEqual({ status: 'delivered', providerRef: saved.id });
         expect(
-          (await http.pool.query('SELECT * FROM in_app_notifications WHERE id=$1', [saved.id])).rows
+          (await pool.query('SELECT * FROM in_app_notifications WHERE id=$1', [saved.id])).rows
         ).toEqual([saved]);
-        await http.pool.query('UPDATE users SET is_admin=true WHERE user_id=$1', [admin]);
+        await pool.query('UPDATE users SET is_admin=true WHERE user_id=$1', [admin]);
         expect(
           (
-            await http.pool.query(
+            await pool.query(
               "SELECT id FROM in_app_notifications WHERE recipient_user_id=$1 AND type='document.quarantined'",
               [f.user]
             )
@@ -2798,11 +2814,15 @@ it('holds document state through mandatory scanner queue failures and delivers o
         ).toEqual([]);
       }
   } finally {
-    http = original;
     await configured.close();
-    delete process.env['DOCUMENT_CLAMAV_HOST'];
   }
-});
+}
+
+it(
+  'holds document state through mandatory scanner queue failures and delivers only to a current private administrator',
+  verifyScannerQueueFailures,
+  30_000
+);
 
 it('queues successful user sealing once and preserves literal document names, recipients and read history', async () => {
   const f = await owner(),
