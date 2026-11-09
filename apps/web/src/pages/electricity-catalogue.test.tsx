@@ -2,6 +2,7 @@ import { act, type ComponentType, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { Route } from '../routes/_app/electricity/index.js';
+import { t } from '@barghsa/i18n/workspace';
 
 vi.mock('@tanstack/react-router', () => ({
   createFileRoute: () => (options: unknown) => ({ options }),
@@ -111,3 +112,35 @@ it('blocks the draft link while the mandatory green product is unavailable', asy
   );
   expect(host.querySelector('a[href="/electricity/order"]')).toBeNull();
 });
+
+it.each(['title', 'description'] as const)(
+  'preserves the last valid catalogue and retries an invalid localized %s',
+  async (field) => {
+    const json = (value: unknown) => Response.json(value);
+    const invalid = [
+      { ...products[0], [field]: { en: { private: 'Malformed copy' } } },
+      ...products.slice(1),
+    ];
+    const recovered = [{ ...products[0], title: { fa: 'برق بازیابی‌شده' } }, ...products.slice(1)];
+    const fetcher = vi
+      .fn()
+      .mockResolvedValueOnce(json(products))
+      .mockResolvedValueOnce(json(invalid))
+      .mockResolvedValueOnce(json(recovered));
+    vi.stubGlobal('fetch', fetcher);
+    await act(async () => root.render(<Catalogue />));
+    const refresh = [...host.querySelectorAll('button')].find(
+      (button) => button.textContent === t('electricity.catalogue.refresh', 'en')
+    )!;
+    await act(async () => refresh.click());
+
+    const error = host.querySelector('[role="alert"]');
+    expect(error?.textContent).toContain(t('electricity.catalogue.error', 'en'));
+    expect(host.textContent).toContain('Thermal electricity');
+    expect(host.textContent).not.toContain('Malformed copy');
+    await act(async () => error!.querySelector('button')!.click());
+    expect(host.querySelector('[role="alert"]')).toBeNull();
+    expect(host.textContent).toContain('برق بازیابی‌شده');
+    expect(fetcher).toHaveBeenCalledTimes(3);
+  }
+);

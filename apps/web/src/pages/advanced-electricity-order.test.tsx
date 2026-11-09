@@ -56,9 +56,12 @@ const catalogue = (['thermal', 'green', 'free_market', 'energy_saving'] as const
     id: systemKey,
     systemKey,
     title: { en: systemKey },
+    description: null,
     price: '100',
     status: 'active',
     orderable: true,
+    simpleOrderable: systemKey === 'thermal',
+    simpleOrderBlockReasons: [],
     limits: { minKwh: '0', maxKwh: '0' },
   })
 );
@@ -327,6 +330,12 @@ it.each([
   ['/api/profiles/verification-status', {}, 401],
   ['/api/products/electricity', {}, 200],
   ['/api/products/electricity', [], 200],
+  [
+    '/api/products/electricity',
+    [{ ...catalogue[0], title: { en: { private: 'Malformed title' } } }, ...catalogue.slice(1)],
+    200,
+  ],
+  ['/api/products/electricity', [{ ...catalogue[0], limits: null }, ...catalogue.slice(1)], 200],
   ['/api/electricity/periods/advanced', {}, 200],
   ['/api/electricity/periods/advanced', {}, 503],
 ] as const)('blocks malformed or failed advanced setup at %s (%#)', async (path, body, status) => {

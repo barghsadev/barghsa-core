@@ -1,4 +1,8 @@
 import { readWithDeadline } from '../../../lib/server-query-client.js';
+import {
+  isElectricityCatalogue,
+  type ElectricityCatalogueProduct,
+} from '../../../lib/electricity-catalogue.js';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import {
@@ -19,52 +23,10 @@ import { t } from '@barghsa/i18n/workspace';
 import { useLocale } from '../../../hooks/useLocale.js';
 import { useNumberFormatting } from '../../../hooks/useNumberFormatting.js';
 
-type ElectricityProduct = {
-  id: string | null;
-  systemKey: 'thermal' | 'green' | 'free_market' | 'energy_saving';
-  title: Record<string, string> | null;
-  description: Record<string, string> | null;
-  status: 'active' | 'inactive' | 'archived' | 'missing';
-  price: string | null;
-  limits: { minKwh: string; maxKwh: string };
-  orderable: boolean;
-  simpleOrderable: boolean;
-  simpleOrderBlockReasons: string[];
-};
-
-const systemKeys = ['thermal', 'green', 'free_market', 'energy_saving'];
-
-function isCatalogue(value: unknown): value is ElectricityProduct[] {
-  return (
-    Array.isArray(value) &&
-    value.length === 4 &&
-    value.every(
-      (item, index) =>
-        item &&
-        typeof item === 'object' &&
-        item.systemKey === systemKeys[index] &&
-        (item.id === null || typeof item.id === 'string') &&
-        (item.title === null || (typeof item.title === 'object' && !Array.isArray(item.title))) &&
-        (item.description === null ||
-          (typeof item.description === 'object' && !Array.isArray(item.description))) &&
-        ['active', 'inactive', 'archived', 'missing'].includes(item.status) &&
-        (item.price === null || (typeof item.price === 'string' && /^\d+$/.test(item.price))) &&
-        typeof item.limits?.minKwh === 'string' &&
-        /^\d+$/.test(item.limits.minKwh) &&
-        typeof item.limits?.maxKwh === 'string' &&
-        /^\d+$/.test(item.limits.maxKwh) &&
-        typeof item.orderable === 'boolean' &&
-        typeof item.simpleOrderable === 'boolean' &&
-        Array.isArray(item.simpleOrderBlockReasons) &&
-        item.simpleOrderBlockReasons.every((reason: unknown) => typeof reason === 'string')
-    )
-  );
-}
-
 function ElectricityIndexPage() {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
-  const [products, setProducts] = useState<ElectricityProduct[]>([]);
+  const [products, setProducts] = useState<ElectricityCatalogueProduct[]>([]);
   const [state, setState] = useState<'loading' | 'ready' | 'error' | 'denied'>('loading');
   const [revision, setRevision] = useState(0);
 
@@ -75,7 +37,7 @@ function ElectricityIndexPage() {
       const response = await fetch('/api/products/electricity', { signal });
       if (!response.ok) throw new Error(String(response.status));
       const data: unknown = await response.json();
-      if (!isCatalogue(data)) throw new Error('Invalid catalogue');
+      if (!isElectricityCatalogue(data)) throw new Error('Invalid catalogue');
       return data;
     })
       .then((data) => {

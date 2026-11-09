@@ -23,6 +23,10 @@ import { useFinancialFormatting } from '../hooks/useFinancialFormatting.js';
 import { useWizardStep } from '../hooks/useWizardStep.js';
 import { electricityOrderReceipt } from '../lib/form-receipt.js';
 import { readIntakeAddresses, type IntakeAddress } from '../lib/service-intake-records.js';
+import {
+  isElectricityCatalogue,
+  type ElectricityCatalogueProduct,
+} from '../lib/electricity-catalogue.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import {
   ElectricityDraftRecovery,
@@ -39,14 +43,6 @@ import {
 
 type Key = 'thermal' | 'green' | 'free_market' | 'energy_saving';
 const keys: Key[] = ['thermal', 'green', 'free_market', 'energy_saving'];
-type Product = {
-  systemKey: Key;
-  title: Record<string, string> | null;
-  price: string | null;
-  status: string;
-  orderable: boolean;
-  limits: { minKwh: string; maxKwh: string };
-};
 type Quote = {
   reviewDigest: string;
   contractTemplate?: ElectricityContractTermsSnapshot | null;
@@ -170,7 +166,7 @@ export function AdvancedElectricityOrderPage() {
   const [profileId, setProfileId] = useState('');
   const [profileName, setProfileName] = useState<string | null>(null);
   const [blocked, setBlocked] = useState(false);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<ElectricityCatalogueProduct[]>([]);
   const [addresses, setAddresses] = useState<IntakeAddress[]>([]);
   const [options, setOptions] = useState<{
     limits: { leadTimeDays: number; maxContractDuration: number };
@@ -328,8 +324,7 @@ export function AdvancedElectricityOrderPage() {
       .then(([status, items, limits]) => {
         if (
           !status.activeProfileId ||
-          !Array.isArray(items) ||
-          items.length !== 4 ||
+          !isElectricityCatalogue(items) ||
           typeof limits?.limits?.maxContractDuration !== 'number'
         )
           throw new Error('Invalid data');

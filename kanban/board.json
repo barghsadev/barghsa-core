@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T00:56:40+00:00",
-  "source_commit": "1e7a85cfba2f5812bb022ffbb32ecaae155ef930",
+  "updated": "2026-11-09T01:03:15+00:00",
+  "source_commit": "fc21b96933a40b15f5b8d0b1495f2020eb56fb72",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -24294,7 +24294,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -28585,7 +28585,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -35568,7 +35568,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
-              "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
             },
             {
               "path": "apps/web/src/routes/_app/savings.tsx",
@@ -36447,11 +36447,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
@@ -37358,7 +37358,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -37374,7 +37374,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -38707,7 +38707,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -40063,7 +40063,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -41427,7 +41427,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -63260,7 +63260,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
-              "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
             },
             {
               "path": "apps/web/src/routes/_app/savings.tsx",
@@ -271447,7 +271447,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -272408,7 +272408,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -273369,7 +273369,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -274330,7 +274330,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -275291,7 +275291,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -276252,7 +276252,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -277213,7 +277213,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -278174,7 +278174,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -279135,7 +279135,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -280096,7 +280096,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -281057,7 +281057,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -282018,7 +282018,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -282980,7 +282980,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -283941,7 +283941,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -284902,7 +284902,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -285863,7 +285863,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -286824,7 +286824,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -290299,7 +290299,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -297842,7 +297842,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -307887,11 +307887,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -308537,11 +308537,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -309187,11 +309187,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -309837,11 +309837,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -310487,11 +310487,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -311138,11 +311138,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -311789,11 +311789,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -312439,11 +312439,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -313089,11 +313089,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -313739,11 +313739,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -314390,11 +314390,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -315040,11 +315040,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -315690,11 +315690,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -316340,11 +316340,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -316995,11 +316995,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -317645,11 +317645,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -318381,7 +318381,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -349010,7 +349010,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -359812,11 +359812,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
@@ -361523,11 +361523,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
@@ -421518,7 +421518,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -491287,7 +491287,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.test.tsx",
@@ -493062,7 +493062,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
-              "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
             },
             {
               "path": "packages/i18n/package.json",
@@ -497884,7 +497884,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
-              "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
             },
             {
               "path": "packages/i18n/package.json",
@@ -512296,7 +512296,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -517957,7 +517957,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -518045,7 +518045,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
-              "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -518977,7 +518977,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -520629,7 +520629,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
-              "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
@@ -521457,7 +521457,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
-              "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
@@ -522785,7 +522785,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
-              "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
@@ -546880,7 +546880,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -546940,7 +546940,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -548746,7 +548746,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -548806,7 +548806,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -550613,7 +550613,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -550673,7 +550673,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -552449,7 +552449,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -552509,7 +552509,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -554311,7 +554311,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -554371,7 +554371,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -556182,7 +556182,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -556242,7 +556242,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -558026,7 +558026,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -558086,7 +558086,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -559834,7 +559834,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -559894,7 +559894,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -561642,7 +561642,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -561702,7 +561702,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -563451,7 +563451,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -563511,7 +563511,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -565259,7 +565259,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -565319,7 +565319,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -567185,7 +567185,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -569080,7 +569080,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -572448,7 +572448,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -572612,7 +572612,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -572952,7 +572952,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
-              "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
             },
             {
               "path": "apps/web/src/routes/_app/settings/index.tsx",
@@ -573862,7 +573862,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -575757,7 +575757,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -577652,7 +577652,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -579547,7 +579547,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -581442,7 +581442,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -583337,7 +583337,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -585232,7 +585232,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -587127,7 +587127,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -589022,7 +589022,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -590917,7 +590917,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -592812,7 +592812,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -595447,7 +595447,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -597342,7 +597342,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -598486,7 +598486,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Both electricity checkout modes now have named saved-address ownership, recovery and payment journey evidence. Admin first-read and consultation detail evidence remains recorded. Reconcile remaining applicable customer and staff loading, empty, denied and stale states and route-specific interaction/layout requirements with named receipts."
+        "Customer electricity catalogue now has named pending, unavailable, malformed, retry, permission withdrawal and cross-theme/localization evidence. Advanced checkout also validates the same product contract. Reconcile the other applicable route and dashboard-widget state criteria with existing named receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -598619,7 +598619,8 @@
           "release-0.5-admin-first-read-probe",
           "release-0.5-safe-admin-read-errors",
           "release-0.5-customer-consultation-denial",
-          "release-0.5-electricity-owned-checkout-addresses"
+          "release-0.5-electricity-owned-checkout-addresses",
+          "release-0.5-electricity-catalogue-validation"
         ],
         "current_acceptance": null
       }
@@ -599301,7 +599302,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -599361,7 +599362,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -601105,7 +601106,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -601165,7 +601166,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -602909,7 +602910,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -602969,7 +602970,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -604713,7 +604714,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -604773,7 +604774,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -606517,7 +606518,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -606577,7 +606578,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -608321,7 +608322,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -608381,7 +608382,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -610125,7 +610126,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -610185,7 +610186,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -637848,7 +637849,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
-              "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
             },
             {
               "path": "apps/web/src/routes/_app/notifications.tsx",
@@ -638972,7 +638973,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
-              "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
             },
             {
               "path": "apps/web/src/routes/_app/notifications.tsx",
@@ -640096,7 +640097,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
-              "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
             },
             {
               "path": "apps/web/src/routes/_app/notifications.tsx",
@@ -641223,7 +641224,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
-              "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
             },
             {
               "path": "apps/web/src/routes/_app/notifications.tsx",
@@ -642350,7 +642351,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
-              "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
             },
             {
               "path": "apps/web/src/routes/_app/notifications.tsx",
@@ -643504,7 +643505,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
-              "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
             },
             {
               "path": "apps/web/src/routes/_app/notifications.tsx",
@@ -644627,7 +644628,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
-              "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
             },
             {
               "path": "apps/web/src/routes/_app/notifications.tsx",
@@ -645750,7 +645751,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
-              "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
             },
             {
               "path": "apps/web/src/routes/_app/notifications.tsx",
@@ -646874,7 +646875,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
-              "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
             },
             {
               "path": "apps/web/src/routes/_app/notifications.tsx",
@@ -648016,7 +648017,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
-              "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
             },
             {
               "path": "apps/web/src/routes/_app/notifications.tsx",
@@ -649141,7 +649142,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
-              "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
             },
             {
               "path": "apps/web/src/routes/_app/notifications.tsx",
@@ -670533,7 +670534,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -670549,7 +670550,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -671201,7 +671202,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -671217,7 +671218,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -671868,7 +671869,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -671884,7 +671885,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -672537,7 +672538,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -672553,7 +672554,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -673206,7 +673207,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -673222,7 +673223,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -673872,7 +673873,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -673888,7 +673889,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -674538,7 +674539,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -674554,7 +674555,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -675205,7 +675206,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -675221,7 +675222,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -675871,7 +675872,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -675887,7 +675888,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -676538,7 +676539,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -676554,7 +676555,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -680643,7 +680644,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
-              "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
             },
             {
               "path": "apps/web/src/routes/_app/notifications.tsx",
@@ -681765,7 +681766,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
-              "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
             },
             {
               "path": "apps/web/src/routes/_app/notifications.tsx",
@@ -682887,7 +682888,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
-              "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
             },
             {
               "path": "apps/web/src/routes/_app/notifications.tsx",
@@ -684009,7 +684010,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
-              "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
             },
             {
               "path": "apps/web/src/routes/_app/notifications.tsx",
@@ -708487,11 +708488,11 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-catalogue.test.tsx",
-              "sha256": "9716138210fb81f4c752eec91f0bb0b501b441ea1a634f442009b9f76595cc9b"
+              "sha256": "6a5803671db6bc421280ef323583cbb4f7665b89794a8d5f2d167ee254bb3508"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -710563,11 +710564,11 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-catalogue.test.tsx",
-              "sha256": "9716138210fb81f4c752eec91f0bb0b501b441ea1a634f442009b9f76595cc9b"
+              "sha256": "6a5803671db6bc421280ef323583cbb4f7665b89794a8d5f2d167ee254bb3508"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -716862,7 +716863,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "123e5c2acf55e2041fde2bc700cacdc50e88fc77254d0314d8876cc7086e9b92"
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -728267,7 +728268,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Both electricity checkout modes now have named saved-address ownership, recovery and payment journey evidence. Admin first-read and consultation detail evidence remains recorded. Reconcile remaining applicable customer and staff loading, empty, denied and stale states and route-specific interaction/layout requirements with named receipts."
+        "Customer electricity catalogue now has named pending, unavailable, malformed, retry, permission withdrawal and cross-theme/localization evidence. Advanced checkout also validates the same product contract. Reconcile the other applicable route and dashboard-widget state criteria with existing named receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -728466,7 +728467,8 @@
           "release-0.5-admin-first-read-probe",
           "release-0.5-safe-admin-read-errors",
           "release-0.5-customer-consultation-denial",
-          "release-0.5-electricity-owned-checkout-addresses"
+          "release-0.5-electricity-owned-checkout-addresses",
+          "release-0.5-electricity-catalogue-validation"
         ]
       }
     },
@@ -729522,7 +729524,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "8bf0b0b2784d67ecdffd396ee03968b0fe9c3cd55787e1454180454c4a3a0380"
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -729670,7 +729672,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
-              "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -730407,7 +730409,8 @@
             "All 101 transfer budgets pass on the document template read-boundary build. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-template-read-boundary/proof.json",
             "All 101 transfer budgets and affected native invoice deadline and wallet receipt accessibility cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-safe-admin-read-errors/proof.json",
             "All 101 transfer budgets and affected native consultation accessibility and keyboard cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-consultation-denial/proof.json",
-            "All 101 transfer budgets and affected native electricity delivery, accessibility and checkout cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-owned-checkout-addresses/proof.json"
+            "All 101 transfer budgets and affected native electricity delivery, accessibility and checkout cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-owned-checkout-addresses/proof.json",
+            "All 101 transfer budgets and native catalogue accessibility and checkout journey cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-catalogue-validation/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -809126,6 +809129,53 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-owned-checkout-addresses/reviewed-final.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-owned-checkout-addresses/renewed-bindings.json",
       "release_disposition": "Closed electricity checkout saved-address ownership and advanced empty-state gaps. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-electricity-catalogue-validation": {
+      "batch": "release-0.5-electricity-catalogue-validation",
+      "base_commit": "fc21b96933a40b15f5b8d0b1495f2020eb56fb72",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/lib/electricity-catalogue.ts",
+          "sha256": "3d2357b9a2f11b968493f1aef473027e46a616e05203968bcbf26480d62c3a2e"
+        },
+        {
+          "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+          "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
+        },
+        {
+          "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+          "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
+        },
+        {
+          "path": "apps/web/src/pages/electricity-catalogue.test.tsx",
+          "sha256": "6a5803671db6bc421280ef323583cbb4f7665b89794a8d5f2d167ee254bb3508"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/index.tsx",
+          "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
+        }
+      ],
+      "checks": [
+        "Four focused baseline cases reproduce rendering failures from nested localized title and description data, and missing advanced catalogue limits. Both electricity readers now validate the canonical API rows before rendering and preserve valid partial translations and nullable placeholders.",
+        "Twenty native Chromium and Mobile Safari cases passed. Eight catalogue cases cover pending, transient 503, malformed content, retained valid rows, keyboard retry, denied data withdrawal and all-unavailable placeholders across locales and themes. Existing advanced address recovery, payment and route transfer cases also passed.",
+        "Seventy-two focused units and 25 instrumented Chromium cases passed. Critical advanced checkout coverage passed with 257 of 270 lines and 396 of 462 branches. The validator and public catalogue changed-source group passed.",
+        "Typechecking, changed-file lint and formatting, and all 101 transfer budgets passed. The electricity ordering budget was 246.65 KB gzip against the existing 255 KB limit."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-catalogue-validation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-catalogue-validation/proof.json",
+      "source_scope_proof_sha256": "db6b6ee1cfd71640233167076559c05c6e362ba598a247a49454dc2aa3c52cff",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-catalogue-validation/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-catalogue-validation/renewed-bindings.json",
+      "release_disposition": "Closed malformed electricity catalogue reads and verified local recovery. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [
@@ -809176,7 +809226,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Probe the electricity catalogue's nested localized titles and descriptions for local malformed-response recovery, then reconcile remaining launch-service and admin child route criteria with named receipts. GitHub required-check enforcement and staging Sentry delivery remain independent."
+    "goal": "Consolidate the current 98-path route census and named receipts against the required loading, empty, error, denied and stale cases for each read owner and dashboard widget. Verify the still-unmatched conditions before renewing route acceptance. GitHub required-check enforcement and staging Sentry delivery remain independent."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
