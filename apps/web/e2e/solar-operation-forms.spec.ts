@@ -212,6 +212,9 @@ for (const [locale, theme] of [
       theme === 'dark'
     );
     await page.goto(`/admin/solar-construction?requestId=${constructionRequest}`);
+    await expect(
+      page.getByRole('link', { name: copy('solarViewContract'), exact: true })
+    ).toHaveAttribute('href', `/admin/contracts?contractId=${state.progress.contractId}`);
     const form = page.getByRole('form', { name: copy('constructionReviewTitle'), exact: true });
     const note = page.locator('#solar-construction-note');
     const review = page.getByRole('button', { name: copy('constructionReview'), exact: true });

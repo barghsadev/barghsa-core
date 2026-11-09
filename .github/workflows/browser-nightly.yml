@@ -42,9 +42,11 @@ jobs:
             printf '%s\n' "$changes" >&2
             exit 1
           fi
-      - name: Verify registered navigation destinations
+      - name: Verify registered navigation destinations and links
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
-        run: pnpm exec turbo run typecheck --filter=@barghsa/web
+        run: |
+          pnpm exec turbo run typecheck --filter=@barghsa/web
+          node scripts/check-web-navigation.mjs
       - name: Upload nightly dependency and migration results
         if: always()
         uses: actions/upload-artifact@v4

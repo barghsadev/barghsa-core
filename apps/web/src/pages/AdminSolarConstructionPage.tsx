@@ -617,8 +617,8 @@ function OwnedAdminSolarConstructionPage({
             {visible.contractId && (
               <Link
                 className="underline"
-                to="/admin/contracts/$contractId"
-                params={{ contractId: visible.contractId }}
+                to="/admin/contracts"
+                search={{ contractId: visible.contractId }}
               >
                 {copy('solarViewContract')}
               </Link>

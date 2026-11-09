@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T17:58:47+00:00",
+  "updated": "2026-11-09T18:02:48+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -5527,7 +5527,8 @@
           "release-0.6-nightly-auth-and-finance-browser-fixtures",
           "release-0.6-nightly-outcome-rollup",
           "release-0.6-nightly-workspace-browser-fixtures",
-          "release-0.6-nightly-admin-policy-group-contract"
+          "release-0.6-nightly-admin-policy-group-contract",
+          "release-0.6-nightly-navigation-link-audit"
         ],
         "current_acceptance": null
       }
@@ -12411,7 +12412,7 @@
       "remaining": [
         "Record a complete actual 02:00 UTC scheduled run across Chromium, Firefox, WebKit and both mobile projects with the exact per-shard results.",
         "Read back the advisory, Drizzle drift, navigation and seven-day outcome reports from an actual scheduled run. The rollup publishes internally in GitHub Actions and reports missing outcomes explicitly.",
-        "Verify destinations outside the typed workspace shell registry and configure an authorized dedicated results receiver."
+        "Verify runtime-generated navigation destinations against current complete journey evidence and configure an authorized dedicated results receiver. The registered shell and literal/template JSX links have local evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -12450,7 +12451,8 @@
           "release-0.6-nightly-auth-and-finance-browser-fixtures",
           "release-0.6-nightly-outcome-rollup",
           "release-0.6-nightly-workspace-browser-fixtures",
-          "release-0.6-hosted-nightly-contract-and-incomplete-rollup"
+          "release-0.6-hosted-nightly-contract-and-incomplete-rollup",
+          "release-0.6-nightly-navigation-link-audit"
         ],
         "current_acceptance": null
       }
@@ -388737,7 +388739,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -389508,7 +389510,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -390279,7 +390281,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -391052,7 +391054,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -393106,7 +393108,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -393877,7 +393879,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -394648,7 +394650,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -395420,7 +395422,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -396192,7 +396194,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -396965,7 +396967,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -397742,7 +397744,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -398513,7 +398515,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -399236,7 +399238,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-review-preview-deadlines",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-solar-replay-lock-order"
+          "release-0.6-solar-replay-lock-order",
+          "release-0.6-nightly-navigation-link-audit"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -399284,7 +399287,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -399547,7 +399550,8 @@
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
             "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
-            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain."
+            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
+            "The audit identified an unregistered staff solar construction contract route. The link now uses the existing admin contracts route with its selected contract query. Web typecheck, lint, formatting, 28 focused solar/service/contract unit tests, production build and four bilingual Chromium/Mobile Safari browser cases passed. The browser assertions require the exact contract link and preserve the original milestone, idempotency and disclosure checks."
           ],
           "criterion_result": "Reject/close-no-contract require trimmed reason and retain customer support_path=/tickets. Approved stays open with null contract until separately confirmed linking. Close uses elevated contracts:write and fresh step-up/review hash; ordinary approval/rejection uses orders:write. Real stale/role/reason/close/contract cases and current browser rejection pass.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance",
@@ -495901,7 +495905,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -499072,7 +499076,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -499974,7 +499978,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -500817,7 +500821,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -501659,7 +501663,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -513203,7 +513207,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -517234,7 +517238,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -524021,7 +524025,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -525559,7 +525563,7 @@
             },
             {
               "path": "apps/web/e2e/solar-operation-forms.spec.ts",
-              "sha256": "955d02fbd18e37244426d429e16ddddc7c089a42303700a98780f30d4570de94"
+              "sha256": "1580433d47fe10708ea9588bb9f52ea12d0109b8484dd0cc1d14b0368b24ebc6"
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
@@ -526404,7 +526408,7 @@
             },
             {
               "path": "apps/web/e2e/solar-operation-forms.spec.ts",
-              "sha256": "955d02fbd18e37244426d429e16ddddc7c089a42303700a98780f30d4570de94"
+              "sha256": "1580433d47fe10708ea9588bb9f52ea12d0109b8484dd0cc1d14b0368b24ebc6"
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
@@ -527761,7 +527765,7 @@
             },
             {
               "path": "apps/web/e2e/solar-operation-forms.spec.ts",
-              "sha256": "955d02fbd18e37244426d429e16ddddc7c089a42303700a98780f30d4570de94"
+              "sha256": "1580433d47fe10708ea9588bb9f52ea12d0109b8484dd0cc1d14b0368b24ebc6"
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
@@ -577995,7 +577999,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -600112,7 +600116,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -605062,7 +605066,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -645054,7 +645058,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -646189,7 +646193,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -647324,7 +647328,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -648462,7 +648466,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -649600,7 +649604,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -650765,7 +650769,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -651899,7 +651903,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -653033,7 +653037,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -654168,7 +654172,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -655321,7 +655325,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -656457,7 +656461,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -688050,7 +688054,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -689183,7 +689187,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -690316,7 +690320,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -691449,7 +691453,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -696015,7 +696019,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -696856,7 +696860,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -697699,7 +697703,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -698540,7 +698544,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -699381,7 +699385,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -700226,7 +700230,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -701071,7 +701075,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -701912,7 +701916,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -702753,7 +702757,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -703595,7 +703599,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -704442,7 +704446,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -725356,7 +725360,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -736666,7 +736670,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -738559,7 +738563,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "d187d4448ce19cc03b5b1e19519e8cd344f828e7290c3ebdfe44b067dc6eeeb1"
+              "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -739799,7 +739803,8 @@
           "release-0.6-nightly-workspace-browser-fixtures",
           "release-0.6-diagnostic-history-public-digest",
           "release-0.6-hosted-nightly-contract-and-incomplete-rollup",
-          "release-0.6-nightly-admin-policy-group-contract"
+          "release-0.6-nightly-admin-policy-group-contract",
+          "release-0.6-nightly-navigation-link-audit"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -829302,6 +829307,49 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-admin-browser-42665470332",
       "source_scope_proof": "release-0.6-nightly-admin-policy-group-contract.json",
       "source_scope_proof_sha256": "145fca5eb093527f15511cf4a39f88a46cce101427e6ff613ad25b7d5b291243"
+    },
+    "release-0.6-nightly-navigation-link-audit": {
+      "batch": "release-0.6-nightly-navigation-link-audit",
+      "base_commit": "e0162debdd67b82d93c1ef421d650f7821c8b82b",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "03-core-business.md#T-03.11.04.03",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "d8fd9f966e5488307a2e91535b326ff64960f2d8c7f433e7a100c53089dfb1c2"
+        },
+        {
+          "path": "scripts/check-web-navigation.mjs",
+          "sha256": "0d872d64d65e51ec8d3f18f3186490689459b8dce607b8708bc931b969fb26b7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
+          "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
+        },
+        {
+          "path": "apps/web/e2e/solar-operation-forms.spec.ts",
+          "sha256": "1580433d47fe10708ea9588bb9f52ea12d0109b8484dd0cc1d14b0368b24ebc6"
+        },
+        {
+          "path": "apps/web/src/routeTree.gen.ts",
+          "sha256": "c1524622f37c4dc26c3fc7f5746d3a9a2d962c8397db0ab77e61efa0422be658"
+        },
+        {
+          "path": "apps/web/src/routes/admin/contracts.tsx",
+          "sha256": "e51e0994c520ae45bcc4b30a3b01c2daca182ba888969184af45047e34f566d6"
+        }
+      ],
+      "checks": [
+        "The nightly navigation check compares literal and template JSX destinations against the generated route registry. The check examined 178 web and shared UI destinations. The synthetic unregistered contract path failed as expected. Runtime-generated destinations remain covered by their existing type and journey checks and require current scheduled evidence.",
+        "The audit identified an unregistered staff solar construction contract route. The link now uses the existing admin contracts route with its selected contract query. Web typecheck, lint, formatting, 28 focused solar/service/contract unit tests, production build and four bilingual Chromium/Mobile Safari browser cases passed. The browser assertions require the exact contract link and preserve the original milestone, idempotency and disclosure checks."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-solar-construction-navigation",
+      "source_scope_proof": "release-0.6-nightly-navigation-link-audit.json",
+      "source_scope_proof_sha256": "7fa07db4fd7790352a1d66105151ef330e59f0c8d5a8b4df295ec29e88637464"
     }
   },
   "historical_improvements": [
