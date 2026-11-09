@@ -2,10 +2,12 @@ import { brandingText } from '@barghsa/i18n/branding';
 import { aiModelFormText } from '@barghsa/i18n/ai-model-forms';
 import { providerText, smsProviderText } from '@barghsa/i18n/providers';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
-import type { APIRequestContext, Page, Route } from '@playwright/test';
+import { tWorkspace } from '@barghsa/i18n/workspace-admin';
+import type { APIRequestContext, APIResponse, Page, Route } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { fork, type ChildProcess } from 'node:child_process';
+import { once } from 'node:events';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 let child: ChildProcess;
@@ -18,6 +20,7 @@ let http: {
   customerCsrf: string;
   jobs: Record<string, { first: string; second: string; dead: string }>;
   readyAgentEditorModels: Record<string, { id: string; title: string }>;
+  staffReviewActors: Record<string, { username: string; session: string; csrf: string }>;
 };
 let restoreNumberPreference: (() => Promise<void>) | null = null;
 
@@ -67,9 +70,14 @@ async function publishNumericPreference(
 }
 
 const pendingApiResponses = new Set<Promise<void>>();
-async function forwardLiveRequest(route: Route, options: Parameters<Route['fetch']>[0]) {
+async function forwardLiveRequest(
+  route: Route,
+  options: Parameters<Route['fetch']>[0],
+  onResponse?: (response: APIResponse) => void
+) {
   const pending = (async () => {
     const response = await route.fetch(options);
+    onResponse?.(response);
     await route.fulfill({ response });
   })();
   pendingApiResponses.add(pending);
@@ -81,6 +89,14 @@ async function forwardLiveRequest(route: Route, options: Parameters<Route['fetch
 }
 async function settleLiveRequests() {
   while (pendingApiResponses.size) await Promise.all([...pendingApiResponses]);
+}
+async function readFixtureOtp(challengeId: string, username: string): Promise<string> {
+  const received = once(child, 'message', { signal: AbortSignal.timeout(5000) });
+  child.send({ challengeId, username });
+  const [reply] = await received;
+  if (reply?.challengeId !== challengeId || !/^\d{6}$/.test(reply.code))
+    throw new Error('The verified-contact fixture did not receive an OTP');
+  return reply.code;
 }
 
 test.afterEach(async ({ page }) => {
@@ -286,19 +302,36 @@ for (const locale of ['en', 'fa'])
     page,
   }) => {
     await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
+    const actor = { ...http.staffReviewActors[locale]! };
     await page.route('**/api/**', async (route) => {
       const request = route.request(),
         url = new URL(request.url());
-      await forwardLiveRequest(route, {
-        url: `${http.base}${url.pathname}${url.search}`,
-        headers: {
-          ...request.headers(),
-          host: new URL(http.base).host,
-          origin: 'https://app.example.test',
-          cookie: `barghsa_session=${http.session}`,
-          'x-csrf-token': http.csrf,
+      await forwardLiveRequest(
+        route,
+        {
+          url: `${http.base}${url.pathname}${url.search}`,
+          headers: {
+            ...request.headers(),
+            host: new URL(http.base).host,
+            origin: 'https://app.example.test',
+            cookie: `barghsa_session=${actor.session}`,
+            'x-csrf-token': actor.csrf,
+          },
         },
-      });
+        (response) => {
+          if (url.pathname !== '/api/auth/step-up/otp/verify' || !response.ok()) return;
+          const cookies = Object.fromEntries(
+            response
+              .headersArray()
+              .filter((header) => header.name.toLowerCase() === 'set-cookie')
+              .map((header) => header.value.split(';', 1)[0]!.split('=', 2))
+          );
+          if (!cookies.barghsa_session || !cookies.barghsa_csrf)
+            throw new Error('Verified step-up did not rotate the fixture session');
+          actor.session = cookies.barghsa_session;
+          actor.csrf = cookies.barghsa_csrf;
+        }
+      );
     });
     const fa = locale === 'fa',
       username = `new-staff-${locale}@example.test`;
@@ -344,7 +377,25 @@ for (const locale of ['en', 'fa'])
     await page
       .getByRole('button', { name: fa ? 'ذخیره نقش‌ها' : 'Save roles', exact: true })
       .click();
-    await confirmDestructiveAction(page, fa ? 'fa' : 'en');
+    const language = fa ? 'fa' : 'en';
+    const stepUp = (key: string) => tWorkspace(`admin.stepUp.${key}`, language);
+    const dialog = page.getByRole('dialog');
+    const send = dialog.getByRole('button', { name: stepUp('send'), exact: true });
+    await expect(send).toBeDisabled();
+    await approveRiskConfirmation(page, language, 'destructive');
+    await expect(send).toBeEnabled();
+    const sent = page.waitForResponse('**/api/auth/step-up/otp/send');
+    await send.click();
+    const challenge = await sent;
+    expect(challenge.status()).toBe(200);
+    const { challengeId } = await challenge.json();
+    await dialog
+      .getByLabel(stepUp('code'), { exact: true })
+      .fill(await readFixtureOtp(challengeId, actor.username));
+    const verified = page.waitForResponse('**/api/auth/step-up/otp/verify');
+    await dialog.getByRole('button', { name: stepUp('verify'), exact: true }).click();
+    expect((await verified).status()).toBe(200);
+    await expect(dialog).toHaveCount(0);
     await expect(row).toContainText(fa ? 'مالی' : 'Finance');
     await row
       .getByRole('button', { name: fa ? 'تاریخچه مجوزها' : 'Permission history', exact: true })
@@ -354,7 +405,7 @@ for (const locale of ['en', 'fa'])
       exact: true,
     });
     await expect(history).toContainText('Assign finance duties');
-    await expect(history).toContainText('admin-ui@example.test');
+    await expect(history).toContainText(actor.username);
     await expect(history).toContainText(fa ? 'نقش‌های افزوده: مالی' : 'Roles added: Finance');
     await history
       .getByRole('button', { name: fa ? 'بستن تاریخچه' : 'Close history', exact: true })
@@ -368,7 +419,7 @@ for (const locale of ['en', 'fa'])
     await expect(row).toContainText(fa ? 'غیرفعال' : 'Disabled');
     await expect(page.locator('#staff-created-password')).toHaveCount(0);
     const response = await page.request.get(`${http.base}/api/admin/staff`, {
-      headers: { cookie: `barghsa_session=${http.session}` },
+      headers: { cookie: `barghsa_session=${actor.session}` },
     });
     const result = await response.json();
     expect(
@@ -2331,7 +2382,7 @@ for (const locale of ['en', 'fa'])
           exact: true,
         })
         .click();
-      await confirm();
+      await confirmDestructiveAction(page, fa ? 'fa' : 'en');
       expect(await detail()).toMatchObject({ status: 'inactive' });
     }
     await page.getByRole('tab', { name: fa ? 'برق' : 'Electricity', exact: true }).click();
@@ -2480,8 +2531,11 @@ for (const locale of ['en', 'fa'] as const) {
         },
       });
     });
+    const titleField = fa ? 'appTitleFa' : 'appTitle';
     const publicTitle = async () =>
-      (await (await page.request.get(`${http.base}/api/public/branding/config`)).json()).appTitle;
+      (await (await page.request.get(`${http.base}/api/public/branding/config`)).json())[
+        titleField
+      ];
     const before = await publicTitle();
     const publicStyle = async () =>
       (await (await page.request.get(`${http.base}/api/public/branding/config`)).json())
@@ -2489,8 +2543,13 @@ for (const locale of ['en', 'fa'] as const) {
     const beforeStyle = await publicStyle();
     const numberStyle = fa ? 'western' : 'persian';
     await page.goto('/admin/branding');
-    const title = page.getByLabel(brandingText('appTitle', locale), { exact: true });
+    const edit = page.getByRole('button', {
+      name: adminText('admin.settings.edit', locale),
+      exact: true,
+    });
+    const title = page.getByLabel(brandingText(titleField, locale), { exact: true });
     const savedTitle = `Brand published ${locale}`;
+    await edit.click();
     await title.fill(savedTitle);
     const style = page.getByLabel(fa ? 'نمایش اعداد' : 'Number display', { exact: true });
     await style.selectOption(numberStyle);
@@ -2570,6 +2629,7 @@ for (const locale of ['en', 'fa'] as const) {
       .poll(() => preview.evaluate((image: HTMLImageElement) => image.naturalWidth))
       .toBe(1);
 
+    await edit.click();
     await title.fill('Unsaved change');
     await expect(
       page.getByRole('button', { name: fa ? 'انتشار' : 'Activate', exact: true })
@@ -2592,6 +2652,7 @@ for (const locale of ['en', 'fa'] as const) {
         page.evaluate(() => document.documentElement.style.getPropertyValue('--primary-foreground'))
       )
       .toBe('#000000');
+    await edit.click();
     await title.fill(`Next draft ${locale}`);
     await style.selectOption('locale');
     await page
@@ -2740,10 +2801,10 @@ for (const locale of ['en', 'fa'])
     const discarded = page
       .locator('table:visible > tbody > tr, ol[role=list]:visible > li')
       .filter({ hasText: `discard-${locale}` });
-    page.once('dialog', (dialog) => dialog.accept());
     await discarded
       .getByRole('button', { name: fa ? 'حذف پیش‌نویس' : 'Discard', exact: true })
       .click();
+    await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     await expect(discarded).toHaveCount(0);
     await page.context().clearCookies();
     await page.goto(`/terms?lang=${locale}`);
@@ -2931,6 +2992,7 @@ for (const locale of ['en', 'fa'] as const)
     const secret = saved.maskedConfig.password;
     await page
       .getByRole('row')
+      .or(page.getByRole('listitem'))
       .filter({ hasText: `Live SMTP ${locale}` })
       .getByRole('button', { name: emailText('update'), exact: true })
       .click();
@@ -2965,6 +3027,7 @@ for (const locale of ['en', 'fa'] as const)
     const key = sms.maskedConfig.api_key;
     await page
       .getByRole('row')
+      .or(page.getByRole('listitem'))
       .filter({ hasText: `Live SMS ${locale}` })
       .getByRole('button', { name: text('edit'), exact: true })
       .click();
@@ -2981,7 +3044,12 @@ for (const locale of ['en', 'fa'] as const)
     await settleLiveRequests();
     await page.reload();
     await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
-    await expect(page.getByRole('cell', { name: `Live SMS ${locale}`, exact: true })).toBeVisible();
+    await expect(
+      page
+        .getByRole('row')
+        .or(page.getByRole('listitem'))
+        .filter({ hasText: `Live SMS ${locale}` })
+    ).toBeVisible();
   });
 
 for (const locale of ['en', 'fa'] as const) {

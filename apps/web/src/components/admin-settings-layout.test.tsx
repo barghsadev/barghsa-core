@@ -4,6 +4,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { Settings } from 'lucide-react';
 import { AdminSettingsLayout } from './AdminSettingsLayout.js';
+import type { NavigationGroup } from './AppShell.js';
 import {
   ADMIN_SETTINGS_SECTIONS,
   activeAdminSettingsPath,
@@ -34,7 +35,7 @@ afterEach(async () => {
   await act(async () => root.unmount());
   host.remove();
 });
-const offered = [
+const offered: NavigationGroup[] = [
   {
     label: 'Workspace',
     items: [

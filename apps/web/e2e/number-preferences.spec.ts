@@ -100,6 +100,9 @@ for (const locale of ['en', 'fa']) {
         ],
       })
     );
+    await page.route(`**/api/electricity/drafts/simple/guarded?profileId=${id}`, (route) =>
+      route.fulfill({ json: { currentStep: 1, data: null, revision: null } })
+    );
     await page.route('**/api/crm/dashboard/pending-verification', (route) =>
       route.fulfill({ json: { enabled: true, count: 12, profiles: [] } })
     );

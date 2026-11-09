@@ -1,10 +1,14 @@
 import { test, expect } from './fixtures';
+import { t } from '@barghsa/i18n/auth';
 
 test.describe('Application smoke tests', () => {
-  test('home page loads and displays the app title', async ({ page }) => {
+  test('home page opens the sign-in screen for a signed-out visitor', async ({ page }) => {
+    await page.route('**/api/auth/user', (route) => route.fulfill({ status: 401, json: {} }));
     await page.goto('/');
-    await expect(page.getByRole('heading', { name: 'Barghsa' })).toBeVisible();
-    await expect(page.getByText('Iranian electricity market intelligence platform')).toBeVisible();
+    await expect(page).toHaveURL(/\/login$/);
+    await expect(
+      page.getByRole('heading', { name: t('auth.login.title', 'fa'), exact: true })
+    ).toBeVisible();
   });
 
   test('application has a valid HTML structure', async ({ page }) => {
