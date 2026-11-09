@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T15:27:32+00:00",
+  "updated": "2026-11-09T15:32:18+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -5240,7 +5240,7 @@
       "launch_required": true,
       "remaining": [
         "Verify hosted nightly outcomes and quarantine receipts after the component build prerequisite is fixed.",
-        "Prove the production promotion guard refuses unresolved quarantined critical coverage through the authorized promotion procedure."
+        "Record the strict promotion report from the exact accepted candidate in the production approval package. The CLI and manual CI release path now enforce the guard, and the synthetic critical and non-critical controls passed."
       ],
       "owner": null,
       "depends_on": [],
@@ -5291,7 +5291,8 @@
           ".github/workflows/ci.yml"
         ],
         "batches": [
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "current_acceptance": null
       }
@@ -11471,7 +11472,9 @@
         "changed_paths": [
           "audit/skipped-work-handoff.md"
         ],
-        "batches": [],
+        "batches": [
+          "release-0.6-production-quarantine-guard"
+        ],
         "current_acceptance": null
       }
     },
@@ -438625,7 +438628,8 @@
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -438633,7 +438637,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -439017,7 +439021,8 @@
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -439025,7 +439030,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -439562,7 +439567,8 @@
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -439570,7 +439576,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -439934,7 +439940,8 @@
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -439942,7 +439949,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -440306,7 +440313,8 @@
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -440314,7 +440322,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -469653,7 +469661,8 @@
           "release-0.6-remove-runtime-package-managers",
           "release-0.6-alpine-node-runtime-candidate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -469661,7 +469670,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
             },
             {
               "path": "Dockerfile.web",
@@ -469880,7 +469889,8 @@
           "release-0.6-remove-runtime-package-managers",
           "release-0.6-alpine-node-runtime-candidate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -469888,7 +469898,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
             },
             {
               "path": "Dockerfile.web",
@@ -471219,7 +471229,8 @@
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -471227,7 +471238,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -472528,7 +472539,8 @@
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-runtime-sbom-provenance",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -472540,7 +472552,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
             },
             {
               "path": ".gitignore",
@@ -472606,7 +472618,8 @@
           "release-0.6-preflight-reconciliation",
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -472618,7 +472631,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
             },
             {
               "path": ".gitignore",
@@ -472737,7 +472750,8 @@
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -472745,7 +472759,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -472839,7 +472853,8 @@
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -472847,7 +472862,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -472903,7 +472918,8 @@
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-runtime-sbom-provenance",
           "release-0.6-postgres-go-license-notices",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "current_acceptance": {
           "kind": "pinned_trivy_and_exact_image_inventory",
@@ -472911,7 +472927,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
             },
             {
               "path": "Dockerfile.base",
@@ -472976,7 +472992,8 @@
           "release-0.6-preflight-reconciliation",
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -472988,7 +473005,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
             },
             {
               "path": ".gitignore",
@@ -473094,7 +473111,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-shipped-component-license-gate",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "current_acceptance": {
           "kind": "current-supply-chain-triage-policy",
@@ -473106,7 +473124,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -473470,7 +473488,8 @@
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-runtime-sbom-provenance",
           "release-0.6-postgres-go-license-notices",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "current_acceptance": {
           "kind": "actual_hosted_image_blocking_evidence",
@@ -473494,7 +473513,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -475538,7 +475557,8 @@
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -475546,7 +475566,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -475598,7 +475618,8 @@
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-runtime-sbom-provenance",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -475606,7 +475627,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -523921,7 +523942,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -523929,7 +523951,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
             },
             {
               "path": ".size-limit.json",
@@ -524760,7 +524782,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -524768,7 +524791,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
             },
             {
               "path": ".size-limit.json",
@@ -526108,7 +526131,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -526116,7 +526140,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
             },
             {
               "path": ".size-limit.json",
@@ -526909,7 +526933,8 @@
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-runtime-image-scan-gate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "current_acceptance": {
           "kind": "active_github_required_check",
@@ -526924,7 +526949,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -726349,7 +726374,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
             },
             {
               "path": "apps/api/openapi.json",
@@ -730221,7 +730246,8 @@
           "release-0.6-web-fixture-typecheck-and-license-readback",
           "release-0.6-solar-replay-lock-order",
           "release-0.6-native-integration-acceptance",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -730274,7 +730300,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
             },
             {
               "path": "apps/api/openapi.json",
@@ -734013,7 +734039,8 @@
           "release-0.6-web-fixture-typecheck-and-license-readback",
           "release-0.6-solar-replay-lock-order",
           "release-0.6-native-integration-acceptance",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -735752,7 +735779,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "80c22b0421b93993e8e9440c2b12c686ab1bb07d9fc070f217438f954231b557"
+              "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
             },
             {
               "path": ".size-limit.json",
@@ -737824,7 +737851,8 @@
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-private-api-monitoring",
           "release-0.6-solar-replay-lock-order",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ]
       }
     },
@@ -737942,7 +737970,8 @@
           "release-0.6-postgres-go-license-notices",
           "release-0.6-staging-postgres-monitoring-readback",
           "release-0.6-native-integration-acceptance",
-          "release-0.6-browser-story-build-prerequisite"
+          "release-0.6-browser-story-build-prerequisite",
+          "release-0.6-production-quarantine-guard"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -825517,6 +825546,78 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "browser-nightly-story-prerequisite-proof.json",
       "source_scope_proof_sha256": "59332ca6c6f07a648f4238ac24f267e629e3629fb04ece8dd841da734ce52e37"
+    },
+    "release-0.6-production-quarantine-guard": {
+      "batch": "release-0.6-production-quarantine-guard",
+      "base_commit": "fdb4de2327f56715dfdaa4155c0a89249599f956",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "release-readiness#R-05.02",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.04.02.04",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.01",
+        "06-security-testing-observability.md#T-06.07.02.02",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.07.02.05",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "06-security-testing-observability.md#T-06.11.02.03",
+        "06-security-testing-observability.md#T-06.11.02.04",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "af175036c97ca7b15c7d039a0bb3316d061241c8e43c9f42b07c4a6aa4bd1aec"
+        },
+        {
+          "path": "scripts/check-flaky-tests.py",
+          "sha256": "0768ffe3ef92d4c170fc72b2ba406a3bf78e81ba3338a8b5c78089755ef14b02"
+        },
+        {
+          "path": "scripts/test_check_flaky_tests.py",
+          "sha256": "730fa41d08929b6936c8bc60f63e05b65c5ec29709f2bdff4db9de8213ea826d"
+        },
+        {
+          "path": "docs/flaky-test-quarantine.md",
+          "sha256": "d6f7abacffa15c480c1f82320ad3de0bab20510b3bac8a50c5c915c85b036735"
+        },
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "f4d1d22f27a32c832535eee913bd7fe8c54293ee06ba986cf0b228ba33dbf494"
+        },
+        {
+          "path": "scripts/check-flaky-tests.sh",
+          "sha256": "91b4d08510670e61adc283e56136fd8aa8eef0df88e1ed4b6506ed6a7fa9f128"
+        },
+        {
+          "path": "scripts/quarantine-registry.json",
+          "sha256": "157a74b0da194e57fcfd444594a710eeba719bb205bfd9969b5d5e634fbb58b2"
+        }
+      ],
+      "checks": [
+        "Nine quarantine tests passed. The actual CLI accepts an active valid critical record in ordinary reporting, rejects it in strict promotion mode, and accepts an active non-critical record in strict mode. The repository registry passes strict mode and the report explicitly identifies that mode.",
+        "The manually dispatched CI release check requests strict mode through the existing report step. Ordinary push, PR and nightly behavior is preserved. The production procedure requires the strict result from the exact candidate. No production promotion or waiver was exercised.",
+        "GitHub workflow syntax passed. Browser, coverage and financial assertions are unchanged."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "production-quarantine-guard-proof.json",
+      "source_scope_proof_sha256": "2fa5d44bb121ba7322d49f31355511d2ec4b633895182379f3103f3f68d80b58"
     }
   },
   "historical_improvements": [
@@ -825556,18 +825657,18 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-browser-test-configuration-and-quarantine",
+    "id": "release-0.6-production-migration-entry-point",
     "release": "0.6.0",
     "task_keys": [
-      "01-platform-infrastructure.md#T-01.04.04",
-      "01-platform-infrastructure.md#T-01.04.06",
-      "release-readiness#R-05.02"
+      "01-platform-infrastructure.md#T-02.03.02",
+      "01-platform-infrastructure.md#T-02.04.04",
+      "release-readiness#R-05.03"
     ],
-    "goal": "Reconcile existing Playwright configuration and quarantine policy against their exact requirements. Reuse source-bound browser and CI proof where the current code matches."
+    "goal": "Reconcile the current packaged migration and production seed entry points with the deployment order and safe rehearsal evidence."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",
-    "next_update_after": "v0.6.0 browser test configuration, package license disposition and production-equivalent environment availability",
+    "next_update_after": "v0.6.0 hosted browser and migration verification, package license disposition and production-equivalent environment availability",
     "method": "v0.5.0 staging and Telegram receipts are confirmed. v0.6.0 owner policy is recorded. Local and disposable staging rehearsals do not satisfy the production-equivalent TLS, provider, off-server recovery, load or schedule gates; production access/provisioning timing is external."
   },
   "capabilities": [

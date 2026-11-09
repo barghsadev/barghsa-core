@@ -330,9 +330,13 @@ jobs:
       - name: Report flaky test count
         if: always()
         id: flaky-check
+        env:
+          ENFORCE_PROMOTION_QUARANTINE: ${{ github.event_name == 'workflow_dispatch' }}
         run: |
           python3 -m unittest discover -s scripts -p 'test_check_flaky_tests.py'
-          ./scripts/check-flaky-tests.sh --report "$RUNNER_TEMP/flaky-test-report.json"
+          args=()
+          if [ "$ENFORCE_PROMOTION_QUARANTINE" = true ]; then args+=(--promotion); fi
+          ./scripts/check-flaky-tests.sh --report "$RUNNER_TEMP/flaky-test-report.json" "${args[@]}"
       - name: Upload flaky test report
         if: always()
         uses: actions/upload-artifact@v4

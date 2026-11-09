@@ -9,14 +9,14 @@ from pathlib import Path, PurePosixPath
 import re
 
 
-def evaluate(registry, today):
+def evaluate(registry, today, *, promotion=False):
     if not isinstance(registry, dict) or type(registry.get("version")) is not int or registry["version"] != 1:
         raise ValueError("registry version must be 1")
     records = registry.get("quarantined")
     if not isinstance(records, list):
         raise ValueError("quarantined must be an array")
     seen = set()
-    active = expired = critical_expired = 0
+    active = expired = critical_active = critical_expired = 0
     for index, record in enumerate(records):
         prefix = f"record {index + 1}"
         if not isinstance(record, dict):
@@ -54,12 +54,15 @@ def evaluate(registry, today):
             critical_expired += record["severity"] == "critical"
         else:
             active += 1
+            critical_active += record["severity"] == "critical"
     return {
         "schema_version": 1,
         "date_utc": today.isoformat(),
-        "status": "blocked" if critical_expired else "passed",
+        "promotion_check": promotion,
+        "status": "blocked" if critical_expired or (promotion and critical_active) else "passed",
         "registered_count": len(records),
         "active_quarantine_count": active,
+        "active_critical_count": critical_active,
         "expired_quarantine_count": expired,
         "expired_critical_count": critical_expired,
         "observed_runtime_flake_count": None,
@@ -70,19 +73,24 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--registry", type=Path, default=Path(__file__).with_name("quarantine-registry.json"))
     parser.add_argument("--report", type=Path, default=Path("flaky-test-report.json"))
+    parser.add_argument("--promotion", action="store_true", help="Block release promotion while a critical test is quarantined")
     args = parser.parse_args()
     try:
-        report = evaluate(json.loads(args.registry.read_text()), datetime.now(timezone.utc).date())
+        report = evaluate(json.loads(args.registry.read_text()), datetime.now(timezone.utc).date(),
+                          promotion=args.promotion)
     except (OSError, ValueError) as error:
         # Do not echo registry content or arbitrary paths into workflow commands.
-        report = {"schema_version": 1, "status": "invalid", "error": type(error).__name__, "observed_runtime_flake_count": None}
+        report = {"schema_version": 1, "promotion_check": args.promotion, "status": "invalid", "error": type(error).__name__, "observed_runtime_flake_count": None}
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.report.write_text(json.dumps(report, indent=2) + "\n")
     valid = report["status"] != "invalid"
     if valid:
         message = (f"Known active quarantines: {report['active_quarantine_count']}; "
+                   f"active critical: {report['active_critical_count']}; "
                    f"expired: {report['expired_quarantine_count']}; "
                    f"expired critical: {report['expired_critical_count']}. Runtime flakes: not measured.")
+        if args.promotion and report["active_critical_count"]:
+            message += " Release promotion requires clearing critical quarantines."
     else:
         message = "Quarantine registry unavailable or invalid. Counts unknown; repair registry before proceeding."
     level = "error" if report["status"] != "passed" else "notice"

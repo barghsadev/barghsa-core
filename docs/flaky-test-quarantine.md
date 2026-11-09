@@ -20,17 +20,14 @@ Every quarantined test MUST have a durable record containing:
 
 ### 2. Critical Tests in Quarantine
 
-A quarantined **critical** test (a test covering a P0/P1 business flow) **must not silently allow production promotion**:
-
-- The CI pipeline must fail or block the release gate if any critical test is in quarantine and the expiry has passed.
-- The production promotion gate (see `README.md` — Production promotion gate) checks for quarantined critical tests and blocks promotion if any are found without a current, valid quarantine record. This enforcement is policy-defined; the automated gate implementation is tracked in T-05.04.01.
+A quarantined **critical** test covers a P0/P1 business flow. Ordinary CI blocks expired critical records. The manual CI release check and production promotion check also block active critical records, even when they have a valid owner, issue and expiry. Restore the required critical coverage before promotion.
 
 ### 3. CI Flaky Report
 
 Every CI run produces a flaky-test report:
 
 - The total number of known flaky tests (active quarantine records) is reported as a CI annotation.
-- The report is displayed in the CI run summary but does not block the PR pipeline by itself — blocking is handled by the production promotion gate.
+- The report appears in the CI run summary. Active valid quarantines remain visible in ordinary CI. A manually dispatched CI release check uses the stricter promotion mode.
 - The nightly browser workflow runs Firefox, WebKit and both mobile projects, reports observed outcomes and checks the quarantine registry. Other scheduled quality gates remain tracked in T-05.05.01.
 
 ### 4. Quarantine Lifecycle
@@ -103,7 +100,10 @@ migration-chain tests still run the entire production journal.
 The script `scripts/check-flaky-tests.sh` reads the quarantine registry and reports the
 active quarantine count. The CI workflow runs it even when preceding tests fail and
 uploads its JSON report. Missing or invalid registries and expired critical records
-fail the check. Expired non-critical records are reported separately.
+fail the check. Expired non-critical records are reported separately. Run
+`scripts/check-flaky-tests.sh --promotion` against the candidate checkout to
+write the strict report required for production approval. Active critical records
+fail that check and remain counted in the report.
 
 Owners use `@user` or `@organization/team`; issue links must be GitHub issue URLs.
 Severity is `critical` or `non-critical`. Test paths are normalized repository-relative
@@ -112,9 +112,8 @@ the current UTC date and expire 1–30 days later. Records remain active through
 expiry date, inclusive.
 
 This report counts registered quarantines. It does not infer flakes from test runner
-results: `observed_runtime_flake_count` is explicitly `null`. An empty registry does
-not prove a run contained no flaky tests. Automatic production promotion remains
-the separate gate described above.
+results. `observed_runtime_flake_count` is explicitly `null`. Review actual test
+outcomes separately before approving a release.
 
 The browser job separately emits Playwright JSON outcomes and an always-uploaded
 count summary. CI enables `failOnFlakyTests`; a failed attempt followed by a passing

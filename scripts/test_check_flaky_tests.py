@@ -37,7 +37,19 @@ class QuarantineTests(unittest.TestCase):
     def test_valid_record_is_reported_without_blocking(self):
         report = self.evaluate(RECORD)
         self.assertEqual(report["status"], "passed")
+        self.assertFalse(report["promotion_check"])
         self.assertEqual(report["active_quarantine_count"], 1)
+
+    def test_promotion_blocks_valid_critical_quarantine_until_cleared(self):
+        registry = {"version": 1, "quarantined": [RECORD]}
+        report = module.evaluate(registry, TODAY, promotion=True)
+        self.assertEqual(report["status"], "blocked")
+        self.assertTrue(report["promotion_check"])
+        self.assertEqual(report["active_critical_count"], 1)
+        registry["quarantined"] = [dict(RECORD, severity="non-critical")]
+        report = module.evaluate(registry, TODAY, promotion=True)
+        self.assertEqual(report["status"], "passed")
+        self.assertEqual(report["active_critical_count"], 0)
 
     def test_expiry_is_inclusive_utc_day(self):
         record = dict(RECORD, expiryDate=TODAY.isoformat())

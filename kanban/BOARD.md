@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T15:27:32+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T15:32:18+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -39,11 +39,11 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Reconcile existing Playwright configuration and quarantine policy against their exact requirements. Reuse source-bound browser and CI proof where the current code matches.
+Reconcile the current packaged migration and production seed entry points with the deployment order and safe rehearsal evidence.
 
-- `01-platform-infrastructure.md#T-01.04.04`: Configure Playwright for E2E testing
-- `01-platform-infrastructure.md#T-01.04.06`: Configure flaky-test quarantine process
-- `release-readiness#R-05.02`: Renew security and operational task acceptance
+- `01-platform-infrastructure.md#T-02.03.02`: Create migration runner script for production deployments
+- `01-platform-infrastructure.md#T-02.04.04`: Wire `pnpm db:seed` script in `packages/db/package.json`
+- `release-readiness#R-05.03`: Prove production deployment, backup and recovery prerequisites
 
 ## v0.2.0: Complete customer journeys
 
