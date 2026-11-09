@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T17:57:00+00:00",
+  "updated": "2026-11-09T17:58:47+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -5526,7 +5526,8 @@
           "release-0.6-nightly-version-and-smoke-contracts",
           "release-0.6-nightly-auth-and-finance-browser-fixtures",
           "release-0.6-nightly-outcome-rollup",
-          "release-0.6-nightly-workspace-browser-fixtures"
+          "release-0.6-nightly-workspace-browser-fixtures",
+          "release-0.6-nightly-admin-policy-group-contract"
         ],
         "current_acceptance": null
       }
@@ -104217,7 +104218,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/lib/knowledge-base-upload.ts",
@@ -104794,7 +104795,8 @@
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
           "release-0.5-staff-confirmation-fixtures",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-nightly-admin-policy-group-contract"
         ],
         "current_acceptance": {
           "status": "done",
@@ -104886,7 +104888,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/lib/knowledge-policy-form.ts",
@@ -104902,7 +104904,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -104997,7 +104999,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
-            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json"
+            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
+            "Web typechecking, formatting and 52 focused knowledge/policy membership, forms and recovery tests passed. Eight actual link/unlink journeys passed in hosted run 42665470332 across Firefox, WebKit, Mobile Chrome and Mobile Safari in Persian and English. The two changed files match the tested SHA byte for byte. The run also exercised other journeys that failed and is evidence only for this scope."
           ],
           "limitations": [],
           "operational_limits": [
@@ -454364,7 +454367,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/lib/knowledge-base-upload.ts",
@@ -454817,7 +454820,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/lib/knowledge-base-upload.ts",
@@ -455272,7 +455275,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/lib/knowledge-base-upload.ts",
@@ -455726,7 +455729,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/lib/knowledge-base-upload.ts",
@@ -456208,7 +456211,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/lib/knowledge-policy-form.ts",
@@ -456224,7 +456227,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -456494,7 +456497,8 @@
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
           "release-0.5-staff-confirmation-fixtures",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-nightly-admin-policy-group-contract"
         ],
         "current_acceptance": {
           "status": "done",
@@ -456586,7 +456590,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/lib/knowledge-policy-form.ts",
@@ -456602,7 +456606,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -456697,7 +456701,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
-            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json"
+            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
+            "Web typechecking, formatting and 52 focused knowledge/policy membership, forms and recovery tests passed. Eight actual link/unlink journeys passed in hosted run 42665470332 across Firefox, WebKit, Mobile Chrome and Mobile Safari in Persian and English. The two changed files match the tested SHA byte for byte. The run also exercised other journeys that failed and is evidence only for this scope."
           ],
           "limitations": [],
           "operational_limits": [
@@ -456960,7 +456965,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/lib/knowledge-policy-form.ts",
@@ -456976,7 +456981,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -495804,7 +495809,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -516487,7 +516492,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -517165,7 +517170,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -522880,7 +522885,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -552176,7 +552181,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -552504,7 +552509,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -554056,7 +554061,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -554384,7 +554389,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -555937,7 +555942,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -556265,7 +556270,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -557787,7 +557792,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -558115,7 +558120,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -559663,7 +559668,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -559991,7 +559996,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -561548,7 +561553,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -561876,7 +561881,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -563406,7 +563411,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -563734,7 +563739,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -565228,7 +565233,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -565556,7 +565561,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -567050,7 +567055,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -567378,7 +567383,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -568873,7 +568878,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -569201,7 +569206,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -570695,7 +570700,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -571023,7 +571028,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -572547,7 +572552,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -572903,7 +572908,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -574460,7 +574465,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -574816,7 +574821,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -577870,7 +577875,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -578382,7 +578387,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -579285,7 +579290,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -579641,7 +579646,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -581198,7 +581203,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -581554,7 +581559,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -583111,7 +583116,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -583467,7 +583472,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -585024,7 +585029,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -585380,7 +585385,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -586937,7 +586942,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -587293,7 +587298,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -588850,7 +588855,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -589206,7 +589211,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -590763,7 +590768,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -591119,7 +591124,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -592676,7 +592681,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -593032,7 +593037,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -594589,7 +594594,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -594945,7 +594950,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -596502,7 +596507,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -596858,7 +596863,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -598415,7 +598420,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -598771,7 +598776,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -601074,7 +601079,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -601430,7 +601435,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -602987,7 +602992,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -603343,7 +603348,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -604937,7 +604942,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -606273,7 +606278,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -606601,7 +606606,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -608091,7 +608096,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -608419,7 +608424,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -609909,7 +609914,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -610237,7 +610242,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -611727,7 +611732,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -612055,7 +612060,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -613545,7 +613550,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -613873,7 +613878,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -615363,7 +615368,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -615691,7 +615696,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -617181,7 +617186,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -617509,7 +617514,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -644969,7 +644974,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -646104,7 +646109,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -647239,7 +647244,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -648377,7 +648382,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -649515,7 +649520,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -650680,7 +650685,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -651814,7 +651819,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -652948,7 +652953,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -654083,7 +654088,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -655236,7 +655241,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -656372,7 +656377,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -687965,7 +687970,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -689098,7 +689103,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -690231,7 +690236,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -691364,7 +691369,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -713069,7 +713074,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -729861,7 +729866,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminDeliveryProvidersPage.tsx",
@@ -729941,7 +729946,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -733758,7 +733763,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminDeliveryProvidersPage.tsx",
@@ -733838,7 +733843,7 @@
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
-              "sha256": "ae3a6ec1ed97ba37b98e0c6716b98830b405f9ddfa853af22707acf7bfa812dd"
+              "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
             },
             {
               "path": "apps/web/src/pages/knowledge-policy-recovery.test.tsx",
@@ -736541,7 +736546,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -738438,7 +738443,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
-              "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+              "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -739793,7 +739798,8 @@
           "release-0.6-nightly-outcome-rollup",
           "release-0.6-nightly-workspace-browser-fixtures",
           "release-0.6-diagnostic-history-public-digest",
-          "release-0.6-hosted-nightly-contract-and-incomplete-rollup"
+          "release-0.6-hosted-nightly-contract-and-incomplete-rollup",
+          "release-0.6-nightly-admin-policy-group-contract"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -829269,6 +829275,33 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-browser-rollup/hosted-42668480792",
       "source_scope_proof": "release-0.6-hosted-nightly-contract-and-incomplete-rollup.json",
       "source_scope_proof_sha256": "ac9532ba0680d7ce197aef17b6cb07cd70290966b47322cf87857d527b37fccd"
+    },
+    "release-0.6-nightly-admin-policy-group-contract": {
+      "batch": "release-0.6-nightly-admin-policy-group-contract",
+      "base_commit": "d09677e6eb3e2aa4eb89b4699633e90463d2ff8a",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.11.03",
+        "05-notifications-documents-ai.md#T-05.18.02",
+        "01-platform-infrastructure.md#T-01.04.04",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
+          "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
+        },
+        {
+          "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
+          "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
+        }
+      ],
+      "checks": [
+        "Admin policy groups accept membership rows without catalogue descriptions. Catalogue entries still require descriptions. Selection identity, priority validation, current authority and mutation-receipt handling are preserved.",
+        "Web typechecking, formatting and 52 focused knowledge/policy membership, forms and recovery tests passed. Eight actual link/unlink journeys passed in hosted run 42665470332 across Firefox, WebKit, Mobile Chrome and Mobile Safari in Persian and English. The two changed files match the tested SHA byte for byte. The run also exercised other journeys that failed and is evidence only for this scope."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-admin-browser-42665470332",
+      "source_scope_proof": "release-0.6-nightly-admin-policy-group-contract.json",
+      "source_scope_proof_sha256": "145fca5eb093527f15511cf4a39f88a46cce101427e6ff613ad25b7d5b291243"
     }
   },
   "historical_improvements": [

@@ -44,10 +44,9 @@ const types = [
 ] as const;
 type PolicyType = (typeof types)[number];
 type Kind = 'policies' | 'policy-groups';
-interface Entry {
+interface PolicyRow {
   id: string;
   title: string;
-  description: string;
   policyType?: PolicyType;
   rules?: Record<string, unknown>;
   enabled?: boolean;
@@ -55,41 +54,47 @@ interface Entry {
   priorityOverride?: number | null;
   memberCount?: number;
 }
+interface Entry extends PolicyRow {
+  description: string;
+}
 
 function record(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
+function validPolicyRow(value: unknown): value is PolicyRow {
+  return (
+    record(value) &&
+    typeof value.id === 'string' &&
+    typeof value.title === 'string' &&
+    (value.policyType === undefined || types.includes(value.policyType as PolicyType)) &&
+    (value.rules === undefined || record(value.rules)) &&
+    (value.enabled === undefined || typeof value.enabled === 'boolean') &&
+    validCatalogueCount(value.memberCount) &&
+    validCataloguePriority(value.priority) &&
+    (value.priorityOverride === undefined ||
+      value.priorityOverride === null ||
+      validCataloguePriority(value.priorityOverride))
+  );
+}
 function validEntries(value: unknown): value is Entry[] {
   return (
     Array.isArray(value) &&
-    value.every(
-      (v) =>
-        record(v) &&
-        ['id', 'title', 'description'].every((k) => typeof v[k] === 'string') &&
-        (v.policyType === undefined || types.includes(v.policyType as PolicyType)) &&
-        (v.rules === undefined || record(v.rules)) &&
-        (v.enabled === undefined || typeof v.enabled === 'boolean') &&
-        validCatalogueCount(v.memberCount) &&
-        validCataloguePriority(v.priority) &&
-        (v.priorityOverride === undefined ||
-          v.priorityOverride === null ||
-          validCataloguePriority(v.priorityOverride))
-    )
+    value.every((row) => record(row) && typeof row.description === 'string' && validPolicyRow(row))
   );
 }
-function override(row: Entry) {
+function override(row: PolicyRow) {
   return row.priorityOverride === null || row.priorityOverride === undefined
     ? ''
     : String(row.priorityOverride);
 }
-function priorityBasis(row: Entry) {
+function priorityBasis(row: PolicyRow) {
   return JSON.stringify({
     id: row.id,
     priority: row.priority,
     override: row.priorityOverride ?? null,
   });
 }
-function membersBasis(rows: Entry[]) {
+function membersBasis(rows: PolicyRow[]) {
   return JSON.stringify(rows.map(priorityBasis).sort());
 }
 function draftFor(row?: Entry): Draft {
@@ -200,7 +205,7 @@ function OwnedAiPoliciesPage({
   const generation = useRef(0),
     commandGeneration = useRef(0);
   const draftBasis = useRef<string | null>(null),
-    acceptedMembers = useRef<Entry[]>([]);
+    acceptedMembers = useRef<PolicyRow[]>([]);
   const clearSelection = useCallback(() => {
     setOperationUncertain(false);
     uncertainOperation.current = null;
@@ -237,8 +242,11 @@ function OwnedAiPoliciesPage({
     validEntries
   );
   const validateDetail = useCallback(
-    (value: unknown): value is { id: string; members: Entry[] } =>
-      record(value) && value.id === selected && validEntries(value.members),
+    (value: unknown): value is { id: string; members: PolicyRow[] } =>
+      record(value) &&
+      value.id === selected &&
+      Array.isArray(value.members) &&
+      value.members.every(validPolicyRow),
     [selected]
   );
   const selectedRead = useCatalogueResource(
