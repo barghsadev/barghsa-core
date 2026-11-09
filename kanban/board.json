@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T02:22:11+00:00",
-  "source_commit": "5be7fc7ca4752c6fa699e89c607ce303143079f0",
+  "updated": "2026-11-09T02:29:14+00:00",
+  "source_commit": "314eceae1cba902462d50fd48315a7f1bdd9d891",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -439662,7 +439662,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "1b0e886a9d60e9e5cc2a14c3c9d5ece6ac5103dd67c073b6efad18933f4c28d4"
+              "sha256": "4357b96888a6aed8ed9a9d40775e618d9f40f1ded3b8e7a1e724fd11ad15faee"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -439674,7 +439674,7 @@
             },
             {
               "path": "apps/web/e2e/storage-config.spec.ts",
-              "sha256": "aeecb10c47da2b05a617ff8f0303de094f314b2d484ce6674b44168986bcc3cc"
+              "sha256": "e321d25707e696fdd0be680c44fb5cc316ea220e9ce4141bf108eac8b4ad6820"
             },
             {
               "path": "apps/web/e2e/storage-policy-forms.spec.ts",
@@ -439943,7 +439943,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "1b0e886a9d60e9e5cc2a14c3c9d5ece6ac5103dd67c073b6efad18933f4c28d4"
+              "sha256": "4357b96888a6aed8ed9a9d40775e618d9f40f1ded3b8e7a1e724fd11ad15faee"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -439955,7 +439955,7 @@
             },
             {
               "path": "apps/web/e2e/storage-config.spec.ts",
-              "sha256": "aeecb10c47da2b05a617ff8f0303de094f314b2d484ce6674b44168986bcc3cc"
+              "sha256": "e321d25707e696fdd0be680c44fb5cc316ea220e9ce4141bf108eac8b4ad6820"
             },
             {
               "path": "apps/web/e2e/storage-policy-forms.spec.ts",
@@ -491503,7 +491503,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "1b0e886a9d60e9e5cc2a14c3c9d5ece6ac5103dd67c073b6efad18933f4c28d4"
+              "sha256": "4357b96888a6aed8ed9a9d40775e618d9f40f1ded3b8e7a1e724fd11ad15faee"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -497207,7 +497207,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "1b0e886a9d60e9e5cc2a14c3c9d5ece6ac5103dd67c073b6efad18933f4c28d4"
+              "sha256": "4357b96888a6aed8ed9a9d40775e618d9f40f1ded3b8e7a1e724fd11ad15faee"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -512556,7 +512556,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "1b0e886a9d60e9e5cc2a14c3c9d5ece6ac5103dd67c073b6efad18933f4c28d4"
+              "sha256": "4357b96888a6aed8ed9a9d40775e618d9f40f1ded3b8e7a1e724fd11ad15faee"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -518225,7 +518225,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "1b0e886a9d60e9e5cc2a14c3c9d5ece6ac5103dd67c073b6efad18933f4c28d4"
+              "sha256": "4357b96888a6aed8ed9a9d40775e618d9f40f1ded3b8e7a1e724fd11ad15faee"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -572780,7 +572780,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "1b0e886a9d60e9e5cc2a14c3c9d5ece6ac5103dd67c073b6efad18933f4c28d4"
+              "sha256": "4357b96888a6aed8ed9a9d40775e618d9f40f1ded3b8e7a1e724fd11ad15faee"
             },
             {
               "path": "apps/web/src/pages/AdminTosDraft.test.tsx",
@@ -594764,7 +594764,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "1b0e886a9d60e9e5cc2a14c3c9d5ece6ac5103dd67c073b6efad18933f4c28d4"
+              "sha256": "4357b96888a6aed8ed9a9d40775e618d9f40f1ded3b8e7a1e724fd11ad15faee"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -598962,7 +598962,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "All 48 staff primary reads have loading and error receipts, with 40 authorized empty or unset cases. Ten customer collections now have held first-read and authorized-empty receipts in both languages on Chromium and mobile Safari. The CRM correction-access change has browser and PostgreSQL HTTP receipts. Reconcile remaining named route interactions and independent child read states before full route acceptance."
+        "All 48 staff primary reads have loading and error receipts, with 40 authorized empty or unset cases. Ten customer collections have held first-read and authorized-empty receipts in both languages on Chromium and mobile Safari. The CRM correction-access scope and independent storage cleanup recovery now have current receipts. Reconcile remaining route-specific interactions and child read states before full route acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -599106,7 +599106,8 @@
           "release-0.5-staff-empty-acceptance",
           "release-0.5-crm-records-revocation",
           "release-0.5-crm-correction-visibility",
-          "release-0.5-customer-history-first-read"
+          "release-0.5-customer-history-first-read",
+          "release-0.5-storage-cleanup-read-states"
         ],
         "current_acceptance": null
       }
@@ -722456,7 +722457,7 @@
             },
             {
               "path": "apps/web/e2e/storage-config.spec.ts",
-              "sha256": "aeecb10c47da2b05a617ff8f0303de094f314b2d484ce6674b44168986bcc3cc"
+              "sha256": "e321d25707e696fdd0be680c44fb5cc316ea220e9ce4141bf108eac8b4ad6820"
             },
             {
               "path": "apps/web/e2e/storage-policy-forms.spec.ts",
@@ -722920,7 +722921,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "1b0e886a9d60e9e5cc2a14c3c9d5ece6ac5103dd67c073b6efad18933f4c28d4"
+              "sha256": "4357b96888a6aed8ed9a9d40775e618d9f40f1ded3b8e7a1e724fd11ad15faee"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -726334,7 +726335,7 @@
             },
             {
               "path": "apps/web/e2e/storage-config.spec.ts",
-              "sha256": "aeecb10c47da2b05a617ff8f0303de094f314b2d484ce6674b44168986bcc3cc"
+              "sha256": "e321d25707e696fdd0be680c44fb5cc316ea220e9ce4141bf108eac8b4ad6820"
             },
             {
               "path": "apps/web/e2e/storage-policy-forms.spec.ts",
@@ -726790,7 +726791,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "1b0e886a9d60e9e5cc2a14c3c9d5ece6ac5103dd67c073b6efad18933f4c28d4"
+              "sha256": "4357b96888a6aed8ed9a9d40775e618d9f40f1ded3b8e7a1e724fd11ad15faee"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -728966,7 +728967,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "All 48 staff primary reads have loading and error receipts, with 40 authorized empty or unset cases. Ten customer collections now have held first-read and authorized-empty receipts in both languages on Chromium and mobile Safari. The CRM correction-access change has browser and PostgreSQL HTTP receipts. Reconcile remaining named route interactions and independent child read states before full route acceptance."
+        "All 48 staff primary reads have loading and error receipts, with 40 authorized empty or unset cases. Ten customer collections have held first-read and authorized-empty receipts in both languages on Chromium and mobile Safari. The CRM correction-access scope and independent storage cleanup recovery now have current receipts. Reconcile remaining route-specific interactions and child read states before full route acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -729176,7 +729177,8 @@
           "release-0.5-staff-empty-acceptance",
           "release-0.5-crm-records-revocation",
           "release-0.5-crm-correction-visibility",
-          "release-0.5-customer-history-first-read"
+          "release-0.5-customer-history-first-read",
+          "release-0.5-storage-cleanup-read-states"
         ]
       }
     },
@@ -730208,7 +730210,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "1b0e886a9d60e9e5cc2a14c3c9d5ece6ac5103dd67c073b6efad18933f4c28d4"
+              "sha256": "4357b96888a6aed8ed9a9d40775e618d9f40f1ded3b8e7a1e724fd11ad15faee"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -731133,7 +731135,8 @@
             "All 101 transfer budgets and affected staff directory and delivery history journeys passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-child-pending/proof.json",
             "All 101 transfer budgets and the affected roles and notification browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-loading-labels/proof.json",
             "All 101 transfer budgets and the CRM profile browser suite passed on the changed source. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-records-revocation/proof.json",
-            "All 101 transfer budgets and the affected Persian/English CRM browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-correction-visibility/proof.json"
+            "All 101 transfer budgets and the affected Persian/English CRM browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-correction-visibility/proof.json",
+            "All 101 transfer budgets and affected Persian/English storage browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-storage-cleanup-read-states/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -810749,6 +810752,45 @@
       "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-history-first-read/customer-collection-states.json",
       "source_scope_proof_sha256": "6f9c1c5ef9d4d3efab544358ffcb1b83a79053727155d29fe4ce8c1d2087e522",
       "release_disposition": "Recorded first-read state receipts for ten customer collections. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-storage-cleanup-read-states": {
+      "batch": "release-0.5-storage-cleanup-read-states",
+      "base_commit": "314eceae1cba902462d50fd48315a7f1bdd9d891",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/storage-config.spec.ts",
+          "sha256": "e321d25707e696fdd0be680c44fb5cc316ea220e9ce4141bf108eac8b4ad6820"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStorageConfig.tsx",
+          "sha256": "4357b96888a6aed8ed9a9d40775e618d9f40f1ded3b8e7a1e724fd11ad15faee"
+        },
+        {
+          "path": "packages/i18n/src/storage-policy-forms.ts",
+          "sha256": "3092c35cdfa65c12aaa28042b0d2f80dc43bf8c2cb81d6a8ead75264ee7e0d5b"
+        }
+      ],
+      "checks": [
+        "Both baseline browser cases reproduced the absence of cleanup-specific loading feedback while the provider form was ready. The cleanup policy now names its own loading and error states in Persian and English.",
+        "The focused cases hold the cleanup read, edit the ready provider form, return a temporary cleanup failure and retry with Enter. The retry reads only cleanup, restores its versioned policy and preserves the provider draft. The provider's private failure text stays hidden.",
+        "Twenty production-browser cases across Chromium and mobile Safari, four instrumented Chromium cases, twenty-two focused tests, i18n and web typechecks, targeted lint and formatting, and all 101 transfer budgets passed. Existing step-up, denied-access and unverified-write assertions remained intact.",
+        "The critical storage file passed with 172/186 lines and 210/234 branches. The existing i18n changed-source gate passed and both new dictionary entries were observed in each language by browser assertions."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-storage-cleanup-read-states",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-storage-cleanup-read-states/proof.json",
+      "source_scope_proof_sha256": "70395a5e34740450bf30e9e14dd72ff6846d331b4412f64f7d8c01c9806c0e5a",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-storage-cleanup-read-states/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-storage-cleanup-read-states/renewed-bindings.json",
+      "release_disposition": "Closed independent storage cleanup read feedback. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [
@@ -810799,7 +810841,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Match remaining independent route and child interactions against named receipts. Prioritize uncovered customer details and separate settings panels. GitHub required checks and staging Sentry remain independent."
+    "goal": "Reconcile remaining original child states with named route receipts, prioritizing uncovered independent reads. GitHub required checks and staging Sentry remain separate gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",

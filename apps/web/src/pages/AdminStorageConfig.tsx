@@ -474,10 +474,10 @@ export default function AdminStorageConfig() {
           </div>
         </form>
       )}
-      {cleanup.loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
+      {cleanup.loading && <LoadingStatus>{text('cleanupLoading')}</LoadingStatus>}
       {cleanup.error && (
         <Alert variant="destructive">
-          {label('loadError')}{' '}
+          {text('cleanupLoadError')}{' '}
           <Button type="button" onClick={() => refresh('cleanup')}>
             {label('reload')}
           </Button>
