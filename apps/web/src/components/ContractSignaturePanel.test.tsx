@@ -378,10 +378,9 @@ it('shows historical evidence with separate recorder and uploader roles without 
   expect(fetcher).toHaveBeenCalledTimes(1);
 });
 it('retries failed loads and paginated documents, deduplicating repeated rows', async () => {
-  let fail = true,
-    moreFail = true;
+  let moreFail = true;
+  let finishInitial!: (value: Response) => void;
   const fetcher = vi.fn(async (raw: string) => {
-    if (fail) return response({}, 503);
     if (raw.includes('/signature?')) return response(view());
     if (raw.includes('before=')) {
       if (moreFail) return response({}, 503);
@@ -389,11 +388,20 @@ it('retries failed loads and paginated documents, deduplicating repeated rows', 
     }
     return response({ documents: [doc('first')], nextBefore: 'cursor' });
   });
+  fetcher.mockImplementationOnce(
+    () =>
+      new Promise<Response>((resolve) => {
+        finishInitial = resolve;
+      })
+  );
   stubFetch(fetcher);
   await render(panel());
+  expect(container.textContent).toContain(en.loading);
+  await act(async () => finishInitial(response({}, 503)));
   expect(container.querySelector('[role=alert]')).not.toBeNull();
-  fail = false;
+  expect(container.textContent).not.toContain(en.loading);
   await click(en.refresh);
+  expect(fetcher.mock.calls[1]?.[0]).toBe(fetcher.mock.calls[0]?.[0]);
   await click(en.next);
   expect(container.querySelector('[role=alert]')).not.toBeNull();
   moreFail = false;
@@ -424,4 +432,88 @@ it('aborts old version loads and closes any confirmation when scope changes', as
   await render(panel(false, documentId(99)));
   expect(old.aborted).toBe(true);
   expect(container.querySelector('[role=dialog]')).toBeNull();
+});
+
+it('keeps the accepted page after a malformed cursor reply and withdraws it on denial', async () => {
+  let denied = false;
+  let expired = false;
+  const onDenied = vi.fn();
+  const onStatus = vi.fn();
+  const fetcher = vi.fn(async (raw: string) => {
+    if (raw.includes('/signature?')) return expired ? response({}, 401) : response(view());
+    if (raw.includes('before='))
+      return denied ? response({}, 403) : response({ documents: null, nextBefore: null });
+    return response({ documents: [doc('first')], nextBefore: 'cursor' });
+  });
+  stubFetch(fetcher);
+  await render(
+    <ContractSignaturePanel
+      id={ID}
+      versionId={VERSION}
+      profileId={PROFILE}
+      staff={false}
+      onChanged={changed}
+      onDenied={onDenied}
+      onStatus={onStatus}
+    />
+  );
+  await click(en.next);
+  expect(container.querySelector('[role=alert]')).not.toBeNull();
+  expect(container.querySelector(`option[value="${ids.first}"]`)).not.toBeNull();
+  expect(onDenied).not.toHaveBeenCalled();
+
+  denied = true;
+  await click(en.next);
+  expect(fetcher.mock.calls.at(-1)?.[0]).toBe(fetcher.mock.calls.at(-2)?.[0]);
+  expect(onDenied).toHaveBeenCalledOnce();
+  expect(onStatus).toHaveBeenLastCalledWith(null);
+  expect(container.querySelector('select')).toBeNull();
+  expect(container.textContent).not.toContain('original.pdf');
+  expect(container.textContent).not.toContain(en.loading);
+  expect(container.querySelector('[role=alert]')).not.toBeNull();
+
+  expired = true;
+  await click(en.refresh);
+  expect(onDenied).toHaveBeenCalledTimes(2);
+  expect(container.textContent).not.toContain(en.loading);
+  expect(container.querySelector('select')).toBeNull();
+});
+
+it('checks the current review claim before paging, refreshing or preparing a signature', async () => {
+  let blocked = false;
+  const coordination = {
+    blocked: () => blocked,
+    acquire: vi.fn(() => false),
+    release: vi.fn(),
+  };
+  const fetcher = vi.fn(async (raw: string) => {
+    if (raw.includes('/signature?')) return response(view());
+    return response({ documents: [doc('first')], nextBefore: 'cursor' });
+  });
+  stubFetch(fetcher);
+  await render(
+    <ContractSignaturePanel
+      id={ID}
+      versionId={VERSION}
+      profileId={PROFILE}
+      staff={false}
+      onChanged={changed}
+      coordination={coordination}
+    />
+  );
+  await value('#signature-signed', 'first');
+  await act(async () => container.querySelector<HTMLInputElement>('input[type=checkbox]')!.click());
+  await click(en.recordSignature);
+  expect(coordination.acquire).toHaveBeenCalledOnce();
+  expect(harness.review).toBeNull();
+  expect(container.querySelector('[role=dialog]')).toBeNull();
+
+  // A parent claim can change before the next render disables the controls.
+  blocked = true;
+  await act(async () => {
+    button(en.next).click();
+    button(en.refresh).click();
+  });
+  expect(fetcher).toHaveBeenCalledTimes(2);
+  expect(container.querySelector<HTMLSelectElement>('#signature-signed')?.value).toBe(ids.first);
 });

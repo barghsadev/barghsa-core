@@ -299,6 +299,102 @@ it('suppresses stale edited owned preview errors but withdraws current denied so
   expect(onDenied).toHaveBeenCalledOnce();
   expect(host.textContent).not.toContain('original.pdf');
 });
+it('retires a pending signature preview when the account changes', async () => {
+  let finish!: (value: Response) => void;
+  const denied = vi.fn();
+  const saved = install(
+    false,
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      })
+  );
+  await render(panel(false, denied));
+  await selectRecord();
+  await click(en.recordSignature);
+  await vi.waitFor(() => expect(finish).toBeDefined());
+  const preview = saved.fetcher.mock.calls.find(([path]) => path.includes('/signature/review'));
+  expect(preview?.[1]?.signal?.aborted).toBe(false);
+
+  await render(panel(false, denied), 'another-user');
+  expect(preview?.[1]?.signal?.aborted).toBe(true);
+  await act(async () => finish(response(signingReview(saved.view, saved.docs[1]!))));
+  expect(denied).not.toHaveBeenCalled();
+  expect(host.querySelector('[role=dialog]')).toBeNull();
+  expect(host.querySelector<HTMLSelectElement>('#signature-signed')?.value).toBe('');
+  expect(button(en.refresh).disabled).toBe(false);
+});
+
+it.each([false, true])(
+  'returns a known signature rejection to its own document field (staff: %s)',
+  async (staff) => {
+    const saved = install(staff);
+    await render(panel(staff));
+    const id = staff ? 'signature-original' : 'signature-signed';
+    const field = staff ? 'originalDocumentId' : 'signedDocumentId';
+    if (staff) await value(id, documentId(1));
+    else await selectRecord();
+    await click(staff ? en.prepareSignature : en.recordSignature);
+    await vi.waitFor(() => expect(harness.dialog).not.toBeNull());
+    const dialog = harness.dialog!;
+    const code = ErrorCodes.VALIDATION_INPUT_INVALID.code;
+    const mapped = dialog.action.errorMessages?.[code];
+    expect(typeof mapped).toBe('function');
+    const reads = saved.fetcher.mock.calls.length;
+    await act(async () => {
+      if (typeof mapped === 'function')
+        mapped({
+          error: { code, message: 'Invalid', correlationId: documentId(7), fields: ['other'] },
+        });
+    });
+    expect(host.querySelector('[role=dialog]')).not.toBeNull();
+    expect(host.querySelector(`#${id}`)?.getAttribute('aria-invalid')).not.toBe('true');
+    await act(async () => {
+      dialog.onCommandDispatch?.(true);
+      if (typeof mapped === 'function')
+        mapped({
+          error: { code, message: 'Invalid', correlationId: documentId(7), fields: [field] },
+        });
+    });
+    expect(host.querySelector('[role=dialog]')).toBeNull();
+    expect(host.querySelector(`#${id}`)?.getAttribute('aria-invalid')).toBe('true');
+    expect(host.querySelector<HTMLSelectElement>(`#${id}`)?.value).toBe(documentId(staff ? 1 : 2));
+    expect(saved.fetcher.mock.calls.length).toBe(reads);
+    expect(button(en.refresh).disabled).toBe(false);
+  }
+);
+
+it('withdraws a missing signed record and ignores a late confirmation callback', async () => {
+  const saved = install();
+  const onDenied = vi.fn();
+  await render(panel(false, onDenied));
+  await selectRecord();
+  await click(en.recordSignature);
+  await vi.waitFor(() => expect(harness.dialog).not.toBeNull());
+  const dialog = harness.dialog!;
+  const code = ErrorCodes.NOT_FOUND_RESOURCE.code;
+  const mapped = dialog.action.errorMessages?.[code];
+  expect(typeof mapped).toBe('function');
+  await act(async () => {
+    if (typeof mapped === 'function')
+      mapped({ error: { code, message: 'Missing', correlationId: documentId(7) } });
+  });
+  expect(onDenied).toHaveBeenCalledOnce();
+  await act(async () => {
+    if (typeof mapped === 'function')
+      mapped({ error: { code, message: 'Missing', correlationId: documentId(7) } });
+    dialog.onCommandDispatch?.(true);
+    dialog.onUnconfirmed?.();
+    dialog.onDenied?.();
+    await dialog.onSuccess(signingReceipt(saved.view, saved.docs[1]!, dialog.review!, false));
+    dialog.onClose();
+  });
+  expect(onDenied).toHaveBeenCalledOnce();
+  expect(host.querySelector('[role=dialog]')).toBeNull();
+  expect(host.querySelector('select')).toBeNull();
+  expect(host.textContent).not.toContain('original.pdf');
+});
+
 it('keeps the same captured body/hash/key through unknown and rejected uncertain retries; GET cannot unlock it', async () => {
   const saved = install();
   await render(panel());

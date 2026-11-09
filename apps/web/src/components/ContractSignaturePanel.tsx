@@ -568,7 +568,7 @@ export function ContractSignaturePanel({
         </Alert>
       )}
       {!shown || !data ? (
-        <PageLoading label={word('loading')} />
+        !error && <PageLoading label={word('loading')} />
       ) : (
         <>
           {data.request ? (
