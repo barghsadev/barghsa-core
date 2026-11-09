@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T18:44:35+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T18:51:06+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 948 | Accepted with unchanged source bindings. |
-| verify | 386 | Existing work may be complete; inspect evidence before building. |
+| done | 952 | Accepted with unchanged source bindings. |
+| verify | 382 | Existing work may be complete; inspect evidence before building. |
 | partial | 28 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1033,11 +1033,11 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-05.02.02` | verify | Earlier deferred | Configure rolling/blue-green deployment automation for HA |
 | `01-platform-infrastructure.md#T-05.02.03` | verify | Earlier deferred | Implement circuit breaker for external providers |
 | `01-platform-infrastructure.md#T-05.02.04` | verify | Earlier deferred | Configure maintenance mode per capability, not whole-application |
-| `01-platform-infrastructure.md#T-05.03.01` | verify | Earlier deferred | Create CI workflow definition (GitHub Actions, GitLab CI, or equivalent) |
-| `01-platform-infrastructure.md#T-05.03.02` | verify | Earlier deferred | Implement migration validation step (two environments) |
-| `01-platform-infrastructure.md#T-05.03.03` | verify | Earlier deferred | Implement OpenAPI generation and drift check |
+| `01-platform-infrastructure.md#T-05.03.01` | done | Earlier deferred | Create CI workflow definition (GitHub Actions, GitLab CI, or equivalent) |
+| `01-platform-infrastructure.md#T-05.03.02` | done | Earlier deferred | Implement migration validation step (two environments) |
+| `01-platform-infrastructure.md#T-05.03.03` | done | Earlier deferred | Implement OpenAPI generation and drift check |
 | `01-platform-infrastructure.md#T-05.03.04` | blocked | Earlier deferred | Configure security scans in PR gate |
-| `01-platform-infrastructure.md#T-05.03.05` | verify | Earlier deferred | Implement coverage threshold enforcement |
+| `01-platform-infrastructure.md#T-05.03.05` | done | Earlier deferred | Implement coverage threshold enforcement |
 | `01-platform-infrastructure.md#T-05.04.01` | verify | Earlier deferred | Create staging gate CI workflow |
 | `01-platform-infrastructure.md#T-05.04.02` | verify | Earlier deferred | Create production promotion workflow with canary/gradual rollout |
 | `01-platform-infrastructure.md#T-05.04.03` | verify | Earlier deferred | Implement post-deploy smoke tests and SLO comparison |

@@ -1,10 +1,11 @@
 # Changed source coverage
 
-CI runs package coverage and production-browser checks, merges their reports, then runs
-`scripts/check-changed-coverage.py` against the
-pull request base or the preceding main commit. The checker uses the merge base and
-committed HEAD, recording both hashes in its JSON artifact. Test failures remain
-failures even when the coverage artifact passes.
+Strict CI runs package coverage and production-browser checks, merges their reports, then runs
+`scripts/check-changed-coverage.py`. A manual release check compares against the last released
+commit in the board. Strict pull request and push checks use the pull request base or the
+previous commit on the pushed ref. The checker records the merge base and committed HEAD in its
+JSON artifact. Test failures remain failures even when the coverage artifact passes. Ordinary
+affected-test runs report their scope separately.
 
 Changed application and package source is grouped by package and criticality.
 General changed executable lines require 80% line and 75% branch coverage. Modified
@@ -53,8 +54,8 @@ Tests that hold or abort lazy chunks use `apps/web/e2e/production-manifest.ts`.
 It reads the manifest for the build the runner serves, so the test intercepts the
 actual chunk in both normal and coverage mode.
 
-A separate CI job combines unit and browser artifacts for the same HEAD. PR coverage
-always includes the web, UI, shared and i18n packages, even when the changed package
+A separate CI job combines unit and browser artifacts for the same HEAD. Strict pull request
+coverage always includes the web, UI, shared and i18n packages, even when the changed package
 set is smaller, so each mapped browser consumer has a unit baseline.
 
 This gate does not certify unchanged critical files or production operations.

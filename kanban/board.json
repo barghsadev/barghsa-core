@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T18:44:35+00:00",
+  "updated": "2026-11-09T18:51:06+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -12250,12 +12250,10 @@
         "story": "01-platform-infrastructure.md#spec-86d8c16eda1f"
       },
       "requirement": "- **T-05.03.01:** Create CI workflow definition (GitHub Actions, GitLab CI, or equivalent)\n  - **Notes:** Trigger: `pull_request` (opened, synchronize). Run on push to PR branch. Matrix: run tests on affected packages only (use Turborepo filtering). PostgreSQL service container for integration tests. Steps in order: checkout → pnpm install → format/lint → typecheck → build affected → unit tests → migration validation → OpenAPI drift → bundle budget → coverage → secret scan → SCA → SAST → license check → security findings gate → required reviews.\n  - **Dependencies:** S-01.01, S-01.03, S-01.04, S-02.03\n  - **Complexity:** XL",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -12285,9 +12283,38 @@
           "audit/skipped-work-handoff.md"
         ],
         "batches": [
-          "2026-09-24-ci-main-concurrency"
+          "2026-09-24-ci-main-concurrency",
+          "release-0.6-current-ci-definition-contract-and-coverage-controls"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "source-bound-ci-implementation-and-targeted-controls",
+          "base_commit": "7367f081717675bf5b60fe7796237b06cbda6f13",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+            },
+            {
+              "path": "docs/development/ci.md",
+              "sha256": "ef51213c1a574bbb6b11ed66824cf031d9d104fcbaa6bc46c369d5f2cd28161f"
+            },
+            {
+              "path": "AGENTS.md",
+              "sha256": "e8902831bc0943720f4bf0f7f8cf10c8f05d3671689f0d111256040a841c93bf"
+            },
+            {
+              "path": "kanban/WORKFLOW.md",
+              "sha256": "37b50b9e6dda85071fa55389c65480d4951437ece6bd3e210cec715a5424dbe9"
+            },
+            {
+              "path": "package.json",
+              "sha256": "0d38ca16dff0d91baf910710ab6f0e82f44fb03b09a2d42796e34de9cfd6b5ee"
+            }
+          ],
+          "checks": [
+            "The current CI workflow runs frozen installation, affected or full tests, PostgreSQL fixtures, build/type/lint/format, migration snapshot, API contract, budgets and security jobs. The owner-authorized direct-main flow uses a reviewed preflight with the exact required integrity check. Strict coverage and license enforcement are configured for the full release lane. The active ruleset and successful exact 530f2840 integrity receipt were read back."
+          ]
+        }
       }
     },
     {
@@ -12301,12 +12328,10 @@
         "story": "01-platform-infrastructure.md#spec-86d8c16eda1f"
       },
       "requirement": "- **T-05.03.02:** Implement migration validation step (two environments)\n  - **Notes:** Step 1 (clean DB): apply all migrations from scratch, verify schema matches Drizzle definitions. Step 2 (upgrade path): start with schema from the previous release's migration point, apply only the new PR's migrations, verify schema matches expected final state. Both steps use a temporary PostgreSQL instance (service container).\n  - **Dependencies:** S-02.03\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -12335,8 +12360,46 @@
         "changed_paths": [
           "audit/skipped-work-handoff.md"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-current-ci-definition-contract-and-coverage-controls"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-ci-implementation-and-targeted-controls",
+          "base_commit": "7367f081717675bf5b60fe7796237b06cbda6f13",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/_journal.json",
+              "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+            },
+            {
+              "path": "packages/db/drizzle/production/0282_electricity_draft_revision_clock.sql",
+              "sha256": "32b29c5e4de7ab006c88920007313d71fc0dafb650c0787616e3af0309b8eff0"
+            },
+            {
+              "path": "packages/db/src/database-foundations.integration.test.ts",
+              "sha256": "707f3f776b7065815471ea6dc0c853a4eef99a5b7803edf24d15aa62c9317b77"
+            },
+            {
+              "path": "packages/db/src/migrate.snapshot.test.ts",
+              "sha256": "6091f8c61af0ad12b340dbb0bc7381c56265f172fb854e3349b75a2b67f93dda"
+            },
+            {
+              "path": "packages/db/src/electricity-draft-revision-upgrade.migrated.test.ts",
+              "sha256": "96c00384860108bcc15daafac86d17fcac0bb356478f3528c46d7b89f0b36eeb"
+            },
+            {
+              "path": "packages/db/src/test/migration-prefix.ts",
+              "sha256": "76264f50922f6a6e7692fdca9dde2c28bf9ac605f5bdd5bfe1b377a589b333f8"
+            }
+          ],
+          "checks": [
+            "The CI database suites cover clean and upgrade PostgreSQL states. The existing native clean snapshot comparison passed for 181 tables. The exact source-matched upgrade starts from the deployed v0.5.0 migration history, applies the single new 0282 clock migration, and verifies existing revision data and subsequent clock behavior. The staging migration gate remains separate."
+          ]
+        }
       }
     },
     {
@@ -12350,12 +12413,10 @@
         "story": "01-platform-infrastructure.md#spec-86d8c16eda1f"
       },
       "requirement": "- **T-05.03.03:** Implement OpenAPI generation and drift check\n  - **Notes:** PR gate generates OpenAPI spec from NestJS decorators (`nestjs/swagger` plugin). Compare generated spec against committed `openapi.json`. If spec differs, fail the check — developer must regenerate and commit the updated spec. Breaking API changes require version negotiation or migration period.\n  - **Dependencies:** T-05.03.01\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -12384,8 +12445,42 @@
         "changed_paths": [
           "audit/skipped-work-handoff.md"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-current-ci-definition-contract-and-coverage-controls"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-ci-implementation-and-targeted-controls",
+          "base_commit": "7367f081717675bf5b60fe7796237b06cbda6f13",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+            },
+            {
+              "path": "package.json",
+              "sha256": "0d38ca16dff0d91baf910710ab6f0e82f44fb03b09a2d42796e34de9cfd6b5ee"
+            },
+            {
+              "path": "apps/api/openapi.json",
+              "sha256": "9408b1b192e79ee2c3de109a3eb5b0c167eca6d34068c13edb350114a53b006e"
+            },
+            {
+              "path": "scripts/check-openapi.mjs",
+              "sha256": "b369d8811eb0f0bf82d221530c3b1f90189bc866a87c1df8c51517f7dee4a49d"
+            },
+            {
+              "path": "scripts/check-openapi.test.mjs",
+              "sha256": "21f92757cf8a5dc23455e928f61d5b01aca2ea4d6380c62143580d1be14aa1fb"
+            },
+            {
+              "path": "apps/api/src/generate-openapi.ts",
+              "sha256": "ef2cac39d5126ed04b155bbf79e9fa85667804df3322f7c0aaad39edb35aba35"
+            }
+          ],
+          "checks": [
+            "The NestJS build generates the contract from the active API decorators. The exact hosted quality job 129356097537 ran the canonical drift checker and passed the generated versus committed OpenAPI comparison. Existing negative tests exercise missing and changed contract data."
+          ]
+        }
       }
     },
     {
@@ -12489,12 +12584,10 @@
         "story": "01-platform-infrastructure.md#spec-86d8c16eda1f"
       },
       "requirement": "- **T-05.03.05:** Implement coverage threshold enforcement\n  - **Notes:** Using `vitest --coverage`, extract per-package line/branch percentages. Compare against thresholds. Fail if changed code in any package falls below threshold. Publish coverage report as CI artifact.\n  - **Dependencies:** T-01.04.02\n  - **Complexity:** M\n  - **UI/UX:** N/A\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -12525,8 +12618,42 @@
         "changed_paths": [
           "audit/skipped-work-handoff.md"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-current-ci-definition-contract-and-coverage-controls"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-ci-implementation-and-targeted-controls",
+          "base_commit": "7367f081717675bf5b60fe7796237b06cbda6f13",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+            },
+            {
+              "path": "docs/changed-coverage.md",
+              "sha256": "f8efa0049662d6235a017e5a44d191441a062161cbca6b871d0441746a250376"
+            },
+            {
+              "path": "scripts/check-changed-coverage.py",
+              "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+            },
+            {
+              "path": "scripts/test_check_changed_coverage.py",
+              "sha256": "642e118a0a4846d29cb8c80e00634740b2d61daf9d5eca0ce328d911eb3b9e18"
+            },
+            {
+              "path": "scripts/browser-coverage.test.mjs",
+              "sha256": "950f3539e9db6d5cacb0a8e412de4112af35d06a4c47b0beca4605b3560f0f27"
+            },
+            {
+              "path": "scripts/merge-browser-coverage.mjs",
+              "sha256": "19fcc8cef996c4e0ddedb872cfe643c2cb755e5a23df3086ddc01d72c87caa75"
+            }
+          ],
+          "checks": [
+            "The strict CI lane measures and merges same-revision package and browser coverage, enforces unchanged package and critical-source floors, and uploads reports. Eleven guard controls and thirteen browser coverage controls passed. The updated documentation distinguishes manual release comparison from fast affected tests. An exact candidate coverage run is still required for promotion."
+          ]
+        }
       }
     },
     {
@@ -740203,7 +740330,8 @@
           "release-0.6-runtime-node-options",
           "release-0.6-database-pool-deadlines-and-log-privacy",
           "release-0.6-database-migration-baseline-and-upgrade",
-          "release-0.6-native-seed-and-bootstrap-acceptance"
+          "release-0.6-native-seed-and-bootstrap-acceptance",
+          "release-0.6-current-ci-definition-contract-and-coverage-controls"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -830265,6 +830393,108 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-seed-acceptance",
       "source_scope_proof": "release-0.6-native-seed-and-bootstrap-acceptance.json",
       "source_scope_proof_sha256": "1077469174f184ce489e373f47cd8428a7fb52739a5123ad393fc4ec5d69ec88"
+    },
+    "release-0.6-current-ci-definition-contract-and-coverage-controls": {
+      "batch": "release-0.6-current-ci-definition-contract-and-coverage-controls",
+      "base_commit": "7367f081717675bf5b60fe7796237b06cbda6f13",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.01",
+        "01-platform-infrastructure.md#T-05.03.02",
+        "01-platform-infrastructure.md#T-05.03.03",
+        "01-platform-infrastructure.md#T-05.03.05",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "e8902831bc0943720f4bf0f7f8cf10c8f05d3671689f0d111256040a841c93bf"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "9408b1b192e79ee2c3de109a3eb5b0c167eca6d34068c13edb350114a53b006e"
+        },
+        {
+          "path": "apps/api/src/generate-openapi.ts",
+          "sha256": "ef2cac39d5126ed04b155bbf79e9fa85667804df3322f7c0aaad39edb35aba35"
+        },
+        {
+          "path": "docs/changed-coverage.md",
+          "sha256": "f8efa0049662d6235a017e5a44d191441a062161cbca6b871d0441746a250376"
+        },
+        {
+          "path": "docs/development/ci.md",
+          "sha256": "ef51213c1a574bbb6b11ed66824cf031d9d104fcbaa6bc46c369d5f2cd28161f"
+        },
+        {
+          "path": "kanban/WORKFLOW.md",
+          "sha256": "37b50b9e6dda85071fa55389c65480d4951437ece6bd3e210cec715a5424dbe9"
+        },
+        {
+          "path": "package.json",
+          "sha256": "0d38ca16dff0d91baf910710ab6f0e82f44fb03b09a2d42796e34de9cfd6b5ee"
+        },
+        {
+          "path": "packages/db/drizzle/production/0282_electricity_draft_revision_clock.sql",
+          "sha256": "32b29c5e4de7ab006c88920007313d71fc0dafb650c0787616e3af0309b8eff0"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+        },
+        {
+          "path": "packages/db/src/database-foundations.integration.test.ts",
+          "sha256": "707f3f776b7065815471ea6dc0c853a4eef99a5b7803edf24d15aa62c9317b77"
+        },
+        {
+          "path": "packages/db/src/electricity-draft-revision-upgrade.migrated.test.ts",
+          "sha256": "96c00384860108bcc15daafac86d17fcac0bb356478f3528c46d7b89f0b36eeb"
+        },
+        {
+          "path": "packages/db/src/migrate.snapshot.test.ts",
+          "sha256": "6091f8c61af0ad12b340dbb0bc7381c56265f172fb854e3349b75a2b67f93dda"
+        },
+        {
+          "path": "packages/db/src/test/migration-prefix.ts",
+          "sha256": "76264f50922f6a6e7692fdca9dde2c28bf9ac605f5bdd5bfe1b377a589b333f8"
+        },
+        {
+          "path": "scripts/browser-coverage.test.mjs",
+          "sha256": "950f3539e9db6d5cacb0a8e412de4112af35d06a4c47b0beca4605b3560f0f27"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-openapi.mjs",
+          "sha256": "b369d8811eb0f0bf82d221530c3b1f90189bc866a87c1df8c51517f7dee4a49d"
+        },
+        {
+          "path": "scripts/check-openapi.test.mjs",
+          "sha256": "21f92757cf8a5dc23455e928f61d5b01aca2ea4d6380c62143580d1be14aa1fb"
+        },
+        {
+          "path": "scripts/merge-browser-coverage.mjs",
+          "sha256": "19fcc8cef996c4e0ddedb872cfe643c2cb755e5a23df3086ddc01d72c87caa75"
+        },
+        {
+          "path": "scripts/test_check_changed_coverage.py",
+          "sha256": "642e118a0a4846d29cb8c80e00634740b2d61daf9d5eca0ce328d911eb3b9e18"
+        }
+      ],
+      "checks": [
+        "The current CI workflow runs frozen installation, affected or full tests, PostgreSQL fixtures, build/type/lint/format, migration snapshot, API contract, budgets and security jobs. The owner-authorized direct-main flow uses a reviewed preflight with the exact required integrity check. Strict coverage and license enforcement are configured for the full release lane. The active ruleset and successful exact 530f2840 integrity receipt were read back.",
+        "The CI database suites cover clean and upgrade PostgreSQL states. The existing native clean snapshot comparison passed for 181 tables. The exact source-matched upgrade starts from the deployed v0.5.0 migration history, applies the single new 0282 clock migration, and verifies existing revision data and subsequent clock behavior. The staging migration gate remains separate.",
+        "The NestJS build generates the contract from the active API decorators. The exact hosted quality job 129356097537 ran the canonical drift checker and passed the generated versus committed OpenAPI comparison. Existing negative tests exercise missing and changed contract data.",
+        "The strict CI lane measures and merges same-revision package and browser coverage, enforces unchanged package and critical-source floors, and uploads reports. Eleven guard controls and thirteen browser coverage controls passed. The updated documentation distinguishes manual release comparison from fast affected tests. An exact candidate coverage run is still required for promotion."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/ci-integrity-reuse-42675559782",
+      "source_scope_proof": "release-0.6-current-ci-definition-contract-and-coverage-controls.json",
+      "source_scope_proof_sha256": "531a9d00539f998bcbe6283d410fcee37141a8186a672482d848e57ce941911e"
     }
   },
   "historical_improvements": [
