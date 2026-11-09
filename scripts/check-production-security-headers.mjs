@@ -88,15 +88,18 @@ for (const mode of ['report-only', 'enforce']) {
       assert.ok(!nonces.has(nonce), `CSP nonce reused on ${path}`);
       nonces.add(nonce);
       const html = await response.text();
-      const scriptTags = [...html.matchAll(/<script\b[^>]*>/gi)].map(([tag]) => tag);
-      assert.ok(
-        scriptTags.some((tag) => tag.includes('type="module"')),
-        `No built module at ${path}`
+      const scripts = [...html.matchAll(/<script\b[^>]*>/gi)];
+      const entry = scripts.find(([tag]) => tag.includes('type="module"'));
+      assert.ok(entry, `No built module at ${path}`);
+      assert.match(
+        html.slice(0, entry.index),
+        /\(globalThis\.__zod_globalConfig\s*\?\?=\s*\{\}\)\.jitless\s*=\s*true;/,
+        `The Zod browser configuration must precede the first module at ${path}`
       );
       const preloads = [...html.matchAll(/<link\b[^>]*\brel=["']modulepreload["'][^>]*>/gi)];
       const styles = [...html.matchAll(/<style\b[^>]*>/gi)];
       for (const tag of [
-        ...scriptTags,
+        ...scripts.map(([tag]) => tag),
         ...preloads.map(([tag]) => tag),
         ...styles.map(([tag]) => tag),
       ]) {

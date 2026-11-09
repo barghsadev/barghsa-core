@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T20:04:41+00:00",
+  "updated": "2026-11-09T20:15:11+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -474073,7 +474073,8 @@
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-container-runtime-hardening",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -474109,11 +474110,11 @@
             },
             {
               "path": "docs/security/content-security-policy.md",
-              "sha256": "e848d2163a3938de7b8b9baf827acf5c61ec7ffcda11715227c51115ce882f55"
+              "sha256": "d4b54e603388895e4025f98b3ccdb356985fb6ecd738725bca174f5238dd3a00"
             },
             {
               "path": "scripts/check-production-security-headers.mjs",
-              "sha256": "47f36836c4975aaced6c161af3781f75d473695d13662545855a38b0b860fd3e"
+              "sha256": "5b9665ad2c6b7db50ad68d3cc9f564dd718a84390658415b87db0c8dd1147029"
             }
           ],
           "checks": [
@@ -474149,7 +474150,8 @@
         "batches": [
           "release-0.6-browser-response-policy",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-container-runtime-hardening"
+          "release-0.6-container-runtime-hardening",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -474173,7 +474175,7 @@
             },
             {
               "path": "docs/security/content-security-policy.md",
-              "sha256": "e848d2163a3938de7b8b9baf827acf5c61ec7ffcda11715227c51115ce882f55"
+              "sha256": "d4b54e603388895e4025f98b3ccdb356985fb6ecd738725bca174f5238dd3a00"
             }
           ],
           "checks": [
@@ -474273,7 +474275,8 @@
         "batches": [
           "release-0.6-browser-response-policy",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "production-browser-nonce-and-exact-stylesheet-hash-verification",
@@ -474285,7 +474288,7 @@
             },
             {
               "path": "scripts/check-production-security-headers.mjs",
-              "sha256": "47f36836c4975aaced6c161af3781f75d473695d13662545855a38b0b860fd3e"
+              "sha256": "5b9665ad2c6b7db50ad68d3cc9f564dd718a84390658415b87db0c8dd1147029"
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
@@ -474297,7 +474300,7 @@
             },
             {
               "path": "apps/web/e2e/csp-reports.spec.ts",
-              "sha256": "f60dc2f6c82d2dfc93b2d1a4c5583eeaf6facbacd9ba9632e2c4a486bf7e2f4b"
+              "sha256": "6590ebfcc9d3a49261bff5e0352c1c777bca0762d96b460ec0b474d8c9b3e884"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -474309,7 +474312,7 @@
             },
             {
               "path": "docs/security/content-security-policy.md",
-              "sha256": "e848d2163a3938de7b8b9baf827acf5c61ec7ffcda11715227c51115ce882f55"
+              "sha256": "d4b54e603388895e4025f98b3ccdb356985fb6ecd738725bca174f5238dd3a00"
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.css",
@@ -474371,7 +474374,8 @@
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-container-runtime-hardening",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -474407,11 +474411,11 @@
             },
             {
               "path": "docs/security/content-security-policy.md",
-              "sha256": "e848d2163a3938de7b8b9baf827acf5c61ec7ffcda11715227c51115ce882f55"
+              "sha256": "d4b54e603388895e4025f98b3ccdb356985fb6ecd738725bca174f5238dd3a00"
             },
             {
               "path": "scripts/check-production-security-headers.mjs",
-              "sha256": "47f36836c4975aaced6c161af3781f75d473695d13662545855a38b0b860fd3e"
+              "sha256": "5b9665ad2c6b7db50ad68d3cc9f564dd718a84390658415b87db0c8dd1147029"
             }
           ],
           "checks": [
@@ -474464,19 +474468,71 @@
         "story": "06-security-testing-observability.md#spec-6a02d6e61674"
       },
       "requirement": "| T-06.02.02.07 | Verify no `unsafe-eval` usage across codebase (replace `eval`, `new Function`, string setTimeout) | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "apps/web/e2e/csp-reports.spec.ts",
+          "apps/web/index.html",
+          "docs/security/content-security-policy.md",
+          "scripts/check-production-security-headers.mjs"
+        ],
+        "batches": [
+          "release-0.6-browser-dynamic-evaluation-boundary"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-compiled-browser-csp-verification",
+          "base_commit": "be0cac75e5e807411fbe6c4a75d8880cab20c219",
+          "source_evidence": [
+            {
+              "path": "apps/web/build.mjs",
+              "sha256": "20432f55d9d3090f592a28e79064d99f0066108a3cda87aeebf023583d55c35f"
+            },
+            {
+              "path": "apps/web/e2e/csp-reports.spec.ts",
+              "sha256": "6590ebfcc9d3a49261bff5e0352c1c777bca0762d96b460ec0b474d8c9b3e884"
+            },
+            {
+              "path": "apps/web/index.html",
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
+            },
+            {
+              "path": "apps/web/server.js",
+              "sha256": "e201f55aad64cd371e6eb5b4063c6958f8aa91d703a000c0a1af08bbb86db22e"
+            },
+            {
+              "path": "docs/security/content-security-policy.md",
+              "sha256": "d4b54e603388895e4025f98b3ccdb356985fb6ecd738725bca174f5238dd3a00"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-payment-review.ts",
+              "sha256": "0d41b27f86956261051d124698778a07a8d9f4bea3d7fda7a6e11a966b175d9a"
+            },
+            {
+              "path": "packages/shared/src/rate-limit/composite-rate-limiter.ts",
+              "sha256": "6225c6e6dd362da56ee57536c65c150841385795667bf4b0701c4c7888f28e27"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "scripts/check-production-security-headers.mjs",
+              "sha256": "5b9665ad2c6b7db50ad68d3cc9f564dd718a84390658415b87db0c8dd1147029"
+            }
+          ],
+          "checks": [
+            "Authored runtime source scan found only a Redis Lua EVAL command, which does not evaluate JavaScript. The existing production CSP keeps unsafe-eval disabled in both modes.",
+            "Chromium and WebKit each reported one blocked eval while loading the original compiled finance bundle. The rebuilt browser entry opts out of classic Zod compilation before any modules load. Both engines loaded the same finance bundle with zero eval violations; an explicit native control still produced one blocked eval.",
+            "Two final compiled workspace browser cases passed. The six existing CSP transport and style cases passed in the preceding run before only the new negative control was corrected. The production header check now requires the configuration before the first module in both HTML entry points.",
+            "Both web tiers, web typecheck, changed-file lint and formatting, all 101 route and interaction budgets, and all six real cold authentication transfer checks passed."
+          ]
+        }
       }
     },
     {
@@ -474503,7 +474559,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-container-runtime-hardening",
-          "release-0.6-proxy-trust-and-request-limits"
+          "release-0.6-proxy-trust-and-request-limits",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -474539,7 +474596,7 @@
             },
             {
               "path": "docs/security/content-security-policy.md",
-              "sha256": "e848d2163a3938de7b8b9baf827acf5c61ec7ffcda11715227c51115ce882f55"
+              "sha256": "d4b54e603388895e4025f98b3ccdb356985fb6ecd738725bca174f5238dd3a00"
             },
             {
               "path": "scripts/check-staging-proxy.mjs",
@@ -474616,7 +474673,8 @@
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-proxy-trust-and-request-limits"
+          "release-0.6-proxy-trust-and-request-limits",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "production-csp-cross-origin-browser-and-first-party-control",
@@ -474624,7 +474682,7 @@
           "source_evidence": [
             {
               "path": "scripts/check-production-security-headers.mjs",
-              "sha256": "47f36836c4975aaced6c161af3781f75d473695d13662545855a38b0b860fd3e"
+              "sha256": "5b9665ad2c6b7db50ad68d3cc9f564dd718a84390658415b87db0c8dd1147029"
             },
             {
               "path": "apps/web/server.js",
@@ -474640,7 +474698,7 @@
             },
             {
               "path": "docs/security/content-security-policy.md",
-              "sha256": "e848d2163a3938de7b8b9baf827acf5c61ec7ffcda11715227c51115ce882f55"
+              "sha256": "d4b54e603388895e4025f98b3ccdb356985fb6ecd738725bca174f5238dd3a00"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -507124,7 +507182,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -507224,7 +507283,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -507680,7 +507739,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -507780,7 +507840,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -508236,7 +508296,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -508336,7 +508397,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -508792,7 +508853,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -508892,7 +508954,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -509348,7 +509410,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -509448,7 +509511,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -509904,7 +509967,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -510004,7 +510068,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -510460,7 +510524,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -510560,7 +510625,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -511016,7 +511081,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -511116,7 +511182,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -511572,7 +511638,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -511672,7 +511739,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -512128,7 +512195,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -512228,7 +512296,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -512684,7 +512752,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -512784,7 +512853,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -513240,7 +513309,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -513340,7 +513410,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -513796,7 +513866,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -513896,7 +513967,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -514352,7 +514423,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -514452,7 +514524,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -514852,7 +514924,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -514904,7 +514977,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -515442,7 +515515,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -515494,7 +515568,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -516032,7 +516106,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -516084,7 +516159,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -516939,7 +517014,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -517007,7 +517083,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -517350,7 +517426,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -517418,7 +517495,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -517759,7 +517836,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -517827,7 +517905,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -518168,7 +518246,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -518236,7 +518315,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -524056,7 +524135,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -524140,7 +524220,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -524501,7 +524581,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -524585,7 +524666,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -527934,7 +528015,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -528018,7 +528100,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -550364,7 +550446,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550432,7 +550515,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -550773,7 +550856,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550841,7 +550925,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -551182,7 +551266,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -551250,7 +551335,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -551591,7 +551676,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -551659,7 +551745,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -552005,7 +552091,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -552073,7 +552160,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -552420,7 +552507,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -552488,7 +552576,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -552829,7 +552917,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -552897,7 +552986,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -553238,7 +553327,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553306,7 +553396,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -553648,7 +553738,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553716,7 +553807,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -554059,7 +554150,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -554127,7 +554219,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -554468,7 +554560,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -554536,7 +554629,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -554878,7 +554971,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -554946,7 +555040,7 @@
             },
             {
               "path": "apps/web/index.html",
-              "sha256": "2d2dff568d36401d147ec891f32e5d3dd331037e2c68859ceb415cdebc363737"
+              "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
             },
             {
               "path": "apps/web/package.json",
@@ -743650,7 +743744,8 @@
           "release-0.6-csrf-rotation-and-dynamic-injection",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-document-http-fixture-isolation"
+          "release-0.6-document-http-fixture-isolation",
+          "release-0.6-browser-dynamic-evaluation-boundary"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -834773,6 +834868,41 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/document-fixture-timeout-and-isolation",
       "source_scope_proof": "release-0.6-document-http-fixture-isolation.json",
       "source_scope_proof_sha256": "8a734a1b419a4886c36623beaafa3b6b02241300e9af6a7c1bf573ff59c40b7b"
+    },
+    "release-0.6-browser-dynamic-evaluation-boundary": {
+      "batch": "release-0.6-browser-dynamic-evaluation-boundary",
+      "base_commit": "be0cac75e5e807411fbe6c4a75d8880cab20c219",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.02.02.07",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/csp-reports.spec.ts",
+          "sha256": "6590ebfcc9d3a49261bff5e0352c1c777bca0762d96b460ec0b474d8c9b3e884"
+        },
+        {
+          "path": "apps/web/index.html",
+          "sha256": "f340d2acf4534652eb20efabad0f8e0b645062d838ae5d482c6de533b113ed70"
+        },
+        {
+          "path": "docs/security/content-security-policy.md",
+          "sha256": "d4b54e603388895e4025f98b3ccdb356985fb6ecd738725bca174f5238dd3a00"
+        },
+        {
+          "path": "scripts/check-production-security-headers.mjs",
+          "sha256": "5b9665ad2c6b7db50ad68d3cc9f564dd718a84390658415b87db0c8dd1147029"
+        }
+      ],
+      "checks": [
+        "Authored runtime source scan found only a Redis Lua EVAL command, which does not evaluate JavaScript. The existing production CSP keeps unsafe-eval disabled in both modes.",
+        "Chromium and WebKit each reported one blocked eval while loading the original compiled finance bundle. The rebuilt browser entry opts out of classic Zod compilation before any modules load. Both engines loaded the same finance bundle with zero eval violations; an explicit native control still produced one blocked eval.",
+        "Two final compiled workspace browser cases passed. The six existing CSP transport and style cases passed in the preceding run before only the new negative control was corrected. The production header check now requires the configuration before the first module in both HTML entry points.",
+        "Both web tiers, web typecheck, changed-file lint and formatting, all 101 route and interaction budgets, and all six real cold authentication transfer checks passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/zod-csp-dynamic-evaluation",
+      "source_scope_proof": "release-0.6-browser-dynamic-evaluation-boundary.json",
+      "source_scope_proof_sha256": "557f17d8d102efb5e44b97ba5b86047e56b5b4cf2afbbc290515e4448b23c3b8"
     }
   },
   "historical_improvements": [

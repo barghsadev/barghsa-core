@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T20:04:41+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T20:15:11+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 987 | Accepted with unchanged source bindings. |
-| verify | 343 | Existing work may be complete; inspect evidence before building. |
+| done | 988 | Accepted with unchanged source bindings. |
+| verify | 342 | Existing work may be complete; inspect evidence before building. |
 | partial | 32 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1131,7 +1131,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.02.02.04` | done | Recorded batch work | Ensure nonce generation and propagation for inline scripts/styles across the served HTML shell and client |
 | `06-security-testing-observability.md#T-06.02.02.05` | done | Recorded batch work | Add CI test that verifies CSP headers in production build |
 | `06-security-testing-observability.md#T-06.02.02.06` | partial | Recorded batch work | Roll out: 1 week Report-Only monitoring → analyze violations → switch to Enforce |
-| `06-security-testing-observability.md#T-06.02.02.07` | verify | Inventory needed | Verify no `unsafe-eval` usage across codebase (replace `eval`, `new Function`, string setTimeout) |
+| `06-security-testing-observability.md#T-06.02.02.07` | done | Recorded batch work | Verify no `unsafe-eval` usage across codebase (replace `eval`, `new Function`, string setTimeout) |
 | `06-security-testing-observability.md#T-06.02.03.01` | done | Recorded batch work | Implement security headers middleware: `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy` |
 | `06-security-testing-observability.md#T-06.02.03.02` | partial | Recorded batch work | Implement `Strict-Transport-Security` header configurable by env; enable HSTS only in production with verified TLS |
 | `06-security-testing-observability.md#T-06.02.03.03` | done | Recorded batch work | Ensure `frame-ancestors 'none'` in CSP prevents clickjacking |

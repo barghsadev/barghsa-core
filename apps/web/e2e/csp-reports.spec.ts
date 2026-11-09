@@ -1,7 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import { createStaticServer } from '../server.js';
 import { createServer, request, type Server, type IncomingHttpHeaders } from 'node:http';
-import { mkdtemp, writeFile, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -128,4 +128,68 @@ test('enforced policy blocks untrusted style elements and keeps dynamic style at
   } finally {
     await new Promise<void>((done) => enforced.close(() => done()));
   }
+});
+
+test('compiled workspace validation avoids dynamic evaluation under enforced CSP', async ({
+  baseURL,
+  page,
+}) => {
+  test.skip(!process.env['PLAYWRIGHT_BASE_URL'], 'Requires the compiled application server');
+  const build = process.env['BARGHSA_BROWSER_COVERAGE'] === '1' ? 'dist-coverage' : 'dist';
+  const manifest: Record<string, { file: string }> = JSON.parse(
+    await readFile(new URL(`../${build}/.vite/manifest.json`, import.meta.url), 'utf8')
+  );
+  const asset = manifest['../../packages/shared/dist/finance/index.js']?.file;
+  expect(asset).toMatch(/^assets\/[a-zA-Z0-9_.-]+\.js$/);
+  await page.addInitScript(() => {
+    window.addEventListener('securitypolicyviolation', ({ blockedURI }) => {
+      if (blockedURI === 'eval') {
+        const root = document.documentElement;
+        root.dataset.evalBlocked = String(Number(root.dataset.evalBlocked ?? 0) + 1);
+      }
+    });
+  });
+  await page.route('**/api/**', (route) =>
+    new URL(route.request().url()).pathname === '/api/csp-report'
+      ? route.fulfill({ status: 204 })
+      : route.fulfill({ status: 404, json: {} })
+  );
+  const origin = new URL('/', baseURL).href;
+  await page.route(origin, async (route) => {
+    const response = await route.fetch();
+    const headers = response.headers();
+    headers['content-security-policy'] ??= headers['content-security-policy-report-only']!;
+    expect(headers['content-security-policy']).toMatch(/script-src 'strict-dynamic' 'nonce-/);
+    delete headers['content-security-policy-report-only'];
+    await route.fulfill({ response, headers });
+  });
+  const response = await page.goto(origin);
+  const policy = response!.headers()['content-security-policy'];
+  const nonce = policy.match(/'nonce-([^']+)'/)![1];
+  expect(policy).not.toContain("'unsafe-eval'");
+  await page.evaluate(
+    ({ asset, nonce }) => {
+      const script = document.createElement('script');
+      script.type = 'module';
+      script.nonce = nonce;
+      script.textContent = `import ${JSON.stringify(`/${asset}`)};
+          document.documentElement.dataset.financeValidationReady = 'true';`;
+      document.head.appendChild(script);
+    },
+    { asset, nonce }
+  );
+  const root = page.locator('html');
+  await expect(root).toHaveAttribute('data-finance-validation-ready', 'true');
+  await expect(root).not.toHaveAttribute('data-eval-blocked');
+
+  await page.evaluate((nonce) => {
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.nonce = nonce;
+    script.textContent = `try { new Function(""); } catch {}
+      document.documentElement.dataset.evalControl = 'true';`;
+    document.head.appendChild(script);
+  }, nonce);
+  await expect(root).toHaveAttribute('data-eval-control', 'true');
+  await expect(root).toHaveAttribute('data-eval-blocked', '1');
 });
