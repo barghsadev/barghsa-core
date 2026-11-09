@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T04:22:55+00:00",
-  "source_commit": "62b4eb6d875a606ea17340c27346d15646f5ad07",
+  "updated": "2026-11-09T04:29:49+00:00",
+  "source_commit": "c18013ec3c56cc232bb287f1d45a5c8efcf067f1",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -370571,7 +370571,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -371853,7 +371853,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -373135,7 +373135,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -374417,7 +374417,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -375700,7 +375700,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -376790,7 +376790,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -377645,7 +377645,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -378496,7 +378496,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -379347,7 +379347,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -380197,7 +380197,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -421695,7 +421695,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -491477,7 +491477,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -494633,7 +494633,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -495524,7 +495524,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -496356,7 +496356,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -497189,7 +497189,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -517535,7 +517535,7 @@
             },
             {
               "path": "apps/web/e2e/staff-business-list-recovery.spec.ts",
-              "sha256": "a2e2218f46ba71b50f32333b5a3df9f556bb574952d353327d2c2a24821b988d"
+              "sha256": "62372530e905fcb839caa05270d6105478b30f912ac21c917d6af4054b998a94"
             },
             {
               "path": "apps/web/e2e/staff-order-list-query.spec.ts",
@@ -518203,7 +518203,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -572750,7 +572750,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -594746,7 +594746,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -598965,7 +598965,7 @@
       "launch_required": true,
       "remaining": [
         "The 98-path inventory retains primary read, detail, layout and redirect evidence. All 27 component owners in the selected request inventory now have scoped source and case references or a verified write-only classification.",
-        "Current receipts cover checkout wallet states and simple or advanced revision option loading and recovery. Reconcile the remaining route and hook-owned conditions and original route controls before full acceptance."
+        "Current receipts cover checkout wallet states, revision option loading and staff saving queue or detail recovery. Reconcile the remaining route and hook-owned conditions and original route controls before full acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -599123,7 +599123,8 @@
           "release-0.5-signature-first-read-feedback",
           "release-0.5-embedded-ticket-read-states",
           "release-0.5-checkout-wallet-read-states",
-          "release-0.5-revision-options-pending"
+          "release-0.5-revision-options-pending",
+          "release-0.5-staff-saving-read-shape"
         ],
         "current_acceptance": null
       }
@@ -638284,7 +638285,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -639416,7 +639417,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -640548,7 +640549,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -641683,7 +641684,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -642818,7 +642819,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -643980,7 +643981,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -645111,7 +645112,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -646242,7 +646243,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -647374,7 +647375,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -648524,7 +648525,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -649657,7 +649658,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -681187,7 +681188,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -682317,7 +682318,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -683447,7 +683448,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -684577,7 +684578,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -718246,7 +718247,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "packages/db/drizzle/production/0260_saving_cancellation_financial_closure.sql",
@@ -728988,7 +728989,7 @@
       "launch_required": true,
       "remaining": [
         "The 98-path inventory retains primary read, detail, layout and redirect evidence. All 27 component owners in the selected request inventory now have scoped source and case references or a verified write-only classification.",
-        "Current receipts cover checkout wallet states and simple or advanced revision option loading and recovery. Reconcile the remaining route and hook-owned conditions and original route controls before full acceptance."
+        "Current receipts cover checkout wallet states, revision option loading and staff saving queue or detail recovery. Reconcile the remaining route and hook-owned conditions and original route controls before full acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -729212,7 +729213,8 @@
           "release-0.5-signature-first-read-feedback",
           "release-0.5-embedded-ticket-read-states",
           "release-0.5-checkout-wallet-read-states",
-          "release-0.5-revision-options-pending"
+          "release-0.5-revision-options-pending",
+          "release-0.5-staff-saving-read-shape"
         ]
       }
     },
@@ -730216,7 +730218,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "0d7432b30c43fb28ace459195a4c1c2ad388d4c0eb1f0a3e7b85ae8974b7a61f"
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -731181,7 +731183,8 @@
             "All 101 transfer budgets and 16 native signing cases passed. Auth assets are byte-identical. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-signature-first-read-feedback/proof.json",
             "All 101 transfer budgets and 20 scoped native ticket, legal-document and receipt history cases passed. Auth assets are byte-identical. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-embedded-ticket-read-states/proof.json",
             "Current simple electricity and saving checkout balance states and staff funding views passed on both native engines. All 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-checkout-wallet-read-states/proof.json",
-            "Current simple and advanced revision journeys and 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-revision-options-pending/proof.json"
+            "Current simple and advanced revision journeys and 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-revision-options-pending/proof.json",
+            "Current saving staff queue and detail journeys and 101 transfer budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-saving-read-shape/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -731272,7 +731275,8 @@
           "release-0.5-consultation-offer-layout",
           "release-0.5-conditional-heading-acceptance",
           "release-0.5-checkout-wallet-read-states",
-          "release-0.5-revision-options-pending"
+          "release-0.5-revision-options-pending",
+          "release-0.5-staff-saving-read-shape"
         ]
       }
     },
@@ -811536,6 +811540,41 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-revision-options-pending/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-revision-options-pending/renewed-bindings.json",
       "release_disposition": "Closed current revision option pending feedback. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-staff-saving-read-shape": {
+      "batch": "release-0.5-staff-saving-read-shape",
+      "base_commit": "c18013ec3c56cc232bb287f1d45a5c8efcf067f1",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/staff-business-list-recovery.spec.ts",
+          "sha256": "62372530e905fcb839caa05270d6105478b30f912ac21c917d6af4054b998a94"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
+          "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
+        }
+      ],
+      "checks": [
+        "On the predecessor build, both locales failed to recover from a settled saving detail response for a different order. The uppercase UUID case initially ran out of host temporary space and then reproduced the failed deep link with the browser temporary files on the RAM volume.",
+        "The staff saving queue rejects an invalid page before updating accepted rows. Detail reads accept only the selected order, keep the retry local to the detail, and reopen uppercase UUIDs against the canonical ID. Existing authorization handling and financial decision checks remain exercised.",
+        "Fourteen Chromium and mobile Safari cases passed. These cover wrong-record rejection, malformed page recovery, retained cursor and draft, denied read withdrawal, and direct and restored URL selections. Four queue recovery cases keep the existing axe assertion.",
+        "All 82 focused saving units passed after the shared compiled export stabilized. The critical file gate passed at 395/417 lines and 366/429 branches. All 101 transfer budgets, web typecheck, lint and formatting passed. Auth assets are byte-identical."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-saving-read-shape",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-saving-read-shape/proof.json",
+      "source_scope_proof_sha256": "4ec2526a53c6c991fbb8341caaa4f523a8aa1c6b09b8b3d81d111394d01dcc91",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-saving-read-shape/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-saving-read-shape/renewed-bindings.json",
+      "release_disposition": "Closed observed staff saving read recovery gaps. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [

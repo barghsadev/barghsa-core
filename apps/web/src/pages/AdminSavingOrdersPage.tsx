@@ -198,7 +198,7 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
   const setAfter = (value: string | null) =>
     queries ? queries.queue.setQuery({ cursor: value ?? '' }) : setLocalAfter(value);
   const [localSelected, setLocalSelected] = useState<string | null>(null);
-  const selected = queries ? queries.selected : localSelected;
+  const selected = (queries ? queries.selected : localSelected)?.toLowerCase() ?? null;
   const setSelected = (id: string | null, replace = false) =>
     queries ? queries.select(id, replace) : setLocalSelected(id);
   const [loadedDetail, setDetail] = useState<Detail | null>(null);
@@ -380,7 +380,13 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
           return null;
         }
         if (!response.ok) throw new Error('queue');
-        return response.data;
+        const value = response.data;
+        if (
+          !Array.isArray(value?.orders) ||
+          value.orders.some((order) => !staffOrderId(order?.id) || !order.pricingSnapshot)
+        )
+          throw new Error('Invalid saving order queue');
+        return value;
       })
       .then((value) => {
         if (fresh() && value) {
@@ -478,7 +484,9 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
           return null;
         }
         if (!response.ok) throw new Error('detail');
-        return response.data;
+        const value = response.data;
+        if (value?.id !== selected) throw new Error('Invalid saving order detail');
+        return value;
       })
       .then((value) => {
         if (fresh() && value) {

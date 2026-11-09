@@ -84,6 +84,7 @@ for (const locale of ['en', 'fa'] as const) {
         denied = false,
         detailReads = 0;
       let held: Route | undefined;
+      let heldMalformedDetail: Route | undefined;
       const queries: string[] = [];
       await page.route(
         (url) => url.pathname === base,
@@ -106,6 +107,10 @@ for (const locale of ['en', 'fa'] as const) {
       await page.route(`**${base}/${firstWork}`, (route) => {
         detailReads++;
         if (name === 'saving' && detailFail) return;
+        if (name === 'saving' && malformedDetail) {
+          heldMalformedDetail = route;
+          return;
+        }
         return detailFail
           ? route.fulfill({ status: 503, json: {} })
           : route.fulfill({
@@ -150,12 +155,17 @@ for (const locale of ['en', 'fa'] as const) {
       const initialQueueReads = queries.length;
       expect(initialQueueReads).toBeGreaterThan(0);
       detailFail = false;
-      if (name === 'consultation') {
+      if (name !== 'electricity') {
         malformedDetail = true;
         await retry.click();
         await expect.poll(() => detailReads).toBe(2);
+        if (name === 'saving') {
+          await expect(retry).toHaveCount(0);
+          await heldMalformedDetail!.fulfill({ json: row(olderWork) });
+        }
         await expect(retry).toBeVisible();
         await expect(page.locator(draft)).toHaveCount(0);
+        await expect(list.getByRole('heading', { name: 'Older buyer' })).toHaveCount(0);
         await expect(content.getByRole('button', { name: /First buyer/ })).toBeVisible();
         malformedDetail = false;
       }
@@ -163,7 +173,7 @@ for (const locale of ['en', 'fa'] as const) {
       const input = page.locator(draft);
       await expect(input).toBeVisible();
       expect(queries).toHaveLength(initialQueueReads);
-      const expectedDetailReads = name === 'consultation' ? 3 : 2;
+      const expectedDetailReads = name === 'electricity' ? 2 : 3;
       expect(detailReads).toBe(expectedDetailReads);
       if (name === 'consultation') {
         await expect(
@@ -189,7 +199,7 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(content.getByRole('button', { name: retryWord, exact: true })).toBeVisible();
       const failed = queries.at(-1);
       pageFail = false;
-      if (name === 'consultation') {
+      if (name !== 'electricity') {
         malformedPage = true;
         await content.getByRole('button', { name: retryWord, exact: true }).click();
         await expect(content.getByRole('button', { name: retryWord, exact: true })).toBeVisible();
@@ -237,3 +247,17 @@ for (const locale of ['en', 'fa'] as const) {
     });
   }
 }
+
+test('saving staff can reopen a canonical order from an uppercase UUID', async ({ page }) => {
+  await shell(page, 'en');
+  const id = `a${firstWork.slice(1)}`;
+  await page.route('**/api/staff/saving/orders?**', (route) =>
+    route.fulfill({ json: { orders: [savingWork(id)], nextAfter: null } })
+  );
+  await page.route(`**/api/staff/saving/orders/${id}`, (route) =>
+    route.fulfill({ json: savingWork(id) })
+  );
+  await page.goto(`/admin/saving-orders?orderId=${id.toUpperCase()}`);
+  await expect(page.getByRole('heading', { name: 'Older buyer', exact: true })).toBeVisible();
+  await expect(page.locator('#saving-staff-note')).toBeVisible();
+});
