@@ -13,6 +13,7 @@ const path = '/api/admin/config/invoice-reminder-offsets';
 let root: Root, host: HTMLDivElement;
 let signal: AbortSignal | undefined, finish: ((value: unknown) => void) | undefined;
 let failed: boolean, first: boolean;
+const readErrorBody = vi.fn(async () => ({ message: 'obsolete-private-error' }));
 beforeEach(() => {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   host = document.createElement('div');
@@ -23,6 +24,7 @@ beforeEach(() => {
   finish = undefined;
   failed = false;
   first = true;
+  readErrorBody.mockClear();
   vi.stubGlobal(
     'fetch',
     vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
@@ -33,9 +35,14 @@ beforeEach(() => {
       if (first) {
         first = false;
         signal = init!.signal as AbortSignal;
+        if (failed) {
+          return new Promise<Response>((resolve) => {
+            finish = () => resolve({ ok: false, status: 500, json: readErrorBody } as Response);
+          });
+        }
         return {
-          ok: !failed,
-          status: failed ? 500 : 200,
+          ok: true,
+          status: 200,
           json: () =>
             new Promise((resolve) => {
               finish = resolve;
@@ -62,11 +69,11 @@ async function render(present = true, actor = 'staff-one') {
     )
   );
 }
-for (const body of ['matrix', 'error']) {
+for (const read of ['matrix body', 'error response']) {
   it.each(['unmount', 'actor', 'profile-context', 'locale'])(
-    'cancels the full reminder ' + body + ' body on %s and refuses obsolete data without writes',
+    'cancels the reminder ' + read + ' on %s and refuses obsolete data without writes',
     async (change) => {
-      failed = body === 'error';
+      failed = read === 'error response';
       await render();
       await vi.waitFor(() => expect(finish).toBeDefined());
       const oldSignal = signal!,
@@ -87,12 +94,9 @@ for (const body of ['matrix', 'error']) {
       }
       expect(oldSignal.aborted).toBe(true);
       await act(async () =>
-        oldFinish(
-          body === 'error'
-            ? { message: 'obsolete-private-error' }
-            : defaultReminderOffsetToggles().map((row) => ({ ...row, enabled: false }))
-        )
+        oldFinish(defaultReminderOffsetToggles().map((row) => ({ ...row, enabled: false })))
       );
+      expect(readErrorBody).not.toHaveBeenCalled();
       expect(host.textContent).not.toContain('obsolete-private-error');
       expect(host.querySelector('[role=alert]')).toBeNull();
       if (change !== 'unmount') {
@@ -106,27 +110,18 @@ for (const body of ['matrix', 'error']) {
     }
   );
 }
-it.each(['server message', 'malformed error body'])(
-  'retains current %s handling without retry',
-  async (kind) => {
-    vi.mocked(fetch).mockImplementation(
-      async () =>
-        ({
-          ok: false,
-          status: 500,
-          json: async () => {
-            if (kind === 'malformed error body') throw new SyntaxError('broken JSON');
-            return { message: 'current-server-message' };
-          },
-        }) as Response
-    );
+it.each([JSON.stringify({ message: 'current-server-message' }), '{'])(
+  'shows a localized message without reading a private or malformed error body',
+  async (body) => {
+    const response = new Response(body, { status: 500 });
+    const read = vi.spyOn(response, 'json');
+    vi.mocked(fetch).mockResolvedValue(response);
     await render();
     await vi.waitFor(() => expect(host.querySelector('[role=alert]')).not.toBeNull());
     expect(host.querySelector('[role=alert]')!.textContent).toBe(
-      kind === 'server message'
-        ? 'current-server-message'
-        : t('admin.invoices.reminders.loadFailed', 'en')
+      t('admin.invoices.reminders.loadFailed', 'en')
     );
+    expect(read).not.toHaveBeenCalled();
     expect(host.querySelectorAll('[role=switch]')).toHaveLength(0);
     expect(fetch).toHaveBeenCalledTimes(1);
   }

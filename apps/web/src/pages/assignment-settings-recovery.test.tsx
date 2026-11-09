@@ -1,6 +1,6 @@
 import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryProvider } from '../test/query-provider.js';
-import { act } from 'react';
+import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import Slots from './AdminAgentSlotsPage.js';
@@ -11,6 +11,10 @@ import {
   assignmentSlots,
 } from '../test/assignment-settings-fixtures.js';
 import { isAgentSlots, isAssignmentAgents, isResponseTargets } from '../lib/assignment-settings.js';
+vi.mock('@tanstack/react-router', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@tanstack/react-router')>()),
+  Link: ({ children, to }: { children: ReactNode; to: string }) => <a href={to}>{children}</a>,
+}));
 let host: HTMLDivElement, root: Root;
 beforeEach(() => {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
@@ -434,7 +438,18 @@ for (const scenario of [
       expect(document.querySelector('[role=dialog]')).toBeNull();
       expect(host.querySelector('form')).toBeNull();
       denied = false;
-      await click(scenario.refresh);
+      if (scenario.name === 'targets' && status === 401) {
+        expect(host.querySelector('a[href="/login"]')).not.toBeNull();
+        expect(
+          [...host.querySelectorAll('button')].some(
+            (button) => button.textContent?.trim() === scenario.refresh
+          )
+        ).toBe(false);
+        await act(async () => root.render(null));
+        await scenario.render();
+      } else {
+        await click(scenario.refresh);
+      }
       expect(host.querySelector('form')).not.toBeNull();
       expect(scenario.name === 'slots' ? choices().value : target().value).toBe(
         scenario.name === 'slots' ? '' : '24'

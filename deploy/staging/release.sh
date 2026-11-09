@@ -92,7 +92,24 @@ echo 'Disposable staging: no offsite backup is configured' >&2
 "${dc[@]}" up -d --no-deps --wait --wait-timeout 240 web
 "${dc[@]}" up -d --no-deps --wait --wait-timeout 240 worker
 
-curl --fail --silent --show-error --max-time 20 "$APP_PUBLIC_URL/api/health/ready" >/dev/null
+for health in live ready; do
+  curl --fail --silent --show-error --max-time 20 "$APP_PUBLIC_URL/api/health/$health" |
+    python3 -c '
+import json, sys
+
+kind = sys.argv[1]
+try:
+    body = json.load(sys.stdin)
+    status = body.get("status")
+    valid = status == "ok" if kind == "live" else (
+        status in ("ok", "degraded") and body["checks"]["postgresql"]["status"] == "ok"
+    )
+except (ValueError, AttributeError, KeyError, TypeError):
+    valid = False
+if not valid:
+    sys.exit(f"Invalid staging {kind} health response")
+' "$health"
+done
 curl --fail --silent --show-error --max-time 20 "$APP_PUBLIC_URL/" >/dev/null
 [[ $(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 20 "$S3_PUBLIC_ENDPOINT/$S3_BUCKET/") == 403 ]] || {
   echo 'Public S3 gateway did not return AccessDenied' >&2; false;

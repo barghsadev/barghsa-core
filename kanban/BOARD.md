@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T13:34:38+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T13:48:34+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 901 | Accepted with unchanged source bindings. |
-| verify | 435 | Existing work may be complete; inspect evidence before building. |
-| partial | 27 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 903 | Accepted with unchanged source bindings. |
+| verify | 432 | Existing work may be complete; inspect evidence before building. |
+| partial | 28 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 2 | Named owner or external prerequisite. |
@@ -977,7 +977,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-02.01.01` | verify | Earlier acceptance_verified | Initialize `packages/db` with Drizzle ORM, `pg`, `pg-pool`, and drizzle-kit |
 | `01-platform-infrastructure.md#T-02.01.02` | verify | Earlier acceptance_verified | Create PostgreSQL pool factory with configurable pool, statement timeout, lock timeout, and idle transaction guard |
 | `01-platform-infrastructure.md#T-02.01.03` | verify | Earlier acceptance_verified | Implement query timeout and cancellation via Drizzle configuration |
-| `01-platform-infrastructure.md#T-02.01.04` | verify | Earlier acceptance_verified | Set up database health check endpoint for readiness probes |
+| `01-platform-infrastructure.md#T-02.01.04` | done | Earlier acceptance_verified | Set up database health check endpoint for readiness probes |
 | `01-platform-infrastructure.md#T-02.02.01` | done | Earlier acceptance_verified | Create `packages/db/src/types.ts` with custom Drizzle type definitions |
 | `01-platform-infrastructure.md#T-02.02.02` | done | Earlier partial | Create base table factory with `id`, `createdAt`, `updatedAt` columns |
 | `01-platform-infrastructure.md#T-02.02.03` | verify | Earlier acceptance_verified | Create UUIDv7 generation function migration |
@@ -1001,7 +1001,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-03.02.02` | verify | Earlier acceptance_verified | Create `.env.example` with all required development variables |
 | `01-platform-infrastructure.md#T-03.02.03` | verify | Earlier acceptance_verified | Create root `pnpm dev` script for hot-reload local development across all apps |
 | `01-platform-infrastructure.md#T-03.02.04` | verify | Earlier acceptance_verified | Configure file-watch with proper polling for Docker-for-Mac compatibility |
-| `01-platform-infrastructure.md#T-03.03.01` | verify | Earlier acceptance_verified | Implement liveness and readiness controllers in NestJS API |
+| `01-platform-infrastructure.md#T-03.03.01` | done | Earlier acceptance_verified | Implement liveness and readiness controllers in NestJS API |
 | `01-platform-infrastructure.md#T-03.03.02` | verify | Earlier acceptance_verified | Implement graceful `SIGTERM` handler for NestJS API and worker |
 | `01-platform-infrastructure.md#T-03.03.03` | verify | Earlier acceptance_verified | Implement graceful shutdown for web frontend server |
 | `01-platform-infrastructure.md#T-03.03.04` | partial | Earlier partial | Add readiness check that excludes non-critical dependencies |
@@ -1335,7 +1335,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.12.02.05` | verify | Inventory needed | Configure required reviewers: domain owner; Finance/Security/Legal when protected rules change |
 | `06-security-testing-observability.md#T-06.12.02.06` | verify | Inventory needed | Add status check reporting: pass/fail per check, summary comment on PR |
 | `06-security-testing-observability.md#T-06.12.03.01` | verify | Inventory needed | Implement main-branch CI workflow: full test suites, E2E, accessibility, container build+scan, SBOM |
-| `06-security-testing-observability.md#T-06.12.03.02` | verify | Inventory needed | Build staging smoke deployment: readiness/liveness verification, migration rehearsal |
+| `06-security-testing-observability.md#T-06.12.03.02` | partial | Recorded batch work | Build staging smoke deployment: readiness/liveness verification, migration rehearsal |
 | `06-security-testing-observability.md#T-06.12.03.03` | verify | Inventory needed | Implement automatic gate: block RC if P0/P1 defect or unexplained flaky critical test |
 | `06-security-testing-observability.md#T-06.12.03.04` | verify | Inventory needed | Provider contract tests in CI: SMTP fake, SMS.ir fake, payment fake, storage fake |
 | `06-security-testing-observability.md#T-06.12.04.01` | verify | Inventory needed | Define production release checklist and automated gate runner |

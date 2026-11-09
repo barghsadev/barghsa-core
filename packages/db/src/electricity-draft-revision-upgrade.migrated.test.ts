@@ -79,7 +79,7 @@ it('preserves pre-upgrade drafts and versions subsequent legacy writes and delet
     const before = await saved();
     const constraints = await existingConstraints();
     expect(constraints.length).toBeGreaterThan(existingTables.length);
-    expect(await runMigrations({ connection })).toEqual({
+    expect(await runMigrationPrefix('0281_electricity_draft_revisions', { connection })).toEqual({
       ok: true,
       applied: ['0281_electricity_draft_revisions'],
     });
@@ -130,6 +130,44 @@ it('preserves pre-upgrade drafts and versions subsequent legacy writes and delet
     const next = await revisions();
     expect(next).toHaveLength(1);
     expect(next[0].revision).not.toBe(first);
+    const beforeClock = (
+      await pool.query(
+        `UPDATE electricity_customer_draft_revisions SET updated_at='2020-01-02T00:00:00Z'
+         WHERE profile_id=$1 RETURNING revision, created_at, updated_at`,
+        [profile]
+      )
+    ).rows[0];
+    expect(await runMigrations({ connection })).toEqual({
+      ok: true,
+      applied: ['0282_electricity_draft_revision_clock'],
+    });
+    expect(
+      (
+        await pool.query(
+          'SELECT revision, created_at, updated_at FROM electricity_customer_draft_revisions WHERE profile_id=$1',
+          [profile]
+        )
+      ).rows[0]
+    ).toEqual(beforeClock);
+    const touched = (
+      await pool.query(
+        `UPDATE electricity_customer_draft_revisions SET revision=revision
+         WHERE profile_id=$1 RETURNING revision, created_at, updated_at`,
+        [profile]
+      )
+    ).rows[0];
+    expect(touched.revision).toBe(beforeClock.revision);
+    expect(touched.created_at).toEqual(beforeClock.created_at);
+    expect(touched.updated_at.getTime()).toBeGreaterThan(beforeClock.updated_at.getTime());
+    const explicit = new Date('2025-01-02T03:04:05.000Z');
+    expect(
+      (
+        await pool.query(
+          'UPDATE electricity_customer_draft_revisions SET updated_at=$1 WHERE profile_id=$2 RETURNING updated_at',
+          [explicit, profile]
+        )
+      ).rows[0].updated_at
+    ).toEqual(explicit);
     expect(await runMigrations({ connection })).toEqual({ ok: true, applied: [] });
     expect(await revisions()).toEqual(next);
   } finally {
