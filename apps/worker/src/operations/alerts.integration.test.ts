@@ -13,6 +13,7 @@ import { InAppNotificationTransport } from '../notifications/in-app-transport.js
 import { EmailNotificationTransport } from '../notifications/email-transport.js';
 import { runOutboxPoll } from '../notifications/outbox-runner.js';
 import { loadNotificationRecipient } from '../notifications/channel-availability-loader.js';
+import { collectNotificationGauges, exportWorkerMetrics } from '../notifications/worker-metrics.js';
 
 let ctx: { pool: Pool; connectionString: string; close: () => Promise<void> };
 let server: ReturnType<typeof createServer>, base: string;
@@ -197,6 +198,78 @@ it('retains the P2 credit priority in the authenticated receipt and private admi
   expect((await ctx.pool.query('SELECT event_key,channels FROM notification_outbox')).rows).toEqual(
     [{ event_key: 'admin.operations_alert', channels: ['in_app'] }]
   );
+});
+
+it('measures due backlog separately from intentionally scheduled and terminal rows', async () => {
+  const client = await ctx.pool.connect();
+  try {
+    await client.query('BEGIN');
+    await client.query(`
+      INSERT INTO notification_outbox (user_id,event_key,channels,status,idempotency_key,created_at,scheduled_for)
+      VALUES
+        ('ops-admin','fixture.backlog',ARRAY['in_app'],'queued','backlog-queued',NOW()-INTERVAL '10 minutes',NULL),
+        ('ops-admin','fixture.backlog',ARRAY['in_app'],'scheduled','backlog-due',NOW()-INTERVAL '4 hours',NOW()-INTERVAL '11 minutes'),
+        ('ops-admin','fixture.backlog',ARRAY['in_app'],'scheduled','backlog-future',NOW()-INTERVAL '2 days',NOW()+INTERVAL '1 day'),
+        ('ops-admin','fixture.backlog',ARRAY['in_app'],'sending','backlog-sending',NOW()-INTERVAL '20 minutes',NOW()-INTERVAL '5 minutes'),
+        ('ops-admin','fixture.backlog',ARRAY['in_app'],'delivered','backlog-done',NOW()-INTERVAL '3 days',NULL)
+    `);
+    await collectNotificationGauges(client);
+    const before = await exportWorkerMetrics();
+    expect(before).toContain('notifications_outbox_age_seconds 172800\n');
+    expect(before).toContain('notifications_eligible_outbox_age_seconds 660\n');
+
+    await client.query(`
+      UPDATE notification_outbox SET status='delivered'
+      WHERE idempotency_key IN ('backlog-queued','backlog-due')
+    `);
+    await collectNotificationGauges(client);
+    expect(await exportWorkerMetrics()).toContain(
+      'notifications_eligible_outbox_age_seconds 300\n'
+    );
+
+    await client.query(
+      "UPDATE notification_outbox SET status='delivered' WHERE idempotency_key='backlog-sending'"
+    );
+    await collectNotificationGauges(client);
+    expect(await exportWorkerMetrics()).toContain('notifications_eligible_outbox_age_seconds 0\n');
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+  }
+});
+
+it.each([
+  { alertname: 'NotificationOutboxBacklog', severity: 'warning', priority: 'P2' },
+  { alertname: 'NotificationOutboxBacklogCritical', severity: 'critical', priority: 'P1' },
+])('records $priority backlog only with its matching severity and priority', async (labels) => {
+  const input = envelope();
+  Object.assign(input.alerts[0]!.labels, labels);
+  const malformed = structuredClone(input);
+  Object.assign(malformed.alerts[0]!.labels, { priority: 'P3' });
+  expect((await request(malformed)).status).toBe(400);
+  const response = await request(input);
+  expect(response.status).toBe(200);
+  const { receipts } = (await response.json()) as { receipts: { id: string; inserted: boolean }[] };
+  expect(receipts).toHaveLength(1);
+  expect(receipts[0]!.inserted).toBe(true);
+  const { id } = receipts[0]!;
+  expect(
+    (
+      await ctx.pool.query('SELECT priority,severity FROM operations_alert_receipts WHERE id=$1', [
+        id,
+      ])
+    ).rows
+  ).toEqual([{ priority: labels.priority, severity: labels.severity }]);
+  expect((await request(input)).status).toBe(200);
+  expect(
+    (await ctx.pool.query('SELECT event_key,channels,payload FROM notification_outbox')).rows
+  ).toMatchObject([
+    {
+      event_key: 'admin.operations_alert',
+      channels: ['in_app'],
+      payload: { priority: labels.priority },
+    },
+  ]);
 });
 const request = (input: unknown, headers: Record<string, string> = {}) =>
   fetch(base, {

@@ -4,11 +4,13 @@ import type { NotificationChannel } from '@barghsa/shared/notifications';
 /**
  * Notification observability metrics (E-05, T-05.01.07).
  *
- * Exposes the four Prometheus metrics the notification story requires:
+ * Exposes Prometheus metrics for notification delivery and backlog:
  *
  *   - `notifications_outbox_age_seconds`        — gauge: how long the oldest
  *       pending (queued/scheduled/sending) outbox row has been waiting. A
  *       growing value signals the worker is falling behind or a row is stuck.
+ *   - `notifications_eligible_outbox_age_seconds` — gauge: elapsed time since
+ *       the oldest eligible pending row became due, excluding future schedules.
  *   - `notifications_delivery_attempts_total{channel,status}` — counter: one
  *       increment per delivery attempt, labelled by channel and outcome
  *       (`delivered` | `failed`). Drives delivery error-rate panels.
@@ -34,6 +36,12 @@ const registry = new Registry();
 export const notificationsOutboxAge = new Gauge({
   name: 'notifications_outbox_age_seconds',
   help: 'Age in seconds of the oldest pending (queued/scheduled/sending) notification outbox row',
+  registers: [registry],
+});
+
+export const notificationsEligibleOutboxAge = new Gauge({
+  name: 'notifications_eligible_outbox_age_seconds',
+  help: 'Seconds since the oldest eligible pending notification outbox row became due',
   registers: [registry],
 });
 
@@ -97,13 +105,18 @@ export async function collectNotificationGauges(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   pool: any
 ): Promise<void> {
-  // Oldest pending row's age, in seconds. NULL (no pending rows) -> 0.
+  // Preserve the all-pending dashboard age and compute the alert age in the same scan.
   const ageRes = await pool.query(
-    `SELECT COALESCE(MAX(EXTRACT(EPOCH FROM (NOW() - created_at))), 0) AS age
+    `SELECT COALESCE(MAX(EXTRACT(EPOCH FROM (NOW() - created_at))), 0) AS age,
+            COALESCE(MAX(EXTRACT(EPOCH FROM (
+              NOW() - GREATEST(created_at, COALESCE(scheduled_for, created_at))
+            ))) FILTER (WHERE created_at <= NOW() AND (scheduled_for IS NULL OR scheduled_for <= NOW())), 0)
+              AS eligible_age
        FROM notification_outbox
       WHERE status IN ('queued', 'scheduled', 'sending')`
   );
   notificationsOutboxAge.set(Number(ageRes.rows[0]?.age ?? 0));
+  notificationsEligibleOutboxAge.set(Number(ageRes.rows[0]?.eligible_age ?? 0));
 
   // Backlog awaiting dispatch: queued + scheduled rows.
   const depthRes = await pool.query(

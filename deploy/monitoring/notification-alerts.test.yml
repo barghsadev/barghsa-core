@@ -4,6 +4,78 @@
   'tests':
     [
       {
+        'name': 'Eligible outbox backlog crosses strict P2 and P1 boundaries and recovers',
+        'interval': '1m',
+        'input_series':
+          [
+            {
+              'series': 'notifications_eligible_outbox_age_seconds{job="worker",environment="staging",database="core",instance="a",pod="a"}',
+              'values': '300 301 900 901 0',
+            },
+            {
+              'series': 'notifications_eligible_outbox_age_seconds{job="worker",environment="staging",database="core",instance="b",pod="b"}',
+              'values': '0 299 899 880 0',
+            },
+            {
+              'series': 'notifications_outbox_age_seconds{job="worker",environment="staging",database="core",instance="a",pod="a"}',
+              'values': '172800+0x4',
+            },
+          ],
+        'alert_rule_test':
+          [
+            { 'eval_time': '0m', 'alertname': 'NotificationOutboxBacklog', 'exp_alerts': [] },
+            {
+              'eval_time': '1m',
+              'alertname': 'NotificationOutboxBacklog',
+              'exp_alerts':
+                [
+                  {
+                    'exp_labels':
+                      {
+                        'job': 'worker',
+                        'environment': 'staging',
+                        'database': 'core',
+                        'severity': 'warning',
+                        'priority': 'P2',
+                      },
+                    'exp_annotations':
+                      { 'summary': 'Eligible notification outbox backlog exceeds five minutes' },
+                  },
+                ],
+            },
+            {
+              'eval_time': '2m',
+              'alertname': 'NotificationOutboxBacklogCritical',
+              'exp_alerts': [],
+            },
+            {
+              'eval_time': '3m',
+              'alertname': 'NotificationOutboxBacklogCritical',
+              'exp_alerts':
+                [
+                  {
+                    'exp_labels':
+                      {
+                        'job': 'worker',
+                        'environment': 'staging',
+                        'database': 'core',
+                        'severity': 'critical',
+                        'priority': 'P1',
+                      },
+                    'exp_annotations':
+                      { 'summary': 'Eligible notification outbox backlog exceeds fifteen minutes' },
+                  },
+                ],
+            },
+            { 'eval_time': '4m', 'alertname': 'NotificationOutboxBacklog', 'exp_alerts': [] },
+            {
+              'eval_time': '4m',
+              'alertname': 'NotificationOutboxBacklogCritical',
+              'exp_alerts': [],
+            },
+          ],
+      },
+      {
         'name': 'Empty queue remains quiet',
         'interval': '1m',
         'input_series':

@@ -1,0 +1,9 @@
+# Notification outbox backlog
+
+The outbox backlog alert measures elapsed time since an eligible pending row became due. An immediate row is due from creation. A scheduled row is due from its scheduled time if that is later. The worker includes pending, scheduled and in-progress rows once due. It excludes future schedules and terminal rows. The original all-pending age remains available for the delivery dashboard. [Notification monitoring](notification-monitoring.md).
+
+Prometheus takes the oldest age across worker replicas within each environment and database. It raises `NotificationOutboxBacklog` as P2 above five minutes and `NotificationOutboxBacklogCritical` as P1 above fifteen minutes. Alertmanager inhibits the P2 notification while P1 is firing for the same scope. The protected operations receiver stores the exact priority with the immutable occurrence receipt and creates private administrator inbox delivery intents. Production pager and team routing have separate verification gates. [Service objectives and priorities](service-objectives.md).
+
+Apply migration `0283_operations_outbox_backlog_priority` before starting the updated operations receiver. The migration widens the priority check and preserves existing receipts and their mutation guard. Start the updated worker and receiver before activating the new rules. For a binary rollback, remove the two backlog rules and their inhibition entry before restoring the older receiver. Leave the widened receipt check and existing history in place.
+
+On a backlog alert, check worker readiness, configured schedules, provider health and delivery history. Preserve the existing lease, occurrence and provider receipt safeguards during triage. Verify that a controlled eligible backlog crosses each threshold and recovers after drain. Keep receipt evidence scoped to the environment and database. [Notification recovery](../runbooks/notification-outage.md).

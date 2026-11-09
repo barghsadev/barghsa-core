@@ -17,3 +17,6 @@ inhibit_rules:
   - source_matchers: ['alertname="NotificationDeadLettersAccumulating"']
     target_matchers: ['alertname="NotificationDeadLettersPending"']
     equal: [environment, database]
+  - source_matchers: ['alertname="NotificationOutboxBacklogCritical"']
+    target_matchers: ['alertname="NotificationOutboxBacklog"']
+    equal: [environment, database]

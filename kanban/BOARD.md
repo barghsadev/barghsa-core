@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T22:00:06+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T22:08:09+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1031 | Accepted with unchanged source bindings. |
-| verify | 297 | Existing work may be complete; inspect evidence before building. |
+| done | 1032 | Accepted with unchanged source bindings. |
+| verify | 296 | Existing work may be complete; inspect evidence before building. |
 | partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1401,7 +1401,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.15.02.05` | verify | Inventory needed | Ensure outbox backlog, refund mismatch, and provider health alerts have SLO-linked burn budgets |
 | `06-security-testing-observability.md#T-06.15.03.01` | verify | Inventory needed | Configure unresolved refund obligation alert: count > 0 for > 1 hour → P2 |
 | `06-security-testing-observability.md#T-06.15.03.02` | verify | Inventory needed | Configure reconciliation mismatch alert: wallet/cached balance drift > threshold → P1 |
-| `06-security-testing-observability.md#T-06.15.03.03` | verify | Inventory needed | Configure outbox backlog age alert: oldest-unprocessed > 5 min → P2, > 15 min → P1 |
+| `06-security-testing-observability.md#T-06.15.03.03` | done | Recorded batch work | Configure outbox backlog age alert: oldest-unprocessed > 5 min → P2, > 15 min → P1 |
 | `06-security-testing-observability.md#T-06.15.03.04` | verify | Inventory needed | Configure duplicate payment detection: same idempotency key with different payload → P1 |
 | `06-security-testing-observability.md#T-06.15.03.05` | verify | Inventory needed | Configure provider callback anomaly alert: unexpected signature, replay, stale timestamp → P1 |
 | `06-security-testing-observability.md#T-06.15.03.06` | verify | Inventory needed | Implement safe outbox replay endpoint/CLI: re-queue unprocessed outbox rows within a configurable date range with idempotency protection and operator confirmation |

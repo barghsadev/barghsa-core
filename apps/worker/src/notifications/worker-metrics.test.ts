@@ -5,6 +5,7 @@ import {
   recordDeliveryAttempt,
   notificationsDeliveryAttempts,
   notificationsOutboxAge,
+  notificationsEligibleOutboxAge,
   notificationsQueueDepth,
   notificationsDeadLetterCount,
   providerEmailHealth,
@@ -24,6 +25,7 @@ import {
 function makePool(
   overrides: {
     age?: number;
+    eligibleAge?: number;
     depth?: number;
     deadLetter?: number;
     /** Provider health rows: [{ id, health }]. */
@@ -34,7 +36,7 @@ function makePool(
   return {
     async query(sql: string): Promise<{ rows: Array<Record<string, unknown>> }> {
       if (sql.includes('EXTRACT(EPOCH FROM (NOW() - created_at))')) {
-        return { rows: [{ age: overrides.age ?? 120 }] };
+        return { rows: [{ age: overrides.age ?? 120, eligible_age: overrides.eligibleAge ?? 0 }] };
       }
       if (sql.includes('notification_dead_letter')) {
         return { rows: [{ count: overrides.deadLetter ?? 3 }] };
@@ -57,6 +59,7 @@ describe('worker notification metrics', () => {
   beforeEach(() => {
     // Reset gauges to a clean slate between tests.
     notificationsOutboxAge.reset();
+    notificationsEligibleOutboxAge.reset();
     notificationsQueueDepth.reset();
     notificationsDeadLetterCount.reset();
     notificationsDeliveryAttempts.reset();
@@ -77,10 +80,13 @@ describe('worker notification metrics', () => {
   });
 
   it('collectNotificationGauges sets outbox age, queue depth and dead-letter count', async () => {
-    await collectNotificationGauges(makePool({ age: 300, depth: 12, deadLetter: 5 }));
+    await collectNotificationGauges(
+      makePool({ age: 300, eligibleAge: 180, depth: 12, deadLetter: 5 })
+    );
 
     const text = await exportWorkerMetrics();
     expect(text).toContain('notifications_outbox_age_seconds 300');
+    expect(text).toContain('notifications_eligible_outbox_age_seconds 180');
     expect(text).toContain('notifications_queue_depth 12');
     expect(text).toContain('notifications_dead_letter_count 5');
   });
@@ -90,6 +96,7 @@ describe('worker notification metrics', () => {
 
     const text = await exportWorkerMetrics();
     expect(text).toContain('notifications_outbox_age_seconds 0');
+    expect(text).toContain('notifications_eligible_outbox_age_seconds 0');
     expect(text).toContain('notifications_queue_depth 0');
     expect(text).toContain('notifications_dead_letter_count 0');
   });

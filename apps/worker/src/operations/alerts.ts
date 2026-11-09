@@ -11,9 +11,23 @@ const labels: Record<string, string> = {
     'اعلان‌های ناموفق نیازمند بررسی هستند / Notification failures need triage',
   NotificationDeadLettersAccumulating:
     'تعداد اعلان‌های ناموفق افزایش یافته است / Notification failures are accumulating',
+  NotificationOutboxBacklog:
+    'پردازش اعلان‌ها با تأخیر روبه‌رو است / Notification processing is delayed',
+  NotificationOutboxBacklogCritical:
+    'تأخیر پردازش اعلان‌ها بحرانی است / Notification processing is critically delayed',
   AiModelCircuitOpen: 'مدل هوش مصنوعی در دسترس نیست / AI model unavailable',
   WorkerUnavailable: 'پردازشگر پس‌زمینه در دسترس نیست / Background worker unavailable',
 };
+const criticalAlerts = new Set([
+  'NotificationDeadLettersAccumulating',
+  'NotificationOutboxBacklogCritical',
+  'WorkerUnavailable',
+]);
+const alertPriorities = new Map<string, 'P1' | 'P2'>([
+  ['SmsProviderLowCredit', 'P2'],
+  ['NotificationOutboxBacklog', 'P2'],
+  ['NotificationOutboxBacklogCritical', 'P1'],
+]);
 type Alert = {
   name: string;
   fingerprint: string;
@@ -22,7 +36,7 @@ type Alert = {
   environment: string;
   database: string;
   severity: 'warning' | 'critical';
-  priority: 'P2' | null;
+  priority: 'P1' | 'P2' | null;
 };
 
 export function parseOperationsAlerts(
@@ -43,18 +57,16 @@ export function parseOperationsAlerts(
     if (!a || typeof a !== 'object') throw new Error('Invalid alert');
     const item = a as Record<string, unknown>;
     const source = item.labels as Record<string, unknown> | undefined;
+    const name = source?.alertname;
+    const priority = typeof name === 'string' ? (alertPriorities.get(name) ?? null) : null;
     if (
       !source ||
-      typeof source.alertname !== 'string' ||
-      !Object.hasOwn(labels, source.alertname) ||
+      typeof name !== 'string' ||
+      !Object.hasOwn(labels, name) ||
       source.environment !== environment ||
       source.database !== database ||
-      source.severity !==
-        (source.alertname === 'NotificationDeadLettersAccumulating' ||
-        source.alertname === 'WorkerUnavailable'
-          ? 'critical'
-          : 'warning') ||
-      (source.alertname === 'SmsProviderLowCredit' && source.priority !== 'P2') ||
+      source.severity !== (criticalAlerts.has(name) ? 'critical' : 'warning') ||
+      (priority !== null && source.priority !== priority) ||
       (item.status !== 'firing' && item.status !== 'resolved') ||
       typeof item.fingerprint !== 'string' ||
       !/^[a-f0-9]{16,128}$/.test(item.fingerprint) ||
@@ -65,14 +77,14 @@ export function parseOperationsAlerts(
     )
       throw new Error('Invalid alert scope or identity');
     return {
-      name: source.alertname,
+      name,
       fingerprint: item.fingerprint,
       status: item.status,
       startsAt: new Date(item.startsAt).toISOString(),
       environment,
       database,
       severity: source.severity as 'warning' | 'critical',
-      priority: source.alertname === 'SmsProviderLowCredit' ? 'P2' : null,
+      priority,
     };
   });
 }

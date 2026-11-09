@@ -39,6 +39,20 @@ groups:
         annotations:
           summary: Notification failures are accumulating
           description: '{{ $value }} notification deliveries remain open in the dead-letter queue. Check provider health, worker errors and delivery history. Do not bulk retry before the cause is fixed.'
+      - alert: NotificationOutboxBacklog
+        expr: max without (instance, pod) (notifications_eligible_outbox_age_seconds) > 300
+        labels:
+          severity: warning
+          priority: P2
+        annotations:
+          summary: Eligible notification outbox backlog exceeds five minutes
+      - alert: NotificationOutboxBacklogCritical
+        expr: max without (instance, pod) (notifications_eligible_outbox_age_seconds) > 900
+        labels:
+          severity: critical
+          priority: P1
+        annotations:
+          summary: Eligible notification outbox backlog exceeds fifteen minutes
   - name: barghsa-ai-models
     rules:
       - alert: AiModelCircuitOpen
