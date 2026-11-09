@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T16:45:39+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T17:00:09+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 935 | Accepted with unchanged source bindings. |
-| verify | 400 | Existing work may be complete; inspect evidence before building. |
-| partial | 27 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 399 | Existing work may be complete; inspect evidence before building. |
+| partial | 28 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 3 | Named owner or external prerequisite. |
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Diagnose the full hosted browser job timeout and partition the same browser cases to complete within the scheduled job limit. Retain all assertions and require actual scheduled results.
+Correct the exact deterministic browser failures from hosted run 42644986543, preserving current authority and real API persistence assertions. Verify targeted native browser outcomes before requesting another complete nightly run.
 
 - `01-platform-infrastructure.md#T-01.04.04`: Configure Playwright for E2E testing
 - `01-platform-infrastructure.md#T-01.04.06`: Configure flaky-test quarantine process
@@ -1042,7 +1042,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-05.04.02` | verify | Earlier deferred | Create production promotion workflow with canary/gradual rollout |
 | `01-platform-infrastructure.md#T-05.04.03` | verify | Earlier deferred | Implement post-deploy smoke tests and SLO comparison |
 | `01-platform-infrastructure.md#T-05.04.04` | verify | Earlier deferred | Create runbooks for rollback scenarios |
-| `01-platform-infrastructure.md#T-05.05.01` | verify | Earlier deferred | Create nightly CI schedule |
+| `01-platform-infrastructure.md#T-05.05.01` | partial | Earlier deferred | Create nightly CI schedule |
 | `01-platform-infrastructure.md#T-05.05.02` | verify | Earlier deferred | Create weekly load/performance regression test |
 | `01-platform-infrastructure.md#T-05.05.03` | verify | Earlier deferred | Create quarterly disaster-recovery and restore exercise |
 | `01-platform-infrastructure.md#T-05.05.04` | verify | Earlier deferred | Create quarterly access review and threat-model update |
