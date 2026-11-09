@@ -7,7 +7,8 @@ export function useSettingsSnapshot<View>(
   validate: (value: unknown) => value is View,
   basis: (value: View) => string,
   reset: (value: View | null) => void,
-  withdraw: () => void
+  withdraw: () => void,
+  onReadDenied?: () => void
 ) {
   const accepted = useRef<View | null>(null);
   const [changed, setChanged] = useState(false);
@@ -20,7 +21,19 @@ export function useSettingsSnapshot<View>(
     setRequiredRead(null);
   }, [reset, withdraw]);
   const scope = useCatalogueScope(clear);
-  const resource = useCatalogueResource(scope, path, validate);
+  const { deny } = scope;
+  const denyRead = useCallback(() => {
+    deny();
+    onReadDenied?.();
+  }, [deny, onReadDenied]);
+  const resource = useCatalogueResource({ ...scope, deny: denyRead }, path, validate);
+  const denyCommand = useCallback(
+    (status?: 401 | 403) => {
+      if (status === 401) denyRead();
+      else deny();
+    },
+    [deny, denyRead]
+  );
   const { data, loading, error, readAttempt } = resource;
   const uncertain = requiredRead !== null;
   const recovered = requiredRead !== null && readAttempt !== null && readAttempt >= requiredRead;
@@ -64,6 +77,7 @@ export function useSettingsSnapshot<View>(
   }
   return {
     scope,
+    denyCommand,
     resource,
     current: data,
     hydrated: accepted.current !== null,

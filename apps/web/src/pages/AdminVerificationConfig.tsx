@@ -4,11 +4,13 @@ import type { TeamAction } from '../components/TeamActionDialog.js';
 import { verificationConfigText } from '@barghsa/i18n/verification-config';
 import { LoadingStatus, Alert, Button } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useSettingsSnapshot } from '../hooks/useSettingsSnapshot.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { withCsrf } from '../lib/csrf.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import {
   settingsErrorFields,
   verificationModes,
@@ -31,6 +33,34 @@ const TeamActionDialog = lazy(() =>
   }))
 );
 export default function AdminVerificationConfig() {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return <OwnedVerificationSettings key={JSON.stringify([actor, revision])} />;
+}
+function OwnedVerificationSettings() {
+  const locale = useLocale();
+  const [denied, setDenied] = useState(false);
+  const denyRead = useCallback(() => setDenied(true), []);
+  return (
+    <div
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+      className="rounded-lg bg-background p-6 text-foreground space-y-5"
+    >
+      <h1 className="text-2xl font-bold">{verificationConfigText('title', locale)}</h1>
+      {denied ? (
+        <Alert variant="destructive">
+          {verificationConfigText('forbidden', locale)}{' '}
+          <Button type="button" onClick={() => setDenied(false)}>
+            {verificationConfigText('reload', locale)}
+          </Button>
+        </Alert>
+      ) : (
+        <VerificationSettings onReadDenied={denyRead} />
+      )}
+    </div>
+  );
+}
+function VerificationSettings({ onReadDenied }: { onReadDenied: () => void }) {
   const locale = useLocale();
   const text = (key: Parameters<typeof verificationConfigText>[0]) =>
     verificationConfigText(key, locale);
@@ -108,7 +138,8 @@ export default function AdminVerificationConfig() {
     validVerificationConfig,
     verificationBasis,
     reset,
-    withdraw
+    withdraw,
+    onReadDenied
   );
   useEffect(
     () => () => {
@@ -181,7 +212,7 @@ export default function AdminVerificationConfig() {
           });
           if (controller.signal.aborted || epoch !== generation.current) return;
           if (status === 401 || status === 403) {
-            state.scope.deny();
+            state.denyCommand(status);
             return;
           }
           if (status === 400) {
@@ -223,11 +254,7 @@ export default function AdminVerificationConfig() {
   }
   const completionGeneration = generation.current;
   return (
-    <div
-      dir={locale === 'fa' ? 'rtl' : 'ltr'}
-      className="rounded-lg bg-background p-6 text-foreground space-y-5"
-    >
-      <h1 className="text-2xl font-bold">{text('title')}</h1>
+    <>
       <p className="text-sm text-muted-foreground">{text('description')}</p>
       <p className="text-sm">{text('warning')}</p>
       {current && (
@@ -365,7 +392,7 @@ export default function AdminVerificationConfig() {
             action={action}
             finalFocus={activateRef}
             onClose={withdraw}
-            onDenied={state.scope.deny}
+            onDenied={state.denyCommand}
             onPendingChange={onPendingChange}
             onUnconfirmed={state.unconfirmed}
             onValidationError={modeErrors}
@@ -406,8 +433,8 @@ export default function AdminVerificationConfig() {
           />
         </Suspense>
       )}
-      <OtpConfigPanel />
-      <VerificationPolicySettings />
-    </div>
+      <OtpConfigPanel onReadDenied={onReadDenied} />
+      <VerificationPolicySettings onReadDenied={onReadDenied} />
+    </>
   );
 }

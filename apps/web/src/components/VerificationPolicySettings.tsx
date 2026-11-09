@@ -25,7 +25,7 @@ const basis = (value: VerificationPolicyView) =>
     verificationPolicyBasis(value.active),
     value.draft && verificationPolicyBasis(value.draft),
   ]);
-export function VerificationPolicySettings() {
+export function VerificationPolicySettings({ onReadDenied }: { onReadDenied?: () => void }) {
   const locale = useLocale(),
     text = (key: Parameters<typeof copy>[0]) => copy(key, locale);
   const [draft, setDraft] = useState<VerificationPolicy>(
@@ -56,7 +56,14 @@ export function VerificationPolicySettings() {
     setInvalid(false);
     setSaved(false);
   }, []);
-  const state = useSettingsSnapshot(path, isVerificationPolicyView, basis, reset, withdraw);
+  const state = useSettingsSnapshot(
+    path,
+    isVerificationPolicyView,
+    basis,
+    reset,
+    withdraw,
+    onReadDenied
+  );
   const blocked = !state.ready || state.changed || state.uncertain;
   const busy = pending || !!action;
   function proposal(): VerificationPolicy | null {
@@ -274,7 +281,7 @@ export function VerificationPolicySettings() {
         <TeamActionDialog
           action={action}
           onClose={withdraw}
-          onDenied={state.scope.deny}
+          onDenied={state.denyCommand}
           onPendingChange={setPending}
           onUnconfirmed={state.unconfirmed}
           confirmationDisabled={blocked}

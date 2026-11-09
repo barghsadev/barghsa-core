@@ -9,6 +9,76 @@ import {
   type VerificationPolicyView,
 } from '@barghsa/shared/verification';
 
+for (const locale of ['en', 'fa'] as const) {
+  test(`verification read denial withdraws all three settings and late replies (${locale})`, async ({
+    page,
+  }) => {
+    await setupCatalogueForms(page, locale, locale === 'fa');
+    const text = (key: Parameters<typeof copy>[0]) => copy(key, locale);
+    const reads = { mode: 0, otp: 0, policy: 0 };
+    let phase: 'current' | 'denied' | 'recovered' = 'current';
+    let finish!: () => void;
+    const heldOtp = new Promise<void>((resolve) => {
+      finish = resolve;
+    });
+    await page.route('**/api/admin/config/profile-verification-mode', (route) => {
+      expect(route.request().method()).toBe('GET');
+      reads.mode++;
+      return route.fulfill({ json: { mode: 'MANUAL', draft: null, version: reads.mode } });
+    });
+    await page.route('**/api/admin/config/otp', async (route) => {
+      expect(route.request().method()).toBe('GET');
+      if (++reads.otp === 2) {
+        await heldOtp;
+        return route.fulfill({ json: { ttlSeconds: 899, version: 2 } });
+      }
+      return route.fulfill({
+        json: { ttlSeconds: phase === 'recovered' ? 420 : 300, version: reads.otp },
+      });
+    });
+    await page.route('**/api/admin/config/profile-verification-policy', (route) => {
+      expect(route.request().method()).toBe('GET');
+      reads.policy++;
+      return phase === 'denied'
+        ? route.fulfill({ status: locale === 'fa' ? 403 : 401, json: {} })
+        : route.fulfill({
+            json: { active: DEFAULT_VERIFICATION_POLICY, draft: null, version: reads.policy },
+          });
+    });
+    try {
+      await page.goto('/admin/verification');
+      const main = page.getByRole('main');
+      const mode = main.locator('#verification-mode-MANUAL');
+      const ttl = main.locator('#otp-lifetime');
+      const expiry = main.locator('#verification-expiry-INDIVIDUAL');
+      await expect(mode).toBeChecked();
+      await expect(ttl).toHaveValue('300');
+      await expect(expiry).toBeEnabled();
+      await ttl.fill('360');
+      await main.getByRole('button', { name: text('otpReload'), exact: true }).click();
+      await expect.poll(() => reads.otp).toBe(2);
+      phase = 'denied';
+      await main.getByRole('button', { name: text('policyReload'), exact: true }).click();
+      const denied = main.getByRole('alert').filter({ hasText: text('forbidden') });
+      await expect(denied).toBeVisible();
+      await expect(mode).toHaveCount(0);
+      await expect(ttl).toHaveCount(0);
+      await expect(expiry).toHaveCount(0);
+      expect(reads).toEqual({ mode: 1, otp: 2, policy: 2 });
+      finish();
+      phase = 'recovered';
+      await denied.getByRole('button', { name: text('reload'), exact: true }).press('Enter');
+      await expect(ttl).toHaveValue('420');
+      await expect(expiry).toBeEnabled();
+      await expect(mode).toBeChecked();
+      await expect(denied).toHaveCount(0);
+      expect(reads).toEqual({ mode: 2, otp: 3, policy: 3 });
+    } finally {
+      finish();
+    }
+  });
+}
+
 for (const width of [390, 1440])
   for (const locale of ['en', 'fa'] as const)
     for (const dark of [false, true])
@@ -106,7 +176,13 @@ for (const width of [390, 1440])
         denied = true;
         await section.getByRole('button', { name: text('policyReload'), exact: true }).click();
         await expect(expiry).toHaveCount(0);
-        await expect(section).toContainText(text('forbidden'));
+        await expect(
+          page
+            .getByRole('main')
+            .getByRole('alert')
+            .filter({ hasText: text('forbidden') })
+        ).toBeVisible();
+        await expect(section).toHaveCount(0);
       });
 
 for (const locale of ['en', 'fa'] as const)

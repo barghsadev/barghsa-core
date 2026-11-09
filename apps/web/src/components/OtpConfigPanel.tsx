@@ -21,7 +21,7 @@ import { AuditLogViewer } from './AuditLogViewer.js';
 const TeamActionDialog = lazy(() =>
   import('./TeamActionDialog.js').then((module) => ({ default: module.TeamActionDialog }))
 );
-export function OtpConfigPanel() {
+export function OtpConfigPanel({ onReadDenied }: { onReadDenied?: () => void }) {
   const locale = useLocale(),
     numbers = useNumberFormatting(locale);
   const text = (key: Parameters<typeof verificationConfigText>[0]) =>
@@ -72,7 +72,8 @@ export function OtpConfigPanel() {
     validOtpConfig,
     otpBasis,
     reset,
-    withdraw
+    withdraw,
+    onReadDenied
   );
   useEffect(
     () => () => {
@@ -226,7 +227,7 @@ export function OtpConfigPanel() {
         <AuditLogViewer
           scope="otp"
           refreshKey={state.current.version}
-          onDenied={state.scope.deny}
+          onDenied={onReadDenied ?? state.scope.deny}
         />
       )}
       {action && (
@@ -235,7 +236,7 @@ export function OtpConfigPanel() {
             finalFocus={saveRef}
             action={action}
             onClose={withdraw}
-            onDenied={state.scope.deny}
+            onDenied={state.denyCommand}
             onPendingChange={onPendingChange}
             onUnconfirmed={state.unconfirmed}
             onValidationError={fieldErrors}

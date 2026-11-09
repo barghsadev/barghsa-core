@@ -10,7 +10,7 @@ const harness = vi.hoisted(() => ({
   action: null as TeamAction | null,
   success: null as ((value: unknown) => Promise<void>) | null,
   close: null as (() => void) | null,
-  deny: null as (() => void) | null,
+  deny: null as ((status?: 401 | 403) => void) | null,
   unconfirmed: null as (() => void) | null,
   fields: null as ((fields: unknown[]) => boolean) | null,
   pending: null as ((value: boolean) => void) | null,
@@ -42,7 +42,7 @@ vi.mock('../components/TeamActionDialog.js', () => ({
     action: TeamAction;
     onSuccess: (value: unknown) => Promise<void>;
     onClose: () => void;
-    onDenied?: () => void;
+    onDenied?: (status?: 401 | 403) => void;
     onUnconfirmed?: () => void;
     onValidationError?: (fields: unknown[]) => boolean;
     onPendingChange?: (pending: boolean) => void;
@@ -345,10 +345,28 @@ it('current denial discards OTP entries and prevents late completion from restor
   await submit('otp');
   await proposal();
   const complete = harness.success!;
-  await act(async () => harness.deny!());
+  await act(async () => harness.deny!(403));
   await act(async () => complete({ ttlSeconds: 120, version: 3 }));
   expect(ttl().value).toBe('');
   expect(host.textContent).not.toContain('Code expiry updated.');
+  expect(selected().matches(':disabled')).toBe(false);
+});
+it('clears all verification panels when a command loses the session', async () => {
+  await mount();
+  await edit('otp');
+  await submit('otp');
+  await proposal();
+  const complete = harness.success!;
+  await act(async () => harness.deny!(401));
+  await act(async () => complete({ ttlSeconds: 120, version: 3 }));
+  expect(ttl()).toBeNull();
+  expect(selected()).toBeNull();
+  expect(host.textContent).not.toContain('Code expiry updated.');
+  expect(host.querySelector('[role="alert"]')?.textContent).toContain(
+    'You do not have permission to manage these settings.'
+  );
+  await click('Reload verification settings');
+  expect(ttl().value).toBe('300');
   expect(selected().matches(':disabled')).toBe(false);
 });
 it('a protected command cannot be withdrawn by refresh while its network request is pending', async () => {
@@ -453,9 +471,11 @@ for (const domain of ['verification', 'otp'] as const)
       expect(host.textContent).not.toContain(
         domain === 'otp' ? 'Code expiry updated.' : 'Verification mode activated'
       );
-      if (recovery === 'denied')
-        expect(domain === 'otp' ? ttl().value : selected().checked).toBe(
-          domain === 'otp' ? '' : false
+      if (recovery === 'denied') {
+        expect(ttl()).toBeNull();
+        expect(selected()).toBeNull();
+        expect(host.querySelector('[role="alert"]')?.textContent).toContain(
+          'You do not have permission to manage these settings.'
         );
-      else expect(host.textContent).toContain('Saved settings changed');
+      } else expect(host.textContent).toContain('Saved settings changed');
     });
