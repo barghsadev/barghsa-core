@@ -16,6 +16,7 @@ export function OrderWalletBalance({
   invoiceId,
   scopeKey = '',
   staff = false,
+  checkout,
 }: {
   profileId: string;
   total?: string;
@@ -23,13 +24,27 @@ export function OrderWalletBalance({
   invoiceId?: string | null;
   scopeKey?: string;
   staff?: boolean;
+  checkout?: {
+    label: string;
+    balanceField: 'balance' | 'availableBalance';
+    unavailable?: string;
+  };
 }) {
   const locale = useLocale(),
     numbers = useNumberFormatting(locale);
   const actor = useAccountUser(),
     profileRevision = useProfileContextRevision();
   const [revision, setRevision] = useState(0);
-  const key = JSON.stringify([actor, profileRevision, profileId, scopeKey, staff, revision]);
+  const checkoutField = checkout?.balanceField;
+  const key = JSON.stringify([
+    actor,
+    profileRevision,
+    profileId,
+    scopeKey,
+    staff,
+    checkoutField,
+    revision,
+  ]);
   const reader = useId();
   const readOwner = useRef({ key, revision: 0 });
   if (readOwner.current.key !== key)
@@ -59,17 +74,25 @@ export function OrderWalletBalance({
       if (!response.ok) throw new Error('Wallet unavailable');
       const value = (await response.json()) as {
         balance?: unknown;
+        availableBalance?: unknown;
         profileId?: unknown;
         currency?: unknown;
-      };
+      } | null;
+      const balance =
+        checkoutField === 'availableBalance'
+          ? (value?.availableBalance ?? value?.balance)
+          : value?.balance;
+      const amountPattern = checkoutField ? /^\d+$/ : /^-?\d{1,20}$/;
+      // Checkout has accepted decimal strings without a currency field. A supplied currency must be IRR.
+      const currency = checkoutField && value?.currency === undefined ? 'IRR' : value?.currency;
       if (
-        value.currency !== 'IRR' ||
-        typeof value.balance !== 'string' ||
-        !/^-?\d{1,20}$/.test(value.balance) ||
-        (staff && value.profileId !== profileId)
+        currency !== 'IRR' ||
+        typeof balance !== 'string' ||
+        !amountPattern.test(balance) ||
+        (staff && value?.profileId !== profileId)
       )
         throw new Error('Invalid wallet balance');
-      return { balance: value.balance, denied: false };
+      return { balance, denied: false };
     },
   });
   const current =
@@ -91,11 +114,13 @@ export function OrderWalletBalance({
   return (
     <div data-testid="order-wallet-balance" className="flex flex-col gap-2 text-sm">
       <p role="status">
-        {t('wallet.funding.balance', locale)}:{' '}
-        {current?.balance === null || !current ? '—' : numbers.money(current.balance)}
+        {checkout?.label ?? t('wallet.funding.balance', locale)}:{' '}
+        {current?.balance === null || !current
+          ? (checkout?.unavailable ?? '—')
+          : numbers.money(current.balance)}
       </p>
       {!current ? (
-        <p>{t('wallet.funding.loading', locale)}</p>
+        <p aria-live="polite">{t('wallet.funding.loading', locale)}</p>
       ) : current.balance === null && (current.denied || remaining === '0') ? (
         <p>{t(current.denied ? 'wallet.funding.denied' : 'wallet.funding.unknown', locale)}</p>
       ) : null}

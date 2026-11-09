@@ -5,6 +5,7 @@ import { readFileSync } from 'node:fs';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 import { t } from '@barghsa/i18n/app';
+import { t as fundingText } from '@barghsa/i18n/workspace';
 import { fullNavigation } from './navigation-fixture';
 import { checkRoutePresentation } from './route-presentation';
 import { expectNoticeBelowPageHeader } from './notice-placement';
@@ -818,6 +819,53 @@ test('simple order submission waits for the financial review code to load', asyn
   await approveRiskConfirmation(page, 'en', 'financial');
   await expect(button(page, 'electricity.order.submit', 'en')).toBeEnabled();
 });
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`simple final review distinguishes pending, failed and denied wallet reads (${locale})`, async ({
+    page,
+  }) => {
+    const state = await fixture(page, 'simple', locale, 5);
+    const reads: string[] = [];
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    await page.route(`**/api/wallet/${profileId}`, async (route) => {
+      reads.push(route.request().method());
+      if (reads.length === 1) {
+        await held;
+        return route.fulfill({ status: 503, json: {} });
+      }
+      if (reads.length === 2) return route.fulfill({ status: 401, json: {} });
+      return route.fulfill({ json: { balance: '0', currency: 'IRR' } });
+    });
+    const panel = page.getByTestId('order-wallet-balance');
+    const link = panel.locator('a[href="/wallet"]');
+    const refresh = panel.getByRole('button', {
+      name: fundingText('wallet.funding.refresh', locale),
+      exact: true,
+    });
+    try {
+      await page.goto('/electricity/order?step=5');
+      await expect.poll(() => reads).toEqual(['GET']);
+      await expect(panel).toContainText(fundingText('wallet.funding.loading', locale));
+      await expect(link).toHaveCount(0);
+    } finally {
+      release();
+    }
+    await expect(panel).toContainText(fundingText('wallet.funding.unknown', locale));
+    await expect(link).toBeVisible();
+    await refresh.press('Enter');
+    await expect(panel).toContainText(fundingText('wallet.funding.denied', locale));
+    await expect(link).toHaveCount(0);
+    await refresh.press('Enter');
+    await expect(link).toBeVisible();
+    await expect(panel).not.toContainText(fundingText('wallet.funding.denied', locale));
+    await expect(page.locator('[data-review-section=address]')).toContainText(address.fullAddress);
+    expect(reads).toEqual(['GET', 'GET', 'GET']);
+    expect(state.orders).toHaveLength(0);
+  });
+}
 
 for (const locale of ['en', 'fa'] as const)
   for (const mode of ['simple', 'advanced'] as const) {

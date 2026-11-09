@@ -19,6 +19,7 @@ vi.mock('../hooks/useNumberFormatting.js', () => ({
 }));
 let root: Root, host: HTMLDivElement;
 let payload: unknown;
+let walletStatus: number;
 let finish: ((value: unknown) => void) | undefined;
 let signal: AbortSignal;
 let pending: boolean;
@@ -36,6 +37,7 @@ beforeEach(() => {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   document.documentElement.lang = 'en';
   pending = false;
+  walletStatus = 200;
   finish = undefined;
   host = document.createElement('div');
   document.body.append(host);
@@ -107,6 +109,7 @@ beforeEach(() => {
           totalIrR: '300000',
         });
       if (url === '/api/wallet/profile-1') {
+        if (walletStatus !== 200) return new Response('{}', { status: walletStatus });
         signal = init!.signal as AbortSignal;
         return {
           ok: true,
@@ -148,6 +151,7 @@ function submissionCalls() {
 it.each([
   [{ availableBalance: 9007199254740992, balance: '500000' }, null],
   [{ balance: 9007199254740992 }, null],
+  [{ balance: '500000', currency: 'USD' }, null],
   [{ availableBalance: '9007199254740993123456' }, '9007199254740993123456'],
   [{ balance: '9007199254740993123456' }, '9007199254740993123456'],
 ] as const)('requires an exact decimal funding balance: %j', async (body, expected) => {
@@ -156,6 +160,40 @@ it.each([
   expect(host.textContent).toContain(expected ?? t('wallet.funding.unknown', 'en'));
   expect(submissionCalls()).toHaveLength(0);
 });
+
+it('saving checkout distinguishes a held read, temporary failure and denied wallet access', async () => {
+  pending = true;
+  await mount();
+  const panel = host.querySelector('[data-testid="order-wallet-balance"]')!;
+  const link = () => panel.querySelector('a[href="/wallet"]');
+  const refresh = () => act(async () => panel.querySelector<HTMLButtonElement>('button')!.click());
+  expect(panel.textContent).toContain(t('wallet.funding.loading', 'en'));
+  expect(link()).toBeNull();
+  await act(async () => finish!({ availableBalance: '0' }));
+  expect(link()).not.toBeNull();
+
+  walletStatus = 503;
+  await refresh();
+  expect(panel.textContent).toContain(t('wallet.funding.unknown', 'en'));
+  expect(link()).not.toBeNull();
+
+  walletStatus = 401;
+  await refresh();
+  expect(panel.textContent).toContain(t('wallet.funding.denied', 'en'));
+  expect(link()).toBeNull();
+
+  pending = false;
+  walletStatus = 200;
+  payload = { availableBalance: '9007199254740993123456' };
+  await refresh();
+  expect(panel.textContent).toContain('9007199254740993123456');
+  expect(panel.textContent).not.toContain(t('wallet.funding.denied', 'en'));
+  expect(
+    vi.mocked(fetch).mock.calls.filter(([url]) => String(url) === '/api/wallet/profile-1')
+  ).toHaveLength(4);
+  expect(submissionCalls()).toHaveLength(0);
+});
+
 it('cancels funding response bytes on page-only unmount and does not refetch on focus', async () => {
   pending = true;
   await mount();

@@ -6,7 +6,7 @@ import type { PriceQuote } from '../routes/_app/electricity/order.js';
 import { ElectricityQuoteErrorNotice } from './ElectricityQuoteErrorNotice.js';
 import { ElectricityFinancialReviewSummary } from './ElectricityFinancialReviewSummary.js';
 import { ElectricityContractTerms } from './ElectricityContractTerms.js';
-import { WalletFundingPrompt } from './WalletFundingPrompt.js';
+import { OrderWalletBalance } from './OrderWalletBalance.js';
 import { StepReviewPage } from './StepReviewPage.js';
 
 interface Props {
@@ -22,7 +22,6 @@ interface Props {
   productName: string;
   deliveryAddress: string;
   postalCode: string;
-  walletBalance: string | null;
   onEdit: (step: number) => void;
   editDisabled: boolean;
 }
@@ -39,7 +38,6 @@ export default function SimpleElectricityReview({
   productName,
   deliveryAddress,
   postalCode,
-  walletBalance,
   onEdit,
   editDisabled,
 }: Props) {
@@ -145,11 +143,17 @@ export default function SimpleElectricityReview({
                 },
               ]}
             />
-            <p className="text-sm">
-              {copy('walletBalance')}:{' '}
-              {walletBalance === null ? copy('walletUnavailable') : numbers.money(walletBalance)}
-            </p>
-            {quote && <WalletFundingPrompt balance={walletBalance} total={quote.totalIrR} />}
+            {activeProfileId && (
+              <OrderWalletBalance
+                profileId={activeProfileId}
+                total={quote?.totalIrR ?? '0'}
+                checkout={{
+                  label: copy('walletBalance'),
+                  balanceField: 'balance',
+                  unavailable: copy('walletUnavailable'),
+                }}
+              />
+            )}
           </>
         )}
       </CardContent>

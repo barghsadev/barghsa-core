@@ -5,7 +5,6 @@ import { NoDeadEndBanner } from '@barghsa/ui';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { Skeleton } from '@barghsa/ui';
 import { useOwnedIntakeRead } from '../hooks/useOwnedIntakeRead.js';
-import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
@@ -19,7 +18,6 @@ import {
   useLayoutEffect,
   useCallback,
   useMemo,
-  useId,
   useRef,
 } from 'react';
 import { Link, useBlocker, useNavigate } from '@tanstack/react-router';
@@ -185,11 +183,8 @@ export function SimpleElectricityOrderPage() {
   return <OwnedSimpleElectricityOrderPage key={JSON.stringify([actor, revision])} />;
 }
 function OwnedSimpleElectricityOrderPage() {
-  const client = useQueryClient();
-  const reader = useId();
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
-  const walletReadSequence = useRef(0);
   const readIntake = useOwnedIntakeRead(JSON.stringify([actor, revision]));
   const intakeScope = useMemo(
     () => ({
@@ -354,7 +349,6 @@ function OwnedSimpleElectricityOrderPage() {
   const draftGeneration = useRef(0);
   const completed = useRef(false);
   const [draftRetry, setDraftRetry] = useState(0);
-  const [walletBalance, setWalletBalance] = useState<string | null>(null);
   const savedDraftSignature = useRef(JSON.stringify(['current_month', '', '', '', '']));
 
   const inputSignature = () =>
@@ -729,46 +723,6 @@ function OwnedSimpleElectricityOrderPage() {
       if (draftGeneration.current === epoch) draftGeneration.current++;
     };
   }, [activeProfileId, draftRetry, readIntake, intakeScope, readRevision, resetDraft, retireDraft]);
-
-  useEffect(() => {
-    if (step !== 5 || !activeProfileId) return;
-    const controller = new AbortController();
-    const key = queryKeys.wallet.balance(
-      { context: 'customer', ownerId: activeProfileId, accountId: actor, revision },
-      JSON.stringify([reader, 'electricity-funding-preview', ++walletReadSequence.current])
-    );
-    const cancel = () => void client.cancelQueries({ queryKey: key, exact: true });
-    controller.signal.addEventListener('abort', cancel, { once: true });
-    setWalletBalance(null);
-    void client
-      .fetchQuery({
-        queryKey: key,
-        staleTime: 0,
-        gcTime: 0,
-        retry: false,
-        queryFn: ({ signal: ownerSignal }) =>
-          readWithDeadline(ownerSignal, async (signal) => {
-            const response = await fetch(`/api/wallet/${activeProfileId}`, {
-              credentials: 'include',
-              signal,
-            });
-            if (!response.ok) throw new Error('Wallet unavailable');
-            return response.json() as Promise<{ balance: unknown }>;
-          }),
-      })
-      .then((wallet) => {
-        if (!wallet || typeof wallet.balance !== 'string' || !/^[0-9]+$/.test(wallet.balance))
-          throw new Error('Invalid wallet balance');
-        if (!controller.signal.aborted) setWalletBalance(wallet.balance);
-      })
-      .catch(() => {
-        if (!controller.signal.aborted) setWalletBalance(null);
-      });
-    return () => {
-      controller.abort();
-      controller.signal.removeEventListener('abort', cancel);
-    };
-  }, [step, activeProfileId, actor, revision, client, reader]);
 
   useEffect(() => {
     const selected = products.find((item) => item.id === selectedProductId);
@@ -2124,7 +2078,6 @@ function OwnedSimpleElectricityOrderPage() {
                     draftError ||
                     completed.current
                   }
-                  walletBalance={walletBalance}
                   onEdit={(target) => void saveDraft(false, target)}
                 />
               )}
