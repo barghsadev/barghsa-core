@@ -23,3 +23,5 @@ Follow [the migration procedure](../docs/development/database-migrations.md).
 ## Risks / limitations
 
 Known limits, operational prerequisites and rollback steps, or None.
+
+- [ ] Update the [threat model](../docs/threat-model.md) when this change affects a trust boundary, sensitive data, a provider, permissions, or a financial flow. Link the updated threats or record why the model remains accurate.

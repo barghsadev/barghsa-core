@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T23:30:29+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T23:35:41+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1062 | Accepted with unchanged source bindings. |
-| verify | 265 | Existing work may be complete; inspect evidence before building. |
+| done | 1068 | Accepted with unchanged source bindings. |
+| verify | 259 | Existing work may be complete; inspect evidence before building. |
 | partial | 35 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1234,12 +1234,12 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.07.03.04` | done | Recorded batch work | Ensure proxy trust configured to exact hop topology (not `trust proxy` globally) |
 | `06-security-testing-observability.md#T-06.07.03.05` | done | Recorded batch work | Add container security scanning to CI (Trivy, etc.) |
 | `06-security-testing-observability.md#T-06.07.03.06` | done | Recorded batch work | Write container smoke test: non-root user, inspector not available, no unsafe parser |
-| `06-security-testing-observability.md#T-06.08.01.01` | verify | Inventory needed | Create initial threat model document (`docs/threat-model.md`) covering all critical flows |
-| `06-security-testing-observability.md#T-06.08.01.02` | verify | Inventory needed | Map trust boundaries, data flows, assets, threat actors (customer, staff, admin, external attacker, provider) |
-| `06-security-testing-observability.md#T-06.08.01.03` | verify | Inventory needed | Apply STRIDE or similar framework to each domain (auth, isolation, wallet, contracts, files, config, providers, AI) |
-| `06-security-testing-observability.md#T-06.08.01.04` | verify | Inventory needed | Document accepted risks with owner, justification, compensating controls, expiry, approval |
-| `06-security-testing-observability.md#T-06.08.01.05` | verify | Inventory needed | Define review cadence: quarterly full review + review on material flow changes |
-| `06-security-testing-observability.md#T-06.08.01.06` | verify | Inventory needed | Create PR checklist item: threat model update required when trust boundary, sensitive data, provider, permission, or financial flow changes |
+| `06-security-testing-observability.md#T-06.08.01.01` | done | Recorded batch work | Create initial threat model document (`docs/threat-model.md`) covering all critical flows |
+| `06-security-testing-observability.md#T-06.08.01.02` | done | Recorded batch work | Map trust boundaries, data flows, assets, threat actors (customer, staff, admin, external attacker, provider) |
+| `06-security-testing-observability.md#T-06.08.01.03` | done | Recorded batch work | Apply STRIDE or similar framework to each domain (auth, isolation, wallet, contracts, files, config, providers, AI) |
+| `06-security-testing-observability.md#T-06.08.01.04` | done | Recorded batch work | Document accepted risks with owner, justification, compensating controls, expiry, approval |
+| `06-security-testing-observability.md#T-06.08.01.05` | done | Recorded batch work | Define review cadence: quarterly full review + review on material flow changes |
+| `06-security-testing-observability.md#T-06.08.01.06` | done | Recorded batch work | Create PR checklist item: threat model update required when trust boundary, sensitive data, provider, permission, or financial flow changes |
 | `06-security-testing-observability.md#T-06.08.02.01` | done | Recorded batch work | Define pen test scope: auth, session, MFA, CSRF, CSP, BOLA/IDOR, rate limits, SSRF, file upload, webhooks, wallet/payment, AI tools |
 | `06-security-testing-observability.md#T-06.08.02.02` | verify | Inventory needed | Schedule pre-launch independent penetration test; budget and vendor selection |
 | `06-security-testing-observability.md#T-06.08.02.03` | done | Recorded batch work | Define criteria: critical/high with credible production path → fix before release; accepted risk requires owner+expiry |

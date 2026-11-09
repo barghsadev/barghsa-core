@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T23:30:29+00:00",
-  "source_commit": "013cd314854837e9b1f704080ecaa8d334816f5a",
+  "updated": "2026-11-09T23:35:41+00:00",
+  "source_commit": "76078aa9cac598593b213692553765253d58bce2",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -481557,20 +481557,40 @@
         "story": "06-security-testing-observability.md#spec-bd5425bcc193"
       },
       "requirement": "| T-06.08.01.01 | Create initial threat model document (`docs/threat-model.md`) covering all critical flows | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "changed_paths": [
+          "docs/threat-model.md"
+        ],
+        "batches": [
+          "release-0.6-source-grounded-threat-model-and-review"
+        ],
+        "current_acceptance": {
+          "kind": "reviewed-repository-threat-model-and-process",
+          "base_commit": "76078aa9cac598593b213692553765253d58bce2",
+          "source_evidence": [
+            {
+              "path": "deploy/staging/compose.yml",
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+            },
+            {
+              "path": "docs/threat-model.md",
+              "sha256": "09686e4478da069317f6773dd4cc5fc4fd97087b24603dfabe53164dd8c8bcb5"
+            }
+          ],
+          "checks": [
+            "The repository threat model covers the four launch services, account access, financial and contract state, uploads, provider integrations, assistant inference, recovery and the source-to-deployment path.",
+            "Checked the reference staging topology and documented the conditional production assumptions. The model claims neither deployment approval nor completion of live security gates."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.08.01.02",
@@ -481583,20 +481603,44 @@
         "story": "06-security-testing-observability.md#spec-bd5425bcc193"
       },
       "requirement": "| T-06.08.01.02 | Map trust boundaries, data flows, assets, threat actors (customer, staff, admin, external attacker, provider) | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "changed_paths": [
+          "docs/threat-model.md"
+        ],
+        "batches": [
+          "release-0.6-source-grounded-threat-model-and-review"
+        ],
+        "current_acceptance": {
+          "kind": "reviewed-repository-threat-model-and-process",
+          "base_commit": "76078aa9cac598593b213692553765253d58bce2",
+          "source_evidence": [
+            {
+              "path": "deploy/staging/compose.yml",
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+            },
+            {
+              "path": "docs/security/authorization.md",
+              "sha256": "69ae3c5af565ae3d122d4b671692f8c8f53b33f9f9517ee02e2ce58949286358"
+            },
+            {
+              "path": "docs/threat-model.md",
+              "sha256": "09686e4478da069317f6773dd4cc5fc4fd97087b24603dfabe53164dd8c8bcb5"
+            }
+          ],
+          "checks": [
+            "The model records seven trust boundaries with channels, data and controls. It distinguishes customer, staff, admin, external callers and providers and maps protected assets and entry points.",
+            "Validated 46 repository links and a 19-edge Mermaid source diagram, including independent CI and deployment edges from the same source repository."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.08.01.03",
@@ -481609,20 +481653,36 @@
         "story": "06-security-testing-observability.md#spec-bd5425bcc193"
       },
       "requirement": "| T-06.08.01.03 | Apply STRIDE or similar framework to each domain (auth, isolation, wallet, contracts, files, config, providers, AI) | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "changed_paths": [
+          "docs/threat-model.md"
+        ],
+        "batches": [
+          "release-0.6-source-grounded-threat-model-and-review"
+        ],
+        "current_acceptance": {
+          "kind": "reviewed-repository-threat-model-and-process",
+          "base_commit": "76078aa9cac598593b213692553765253d58bce2",
+          "source_evidence": [
+            {
+              "path": "docs/threat-model.md",
+              "sha256": "09686e4478da069317f6773dd4cc5fc4fd97087b24603dfabe53164dd8c8bcb5"
+            }
+          ],
+          "checks": [
+            "All six STRIDE categories map to nine stable threat IDs spanning auth, isolation, wallet, contract and document integrity, configuration, providers, AI, availability and supply chain.",
+            "Each threat records prerequisites, impact, controls, gaps, detection, likelihood, severity and priority. The manual review paths tie back to those IDs."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.08.01.04",
@@ -481635,20 +481695,39 @@
         "story": "06-security-testing-observability.md#spec-bd5425bcc193"
       },
       "requirement": "| T-06.08.01.04 | Document accepted risks with owner, justification, compensating controls, expiry, approval | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "changed_paths": [
+          "docs/threat-model.md"
+        ],
+        "batches": [
+          "release-0.6-source-grounded-threat-model-and-review"
+        ],
+        "current_acceptance": {
+          "kind": "reviewed-repository-threat-model-and-process",
+          "base_commit": "76078aa9cac598593b213692553765253d58bce2",
+          "source_evidence": [
+            {
+              "path": "docs/security/security-verification.md",
+              "sha256": "16433e8f8b6050e62bbeee5e142d777846bda0459c89ca0ae9140b833a452473"
+            },
+            {
+              "path": "docs/threat-model.md",
+              "sha256": "09686e4478da069317f6773dd4cc5fc4fd97087b24603dfabe53164dd8c8bcb5"
+            }
+          ],
+          "checks": [
+            "The exception register requires threat and candidate identity, accountable owner, justification, compensating controls, expiry, explicit approval and retest. The initial register has zero approved entries. Existing open release gates stay open."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.08.01.05",
@@ -481661,20 +481740,35 @@
         "story": "06-security-testing-observability.md#spec-bd5425bcc193"
       },
       "requirement": "| T-06.08.01.05 | Define review cadence: quarterly full review + review on material flow changes | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "changed_paths": [
+          "docs/threat-model.md"
+        ],
+        "batches": [
+          "release-0.6-source-grounded-threat-model-and-review"
+        ],
+        "current_acceptance": {
+          "kind": "reviewed-repository-threat-model-and-process",
+          "base_commit": "76078aa9cac598593b213692553765253d58bce2",
+          "source_evidence": [
+            {
+              "path": "docs/threat-model.md",
+              "sha256": "09686e4478da069317f6773dd4cc5fc4fd97087b24603dfabe53164dd8c8bcb5"
+            }
+          ],
+          "checks": [
+            "The model requires a full quarterly review and review at each material change to boundaries, sensitive data, providers, permissions or financial flows. The same review applies to direct pushes."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.08.01.06",
@@ -481687,20 +481781,40 @@
         "story": "06-security-testing-observability.md#spec-bd5425bcc193"
       },
       "requirement": "| T-06.08.01.06 | Create PR checklist item: threat model update required when trust boundary, sensitive data, provider, permission, or financial flow changes | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "changed_paths": [
+          "docs/threat-model.md",
+          ".github/PULL_REQUEST_TEMPLATE.md"
+        ],
+        "batches": [
+          "release-0.6-source-grounded-threat-model-and-review"
+        ],
+        "current_acceptance": {
+          "kind": "reviewed-repository-threat-model-and-process",
+          "base_commit": "76078aa9cac598593b213692553765253d58bce2",
+          "source_evidence": [
+            {
+              "path": ".github/PULL_REQUEST_TEMPLATE.md",
+              "sha256": "e1c538bad767ebb987aad419a669584479642ac21cb11b337f8906b7459b2ba0"
+            },
+            {
+              "path": "docs/threat-model.md",
+              "sha256": "09686e4478da069317f6773dd4cc5fc4fd97087b24603dfabe53164dd8c8bcb5"
+            }
+          ],
+          "checks": [
+            "The pull request template includes the required threat-model checklist item and links to the exact repository document. The checklist covers trust boundary, sensitive data, provider, permission and financial changes."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.08.02.01",
@@ -846441,6 +846555,58 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/provider-protocol-fixtures",
       "source_scope_proof": "provider-fixture-source-proof.json",
       "source_scope_proof_sha256": "bce32814d1b1837a5a31ba475d117c9f9c82e262db52ce63e857d63d591969f8"
+    },
+    "release-0.6-source-grounded-threat-model-and-review": {
+      "batch": "release-0.6-source-grounded-threat-model-and-review",
+      "base_commit": "76078aa9cac598593b213692553765253d58bce2",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.08.01.01",
+        "06-security-testing-observability.md#T-06.08.01.02",
+        "06-security-testing-observability.md#T-06.08.01.03",
+        "06-security-testing-observability.md#T-06.08.01.04",
+        "06-security-testing-observability.md#T-06.08.01.05",
+        "06-security-testing-observability.md#T-06.08.01.06"
+      ],
+      "changed_paths": [
+        "docs/threat-model.md",
+        ".github/PULL_REQUEST_TEMPLATE.md"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/PULL_REQUEST_TEMPLATE.md",
+          "sha256": "e1c538bad767ebb987aad419a669584479642ac21cb11b337f8906b7459b2ba0"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+        },
+        {
+          "path": "docs/security/authorization.md",
+          "sha256": "69ae3c5af565ae3d122d4b671692f8c8f53b33f9f9517ee02e2ce58949286358"
+        },
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "16433e8f8b6050e62bbeee5e142d777846bda0459c89ca0ae9140b833a452473"
+        },
+        {
+          "path": "docs/threat-model.md",
+          "sha256": "09686e4478da069317f6773dd4cc5fc4fd97087b24603dfabe53164dd8c8bcb5"
+        }
+      ],
+      "checks": [
+        "The repository threat model covers the four launch services, account access, financial and contract state, uploads, provider integrations, assistant inference, recovery and the source-to-deployment path.",
+        "Checked the reference staging topology and documented the conditional production assumptions. The model claims neither deployment approval nor completion of live security gates.",
+        "The model records seven trust boundaries with channels, data and controls. It distinguishes customer, staff, admin, external callers and providers and maps protected assets and entry points.",
+        "Validated 46 repository links and a 19-edge Mermaid source diagram, including independent CI and deployment edges from the same source repository.",
+        "All six STRIDE categories map to nine stable threat IDs spanning auth, isolation, wallet, contract and document integrity, configuration, providers, AI, availability and supply chain.",
+        "Each threat records prerequisites, impact, controls, gaps, detection, likelihood, severity and priority. The manual review paths tie back to those IDs.",
+        "The exception register requires threat and candidate identity, accountable owner, justification, compensating controls, expiry, explicit approval and retest. The initial register has zero approved entries. Existing open release gates stay open.",
+        "The model requires a full quarterly review and review at each material change to boundaries, sensitive data, providers, permissions or financial flows. The same review applies to direct pushes.",
+        "The pull request template includes the required threat-model checklist item and links to the exact repository document. The checklist covers trust boundary, sensitive data, provider, permission and financial changes."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/threat-model",
+      "source_scope_proof": "threat-model-review.json",
+      "source_scope_proof_sha256": "e919139a18dc37b5c526ee0bb2163833a750bf682a6da081a8deec62b37b32a6"
     }
   },
   "historical_improvements": [
