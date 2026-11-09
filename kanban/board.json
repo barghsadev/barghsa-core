@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T01:03:15+00:00",
-  "source_commit": "fc21b96933a40b15f5b8d0b1495f2020eb56fb72",
+  "updated": "2026-11-09T01:08:16+00:00",
+  "source_commit": "223c3d1d9d0929c404f14994503411b253ed7790",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -598486,7 +598486,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer electricity catalogue now has named pending, unavailable, malformed, retry, permission withdrawal and cross-theme/localization evidence. Advanced checkout also validates the same product contract. Reconcile the other applicable route and dashboard-widget state criteria with existing named receipts."
+        "All eleven dashboard widget primary read states and the admin first-read failure sweep have current scoped evidence. The 98-path route index separates verified states from older candidates. Resolve the remaining applicable customer and staff child-route empty, denied and stale states and route-specific interaction/layout criteria from named receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -598620,7 +598620,8 @@
           "release-0.5-safe-admin-read-errors",
           "release-0.5-customer-consultation-denial",
           "release-0.5-electricity-owned-checkout-addresses",
-          "release-0.5-electricity-catalogue-validation"
+          "release-0.5-electricity-catalogue-validation",
+          "release-0.5-dashboard-widget-acceptance"
         ],
         "current_acceptance": null
       }
@@ -728268,7 +728269,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer electricity catalogue now has named pending, unavailable, malformed, retry, permission withdrawal and cross-theme/localization evidence. Advanced checkout also validates the same product contract. Reconcile the other applicable route and dashboard-widget state criteria with existing named receipts."
+        "All eleven dashboard widget primary read states and the admin first-read failure sweep have current scoped evidence. The 98-path route index separates verified states from older candidates. Resolve the remaining applicable customer and staff child-route empty, denied and stale states and route-specific interaction/layout criteria from named receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -728468,7 +728469,8 @@
           "release-0.5-safe-admin-read-errors",
           "release-0.5-customer-consultation-denial",
           "release-0.5-electricity-owned-checkout-addresses",
-          "release-0.5-electricity-catalogue-validation"
+          "release-0.5-electricity-catalogue-validation",
+          "release-0.5-dashboard-widget-acceptance"
         ]
       }
     },
@@ -809176,6 +809178,142 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-catalogue-validation/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-catalogue-validation/renewed-bindings.json",
       "release_disposition": "Closed malformed electricity catalogue reads and verified local recovery. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-dashboard-widget-acceptance": {
+      "batch": "release-0.5-dashboard-widget-acceptance",
+      "base_commit": "223c3d1d9d0929c404f14994503411b253ed7790",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/catalogue-form-fixture.ts",
+          "sha256": "d628dc1b6830b741901854f7107cee5a094dd9b33b286d20097b66f47629a74a"
+        },
+        {
+          "path": "apps/web/e2e/chargeback-dashboard.spec.ts",
+          "sha256": "aee8b8d0853f175cf3f062fe9fd19d52b2eb7896faf1593e2c4cb558fbbd200c"
+        },
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "07949862684b86d6ff241d5f71e59e6c71a5cc1ddc70655b0d508beb53865dac"
+        },
+        {
+          "path": "apps/web/e2e/crm-dashboard.spec.ts",
+          "sha256": "59e01fcd87a53dcff9e379b98054f0f5017f880961173f22674c371757bfa847"
+        },
+        {
+          "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
+          "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
+        },
+        {
+          "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
+          "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+        },
+        {
+          "path": "apps/web/e2e/navigation-fixture.ts",
+          "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
+        },
+        {
+          "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
+          "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+        },
+        {
+          "path": "apps/web/src/components/AdminBusinessWorkCounts.tsx",
+          "sha256": "3938d63c4d27fa8886df9b07eb8ddfe45da913706a81c8f044b1b32e2f5c03cb"
+        },
+        {
+          "path": "apps/web/src/components/AdminMaintenanceSummary.tsx",
+          "sha256": "1a3cdcf73c6b4a11cfda0fe7aad1a5f5166722863dc6c85706c5348fc883fabc"
+        },
+        {
+          "path": "apps/web/src/components/FailedJobsWidget.tsx",
+          "sha256": "552c8c43da7d9bb5b46ae95eabebb7b6d8ccc91e85da0f4b610095d2d4fcd5c3"
+        },
+        {
+          "path": "apps/web/src/components/StaffWorkQueueWidget.tsx",
+          "sha256": "490fe6d3d8df38ca090937c5faacc68b6d329097212082fcc20b6f1ab89c47b7"
+        },
+        {
+          "path": "apps/web/src/components/dashboard/DashboardLayout.tsx",
+          "sha256": "34068a860374463b167b3f4bce66842e58385ffc2d898217db68acb08f5a59b6"
+        },
+        {
+          "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
+          "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
+        },
+        {
+          "path": "apps/web/src/hooks/useAsyncData.ts",
+          "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
+        },
+        {
+          "path": "apps/web/src/hooks/useServerQuery.ts",
+          "sha256": "d48dcb712ea4eee821a3b101e12b3d7ee81f11277a8b42ab8aeb594cb2fab47d"
+        },
+        {
+          "path": "apps/web/src/hooks/useStaffDashboardData.ts",
+          "sha256": "a3bb637f5d6a615b02ed7e55cedf26e133558c3bfb197de67328504b1fdac032"
+        },
+        {
+          "path": "apps/web/src/lib/profile-context.ts",
+          "sha256": "fb6524f0764564f78d2ee7d9e18631b8294702fffdac58228e31041aa12e9c4d"
+        },
+        {
+          "path": "apps/web/src/lib/query-keys.ts",
+          "sha256": "e4ba099d6287bf44a752c95ef7ac5fa182127f6710ec4a77849d1d45614c968f"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDashboard.tsx",
+          "sha256": "68f1ff2b4d92335a5e4616850eeec90a7066301fc569bd86df9b00c3b8aad2f2"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.tsx",
+          "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
+        },
+        {
+          "path": "apps/web/src/routeTree.gen.ts",
+          "sha256": "c1524622f37c4dc26c3fc7f5746d3a9a2d962c8397db0ab77e61efa0422be658"
+        },
+        {
+          "path": "apps/web/src/routes/_app/app.tsx",
+          "sha256": "309d24401e4059569adb6d4398b45280da3f060dbe8037ccb873e3228753e65e"
+        },
+        {
+          "path": "packages/i18n/src/dashboard.ts",
+          "sha256": "0b1d2e35178c8257602256ad3d6b92e736a42fe0a3adcaa2b8fb83f4005d6e76"
+        },
+        {
+          "path": "packages/i18n/src/maintenance.ts",
+          "sha256": "8b0cd85c0a91a7c4ca640255072c1014b9aef7c1d426c5e0e3eca24d6ca10559"
+        },
+        {
+          "path": "packages/i18n/src/workspace.ts",
+          "sha256": "eb46066e52c2e316528a3543d2d2088b609b0c76b5f4feeb0de52efb944b4d5e"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "All 11 dashboard read owners passed controlled pending, localized HTTP 503, keyboard retry and valid empty or zero responses. Eight accepted cases cover both roles, Persian and English, Chromium and Mobile Safari. Each endpoint was read twice and recovering a widget left its siblings' request counts unchanged.",
+        "Two initial staff WebKit checks measured the entrance animation. The exact geometry assertions passed after waiting for running card and ancestor animations and fonts on the same application build. Six unaffected cases carry forward.",
+        "Verified source-bound reuse of prior dashboard profile-conflict and stale-view evidence. The current 98-path index records 32 entries with direct source changes since the previous inventory and distinguishes scoped current checks from prior case candidates.",
+        "Current first-read evidence covers the 48 admin data routes with the two earlier diagnostic-text disclosures covered by the subsequent localized recovery checks. The dashboard and four customer service paths have separate current state receipts."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-widget-acceptance",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-widget-acceptance/proof.json",
+      "source_scope_proof_sha256": "9371e1450425d5d177b9ceca41587c6bfd856eeeaab93e8b7946e2669b509a15",
+      "release_disposition": "Verified local pending, failure, retry and empty states for all dashboard widgets and indexed current route evidence. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [
@@ -809226,7 +809364,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Consolidate the current 98-path route census and named receipts against the required loading, empty, error, denied and stale cases for each read owner and dashboard widget. Verify the still-unmatched conditions before renewing route acceptance. GitHub required-check enforcement and staging Sentry delivery remain independent."
+    "goal": "Use the current route-state index to close the remaining primary and child read states. Start with the customer contracts and documents workspaces and account settings, then verify still-unmatched staff child states. GitHub required-check enforcement and staging Sentry delivery remain independent."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
