@@ -49,8 +49,14 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 const field = (name: string) => host.querySelector<HTMLInputElement>(`#delivery-window-${name}`)!;
-async function mount() {
-  await act(async () => root.render(<QueryProvider>{<Panel uiLocale="en" />}</QueryProvider>));
+async function mount(onSessionEnded = () => {}) {
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <Panel uiLocale="en" onSessionEnded={onSessionEnded} />
+      </QueryProvider>
+    )
+  );
   await vi.waitFor(() => expect(field('start')?.value).toBe('09:00'));
 }
 async function fill(name: string, value: string) {
@@ -188,6 +194,19 @@ it('clears private drafts on denial and ignores a late write receipt', async () 
   expect(host.querySelector('form')).toBeNull();
   expect(host.textContent).toContain('no longer have access');
 });
+it.each([401, 403])(
+  'withdraws denied settings and reports only session expiry (%i)',
+  async (status) => {
+    const onSessionEnded = vi.fn();
+    await mount(onSessionEnded);
+    await fill('start', '10:00');
+    writeStatus = status;
+    await submit();
+    await vi.waitFor(() => expect(host.querySelector('form')).toBeNull());
+    expect(writes()).toHaveLength(1);
+    expect(onSessionEnded).toHaveBeenCalledTimes(status === 401 ? 1 : 0);
+  }
+);
 it('does not treat a refresh before an outstanding write settles as authoritative recovery', async () => {
   await mount();
   await fill('start', '10:00');

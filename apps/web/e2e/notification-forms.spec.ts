@@ -3,8 +3,56 @@ import { setupCatalogueForms } from './catalogue-form-fixture';
 import { notificationTemplate } from '../src/test/content-catalogue-fixtures';
 import { t } from '@barghsa/i18n/admin-ui';
 import { notificationFormText } from '@barghsa/i18n/notification-forms';
+import { loginFormText } from '@barghsa/i18n/login-forms';
 import AxeBuilder from '@axe-core/playwright';
 test.use({ viewport: { width: 390, height: 844 } });
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`delivery settings session expiry withdraws a private notification draft (${locale})`, async ({
+    page,
+  }) => {
+    await setupCatalogueForms(page, locale, false);
+    await page.route('**/api/admin/notifications/templates', (route) =>
+      route.fulfill({ json: [notificationTemplate()] })
+    );
+    let status = 200;
+    await page.route('**/api/admin/config/delivery-window', (route) =>
+      route.fulfill({ status, json: { timezone: 'UTC', startHour: 9, endHour: 21 } })
+    );
+    await page.goto('/admin/notifications');
+    const start = page.locator('#delivery-window-start');
+    await expect(start).toHaveValue('09:00');
+    await page
+      .getByRole('button', { name: t('admin.notifications.edit', locale), exact: true })
+      .click();
+    const body = page.locator('#notification-template-bodyTemplate');
+    await body.fill('Local private draft');
+    const refresh = page.getByRole('button', {
+      name: notificationFormText('refresh', locale),
+      exact: true,
+    });
+    status = 403;
+    await refresh.click();
+    await expect(start).toHaveCount(0);
+    await expect(body).toHaveValue('Local private draft');
+    status = 200;
+    await refresh.click();
+    await expect(start).toHaveValue('09:00');
+    status = 401;
+    await refresh.click();
+    await expect(start).toHaveCount(0);
+    await expect(body).toHaveCount(0);
+    const sessionEnded = page
+      .getByRole('main')
+      .getByRole('alert')
+      .filter({ hasText: loginFormText('sessionEnded', locale) });
+    await expect(sessionEnded).toBeVisible();
+    await expect(
+      sessionEnded.getByRole('link', { name: loginFormText('restart', locale) })
+    ).toHaveAttribute('href', '/login');
+  });
+}
+
 for (const locale of ['en', 'fa'] as const)
   for (const dark of [false, true]) {
     test(`notification template and minute window feedback, captured retry (${locale}, ${dark ? 'dark' : 'light'})`, async ({

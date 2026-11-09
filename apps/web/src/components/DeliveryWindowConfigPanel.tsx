@@ -38,7 +38,13 @@ const TIMEZONE_OPTIONS = [
   'America/New_York',
 ];
 /** Newly scheduled daytime messages use this minute-precision window; existing schedules retain theirs. */
-export default function DeliveryWindowConfigPanel({ uiLocale }: { uiLocale: Locale }) {
+export default function DeliveryWindowConfigPanel({
+  uiLocale,
+  onSessionEnded,
+}: {
+  uiLocale: Locale;
+  onSessionEnded?: () => void;
+}) {
   const profileRevision = useProfileContextRevision();
   const label = (key: string) => t(`admin.notifications.window.${key}`, uiLocale);
   const messages = {
@@ -75,23 +81,27 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: { uiLocale: Loca
     mounted = useRef(false),
     write = useRef<AbortController | null>(null);
   commandRef.current = command;
-  const clearPrivate = useCallback(() => {
-    generation.current++;
-    editor.setValidationPending(false);
-    networkOwner.current++;
-    write.current?.abort();
-    basis.current = null;
-    commandRef.current = null;
-    setCommand(null);
-    editor.form.reset(windowValues(DEFAULT_DELIVERY_WINDOW));
-    setStale(false);
-    setUncertain(false);
-    setRecoveryAttempt(null);
-    setSaved(false);
-    setSaving(false);
-    setProtectedBusy(false);
-    setError(null);
-  }, [editor.form.reset]);
+  const clearPrivate = useCallback(
+    (status?: 401 | 403) => {
+      generation.current++;
+      editor.setValidationPending(false);
+      networkOwner.current++;
+      write.current?.abort();
+      basis.current = null;
+      commandRef.current = null;
+      setCommand(null);
+      editor.form.reset(windowValues(DEFAULT_DELIVERY_WINDOW));
+      setStale(false);
+      setUncertain(false);
+      setRecoveryAttempt(null);
+      setSaved(false);
+      setSaving(false);
+      setProtectedBusy(false);
+      setError(null);
+      if (status === 401) onSessionEnded?.();
+    },
+    [editor.form.reset, onSessionEnded]
+  );
   const scope = useCatalogueScope(clearPrivate);
   const resource = useCatalogueResource(scope, '/api/admin/config/delivery-window', validWindow);
   const config = resource.data;
@@ -224,7 +234,7 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: { uiLocale: Loca
             return;
           }
           if (res.status === 401 || res.status === 403) {
-            scope.deny();
+            scope.deny(res.status);
             return;
           }
           if (res.status === 400 && Array.isArray(nested?.fields) && applyErrors(nested.fields))

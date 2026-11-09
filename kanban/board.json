@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T02:49:32+00:00",
-  "source_commit": "36211f45a6db900f306b69ec277e75e20ad62bf8",
+  "updated": "2026-11-09T02:58:29+00:00",
+  "source_commit": "299c812d0c05430c913f924d7cabf0ff41b7d7d1",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35372,7 +35372,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -35476,7 +35476,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -63084,7 +63084,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -63172,7 +63172,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -66576,7 +66576,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -75889,11 +75889,11 @@
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
-              "sha256": "64d89fc817b45e85872109add54d18b8a89b1eaa6e54c4c4ed128c09a43b2350"
+              "sha256": "282717710440ba999d4cb6075c35872bee79a33921bb0f71a19e4487bb1559b3"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/lib/catalogue-form-schemas.ts",
@@ -76298,11 +76298,11 @@
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
-              "sha256": "64d89fc817b45e85872109add54d18b8a89b1eaa6e54c4c4ed128c09a43b2350"
+              "sha256": "282717710440ba999d4cb6075c35872bee79a33921bb0f71a19e4487bb1559b3"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/lib/catalogue-form-schemas.ts",
@@ -76729,11 +76729,11 @@
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
-              "sha256": "64d89fc817b45e85872109add54d18b8a89b1eaa6e54c4c4ed128c09a43b2350"
+              "sha256": "282717710440ba999d4cb6075c35872bee79a33921bb0f71a19e4487bb1559b3"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/lib/catalogue-form-schemas.ts",
@@ -77290,7 +77290,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -77875,7 +77875,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -78627,7 +78627,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -79209,7 +79209,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -79794,7 +79794,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -82092,7 +82092,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
@@ -83041,7 +83041,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
@@ -83990,7 +83990,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
@@ -84940,7 +84940,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
@@ -85889,7 +85889,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
@@ -86787,7 +86787,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -87540,7 +87540,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -88203,7 +88203,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
@@ -89408,11 +89408,11 @@
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
-              "sha256": "64d89fc817b45e85872109add54d18b8a89b1eaa6e54c4c4ed128c09a43b2350"
+              "sha256": "282717710440ba999d4cb6075c35872bee79a33921bb0f71a19e4487bb1559b3"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/lib/catalogue-form-schemas.ts",
@@ -491219,7 +491219,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/components/GiftProfilePicker.tsx",
@@ -491463,7 +491463,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -492998,7 +492998,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
@@ -494619,7 +494619,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -495510,7 +495510,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -496342,7 +496342,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -497852,7 +497852,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
@@ -511854,7 +511854,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -512528,7 +512528,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
@@ -517365,7 +517365,7 @@
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
-              "sha256": "64d89fc817b45e85872109add54d18b8a89b1eaa6e54c4c4ed128c09a43b2350"
+              "sha256": "282717710440ba999d4cb6075c35872bee79a33921bb0f71a19e4487bb1559b3"
             },
             {
               "path": "apps/web/e2e/notification-template-authoring.spec.ts",
@@ -518189,7 +518189,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -519257,7 +519257,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -546968,7 +546968,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -547132,7 +547132,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -548838,7 +548838,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -549002,7 +549002,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -550709,7 +550709,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -550873,7 +550873,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -552549,7 +552549,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -552713,7 +552713,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -554415,7 +554415,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -554579,7 +554579,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -556290,7 +556290,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -556454,7 +556454,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -558138,7 +558138,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -558302,7 +558302,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -559950,7 +559950,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -560114,7 +560114,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -561762,7 +561762,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -561926,7 +561926,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -563575,7 +563575,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -563739,7 +563739,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -565387,7 +565387,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -565551,7 +565551,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -566973,7 +566973,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -567173,7 +567173,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -568876,7 +568876,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -569076,7 +569076,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -571512,7 +571512,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -571976,7 +571976,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -572736,7 +572736,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -573674,7 +573674,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -573874,7 +573874,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -575577,7 +575577,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -575777,7 +575777,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -577480,7 +577480,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -577680,7 +577680,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -579383,7 +579383,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -579583,7 +579583,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -581286,7 +581286,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -581486,7 +581486,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -583189,7 +583189,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -583389,7 +583389,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -585092,7 +585092,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -585292,7 +585292,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -586995,7 +586995,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -587195,7 +587195,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -588898,7 +588898,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -589098,7 +589098,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -590801,7 +590801,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -591001,7 +591001,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -592704,7 +592704,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -592904,7 +592904,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -595347,7 +595347,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -595547,7 +595547,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -597250,7 +597250,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -597450,7 +597450,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -598962,7 +598962,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The staff inventory covers loading and error on all 48 primary data routes and authorized empty or unset states on 40 routes. Ten customer collections have held first-read and authorized-empty receipts in both languages on Chromium and mobile Safari. The CRM correction scope, storage cleanup recovery, verification settings shared read denial and combined service-workflow grant withdrawal have current source-bound evidence. Reconcile other original route interactions and independently loaded children before full acceptance."
+        "The staff inventory covers loading and error on all 48 primary data routes and authorized empty or unset states on 40 routes. Ten customer collections have held first-read and authorized-empty receipts in both languages on Chromium and mobile Safari. The CRM correction scope, storage cleanup recovery, verification settings shared read denial combined service-workflow grant withdrawal, and notification delivery-window session cleanup have current source-bound evidence. Reconcile other original route interactions and independently loaded children before full acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -599109,7 +599109,8 @@
           "release-0.5-customer-history-first-read",
           "release-0.5-storage-cleanup-read-states",
           "release-0.5-verification-shared-read-access",
-          "release-0.5-service-workflow-grant-revocation"
+          "release-0.5-service-workflow-grant-revocation",
+          "release-0.5-notification-settings-session"
         ],
         "current_acceptance": null
       }
@@ -599575,7 +599576,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -599739,7 +599740,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -601383,7 +601384,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -601547,7 +601548,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -603191,7 +603192,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -603355,7 +603356,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -604999,7 +605000,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -605163,7 +605164,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -606807,7 +606808,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -606971,7 +606972,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -608615,7 +608616,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -608779,7 +608780,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -610423,7 +610424,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -610587,7 +610588,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -638258,7 +638259,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -639390,7 +639391,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -640522,7 +640523,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -641657,7 +641658,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -642792,7 +642793,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -643954,7 +643955,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -645085,7 +645086,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -646216,7 +646217,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -647348,7 +647349,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -648498,7 +648499,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -649631,7 +649632,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -681161,7 +681162,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -682291,7 +682292,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -683421,7 +683422,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -684551,7 +684552,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -705790,7 +705791,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/notification-forms.test.tsx",
@@ -722407,7 +722408,7 @@
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
-              "sha256": "64d89fc817b45e85872109add54d18b8a89b1eaa6e54c4c4ed128c09a43b2350"
+              "sha256": "282717710440ba999d4cb6075c35872bee79a33921bb0f71a19e4487bb1559b3"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -722527,7 +722528,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -722911,7 +722912,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -726293,7 +726294,7 @@
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
-              "sha256": "64d89fc817b45e85872109add54d18b8a89b1eaa6e54c4c4ed128c09a43b2350"
+              "sha256": "282717710440ba999d4cb6075c35872bee79a33921bb0f71a19e4487bb1559b3"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -726405,7 +726406,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -726781,7 +726782,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -728969,7 +728970,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The staff inventory covers loading and error on all 48 primary data routes and authorized empty or unset states on 40 routes. Ten customer collections have held first-read and authorized-empty receipts in both languages on Chromium and mobile Safari. The CRM correction scope, storage cleanup recovery, verification settings shared read denial and combined service-workflow grant withdrawal have current source-bound evidence. Reconcile other original route interactions and independently loaded children before full acceptance."
+        "The staff inventory covers loading and error on all 48 primary data routes and authorized empty or unset states on 40 routes. Ten customer collections have held first-read and authorized-empty receipts in both languages on Chromium and mobile Safari. The CRM correction scope, storage cleanup recovery, verification settings shared read denial combined service-workflow grant withdrawal, and notification delivery-window session cleanup have current source-bound evidence. Reconcile other original route interactions and independently loaded children before full acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -729182,7 +729183,8 @@
           "release-0.5-customer-history-first-read",
           "release-0.5-storage-cleanup-read-states",
           "release-0.5-verification-shared-read-access",
-          "release-0.5-service-workflow-grant-revocation"
+          "release-0.5-service-workflow-grant-revocation",
+          "release-0.5-notification-settings-session"
         ]
       }
     },
@@ -729422,7 +729424,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
             },
             {
               "path": "apps/web/src/components/DirectionAware.tsx",
@@ -730174,7 +730176,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+              "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -731142,7 +731144,8 @@
             "All 101 transfer budgets and the affected Persian/English CRM browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-correction-visibility/proof.json",
             "All 101 transfer budgets and affected Persian/English storage browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-storage-cleanup-read-states/proof.json",
             "All 101 transfer budgets and affected verification and service-workflow browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-verification-shared-read-access/proof.json",
-            "All 101 transfer budgets and 58 affected settings browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflow-grant-revocation/proof.json"
+            "All 101 transfer budgets and 58 affected settings browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflow-grant-revocation/proof.json",
+            "All 101 transfer budgets and 62 affected notification browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-settings-session/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -810913,6 +810916,49 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflow-grant-revocation/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflow-grant-revocation/renewed-bindings.json",
       "release_disposition": "Closed combined service workflow grant withdrawal and verified affected settings recovery. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-notification-settings-session": {
+      "batch": "release-0.5-notification-settings-session",
+      "base_commit": "299c812d0c05430c913f924d7cabf0ff41b7d7d1",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/notification-forms.spec.ts",
+          "sha256": "282717710440ba999d4cb6075c35872bee79a33921bb0f71a19e4487bb1559b3"
+        },
+        {
+          "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
+          "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+        },
+        {
+          "path": "apps/web/src/components/delivery-window-forms.test.tsx",
+          "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
+        }
+      ],
+      "checks": [
+        "Both baseline Chromium cases reproduced a private template draft remaining mounted when the delivery-window GET returned HTTP 401. The earlier HTTP 403 removed only its independently authorized delivery-window settings, and explicit retry recovered that panel.",
+        "Delivery-window HTTP 401 from the read or a direct or protected write withdraws notification settings, private drafts and pending work through the existing page cleanup. A localized notice links to sign-in. Delivery-window HTTP 403 still withdraws only its own panel; template catalogue read and recovery semantics are unchanged.",
+        "All 62 distinct native Chromium and mobile Safari cases passed. The only unsuccessful first-run case reached screenshot capture and hit ENOSPC. Its single isolated rerun passed on the same runtime and test sources. Forty instrumented Chromium cases, 60 distinct focused unit tests, web typecheck, changed-file lint and formatting and all 101 transfer budgets passed.",
+        "The unchanged coverage gate passed at 476/508 lines and 544/640 branches for AdminNotificationsPage and 18/18 lines and 8/10 branches for changed delivery-window code after one existing archived-template case and two direct write-denial tests. The final snapshot differs from the browser runtime only in the delivery-window unit fixture."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-settings-session",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-settings-session/proof.json",
+      "source_scope_proof_sha256": "2fffb15c8e2352bc29f9cf320341891079941ff2bebcc09aeb504dfd39f4a5c5",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-settings-session/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-settings-session/renewed-bindings.json",
+      "release_disposition": "Closed notification delivery-window session expiry and verified related template and queue recovery. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [

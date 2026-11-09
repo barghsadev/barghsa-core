@@ -1,5 +1,7 @@
 import { sendToast, toast } from '../lib/toast-api.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
+import { loginFormText } from '@barghsa/i18n/login-forms';
+import { Link } from '@tanstack/react-router';
 import { useDestructiveConfirm } from '../hooks/useDestructiveConfirm.js';
 import { parseTemplateEventKey } from '@barghsa/shared/notifications';
 import { renderTemplatePreview } from '../lib/template-preview.js';
@@ -140,6 +142,7 @@ function OwnedNotificationsPage({
   const [accepted, setAccepted] = useState(false);
   const [unconfirmed, setUnconfirmed] = useState<'template' | 'test' | null>(null);
   const [panelsReady, setPanelsReady] = useState(false);
+  const [sessionEnded, setSessionEnded] = useState(false);
   const refreshButton = useRef<HTMLButtonElement>(null);
   const templatesRef = useRef(templates);
   templatesRef.current = templates;
@@ -268,6 +271,10 @@ function OwnedNotificationsPage({
     setTestSendMsg(null);
   }, [resetEditorBusy, resetCatalogueBusy]);
   const scope = useCatalogueScope(clearPrivate);
+  const endSession = useCallback(() => {
+    scope.deny();
+    setSessionEnded(true);
+  }, [scope.deny]);
   const read = useStaffQueryRead('notifications');
   const confirmDestruction = useDestructiveConfirm(uiLocale, scope.version);
   const ready = accepted && !loading && !loadFailed && !scope.denied && !unconfirmed;
@@ -899,6 +906,20 @@ function OwnedNotificationsPage({
     }
   }
 
+  if (sessionEnded) {
+    return (
+      <div className="space-y-6" dir={uiLocale === 'fa' ? 'rtl' : 'ltr'}>
+        <h1 className="text-2xl font-bold">{t('admin.notifications.title', uiLocale)}</h1>
+        <Alert variant="destructive">
+          <p>{loginFormText('sessionEnded', uiLocale)}</p>
+          <Link to="/login" className="underline">
+            {loginFormText('restart', uiLocale)}
+          </Link>
+        </Alert>
+      </div>
+    );
+  }
+
   return (
     <div className="min-w-0 space-y-6" dir={uiLocale === 'fa' ? 'rtl' : 'ltr'}>
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -956,7 +977,7 @@ function OwnedNotificationsPage({
           />
 
           {/* Delivery-window config (T-05.03.03) */}
-          <DeliveryWindowConfigPanel uiLocale={uiLocale} />
+          <DeliveryWindowConfigPanel uiLocale={uiLocale} onSessionEnded={endSession} />
 
           {/* Dead-letter queue (T-05.01.06) */}
           <DeadLetterPanel
