@@ -2,9 +2,10 @@ import { afterAll, beforeAll, expect, it, vi } from 'vitest';
 import { createServer, type Server } from 'node:http';
 import { createSmsSender, prepareSmsMessage, validSmsMessage } from './sms.js';
 import { DeliveryRejected } from './execution.js';
-import { classifyProviderError } from './email-errors.js';
+import { classifyProviderError, requiresProviderConfigurationFix } from './email-errors.js';
 let server: Server,
   endpoint: string,
+  httpStatus = 200,
   response: unknown = { status: 1, data: { messageId: 123 } };
 const received: unknown[] = [];
 beforeAll(async () => {
@@ -12,7 +13,7 @@ beforeAll(async () => {
     const chunks: Buffer[] = [];
     for await (const chunk of req) chunks.push(Buffer.from(chunk));
     received.push(JSON.parse(Buffer.concat(chunks).toString()));
-    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.writeHead(httpStatus, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(response));
   });
   await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
@@ -187,6 +188,42 @@ it('executes only after preflight, preserves receipts and distinguishes explicit
   }
   response = { status: 1, data: { messageId: 123 } };
 });
+it.each([
+  [400, 123, 'permanent', true],
+  [401, 10, 'permanent', true],
+  [408, 0, 'transient', false],
+  [429, 0, 'transient', false],
+  [503, 0, 'transient', false],
+] as const)(
+  'classifies SMS.ir HTTP %s without returning a receipt or retrying the wire request',
+  async (status, diagnostic, kind, configFix) => {
+    const previous = response;
+    const { pool, request } = setup();
+    const message = await prepareSmsMessage(pool, '+989121234567', 'invoice.created', ['amount'], {
+      amount: 5000,
+    });
+    try {
+      httpStatus = status;
+      response = { status: diagnostic, data: null };
+      const error = await createSmsSender(
+        pool,
+        request
+      )(message).then(
+        () => undefined,
+        (failure: unknown) => failure
+      );
+      expect(error).toMatchObject({ httpStatus: status, smsirStatus: diagnostic });
+      expect(error).not.toBeInstanceOf(DeliveryRejected);
+      expect(classifyProviderError(error)).toBe(kind);
+      expect(requiresProviderConfigurationFix(error)).toBe(configFix);
+      expect(request).toHaveBeenCalledOnce();
+    } finally {
+      httpStatus = 200;
+      response = previous;
+    }
+  }
+);
+
 it('uses only approved mapped variables and requires an actual provider receipt', async () => {
   const { pool, request } = setup();
   const message = await prepareSmsMessage(pool, '+989121234567', 'invoice.created', ['amount'], {

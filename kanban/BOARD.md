@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T23:25:12+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T23:30:29+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1060 | Accepted with unchanged source bindings. |
-| verify | 267 | Existing work may be complete; inspect evidence before building. |
+| done | 1062 | Accepted with unchanged source bindings. |
+| verify | 265 | Existing work may be complete; inspect evidence before building. |
 | partial | 35 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1274,7 +1274,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.10.01.01` | partial | Recorded batch work | Set up test PostgreSQL instance in CI and local dev (Docker Compose service) |
 | `06-security-testing-observability.md#T-06.10.01.02` | done | Recorded batch work | Configure NestJS testing module: bootstrap real app with test DB, apply migrations before each suite |
 | `06-security-testing-observability.md#T-06.10.01.03` | done | Recorded batch work | Implement test DB lifecycle: per-worker isolated schema or database for parallel runs |
-| `06-security-testing-observability.md#T-06.10.01.04` | verify | Inventory needed | Build fake adapter servers: SMTP fake, SMS.ir fake, payment gateway fake, document storage fake |
+| `06-security-testing-observability.md#T-06.10.01.04` | done | Recorded batch work | Build fake adapter servers: SMTP fake, SMS.ir fake, payment gateway fake, document storage fake |
 | `06-security-testing-observability.md#T-06.10.01.05` | done | Recorded batch work | Implement deterministic signed webhook fixture builder |
 | `06-security-testing-observability.md#T-06.10.01.06` | verify | Inventory needed | Write helper utilities: create user, create profile, authenticate, create order, create invoice, add wallet funds |
 | `06-security-testing-observability.md#T-06.10.02.01` | done | Recorded batch work | Write migration integration tests: clean database apply, upgrade-path apply, rollback, data preservation |
@@ -1286,7 +1286,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.10.02.07` | done | Recorded batch work | Write outbox tests: transactional outbox write + commit, worker read + idempotent processing + dead letter |
 | `06-security-testing-observability.md#T-06.10.02.08` | done | Recorded batch work | Write idempotency tests: duplicate request returns original result, same idempotency key different payload rejected |
 | `06-security-testing-observability.md#T-06.10.02.09` | done | Recorded batch work | Mandatory concurrency tests: simultaneous wallet payments, duplicate provider callbacks, duplicate bank confirmation, concurrent refund workers, repeated order submission, ownership/role changes during requests, competing state transitions |
-| `06-security-testing-observability.md#T-06.10.02.10` | verify | Inventory needed | Write provider adapter integration tests: fake SMTP, fake SMS.ir, fake payment gateway with all error modes |
+| `06-security-testing-observability.md#T-06.10.02.10` | done | Recorded batch work | Write provider adapter integration tests: fake SMTP, fake SMS.ir, fake payment gateway with all error modes |
 | `06-security-testing-observability.md#T-06.10.03.01` | verify | Inventory needed | Configure Playwright: project structure, environment, auth helpers, seed data, parallel workers with isolated DB schemas |
 | `06-security-testing-observability.md#T-06.10.03.02` | verify | Inventory needed | Write E2E: registration → OTP verify → onboarding INDIVIDUAL → dashboard |
 | `06-security-testing-observability.md#T-06.10.03.03` | verify | Inventory needed | Write E2E: registration → OTP verify → onboarding LEGAL → profile verification flow |

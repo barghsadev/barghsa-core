@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T23:25:12+00:00",
-  "source_commit": "ce3a2dfaa7d1c5c788a6128248479d202fb0b778",
+  "updated": "2026-11-09T23:30:29+00:00",
+  "source_commit": "013cd314854837e9b1f704080ecaa8d334816f5a",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -13115,7 +13115,8 @@
         "batches": [
           "2026-09-24-ci-main-concurrency",
           "release-0.6-current-ci-definition-contract-and-coverage-controls",
-          "release-0.6-backend-test-fixture-reconciliation"
+          "release-0.6-backend-test-fixture-reconciliation",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -13127,7 +13128,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
+              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
             },
             {
               "path": "AGENTS.md",
@@ -13143,7 +13144,8 @@
             }
           ],
           "checks": [
-            "The current CI workflow runs frozen installation, affected or full tests, PostgreSQL fixtures, build/type/lint/format, migration snapshot, API contract, budgets and security jobs. The owner-authorized direct-main flow uses a reviewed preflight with the exact required integrity check. Strict coverage and license enforcement are configured for the full release lane. The active ruleset and successful exact 530f2840 integrity receipt were read back."
+            "The current CI workflow runs frozen installation, affected or full tests, PostgreSQL fixtures, build/type/lint/format, migration snapshot, API contract, budgets and security jobs. The owner-authorized direct-main flow uses a reviewed preflight with the exact required integrity check. Strict coverage and license enforcement are configured for the full release lane. The active ruleset and successful exact 530f2840 integrity receipt were read back.",
+            "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged."
           ]
         }
       }
@@ -92927,7 +92929,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-payment-idempotency-conflict-alert",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -93091,7 +93094,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/sms.test.ts",
-              "sha256": "cf68b3f10bc220324efc54fd6325ed5cdcaf4a13dec496a992e4ce69693f23e2"
+              "sha256": "bae5fdfab214fde684e868b92ec741da88a7de4becf1084327c0ec3bca03b466"
             },
             {
               "path": "packages/shared/src/notification-delivery/sms.ts",
@@ -93131,7 +93134,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-protected-staff-browser-closure: one validated OTP toast and bounded geography dialog. 32 distinct native cases and 61 related unit tests passed, retaining current staff confirmation, authority, focus and exact response assertions.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "The 42-case targeted provider run passed with the added HTTP error cases. All original SMS test assertions and provider runtime source remain unchanged."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/sms-provider-current-acceptance",
@@ -135409,7 +135413,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -135805,7 +135810,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/sms.test.ts",
-              "sha256": "cf68b3f10bc220324efc54fd6325ed5cdcaf4a13dec496a992e4ce69693f23e2"
+              "sha256": "bae5fdfab214fde684e868b92ec741da88a7de4becf1084327c0ec3bca03b466"
             },
             {
               "path": "packages/shared/src/notification-delivery/sms.ts",
@@ -135940,7 +135945,8 @@
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch."
+            "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch.",
+            "The 42-case targeted provider run passed with the added HTTP error cases. All original SMS test assertions and provider runtime source remain unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/invoice-lifecycle",
           "limitations": [
@@ -137631,7 +137637,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -138027,7 +138034,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/sms.test.ts",
-              "sha256": "cf68b3f10bc220324efc54fd6325ed5cdcaf4a13dec496a992e4ce69693f23e2"
+              "sha256": "bae5fdfab214fde684e868b92ec741da88a7de4becf1084327c0ec3bca03b466"
             },
             {
               "path": "packages/shared/src/notification-delivery/sms.ts",
@@ -138162,7 +138169,8 @@
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch."
+            "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch.",
+            "The 42-case targeted provider run passed with the added HTTP error cases. All original SMS test assertions and provider runtime source remain unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/invoice-lifecycle",
           "limitations": [
@@ -440390,7 +440398,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-payment-idempotency-conflict-alert",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -440554,7 +440563,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/sms.test.ts",
-              "sha256": "cf68b3f10bc220324efc54fd6325ed5cdcaf4a13dec496a992e4ce69693f23e2"
+              "sha256": "bae5fdfab214fde684e868b92ec741da88a7de4becf1084327c0ec3bca03b466"
             },
             {
               "path": "packages/shared/src/notification-delivery/sms.ts",
@@ -440611,7 +440620,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-protected-staff-browser-closure: one validated OTP toast and bounded geography dialog. 32 distinct native cases and 61 related unit tests passed, retaining current staff confirmation, authority, focus and exact response assertions.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "The 42-case targeted provider run passed with the added HTTP error cases. All original SMS test assertions and provider runtime source remain unchanged."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/sms-provider-current-acceptance",
@@ -440843,7 +440853,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-payment-idempotency-conflict-alert",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -441007,7 +441018,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/sms.test.ts",
-              "sha256": "cf68b3f10bc220324efc54fd6325ed5cdcaf4a13dec496a992e4ce69693f23e2"
+              "sha256": "bae5fdfab214fde684e868b92ec741da88a7de4becf1084327c0ec3bca03b466"
             },
             {
               "path": "packages/shared/src/notification-delivery/sms.ts",
@@ -441064,7 +441075,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-protected-staff-browser-closure: one validated OTP toast and bounded geography dialog. 32 distinct native cases and 61 related unit tests passed, retaining current staff confirmation, authority, focus and exact response assertions.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "The 42-case targeted provider run passed with the added HTTP error cases. All original SMS test assertions and provider runtime source remain unchanged."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/sms-provider-current-acceptance",
@@ -441295,7 +441307,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-payment-idempotency-conflict-alert",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -441459,7 +441472,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/sms.test.ts",
-              "sha256": "cf68b3f10bc220324efc54fd6325ed5cdcaf4a13dec496a992e4ce69693f23e2"
+              "sha256": "bae5fdfab214fde684e868b92ec741da88a7de4becf1084327c0ec3bca03b466"
             },
             {
               "path": "packages/shared/src/notification-delivery/sms.ts",
@@ -441499,7 +441512,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-protected-staff-browser-closure: one validated OTP toast and bounded geography dialog. 32 distinct native cases and 61 related unit tests passed, retaining current staff confirmation, authority, focus and exact response assertions.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "The 42-case targeted provider run passed with the added HTTP error cases. All original SMS test assertions and provider runtime source remain unchanged."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/sms-provider-current-acceptance",
@@ -441748,7 +441762,8 @@
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-outbox-worker-processing-metrics",
-          "release-0.6-external-provider-metrics-reconciliation"
+          "release-0.6-external-provider-metrics-reconciliation",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "current_acceptance": {
           "status": "done",
@@ -441912,7 +441927,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/sms.test.ts",
-              "sha256": "cf68b3f10bc220324efc54fd6325ed5cdcaf4a13dec496a992e4ce69693f23e2"
+              "sha256": "bae5fdfab214fde684e868b92ec741da88a7de4becf1084327c0ec3bca03b466"
             },
             {
               "path": "packages/shared/src/notification-delivery/sms.ts",
@@ -442018,7 +442033,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-protected-staff-browser-closure: one validated OTP toast and bounded geography dialog. 32 distinct native cases and 61 related unit tests passed, retaining current staff confirmation, authority, focus and exact response assertions.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "The 42-case targeted provider run passed with the added HTTP error cases. All original SMS test assertions and provider runtime source remain unchanged."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/sms-provider-current-acceptance",
@@ -442287,7 +442303,8 @@
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-payment-idempotency-conflict-alert",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -442479,7 +442496,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/sms.test.ts",
-              "sha256": "cf68b3f10bc220324efc54fd6325ed5cdcaf4a13dec496a992e4ce69693f23e2"
+              "sha256": "bae5fdfab214fde684e868b92ec741da88a7de4becf1084327c0ec3bca03b466"
             },
             {
               "path": "packages/shared/src/notification-delivery/sms.ts",
@@ -442543,7 +442560,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-protected-staff-browser-closure: one validated OTP toast and bounded geography dialog. 32 distinct native cases and 61 related unit tests passed, retaining current staff confirmation, authority, focus and exact response assertions.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "The 42-case targeted provider run passed with the added HTTP error cases. All original SMS test assertions and provider runtime source remain unchanged."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/sms-variable-dropdowns",
@@ -442842,7 +442860,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-outbox-worker-processing-metrics",
-          "release-0.6-ai-inference-metrics"
+          "release-0.6-ai-inference-metrics",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "current_acceptance": {
           "status": "done",
@@ -443018,7 +443037,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/sms.test.ts",
-              "sha256": "cf68b3f10bc220324efc54fd6325ed5cdcaf4a13dec496a992e4ce69693f23e2"
+              "sha256": "bae5fdfab214fde684e868b92ec741da88a7de4becf1084327c0ec3bca03b466"
             },
             {
               "path": "packages/shared/src/notification-delivery/sms.ts",
@@ -443053,7 +443072,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
-            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
+            "The 42-case targeted provider run passed with the added HTTP error cases. All original SMS test assertions and provider runtime source remain unchanged."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/provider-preflight-classification",
@@ -481997,7 +482017,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-backend-test-fixture-reconciliation"
+          "release-0.6-backend-test-fixture-reconciliation",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-shared-vitest-configuration-and-reporters",
@@ -482005,7 +482026,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
+              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
             },
             {
               "path": "vitest.config.ts",
@@ -482066,7 +482087,8 @@
           ],
           "checks": [
             "All eight tested workspaces extend the shared Vitest configuration. The checked configuration preserves text, JSON, LCOV and HTML reporting and the package plus CI changed-source/critical-file coverage gates.",
-            "Exact fa7d7416 full test job passed all 17,055 tests, including the three Vitest base config assertions, and uploaded the coverage artifact. Runner configuration and lockfile match current source. The separate merged browser/coverage result is pending."
+            "Exact fa7d7416 full test job passed all 17,055 tests, including the three Vitest base config assertions, and uploaded the coverage artifact. Runner configuration and lockfile match current source. The separate merged browser/coverage result is pending.",
+            "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged."
           ]
         }
       },
@@ -482615,7 +482637,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-backend-test-fixture-reconciliation"
+          "release-0.6-backend-test-fixture-reconciliation",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-disposable-postgresql-pending-compose-criterion",
@@ -482623,7 +482646,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
+              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -482659,7 +482682,8 @@
             }
           ],
           "checks": [
-            "CI and local Vitest use the existing disposable PostgreSQL Testcontainers setup with pgvector and btree_gist. The hosted and isolated PostgreSQL receipts cover that path. The Compose-specific test service remains unresolved."
+            "CI and local Vitest use the existing disposable PostgreSQL Testcontainers setup with pgvector and btree_gist. The hosted and isolated PostgreSQL receipts cover that path. The Compose-specific test service remains unresolved.",
+            "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged."
           ]
         }
       },
@@ -482686,7 +482710,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-backend-test-fixture-reconciliation"
+          "release-0.6-backend-test-fixture-reconciliation",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-real-nestjs-and-migrated-test-fixture",
@@ -482694,7 +482719,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
+              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -482727,7 +482752,8 @@
           ],
           "checks": [
             "The global setup migrates a fresh disposable PostgreSQL template with the production migrations. The HTTP fixture creates an isolated migrated database before each suite and boots the compiled NestJS application. Fresh per-fixture migration remains available for migration checks.",
-            "The exact hosted fixture test passed on the source-matching compiled path and verified expected production triggers and seeded staff roles in both cloned databases."
+            "The exact hosted fixture test passed on the source-matching compiled path and verified expected production triggers and seeded staff roles in both cloned databases.",
+            "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged."
           ]
         }
       },
@@ -482754,7 +482780,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-backend-test-fixture-reconciliation"
+          "release-0.6-backend-test-fixture-reconciliation",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-parallel-postgres-isolation",
@@ -482762,7 +482789,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
+              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -482795,7 +482822,8 @@
           ],
           "checks": [
             "Two concurrent hosted HTTP fixtures cloned the same unwritable migrated baseline into separate databases. The test verified that a new row and table in one fixture stayed absent from the other and that the baseline refused connection.",
-            "Lower-level tests retain random isolated schemas and explicit cleanup. No changes to the database or application harness were required."
+            "Lower-level tests retain random isolated schemas and explicit cleanup. No changes to the database or application harness were required.",
+            "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged."
           ]
         }
       },
@@ -482812,20 +482840,102 @@
         "story": "06-security-testing-observability.md#spec-6d621a69af5e"
       },
       "requirement": "| T-06.10.01.04 | Build fake adapter servers: SMTP fake, SMS.ir fake, payment gateway fake, document storage fake | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "changed_paths": [
+          "packages/shared/src/notification-delivery/smtp-wire.test.ts",
+          "packages/shared/src/notification-delivery/sms.test.ts",
+          "docs/development/ci.md"
+        ],
+        "batches": [
+          "release-0.6-loopback-provider-protocol-fixtures"
+        ],
+        "current_acceptance": {
+          "kind": "verified-loopback-and-source-matching-provider-tests",
+          "base_commit": "013cd314854837e9b1f704080ecaa8d334816f5a",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
+              "sha256": "2f790e5e306d653fd426cc38bf25d8ce66d26573d6645d166b534e06c37edd06"
+            },
+            {
+              "path": "apps/api/src/wallet/payment-gateway-http-boundaries.test.ts",
+              "sha256": "8b275a988a09206b3feb59c78ba5a01c54faef7b8aa8efc4f5e25f2606696147"
+            },
+            {
+              "path": "apps/api/src/wallet/payment-gateway.test.ts",
+              "sha256": "ad52b2aa1d07f79905aa4dc20c86c3435beaf6ef4f4152847b849a638534b246"
+            },
+            {
+              "path": "apps/api/src/wallet/payment-gateway.ts",
+              "sha256": "c8945b247aeca252651eef7514d06c0280e51061e160359710f34f649401a67b"
+            },
+            {
+              "path": "deploy/staging/payment-sandbox.mjs",
+              "sha256": "b55344675618600622283bf8f547e61a55a596d6df3771a6ff790b0d7625eba6"
+            },
+            {
+              "path": "deploy/staging/payment-sandbox.test.mjs",
+              "sha256": "86fb1bfd0112f4cf15f270a74e5e93237f684d7c0ec2f5a57de6d6b2ef6df29f"
+            },
+            {
+              "path": "docs/development/ci.md",
+              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
+            },
+            {
+              "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
+              "sha256": "f4ded48b7e12eaa12e76b70e776e97e68478d667ae1744c44f2cc9d62065e86b"
+            },
+            {
+              "path": "packages/shared/src/auth-delivery/smsir-client.ts",
+              "sha256": "f2d5247adf585f08144a67c016f40baccab39eee76c1bff5f64a7e84c9f047df"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/email.test.ts",
+              "sha256": "587f21855069d8ca192e5f6b9b5973bb0ea3429083ebfcd775514048df226a3f"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/email.ts",
+              "sha256": "c41ba3123682efdec817653ad3783f8ee2718d862f198c70c6df81600c6f4f31"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/provider-errors.test.ts",
+              "sha256": "6203460859ebbed90ad17ec8d6ea4e2d5e450e231b79be66af8679a4209d1f1c"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/sms.test.ts",
+              "sha256": "bae5fdfab214fde684e868b92ec741da88a7de4becf1084327c0ec3bca03b466"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/sms.ts",
+              "sha256": "6bc26f856a25df6e17b8cc7b6e1dd8c4463ea845f20f96167e3fc624de15fede"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/smtp-wire.test.ts",
+              "sha256": "9cbe6e6e40bd16b28e604d53250ba1a76bcb78d4738a309ea97e2d21b12a9917"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/smtp.test.ts",
+              "sha256": "8903e89d932a5a0fcafa2f0f2dfcdb42743700f49a2f4c4886b482d7fea93255"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "The TLS SMTP fixture binds an ephemeral loopback listener, trusts its generated certificate for the real Nodemailer transport, and runs the production SMTP sender and hostname allowlist path. The seven wire cases passed.",
+            "The existing SMS.ir and document storage fixtures use loopback HTTP. All 24 hosted storage-record cases passed with matching source and the in-memory S3 fixture. The six native payment sandbox cases passed using a disposable ledger and actual HTTP payment adapter."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.10.01.05",
@@ -483622,20 +483732,103 @@
         "story": "06-security-testing-observability.md#spec-7665a6370b00"
       },
       "requirement": "| T-06.10.02.10 | Write provider adapter integration tests: fake SMTP, fake SMS.ir, fake payment gateway with all error modes | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "changed_paths": [
+          "packages/shared/src/notification-delivery/smtp-wire.test.ts",
+          "packages/shared/src/notification-delivery/sms.test.ts",
+          "docs/development/ci.md"
+        ],
+        "batches": [
+          "release-0.6-loopback-provider-protocol-fixtures"
+        ],
+        "current_acceptance": {
+          "kind": "verified-loopback-and-source-matching-provider-tests",
+          "base_commit": "013cd314854837e9b1f704080ecaa8d334816f5a",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
+              "sha256": "2f790e5e306d653fd426cc38bf25d8ce66d26573d6645d166b534e06c37edd06"
+            },
+            {
+              "path": "apps/api/src/wallet/payment-gateway-http-boundaries.test.ts",
+              "sha256": "8b275a988a09206b3feb59c78ba5a01c54faef7b8aa8efc4f5e25f2606696147"
+            },
+            {
+              "path": "apps/api/src/wallet/payment-gateway.test.ts",
+              "sha256": "ad52b2aa1d07f79905aa4dc20c86c3435beaf6ef4f4152847b849a638534b246"
+            },
+            {
+              "path": "apps/api/src/wallet/payment-gateway.ts",
+              "sha256": "c8945b247aeca252651eef7514d06c0280e51061e160359710f34f649401a67b"
+            },
+            {
+              "path": "deploy/staging/payment-sandbox.mjs",
+              "sha256": "b55344675618600622283bf8f547e61a55a596d6df3771a6ff790b0d7625eba6"
+            },
+            {
+              "path": "deploy/staging/payment-sandbox.test.mjs",
+              "sha256": "86fb1bfd0112f4cf15f270a74e5e93237f684d7c0ec2f5a57de6d6b2ef6df29f"
+            },
+            {
+              "path": "docs/development/ci.md",
+              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
+            },
+            {
+              "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
+              "sha256": "f4ded48b7e12eaa12e76b70e776e97e68478d667ae1744c44f2cc9d62065e86b"
+            },
+            {
+              "path": "packages/shared/src/auth-delivery/smsir-client.ts",
+              "sha256": "f2d5247adf585f08144a67c016f40baccab39eee76c1bff5f64a7e84c9f047df"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/email.test.ts",
+              "sha256": "587f21855069d8ca192e5f6b9b5973bb0ea3429083ebfcd775514048df226a3f"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/email.ts",
+              "sha256": "c41ba3123682efdec817653ad3783f8ee2718d862f198c70c6df81600c6f4f31"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/provider-errors.test.ts",
+              "sha256": "6203460859ebbed90ad17ec8d6ea4e2d5e450e231b79be66af8679a4209d1f1c"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/sms.test.ts",
+              "sha256": "bae5fdfab214fde684e868b92ec741da88a7de4becf1084327c0ec3bca03b466"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/sms.ts",
+              "sha256": "6bc26f856a25df6e17b8cc7b6e1dd8c4463ea845f20f96167e3fc624de15fede"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/smtp-wire.test.ts",
+              "sha256": "9cbe6e6e40bd16b28e604d53250ba1a76bcb78d4738a309ea97e2d21b12a9917"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/smtp.test.ts",
+              "sha256": "8903e89d932a5a0fcafa2f0f2dfcdb42743700f49a2f4c4886b482d7fea93255"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "The 42 targeted shared cases passed. SMTP verifies success and stable Message-ID, authentication and sender rejection, temporary and permanent recipient rejection, command timeout, and loss of the response after DATA. The original provider policy assertions were retained.",
+            "SMS.ir verifies successful receipts, direct and template validation, explicit rejection, incomplete or contradictory acknowledgments and controlled HTTP 400, 401, 408, 429 and 503. Those HTTP failures produce no receipt, preserve diagnostics and do not trigger an immediate resend.",
+            "The six local HTTP sandbox tests and 134 source-matching hosted gateway adapter tests cover protected settlement, failed and unverified responses, unsafe redirects, timeouts and recovery, idempotency collisions and authenticated callback binding. Live merchant and external delivery evidence are separate gates."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.10.03.01",
@@ -715152,7 +715345,8 @@
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
-          "release-0.6-backend-test-fixture-reconciliation"
+          "release-0.6-backend-test-fixture-reconciliation",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -715516,7 +715710,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
+              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -715568,7 +715762,8 @@
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
-            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical."
+            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical.",
+            "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged."
           ],
           "criterion_result": "Full-page individual/legal/both checkbox chooser, canonical selection order, owner-bound durable request key, resume and lost-receipt recovery verified.",
           "limitations": [
@@ -715791,7 +715986,8 @@
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
-          "release-0.6-backend-test-fixture-reconciliation"
+          "release-0.6-backend-test-fixture-reconciliation",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -716155,7 +716351,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
+              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -716207,7 +716403,8 @@
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
-            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical."
+            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical.",
+            "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged."
           ],
           "criterion_result": "Required personal identity and checksum, optional title, dependent province/city, address/postal validation, save-before-step server drafts, review and exact submission receipt verified.",
           "limitations": [
@@ -716430,7 +716627,8 @@
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
-          "release-0.6-backend-test-fixture-reconciliation"
+          "release-0.6-backend-test-fixture-reconciliation",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -716794,7 +716992,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
+              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -716846,7 +717044,8 @@
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
-            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical."
+            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical.",
+            "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged."
           ],
           "criterion_result": "Representative and company identity, required/unique national identifier, company type, optional localized registration date/contact/economic fields, required dependent address, optional verified document workflow, review and persisted verification status verified.",
           "limitations": [
@@ -717070,7 +717269,8 @@
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
-          "release-0.6-backend-test-fixture-reconciliation"
+          "release-0.6-backend-test-fixture-reconciliation",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -717434,7 +717634,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
+              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -717486,7 +717686,8 @@
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
-            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical."
+            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical.",
+            "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged."
           ],
           "criterion_result": "Aggregate persisted profile summaries, first initial dashboard choice, explicit alternate selection, saved context, exact final receipt and current /app dashboard entry verified.",
           "limitations": [
@@ -717709,7 +717910,8 @@
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
-          "release-0.6-backend-test-fixture-reconciliation"
+          "release-0.6-backend-test-fixture-reconciliation",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -718073,7 +718275,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
+              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -718125,7 +718327,8 @@
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
-            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical."
+            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical.",
+            "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged."
           ],
           "criterion_result": "Customer /app and nested availability guard redirects empty accounts to onboarding; unavailable reads fail rather than inventing an empty account; staff context remains independent.",
           "limitations": [
@@ -718348,7 +718551,8 @@
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
-          "release-0.6-backend-test-fixture-reconciliation"
+          "release-0.6-backend-test-fixture-reconciliation",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -718712,7 +718916,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
+              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -718764,7 +718968,8 @@
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
-            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical."
+            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical.",
+            "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged."
           ],
           "criterion_result": "Active legal-profile directory verifies initials avatars, masked contacts, role/status badges, actual/unknown invitation/join/sign-in dates, owner crown and transfer entry.",
           "limitations": [
@@ -718987,7 +719192,8 @@
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
-          "release-0.6-backend-test-fixture-reconciliation"
+          "release-0.6-backend-test-fixture-reconciliation",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -719351,7 +719557,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
+              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -719403,7 +719609,8 @@
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
-            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical."
+            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical.",
+            "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged."
           ],
           "criterion_result": "Invitation username/role and optional bounded plain-text message, local validation, self/existing-member safeguards, current authority, retained failure draft and safe note display verified.",
           "limitations": [
@@ -719627,7 +719834,8 @@
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
-          "release-0.6-backend-test-fixture-reconciliation"
+          "release-0.6-backend-test-fixture-reconciliation",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -719991,7 +720199,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
+              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -720043,7 +720251,8 @@
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
-            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical."
+            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical.",
+            "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged."
           ],
           "criterion_result": "Member/invitation detail dialogs verify scoped identity and public activity, role editing, guarded removal, withdrawal, current ownership and captured step-up/receipt recovery.",
           "limitations": [
@@ -720266,7 +720475,8 @@
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
-          "release-0.6-backend-test-fixture-reconciliation"
+          "release-0.6-backend-test-fixture-reconciliation",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -720630,7 +720840,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
+              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -720682,7 +720892,8 @@
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
-            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical."
+            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical.",
+            "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged."
           ],
           "criterion_result": "Account-bound pending invitations identify company/inviter and remain until accept/decline. Onboarding acceptance requires no new profile, binds company/role and opens the accepted context explicitly.",
           "limitations": [
@@ -720905,7 +721116,8 @@
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
-          "release-0.6-backend-test-fixture-reconciliation"
+          "release-0.6-backend-test-fixture-reconciliation",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -721269,7 +721481,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b7ad0aca9274fe9e42783b9a8fa13e963115661a45c928a1c95b7f61d06f6305"
+              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -721321,7 +721533,8 @@
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
-            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical."
+            "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical.",
+            "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged."
           ],
           "criterion_result": "Owner rows cannot be removed or edited through ordinary member actions. Bound ownership transfer, current authority, step-up, stale/expiry/retry and last-owner safeguards verified.",
           "limitations": [
@@ -730325,7 +730538,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/sms.test.ts",
-              "sha256": "cf68b3f10bc220324efc54fd6325ed5cdcaf4a13dec496a992e4ce69693f23e2"
+              "sha256": "bae5fdfab214fde684e868b92ec741da88a7de4becf1084327c0ec3bca03b466"
             },
             {
               "path": "packages/shared/src/notification-delivery/sms.ts",
@@ -732456,7 +732669,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch."
+            "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch.",
+            "The 42-case targeted provider run passed with the added HTTP error cases. All original SMS test assertions and provider runtime source remain unchanged."
           ],
           "limitations": [
             "Complete the remaining effective contract/refund/invoice/receipt criteria after the existing owner decisions on engine/callback/credit-trigger/increase representations are dispositioned. Eleven scoped tasks remain partial; six have no current whole-task acceptance. Preserve the separate mathematical-policy, development reload and operational gates. Current35 boundary passes and94 matching accepted tasks do not certify those unresolved requirements."
@@ -733795,7 +734009,8 @@
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-payment-idempotency-conflict-alert",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ]
       }
     },
@@ -741262,7 +741477,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/sms.test.ts",
-              "sha256": "cf68b3f10bc220324efc54fd6325ed5cdcaf4a13dec496a992e4ce69693f23e2"
+              "sha256": "bae5fdfab214fde684e868b92ec741da88a7de4becf1084327c0ec3bca03b466"
             },
             {
               "path": "packages/shared/src/notification-delivery/sms.ts",
@@ -741583,7 +741798,8 @@
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
             "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures.",
-            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed."
+            "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed.",
+            "The 42-case targeted provider run passed with the added HTTP error cases. All original SMS test assertions and provider runtime source remain unchanged."
           ],
           "limitations": [],
           "operational_limits": [
@@ -742394,7 +742610,8 @@
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-ai-inference-metrics",
-          "release-0.6-external-provider-metrics-reconciliation"
+          "release-0.6-external-provider-metrics-reconciliation",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -745191,7 +745408,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/sms.test.ts",
-              "sha256": "cf68b3f10bc220324efc54fd6325ed5cdcaf4a13dec496a992e4ce69693f23e2"
+              "sha256": "bae5fdfab214fde684e868b92ec741da88a7de4becf1084327c0ec3bca03b466"
             },
             {
               "path": "packages/shared/src/notification-delivery/sms.ts",
@@ -745533,7 +745750,8 @@
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
             "Renewed the shared release-version browser binding after preserving the historical milestone check in the root-version suite. All 25 focused release and smoke cases passed across the five browser projects.",
-            "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures."
+            "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures.",
+            "The 42-case targeted provider run passed with the added HTTP error cases. All original SMS test assertions and provider runtime source remain unchanged."
           ],
           "limitations": [
             "Current staging is v0.3.0/2ac708c11225a1239156787cddfdd3ab094fb8f8, API/web/worker healthy and Redis/object storage readiness verified. After effective v0.4.0 criteria are accepted, deploy its immutable candidate and verify actual AI routing, slot isolation and notification/storage operations. Earlier v0.1.29/forced-TLS warning description is stale and does not dispatch a rebuild.",
@@ -746233,7 +746451,8 @@
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-ai-inference-metrics",
-          "release-0.6-external-provider-metrics-reconciliation"
+          "release-0.6-external-provider-metrics-reconciliation",
+          "release-0.6-loopback-provider-protocol-fixtures"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -846102,6 +846321,126 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/transaction-fixture-reconciliation",
       "source_scope_proof": "migration-constraint-source-proof.json",
       "source_scope_proof_sha256": "e9d8ad265b59a4f7d750643c7e24dcafb91961d2cd2a6c6b9218509064b7ee76"
+    },
+    "release-0.6-loopback-provider-protocol-fixtures": {
+      "batch": "release-0.6-loopback-provider-protocol-fixtures",
+      "base_commit": "013cd314854837e9b1f704080ecaa8d334816f5a",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.01",
+        "02-auth-users-admin.md#T-09.06.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "05-notifications-documents-ai.md#T-05.07.01",
+        "05-notifications-documents-ai.md#T-05.07.02",
+        "05-notifications-documents-ai.md#T-05.07.03",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "05-notifications-documents-ai.md#T-05.07.05",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "06-security-testing-observability.md#T-06.09.01.01",
+        "06-security-testing-observability.md#T-06.10.01.01",
+        "06-security-testing-observability.md#T-06.10.01.02",
+        "06-security-testing-observability.md#T-06.10.01.03",
+        "06-security-testing-observability.md#T-06.10.01.04",
+        "06-security-testing-observability.md#T-06.10.02.10",
+        "07-ui-ux-design.md#T-07.28.01.01",
+        "07-ui-ux-design.md#T-07.28.01.02",
+        "07-ui-ux-design.md#T-07.28.01.03",
+        "07-ui-ux-design.md#T-07.28.01.04",
+        "07-ui-ux-design.md#T-07.28.01.05",
+        "07-ui-ux-design.md#T-07.29.01.01",
+        "07-ui-ux-design.md#T-07.29.01.02",
+        "07-ui-ux-design.md#T-07.29.01.03",
+        "07-ui-ux-design.md#T-07.29.01.04",
+        "07-ui-ux-design.md#T-07.29.01.05",
+        "release-readiness#R-02.01",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "packages/shared/src/notification-delivery/smtp-wire.test.ts",
+        "packages/shared/src/notification-delivery/sms.test.ts",
+        "docs/development/ci.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
+          "sha256": "2f790e5e306d653fd426cc38bf25d8ce66d26573d6645d166b534e06c37edd06"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-gateway-http-boundaries.test.ts",
+          "sha256": "8b275a988a09206b3feb59c78ba5a01c54faef7b8aa8efc4f5e25f2606696147"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-gateway.test.ts",
+          "sha256": "ad52b2aa1d07f79905aa4dc20c86c3435beaf6ef4f4152847b849a638534b246"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-gateway.ts",
+          "sha256": "c8945b247aeca252651eef7514d06c0280e51061e160359710f34f649401a67b"
+        },
+        {
+          "path": "deploy/staging/payment-sandbox.mjs",
+          "sha256": "b55344675618600622283bf8f547e61a55a596d6df3771a6ff790b0d7625eba6"
+        },
+        {
+          "path": "deploy/staging/payment-sandbox.test.mjs",
+          "sha256": "86fb1bfd0112f4cf15f270a74e5e93237f684d7c0ec2f5a57de6d6b2ef6df29f"
+        },
+        {
+          "path": "docs/development/ci.md",
+          "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
+        },
+        {
+          "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
+          "sha256": "f4ded48b7e12eaa12e76b70e776e97e68478d667ae1744c44f2cc9d62065e86b"
+        },
+        {
+          "path": "packages/shared/src/auth-delivery/smsir-client.ts",
+          "sha256": "f2d5247adf585f08144a67c016f40baccab39eee76c1bff5f64a7e84c9f047df"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/email.test.ts",
+          "sha256": "587f21855069d8ca192e5f6b9b5973bb0ea3429083ebfcd775514048df226a3f"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/email.ts",
+          "sha256": "c41ba3123682efdec817653ad3783f8ee2718d862f198c70c6df81600c6f4f31"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/provider-errors.test.ts",
+          "sha256": "6203460859ebbed90ad17ec8d6ea4e2d5e450e231b79be66af8679a4209d1f1c"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/sms.test.ts",
+          "sha256": "bae5fdfab214fde684e868b92ec741da88a7de4becf1084327c0ec3bca03b466"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/sms.ts",
+          "sha256": "6bc26f856a25df6e17b8cc7b6e1dd8c4463ea845f20f96167e3fc624de15fede"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/smtp-wire.test.ts",
+          "sha256": "9cbe6e6e40bd16b28e604d53250ba1a76bcb78d4738a309ea97e2d21b12a9917"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/smtp.test.ts",
+          "sha256": "8903e89d932a5a0fcafa2f0f2dfcdb42743700f49a2f4c4886b482d7fea93255"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "The TLS SMTP fixture binds an ephemeral loopback listener, trusts its generated certificate for the real Nodemailer transport, and runs the production SMTP sender and hostname allowlist path. The seven wire cases passed.",
+        "The existing SMS.ir and document storage fixtures use loopback HTTP. All 24 hosted storage-record cases passed with matching source and the in-memory S3 fixture. The six native payment sandbox cases passed using a disposable ledger and actual HTTP payment adapter.",
+        "The 42 targeted shared cases passed. SMTP verifies success and stable Message-ID, authentication and sender rejection, temporary and permanent recipient rejection, command timeout, and loss of the response after DATA. The original provider policy assertions were retained.",
+        "SMS.ir verifies successful receipts, direct and template validation, explicit rejection, incomplete or contradictory acknowledgments and controlled HTTP 400, 401, 408, 429 and 503. Those HTTP failures produce no receipt, preserve diagnostics and do not trigger an immediate resend.",
+        "The six local HTTP sandbox tests and 134 source-matching hosted gateway adapter tests cover protected settlement, failed and unverified responses, unsafe redirects, timeouts and recovery, idempotency collisions and authenticated callback binding. Live merchant and external delivery evidence are separate gates."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/provider-protocol-fixtures",
+      "source_scope_proof": "provider-fixture-source-proof.json",
+      "source_scope_proof_sha256": "bce32814d1b1837a5a31ba475d117c9f9c82e262db52ce63e857d63d591969f8"
     }
   },
   "historical_improvements": [

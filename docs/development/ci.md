@@ -26,6 +26,19 @@ apply migrations to each fresh HTTP fixture database. Lower-level PostgreSQL
 tests can use the schema fixture with a unique search path and managed
 cleanup. Keep the database URL scoped to a disposable test instance.
 
+## Provider fixtures
+
+The SMTP integration test uses OpenSSL to generate a short-lived certificate
+for a loopback TLS listener. Install the `openssl` executable before running
+the shared package tests. The fixture trusts only its generated certificate,
+uses the existing SMTP allowlist for localhost inside the test, and removes
+the certificate and key after setup.
+
+SMS.ir and document storage tests use loopback HTTP fixtures. The staging
+payment sandbox test runs the real payment adapter against a disposable local
+ledger. These fixtures exercise provider responses without external delivery
+or live merchant credentials.
+
 ## Reusing local builds
 
 Build the required shared, API, worker and web outputs once before their
