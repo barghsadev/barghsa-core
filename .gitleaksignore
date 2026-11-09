@@ -141,3 +141,6 @@ ce7f20e539cf76aac23b7145db68f16ae9f0e404:kanban/board.json:generic-api-key:769
 71e64631bf3976c4e8804768da254dd3a7881ba1:kanban/board.json:generic-api-key:594
 8598d6fb561ff93ce51704b0424697df4acb6409:kanban/board.json:generic-api-key:38118
 b9abb1fb2ca020992fae572bd0a83a9ba2bc23b8:scripts/check-staging-proxy.mjs:generic-api-key:90
+
+# Verified SHA-256 of the public authentication specification, not a credential.
+3182b822e03500066dd23aba38caf7be6b784121:kanban/board.json:generic-api-key:976

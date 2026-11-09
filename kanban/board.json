@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T13:20:53+00:00",
+  "updated": "2026-11-09T13:24:17+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -471595,7 +471595,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-required-source-and-secret-gates"
+          "release-0.6-required-source-and-secret-gates",
+          "release-0.6-preflight-reconciliation"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -471615,7 +471616,7 @@
             },
             {
               "path": ".gitleaksignore",
-              "sha256": "ab2ed1d286fec78d38cf86535014aadef1ef24b18cba981bc7eb0d5f0411ecba"
+              "sha256": "9ce5f18a938c71c2db3a07abf1486ebdefa1480e0d80b10c1c7277ad660af4d6"
             },
             {
               "path": "apps/web/build.mjs",
@@ -471640,7 +471641,8 @@
           ],
           "checks": [
             "Audited complete Git history, tracked environment paths and exact built frontend separately. No committed or bundled credentials detected.",
-            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
+            "Gitleaks flagged a specification SHA-256 on the exact preflight commit. Verified the digest against the committed public file. Only the exact historical fingerprint is excluded. Synthetic credential detection, redaction, and a full 3,018-commit scan with zero leaks passed locally."
           ]
         }
       }
@@ -471666,7 +471668,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-required-source-and-secret-gates"
+          "release-0.6-required-source-and-secret-gates",
+          "release-0.6-preflight-reconciliation"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -471686,7 +471689,7 @@
             },
             {
               "path": ".gitleaksignore",
-              "sha256": "ab2ed1d286fec78d38cf86535014aadef1ef24b18cba981bc7eb0d5f0411ecba"
+              "sha256": "9ce5f18a938c71c2db3a07abf1486ebdefa1480e0d80b10c1c7277ad660af4d6"
             },
             {
               "path": "scripts/check-secrets.py",
@@ -471699,7 +471702,8 @@
           ],
           "checks": [
             "Required GitHub check now depends on full-history redacted secret scan and fails on any non-success. Actual base secret receipt and negative status matrix verified.",
-            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
+            "Gitleaks flagged a specification SHA-256 on the exact preflight commit. Verified the digest against the committed public file. Only the exact historical fingerprint is excluded. Synthetic credential detection, redaction, and a full 3,018-commit scan with zero leaks passed locally."
           ]
         },
         "ci_checkpoint": {
@@ -471971,7 +471975,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-required-source-and-secret-gates"
+          "release-0.6-required-source-and-secret-gates",
+          "release-0.6-preflight-reconciliation"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -471991,7 +471996,7 @@
             },
             {
               "path": ".gitleaksignore",
-              "sha256": "ab2ed1d286fec78d38cf86535014aadef1ef24b18cba981bc7eb0d5f0411ecba"
+              "sha256": "9ce5f18a938c71c2db3a07abf1486ebdefa1480e0d80b10c1c7277ad660af4d6"
             },
             {
               "path": "scripts/check-secrets.py",
@@ -472004,7 +472009,8 @@
           ],
           "checks": [
             "PR, main and preflight all run Gitleaks with complete history and verified redaction. Required check rejects missing/failed scan outcomes.",
-            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
+            "Gitleaks flagged a specification SHA-256 on the exact preflight commit. Verified the digest against the committed public file. Only the exact historical fingerprint is excluded. Synthetic credential detection, redaction, and a full 3,018-commit scan with zero leaks passed locally."
           ]
         },
         "current_scan_checkpoint": {
@@ -519011,7 +519017,8 @@
           "release-0.5-conditional-form-closure",
           "release-0.6-owner-policy-reconciliation",
           "release-0.6-browser-response-policy",
-          "release-0.6-browser-font-notices"
+          "release-0.6-browser-font-notices",
+          "release-0.6-preflight-reconciliation"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -520355,7 +520362,7 @@
             },
             {
               "path": "packages/i18n/src/electricity-correction-forms.test.ts",
-              "sha256": "a20d35e7174ba4f2a3df206e1124d00dab1a87f4ce09526106862c5985b181f2"
+              "sha256": "150298767f0ac7fe1e016a4324e2525438c23abd6dcb8c8c7f054a892f18d95e"
             },
             {
               "path": "packages/i18n/src/public-shell.ts",
@@ -520473,7 +520480,8 @@
             "The 347 source paths from earlier form evidence were reconciled with current hashes and renewed where affected. Prior browser and form fixtures remain traceable through their source-bound receipts. The census documents control structure alongside the schema and browser checks.",
             "Twenty-eight final production browser cases, 18 instrumented Chromium cases, 100 related unit cases, eight coverage groups and 98 gzip budgets passed. Web typecheck, changed-file lint and formatting passed. Six cold-auth checks carry forward against byte-identical auth assets.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "Reproduced the existing localized correction test failure. The test now requires every one of the 18 concrete keys (including the existing loading message), preserves English/Persian parity and content assertions, and passes."
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-form-closure/proof.json",
           "scope_dispositions": [
@@ -822279,6 +822287,34 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/isolated-compose-rollback-final.log",
       "source_scope_proof_sha256": "f4301b4516259de06b74c193be09c0d9ca63838518e66f5e4c613c0761f8790a"
+    },
+    "release-0.6-preflight-reconciliation": {
+      "batch": "release-0.6-preflight-reconciliation",
+      "base_commit": "e90145fe0e41e1149b234c7bbf86a049a53c6e98",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "07-ui-ux-design.md#T-07.05.01.05"
+      ],
+      "source_evidence": [
+        {
+          "path": ".gitleaksignore",
+          "sha256": "9ce5f18a938c71c2db3a07abf1486ebdefa1480e0d80b10c1c7277ad660af4d6"
+        },
+        {
+          "path": "packages/i18n/src/electricity-correction-forms.test.ts",
+          "sha256": "150298767f0ac7fe1e016a4324e2525438c23abd6dcb8c8c7f054a892f18d95e"
+        }
+      ],
+      "checks": [
+        "Gitleaks flagged a specification SHA-256 on the exact preflight commit. Verified the digest against the committed public file. Only the exact historical fingerprint is excluded. Synthetic credential detection, redaction, and a full 3,018-commit scan with zero leaks passed locally.",
+        "Reproduced the existing localized correction test failure. The test now requires every one of the 18 concrete keys (including the existing loading message), preserves English/Persian parity and content assertions, and passes.",
+        "Five secret-scan failure handling tests passed. Hosted integrity still required."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/geoip-resolved-secret-scan.log",
+      "source_scope_proof_sha256": "e0ad7457892364c34c80f92f9f88e5f75e36980db220566bb083caa94ab56e37"
     }
   },
   "historical_improvements": [
