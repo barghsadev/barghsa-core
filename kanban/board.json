@@ -11171,8 +11171,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Close the named exceptions with verified notices and corresponding-source evidence where required, or replace the packages. Reconcile final image OS/tooling notices and resolve DOMPurify via its already allowed Apache-2.0 option.",
-        "Implement and run the license gate against the final built assets and immutable images, with only reviewed package-specific exceptions. Existing SCA, SAST and secret gates passed related checks."
+        "Review the exact pinned browser and PDF font copies, the LGPL native libvips distributions, four runtime package exceptions and final OS/tooling distribution notices. Browser font source provenance and both notice assets are verified.",
+        "Implement and run the license gate against the final built assets and immutable images, permitting only reviewed package-specific exceptions. Preserve the DOMPurify Apache-2.0 option and its applicable notices."
       ],
       "owner": null,
       "depends_on": [],
@@ -11208,11 +11208,12 @@
           "release-0.6-browser-font-notices",
           "release-0.6-immutable-location-and-signature-feed",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-font-source-provenance"
         ],
         "current_acceptance": null
       },
-      "blocker": "Owner or legal approval and packaging evidence are still required for the named OFL fonts, LGPL libvips binaries and four runtime package exceptions in docs/security/release-license-review.md. The owner approved removing GeoLite2; it does not require a license exception."
+      "blocker": "The review packet is ready for owner or legal review of the exact OFL font copies, LGPL libvips binaries and four runtime package exceptions. Corresponding-source and replacement terms for libvips still require review. GeoLite2 removal is already owner approved."
     },
     {
       "key": "01-platform-infrastructure.md#T-05.03.05",
@@ -24175,7 +24176,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-immutable-location-and-signature-feed",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-font-source-provenance"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -24331,7 +24333,7 @@
             },
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "624578dfb0f228a151c3c9e98e0217634bda978f859af77b8431d6c6f56f2a2c"
+              "sha256": "bb434ce9ab9d15ff25bc4f61405267a6c1e376642fb64989d860ef532f036820"
             }
           ],
           "checks": [
@@ -24696,7 +24698,14 @@
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
             }
-          ]
+          ],
+          "font_provenance_source_renewal": {
+            "batch": "release-0.6-font-source-provenance",
+            "base_commit": "03be3932d266d87b2b8fbdec61c6161beb25e674",
+            "paths": [
+              "docs/security/release-license-review.md"
+            ]
+          }
         }
       }
     },
@@ -472849,20 +472858,24 @@
         "story": "06-security-testing-observability.md#spec-78eef3232c99"
       },
       "requirement": "| T-06.07.02.06 | Set up license compliance check (e.g. license-checker) for dependency licenses | S |",
-      "status": "verify",
+      "status": "blocked",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Review the exact pinned browser and PDF font copies, the LGPL native libvips distributions, four runtime package exceptions and final OS/tooling distribution notices. Browser font source provenance and both notice assets are verified.",
+        "Implement and run the license gate against the final built assets and immutable images, permitting only reviewed package-specific exceptions. Preserve the DOMPurify Apache-2.0 option and its applicable notices."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-font-source-provenance"
+        ],
         "current_acceptance": null
-      }
+      },
+      "blocker": "The review packet is ready for owner or legal review of the exact OFL font copies, LGPL libvips binaries and four runtime package exceptions. Corresponding-source and replacement terms for libvips still require review. GeoLite2 removal is already owner approved."
     },
     {
       "key": "06-security-testing-observability.md#T-06.07.02.07",
@@ -479053,7 +479066,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
-          "release-0.6-required-source-and-secret-gates"
+          "release-0.6-required-source-and-secret-gates",
+          "release-0.6-font-source-provenance"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -479401,11 +479415,11 @@
             },
             {
               "path": "packages/ui/src/fonts/vazirmatn-arabic.woff2",
-              "sha256": "07c90f3690c05c7722300d9933824191a77f5eb8367e498a07ffc9552f2c2635"
+              "sha256": "84a382e46c30fb4f73d0e3800c16d0af15888e2731e57fa5f93e2c29a2c6a957"
             },
             {
               "path": "packages/ui/src/fonts/vazirmatn-latin.woff2",
-              "sha256": "454d44a1112afe0a95f40216cd231d0fb725269e31c8692ff36003c56eb23d7c"
+              "sha256": "d29c041cd4294af893cf3c01dfab6d47202c667ab55d702f68782599918c651d"
             },
             {
               "path": "packages/ui/src/form/bound-field.test.tsx",
@@ -479875,7 +479889,15 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
-          ]
+          ],
+          "font_provenance_source_renewal": {
+            "batch": "release-0.6-font-source-provenance",
+            "base_commit": "03be3932d266d87b2b8fbdec61c6161beb25e674",
+            "paths": [
+              "packages/ui/src/fonts/vazirmatn-arabic.woff2",
+              "packages/ui/src/fonts/vazirmatn-latin.woff2"
+            ]
+          }
         }
       }
     },
@@ -480148,7 +480170,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
-          "release-0.6-owner-policy-reconciliation"
+          "release-0.6-owner-policy-reconciliation",
+          "release-0.6-font-source-provenance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -480512,11 +480535,11 @@
             },
             {
               "path": "packages/ui/src/fonts/vazirmatn-arabic.woff2",
-              "sha256": "07c90f3690c05c7722300d9933824191a77f5eb8367e498a07ffc9552f2c2635"
+              "sha256": "84a382e46c30fb4f73d0e3800c16d0af15888e2731e57fa5f93e2c29a2c6a957"
             },
             {
               "path": "packages/ui/src/fonts/vazirmatn-latin.woff2",
-              "sha256": "454d44a1112afe0a95f40216cd231d0fb725269e31c8692ff36003c56eb23d7c"
+              "sha256": "d29c041cd4294af893cf3c01dfab6d47202c667ab55d702f68782599918c651d"
             },
             {
               "path": "packages/ui/src/form/bound-field.test.tsx",
@@ -480831,7 +480854,15 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
-          ]
+          ],
+          "font_provenance_source_renewal": {
+            "batch": "release-0.6-font-source-provenance",
+            "base_commit": "03be3932d266d87b2b8fbdec61c6161beb25e674",
+            "paths": [
+              "packages/ui/src/fonts/vazirmatn-arabic.woff2",
+              "packages/ui/src/fonts/vazirmatn-latin.woff2"
+            ]
+          }
         },
         "acceptance_history": [
           {
@@ -481002,7 +481033,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-component-direction-matrix"
+          "release-0.5-component-direction-matrix",
+          "release-0.6-font-source-provenance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -481366,11 +481398,11 @@
             },
             {
               "path": "packages/ui/src/fonts/vazirmatn-arabic.woff2",
-              "sha256": "07c90f3690c05c7722300d9933824191a77f5eb8367e498a07ffc9552f2c2635"
+              "sha256": "84a382e46c30fb4f73d0e3800c16d0af15888e2731e57fa5f93e2c29a2c6a957"
             },
             {
               "path": "packages/ui/src/fonts/vazirmatn-latin.woff2",
-              "sha256": "454d44a1112afe0a95f40216cd231d0fb725269e31c8692ff36003c56eb23d7c"
+              "sha256": "d29c041cd4294af893cf3c01dfab6d47202c667ab55d702f68782599918c651d"
             },
             {
               "path": "packages/ui/src/form/bound-field.test.tsx",
@@ -481685,7 +481717,15 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
-          ]
+          ],
+          "font_provenance_source_renewal": {
+            "batch": "release-0.6-font-source-provenance",
+            "base_commit": "03be3932d266d87b2b8fbdec61c6161beb25e674",
+            "paths": [
+              "packages/ui/src/fonts/vazirmatn-arabic.woff2",
+              "packages/ui/src/fonts/vazirmatn-latin.woff2"
+            ]
+          }
         },
         "acceptance_history": [
           {
@@ -481741,7 +481781,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
-          "release-0.6-required-source-and-secret-gates"
+          "release-0.6-required-source-and-secret-gates",
+          "release-0.6-font-source-provenance"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -482089,11 +482130,11 @@
             },
             {
               "path": "packages/ui/src/fonts/vazirmatn-arabic.woff2",
-              "sha256": "07c90f3690c05c7722300d9933824191a77f5eb8367e498a07ffc9552f2c2635"
+              "sha256": "84a382e46c30fb4f73d0e3800c16d0af15888e2731e57fa5f93e2c29a2c6a957"
             },
             {
               "path": "packages/ui/src/fonts/vazirmatn-latin.woff2",
-              "sha256": "454d44a1112afe0a95f40216cd231d0fb725269e31c8692ff36003c56eb23d7c"
+              "sha256": "d29c041cd4294af893cf3c01dfab6d47202c667ab55d702f68782599918c651d"
             },
             {
               "path": "packages/ui/src/form/bound-field.test.tsx",
@@ -482563,7 +482604,15 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
-          ]
+          ],
+          "font_provenance_source_renewal": {
+            "batch": "release-0.6-font-source-provenance",
+            "base_commit": "03be3932d266d87b2b8fbdec61c6161beb25e674",
+            "paths": [
+              "packages/ui/src/fonts/vazirmatn-arabic.woff2",
+              "packages/ui/src/fonts/vazirmatn-latin.woff2"
+            ]
+          }
         }
       }
     },
@@ -482615,7 +482664,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-component-direction-matrix"
+          "release-0.5-component-direction-matrix",
+          "release-0.6-font-source-provenance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -482979,11 +483029,11 @@
             },
             {
               "path": "packages/ui/src/fonts/vazirmatn-arabic.woff2",
-              "sha256": "07c90f3690c05c7722300d9933824191a77f5eb8367e498a07ffc9552f2c2635"
+              "sha256": "84a382e46c30fb4f73d0e3800c16d0af15888e2731e57fa5f93e2c29a2c6a957"
             },
             {
               "path": "packages/ui/src/fonts/vazirmatn-latin.woff2",
-              "sha256": "454d44a1112afe0a95f40216cd231d0fb725269e31c8692ff36003c56eb23d7c"
+              "sha256": "d29c041cd4294af893cf3c01dfab6d47202c667ab55d702f68782599918c651d"
             },
             {
               "path": "packages/ui/src/form/bound-field.test.tsx",
@@ -483298,7 +483348,15 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
-          ]
+          ],
+          "font_provenance_source_renewal": {
+            "batch": "release-0.6-font-source-provenance",
+            "base_commit": "03be3932d266d87b2b8fbdec61c6161beb25e674",
+            "paths": [
+              "packages/ui/src/fonts/vazirmatn-arabic.woff2",
+              "packages/ui/src/fonts/vazirmatn-latin.woff2"
+            ]
+          }
         },
         "acceptance_history": [
           {
@@ -483356,7 +483414,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
-          "release-0.6-required-source-and-secret-gates"
+          "release-0.6-required-source-and-secret-gates",
+          "release-0.6-font-source-provenance"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -483704,11 +483763,11 @@
             },
             {
               "path": "packages/ui/src/fonts/vazirmatn-arabic.woff2",
-              "sha256": "07c90f3690c05c7722300d9933824191a77f5eb8367e498a07ffc9552f2c2635"
+              "sha256": "84a382e46c30fb4f73d0e3800c16d0af15888e2731e57fa5f93e2c29a2c6a957"
             },
             {
               "path": "packages/ui/src/fonts/vazirmatn-latin.woff2",
-              "sha256": "454d44a1112afe0a95f40216cd231d0fb725269e31c8692ff36003c56eb23d7c"
+              "sha256": "d29c041cd4294af893cf3c01dfab6d47202c667ab55d702f68782599918c651d"
             },
             {
               "path": "packages/ui/src/form/bound-field.test.tsx",
@@ -484178,7 +484237,15 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
-          ]
+          ],
+          "font_provenance_source_renewal": {
+            "batch": "release-0.6-font-source-provenance",
+            "base_commit": "03be3932d266d87b2b8fbdec61c6161beb25e674",
+            "paths": [
+              "packages/ui/src/fonts/vazirmatn-arabic.woff2",
+              "packages/ui/src/fonts/vazirmatn-latin.woff2"
+            ]
+          }
         }
       }
     },
@@ -484230,7 +484297,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-component-direction-matrix"
+          "release-0.5-component-direction-matrix",
+          "release-0.6-font-source-provenance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -484594,11 +484662,11 @@
             },
             {
               "path": "packages/ui/src/fonts/vazirmatn-arabic.woff2",
-              "sha256": "07c90f3690c05c7722300d9933824191a77f5eb8367e498a07ffc9552f2c2635"
+              "sha256": "84a382e46c30fb4f73d0e3800c16d0af15888e2731e57fa5f93e2c29a2c6a957"
             },
             {
               "path": "packages/ui/src/fonts/vazirmatn-latin.woff2",
-              "sha256": "454d44a1112afe0a95f40216cd231d0fb725269e31c8692ff36003c56eb23d7c"
+              "sha256": "d29c041cd4294af893cf3c01dfab6d47202c667ab55d702f68782599918c651d"
             },
             {
               "path": "packages/ui/src/form/bound-field.test.tsx",
@@ -484913,7 +484981,15 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
-          ]
+          ],
+          "font_provenance_source_renewal": {
+            "batch": "release-0.6-font-source-provenance",
+            "base_commit": "03be3932d266d87b2b8fbdec61c6161beb25e674",
+            "paths": [
+              "packages/ui/src/fonts/vazirmatn-arabic.woff2",
+              "packages/ui/src/fonts/vazirmatn-latin.woff2"
+            ]
+          }
         },
         "acceptance_history": [
           {
@@ -484973,7 +485049,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-component-direction-matrix"
+          "release-0.5-component-direction-matrix",
+          "release-0.6-font-source-provenance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -485337,11 +485414,11 @@
             },
             {
               "path": "packages/ui/src/fonts/vazirmatn-arabic.woff2",
-              "sha256": "07c90f3690c05c7722300d9933824191a77f5eb8367e498a07ffc9552f2c2635"
+              "sha256": "84a382e46c30fb4f73d0e3800c16d0af15888e2731e57fa5f93e2c29a2c6a957"
             },
             {
               "path": "packages/ui/src/fonts/vazirmatn-latin.woff2",
-              "sha256": "454d44a1112afe0a95f40216cd231d0fb725269e31c8692ff36003c56eb23d7c"
+              "sha256": "d29c041cd4294af893cf3c01dfab6d47202c667ab55d702f68782599918c651d"
             },
             {
               "path": "packages/ui/src/form/bound-field.test.tsx",
@@ -485656,7 +485733,15 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
-          ]
+          ],
+          "font_provenance_source_renewal": {
+            "batch": "release-0.6-font-source-provenance",
+            "base_commit": "03be3932d266d87b2b8fbdec61c6161beb25e674",
+            "paths": [
+              "packages/ui/src/fonts/vazirmatn-arabic.woff2",
+              "packages/ui/src/fonts/vazirmatn-latin.woff2"
+            ]
+          }
         },
         "acceptance_history": [
           {
@@ -824512,6 +824597,54 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "private-api-monitoring-proof.json",
       "source_scope_proof_sha256": "a5ae57d68164cdb74be1b5c75d05413b082b0cc1c6147fdcbf058cdac53ed9c6"
+    },
+    "release-0.6-font-source-provenance": {
+      "batch": "release-0.6-font-source-provenance",
+      "base_commit": "03be3932d266d87b2b8fbdec61c6161beb25e674",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "02-auth-users-admin.md#T-02.02.02",
+        "07-ui-ux-design.md#T-07.01.01.01",
+        "07-ui-ux-design.md#T-07.01.01.02",
+        "07-ui-ux-design.md#T-07.01.01.03",
+        "07-ui-ux-design.md#T-07.01.01.04",
+        "07-ui-ux-design.md#T-07.01.01.05",
+        "07-ui-ux-design.md#T-07.01.01.06",
+        "07-ui-ux-design.md#T-07.01.01.07",
+        "07-ui-ux-design.md#T-07.01.01.08"
+      ],
+      "checks": [
+        "Verified npm registry archive integrity for 29 published Fontsource Variable versions. None matches the former subsets. Final Arabic and Latin bytes are unchanged copies from pinned 5.3.0, and its original OFL notice matches the existing notice exactly.",
+        "Both subsets preserve the font family, release 33.003, variable weight range and exact code-point sets. Arabic GPOS and hints differ. Both production web shells contain the exact new assets and accompanying original notices.",
+        "36 distinct existing production browser cases pass across Chromium desktop and mobile, Persian and English, authentication, dashboard, contract and four service histories. The first run passed 35. One result failed at report creation with ENOSPC and passed on the single-case rerun. No assertion changed.",
+        "All 101 existing route and interaction gzip budgets and six actual cold auth browser budgets passed. The largest cold auth transfer was 149.37 KB gzip, below the unchanged 150 KB cap."
+      ],
+      "source_evidence": [
+        {
+          "path": "packages/ui/src/fonts/vazirmatn-arabic.woff2",
+          "sha256": "84a382e46c30fb4f73d0e3800c16d0af15888e2731e57fa5f93e2c29a2c6a957"
+        },
+        {
+          "path": "packages/ui/src/fonts/vazirmatn-latin.woff2",
+          "sha256": "d29c041cd4294af893cf3c01dfab6d47202c667ab55d702f68782599918c651d"
+        },
+        {
+          "path": "docs/security/release-license-review.md",
+          "sha256": "bb434ce9ab9d15ff25bc4f61405267a6c1e376642fb64989d860ef532f036820"
+        },
+        {
+          "path": "packages/ui/src/fonts/vazirmatn-OFL.txt",
+          "sha256": "e6f4ce7b6c830d5a25a4f8ac777c267cd7d3c180bc2a7150ca57cbb9b280c4b7"
+        },
+        {
+          "path": "packages/ui/src/fonts/fonts.css",
+          "sha256": "a1f68a0120c9ba7279ee54b5c7c728d983b87455bf22cbbe1e9f21f420bb76cb"
+        }
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "font-provenance-acceptance-proof.json",
+      "source_scope_proof_sha256": "c5fa682f87f0bacf277272b51405d9a266ecbcc19b90a71bce7bbbf1b3beb79a"
     }
   },
   "historical_improvements": [
