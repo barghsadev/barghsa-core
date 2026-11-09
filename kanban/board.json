@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T13:19:39+00:00",
+  "updated": "2026-11-09T13:20:53+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -11378,7 +11378,9 @@
         "changed_paths": [
           "audit/skipped-work-handoff.md"
         ],
-        "batches": [],
+        "batches": [
+          "release-0.6-staging-image-rollback"
+        ],
         "current_acceptance": null
       }
     },
@@ -60668,7 +60670,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-staging-image-rollback"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -60816,7 +60819,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "711bc0a7470f4e21e4891176655fe76e93f71feb768631a17b67ff103dd19dde"
+              "sha256": "31e1c0733dce6cd92d13966bfda5e5668376b72fc253cd63a9caf2885e130d0c"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -61115,7 +61118,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
-            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain."
+            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
+            "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed."
           ],
           "limitations": [
             "Before deployed producer rollout, publish reviewed active profile.verification_status email and SMS templates in both languages using messageFa/messageEn, and activate verified SMS mappings for the corresponding approved provider parameters. Record exact template/mapping versions and actual authorized deployment/delivery evidence. Existing customized families are preserved by import; schema migration or a successful local transport fixture does not satisfy this gate. No historical resend/backfill or external customer message is authorized or performed."
@@ -104849,7 +104853,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.5-staging-image-package-source",
           "release-0.5-protected-publication",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-staging-image-rollback"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -105221,7 +105226,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "a5c2f149134ee16667208b2cca4d0777076ffe952bae9a5cc37c67381a08666f"
+              "sha256": "ef2d8af5b359edd372c8b14d365b113bb7a8867f59c0eb2bcca2741fcbdece36"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -105233,7 +105238,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "711bc0a7470f4e21e4891176655fe76e93f71feb768631a17b67ff103dd19dde"
+              "sha256": "31e1c0733dce6cd92d13966bfda5e5668376b72fc253cd63a9caf2885e130d0c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -105463,7 +105468,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed."
           ],
           "limitations": [
             "Provision protected CUSTOMER_TELEGRAM credentials after identifying the existing ngrok webhook owner/secret location (already asked once); hand off the callback without disturbing unrelated integration. At the accepted staging release, verify actual customer/profile linking, private Telegram reply/root version, exact provider message receipts and live slot/authority isolation. Local implementation and 127 related cases are accepted; live operations are not certified."
@@ -444790,7 +444796,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-staging-image-rollback"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -444962,7 +444969,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "711bc0a7470f4e21e4891176655fe76e93f71feb768631a17b67ff103dd19dde"
+              "sha256": "31e1c0733dce6cd92d13966bfda5e5668376b72fc253cd63a9caf2885e130d0c"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -445100,7 +445107,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/permanent-document-retention",
@@ -457991,7 +457999,8 @@
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
           "release-0.5-conditional-native-choices",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-staging-image-rollback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -458231,7 +458240,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "711bc0a7470f4e21e4891176655fe76e93f71feb768631a17b67ff103dd19dde"
+              "sha256": "31e1c0733dce6cd92d13966bfda5e5668376b72fc253cd63a9caf2885e130d0c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -458336,7 +458345,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -458558,7 +458568,8 @@
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
           "release-0.5-conditional-native-choices",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-staging-image-rollback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -458798,7 +458809,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "711bc0a7470f4e21e4891176655fe76e93f71feb768631a17b67ff103dd19dde"
+              "sha256": "31e1c0733dce6cd92d13966bfda5e5668376b72fc253cd63a9caf2885e130d0c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -458903,7 +458914,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -459123,7 +459135,8 @@
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
           "release-0.5-conditional-native-choices",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-staging-image-rollback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -459363,7 +459376,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "711bc0a7470f4e21e4891176655fe76e93f71feb768631a17b67ff103dd19dde"
+              "sha256": "31e1c0733dce6cd92d13966bfda5e5668376b72fc253cd63a9caf2885e130d0c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -459468,7 +459481,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -459688,7 +459702,8 @@
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
           "release-0.5-conditional-native-choices",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-staging-image-rollback"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -459928,7 +459943,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "711bc0a7470f4e21e4891176655fe76e93f71feb768631a17b67ff103dd19dde"
+              "sha256": "31e1c0733dce6cd92d13966bfda5e5668376b72fc253cd63a9caf2885e130d0c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -460049,7 +460064,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -460752,7 +460768,8 @@
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
           "release-0.5-conditional-native-choices",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-staging-image-rollback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -460992,7 +461009,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "711bc0a7470f4e21e4891176655fe76e93f71feb768631a17b67ff103dd19dde"
+              "sha256": "31e1c0733dce6cd92d13966bfda5e5668376b72fc253cd63a9caf2885e130d0c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -461097,7 +461114,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -461347,7 +461365,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.5-staging-image-package-source",
           "release-0.5-protected-publication",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-staging-image-rollback"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -461719,7 +461738,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "a5c2f149134ee16667208b2cca4d0777076ffe952bae9a5cc37c67381a08666f"
+              "sha256": "ef2d8af5b359edd372c8b14d365b113bb7a8867f59c0eb2bcca2741fcbdece36"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -461731,7 +461750,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "711bc0a7470f4e21e4891176655fe76e93f71feb768631a17b67ff103dd19dde"
+              "sha256": "31e1c0733dce6cd92d13966bfda5e5668376b72fc253cd63a9caf2885e130d0c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -461977,7 +461996,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed."
           ],
           "limitations": [
             "Provision protected CUSTOMER_TELEGRAM credentials after identifying the existing ngrok webhook owner/secret location (already asked once); hand off the callback without disturbing unrelated integration. At the accepted staging release, verify actual customer/profile linking, private Telegram reply/root version, exact provider message receipts and live slot/authority isolation. Local implementation and 127 related cases are accepted; live operations are not certified."
@@ -462494,7 +462514,8 @@
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
           "release-0.5-conditional-native-choices",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-staging-image-rollback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -462734,7 +462755,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "711bc0a7470f4e21e4891176655fe76e93f71feb768631a17b67ff103dd19dde"
+              "sha256": "31e1c0733dce6cd92d13966bfda5e5668376b72fc253cd63a9caf2885e130d0c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -462839,7 +462860,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -463058,7 +463080,8 @@
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
           "release-0.5-conditional-native-choices",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-staging-image-rollback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -463298,7 +463321,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "711bc0a7470f4e21e4891176655fe76e93f71feb768631a17b67ff103dd19dde"
+              "sha256": "31e1c0733dce6cd92d13966bfda5e5668376b72fc253cd63a9caf2885e130d0c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -463403,7 +463426,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -463623,7 +463647,8 @@
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
           "release-0.5-conditional-native-choices",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-staging-image-rollback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -463863,7 +463888,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "711bc0a7470f4e21e4891176655fe76e93f71feb768631a17b67ff103dd19dde"
+              "sha256": "31e1c0733dce6cd92d13966bfda5e5668376b72fc253cd63a9caf2885e130d0c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -463968,7 +463993,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -464189,7 +464215,8 @@
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
           "release-0.5-conditional-native-choices",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-staging-image-rollback"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -464429,7 +464456,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "711bc0a7470f4e21e4891176655fe76e93f71feb768631a17b67ff103dd19dde"
+              "sha256": "31e1c0733dce6cd92d13966bfda5e5668376b72fc253cd63a9caf2885e130d0c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -464550,7 +464577,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -464777,7 +464805,8 @@
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
           "release-0.5-conditional-native-choices",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-staging-image-rollback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -465017,7 +465046,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "711bc0a7470f4e21e4891176655fe76e93f71feb768631a17b67ff103dd19dde"
+              "sha256": "31e1c0733dce6cd92d13966bfda5e5668376b72fc253cd63a9caf2885e130d0c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -465122,7 +465151,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -465341,7 +465371,8 @@
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
           "release-0.5-conditional-native-choices",
-          "release-0.6-browser-response-policy"
+          "release-0.6-browser-response-policy",
+          "release-0.6-staging-image-rollback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -465581,7 +465612,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "711bc0a7470f4e21e4891176655fe76e93f71feb768631a17b67ff103dd19dde"
+              "sha256": "31e1c0733dce6cd92d13966bfda5e5668376b72fc253cd63a9caf2885e130d0c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -465686,7 +465717,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -475168,18 +475200,20 @@
         "story": "06-security-testing-observability.md#spec-8b67a7fdcd80"
       },
       "requirement": "| T-06.12.04.03 | Implement auto-halt/rollback on: smoke failure, elevated error rate, SLO burn, reconciliation mismatch, security alert | L |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Exact staging error-trap rollback passed in isolated Compose after an induced health failure. Production canary smoke, error rate, SLO burn, reconciliation mismatch and security alert halt/rollback triggers still need acceptance."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-staging-image-rollback"
+        ],
         "current_acceptance": null
       }
     },
@@ -477337,7 +477371,9 @@
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-staging-image-rollback"
+        ],
         "current_acceptance": null
       }
     },
@@ -726889,7 +726925,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "a5c2f149134ee16667208b2cca4d0777076ffe952bae9a5cc37c67381a08666f"
+              "sha256": "ef2d8af5b359edd372c8b14d365b113bb7a8867f59c0eb2bcca2741fcbdece36"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -726913,7 +726949,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "711bc0a7470f4e21e4891176655fe76e93f71feb768631a17b67ff103dd19dde"
+              "sha256": "31e1c0733dce6cd92d13966bfda5e5668376b72fc253cd63a9caf2885e130d0c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -727834,7 +727870,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
+            "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -728592,7 +728629,8 @@
           "release-0.5-direct-push-preflight",
           "release-0.5-protected-publication",
           "release-0.6-browser-response-policy",
-          "release-0.6-required-source-and-secret-gates"
+          "release-0.6-required-source-and-secret-gates",
+          "release-0.6-staging-image-rollback"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -730761,7 +730799,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "a5c2f149134ee16667208b2cca4d0777076ffe952bae9a5cc37c67381a08666f"
+              "sha256": "ef2d8af5b359edd372c8b14d365b113bb7a8867f59c0eb2bcca2741fcbdece36"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -730785,7 +730823,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "711bc0a7470f4e21e4891176655fe76e93f71feb768631a17b67ff103dd19dde"
+              "sha256": "31e1c0733dce6cd92d13966bfda5e5668376b72fc253cd63a9caf2885e130d0c"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -731723,7 +731761,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json"
+            "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
+            "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed."
           ],
           "limitations": [
             "Current staging is v0.3.0/2ac708c11225a1239156787cddfdd3ab094fb8f8, API/web/worker healthy and Redis/object storage readiness verified. After effective v0.4.0 criteria are accepted, deploy its immutable candidate and verify actual AI routing, slot isolation and notification/storage operations. Earlier v0.1.29/forced-TLS warning description is stale and does not dispatch a rebuild.",
@@ -732371,7 +732410,8 @@
           "release-0.5-direct-push-preflight",
           "release-0.5-protected-publication",
           "release-0.6-browser-response-policy",
-          "release-0.6-required-source-and-secret-gates"
+          "release-0.6-required-source-and-secret-gates",
+          "release-0.6-staging-image-rollback"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -822192,6 +822232,53 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-font-notices-receipt.json",
       "source_scope_proof_sha256": "d57c3774558bfc4da4e72d9eea9a98e3b1b855da2c48c018d822cc615a8b9900"
+    },
+    "release-0.6-staging-image-rollback": {
+      "batch": "release-0.6-staging-image-rollback",
+      "base_commit": "6633da38cfd19d9ec8207fadaa5eb995a70bbab5",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.04.04",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.12.04.03",
+        "06-security-testing-observability.md#T-06.17.01.07",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "ef2d8af5b359edd372c8b14d365b113bb7a8867f59c0eb2bcca2741fcbdece36"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "31e1c0733dce6cd92d13966bfda5e5668376b72fc253cd63a9caf2885e130d0c"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "f36c07cd9b5a9e74db21cd05bfedf3cda3437f5c4e2f28e938d30c0be65e9f90"
+        }
+      ],
+      "checks": [
+        "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
+        "Shell syntax passed. The old active manifest remains separate from candidate shell variables; a failed restoration is visible without masking the candidate error."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/isolated-compose-rollback-final.log",
+      "source_scope_proof_sha256": "f4301b4516259de06b74c193be09c0d9ca63838518e66f5e4c613c0761f8790a"
     }
   },
   "historical_improvements": [

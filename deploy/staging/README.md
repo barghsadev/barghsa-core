@@ -172,8 +172,12 @@ docker compose --env-file /etc/barghsa/staging/runtime.env \
 
 The API/worker app image is shared; the worker uses its own command and health
 check. Database migrations run once per release before the API and worker are
-replaced. The release restores the last app images after a failed rollout; a
-database migration itself is not reversed.
+replaced. If a rollout fails after that step, the release restores the API,
+worker, AI inference and web images from the previous active manifest. It waits
+for their health checks and reports separately if restoration fails. Check
+Compose status and the active manifest before retrying. Database migrations
+are forward-only here; use the [PostgreSQL restore runbook](../../docs/operations/backup/postgresql-restore-runbook.md)
+if data recovery is required.
 
 The generated Zarinpal merchant ID is deliberately invalid. Configure a real
 staging merchant before testing payments. SMS, email, and other external

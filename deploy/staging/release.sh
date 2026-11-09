@@ -56,7 +56,13 @@ rollback() {
   echo 'Release failed; restoring previous app images' >&2
   if [[ -r "$active" ]]; then
     local previous=(docker compose --env-file "$runtime" --env-file "$active" -f "$compose")
-    "${previous[@]}" up -d --no-deps api web worker ai-inference || true
+    # Compose gives exported shell variables priority over the previous manifest.
+    if ! (
+      unset BARGHSA_APP_IMAGE BARGHSA_WEB_IMAGE BARGHSA_POSTGRES_IMAGE BARGHSA_CLAMAV_IMAGE
+      "${previous[@]}" up -d --no-deps --wait --wait-timeout 240 api web worker ai-inference
+    ); then
+      echo 'Restoring the previous staging app images failed' >&2
+    fi
   else
     "${dc[@]}" stop worker web api ai-inference || true
   fi
