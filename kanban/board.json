@@ -11247,9 +11247,19 @@
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-web-fixture-typecheck-and-license-readback",
           "release-0.6-font-source-provenance",
-          "release-0.6-shipped-component-license-gate"
+          "release-0.6-shipped-component-license-gate",
+          "release-0.6-database-client-pool-metrics"
         ],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "exact_license_report": {
+          "run": 42638068584,
+          "commit": "3732c1ad143e6a216ed29cae76c7fc4ec5a0412f",
+          "report": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/license-hosted-42638068584/release-licenses.json",
+          "sha256": "7563ced331980069484f0ed623ce1f8f702b8cfa610d2e5da552d2a77ee0c1f4",
+          "package_scope_entries": 594,
+          "review_required": 174,
+          "distinct_package_urls": 146
+        }
       },
       "blocker": "The strict gate is implemented. The exact shipped component exceptions still require owner or legal approval and proof of the applicable conditions before release acceptance."
     },
@@ -102642,11 +102652,11 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "4b886fd914e41afc8234c5a9bc9b1e8dfb48467d12f13eab98bd7119068581fb"
+              "sha256": "a06d5f3b446efaff6353bdc34ea47e96fbc1a361c6b19324da1542c75ee26601"
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
-              "sha256": "7f0fb53c45eefd051a7d4fe3111b47966a8f4e0b8d605012f328c9f906f9c8a6"
+              "sha256": "a80bdd2a905e231cfaff2166aa3db64d0cf8b94bf9dacefecb3828e6938aefed"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -451346,11 +451356,11 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "4b886fd914e41afc8234c5a9bc9b1e8dfb48467d12f13eab98bd7119068581fb"
+              "sha256": "a06d5f3b446efaff6353bdc34ea47e96fbc1a361c6b19324da1542c75ee26601"
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
-              "sha256": "7f0fb53c45eefd051a7d4fe3111b47966a8f4e0b8d605012f328c9f906f9c8a6"
+              "sha256": "a80bdd2a905e231cfaff2166aa3db64d0cf8b94bf9dacefecb3828e6938aefed"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -451827,11 +451837,11 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "4b886fd914e41afc8234c5a9bc9b1e8dfb48467d12f13eab98bd7119068581fb"
+              "sha256": "a06d5f3b446efaff6353bdc34ea47e96fbc1a361c6b19324da1542c75ee26601"
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
-              "sha256": "7f0fb53c45eefd051a7d4fe3111b47966a8f4e0b8d605012f328c9f906f9c8a6"
+              "sha256": "a80bdd2a905e231cfaff2166aa3db64d0cf8b94bf9dacefecb3828e6938aefed"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -452310,11 +452320,11 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "4b886fd914e41afc8234c5a9bc9b1e8dfb48467d12f13eab98bd7119068581fb"
+              "sha256": "a06d5f3b446efaff6353bdc34ea47e96fbc1a361c6b19324da1542c75ee26601"
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
-              "sha256": "7f0fb53c45eefd051a7d4fe3111b47966a8f4e0b8d605012f328c9f906f9c8a6"
+              "sha256": "a80bdd2a905e231cfaff2166aa3db64d0cf8b94bf9dacefecb3828e6938aefed"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -452791,11 +452801,11 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "4b886fd914e41afc8234c5a9bc9b1e8dfb48467d12f13eab98bd7119068581fb"
+              "sha256": "a06d5f3b446efaff6353bdc34ea47e96fbc1a361c6b19324da1542c75ee26601"
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
-              "sha256": "7f0fb53c45eefd051a7d4fe3111b47966a8f4e0b8d605012f328c9f906f9c8a6"
+              "sha256": "a80bdd2a905e231cfaff2166aa3db64d0cf8b94bf9dacefecb3828e6938aefed"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -472931,9 +472941,19 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-font-source-provenance",
-          "release-0.6-shipped-component-license-gate"
+          "release-0.6-shipped-component-license-gate",
+          "release-0.6-database-client-pool-metrics"
         ],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "exact_license_report": {
+          "run": 42638068584,
+          "commit": "3732c1ad143e6a216ed29cae76c7fc4ec5a0412f",
+          "report": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/license-hosted-42638068584/release-licenses.json",
+          "sha256": "7563ced331980069484f0ed623ce1f8f702b8cfa610d2e5da552d2a77ee0c1f4",
+          "package_scope_entries": 594,
+          "review_required": 174,
+          "distinct_package_urls": 146
+        }
       },
       "blocker": "The strict gate is implemented. The exact shipped component exceptions still require owner or legal approval and proof of the applicable conditions before release acceptance."
     },
@@ -476762,7 +476782,7 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "4b886fd914e41afc8234c5a9bc9b1e8dfb48467d12f13eab98bd7119068581fb"
+              "sha256": "a06d5f3b446efaff6353bdc34ea47e96fbc1a361c6b19324da1542c75ee26601"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -476846,7 +476866,7 @@
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "27e67fac54c7cd6aef7fab066db42cd51351349b2b71db3f2f85d9abf1acc09a"
+              "sha256": "86d7f4c87d7059d1853811276de6fdcbb947c2f23072872aa121bb7d29c4afd4"
             }
           ],
           "checks": [
@@ -476868,19 +476888,55 @@
         "story": "06-security-testing-observability.md#spec-ec4f15075ffa"
       },
       "requirement": "| T-06.14.01.03 | Instrument database metrics: pool size, active/idle/waiting connections, query duration, slow queries | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-database-client-pool-metrics"
+        ],
+        "current_acceptance": {
+          "kind": "native-database-client-pool-and-query-metrics",
+          "base_commit": "3732c1ad143e6a216ed29cae76c7fc4ec5a0412f",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/metrics/metrics.service.ts",
+              "sha256": "a06d5f3b446efaff6353bdc34ea47e96fbc1a361c6b19324da1542c75ee26601"
+            },
+            {
+              "path": "apps/api/src/metrics/metrics.service.test.ts",
+              "sha256": "55803cb0f48c74c21bba55f766953296c572ec90ce037689b6c1659eab86cfdf"
+            },
+            {
+              "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
+              "sha256": "a80bdd2a905e231cfaff2166aa3db64d0cf8b94bf9dacefecb3828e6938aefed"
+            },
+            {
+              "path": "docs/operations/postgresql-monitoring.md",
+              "sha256": "86d7f4c87d7059d1853811276de6fdcbb947c2f23072872aa121bb7d29c4afd4"
+            },
+            {
+              "path": "packages/db/src/metrics.ts",
+              "sha256": "870175f55d81aa7508a410702158561147cf730c148b6b90d3826a5331b34780"
+            },
+            {
+              "path": "apps/api/src/metrics/telemetry-http.integration.test.ts",
+              "sha256": "9fc0d2776175d661a57d697e0a2a4b7f68ef3d6db4b0e71aa454a54a7ae0f627"
+            }
+          ],
+          "checks": [
+            "Four exact native/compiled API suites passed 10 cases with an isolated PostgreSQL database. They verify the configured capacity and observed connection and queue gauges, database outage with local pool values retained and stale PostgreSQL values removed, recovery, AI circuit output, OTLP boundaries and request metric privacy.",
+            "One isolated compiled API proof with pg_stat_statements enabled returned live positive query timings by query ID and the slow-query gauge. The query text was absent from Prometheus. Exact fixture and result are retained outside the checkout.",
+            "The staging readback found shared_preload_libraries already configured, but pg_stat_statements not installed in the monitored database. Current staging returns valid base statistics and the slow-query gauge, with query timing correctly unavailable. DBA setup and live query timing readback remain open.",
+            "API SWC compilation, typecheck, changed-file ESLint and formatting passed. The pool reads process counters without an additional database query or a change to collector SQL, fail-closed statistics, or authorization."
+          ],
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-client-pool-metrics-proof.json"
+        }
       }
     },
     {
@@ -726621,11 +726677,11 @@
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
-              "sha256": "7f0fb53c45eefd051a7d4fe3111b47966a8f4e0b8d605012f328c9f906f9c8a6"
+              "sha256": "a80bdd2a905e231cfaff2166aa3db64d0cf8b94bf9dacefecb3828e6938aefed"
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "4b886fd914e41afc8234c5a9bc9b1e8dfb48467d12f13eab98bd7119068581fb"
+              "sha256": "a06d5f3b446efaff6353bdc34ea47e96fbc1a361c6b19324da1542c75ee26601"
             },
             {
               "path": "apps/api/src/notifications/customer-business-notifications.integration.test.ts",
@@ -730527,11 +730583,11 @@
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
-              "sha256": "7f0fb53c45eefd051a7d4fe3111b47966a8f4e0b8d605012f328c9f906f9c8a6"
+              "sha256": "a80bdd2a905e231cfaff2166aa3db64d0cf8b94bf9dacefecb3828e6938aefed"
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "4b886fd914e41afc8234c5a9bc9b1e8dfb48467d12f13eab98bd7119068581fb"
+              "sha256": "a06d5f3b446efaff6353bdc34ea47e96fbc1a361c6b19324da1542c75ee26601"
             },
             {
               "path": "apps/api/src/notifications/customer-business-notifications.integration.test.ts",
@@ -737631,7 +737687,8 @@
         "Install required monitoring, alerts and quality schedules and prove first execution/delivery. Local scripts alone are not proof.",
         "Provision approved Persian/English profile.verification_status SMS.ir templates or activate direct text, test owned verified destination and record actual provider acceptance/delivery reports before production. Both 11 October direct-line probes rejected with HTTP400/status123; owner deferred this evidence from v0.3.0 staging only.",
         "Provide an authorized ClamAV signature feed and verify that the chosen staging scanner loads current vendor data, including clean and infected scan receipts. The direct stage feed returned HTTP 403 and a cooldown.",
-        "Staging CSP report-only review found five cross-origin image reports and the live public branding response references the same barghsa.com favicon origin. Publish the preserved PNG as a sealed staging asset with authorized staff step-up, verify the byte-identical response and complete the full week of reviewed reports before enforcing CSP."
+        "Staging CSP report-only review found five cross-origin image reports and the live public branding response references the same barghsa.com favicon origin. Publish the preserved PNG as a sealed staging asset with authorized staff step-up, verify the byte-identical response and complete the full week of reviewed reports before enforcing CSP.",
+        "Provision pg_stat_statements in the monitored staging and production-equivalent databases through the DBA workflow and verify the intended collector role can see current query timing samples. Staging currently preloads the library without installing the extension in the app database."
       ],
       "owner": null,
       "depends_on": [],
@@ -737643,7 +737700,8 @@
           "release-0.6-immutable-location-and-signature-feed",
           "release-0.6-postgres-image-candidate",
           "release-0.6-combined-runtime-image-candidate",
-          "release-0.6-shipped-component-license-gate"
+          "release-0.6-shipped-component-license-gate",
+          "release-0.6-database-client-pool-metrics"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -824763,6 +824821,43 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "shipped-component-license-gate-proof.json",
       "source_scope_proof_sha256": "a62b85b6ceae8d8830da45e32f6a3ee3586f587f08a9bf43bfe7efabda8ec141"
+    },
+    "release-0.6-database-client-pool-metrics": {
+      "batch": "release-0.6-database-client-pool-metrics",
+      "base_commit": "3732c1ad143e6a216ed29cae76c7fc4ec5a0412f",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.14.01.03",
+        "release-readiness#R-05.03",
+        "01-platform-infrastructure.md#T-05.03.04",
+        "06-security-testing-observability.md#T-06.07.02.06"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/metrics/metrics.service.ts",
+          "sha256": "a06d5f3b446efaff6353bdc34ea47e96fbc1a361c6b19324da1542c75ee26601"
+        },
+        {
+          "path": "apps/api/src/metrics/metrics.service.test.ts",
+          "sha256": "55803cb0f48c74c21bba55f766953296c572ec90ce037689b6c1659eab86cfdf"
+        },
+        {
+          "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
+          "sha256": "a80bdd2a905e231cfaff2166aa3db64d0cf8b94bf9dacefecb3828e6938aefed"
+        },
+        {
+          "path": "docs/operations/postgresql-monitoring.md",
+          "sha256": "86d7f4c87d7059d1853811276de6fdcbb947c2f23072872aa121bb7d29c4afd4"
+        }
+      ],
+      "checks": [
+        "Four exact native/compiled API suites passed 10 cases with an isolated PostgreSQL database. They verify the configured capacity and observed connection and queue gauges, database outage with local pool values retained and stale PostgreSQL values removed, recovery, AI circuit output, OTLP boundaries and request metric privacy.",
+        "One isolated compiled API proof with pg_stat_statements enabled returned live positive query timings by query ID and the slow-query gauge. The query text was absent from Prometheus. Exact fixture and result are retained outside the checkout.",
+        "The staging readback found shared_preload_libraries already configured, but pg_stat_statements not installed in the monitored database. Current staging returns valid base statistics and the slow-query gauge, with query timing correctly unavailable. DBA setup and live query timing readback remain open.",
+        "API SWC compilation, typecheck, changed-file ESLint and formatting passed. The pool reads process counters without an additional database query or a change to collector SQL, fail-closed statistics, or authorization."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "database-client-pool-metrics-proof.json",
+      "source_scope_proof_sha256": "794665062dfedd899e06e0508db273a8adb9d305ae741bf254f144c91fc57fab"
     }
   },
   "historical_improvements": [

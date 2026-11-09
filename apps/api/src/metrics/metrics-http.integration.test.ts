@@ -1,9 +1,14 @@
-import { afterAll, beforeAll, expect, it } from 'vitest';
+import { afterAll, beforeAll, expect, it, vi } from 'vitest';
 import { Pool } from 'pg';
 import { startHttpFixture } from '../test/http-fixture.js';
 let fixture: Awaited<ReturnType<typeof startHttpFixture>>;
 beforeAll(async () => {
-  fixture = await startHttpFixture(process.env.TEST_DATABASE_URL!);
+  vi.stubEnv('DB_POOL_MAX', '7');
+  try {
+    fixture = await startHttpFixture(process.env.TEST_DATABASE_URL!);
+  } finally {
+    vi.unstubAllEnvs();
+  }
 }, 60_000);
 afterAll(async () => {
   await fixture?.close();
@@ -38,6 +43,10 @@ it('serves unavailable metrics through a database outage and recovers without st
   expect(healthy).toMatch(/^pg_metrics_collection_success 1$/m);
   expect(healthy).toMatch(/^pg_checkpoints_timed_total \d+/m);
   expect(healthy).toMatch(/^pg_metrics_view_available\{view="statements"\} 0$/m);
+  expect(healthy).toMatch(/^pg_pool_capacity 7$/m);
+  expect(healthy).toMatch(/^pg_pool_connections\{state="active"\} \d+$/m);
+  expect(healthy).toMatch(/^pg_pool_connections\{state="idle"\} \d+$/m);
+  expect(healthy).toMatch(/^pg_pool_waiting_requests 0$/m);
 
   // This control connection only changes the disposable database owned by this fixture.
   const identity = (
@@ -60,6 +69,7 @@ it('serves unavailable metrics through a database outage and recovers without st
     expect(failed).toMatch(/^pg_metrics_collection_success 0$/m);
     expect(failed).not.toMatch(/^pg_cache_hit_ratio /m);
     expect(failed).not.toMatch(/^pg_checkpoints_timed_total /m);
+    expect(failed).toMatch(/^pg_pool_capacity 7$/m);
   } finally {
     try {
       await control.query(`ALTER DATABASE "${database}" ALLOW_CONNECTIONS true`);

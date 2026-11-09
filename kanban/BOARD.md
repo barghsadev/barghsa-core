@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 907 | Accepted with unchanged source bindings. |
-| verify | 425 | Existing work may be complete; inspect evidence before building. |
+| done | 908 | Accepted with unchanged source bindings. |
+| verify | 424 | Existing work may be complete; inspect evidence before building. |
 | partial | 30 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1366,7 +1366,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.13.02.07` | verify | Inventory needed | Write integration test: log format compliance, redaction, correlation ID presence |
 | `06-security-testing-observability.md#T-06.14.01.01` | done | Recorded batch work | Implement Prometheus metrics endpoint in API and worker processes |
 | `06-security-testing-observability.md#T-06.14.01.02` | done | Recorded batch work | Instrument RED metrics: request rate, error count (by status/route), latency (p50/p95/p99) |
-| `06-security-testing-observability.md#T-06.14.01.03` | verify | Inventory needed | Instrument database metrics: pool size, active/idle/waiting connections, query duration, slow queries |
+| `06-security-testing-observability.md#T-06.14.01.03` | done | Recorded batch work | Instrument database metrics: pool size, active/idle/waiting connections, query duration, slow queries |
 | `06-security-testing-observability.md#T-06.14.01.04` | verify | Inventory needed | Instrument queue metrics: queue depth, oldest-unprocessed age, processing time, failure rate, dead-letter count |
 | `06-security-testing-observability.md#T-06.14.01.05` | verify | Inventory needed | Instrument external provider metrics: call latency, success/error count, circuit-breaker state |
 | `06-security-testing-observability.md#T-06.14.01.06` | verify | Inventory needed | Instrument business safety metrics: unresolved refund count, reconciliation mismatch count, outbox backlog age |

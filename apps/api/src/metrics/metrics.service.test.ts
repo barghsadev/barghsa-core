@@ -1,10 +1,15 @@
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import promClient from 'prom-client';
 import { createMetricsSnapshot as snapshot } from '../test/metrics-fixture.js';
-const collector = vi.hoisted(() => ({ performance: vi.fn(), replication: vi.fn() }));
+const collector = vi.hoisted(() => ({
+  performance: vi.fn(),
+  replication: vi.fn(),
+  pool: { totalCount: 6, idleCount: 0, waitingCount: 3, options: { max: 6 }, query: vi.fn() },
+}));
 vi.mock('@barghsa/db', () => ({
   collectPerformanceMetrics: collector.performance,
   collectReplicationLag: collector.replication,
+  getDbPool: () => collector.pool,
 }));
 import { MetricsService } from './metrics.service.js';
 
@@ -15,6 +20,7 @@ beforeEach(() => {
   promClient.register.clear();
   collector.performance.mockResolvedValue({ ok: true, metrics: snapshot(), latencyMs: 1 });
   collector.replication.mockResolvedValue(23);
+  collector.pool.query.mockResolvedValue({ rows: [] });
   service = new MetricsService();
 });
 afterEach(async () => {
@@ -33,6 +39,10 @@ it.each(['failed', 'thrown'])(
     expect(text).toMatch(/^pg_metrics_collection_success 0$/m);
     expect(text).not.toMatch(/^pg_cache_hit_ratio /m);
     expect(text).not.toMatch(/^pg_checkpoints_timed_total /m);
+    expect(text).toMatch(/^pg_pool_connections\{state="active"\} 6$/m);
+    expect(text).toMatch(/^pg_pool_connections\{state="idle"\} 0$/m);
+    expect(text).toMatch(/^pg_pool_waiting_requests 3$/m);
+    expect(text).toMatch(/^pg_pool_capacity 6$/m);
     expect(service.getLastMetrics()).toBeNull();
     collector.performance.mockResolvedValue({ ok: true, metrics: snapshot(), latencyMs: 1 });
     expect(await service.collect()).toMatch(/^pg_metrics_collection_success 1$/m);

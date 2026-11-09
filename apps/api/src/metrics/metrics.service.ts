@@ -100,6 +100,19 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
     name: 'pg_waiting_connections',
     help: 'Number of connections waiting on a lock',
   });
+  private readonly poolConnections = new promClient.Gauge({
+    name: 'pg_pool_connections',
+    help: 'Connections currently owned by this API process pool, by state',
+    labelNames: ['state'] as const,
+  });
+  private readonly poolCapacity = new promClient.Gauge({
+    name: 'pg_pool_capacity',
+    help: 'Configured maximum connections in this API process pool',
+  });
+  private readonly poolWaitingRequests = new promClient.Gauge({
+    name: 'pg_pool_waiting_requests',
+    help: 'Requests waiting for a client from this API process pool',
+  });
   private readonly longRunningQueries = new promClient.Gauge({
     name: 'pg_long_running_queries',
     help: 'Number of queries running longer than 30 seconds',
@@ -274,6 +287,8 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
    * text content.  Called by the /metrics controller on each HTTP scrape.
    */
   async collect(): Promise<string> {
+    // Sample the local pool before the statistics query itself can join its queue.
+    const { totalCount, idleCount, waitingCount, options } = getDbPool();
     const queue = aiInferenceQueue.snapshot();
     this.aiInferenceActive.set(queue.active);
     this.aiInferencePending.set(queue.pending);
@@ -281,6 +296,10 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
     this.aiInferenceRejections.inc(Math.max(0, queue.rejected - this.previousInferenceRejections));
     this.previousInferenceRejections = queue.rejected;
     await this.poll();
+    this.poolConnections.set({ state: 'active' }, totalCount - idleCount);
+    this.poolConnections.set({ state: 'idle' }, idleCount);
+    this.poolWaitingRequests.set(waitingCount);
+    if (options.max !== undefined) this.poolCapacity.set(options.max);
     return promClient.register.metrics();
   }
 
