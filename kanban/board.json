@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T21:26:44+00:00",
+  "updated": "2026-11-09T21:27:35+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -13308,8 +13308,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Owner or legal reviewer must record package-specific dispositions for the exact 170 rows. The packet provides the original 159 Alpine expressions and source revisions, distinguishes six zero-byte records and retains verified browser and runtime notices. Verify corresponding source, replacement rights and required distribution notices before approving applicable packages.",
-        "Run the strict license check on the immutable candidate with only recorded approvals. Match image identities and verify the conditions in the final distribution."
+        "Record owner or legal dispositions for the exact 170 package/scope/license rows. The 42d2c407 inventory matches the prepared packet. Verify package-specific notices, corresponding source and replacement rights where applicable.",
+        "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions."
       ],
       "owner": null,
       "depends_on": [],
@@ -13351,9 +13351,43 @@
           "release-0.6-database-client-pool-metrics",
           "release-0.6-postgres-go-license-notices",
           "release-0.6-staging-postgres-monitoring-readback",
-          "release-0.6-package-metadata-review"
+          "release-0.6-package-metadata-review",
+          "release-0.6-current-license-inventory-readback"
         ],
-        "current_acceptance": null,
+        "current_acceptance": {
+          "kind": "source-bound-current-inventory-pending-approval",
+          "base_commit": "af5d303a0876b181e38dcc7468a89f4457e32a72",
+          "source_evidence": [
+            {
+              "path": "docs/security/release-license-review.md",
+              "sha256": "943f17676c4f3d011002ac8a10277057eb32664853e0fb19540a0160fd9c2326"
+            },
+            {
+              "path": "deploy/licenses/release-approvals.json",
+              "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+            },
+            {
+              "path": "scripts/check-release-licenses.py",
+              "sha256": "271754dea01f1e5751d57f59160292723e14b994dea8523f0de172e976b499ea"
+            },
+            {
+              "path": "Dockerfile.base",
+              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+            }
+          ],
+          "checks": [
+            "The immutable 42d2c407 preflight artifact contains 594 package-and-distribution entries from four identified runtime images. All 170 review-required tuples match the prepared owner packet by exact package URL, distribution scope and observed licenses. The other 424 entries are allowed by the existing policy.",
+            "The source-bound inventory contains no GeoLite2 dataset package, consistent with the recorded fallback decision. The inventory is report-only while owner or legal approval remains pending. The strict final distribution gate and package-specific notices, source and replacement conditions still apply."
+          ]
+        },
         "exact_license_report": {
           "run": 42638068584,
           "commit": "3732c1ad143e6a216ed29cae76c7fc4ec5a0412f",
@@ -26591,7 +26625,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-current-license-inventory-readback"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -26747,7 +26782,7 @@
             },
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "6f565665d3a2a97f879174e74e413c2b58f4ba5ad07bdb6b2a6410f2aecf6baf"
+              "sha256": "943f17676c4f3d011002ac8a10277057eb32664853e0fb19540a0160fd9c2326"
             }
           ],
           "checks": [
@@ -479327,8 +479362,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Owner or legal reviewer must record package-specific dispositions for the exact 170 rows. The packet provides the original 159 Alpine expressions and source revisions, distinguishes six zero-byte records and retains verified browser and runtime notices. Verify corresponding source, replacement rights and required distribution notices before approving applicable packages.",
-        "Run the strict license check on the immutable candidate with only recorded approvals. Match image identities and verify the conditions in the final distribution."
+        "Record owner or legal dispositions for the exact 170 package/scope/license rows. The 42d2c407 inventory matches the prepared packet. Verify package-specific notices, corresponding source and replacement rights where applicable.",
+        "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions."
       ],
       "owner": null,
       "depends_on": [],
@@ -479341,9 +479376,43 @@
           "release-0.6-database-client-pool-metrics",
           "release-0.6-postgres-go-license-notices",
           "release-0.6-staging-postgres-monitoring-readback",
-          "release-0.6-package-metadata-review"
+          "release-0.6-package-metadata-review",
+          "release-0.6-current-license-inventory-readback"
         ],
-        "current_acceptance": null,
+        "current_acceptance": {
+          "kind": "source-bound-current-inventory-pending-approval",
+          "base_commit": "af5d303a0876b181e38dcc7468a89f4457e32a72",
+          "source_evidence": [
+            {
+              "path": "docs/security/release-license-review.md",
+              "sha256": "943f17676c4f3d011002ac8a10277057eb32664853e0fb19540a0160fd9c2326"
+            },
+            {
+              "path": "deploy/licenses/release-approvals.json",
+              "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+            },
+            {
+              "path": "scripts/check-release-licenses.py",
+              "sha256": "271754dea01f1e5751d57f59160292723e14b994dea8523f0de172e976b499ea"
+            },
+            {
+              "path": "Dockerfile.base",
+              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+            }
+          ],
+          "checks": [
+            "The immutable 42d2c407 preflight artifact contains 594 package-and-distribution entries from four identified runtime images. All 170 review-required tuples match the prepared owner packet by exact package URL, distribution scope and observed licenses. The other 424 entries are allowed by the existing policy.",
+            "The source-bound inventory contains no GeoLite2 dataset package, consistent with the recorded fallback decision. The inventory is report-only while owner or legal approval remains pending. The strict final distribution gate and package-specific notices, source and replacement conditions still apply."
+          ]
+        },
         "exact_license_report": {
           "run": 42638068584,
           "commit": "3732c1ad143e6a216ed29cae76c7fc4ec5a0412f",
@@ -746336,7 +746405,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-storage-abstraction-direct-transfer-and-admin",
           "release-0.6-versioned-config-cache-and-diagnostic-privacy",
-          "release-0.6-dynamic-js-lint-and-sanitized-html-boundary"
+          "release-0.6-dynamic-js-lint-and-sanitized-html-boundary",
+          "release-0.6-current-license-inventory-readback"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -838517,6 +838587,48 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/dynamic-js-lint",
       "source_scope_proof": "release-0.6-dynamic-js-lint-and-sanitized-html-boundary.json",
       "source_scope_proof_sha256": "8bd43246cb8964d4c706f23aa24511c369ddd64a396a422ef83213b09806de4b"
+    },
+    "release-0.6-current-license-inventory-readback": {
+      "batch": "release-0.6-current-license-inventory-readback",
+      "base_commit": "af5d303a0876b181e38dcc7468a89f4457e32a72",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/security/release-license-review.md",
+          "sha256": "943f17676c4f3d011002ac8a10277057eb32664853e0fb19540a0160fd9c2326"
+        },
+        {
+          "path": "deploy/licenses/release-approvals.json",
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        },
+        {
+          "path": "scripts/check-release-licenses.py",
+          "sha256": "271754dea01f1e5751d57f59160292723e14b994dea8523f0de172e976b499ea"
+        },
+        {
+          "path": "Dockerfile.base",
+          "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+        }
+      ],
+      "checks": [
+        "The immutable 42d2c407 preflight artifact contains 594 package-and-distribution entries from four identified runtime images. All 170 review-required tuples match the prepared owner packet by exact package URL, distribution scope and observed licenses. The other 424 entries are allowed by the existing policy.",
+        "The source-bound inventory contains no GeoLite2 dataset package, consistent with the recorded fallback decision. The inventory is report-only while owner or legal approval remains pending. The strict final distribution gate and package-specific notices, source and replacement conditions still apply."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/license-current-42d2c407",
+      "source_scope_proof": "release-0.6-current-license-inventory-readback.json",
+      "source_scope_proof_sha256": "28aff0ea1514625efde1cbc7c93c5aa6708a20de250799e47c58be4406cf8427"
     }
   },
   "historical_improvements": [
