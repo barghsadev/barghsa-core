@@ -96,16 +96,72 @@ jobs:
       - name: Report observed browser outcomes
         if: always()
         run: python3 scripts/check-browser-results.py --input apps/web/test-results/results.json --report "${{ runner.temp }}/browser-outcomes.json"
-      - name: Check known quarantines
+      - name: Upload shard outcome counts
         if: always()
-        run: python3 scripts/check-flaky-tests.py --report "${{ runner.temp }}/quarantine.json"
-      - name: Upload outcomes and failure evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-outcome-${{ matrix.project }}-${{ matrix.shard }}
+          path: ${{ runner.temp }}/browser-outcomes.json
+          overwrite: true
+          retention-days: 14
+      - name: Upload Playwright results and failure evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: browser-${{ matrix.project }}-${{ matrix.shard }}
+          path: apps/web/test-results/
+          retention-days: 14
+
+  report:
+    name: Report seven days of browser outcomes
+    if: ${{ always() && !cancelled() }}
+    needs: [browsers]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: browser-outcome-*
+          path: ${{ runner.temp }}/browser-outcomes
+      - name: Read recent scheduled outcomes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        shell: bash
+        run: |
+          history="$RUNNER_TEMP/nightly-history"
+          mkdir -p "$history"
+          since=$(date -u -d '7 days ago' +%Y-%m-%dT%H:%M:%SZ)
+          gh run list --repo "$GITHUB_REPOSITORY" --workflow browser-nightly.yml \
+            --branch "$DEFAULT_BRANCH" --event schedule --status completed --created ">=$since" \
+            --limit 30 --json databaseId,conclusion > "$history/runs.json"
+          while IFS= read -r run; do
+            if ! gh run download "$run" --repo "$GITHUB_REPOSITORY" \
+              --name nightly-browser-summary --dir "$history/$run"; then
+              echo "No outcome receipt available for scheduled run $run."
+            fi
+          done < <(jq -r '.[].databaseId' "$history/runs.json")
+      - name: Summarize current and historical outcomes
+        if: ${{ always() && !cancelled() }}
+        run: |
+          python3 -m unittest discover -s scripts -p 'test_report_nightly_browser.py'
+          python3 scripts/report-nightly-browser.py \
+            --outcomes "$RUNNER_TEMP/browser-outcomes" --history "$RUNNER_TEMP/nightly-history" \
+            --report "$RUNNER_TEMP/nightly-browser-summary.json"
+      - name: Check known quarantines
+        if: ${{ always() && !cancelled() }}
+        run: python3 scripts/check-flaky-tests.py --report "$RUNNER_TEMP/nightly-quarantine.json"
+      - name: Upload nightly rollup
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-browser-summary
           path: |
-            ${{ runner.temp }}/browser-outcomes.json
-            ${{ runner.temp }}/quarantine.json
-            apps/web/test-results/
+            ${{ runner.temp }}/nightly-browser-summary.json
+            ${{ runner.temp }}/nightly-quarantine.json
+          overwrite: true
           retention-days: 14

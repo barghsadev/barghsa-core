@@ -1,19 +1,16 @@
 import { test, expect } from './coverage-fixture';
+import { t as tWorkspace } from '@barghsa/i18n/workspace';
+import { brandSettings } from '../src/test/branding-settings-fixtures';
 
 const id = '11111111-1111-4111-8111-111111111111';
 const amount = '10000000000000001';
 const western = '10,000,000,000,000,001';
 const persian = '۱۰٬۰۰۰٬۰۰۰٬۰۰۰٬۰۰۰٬۰۰۱';
-for (const locale of ['en', 'fa']) {
+for (const locale of ['en', 'fa'] as const) {
   test(`published number preference reaches finance without changing submitted values (${locale})`, async ({
     page,
   }) => {
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     let numberStyle = locale === 'fa' ? 'western' : 'persian';
     let walletAmount: string | number = amount;
     let isStaff = false;
@@ -21,17 +18,7 @@ for (const locale of ['en', 'fa']) {
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/public/branding/config', (route) =>
       route.fulfill({
-        json: {
-          appTitle: 'Number preference test',
-          slogan: '',
-          primaryColor: '#2563eb',
-          secondaryColor: '#64748b',
-          accentColor: '#f59e0b',
-          logoUrl: null,
-          faviconUrl: null,
-          darkMode: false,
-          numberStyle,
-        },
+        json: { ...brandSettings, numberStyle },
       })
     );
     await page.route('**/api/auth/user', (route) =>
@@ -114,6 +101,38 @@ for (const locale of ['en', 'fa']) {
         ],
       })
     );
+    await page.route('**/api/products/electricity', (route) =>
+      route.fulfill({
+        json: ['thermal', 'green', 'free_market', 'energy_saving'].map((systemKey, index) => ({
+          id: index === 0 ? id : null,
+          systemKey,
+          title: index === 0 ? { en: 'Electricity', fa: 'برق' } : null,
+          description: null,
+          status: index === 0 ? 'active' : 'missing',
+          price: index === 0 ? amount : null,
+          limits: { minKwh: '0', maxKwh: '0' },
+          orderable: index === 0,
+          simpleOrderable: index === 0,
+          simpleOrderBlockReasons: [],
+        })),
+      })
+    );
+    await page.route('**/api/electricity/periods/simple', (route) =>
+      route.fulfill({
+        json: {
+          periods: [
+            'current_month',
+            'next_month',
+            'current_week',
+            'next_week',
+            'week_after_next',
+          ].map((key) => ({ key, start: '2030-01-01T00:00:00Z', end: '2030-01-08T00:00:00Z' })),
+        },
+      })
+    );
+    await page.route(`**/api/electricity/drafts/simple/guarded?profileId=${id}`, (route) =>
+      route.fulfill({ json: { currentStep: 1, data: null, revision: null } })
+    );
     await page.route('**/api/crm/dashboard/pending-verification', (route) =>
       route.fulfill({ json: { enabled: true, count: 12, profiles: [] } })
     );
@@ -163,7 +182,9 @@ for (const locale of ['en', 'fa']) {
     isStaff = true;
     await page.goto('/admin/wallet-receipts');
     const input = page.getByTestId('wallet-top-up-limit-input');
-    await expect(input).toHaveValue(locale === 'fa' ? '2,000,000,000' : '۲٬۰۰۰٬۰۰۰٬۰۰۰');
+    const displayedLimit = page.getByTestId('wallet-top-up-limit-current');
+    await expect(displayedLimit).toContainText(locale === 'fa' ? '2,000,000,000' : '۲٬۰۰۰٬۰۰۰٬۰۰۰');
+    await expect(input).toHaveValue('2000000000');
     await input.fill('۵۰۰۰۰۰۰۰۰');
     await page.getByTestId('wallet-top-up-limit-save').click();
     await page
@@ -174,11 +195,14 @@ for (const locale of ['en', 'fa']) {
     expect(writes).toEqual([{ limit_irr: 500000000, expected_version: 0 }]);
     numberStyle = 'locale';
     await page.evaluate(() => window.dispatchEvent(new Event('barghsa:branding-activated')));
-    await expect(input).toHaveValue(locale === 'fa' ? '۵۰۰٬۰۰۰٬۰۰۰' : '500,000,000');
+    await expect(displayedLimit).toContainText(locale === 'fa' ? '۵۰۰٬۰۰۰٬۰۰۰' : '500,000,000');
+    await expect(input).toHaveValue('500000000');
     expect(writes).toHaveLength(1);
     walletAmount = Number.MAX_SAFE_INTEGER + 1;
     isStaff = false;
     await page.goto('/wallet');
-    await expect(page.locator('main .text-3xl')).toHaveText('—');
+    const wallet = page.getByTestId('wallet-page');
+    await expect(wallet.getByRole('alert')).toHaveText(tWorkspace('wallet.page.loadError', locale));
+    await expect(wallet.getByTestId('wallet-balance')).toHaveCount(0);
   });
 }
