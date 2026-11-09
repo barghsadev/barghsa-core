@@ -7,7 +7,7 @@ import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { collectVariables } from '@barghsa/shared/notifications';
 import { parseSmsirConfig } from './smsir-config.schema';
-import type { SmsirConnectionTesterService } from './smsir-connection-tester.service';
+import { SmsirConnectionTesterService } from './smsir-connection-tester.service';
 import {
   ProviderSecretsService,
   type ProviderMaskedConfig,
@@ -199,6 +199,7 @@ export class SmsProviderConfigService {
     @Inject(PROVIDER_CONFIG_POOL)
     private readonly injectedPool?: ProviderPool,
     @Optional()
+    @Inject(SmsirConnectionTesterService)
     private readonly smsirTester?: SmsirConnectionTesterService,
     @Optional()
     private readonly secretsService?: ProviderSecretsService

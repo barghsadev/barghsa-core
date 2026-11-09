@@ -7,9 +7,9 @@ import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { parseSmtpConfig } from './smtp-config.schema';
-import type { SmtpConnectionTesterService } from './smtp-connection-tester.service';
+import { SmtpConnectionTesterService } from './smtp-connection-tester.service';
 import { parseResendConfig } from './resend-config.schema';
-import type { ResendConnectionTesterService } from './resend-connection-tester.service';
+import { ResendConnectionTesterService } from './resend-connection-tester.service';
 import { ProviderSecretsService, type ProviderMaskedConfig } from './provider-secrets.service';
 import { EmailCircuitBreakerService } from './email-circuit-breaker.service';
 import { PROVIDER_CONFIG_POOL, type PoolClient, type ProviderPool } from './provider-config.di';
@@ -199,8 +199,10 @@ export class EmailProviderConfigService {
     @Inject(PROVIDER_CONFIG_POOL)
     private readonly injectedPool?: ProviderPool,
     @Optional()
+    @Inject(SmtpConnectionTesterService)
     private readonly smtpTester?: SmtpConnectionTesterService,
     @Optional()
+    @Inject(ResendConnectionTesterService)
     private readonly resendTester?: ResendConnectionTesterService,
     @Optional()
     private readonly secretsService?: ProviderSecretsService,

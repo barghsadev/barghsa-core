@@ -26,6 +26,22 @@ The repository regression fixtures cover these cases across the API, shared
 validation, and the native PostgreSQL and object-storage boundaries. See the
 source-bound test receipts on the task board. [Task board](../../kanban/BOARD.md).
 
+The compiled HTTP subset runs the application with disposable databases. It
+exercises session and origin controls, forwarded-address limits, direct UUID
+substitution, the SMTP connection guard, and payment-return navigation.
+Follow the CI fixture setup when running it locally. [Test databases](../development/ci.md#backend-test-databases).
+
+```sh
+rtk proxy pnpm --filter @barghsa/api exec vitest run \
+  src/session/preauth-csrf-http.integration.test.ts \
+  src/session/session-http.integration.test.ts \
+  src/auth/login-rate-http.integration.test.ts \
+  src/auth/proxy-rate-http.integration.test.ts \
+  src/orders/order-access-http.integration.test.ts \
+  src/provider-config/provider-test-http.integration.test.ts \
+  src/wallet/online-topup-http.integration.test.ts
+```
+
 ## Live candidate review
 
 - Exercise login, logout, account recovery, MFA step-up and context changes

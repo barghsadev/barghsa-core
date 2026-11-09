@@ -523,6 +523,7 @@ it('enforces the role matrix through real staff, finance, CRM, legal and adminis
     ['role-crm-verification', [403, 200, 403, 403, 403]],
     ['role-finance', [403, 403, 200, 403, 403]],
     ['role-legal-contracts', [403, 403, 403, 200, 403]],
+    ['role-operations', [403, 403, 403, 403, 403]],
     ['role-admin', [200, 200, 200, 200, 200]],
   ];
   for (const [role, expected] of matrix) {

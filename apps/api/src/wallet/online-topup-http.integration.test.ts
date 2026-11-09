@@ -228,7 +228,7 @@ it('online HTTP initiation rechecks a session revoked after the guard while wait
   }
 });
 
-it('browser payment GET only redirects to confirmation and never changes the intent or claims an event', async () => {
+it('browser payment GET ignores external destinations and never changes the intent or claims an event', async () => {
   const input = await seed();
   expect((await input.submit()).status).toBe(201);
   const row = (
@@ -236,10 +236,17 @@ it('browser payment GET only redirects to confirmation and never changes the int
       input.profileId,
     ])
   ).rows[0];
-  const response = await fetch(
-    `${http.base}/api/wallet/top-ups/callback?orderId=${row.id}&Authority=${encodeURIComponent(row.ref_id)}&Status=NOK`,
-    { redirect: 'manual' }
-  );
+  const query = new URLSearchParams({
+    orderId: row.id,
+    Authority: row.ref_id,
+    Status: 'NOK',
+    next: 'https://untrusted.example.test/checkout',
+    returnUrl: '//untrusted.example.test/checkout',
+  });
+  const response = await fetch(`${http.base}/api/wallet/top-ups/callback?${query}`, {
+    redirect: 'manual',
+    headers: { 'X-Forwarded-Host': 'untrusted.example.test' },
+  });
   expect(
     (await http.pool.query('SELECT state FROM wallet_transactions WHERE id=$1', [row.id])).rows[0]
   ).toEqual({ state: 'Pending' });

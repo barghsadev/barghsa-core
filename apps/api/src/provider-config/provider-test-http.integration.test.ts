@@ -1,17 +1,22 @@
 import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
+import { createServer, type AddressInfo } from 'node:net';
 import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let headers: Record<string, string>;
 beforeAll(async () => {
   const priorKey = process.env.PROVIDER_CONFIG_ENCRYPTION_KEY;
+  const priorAllowlist = process.env.SMTP_HOST_ALLOWLIST;
   process.env.PROVIDER_CONFIG_ENCRYPTION_KEY = '';
+  process.env.SMTP_HOST_ALLOWLIST = '';
   try {
     http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
   } finally {
     if (priorKey === undefined) delete process.env.PROVIDER_CONFIG_ENCRYPTION_KEY;
     else process.env.PROVIDER_CONFIG_ENCRYPTION_KEY = priorKey;
+    if (priorAllowlist === undefined) delete process.env.SMTP_HOST_ALLOWLIST;
+    else process.env.SMTP_HOST_ALLOWLIST = priorAllowlist;
   }
   await http.pool.query(
     "INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ('provider-editor','Provider editor','Fixture','[\"admin:notification-providers:edit\"]')"
@@ -40,6 +45,45 @@ afterAll(async () => {
 beforeEach(async () => {
   await http.pool.query('DELETE FROM email_provider_configs');
   await http.pool.query('DELETE FROM sms_provider_configs');
+});
+
+it('rejects a private SMTP destination through the provider test API before dialing it', async () => {
+  let connections = 0;
+  const listener = createServer((socket) => {
+    connections++;
+    socket.destroy();
+  });
+  await new Promise<void>((resolve, reject) => {
+    listener.once('error', reject);
+    listener.listen(0, '127.0.0.1', resolve);
+  });
+  try {
+    const id = randomUUID();
+    const config = {
+      host: '127.0.0.1',
+      port: (listener.address() as AddressInfo).port,
+      security: 'TLS',
+      from_email: 'sender@example.test',
+    };
+    await http.pool.query(
+      `INSERT INTO email_provider_configs(id,transport,label,status,config,created_by)
+       VALUES ($1,'smtp','Private destination fixture','draft',$2::jsonb,'provider-editor')`,
+      [id, JSON.stringify(config)]
+    );
+    const response = await fetch(`${http.base}/api/admin/email-providers/${id}/test-connection`, {
+      method: 'POST',
+      headers,
+      body: '{}',
+    });
+    expect(response.status, await response.clone().text()).toBe(200);
+    expect(await response.json()).toMatchObject({
+      lastTestStatus: 'failed',
+      test: { ok: false, error: expect.stringMatching(/blocked/i) },
+    });
+    expect(connections).toBe(0);
+  } finally {
+    await new Promise<void>((resolve) => listener.close(() => resolve()));
+  }
 });
 
 for (const channel of ['email', 'sms']) {

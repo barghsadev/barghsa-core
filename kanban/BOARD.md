@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T23:38:41+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T23:54:13+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1072 | Accepted with unchanged source bindings. |
-| verify | 253 | Existing work may be complete; inspect evidence before building. |
+| done | 1075 | Accepted with unchanged source bindings. |
+| verify | 250 | Existing work may be complete; inspect evidence before building. |
 | partial | 36 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1149,13 +1149,13 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.03.01.05` | verify | Inventory needed | Extend authorization to background workers, AI tool calls, file access URLs, exports, and admin actions |
 | `06-security-testing-observability.md#T-06.03.01.06` | done | Recorded batch work | Implement staff role permissions: deny-by-default, additive by role (CS, CRM, Finance, Legal, Ops, Admin) |
 | `06-security-testing-observability.md#T-06.03.01.07` | verify | Inventory needed | Ensure all staff permissions are explicit capabilities; high-risk commands require dedicated capability + step-up auth |
-| `06-security-testing-observability.md#T-06.03.01.08` | verify | Inventory needed | Write integration tests: each role's permitted/denied actions, profile isolation, cross-tenant BOLA attempts |
+| `06-security-testing-observability.md#T-06.03.01.08` | done | Recorded batch work | Write integration tests: each role's permitted/denied actions, profile isolation, cross-tenant BOLA attempts |
 | `06-security-testing-observability.md#T-06.03.01.09` | verify | Inventory needed | Ensure AuthorizationService logs every authorization denial as a structured audit event with actor, resource, action, reason, timestamp |
 | `06-security-testing-observability.md#T-06.03.01.10` | verify | Inventory needed | Write integration test: authorization denials are logged and appear on audit event dashboard |
 | `06-security-testing-observability.md#T-06.03.02.01` | verify | Inventory needed | Audit all existing resource-loading endpoints for BOLA gaps (load by ID without profile scope check) |
 | `06-security-testing-observability.md#T-06.03.02.02` | verify | Inventory needed | Implement reusable query scope filter: `where({ id, profileId: activeProfileId })` for customer resources |
 | `06-security-testing-observability.md#T-06.03.02.03` | verify | Inventory needed | Ensure staff/staff-admin routes verify explicit permission, not just "is staff" |
-| `06-security-testing-observability.md#T-06.03.02.04` | verify | Inventory needed | Write BOLA/IDOR penetration tests: attempt cross-profile access via UUID enumeration, direct ID manipulation |
+| `06-security-testing-observability.md#T-06.03.02.04` | done | Recorded batch work | Write BOLA/IDOR penetration tests: attempt cross-profile access via UUID enumeration, direct ID manipulation |
 | `06-security-testing-observability.md#T-06.03.02.05` | done | Recorded batch work | Add DAST/security E2E: attempt access to another profile's invoices, orders, contracts, wallet |
 | `06-security-testing-observability.md#T-06.03.03.01` | verify | Inventory needed | Implement audit-logging interceptor for ownership/role/identity changes: before/after values, actor, timestamp |
 | `06-security-testing-observability.md#T-06.03.03.02` | verify | Inventory needed | Implement dual-approval engine: configurable IRR threshold, second authorized user approval needed |
@@ -1244,7 +1244,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.08.02.02` | blocked | Recorded batch work | Schedule pre-launch independent penetration test; budget and vendor selection |
 | `06-security-testing-observability.md#T-06.08.02.03` | done | Recorded batch work | Define criteria: critical/high with credible production path → fix before release; accepted risk requires owner+expiry |
 | `06-security-testing-observability.md#T-06.08.02.04` | verify | Inventory needed | Implement automated authenticated DAST in staging (e.g. OWASP ZAP API scan) |
-| `06-security-testing-observability.md#T-06.08.02.05` | verify | Inventory needed | Write custom security E2E suite for targeted API test cases CSRF, CORS, session rotation, rate limits, BOLA, SSRF, open redirect |
+| `06-security-testing-observability.md#T-06.08.02.05` | done | Recorded batch work | Write custom security E2E suite for targeted API test cases CSRF, CORS, session rotation, rate limits, BOLA, SSRF, open redirect |
 | `06-security-testing-observability.md#T-06.08.03.01` | done | Recorded batch work | Create incident response runbook (`docs/runbooks/security-incident.md`): detection, containment, eradication, recovery, post-mortem |
 | `06-security-testing-observability.md#T-06.08.03.02` | done | Recorded batch work | Create key/token revocation procedure: API keys, provider secrets, session mass-revocation, certificate rotation |
 | `06-security-testing-observability.md#T-06.08.03.03` | done | Recorded batch work | Create customer communication templates: breach notification, service disruption, credential rotation |

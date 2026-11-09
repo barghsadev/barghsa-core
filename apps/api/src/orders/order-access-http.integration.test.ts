@@ -8,6 +8,7 @@ import { beforeEach, afterEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import type { PoolClient } from 'pg';
 import { startHttpFixture } from '../test/http-fixture.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import { DEFAULT_GREEN_ELECTRICITY_CONFIG } from '@barghsa/shared/finance';
 import { ElectricityCalculationService } from '../electricity/electricity-calculation.service.js';
 import { persistElectricitySubmissionSnapshot } from '../electricity/electricity-submission-snapshot.js';
@@ -311,6 +312,38 @@ it('allows the owner and Manager while excluding financial, legal and stale Owne
     { event: 'order_cancelled', user_id: 'owner' },
   ]);
 });
+it('gives a customer the same denial for a foreign order and guessed UUIDs', async () => {
+  const foreignId = await create();
+  const other = await http.pool.query<{ id: string }>(
+    "INSERT INTO profiles(user_id,profile_type,status) VALUES ('stranger','LEGAL','ACTIVE') RETURNING id"
+  );
+  const ownOrder = await request('stranger', 'POST', '', { ...body, profileId: other.rows[0]!.id });
+  expect(ownOrder.status).toBe(201);
+  const { id: ownId } = (await ownOrder.json()) as { id: string };
+  expect((await request('stranger', 'GET', `/${ownId}`)).status).toBe(200);
+  const before = await electricityDeliverySnapshot(http.pool, foreignId);
+
+  for (const [method, suffix] of [
+    ['GET', ''],
+    ['POST', '/cancel'],
+  ] as const) {
+    const errors = [];
+    for (const id of [foreignId, randomUUID(), randomUUID()]) {
+      const result = await request('stranger', method, `/${id}${suffix}`);
+      expect(result.status).toBe(404);
+      const payload = (await result.json()) as { error: Record<string, unknown> };
+      expect(payload.error.code).toBe(ErrorCodes.NOT_FOUND_RESOURCE.code);
+      expect(payload.error.correlationId).toEqual(expect.any(String));
+      delete payload.error.correlationId;
+      errors.push(payload);
+    }
+    expect(errors).toEqual([errors[0], errors[0], errors[0]]);
+  }
+
+  expect(await electricityDeliverySnapshot(http.pool, foreignId)).toEqual(before);
+  expect((await request('owner', 'GET', `/${foreignId}`)).status).toBe(200);
+});
+
 it('moves order access with current ownership, preserving the original actor on the order', async () => {
   const id = await create();
   await http.pool.query("UPDATE profiles SET user_id='successor' WHERE id=$1", [profileId]);
