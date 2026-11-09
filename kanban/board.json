@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T18:05:50+00:00",
+  "updated": "2026-11-09T18:15:58+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -5474,7 +5474,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Correct the deterministic browser failures reported by GitHub manual run 42644986543 and verify all exact eight-shard project outcomes, including the next scheduled run. Local partition proof is discovery evidence.",
+        "Verify the next actual scheduled run and its 40 exact shard outcomes. Targeted diagnostics cover the known deterministic failures in run 42644986543. The historical two first-attempt Mobile Safari document timeouts were not reproducible in eight local repeats and need scheduled evidence.",
         "Bind current critical registration, MFA, legal onboarding, electricity and wallet, saving, solar construction and admin browser journeys to the accepted release source."
       ],
       "owner": null,
@@ -5529,7 +5529,11 @@
           "release-0.6-nightly-workspace-browser-fixtures",
           "release-0.6-nightly-admin-policy-group-contract",
           "release-0.6-nightly-navigation-link-audit",
-          "release-0.6-nightly-portable-browser-captures"
+          "release-0.6-nightly-portable-browser-captures",
+          "release-0.6-nightly-real-admin-journeys",
+          "release-0.6-nightly-hosted-portable-browser-captures",
+          "release-0.6-nightly-documents-timeout-repeat",
+          "release-0.6-nightly-critical-browser-journeys"
         ],
         "current_acceptance": null
       }
@@ -5771,7 +5775,11 @@
           "release-0.6-nightly-auth-and-finance-browser-fixtures",
           "release-0.6-nightly-outcome-rollup",
           "release-0.6-nightly-workspace-browser-fixtures",
-          "release-0.6-hosted-nightly-contract-and-incomplete-rollup"
+          "release-0.6-hosted-nightly-contract-and-incomplete-rollup",
+          "release-0.6-nightly-real-admin-journeys",
+          "release-0.6-nightly-hosted-portable-browser-captures",
+          "release-0.6-nightly-documents-timeout-repeat",
+          "release-0.6-nightly-critical-browser-journeys"
         ],
         "current_acceptance": null
       }
@@ -12454,7 +12462,11 @@
           "release-0.6-nightly-workspace-browser-fixtures",
           "release-0.6-hosted-nightly-contract-and-incomplete-rollup",
           "release-0.6-nightly-navigation-link-audit",
-          "release-0.6-nightly-portable-browser-captures"
+          "release-0.6-nightly-portable-browser-captures",
+          "release-0.6-nightly-real-admin-journeys",
+          "release-0.6-nightly-hosted-portable-browser-captures",
+          "release-0.6-nightly-documents-timeout-repeat",
+          "release-0.6-nightly-critical-browser-journeys"
         ],
         "current_acceptance": null
       }
@@ -26758,7 +26770,8 @@
           "release-0.6-browser-origin-security",
           "release-0.6-remove-unapproved-session-location-data",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-proxy-trust-and-request-limits"
+          "release-0.6-proxy-trust-and-request-limits",
+          "release-0.6-nightly-real-admin-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -27018,7 +27031,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -27443,7 +27456,8 @@
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
-            "The exact compiled API and source-bound session HTTP suite passed 17 cases on isolated PostgreSQL 16, including the owner-approved null location even for a public IP and legacy country metadata. Existing authentication, CSRF, expiry, step-up, revoke-all and forced-change assertions passed."
+            "The exact compiled API and source-bound session HTTP suite passed 17 cases on isolated PostgreSQL 16, including the owner-approved null location even for a public IP and legacy country metadata. Existing authentication, CSRF, expiry, step-up, revoke-all and forced-change assertions passed.",
+            "The current real admin suite passed 52 cases on each of Chromium, Firefox, WebKit, Mobile Chrome and Mobile Safari in hosted run 42670364943. Each receipt contains zero unexpected, flaky, skipped or runner-error outcomes. These are diagnostic job results for the admin suite only."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/step-up-action-audit",
           "limitations": [
@@ -40396,7 +40410,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -41753,7 +41767,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -43118,7 +43132,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -58148,7 +58162,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -59259,7 +59273,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -60370,7 +60384,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -61863,7 +61877,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -64125,7 +64139,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-essential-control-contrast",
           "release-0.5-conditional-heading-acceptance",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-nightly-real-admin-journeys"
         ],
         "current_acceptance": {
           "kind": "accepted-verified-branding-editor-assets",
@@ -64193,7 +64208,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -64201,7 +64216,7 @@
             },
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
-              "sha256": "78e0581234e695f305b42477ef6ebf46e6edffcfe58ea30c0b19c553087c83de"
+              "sha256": "699228cec9e01c1a833dd740fb2a0b6e8f2954b5ebb3f3af213460e7db733fc0"
             },
             {
               "path": "apps/api/src/test/http-fixture.ts",
@@ -64259,7 +64274,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Renewed the auth specification binding after reconciling the older meter visibility wording with the documented v0.5 display policy. Other auth requirements remain unchanged."
+            "Renewed the auth specification binding after reconciling the older meter visibility wording with the documented v0.5 display policy. Other auth requirements remain unchanged.",
+            "The current real admin suite passed 52 cases on each of Chromium, Firefox, WebKit, Mobile Chrome and Mobile Safari in hosted run 42670364943. Each receipt contains zero unexpected, flaky, skipped or runner-error outcomes. These are diagnostic job results for the admin suite only."
           ],
           "criterion_result": "Complete editor verified including logo/favicon native uploads, localized titles/colors, light/dark preview, versioned save/activate and owner-approved same-origin no-store assets. Fresh and upgrade history repaired; original privacy, integrity and concurrency checks retained.",
           "limitations": [
@@ -65537,7 +65553,7 @@
             },
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
-              "sha256": "78e0581234e695f305b42477ef6ebf46e6edffcfe58ea30c0b19c553087c83de"
+              "sha256": "699228cec9e01c1a833dd740fb2a0b6e8f2954b5ebb3f3af213460e7db733fc0"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -65641,7 +65657,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -66199,7 +66215,7 @@
             },
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
-              "sha256": "78e0581234e695f305b42477ef6ebf46e6edffcfe58ea30c0b19c553087c83de"
+              "sha256": "699228cec9e01c1a833dd740fb2a0b6e8f2954b5ebb3f3af213460e7db733fc0"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -66303,7 +66319,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -66848,7 +66864,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-native-staff-touch-and-electricity-recovery",
-          "release-0.6-packaged-production-seed"
+          "release-0.6-packaged-production-seed",
+          "release-0.6-nightly-real-admin-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -66860,7 +66877,7 @@
             },
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
-              "sha256": "78e0581234e695f305b42477ef6ebf46e6edffcfe58ea30c0b19c553087c83de"
+              "sha256": "699228cec9e01c1a833dd740fb2a0b6e8f2954b5ebb3f3af213460e7db733fc0"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -66964,7 +66981,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -67120,7 +67137,8 @@
             "Bindings renewed by release-0.5-protected-staff-browser-closure: one validated OTP toast and bounded geography dialog. 32 distinct native cases and 61 related unit tests passed, retaining current staff confirmation, authority, focus and exact response assertions.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
-            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain."
+            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
+            "The current real admin suite passed 52 cases on each of Chromium, Firefox, WebKit, Mobile Chrome and Mobile Safari in hosted run 42670364943. Each receipt contains zero unexpected, flaky, skipped or runner-error outcomes. These are diagnostic job results for the admin suite only."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
           "limitations": [
@@ -67520,7 +67538,7 @@
             },
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
-              "sha256": "78e0581234e695f305b42477ef6ebf46e6edffcfe58ea30c0b19c553087c83de"
+              "sha256": "699228cec9e01c1a833dd740fb2a0b6e8f2954b5ebb3f3af213460e7db733fc0"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -67624,7 +67642,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -94609,7 +94627,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -95652,7 +95670,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -96701,7 +96719,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -97981,7 +97999,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
@@ -99634,7 +99652,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/failed-jobs.spec.ts",
@@ -100032,7 +100050,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/failed-jobs.spec.ts",
@@ -101882,7 +101900,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/contract-templates.spec.ts",
@@ -102727,7 +102745,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/contract-templates.spec.ts",
@@ -107288,7 +107306,8 @@
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
           "release-0.5-route-census-closure",
-          "release-0.6-browser-origin-security"
+          "release-0.6-browser-origin-security",
+          "release-0.6-nightly-real-admin-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -107296,7 +107315,7 @@
           "source_evidence": [
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
-              "sha256": "78e0581234e695f305b42477ef6ebf46e6edffcfe58ea30c0b19c553087c83de"
+              "sha256": "699228cec9e01c1a833dd740fb2a0b6e8f2954b5ebb3f3af213460e7db733fc0"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -107496,7 +107515,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/catalogue.spec.ts",
@@ -107651,7 +107670,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
-            "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json"
+            "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
+            "The current real admin suite passed 52 cases on each of Chromium, Firefox, WebKit, Mobile Chrome and Mobile Safari in hosted run 42670364943. Each receipt contains zero unexpected, flaky, skipped or runner-error outcomes. These are diagnostic job results for the admin suite only."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
           "limitations": [
@@ -108018,7 +108038,7 @@
           "source_evidence": [
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
-              "sha256": "78e0581234e695f305b42477ef6ebf46e6edffcfe58ea30c0b19c553087c83de"
+              "sha256": "699228cec9e01c1a833dd740fb2a0b6e8f2954b5ebb3f3af213460e7db733fc0"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -108218,7 +108238,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/catalogue.spec.ts",
@@ -108991,7 +109011,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
@@ -109866,7 +109886,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/contract-templates.spec.ts",
@@ -110571,7 +110591,7 @@
           "source_evidence": [
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
-              "sha256": "78e0581234e695f305b42477ef6ebf46e6edffcfe58ea30c0b19c553087c83de"
+              "sha256": "699228cec9e01c1a833dd740fb2a0b6e8f2954b5ebb3f3af213460e7db733fc0"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -110771,7 +110791,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/catalogue.spec.ts",
@@ -525381,7 +525401,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
@@ -526226,7 +526246,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
@@ -527583,7 +527603,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
@@ -712131,7 +712151,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -712139,7 +712159,7 @@
             },
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
-              "sha256": "78e0581234e695f305b42477ef6ebf46e6edffcfe58ea30c0b19c553087c83de"
+              "sha256": "699228cec9e01c1a833dd740fb2a0b6e8f2954b5ebb3f3af213460e7db733fc0"
             },
             {
               "path": "apps/api/src/test/http-fixture.ts",
@@ -723674,7 +723694,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "1c1b055aaa1421149520d522d378d20ebf39836f266758ea083ab057dc12b248"
+              "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -739807,7 +739827,11 @@
           "release-0.6-hosted-nightly-contract-and-incomplete-rollup",
           "release-0.6-nightly-admin-policy-group-contract",
           "release-0.6-nightly-navigation-link-audit",
-          "release-0.6-nightly-portable-browser-captures"
+          "release-0.6-nightly-portable-browser-captures",
+          "release-0.6-nightly-real-admin-journeys",
+          "release-0.6-nightly-hosted-portable-browser-captures",
+          "release-0.6-nightly-documents-timeout-repeat",
+          "release-0.6-nightly-critical-browser-journeys"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -829411,6 +829435,155 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-portable-screenshots",
       "source_scope_proof": "release-0.6-nightly-portable-browser-captures.json",
       "source_scope_proof_sha256": "ffa0c8dad53b37d5b486c1f444e981a9e95f50b6e81a6114e90266cde949420d"
+    },
+    "release-0.6-nightly-real-admin-journeys": {
+      "batch": "release-0.6-nightly-real-admin-journeys",
+      "base_commit": "46ca15d78121876f8e7ba85e642e2576f55daa00",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "release-readiness#R-05.02",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-09.01.01",
+        "02-auth-users-admin.md#T-09.03.01",
+        "02-auth-users-admin.md#T-09.12.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/scripts/admin-ui-fixture.ts",
+          "sha256": "699228cec9e01c1a833dd740fb2a0b6e8f2954b5ebb3f3af213460e7db733fc0"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "5a5607307aca7ecef1dc9fe096aa21647b7f264da08d4bbc801257b48eb0faeb"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
+          "sha256": "d8ad758872040900c27a00ea4f8c69cb126d95df8d231030a33c3ba125852323"
+        }
+      ],
+      "checks": [
+        "The current real admin suite passed 52 cases on each of Chromium, Firefox, WebKit, Mobile Chrome and Mobile Safari in hosted run 42670364943. Each receipt contains zero unexpected, flaky, skipped or runner-error outcomes. These are diagnostic job results for the admin suite only.",
+        "The fixture uses independently seeded staff actors, an isolated test database and a fixture-only IPC read of the encrypted OTP outbox. The browser proves the challenge and OTP verification, rotated session and CSRF, exact role write and audit. Other repaired admin journeys verify the current form controls and persisted API receipts. The exact source matches and formatting and lint passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-admin-browser-42670364943",
+      "source_scope_proof": "release-0.6-nightly-real-admin-journeys.json",
+      "source_scope_proof_sha256": "f5af404b5d2b1f391e800950f9906f952048dec65fa10146709410fc8c8d71df"
+    },
+    "release-0.6-nightly-hosted-portable-browser-captures": {
+      "batch": "release-0.6-nightly-hosted-portable-browser-captures",
+      "base_commit": "46ca15d78121876f8e7ba85e642e2576f55daa00",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/delivery-provider-tables.spec.ts",
+          "sha256": "95579be1540acfe5339ec48d717436db7cb78bd1004dcb8fa68bc09db9e599b8"
+        },
+        {
+          "path": "apps/web/e2e/documents.spec.ts",
+          "sha256": "c56140f7a8657b2f3260bd76388f0448432f8c99917630c3463b7611193410d7"
+        },
+        {
+          "path": "apps/web/e2e/geography-tables.spec.ts",
+          "sha256": "415aa7716df19270620c05dcb9c8e4a1c2bb4e2bda4500bd5a2a2b0772981343"
+        },
+        {
+          "path": "apps/web/e2e/gift-code-tables.spec.ts",
+          "sha256": "191db10d54aded979af1a9e3f8aca2bc77f56c82d915cb6c8e52c903c4ecb104"
+        },
+        {
+          "path": "apps/web/e2e/operational-queue-tables.spec.ts",
+          "sha256": "de769da05fd9f31705f0750260019d45957fe58a84356c6bbf77671279e1c3e8"
+        },
+        {
+          "path": "apps/web/e2e/reconciliation-forms.spec.ts",
+          "sha256": "bacbe80487a8105819f155533520f232ccfb853d6e5d2af97dbb27c7d843a876"
+        },
+        {
+          "path": "apps/web/e2e/reconciliation-tables.spec.ts",
+          "sha256": "953f78af148294952783240da1f7842b6e2f0b0ee3d7b10411ecd47146ec2c24"
+        },
+        {
+          "path": "apps/web/e2e/sms-provider-settings.spec.ts",
+          "sha256": "ca4d5e4968eb685037d90dc32a95e47dce79d3409d6ec0260c7594e212d03543"
+        },
+        {
+          "path": "apps/web/e2e/staff-directory-tables.spec.ts",
+          "sha256": "f9dc0de525bcd830b232f7da1d9e9af0a5fc4975f4b18a7d553983b659205b3e"
+        },
+        {
+          "path": "apps/web/e2e/template-catalogue-tables.spec.ts",
+          "sha256": "d9ecb16029f58bb16b0a41cb3b1dc2d7c63711e460db9ae5b62786e060010bda"
+        }
+      ],
+      "checks": [
+        "The ten source-matched specs passed all 15 hosted capture journeys on Mobile Safari and Chromium in run 42670730772, including every previous workstation-path failure. Both downloaded outcome receipts report zero unexpected, flaky, skipped or runner-error outcomes. The 17 capture files were verified in the actual runner artifacts."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-portable-screenshots/hosted-42670730772",
+      "source_scope_proof": "release-0.6-nightly-hosted-portable-browser-captures.json",
+      "source_scope_proof_sha256": "29e90f00447cb77aa7c554e89e2babea08c901b773d2a78e0bd5a687ba49c9db"
+    },
+    "release-0.6-nightly-documents-timeout-repeat": {
+      "batch": "release-0.6-nightly-documents-timeout-repeat",
+      "base_commit": "46ca15d78121876f8e7ba85e642e2576f55daa00",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/shared-loading-adoption.spec.ts",
+          "sha256": "be89235da71197cdf76430d84ece810f3c7dea88666cedd35511b08196833747"
+        }
+      ],
+      "checks": [
+        "In original run 42644986543, two Mobile Safari document timeout cases failed on their first attempt and passed on retry. The first-attempt error traces were unavailable. The unchanged test passed eight focused local repeat cases at the current application build with zero retries. This diagnostic does not resolve the historical flake or certify the scheduled job."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-shared-loading",
+      "source_scope_proof": "release-0.6-nightly-documents-timeout-repeat.json",
+      "source_scope_proof_sha256": "ed9549bcf6f3f64a616e136af11fbddc77b8e61c1ce81f8afa972539ebe952b3"
+    },
+    "release-0.6-nightly-critical-browser-journeys": {
+      "batch": "release-0.6-nightly-critical-browser-journeys",
+      "base_commit": "46ca15d78121876f8e7ba85e642e2576f55daa00",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/login-native-forms.spec.ts",
+          "sha256": "4a701474705ca10b8ce53c7584446380e5371218e0f2ca5e858e16467b0a44fd"
+        },
+        {
+          "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+          "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+        },
+        {
+          "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
+          "sha256": "d5cb46c73206c8e4521c52124aabc7b38bf4eb8d80fe55ce6cb37eab00cb9245"
+        },
+        {
+          "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
+          "sha256": "15e40d795f0daedfa9ea575f9b14d8fd329a67b60217916c7f45e28ec37215d2"
+        }
+      ],
+      "checks": [
+        "Sixteen focused native Chromium and Mobile Safari cases passed in Persian and English with zero retries. The existing suites exercised password change and OTP, company onboarding, simple electricity from reviewed quote through payment and activation, and wallet receipt recovery after a lost response. The tested browser app source matches the 44adb51a build scope. The results use isolated browser fixtures and do not establish live provider or full scheduled acceptance."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-critical-browser",
+      "source_scope_proof": "release-0.6-nightly-critical-browser-journeys.json",
+      "source_scope_proof_sha256": "f706fbf97c1bd7db0515d3d4c4a5d17cbd189345e26e2f521b559963a6f49058"
     }
   },
   "historical_improvements": [
@@ -829450,20 +829623,21 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-nightly-browser-deterministic-failures",
+    "id": "release-0.6-runtime-and-scheduled-acceptance",
     "release": "0.6.0",
     "task_keys": [
+      "06-security-testing-observability.md#T-06.07.03.01",
       "01-platform-infrastructure.md#T-01.04.04",
       "01-platform-infrastructure.md#T-01.04.06",
       "01-platform-infrastructure.md#T-05.05.01",
       "release-readiness#R-05.02"
     ],
-    "goal": "Correct the exact deterministic browser failures from hosted run 42644986543, preserving current authority and real API persistence assertions. Verify targeted native browser outcomes before requesting another complete nightly run."
+    "goal": "Finish source-bound runtime hardening, collect the scheduled browser and quality outcomes, and reconcile the remaining v0.6.0 operational prerequisites before accepting a staging release."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",
-    "next_update_after": "v0.6.0 hosted browser, image distribution verification, package license disposition and production-equivalent environment availability",
-    "method": "v0.5.0 staging and Telegram receipts are confirmed. v0.6.0 owner policy is recorded. Local and disposable staging rehearsals do not satisfy the production-equivalent TLS, provider, off-server recovery, load or schedule gates; production access/provisioning timing is external."
+    "next_update_after": "Complete v0.6.0 scheduled quality receipts, CSP observation, package license disposition, image distribution, and production-equivalent environment evidence.",
+    "method": "v0.5.0 staging and Telegram receipts are confirmed. v0.6.0 targeted admin/browser diagnostics passed. The next scheduled browser run is due November 10 at 02:00 UTC. CSP observation began November 9, so the November 9 delivery target cannot be met with the current gates. The license decision, candidate CSP window, and production-equivalent TLS, provider, off-server recovery and load proof remain open."
   },
   "capabilities": [
     {

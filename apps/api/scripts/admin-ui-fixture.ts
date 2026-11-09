@@ -1,5 +1,6 @@
 import { createServer } from 'node:http';
 import { randomUUID } from 'node:crypto';
+import { decryptAuthDelivery } from '@barghsa/shared/auth-delivery';
 import { startHttpFixture } from '../src/test/http-fixture';
 import { startTestPostgres } from '../../../packages/db/src/test/globalSetup';
 
@@ -148,7 +149,15 @@ async function main() {
         [dead, outbox, job, event, profile]
       );
     }
+  const readyAgentEditorModels: Record<string, { id: string; title: string }> = {};
   for (const locale of ['en', 'fa']) {
+    const { rows } = await http.pool.query<{ id: string; title: string }>(
+      `INSERT INTO ai_models(title,provider_type,base_url,model_name,created_by,is_enabled,last_test_status)
+       VALUES ($1,'openai_compatible','https://example.test','test','team-ui-admin',true,'passed')
+       RETURNING id,title`,
+      [`Editor model ${locale}`]
+    );
+    readyAgentEditorModels[locale] = rows[0]!;
     await http.pool.query(
       "INSERT INTO reconciliation_exceptions(exception_type,severity,description,details) VALUES ('wallet_mismatch','high',$1,$2::jsonb)",
       [
@@ -160,6 +169,38 @@ async function main() {
   await http.pool.query(
     `INSERT INTO products(system_key,title,price,status) VALUES ('green','{"en":"Green UI","fa":"Green UI"}',1000,'active') ON CONFLICT(system_key) DO UPDATE SET title=EXCLUDED.title,status='active',price=1000`
   );
+  const staffReviewActors: Record<string, { username: string; session: string; csrf: string }> = {};
+  for (const locale of ['en', 'fa']) {
+    const userId = `team-ui-role-review-${locale}`;
+    const username = `admin-role-review-${locale}@example.test`;
+    const session = randomUUID();
+    const csrf = randomUUID();
+    await http.pool.query(
+      `INSERT INTO users(user_id,username,password_hash,is_admin,is_staff) VALUES ($1,$2,'test-only',true,true)`,
+      [userId, username]
+    );
+    await http.pool.query(
+      `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at)
+       VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour',NOW())`,
+      [session, userId, csrf, randomUUID()]
+    );
+    staffReviewActors[locale] = { username, session, csrf };
+  }
+  // Read synthetic OTP delivery only in the fixture process and only for its review actors.
+  process.env.AUTH_DELIVERY_ENCRYPTION_KEY = 'http-fixture-delivery-key-only';
+  async function deliverFixtureCode(challengeId: string, username: string) {
+    const { rows } = await http.pool.query<{ id: string; encrypted_payload: string }>(
+      `SELECT delivery.id,delivery.encrypted_payload
+       FROM auth_delivery_outbox delivery
+       JOIN otp_challenges challenge ON challenge.challenge_id=delivery.challenge_id
+       WHERE challenge.challenge_id=$1 AND challenge.destination=$2 AND challenge.purpose='step_up'`,
+      [challengeId, username]
+    );
+    const row = rows[0];
+    const payload = row && decryptAuthDelivery(row.id, row.encrypted_payload);
+    const code = payload && typeof payload === 'object' && 'code' in payload ? payload.code : null;
+    process.send?.({ challengeId, code });
+  }
   let closing = false;
   const close = async () => {
     if (closing) return;
@@ -174,10 +215,35 @@ async function main() {
       console.error(error);
       process.exit(1);
     });
-  process.once('message', requestClose);
+  process.on('message', (message: unknown) => {
+    if (message === 'stop') requestClose();
+    else if (
+      message &&
+      typeof message === 'object' &&
+      'challengeId' in message &&
+      'username' in message &&
+      typeof message.challengeId === 'string' &&
+      typeof message.username === 'string' &&
+      Object.values(staffReviewActors).some((actor) => actor.username === message.username)
+    ) {
+      const { challengeId, username } = message;
+      void deliverFixtureCode(challengeId, username).catch(() =>
+        process.send?.({ challengeId, code: null })
+      );
+    }
+  });
   process.once('disconnect', requestClose);
   process.once('SIGTERM', requestClose);
-  process.send?.({ base: http.base, session, csrf, customerSession, customerCsrf, jobs });
+  process.send?.({
+    base: http.base,
+    session,
+    csrf,
+    customerSession,
+    customerCsrf,
+    jobs,
+    readyAgentEditorModels,
+    staffReviewActors,
+  });
 }
 main().catch(async (error) => {
   console.error(error);

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T18:05:50+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T18:15:58+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -39,8 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Correct the exact deterministic browser failures from hosted run 42644986543, preserving current authority and real API persistence assertions. Verify targeted native browser outcomes before requesting another complete nightly run.
+Finish source-bound runtime hardening, collect the scheduled browser and quality outcomes, and reconcile the remaining v0.6.0 operational prerequisites before accepting a staging release.
 
+- `06-security-testing-observability.md#T-06.07.03.01`: Harden Dockerfile: non-root user, read-only rootfs where practical, no inspector, `NODE_OPTIONS=--no-deprecation`
 - `01-platform-infrastructure.md#T-01.04.04`: Configure Playwright for E2E testing
 - `01-platform-infrastructure.md#T-01.04.06`: Configure flaky-test quarantine process
 - `01-platform-infrastructure.md#T-05.05.01`: Create nightly CI schedule
