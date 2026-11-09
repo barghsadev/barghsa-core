@@ -37,12 +37,16 @@ export function GiftProfilePicker({
 }) {
   const [search, setSearch] = useState(''),
     [query, setQuery] = useState(''),
-    [revision, setRevision] = useState(0);
+    [searchRevision, setSearchRevision] = useState(0),
+    [selectedRevision, setSelectedRevision] = useState(0);
   const [options, setOptions] = useState<ProfileOption[]>([]),
     [selected, setSelected] = useState<ProfileOption[]>([]);
-  const [loading, setLoading] = useState(false),
+  const [loading, setLoading] = useState(true),
+    [selectedLoading, setSelectedLoading] = useState(ids.length > 0),
     [error, setError] = useState(false),
     [selectedError, setSelectedError] = useState(false);
+  // Form renders can recreate the array without changing the selected UUIDs.
+  const selectedIds = ids.join(',');
   useEffect(() => {
     const abort = new AbortController();
     setLoading(true);
@@ -72,13 +76,17 @@ export function GiftProfilePicker({
         if (!abort.signal.aborted) setLoading(false);
       });
     return () => abort.abort();
-  }, [query, revision, onDenied]);
+  }, [query, searchRevision, onDenied]);
   useEffect(() => {
     const abort = new AbortController();
+    const requestedIds = selectedIds ? selectedIds.split(',') : [];
     setSelectedError(false);
     setSelected([]);
+    setSelectedLoading(requestedIds.length > 0);
     const batches: string[][] = [];
-    for (let i = 0; i < ids.length; i += 200) batches.push(ids.slice(i, i + 200));
+    for (let i = 0; i < requestedIds.length; i += 200) {
+      batches.push(requestedIds.slice(i, i + 200));
+    }
     void readWithDeadline(abort.signal, (signal) =>
       Promise.all(
         batches.map(async (batch) => {
@@ -100,9 +108,12 @@ export function GiftProfilePicker({
       })
       .catch(() => {
         if (!abort.signal.aborted) setSelectedError(true);
+      })
+      .finally(() => {
+        if (!abort.signal.aborted) setSelectedLoading(false);
       });
     return () => abort.abort();
-  }, [ids, revision, onDenied]);
+  }, [selectedIds, selectedRevision, onDenied]);
   const byId = new Map([...options, ...selected].map((row) => [row.id, row]));
   const allIds = [...new Set([...ids, ...options.map((row) => row.id)])];
   return (
@@ -121,15 +132,29 @@ export function GiftProfilePicker({
           variant="outline"
           onClick={() => {
             setQuery(search.trim());
-            setRevision((value) => value + 1);
+            setSearchRevision((value) => value + 1);
           }}
         >
           {label('search')}
         </Button>
       </div>
       <p className="mb-3 text-sm text-muted-foreground">{label('profileHelp')}</p>
-      {loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
-      {(error || selectedError) && <p role="alert">{label('profileError')}</p>}
+      {(loading || selectedLoading) && <LoadingStatus>{label('loading')}</LoadingStatus>}
+      {(error || selectedError) && (
+        <div role="alert" className="space-y-2">
+          <p>{label('profileError')}</p>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              if (error) setSearchRevision((value) => value + 1);
+              if (selectedError) setSelectedRevision((value) => value + 1);
+            }}
+          >
+            {label('retry')}
+          </Button>
+        </div>
+      )}
       <div className="flex max-h-64 flex-col gap-3 overflow-y-auto">
         {allIds.map((id) => {
           const row = byId.get(id);
@@ -155,7 +180,7 @@ export function GiftProfilePicker({
           );
         })}
       </div>
-      {!loading && !error && !allIds.length && <p>{label('noProfiles')}</p>}
+      {!loading && !error && !selectedError && !allIds.length && <p>{label('noProfiles')}</p>}
     </fieldset>
   );
 }

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T03:30:41+00:00",
-  "source_commit": "8bf00eba522e8c9f224f9556d84f3d55c585433c",
+  "updated": "2026-11-09T03:40:43+00:00",
+  "source_commit": "01bd2070a6d5934939d0f8e9809db2190ff8feb2",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -96177,7 +96177,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
-              "sha256": "3cac1b9327b5df89dfd46ec7dc61f4fd73a0da3f1533c7bdb001f62fbe58373b"
+              "sha256": "e719d46498d567afca63fa9721de1de28e0adb961d52acc3bf131043a8f48fc1"
             },
             {
               "path": "apps/web/e2e/gift-code-recovery.spec.ts",
@@ -107147,7 +107147,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
-              "sha256": "3cac1b9327b5df89dfd46ec7dc61f4fd73a0da3f1533c7bdb001f62fbe58373b"
+              "sha256": "e719d46498d567afca63fa9721de1de28e0adb961d52acc3bf131043a8f48fc1"
             },
             {
               "path": "apps/web/e2e/gift-code-recovery.spec.ts",
@@ -241203,7 +241203,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
-              "sha256": "3cac1b9327b5df89dfd46ec7dc61f4fd73a0da3f1533c7bdb001f62fbe58373b"
+              "sha256": "e719d46498d567afca63fa9721de1de28e0adb961d52acc3bf131043a8f48fc1"
             },
             {
               "path": "apps/web/e2e/gift-code-recovery.spec.ts",
@@ -241247,7 +241247,7 @@
             },
             {
               "path": "packages/i18n/src/gifts.ts",
-              "sha256": "86f7b9bd1a6292274ea538aa1f9109d719f3eff94360772340a88e5a3c905e57"
+              "sha256": "67a76eb7ce357cbf1c9c05154ec5afb9c18a4aa742441727300d26c175041815"
             },
             {
               "path": "packages/shared/src/promotions/gift-code.test.ts",
@@ -241421,7 +241421,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
-              "sha256": "3cac1b9327b5df89dfd46ec7dc61f4fd73a0da3f1533c7bdb001f62fbe58373b"
+              "sha256": "e719d46498d567afca63fa9721de1de28e0adb961d52acc3bf131043a8f48fc1"
             },
             {
               "path": "apps/web/e2e/gift-code-recovery.spec.ts",
@@ -241465,7 +241465,7 @@
             },
             {
               "path": "packages/i18n/src/gifts.ts",
-              "sha256": "86f7b9bd1a6292274ea538aa1f9109d719f3eff94360772340a88e5a3c905e57"
+              "sha256": "67a76eb7ce357cbf1c9c05154ec5afb9c18a4aa742441727300d26c175041815"
             },
             {
               "path": "packages/shared/src/promotions/gift-code.test.ts",
@@ -241637,7 +241637,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
-              "sha256": "3cac1b9327b5df89dfd46ec7dc61f4fd73a0da3f1533c7bdb001f62fbe58373b"
+              "sha256": "e719d46498d567afca63fa9721de1de28e0adb961d52acc3bf131043a8f48fc1"
             },
             {
               "path": "apps/web/e2e/gift-code-recovery.spec.ts",
@@ -241681,7 +241681,7 @@
             },
             {
               "path": "packages/i18n/src/gifts.ts",
-              "sha256": "86f7b9bd1a6292274ea538aa1f9109d719f3eff94360772340a88e5a3c905e57"
+              "sha256": "67a76eb7ce357cbf1c9c05154ec5afb9c18a4aa742441727300d26c175041815"
             },
             {
               "path": "packages/shared/src/promotions/gift-code.test.ts",
@@ -241853,7 +241853,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
-              "sha256": "3cac1b9327b5df89dfd46ec7dc61f4fd73a0da3f1533c7bdb001f62fbe58373b"
+              "sha256": "e719d46498d567afca63fa9721de1de28e0adb961d52acc3bf131043a8f48fc1"
             },
             {
               "path": "apps/web/e2e/gift-code-recovery.spec.ts",
@@ -241897,7 +241897,7 @@
             },
             {
               "path": "packages/i18n/src/gifts.ts",
-              "sha256": "86f7b9bd1a6292274ea538aa1f9109d719f3eff94360772340a88e5a3c905e57"
+              "sha256": "67a76eb7ce357cbf1c9c05154ec5afb9c18a4aa742441727300d26c175041815"
             },
             {
               "path": "packages/shared/src/promotions/gift-code.test.ts",
@@ -242072,7 +242072,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
-              "sha256": "3cac1b9327b5df89dfd46ec7dc61f4fd73a0da3f1533c7bdb001f62fbe58373b"
+              "sha256": "e719d46498d567afca63fa9721de1de28e0adb961d52acc3bf131043a8f48fc1"
             },
             {
               "path": "apps/web/e2e/gift-code-recovery.spec.ts",
@@ -242116,7 +242116,7 @@
             },
             {
               "path": "packages/i18n/src/gifts.ts",
-              "sha256": "86f7b9bd1a6292274ea538aa1f9109d719f3eff94360772340a88e5a3c905e57"
+              "sha256": "67a76eb7ce357cbf1c9c05154ec5afb9c18a4aa742441727300d26c175041815"
             },
             {
               "path": "packages/shared/src/promotions/gift-code.test.ts",
@@ -491223,7 +491223,7 @@
             },
             {
               "path": "apps/web/src/components/GiftProfilePicker.tsx",
-              "sha256": "7a823a6ed0b054e47b731e6b6e92a774cc199170f2c11fc468c330a56d1248ab"
+              "sha256": "a0a2a1512d653ff5cfc2ef00cfa241aa25a7ba9c903b32f37b349bba0d5fe5bc"
             },
             {
               "path": "apps/web/src/components/InvitationBanner.tsx",
@@ -512324,7 +512324,7 @@
             },
             {
               "path": "apps/web/src/components/GiftProfilePicker.tsx",
-              "sha256": "7a823a6ed0b054e47b731e6b6e92a774cc199170f2c11fc468c330a56d1248ab"
+              "sha256": "a0a2a1512d653ff5cfc2ef00cfa241aa25a7ba9c903b32f37b349bba0d5fe5bc"
             },
             {
               "path": "apps/web/src/components/HighContrastPreference.tsx",
@@ -512975,7 +512975,7 @@
             },
             {
               "path": "apps/web/src/components/GiftProfilePicker.tsx",
-              "sha256": "7a823a6ed0b054e47b731e6b6e92a774cc199170f2c11fc468c330a56d1248ab"
+              "sha256": "a0a2a1512d653ff5cfc2ef00cfa241aa25a7ba9c903b32f37b349bba0d5fe5bc"
             },
             {
               "path": "apps/web/src/components/LanguageSwitcher.tsx",
@@ -513774,7 +513774,7 @@
             },
             {
               "path": "apps/web/src/components/GiftProfilePicker.tsx",
-              "sha256": "7a823a6ed0b054e47b731e6b6e92a774cc199170f2c11fc468c330a56d1248ab"
+              "sha256": "a0a2a1512d653ff5cfc2ef00cfa241aa25a7ba9c903b32f37b349bba0d5fe5bc"
             },
             {
               "path": "apps/web/src/components/LanguageSwitcher.tsx",
@@ -514572,7 +514572,7 @@
             },
             {
               "path": "apps/web/src/components/GiftProfilePicker.tsx",
-              "sha256": "7a823a6ed0b054e47b731e6b6e92a774cc199170f2c11fc468c330a56d1248ab"
+              "sha256": "a0a2a1512d653ff5cfc2ef00cfa241aa25a7ba9c903b32f37b349bba0d5fe5bc"
             },
             {
               "path": "apps/web/src/components/LanguageSwitcher.tsx",
@@ -517317,7 +517317,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
-              "sha256": "3cac1b9327b5df89dfd46ec7dc61f4fd73a0da3f1533c7bdb001f62fbe58373b"
+              "sha256": "e719d46498d567afca63fa9721de1de28e0adb961d52acc3bf131043a8f48fc1"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -570988,7 +570988,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
-              "sha256": "3cac1b9327b5df89dfd46ec7dc61f4fd73a0da3f1533c7bdb001f62fbe58373b"
+              "sha256": "e719d46498d567afca63fa9721de1de28e0adb961d52acc3bf131043a8f48fc1"
             },
             {
               "path": "apps/web/e2e/gift-code-tables.spec.ts",
@@ -598962,7 +598962,8 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The canonical route inventory now links primary read, detail, dashboard, entry or static evidence for every path. The 13 routes with changed direct sources have newer scoped receipts. Complete the remaining independent list and detail states by checking each child's applicable loading, retry and empty or unavailable behavior against the named receipts."
+        "The canonical route inventory now links primary read, detail, dashboard, entry or static evidence for every path. The 13 routes with changed direct sources have newer scoped receipts. Complete the remaining independent list and detail states by checking each child's applicable loading, retry and empty or unavailable behavior against the named receipts.",
+        "The independent gift-code eligibility reads now have current bilingual loading, keyboard retry, empty and preserved-selection evidence. Other conditional reads and controls retain their prior scope."
       ],
       "owner": null,
       "depends_on": [],
@@ -599114,7 +599115,8 @@
           "release-0.5-staff-configuration-adoption",
           "release-0.5-saving-detail-denied-read",
           "release-0.5-customer-collection-first-retry",
-          "release-0.5-launch-entry-acceptance"
+          "release-0.5-launch-entry-acceptance",
+          "release-0.5-gift-profile-read-retry"
         ],
         "current_acceptance": null
       }
@@ -616178,7 +616180,7 @@
             },
             {
               "path": "apps/web/src/components/GiftProfilePicker.tsx",
-              "sha256": "7a823a6ed0b054e47b731e6b6e92a774cc199170f2c11fc468c330a56d1248ab"
+              "sha256": "a0a2a1512d653ff5cfc2ef00cfa241aa25a7ba9c903b32f37b349bba0d5fe5bc"
             },
             {
               "path": "apps/web/src/components/LanguageSwitcher.tsx",
@@ -616976,7 +616978,7 @@
             },
             {
               "path": "apps/web/src/components/GiftProfilePicker.tsx",
-              "sha256": "7a823a6ed0b054e47b731e6b6e92a774cc199170f2c11fc468c330a56d1248ab"
+              "sha256": "a0a2a1512d653ff5cfc2ef00cfa241aa25a7ba9c903b32f37b349bba0d5fe5bc"
             },
             {
               "path": "apps/web/src/components/LanguageSwitcher.tsx",
@@ -617774,7 +617776,7 @@
             },
             {
               "path": "apps/web/src/components/GiftProfilePicker.tsx",
-              "sha256": "7a823a6ed0b054e47b731e6b6e92a774cc199170f2c11fc468c330a56d1248ab"
+              "sha256": "a0a2a1512d653ff5cfc2ef00cfa241aa25a7ba9c903b32f37b349bba0d5fe5bc"
             },
             {
               "path": "apps/web/src/components/LanguageSwitcher.tsx",
@@ -618572,7 +618574,7 @@
             },
             {
               "path": "apps/web/src/components/GiftProfilePicker.tsx",
-              "sha256": "7a823a6ed0b054e47b731e6b6e92a774cc199170f2c11fc468c330a56d1248ab"
+              "sha256": "a0a2a1512d653ff5cfc2ef00cfa241aa25a7ba9c903b32f37b349bba0d5fe5bc"
             },
             {
               "path": "apps/web/src/components/LanguageSwitcher.tsx",
@@ -619374,7 +619376,7 @@
             },
             {
               "path": "apps/web/src/components/GiftProfilePicker.tsx",
-              "sha256": "7a823a6ed0b054e47b731e6b6e92a774cc199170f2c11fc468c330a56d1248ab"
+              "sha256": "a0a2a1512d653ff5cfc2ef00cfa241aa25a7ba9c903b32f37b349bba0d5fe5bc"
             },
             {
               "path": "apps/web/src/components/LanguageSwitcher.tsx",
@@ -620172,7 +620174,7 @@
             },
             {
               "path": "apps/web/src/components/GiftProfilePicker.tsx",
-              "sha256": "7a823a6ed0b054e47b731e6b6e92a774cc199170f2c11fc468c330a56d1248ab"
+              "sha256": "a0a2a1512d653ff5cfc2ef00cfa241aa25a7ba9c903b32f37b349bba0d5fe5bc"
             },
             {
               "path": "apps/web/src/components/LanguageSwitcher.tsx",
@@ -620970,7 +620972,7 @@
             },
             {
               "path": "apps/web/src/components/GiftProfilePicker.tsx",
-              "sha256": "7a823a6ed0b054e47b731e6b6e92a774cc199170f2c11fc468c330a56d1248ab"
+              "sha256": "a0a2a1512d653ff5cfc2ef00cfa241aa25a7ba9c903b32f37b349bba0d5fe5bc"
             },
             {
               "path": "apps/web/src/components/LanguageSwitcher.tsx",
@@ -621769,7 +621771,7 @@
             },
             {
               "path": "apps/web/src/components/GiftProfilePicker.tsx",
-              "sha256": "7a823a6ed0b054e47b731e6b6e92a774cc199170f2c11fc468c330a56d1248ab"
+              "sha256": "a0a2a1512d653ff5cfc2ef00cfa241aa25a7ba9c903b32f37b349bba0d5fe5bc"
             },
             {
               "path": "apps/web/src/components/LanguageSwitcher.tsx",
@@ -622568,7 +622570,7 @@
             },
             {
               "path": "apps/web/src/components/GiftProfilePicker.tsx",
-              "sha256": "7a823a6ed0b054e47b731e6b6e92a774cc199170f2c11fc468c330a56d1248ab"
+              "sha256": "a0a2a1512d653ff5cfc2ef00cfa241aa25a7ba9c903b32f37b349bba0d5fe5bc"
             },
             {
               "path": "apps/web/src/components/LanguageSwitcher.tsx",
@@ -623367,7 +623369,7 @@
             },
             {
               "path": "apps/web/src/components/GiftProfilePicker.tsx",
-              "sha256": "7a823a6ed0b054e47b731e6b6e92a774cc199170f2c11fc468c330a56d1248ab"
+              "sha256": "a0a2a1512d653ff5cfc2ef00cfa241aa25a7ba9c903b32f37b349bba0d5fe5bc"
             },
             {
               "path": "apps/web/src/components/LanguageSwitcher.tsx",
@@ -624166,7 +624168,7 @@
             },
             {
               "path": "apps/web/src/components/GiftProfilePicker.tsx",
-              "sha256": "7a823a6ed0b054e47b731e6b6e92a774cc199170f2c11fc468c330a56d1248ab"
+              "sha256": "a0a2a1512d653ff5cfc2ef00cfa241aa25a7ba9c903b32f37b349bba0d5fe5bc"
             },
             {
               "path": "apps/web/src/components/LanguageSwitcher.tsx",
@@ -624965,7 +624967,7 @@
             },
             {
               "path": "apps/web/src/components/GiftProfilePicker.tsx",
-              "sha256": "7a823a6ed0b054e47b731e6b6e92a774cc199170f2c11fc468c330a56d1248ab"
+              "sha256": "a0a2a1512d653ff5cfc2ef00cfa241aa25a7ba9c903b32f37b349bba0d5fe5bc"
             },
             {
               "path": "apps/web/src/components/LanguageSwitcher.tsx",
@@ -625764,7 +625766,7 @@
             },
             {
               "path": "apps/web/src/components/GiftProfilePicker.tsx",
-              "sha256": "7a823a6ed0b054e47b731e6b6e92a774cc199170f2c11fc468c330a56d1248ab"
+              "sha256": "a0a2a1512d653ff5cfc2ef00cfa241aa25a7ba9c903b32f37b349bba0d5fe5bc"
             },
             {
               "path": "apps/web/src/components/LanguageSwitcher.tsx",
@@ -626563,7 +626565,7 @@
             },
             {
               "path": "apps/web/src/components/GiftProfilePicker.tsx",
-              "sha256": "7a823a6ed0b054e47b731e6b6e92a774cc199170f2c11fc468c330a56d1248ab"
+              "sha256": "a0a2a1512d653ff5cfc2ef00cfa241aa25a7ba9c903b32f37b349bba0d5fe5bc"
             },
             {
               "path": "apps/web/src/components/LanguageSwitcher.tsx",
@@ -627362,7 +627364,7 @@
             },
             {
               "path": "apps/web/src/components/GiftProfilePicker.tsx",
-              "sha256": "7a823a6ed0b054e47b731e6b6e92a774cc199170f2c11fc468c330a56d1248ab"
+              "sha256": "a0a2a1512d653ff5cfc2ef00cfa241aa25a7ba9c903b32f37b349bba0d5fe5bc"
             },
             {
               "path": "apps/web/src/components/LanguageSwitcher.tsx",
@@ -706776,7 +706778,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
-              "sha256": "3cac1b9327b5df89dfd46ec7dc61f4fd73a0da3f1533c7bdb001f62fbe58373b"
+              "sha256": "e719d46498d567afca63fa9721de1de28e0adb961d52acc3bf131043a8f48fc1"
             },
             {
               "path": "apps/web/e2e/gift-code-recovery.spec.ts",
@@ -728978,7 +728980,8 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "All 98 canonical paths have per-route receipt links, including 93 populated layout observations, and the current build passed 86 launch-entry, public account and guide cases. Close the original per-route control acceptance by reconciling keyboard, forms, filters and stale-context conditions against the named cases. Carry only evidence within its recorded scope."
+        "All 98 canonical paths have per-route receipt links, including 93 populated layout observations, and the current build passed 86 launch-entry, public account and guide cases. Close the original per-route control acceptance by reconciling keyboard, forms, filters and stale-context conditions against the named cases. Carry only evidence within its recorded scope.",
+        "The independent gift-code eligibility reads now have current bilingual loading, keyboard retry, empty and preserved-selection evidence. Other conditional reads and controls retain their prior scope."
       ],
       "owner": null,
       "depends_on": [],
@@ -729196,7 +729199,8 @@
           "release-0.5-staff-configuration-adoption",
           "release-0.5-saving-detail-denied-read",
           "release-0.5-customer-collection-first-retry",
-          "release-0.5-launch-entry-acceptance"
+          "release-0.5-launch-entry-acceptance",
+          "release-0.5-gift-profile-read-retry"
         ]
       }
     },
@@ -729484,7 +729488,7 @@
             },
             {
               "path": "apps/web/src/components/GiftProfilePicker.tsx",
-              "sha256": "7a823a6ed0b054e47b731e6b6e92a774cc199170f2c11fc468c330a56d1248ab"
+              "sha256": "a0a2a1512d653ff5cfc2ef00cfa241aa25a7ba9c903b32f37b349bba0d5fe5bc"
             },
             {
               "path": "apps/web/src/components/HighContrastPreference.tsx",
@@ -731159,7 +731163,8 @@
             "All 101 transfer budgets and 58 affected settings browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflow-grant-revocation/proof.json",
             "All 101 transfer budgets and 62 affected notification browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-settings-session/proof.json",
             "All 101 transfer budgets and 64 affected staff and provider browser cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-configuration-adoption/proof.json",
-            "All 101 transfer budgets and 48 customer detail/fulfillment cases and eight independent staff detail cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-detail-denied-read/proof.json"
+            "All 101 transfer budgets and 48 customer detail/fulfillment cases and eight independent staff detail cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-detail-denied-read/proof.json",
+            "All 101 transfer budgets and 28 native gift-code cases passed. Auth assets are byte-identical. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-gift-profile-read-retry/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -811275,6 +811280,44 @@
       "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-launch-entry-acceptance/proof.json",
       "source_scope_proof_sha256": "b802578bd3326b6b03e6c8f43564a745c754a5359e1695d96fd1a67dda4b309c",
       "release_disposition": "Verified launch and public entry conditions and recorded canonical route evidence. Full original control and independent child acceptance remains open."
+    },
+    "release-0.5-gift-profile-read-retry": {
+      "batch": "release-0.5-gift-profile-read-retry",
+      "base_commit": "01bd2070a6d5934939d0f8e9809db2190ff8feb2",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/gift-code-forms.spec.ts",
+          "sha256": "e719d46498d567afca63fa9721de1de28e0adb961d52acc3bf131043a8f48fc1"
+        },
+        {
+          "path": "apps/web/src/components/GiftProfilePicker.tsx",
+          "sha256": "a0a2a1512d653ff5cfc2ef00cfa241aa25a7ba9c903b32f37b349bba0d5fe5bc"
+        },
+        {
+          "path": "packages/i18n/src/gifts.ts",
+          "sha256": "67a76eb7ce357cbf1c9c05154ec5afb9c18a4aa742441727300d26c175041815"
+        }
+      ],
+      "checks": [
+        "The predecessor Chromium build passed the held search and kept the selected profile after a 503 in both languages, then failed on the absent Retry control. The first candidate reproduced a redundant selected-label request on form blur. Keying that lookup by the selected UUIDs removes the redundant read.",
+        "The final build passed 28 distinct gift-code cases across Chromium and mobile Safari. Four cases required a fixture-only correction because Playwright uncheck waited for a removed checkbox after the empty state had rendered. The picker cases hold each independent read, recover its exact query by keyboard, preserve the unapplied query and selected profile, distinguish empty from failure, and issue no write during recovery.",
+        "Six instrumented Chromium cases, 39 focused web tests and 25 translation tests passed. The changed-source gate passed at 13/13 picker lines and 18/19 picker branches. Web typecheck, lint, formatting and all 101 transfer budgets passed. Auth assets match the prior build byte-for-byte."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-gift-profile-read-retry",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-gift-profile-read-retry/proof.json",
+      "source_scope_proof_sha256": "a8c474d3a674f0afd2c8f49a017e7f447cd89c0a0dc58ba1e234be0d41014705",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-gift-profile-read-retry/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-gift-profile-read-retry/renewed-bindings.json",
+      "release_disposition": "Verified the gift profile eligibility lookup and the affected gift-code journeys. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [

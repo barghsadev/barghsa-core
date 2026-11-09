@@ -1,4 +1,4 @@
-import { test, expect, type Page, type TestInfo } from './coverage-fixture';
+import { test, expect, type Page, type Route, type TestInfo } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { giftCode } from '../src/test/gift-code-fixtures';
 import { tGift } from '@barghsa/i18n/gifts';
@@ -86,6 +86,110 @@ async function inspect(page: Page, locale: string, info: TestInfo, name: string)
   }
 }
 for (const locale of ['en', 'fa'] as const) {
+  test(`gift profile retry preserves the failed search and selected profile (${locale})`, async ({
+    page,
+  }) => {
+    await crmShell(page, locale);
+    const word = (key: string) => tGift(`admin.gifts.${key}`, locale);
+    const profile = {
+      id: '11111111-1111-4111-8111-111111111111',
+      title: 'Fixture customer',
+      profileType: 'LEGAL',
+      archived: false,
+    };
+    const searches: string[] = [];
+    const selectedReads: string[] = [];
+    const writes: string[] = [];
+    let first: Route | undefined;
+    let failed: Route | undefined;
+    let selectedFirst: Route | undefined;
+    await page.route(
+      (url) => url.pathname === '/api/admin/promotions/gift-codes',
+      (route) => {
+        if (route.request().method() === 'GET') return route.fulfill({ json: [] });
+        writes.push(route.request().method());
+        return route.fulfill({ status: 500, json: {} });
+      }
+    );
+    await page.route(
+      (url) => url.pathname === '/api/admin/promotions/gift-codes/profiles',
+      (route) => {
+        const url = new URL(route.request().url());
+        const ids = url.searchParams.get('ids');
+        if (ids !== null) {
+          selectedReads.push(ids);
+          if (selectedReads.length === 1) {
+            selectedFirst = route;
+            return;
+          }
+          return route.fulfill({ json: [profile] });
+        }
+        const search = url.searchParams.get('search')!;
+        searches.push(search);
+        if (searches.length === 1) {
+          first = route;
+          return;
+        }
+        if (searches.length === 2) {
+          failed = route;
+          return;
+        }
+        return route.fulfill({ json: [] });
+      }
+    );
+    await page.goto('/admin/gift-codes');
+    await page.getByRole('button', { name: word('add'), exact: true }).click();
+    await page.locator('#gift-eligibility').selectOption('profile');
+    const picker = page.getByRole('group', { name: word('profiles'), exact: true });
+    const empty = picker.getByText(word('noProfiles'), { exact: true });
+    const search = picker.getByRole('textbox', { name: word('searchProfiles'), exact: true });
+    await expect.poll(() => first !== undefined).toBe(true);
+    await expect(picker.getByRole('status')).toHaveText(word('loading'));
+    await expect(empty).toHaveCount(0);
+    await first!.fulfill({ json: [profile] });
+    const choice = picker.getByRole('checkbox', { name: /Fixture customer/ });
+    await choice.check();
+    await expect.poll(() => selectedFirst !== undefined).toBe(true);
+    await expect(picker.getByRole('status')).toHaveText(word('loading'));
+    await selectedFirst!.fulfill({
+      status: 503,
+      json: { message: 'Private selected lookup error' },
+    });
+    const alert = picker.getByRole('alert');
+    const retry = alert.getByRole('button', { name: word('retry'), exact: true });
+    await expect(alert).toContainText(word('profileError'));
+    await expect(alert).not.toContainText('Private selected lookup error');
+    await expect(choice).toBeChecked();
+    await retry.press('Enter');
+    await expect(alert).toHaveCount(0);
+    await expect(picker.getByRole('status')).toHaveCount(0);
+    await expect(choice).toBeChecked();
+    expect(selectedReads).toEqual([profile.id, profile.id]);
+    expect(searches).toEqual(['']);
+    await search.fill('failed term');
+    await picker.getByRole('button', { name: word('search'), exact: true }).press('Enter');
+    await expect.poll(() => failed !== undefined).toBe(true);
+    await expect(picker.getByRole('status')).toHaveText(word('loading'));
+    await failed!.fulfill({ status: 503, json: { message: 'Private lookup error' } });
+    await expect(alert).toContainText(word('profileError'));
+    await expect(alert).not.toContainText('Private lookup error');
+    await expect(choice).toBeChecked();
+    await search.fill('unapplied search');
+    await expect(retry).toBeEnabled();
+    await retry.press('Enter');
+    await expect(alert).toHaveCount(0);
+    await expect(picker.getByRole('status')).toHaveCount(0);
+    await expect(choice).toBeChecked();
+    await expect(search).toHaveValue('unapplied search');
+    expect(searches).toEqual(['', 'failed term', 'failed term']);
+    expect(selectedReads).toEqual([profile.id, profile.id]);
+    await choice.press('Space');
+    await expect(choice).toHaveCount(0);
+    await expect(empty).toBeVisible();
+    await expect(picker.getByText(/Private .*lookup error/)).toHaveCount(0);
+    expect(writes).toEqual([]);
+  });
+
   test(`gift creation validates raw input and captures exact IRR once (${locale})`, async ({
     page,
   }, info) => {

@@ -49,7 +49,7 @@ const fa: Record<string, string> = {
   'admin.gifts.profileHelp':
     'حداکثر ۵۰ نتیجه نمایش داده می‌شود. برای یافتن نام‌های دیگر جست‌وجو کنید.',
   'admin.gifts.profileError':
-    'نام پروفایل‌ها بارگذاری نشد. دوباره جست‌وجو کنید؛ انتخاب‌های قبلی حفظ شده‌اند.',
+    'نام پروفایل‌ها بارگذاری نشد. دوباره تلاش کنید؛ انتخاب‌های قبلی حفظ شده‌اند.',
   'admin.gifts.untitledProfile': 'پروفایل بدون نام',
   'admin.gifts.legal': 'حقوقی',
   'admin.gifts.individual': 'حقیقی',
@@ -175,7 +175,7 @@ const en: Record<string, string> = {
   'admin.gifts.searchProfiles': 'Search profile name',
   'admin.gifts.profileHelp': 'Shows up to 50 results. Search to find other names.',
   'admin.gifts.profileError':
-    'Could not load profile names. Search again; existing selections are preserved.',
+    'Could not load profile names. Try again. Existing selections are preserved.',
   'admin.gifts.untitledProfile': 'Unnamed profile',
   'admin.gifts.legal': 'Legal entity',
   'admin.gifts.individual': 'Individual',
