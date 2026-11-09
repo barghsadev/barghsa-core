@@ -114,6 +114,26 @@ function fixture() {
   vi.stubGlobal('fetch', fetcher);
   return { state, requests, fetcher };
 }
+
+it('clears an old read error after a pending Telegram status retry', async () => {
+  const f = fixture();
+  let finish!: (result: Response) => void;
+  f.fetcher
+    .mockResolvedValueOnce(Response.json({}, { status: 503 }))
+    .mockImplementationOnce(() => new Promise<Response>((resolve) => (finish = resolve)));
+  await mount();
+  await vi.waitFor(() =>
+    expect(host.querySelector('[role="alert"]')?.textContent).toBe(copy('error', 'en'))
+  );
+  await click('refresh');
+  await vi.waitFor(() => expect(finish).toBeDefined());
+  expect(host.querySelector('[role="status"]')).not.toBeNull();
+  expect(button('refresh').disabled).toBe(true);
+  await act(async () => finish(Response.json(f.state)));
+  expect(host.querySelector('[role="alert"]')).toBeNull();
+  expect(button('connect').disabled).toBe(false);
+});
+
 it('displays only a freshly scoped link and confirms normalized digits with live CSRF', async () => {
   const f = fixture();
   await mount();

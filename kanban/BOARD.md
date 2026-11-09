@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T01:24:55+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T01:31:12+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Resolve demonstrable account and staff child-route pending, empty and error states using the existing route evidence. Preserve account and profile authority. GitHub required-check enforcement and the staging Sentry receipt remain independent.
+Verify and close remaining staff child-route states against the first-read inventory and named route evidence. Keep GitHub merge check enforcement and staging Sentry proof pending on the external prerequisites.
 
 - `07-ui-ux-design.md#T-07.05.01.08`: Ensure all color combinations pass WCAG AA contrast ratios: normal text ≥ 4.5:1, large text ≥ 3:1, UI components ≥ 3:1. Verify with automated tools. Provide a "high contrast" mode toggle that strengthens all contrast ratios.
 - `07-ui-ux-design.md#T-07.05.02.04`: Add CI gate: a11y violations on critical pages block PR merge. Non-critical pages warn but do not block. Violations must be triaged with reason or exemption.

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T01:24:55+00:00",
-  "source_commit": "9e046b57d335d26c1ec86d6fdddeb85e0d936008",
+  "updated": "2026-11-09T01:31:12+00:00",
+  "source_commit": "a24ed49ccf22cb30e7cefffc685c23186a818bf5",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -104472,7 +104472,7 @@
             },
             {
               "path": "apps/web/e2e/telegram-link.spec.ts",
-              "sha256": "2baf2a6218b86c78a4fd0526a9c1f71bab237f03773e99eaa335acbfad6c56eb"
+              "sha256": "c2c84be487852aa620edeecbd47e65d473a400fe329130393bdc646edcb65445"
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
@@ -104496,11 +104496,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+              "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
@@ -177475,7 +177475,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/lib/document-records.ts",
@@ -178290,7 +178290,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/lib/document-records.ts",
@@ -179102,7 +179102,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/lib/document-records.ts",
@@ -179913,7 +179913,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/lib/document-records.ts",
@@ -180726,7 +180726,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/lib/document-records.ts",
@@ -381333,7 +381333,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/lib/document-records.ts",
@@ -382301,7 +382301,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/lib/document-records.ts",
@@ -383268,7 +383268,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/lib/document-records.ts",
@@ -440225,7 +440225,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             }
           ],
           "checks": [
@@ -440503,7 +440503,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             }
           ],
           "checks": [
@@ -440783,7 +440783,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             }
           ],
           "checks": [
@@ -441061,7 +441061,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             }
           ],
           "checks": [
@@ -441340,7 +441340,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             }
           ],
           "checks": [
@@ -441870,7 +441870,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/lib/document-records.ts",
@@ -442546,7 +442546,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/lib/document-records.ts",
@@ -443038,7 +443038,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/lib/document-records.ts",
@@ -443398,7 +443398,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/lib/document-records.ts",
@@ -443817,7 +443817,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/lib/document-records.ts",
@@ -444339,7 +444339,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/lib/document-records.ts",
@@ -444708,7 +444708,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/lib/document-records.ts",
@@ -445125,7 +445125,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/lib/document-records.ts",
@@ -445615,7 +445615,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/lib/document-records.ts",
@@ -446125,7 +446125,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/lib/document-records.ts",
@@ -446635,7 +446635,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/lib/document-records.ts",
@@ -447145,7 +447145,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/lib/document-records.ts",
@@ -447650,7 +447650,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/lib/document-records.ts",
@@ -448014,7 +448014,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/lib/document-records.ts",
@@ -448369,7 +448369,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             }
           ],
           "checks": [
@@ -448712,7 +448712,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             }
           ],
           "checks": [
@@ -449057,7 +449057,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "docs/decisions/notification-provider-closure.md",
@@ -449427,7 +449427,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             }
           ],
           "checks": [
@@ -449770,7 +449770,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             }
           ],
           "checks": [
@@ -460891,7 +460891,7 @@
             },
             {
               "path": "apps/web/e2e/telegram-link.spec.ts",
-              "sha256": "2baf2a6218b86c78a4fd0526a9c1f71bab237f03773e99eaa335acbfad6c56eb"
+              "sha256": "c2c84be487852aa620edeecbd47e65d473a400fe329130393bdc646edcb65445"
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
@@ -460915,11 +460915,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+              "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
             },
             {
               "path": "apps/web/src/components/assistant-chat-forms.test.tsx",
@@ -489520,7 +489520,7 @@
             },
             {
               "path": "apps/web/e2e/profile-address-forms.spec.ts",
-              "sha256": "8a9bf3df0be5f867b348bddf2975da88868009d058088950c0aa8540c30d7728"
+              "sha256": "3e19472647b13a4ac43b9f7550b23a76037d8860442e963c89b541b514c2cf6e"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -489874,7 +489874,7 @@
             },
             {
               "path": "apps/web/e2e/profile-address-forms.spec.ts",
-              "sha256": "8a9bf3df0be5f867b348bddf2975da88868009d058088950c0aa8540c30d7728"
+              "sha256": "3e19472647b13a4ac43b9f7550b23a76037d8860442e963c89b541b514c2cf6e"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -491243,7 +491243,7 @@
             },
             {
               "path": "apps/web/src/components/LegalProfileDocuments.tsx",
-              "sha256": "d1979aabf29f04023a52c360a05541d8c26d6a5a03faf180fd616cedd674718d"
+              "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
             },
             {
               "path": "apps/web/src/components/MaintenanceNotice.tsx",
@@ -491339,7 +491339,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+              "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
             },
             {
               "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
@@ -493510,7 +493510,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/WalletReceiptHistoryDetails.tsx",
@@ -498364,7 +498364,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
@@ -512983,7 +512983,7 @@
             },
             {
               "path": "apps/web/src/components/LegalProfileDocuments.tsx",
-              "sha256": "d1979aabf29f04023a52c360a05541d8c26d6a5a03faf180fd616cedd674718d"
+              "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
@@ -513782,7 +513782,7 @@
             },
             {
               "path": "apps/web/src/components/LegalProfileDocuments.tsx",
-              "sha256": "d1979aabf29f04023a52c360a05541d8c26d6a5a03faf180fd616cedd674718d"
+              "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
@@ -514580,7 +514580,7 @@
             },
             {
               "path": "apps/web/src/components/LegalProfileDocuments.tsx",
-              "sha256": "d1979aabf29f04023a52c360a05541d8c26d6a5a03faf180fd616cedd674718d"
+              "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
@@ -517401,7 +517401,7 @@
             },
             {
               "path": "apps/web/e2e/profile-address-forms.spec.ts",
-              "sha256": "8a9bf3df0be5f867b348bddf2975da88868009d058088950c0aa8540c30d7728"
+              "sha256": "3e19472647b13a4ac43b9f7550b23a76037d8860442e963c89b541b514c2cf6e"
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
@@ -517565,7 +517565,7 @@
             },
             {
               "path": "apps/web/e2e/telegram-link.spec.ts",
-              "sha256": "2baf2a6218b86c78a4fd0526a9c1f71bab237f03773e99eaa335acbfad6c56eb"
+              "sha256": "c2c84be487852aa620edeecbd47e65d473a400fe329130393bdc646edcb65445"
             },
             {
               "path": "apps/web/e2e/template-catalogue-query.spec.ts",
@@ -517901,11 +517901,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+              "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
             },
             {
               "path": "apps/web/src/components/TicketCommentThread.tsx",
@@ -546900,11 +546900,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+              "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -548770,11 +548770,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+              "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -550641,11 +550641,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+              "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -552481,11 +552481,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+              "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -554347,11 +554347,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+              "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -556222,11 +556222,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+              "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -558070,11 +558070,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+              "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -559882,11 +559882,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+              "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -561694,11 +561694,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+              "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -563507,11 +563507,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+              "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -565319,11 +565319,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+              "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -567101,7 +567101,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -569004,7 +569004,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -571096,7 +571096,7 @@
             },
             {
               "path": "apps/web/e2e/profile-address-forms.spec.ts",
-              "sha256": "8a9bf3df0be5f867b348bddf2975da88868009d058088950c0aa8540c30d7728"
+              "sha256": "3e19472647b13a4ac43b9f7550b23a76037d8860442e963c89b541b514c2cf6e"
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
@@ -571280,7 +571280,7 @@
             },
             {
               "path": "apps/web/e2e/telegram-link.spec.ts",
-              "sha256": "2baf2a6218b86c78a4fd0526a9c1f71bab237f03773e99eaa335acbfad6c56eb"
+              "sha256": "c2c84be487852aa620edeecbd47e65d473a400fe329130393bdc646edcb65445"
             },
             {
               "path": "apps/web/e2e/template-catalogue-query.spec.ts",
@@ -571836,11 +571836,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+              "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -573802,7 +573802,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -575705,7 +575705,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -577608,7 +577608,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -579511,7 +579511,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -581414,7 +581414,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -583317,7 +583317,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -585220,7 +585220,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -587123,7 +587123,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -589026,7 +589026,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -590929,7 +590929,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -592832,7 +592832,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -594604,7 +594604,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/WalletReceiptHistoryDetails.tsx",
@@ -595475,7 +595475,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -597378,7 +597378,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -598962,7 +598962,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer and staff document detail and contract snapshot/history recovery have current targeted receipts. Dashboard widget and admin first-read evidence remains indexed. Reconcile the outstanding account and staff child-route pending, empty and error conditions against the named route evidence."
+        "Named account settings, contract and document route cases and dashboard widget states have indexed evidence. Verify remaining staff child-route pending, empty and error conditions against the first-read inventory and original acceptance. Broader route adoption still requires matching route-level evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -599099,7 +599099,8 @@
           "release-0.5-electricity-catalogue-validation",
           "release-0.5-dashboard-widget-acceptance",
           "release-0.5-document-detail-authority",
-          "release-0.5-contract-snapshot-states"
+          "release-0.5-contract-snapshot-states",
+          "release-0.5-account-child-read-recovery"
         ],
         "current_acceptance": null
       }
@@ -599497,11 +599498,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+              "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -601305,11 +601306,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+              "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -603113,11 +603114,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+              "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -604921,11 +604922,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+              "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -606729,11 +606730,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+              "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -608537,11 +608538,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+              "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -610345,11 +610346,11 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
-              "sha256": "5fd820867d65601e9cc950927207f27e7d51bb70c4f42bf8be2decc65b55e7c4"
+              "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+              "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
             },
             {
               "path": "apps/web/src/components/ValidatedFormWizard.tsx",
@@ -616171,7 +616172,7 @@
             },
             {
               "path": "apps/web/src/components/LegalProfileDocuments.tsx",
-              "sha256": "d1979aabf29f04023a52c360a05541d8c26d6a5a03faf180fd616cedd674718d"
+              "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
@@ -616969,7 +616970,7 @@
             },
             {
               "path": "apps/web/src/components/LegalProfileDocuments.tsx",
-              "sha256": "d1979aabf29f04023a52c360a05541d8c26d6a5a03faf180fd616cedd674718d"
+              "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
@@ -617767,7 +617768,7 @@
             },
             {
               "path": "apps/web/src/components/LegalProfileDocuments.tsx",
-              "sha256": "d1979aabf29f04023a52c360a05541d8c26d6a5a03faf180fd616cedd674718d"
+              "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
@@ -618565,7 +618566,7 @@
             },
             {
               "path": "apps/web/src/components/LegalProfileDocuments.tsx",
-              "sha256": "d1979aabf29f04023a52c360a05541d8c26d6a5a03faf180fd616cedd674718d"
+              "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
@@ -619367,7 +619368,7 @@
             },
             {
               "path": "apps/web/src/components/LegalProfileDocuments.tsx",
-              "sha256": "d1979aabf29f04023a52c360a05541d8c26d6a5a03faf180fd616cedd674718d"
+              "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
@@ -620165,7 +620166,7 @@
             },
             {
               "path": "apps/web/src/components/LegalProfileDocuments.tsx",
-              "sha256": "d1979aabf29f04023a52c360a05541d8c26d6a5a03faf180fd616cedd674718d"
+              "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
@@ -620963,7 +620964,7 @@
             },
             {
               "path": "apps/web/src/components/LegalProfileDocuments.tsx",
-              "sha256": "d1979aabf29f04023a52c360a05541d8c26d6a5a03faf180fd616cedd674718d"
+              "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
@@ -621762,7 +621763,7 @@
             },
             {
               "path": "apps/web/src/components/LegalProfileDocuments.tsx",
-              "sha256": "d1979aabf29f04023a52c360a05541d8c26d6a5a03faf180fd616cedd674718d"
+              "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
@@ -622561,7 +622562,7 @@
             },
             {
               "path": "apps/web/src/components/LegalProfileDocuments.tsx",
-              "sha256": "d1979aabf29f04023a52c360a05541d8c26d6a5a03faf180fd616cedd674718d"
+              "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
@@ -623360,7 +623361,7 @@
             },
             {
               "path": "apps/web/src/components/LegalProfileDocuments.tsx",
-              "sha256": "d1979aabf29f04023a52c360a05541d8c26d6a5a03faf180fd616cedd674718d"
+              "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
@@ -624159,7 +624160,7 @@
             },
             {
               "path": "apps/web/src/components/LegalProfileDocuments.tsx",
-              "sha256": "d1979aabf29f04023a52c360a05541d8c26d6a5a03faf180fd616cedd674718d"
+              "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
@@ -624958,7 +624959,7 @@
             },
             {
               "path": "apps/web/src/components/LegalProfileDocuments.tsx",
-              "sha256": "d1979aabf29f04023a52c360a05541d8c26d6a5a03faf180fd616cedd674718d"
+              "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
@@ -625757,7 +625758,7 @@
             },
             {
               "path": "apps/web/src/components/LegalProfileDocuments.tsx",
-              "sha256": "d1979aabf29f04023a52c360a05541d8c26d6a5a03faf180fd616cedd674718d"
+              "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
@@ -626556,7 +626557,7 @@
             },
             {
               "path": "apps/web/src/components/LegalProfileDocuments.tsx",
-              "sha256": "d1979aabf29f04023a52c360a05541d8c26d6a5a03faf180fd616cedd674718d"
+              "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
@@ -627355,7 +627356,7 @@
             },
             {
               "path": "apps/web/src/components/LegalProfileDocuments.tsx",
-              "sha256": "d1979aabf29f04023a52c360a05541d8c26d6a5a03faf180fd616cedd674718d"
+              "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
@@ -715049,7 +715050,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
@@ -724165,7 +724166,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/web/src/lib/brand-config.ts",
@@ -728015,7 +728016,7 @@
             },
             {
               "path": "apps/web/src/components/document-template-query.test.tsx",
-              "sha256": "d5587cd6b92aab4c3597386568ef08c0c097d781e684b0c8e5510419fb4f70cf"
+              "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
             },
             {
               "path": "apps/api/src/telegram/telegram-links.service.ts",
@@ -728959,7 +728960,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer and staff document detail and contract snapshot/history recovery have current targeted receipts. Dashboard widget and admin first-read evidence remains indexed. Reconcile the outstanding account and staff child-route pending, empty and error conditions against the named route evidence."
+        "Named account settings, contract and document route cases and dashboard widget states have indexed evidence. Verify remaining staff child-route pending, empty and error conditions against the first-read inventory and original acceptance. Broader route adoption still requires matching route-level evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -729162,7 +729163,8 @@
           "release-0.5-electricity-catalogue-validation",
           "release-0.5-dashboard-widget-acceptance",
           "release-0.5-document-detail-authority",
-          "release-0.5-contract-snapshot-states"
+          "release-0.5-contract-snapshot-states",
+          "release-0.5-account-child-read-recovery"
         ]
       }
     },
@@ -729510,7 +729512,7 @@
             },
             {
               "path": "apps/web/src/components/LegalProfileDocuments.tsx",
-              "sha256": "d1979aabf29f04023a52c360a05541d8c26d6a5a03faf180fd616cedd674718d"
+              "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
             },
             {
               "path": "apps/web/src/components/MaintenanceNotice.tsx",
@@ -729722,7 +729724,7 @@
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
-              "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+              "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
             },
             {
               "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
@@ -731114,7 +731116,8 @@
             "All 101 transfer budgets and affected native electricity delivery, accessibility and checkout cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-owned-checkout-addresses/proof.json",
             "All 101 transfer budgets and native catalogue accessibility and checkout journey cases passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-catalogue-validation/proof.json",
             "All 101 final transfer budgets and affected document/solar browser checks passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-detail-authority/proof.json",
-            "All 101 transfer budgets and affected contract journeys passed against the reviewed final runtime. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-snapshot-states/proof.json"
+            "All 101 transfer budgets and affected contract journeys passed against the reviewed final runtime. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-snapshot-states/proof.json",
+            "All 101 transfer budgets and affected profile/security journeys passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-account-child-read-recovery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -810102,6 +810105,58 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-snapshot-states/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-snapshot-states/renewed-bindings.json",
       "release_disposition": "Closed contract snapshot validation and historical read recovery gaps. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-account-child-read-recovery": {
+      "batch": "release-0.5-account-child-read-recovery",
+      "base_commit": "a24ed49ccf22cb30e7cefffc685c23186a818bf5",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/profile-address-forms.spec.ts",
+          "sha256": "3e19472647b13a4ac43b9f7550b23a76037d8860442e963c89b541b514c2cf6e"
+        },
+        {
+          "path": "apps/web/e2e/telegram-link.spec.ts",
+          "sha256": "c2c84be487852aa620edeecbd47e65d473a400fe329130393bdc646edcb65445"
+        },
+        {
+          "path": "apps/web/src/components/LegalProfileDocuments.tsx",
+          "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
+        },
+        {
+          "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
+          "sha256": "f9d68c31b53665a6d05a824c93b9344b55ec82bd854e7b66054f680a2bf5ff87"
+        },
+        {
+          "path": "apps/web/src/components/TelegramLinkPanel.tsx",
+          "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
+        },
+        {
+          "path": "apps/web/src/components/document-template-query.test.tsx",
+          "sha256": "896cb7d64108de5860ceb181245e0c1a431a9d66e189e7010389a50d1e43062c"
+        }
+      ],
+      "checks": [
+        "Three baseline regressions reproduced a false empty result for invalid legal-document metadata, publication of a credential-bearing URL, and a Telegram retry that displayed no pending state.",
+        "Legal document reads validate response shape and the existing safe storage URL rules before render. A malformed response is retryable with no links, empty results have a status, and confirmed access denial follows the current profile withdrawal callback. Legal links suppress referrers.",
+        "Telegram's explicit status retry announces loading, clears the prior error, retains the uncertainty lock until a valid status is read, and leaves the session and trusted-device lists independent.",
+        "Thirty-eight focused units and twenty-eight native Chromium and mobile Safari cases passed in Persian and English. The coverage gate passed with 15/16 changed lines and 21/23 branches. All 101 transfer budgets, web typecheck, changed-file lint and formatting passed.",
+        "Named native cases for eight account settings paths are indexed, including existing scopes with matching source inputs and the fresh profile/security evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-account-child-read-recovery/account-route-evidence.json"
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-account-child-read-recovery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-account-child-read-recovery/proof.json",
+      "source_scope_proof_sha256": "db3138b0da9df2b71b9bf15aedb942383835251e09908f9013bbd60e5ec504b4",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-account-child-read-recovery/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-account-child-read-recovery/renewed-bindings.json",
+      "release_disposition": "Closed account child read gaps. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [
@@ -810152,7 +810207,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Resolve demonstrable account and staff child-route pending, empty and error states using the existing route evidence. Preserve account and profile authority. GitHub required-check enforcement and the staging Sentry receipt remain independent."
+    "goal": "Verify and close remaining staff child-route states against the first-read inventory and named route evidence. Keep GitHub merge check enforcement and staging Sentry proof pending on the external prerequisites."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",

@@ -210,6 +210,63 @@ async function addressCompanions(
 }
 
 for (const locale of ['en', 'fa'] as const) {
+  test(`legal profile documents recover locally and withdraw denied links (${locale})`, async ({
+    page,
+  }) => {
+    await setupSettingsForms(page, locale, 'profile');
+    let first: Route | undefined;
+    let reads = 0;
+    const url = 'https://files.test/legal-document.pdf';
+    await page.route(`**/api/onboarding/documents/${profileId}`, (route) => {
+      switch (++reads) {
+        case 1:
+          first = route;
+          return;
+        case 2:
+          return route.fulfill({
+            json: {
+              documents: [{ key: 'bad', name: 'Unexpected link', url: 'javascript:void(0)' }],
+            },
+          });
+        case 3:
+          return route.fulfill({ json: { documents: [] } });
+        case 4:
+          return route.fulfill({
+            json: { documents: [{ key: 'legal', name: 'Legal document', url }] },
+          });
+        default:
+          return route.fulfill({ status: 403, json: {} });
+      }
+    });
+    await page.goto('/settings/profile');
+    const panel = page.getByRole('region', {
+      name: t('onboarding.documents.title', locale),
+      exact: true,
+    });
+    const refresh = panel.getByRole('button', { name: t('onboarding.documents.refresh', locale) });
+    const owner = form(page, 'profile');
+    await expect(panel.getByRole('status')).toHaveText(t('onboarding.draft.loading', locale));
+    await expect(refresh).toBeDisabled();
+    await expect.poll(() => !!first).toBe(true);
+    await first!.fulfill({ status: 503, json: {} });
+    await expect(panel.getByRole('alert')).toHaveText(t('onboarding.documents.loadError', locale));
+    await refresh.click();
+    await expect.poll(() => reads).toBe(2);
+    await expect(panel.getByRole('alert')).toBeVisible();
+    await expect(panel.getByRole('link')).toHaveCount(0);
+    await expect(owner).toBeVisible();
+    await refresh.click();
+    await expect(panel.getByText(t('onboarding.documents.empty', locale))).toBeVisible();
+    await refresh.click();
+    const link = panel.getByRole('link', { name: 'Legal document', exact: true });
+    await expect(link).toHaveAttribute('href', url);
+    await expect(link).toHaveAttribute('referrerpolicy', 'no-referrer');
+    await refresh.click();
+    await expect(panel).toHaveCount(0);
+    await expect(owner).toHaveCount(0);
+    expect(reads).toBe(5);
+  });
+
   test(`settings profile editor confirms actual legal/address values and original captured retries (${locale})`, async ({
     page,
   }) => {

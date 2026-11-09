@@ -5,6 +5,7 @@ import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { documentTemplateText } from '@barghsa/i18n/document-templates';
+import { t } from '@barghsa/i18n/app';
 import AdminDocumentTemplatesPage from '../pages/AdminDocumentTemplatesPage.js';
 import { LegalProfileDocuments } from './LegalProfileDocuments.js';
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => 'en' }));
@@ -279,3 +280,24 @@ it.each([401, 403, 404])(
     expect(host.querySelector('a')).toBeNull();
   }
 );
+
+it.each([
+  { documents: {} },
+  { documents: [{ key: 'forged', name: 'Forged link', url: 'https://other:secret@files.test/' }] },
+])('keeps an invalid legal-document response local and retryable', async (invalid) => {
+  target = 'legal';
+  vi.mocked(fetch)
+    .mockResolvedValueOnce(Response.json(invalid))
+    .mockResolvedValueOnce(Response.json({ documents: [] }))
+    .mockResolvedValueOnce(Response.json(data('/api/onboarding/documents/profile-one')));
+  await render();
+  await vi.waitFor(() => expect(host.querySelector('[role="alert"]')).not.toBeNull());
+  expect(host.querySelector('a')).toBeNull();
+  expect(onDenied).not.toHaveBeenCalled();
+  await click(t('onboarding.documents.refresh', 'en'));
+  await vi.waitFor(() => expect(host.textContent).toContain(t('onboarding.documents.empty', 'en')));
+  await click(t('onboarding.documents.refresh', 'en'));
+  const link = host.querySelector('a');
+  expect(link?.href).toBe('https://files.test/current-legal.pdf');
+  expect(link?.getAttribute('referrerpolicy')).toBe('no-referrer');
+});

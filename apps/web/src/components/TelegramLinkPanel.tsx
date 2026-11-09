@@ -261,6 +261,8 @@ function OwnedTelegramLinkPanel({ scope }: { scope: Scope }) {
   }
   async function refresh() {
     if (!scope.claim(family)) return;
+    setLoading(true);
+    setError(null);
     try {
       if (await read()) {
         setUncertain(false);

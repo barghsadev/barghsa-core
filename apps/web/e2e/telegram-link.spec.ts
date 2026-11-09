@@ -1,11 +1,13 @@
 import AxeBuilder from '@axe-core/playwright';
-import type { Page } from '@playwright/test';
+import type { Page, Route } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { fullNavigation } from './navigation-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { telegramText as copy } from '@barghsa/i18n/telegram';
 import { t } from '@barghsa/i18n/workspace';
+import { t as appText } from '@barghsa/i18n/app';
+import { securitySettingsText } from '@barghsa/i18n/security-settings-forms';
 const uuid = '0199f111-1111-7111-8111-111111111111';
 const url = 'https://t.me/barghsa_dev_bot?start=' + 'a'.repeat(43);
 async function setup(page: Page, locale: 'en' | 'fa') {
@@ -84,6 +86,34 @@ async function setup(page: Page, locale: 'en' | 'fa') {
   };
 }
 for (const locale of ['en', 'fa'] as const) {
+  test(`Telegram status retry clears the old error and keeps security lists visible (${locale})`, async ({
+    page,
+  }) => {
+    const f = await setup(page, locale);
+    let reads = 0;
+    let retry: Route | undefined;
+    await page.route('**/api/telegram/link', (route) => {
+      expect(route.request().method()).toBe('GET');
+      if (++reads === 1) return route.fulfill({ status: 503, json: {} });
+      retry = route;
+    });
+    await page.goto('/settings/security');
+    const panel = page.getByRole('region', { name: copy('title', locale), exact: true });
+    const refresh = panel.getByRole('button', { name: copy('refresh', locale), exact: true });
+    await expect(panel.getByRole('alert')).toHaveText(copy('error', locale));
+    await refresh.click();
+    await expect(panel.getByRole('status')).toHaveText(securitySettingsText('loading', locale));
+    await expect(refresh).toBeDisabled();
+    await expect(page.getByText(appText('settings.security.noSessions', locale))).toBeVisible();
+    await expect.poll(() => !!retry).toBe(true);
+    await retry!.fulfill({ json: f.state });
+    await expect(panel.getByRole('alert')).toHaveCount(0);
+    await expect(
+      panel.getByRole('button', { name: copy('connect', locale), exact: true })
+    ).toBeEnabled();
+    expect(reads).toBe(2);
+  });
+
   test(`private Telegram settings confirm normalized code and unlink (${locale})`, async ({
     page,
   }, info) => {

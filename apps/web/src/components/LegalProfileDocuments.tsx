@@ -1,10 +1,13 @@
 import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
+import { documentUrl, DocumentRequestError } from '../lib/documents.js';
 import { useEffect, useState } from 'react';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { LoadingStatus, Button } from '@barghsa/ui';
+
+type LegalDocumentLink = { key: string; name: string; url: string };
 
 export function LegalProfileDocuments(props: Parameters<typeof OwnedLegalProfileDocuments>[0]) {
   const actor = useAccountUser();
@@ -37,7 +40,7 @@ function OwnedLegalProfileDocuments({
     'legal-profile-documents'
   );
   const locale = useLocale();
-  const [documents, setDocuments] = useState<Array<{ key: string; name: string; url: string }>>([]);
+  const [documents, setDocuments] = useState<LegalDocumentLink[]>([]);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [retry, setRetry] = useState(0);
   useEffect(() => {
@@ -45,31 +48,36 @@ function OwnedLegalProfileDocuments({
     setDocuments([]);
     setStatus('loading');
     readDocument(
-      `/api/onboarding/documents/${profileId}`,
+      `/api/onboarding/documents/${encodeURIComponent(profileId)}`,
       {
         credentials: 'include',
+        cache: 'no-store',
         signal: controller.signal,
       },
       async (path, options) => {
         const response = await fetch(path, options);
-        if (!response.ok) {
-          if (!controller.signal.aborted && [401, 403, 404].includes(response.status))
-            onAccessDenied?.();
-          throw new Error('Documents unavailable');
-        }
-        return response.json() as Promise<{
-          documents: Array<{ key: string; name: string; url: string }>;
-        }>;
+        if (!response.ok) throw new DocumentRequestError(response.status, null);
+        const body = (await response.json()) as { documents?: unknown } | null;
+        if (!Array.isArray(body?.documents)) throw new Error('Invalid legal documents');
+        return body.documents.map((row: unknown) => {
+          const document = row as Partial<LegalDocumentLink> | null;
+          if (!document || typeof document.key !== 'string' || typeof document.name !== 'string')
+            throw new Error('Invalid legal document');
+          return { key: document.key, name: document.name, url: documentUrl(document.url) };
+        });
       }
     )
-      .then((body) => {
+      .then((links) => {
         if (!controller.signal.aborted) {
-          setDocuments(body.documents);
+          setDocuments(links);
           setStatus('ready');
         }
       })
-      .catch(() => {
-        if (!controller.signal.aborted) setStatus('error');
+      .catch((error: unknown) => {
+        if (controller.signal.aborted) return;
+        if (error instanceof DocumentRequestError && [401, 403, 404].includes(error.status))
+          onAccessDenied?.();
+        setStatus('error');
       });
     return () => controller.abort();
   }, [profileId, retry, readDocument]);
@@ -92,6 +100,7 @@ function OwnedLegalProfileDocuments({
                 href={document.url}
                 target="_blank"
                 rel="noopener noreferrer"
+                referrerPolicy="no-referrer"
               >
                 {document.name}
               </a>
@@ -99,7 +108,7 @@ function OwnedLegalProfileDocuments({
           ))}
         </ul>
       ) : (
-        <p>{t('onboarding.documents.empty', locale)}</p>
+        <p role="status">{t('onboarding.documents.empty', locale)}</p>
       )}
       <Button
         type="button"
